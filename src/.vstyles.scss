@@ -1,0 +1,33 @@
+.-success, .app-simple-button-component.-success {
+    color: #00B333;
+}
+.-dismissed {
+    color: #eb6886 !important;
+}
+
+.-blue, .app-simple-button-component.-blue {
+    color: #0076E0;
+    &:hover {
+        color: #FF6A00;
+    }
+}
+
+.-waiting, .app-simple-button-component.-waiting,
+.-warning, .app-simple-button-component.-warning {
+    color: #FF6A00;
+}
+.-error, .app-simple-button-component.-error {
+    color: #ED3545;
+}
+.-none, .app-simple-button-component.-none {
+    color: #7D859B;
+}
+
+.-custom-scroll {
+    @include custom-scroll(
+        2px,
+        $scrollbar-track-color,
+        $scrollbar-thumb-color,
+        $scrollbar-thumb-hover-color
+    );
+}

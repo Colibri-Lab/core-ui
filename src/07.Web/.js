@@ -1,0 +1,3 @@
+Colibri.Web = class {
+    
+}

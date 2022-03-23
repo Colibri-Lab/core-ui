@@ -1,0 +1,31 @@
+.app-component-text-field {
+
+
+    [data-object-name$="-content"] > [data-object-name$="-container"] {
+
+        background: #FFFFFF;
+        border: 1px solid #D9DCE3;
+        border-radius: 3px;
+        overflow: hidden;
+    
+        input {
+            width: 100%;
+            background: transparent;
+            border: 0px;
+            padding: 5px 12px;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 20px;        
+            outline: none;
+            color: #000000;
+            &:-internal-autofill-selected {
+                background-color: transparent !important;
+                color: #000000 !important;
+                appearance: auto !important;
+            }
+        }
+    }
+
+    
+}

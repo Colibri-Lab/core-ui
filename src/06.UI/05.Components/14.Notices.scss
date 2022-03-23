@@ -1,0 +1,93 @@
+.app-notices-component {
+
+    position: fixed;
+    right: 20px;
+    top: 20px;
+
+    width: 384px;
+
+    .app-component-list {
+        padding: 0px 20px;
+        overflow: hidden;
+        overflow-y: auto;
+        max-height: calc(100vh - 20px);
+    }
+
+    .app-component-list-group > div {
+        padding: 0px;
+    }
+
+    .app-component-list-group {
+        .app-component-list-item:not(.disable-default) {
+
+            transition: all .3s;
+
+            position: relative;
+    
+            width: 100%;
+            margin-bottom: 20px;
+            margin-left: 100%;
+    
+            border-bottom: 0px;
+    
+            box-shadow: 0px 1px 4px rgba(44, 48, 59, 0.3), 0px 4px 12px rgba(44, 48, 59, 0.35);
+            border-radius: 3px;
+    
+            padding: 16px;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 140%;
+            color: #ffffff;
+            padding-right: 50px;
+            opacity: 0;
+    
+            .app-notice-icon-component {
+                position: absolute;
+                right: 10px;
+                top: 10px;
+                svg {
+                    width: 16px;
+                    height: 16px;
+                    path {
+                        fill: #ffffff;
+                    }
+                }
+            }
+    
+            &.app-notice-success-component {
+                position: relative;
+                opacity: 1;
+                margin-left: 0px;
+                background: #00B333;
+                &:hover, &.app-component-selected {
+                    background: #00B333;
+                }
+            }
+    
+            &.app-notice-error-component {
+                position: relative;
+                opacity: 1;
+                background: #ED3545;
+                margin-left: 0px;
+                &:hover, &.app-component-selected {
+                    background: #ED3545;
+                }
+            }
+    
+            &.app-notice-warning-component {
+                position: relative;
+                margin-left: 0px;
+                opacity: 1;
+                background: #FF6A00;
+                &:hover, &.app-component-selected {
+                    background: #FF6A00;
+                }
+            }
+    
+        }
+    }
+
+    
+
+}

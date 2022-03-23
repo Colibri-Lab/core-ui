@@ -1,0 +1,28 @@
+.app-gridfile-viewer-component {
+
+    width: 100%;
+    justify-content: center;
+    
+    &.app-component-shown {
+        display: flex;
+    }
+    
+    .app-component-icon {
+        cursor: pointer;
+    }
+
+    .app-contextmenu-icon-component {
+        position: static !important;
+        flex: none !important;
+        right: unset !important;
+        top: unset !important;
+        &.-selected, &:hover {
+            background: transparent !important;
+            .app-component-icon {
+                background: transparent !important;
+            }
+
+        }
+        
+    }
+}

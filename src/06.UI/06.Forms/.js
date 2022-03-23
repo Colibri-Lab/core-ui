@@ -1,0 +1,1 @@
+Colibri.UI.Forms = class {}

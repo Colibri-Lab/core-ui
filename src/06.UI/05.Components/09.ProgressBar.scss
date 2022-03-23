@@ -1,0 +1,15 @@
+.app-progress-bar-component {
+    width: 100%;
+    .app-progress-bar-container-component {
+        height: 10px;
+        width: 100%;
+        .app-progress-bar-progress-component {
+            transition: width .2s;
+            height: 100%;
+            width: 0;
+            min-width: 0;
+            max-width: 100%;
+            background: #DEE0E4;
+        }
+    }
+}

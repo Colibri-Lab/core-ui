@@ -1,0 +1,81 @@
+.app-dropdown-component {
+
+    position: absolute;
+    background-color: #fff;
+    font-weight: normal;
+    color: #435466;
+    box-shadow: 0 2px 7px 0 rgb(90 102 117 / 25%);
+    border-radius: 5px;
+    // z-index: 1001;
+
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+
+
+    &.app-component-shown {
+        display: grid;
+    }
+    
+    [data-object-name="search"] {
+        margin: 7px 12px;
+        margin-top: 7px;
+        margin-bottom: 8px;
+        margin-left: 12px;
+        width: 276px;
+        box-shadow: none;
+
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 6px;
+            svg {
+                width: 16px;
+                height: 16px;
+            }
+        }
+
+        input {
+            color: #435466;
+            font-size: 14px;
+            line-height: 22px;
+            border-radius: 3px;
+        }
+    }
+
+    [data-object-name="list"] {
+
+
+        .app-component-list-group {
+            width: 100%;
+            > span {
+                display: block;
+                text-indent: -9999px;
+                height: 1px;
+            }
+
+            > div {
+                padding: 0px;
+                .app-component-list-item {
+                    padding: 12px;
+                    &:hover {
+                        background-color: #e4f4ff;
+                    }
+                    
+                }
+
+            }
+
+            &:last-child {
+                margin-bottom: 0px;
+            }
+
+        }
+
+        
+    }
+
+}

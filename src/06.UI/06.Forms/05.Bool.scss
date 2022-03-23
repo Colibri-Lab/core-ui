@@ -1,0 +1,50 @@
+.app-component-bool-field {
+
+    [data-object-name$="-content"] > [data-object-name$="-container"] {
+        
+
+        input[type="checkbox"] {
+            display: none;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            &:before {
+                content: '';
+                display: block;
+                width: 18px;
+                height: 18px;
+                background: #FFFFFF;
+                border: 1px solid #C4C8D4;
+                border-radius: 2px;
+                margin-right: 8px;
+            }
+        }
+
+        input:checked + label {
+            position: relative;
+            &:before {
+                background: #0095FF;
+            }
+            &:after {
+                content: "";
+                display: block;
+                width: 5px;
+                height: 9px;
+                border: solid white;
+                border-width: 0 2px 2px 0;
+                -webkit-transform: rotate(45deg);
+                -ms-transform: rotate(45deg);
+                transform: rotate(45deg);
+                cursor: pointer;
+                position: absolute;
+                left: 7px;
+                top: 2px;
+            }
+        }
+
+    }
+
+}

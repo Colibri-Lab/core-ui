@@ -1,0 +1,35 @@
+.app-confirm-dialog-component {
+
+    .confirm-dialog-window-container {
+        padding: 16px 32px;
+
+        .app-component-textspan {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 20px;    
+        }
+
+    }
+
+    .confirm-dialog-window-footer {
+        display: flex;
+        align-items: center;
+        margin-top: 0;
+
+        background: #F5F6FA;
+        border-top: 1px solid #D9DCE3;
+        padding: 16px 32px;
+        button {
+            margin-right: 10px;
+            &.app-success-button-component {
+                width: 110px;
+            }
+            &.app-simple-button-component {
+                width: 78px;
+            }
+        }
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+}

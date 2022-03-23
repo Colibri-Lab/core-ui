@@ -1,0 +1,53 @@
+.app-component-checkbox {
+    user-select: none;
+    width: 17px;
+    height: 17px;
+    border: 1px solid #D4D4D4;
+    background-color: transparent;
+    border-radius: 2px;
+    cursor: pointer;
+    margin: 0;
+
+    &.app-component-shown {
+        display: flex;
+    }
+
+    &.ui-disabled {
+        background: #F5F6FA;
+    }
+
+    input {
+        display: none;
+    }
+
+    &.-checked {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #2196f3;
+        border: 1px solid #2196f3;
+
+         [data-object-name$="-icon"] svg {
+            display: block;
+            height: 15px;
+            width: 13px;
+
+            path {
+                fill: #FFFFFF;
+            }
+        }
+
+        &.-third-state {
+            [data-object-name$="-icon"] svg {
+                display: block;
+                height: 15px;
+                width: 13px;
+
+                path {
+                    fill: #FFFFFF;
+                }
+            }
+        }
+    }
+
+}

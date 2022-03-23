@@ -1,0 +1,7 @@
+.app-component-flexbox {
+  width: 100%;
+  flex-wrap: wrap;
+  &.app-component-shown {
+    display: flex;
+  }
+}

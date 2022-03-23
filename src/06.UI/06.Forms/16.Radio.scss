@@ -1,0 +1,53 @@
+.app-component-radio-field {
+
+
+    [data-object-name$="-content"] > [data-object-name$="-container"] {
+
+        background: #FFFFFF;
+    
+        label {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 18px;
+            line-height: 140%;
+            input {
+                display: none;
+            }
+            span {
+                
+                display: block;
+                padding-bottom: 10px;
+                user-select: none;
+
+                &:before {
+                    content: '';
+                    width: 22px;
+                    height: 22px;
+                    vertical-align: middle;
+                    display: inline-block;
+
+                    background: #FFFFFF;
+                    border: 1px solid #C4C8D4;
+                    box-sizing: border-box;
+                    border-radius: 30px;
+                    margin-right: 10px;
+                    margin-top: -2px;
+
+                }
+    
+            }
+
+            input:checked + span {
+
+                &:before {
+                    border: 7px solid #0095FF;
+                }
+
+            }
+
+        }
+        
+    }
+
+    
+}

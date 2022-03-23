@@ -1,0 +1,100 @@
+.app-component-modeless-window {
+    position: absolute !important;
+    box-shadow: 0 2px 7px 0 rgb(90 102 117 / 25%);
+    background-color: #FFFFFF;
+    border: 1px solid #D9DCE3;
+    border-radius: 10px;
+    max-height: 100%;
+    overflow: hidden;
+    padding: 0;
+
+    flex-direction: column;
+
+    &.app-component-shown {
+        display: flex;
+    }
+
+    .modeless-window-header-container {
+        display: flex;
+        justify-content: flex-start;
+        border-bottom: 1px solid #EAEBF1;
+
+        .modeless-window-header {
+            display: flex;
+            align-items: center;
+            padding: 20px 0 20px 20px;
+            margin-right: auto;
+
+            font-style: normal;
+            font-weight: 600;
+            font-size: 24px;
+            &:empty {
+                display: none;
+            }
+        }
+
+        .close-button-container {
+             margin: 0 0 0 auto;
+             padding: 0;
+
+             .close-button {
+                 cursor: pointer;
+                 padding: 20px;
+                 margin-left: auto;
+
+                 svg {
+                     display: block;
+                     width: 12px;
+                     height: 12px;
+
+                     path {
+                         stroke: #14151A;
+                         fill: #14151A;
+                     }
+                 }
+
+             }
+         }
+    }
+
+    .modeless-window-container {
+        height: 100%;
+        overflow: auto;
+        padding: 20px;
+    }
+
+    .modeless-window-footer {
+        background: #F5F6FA;
+        border-top: 1px solid #D9DCE3;
+        display: flex;
+        margin-top: auto;
+        padding: 15px 20px;
+        &:empty {
+            display: none;
+        }
+    }
+
+    &.-stick-to-x-left {
+        left: 0;
+    }
+
+    &.-stick-to-x-right {
+        left: calc(100% - var(--windowWidth));
+    }
+
+    &.-stick-to-x-center {
+        left: calc((100% - var(--windowWidth)) / 2);
+    }
+
+    &.-stick-to-y-top {
+        top: 0;
+    }
+
+    &.-stick-to-y-bottom {
+        top: calc(100% - var(--windowHeight));
+    }
+
+    &.-stick-to-y-center {
+        top: calc((100% - var(--windowHeight)) / 2);
+    }
+}

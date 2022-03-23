@@ -1,0 +1,46 @@
+
+.app-togglebox-component {
+
+    &.app-component-shown {
+        display: flex;
+    }
+
+    align-items: center;
+    justify-content: flex-start;
+    cursor: pointer;
+
+    .toggle {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        background: #ADB2C2;
+        border-radius: 45px;
+        margin-right: 6px;
+        width: 20px;
+        height: 12px;
+        padding: 2px;
+        .box {
+            background: #FFFFFF;
+            border-radius: 50%;
+            width: 8px;
+            height: 8px;
+        }
+    }
+
+    .text {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    &.-selected {
+        .toggle {
+            background: #0095FF;
+            border-radius: 45px;
+            justify-content: flex-end;
+        }
+    }
+
+
+}

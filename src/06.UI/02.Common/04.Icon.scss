@@ -1,0 +1,14 @@
+.app-component-icon {
+  background-size: contain;
+  background-repeat: no-repeat;
+  //min-width: 10px;
+  //min-height: 10px;
+  vertical-align: middle;
+  &.app-component-shown {
+    display: inline-block;
+    > svg, > img, > div, > span:not(.tip) {
+      width: inherit;
+      height: inherit;
+    }
+  }
+}

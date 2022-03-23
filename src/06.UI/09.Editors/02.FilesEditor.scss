@@ -1,0 +1,74 @@
+.app-files-editor-component {
+    border-radius: 3px;
+    overflow: hidden;
+    padding-left: 6px;
+
+    [data-object-name="files-list"] {
+        padding: 0px;
+        .app-component-list-group {
+            padding: 0px;
+            >div {
+                padding: 0px;
+            }    
+            .app-component-list-item {
+                padding: 0px;
+                margin: 0px 0px 5px;
+                background: transparent;
+
+                &:not(.disable-default):hover, 
+                &:not(.disable-default).app-component-selected {
+                    background: transparent;
+                }
+
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+
+                [data-object-name] {
+                    line-height: 0;
+                }
+                [data-object-name="span"] {
+                    line-height: 1;
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 14px;
+                    color: #0076E0;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    margin-right: auto;
+                } 
+                [data-object-name="sign"] {
+                    cursor: pointer;
+                    margin-left: 10px;
+                    padding: 10px 15px;
+                    text-decoration: underline;
+                    color: #0076E0;
+                }
+                [data-object-name="delete"] {
+                    margin-left: 10px;
+                    margin-right: 10px;
+                }
+                [data-object-name="icon"] {
+                    margin-right: 4px;
+                }
+            }
+        }
+    }
+
+    .app-component-input-type-file {
+        border: 0px;
+        background: transparent;
+        text-align: left;
+        padding: 0px;
+        margin-left: -1px;
+        height: 27px;
+        span {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 20px;
+            color: #0076E0;        
+        }
+    }
+}

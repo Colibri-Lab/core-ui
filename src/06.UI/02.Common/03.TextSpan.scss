@@ -1,0 +1,24 @@
+.app-component-textspan {
+    vertical-align: middle;
+    &.app-component-shown {
+        display: inline;
+    }
+    &.strong {
+        font-weight: bold;
+    }
+    &.italic {
+        font-style: italic;
+    }
+    &.underline {
+        text-decoration: underline;
+    }
+    &.uppercase {
+        text-transform: uppercase;
+    }
+    &.block {
+        &.app-component-shown {
+            display: block;
+        }
+    }
+    
+}

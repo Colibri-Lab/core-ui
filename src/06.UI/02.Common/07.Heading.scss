@@ -1,0 +1,28 @@
+.app-component-heading {
+    vertical-align: middle;
+    &.app-component-shown {
+        display: block;
+    }
+    font-style: normal;
+    font-weight: 600;
+    line-height: 140%;
+    padding: 0 0 10px;
+    margin: 0;
+
+    h1& {
+        font-size: 24px;
+    }
+
+    h2& {
+        font-size: 20px;
+    }
+
+    h3&  {
+        font-size: 18px;
+    }
+
+    h4&  {
+        font-size: 16px;
+    }
+    
+}

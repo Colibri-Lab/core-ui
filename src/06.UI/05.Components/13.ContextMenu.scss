@@ -1,0 +1,85 @@
+.app-contextmenu-component {
+    position: absolute;
+    left:0;
+    top:0;
+    cursor: default;
+
+    &.app-component-shown {
+        display: flex;
+
+        animation-name: fadein;
+        animation-duration: 0.2s;
+        animation-iteration-count: 1;
+        animation-timing-function: ease-in;
+
+    }
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+
+    background: #444855;
+    box-shadow: 0 1px 4px rgba(68, 72, 85, 0.06), 0 4px 8px rgba(0, 0, 0, 0.06);
+    border-radius: 5px;
+
+    padding: 10px 0 10px 0;
+    margin-top: 5px;
+
+    .app-contextmenu-item-component {
+
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+
+        cursor: pointer;
+        padding: 10px 20px 10px 20px;
+
+        &:hover {
+            background: #2f323a;
+        }
+
+        .app-component-icon {
+            width: 17px;
+            height: 17px;
+            margin-right: 10px;
+        }
+
+        .app-component-textspan {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 16px;
+            line-height: 20px;
+            letter-spacing: 0.01em;
+            color: #FFFFFF;
+        }
+
+    }
+
+    &.app-context-menu-white {
+
+        background: #ffffff;
+        border-radius: 3px;
+        box-shadow: 0 1px 4px rgba(44, 48, 59, 0.1), 0 4px 12px rgba(44, 48, 59, 0.15);
+
+        .app-contextmenu-item-component {
+            .app-component-textspan {
+                font-style: normal;
+                font-weight: normal;
+                font-size: 14px;
+                line-height: 20px;
+                color: #14151A;
+            }
+
+            &:hover {
+                background: #0095FF;
+                .app-component-textspan {
+                    color: #ffffff;
+                }
+            }
+
+            padding: 8px 12px;
+
+        }
+
+    }
+
+}

@@ -1,0 +1,104 @@
+.app-component-pane {
+    &.app-component-shown {
+        display: block;
+    }
+
+    position: relative;
+
+    >.app-component-pane-resize {
+        position: absolute;
+        z-index: 1;
+        display: none;
+        overflow: hidden;
+        touch-action: none;
+        user-select: none;
+        &:after {
+            display: block;
+            content: '';
+            height: 1px;
+            width: 10px;
+            background: #c0c0c0;
+        }
+        &:before {
+            content: '';
+            display: block;
+            height: 1px;
+            width: 10px;
+            background: #c0c0c0;
+        }
+
+       
+    }
+    &.app-component-resize-none {
+        >.app-component-pane-resize {
+            display: none;
+        }
+    }
+
+    &.app-component-resize-all {
+        >.app-component-pane-resize {
+            display: block;
+            right: 0px;
+            bottom: 0px;
+            width: 10px;
+            height: 10px;
+            cursor: nw-resize;
+            &:after {
+                transform: rotate(-45deg);
+                position: absolute;
+                top: 5px;
+            }
+            &:before {
+                position: absolute;
+                bottom: 0px;
+                transform: rotate(-45deg);
+            }
+        }
+    }
+    &.app-component-resize-vertical {
+        padding-bottom: 10px;
+        >.app-component-pane-resize {
+            display: block;
+            bottom: 0px;
+            width: 100%;
+            height: 10px;
+            cursor: n-resize;
+            &:after {
+                position: absolute;
+                margin-left: -5px;
+                left: 50%;
+                top: 3px;
+            }
+            &:before {
+                position: absolute;
+                bottom: 3px;
+                left: 50%;
+                margin-left: -5px;
+            }
+        }
+    }
+    &.app-component-resize-horizontal {
+        padding-right: 10px;
+        >.app-component-pane-resize {
+            display: block;
+            right: 0px;
+            height: 100%;
+            width: 10px;
+            cursor: w-resize;
+            &:after {
+                position: absolute;
+                margin-top: -5px;
+                top: 50%;
+                left: 2px;
+                transform: rotate(90deg);
+            }
+            &:before {
+                position: absolute;
+                right: 2px;
+                top: 50%;
+                margin-top: -5px;
+                transform: rotate(90deg);
+            }
+        }
+    }
+}

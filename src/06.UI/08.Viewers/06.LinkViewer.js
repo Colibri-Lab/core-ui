@@ -1,0 +1,77 @@
+Colibri.UI.LinkViewer = class extends Colibri.UI.Viewer {
+
+    constructor(name, container, element = '<span />', root = null) {
+        super(name, container, element, root);
+        this.AddClass('app-link-viewer-component');
+
+        this._value = null;
+        this._downloadlink = null;
+
+        this._grid = this.parent.grid;
+
+        this._icon = new Colibri.UI.Icon('icon', this);
+        this._icon.shown = true;
+        this._icon.value = Colibri.UI.FileLinkIcon;
+
+        this._text = new Colibri.UI.TextSpan('span', this);
+        this._text.shown = true;
+
+        this.AddHandler('Clicked', (event, args) => {
+
+            this._clickOnLink();
+
+            args.domEvent.stopPropagation();
+            args.domEvent.preventDefault();
+            return false;
+        });
+
+    }
+
+    _showValue() {
+        this._text.value = this.value;
+        if(this._grid) {
+            const field = this._grid.header.columns.Children(this.parent.name.replaceAll(this.parent.parentRow.name + '-', '')).tag;
+            if(field) {
+                this._text.value = field.params && field.params.view ? field.params.view : field.desc;
+            }
+        }
+        else if(this.field) {
+            this._text.value = this.field.desc + ' (скачать)';
+        }
+        else {
+            this._text.value = 'Скачать';
+        }
+
+    }
+
+    _clickOnLink() {
+        if(this._grid) {
+            const field = this._grid.header.columns.Children(this.parent.name.replaceAll(this.parent.parentRow.name + '-', '')).tag;
+            if(field) {
+                return false;
+            }
+        }
+        else if(this.field && this._downloadlink) {
+            window.open((window.rpchandler ? window.rpchandler : '') + this._downloadlink + '?name=' + this.field.name + '&data=' + this.field.params.data);
+        }
+        else {
+            
+        }
+    }
+
+    
+    get value() {
+        return this._value;
+    }
+
+    set value(value) {
+        this._value = value;
+        this._showValue();
+    }
+
+    set downloadlink(value) {
+        this._downloadlink = value;
+    }
+
+
+}

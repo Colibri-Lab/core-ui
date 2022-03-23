@@ -1,0 +1,14 @@
+.app-file-viewer-component {
+
+    width: 100%;
+    
+    &.app-component-shown {
+        display: flex;
+    }
+    justify-content: center;
+
+    .app-component-icon {
+        cursor: pointer;
+    }
+
+}

@@ -1,0 +1,31 @@
+.app-component-link {
+    vertical-align: middle;
+    cursor: pointer;
+    
+    text-decoration: none;
+    &.app-component-shown {
+        display: inline;
+    }
+    
+    &:not(.-warning):not(.-error):not(.-success) {
+        color: #7D859B;
+        &:hover {
+            color: #FF6A00;
+        }
+    }
+
+
+    &.-warning {
+        padding: 0px;
+        margin: 0px; 
+    }
+    &.-error {
+        padding: 0px;
+        margin: 0px; 
+    }
+    &.-success {
+        padding: 0px;
+        margin: 0px; 
+    }
+
+}

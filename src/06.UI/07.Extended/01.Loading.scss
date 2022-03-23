@@ -1,0 +1,25 @@
+.app-loading-component {
+
+    position: fixed;
+    
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+
+    background: rgba(0, 0, 0, .2);
+
+    &.app-component-shown {
+        display: flex;
+    }
+
+    svg {
+        animation: 2s linear 0s infinite normal rotateInfiniteAnimation;
+        path {
+            stroke: #ffffff;
+        }
+    }
+
+}

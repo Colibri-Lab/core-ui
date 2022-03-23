@@ -1,0 +1,511 @@
+Colibri.UI.List = class extends Colibri.UI.Component {
+
+    constructor(name, container, multiple) {
+        super(name, container);
+        this.AddClass('app-component-list');
+
+        this._selected = [];
+
+        if (multiple === undefined) {
+            multiple = false;
+        }
+        this._multiple = multiple;
+
+        this._scrolling = -1;
+        this._scrollY = -1;
+        this._element.addEventListener('scroll', (event) => {
+            if(event.target.scrollTop > this._scrollY) {
+                if (this._element.lastChild.getBoundingClientRect().bottom < (event.target.getBoundingClientRect().bottom + 10)) {
+                    clearTimeout(this._scrolling);
+                    this._scrolling = setTimeout(() => {
+                        this.Dispatch('ScrolledToBottom', {});
+                    }, 66);
+                }
+            }
+            this._scrollY = event.target.scrollTop;
+        });
+    }
+
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('SelectionChanged', false, 'Поднимается, изменилось выделение');
+        this.RegisterEvent('ItemClicked', false, 'Поднимается, при нажатии на элемент списка');
+        this.RegisterEvent('ItemMouseDown', false, 'Поднимается, при нажатии на элемент списка');
+        this.RegisterEvent('ItemMouseUp', false, 'Поднимается, при нажатии на элемент списка');
+        this.RegisterEvent('ItemDoubleClicked', false, 'Поднимается, при двойном нажатии на элемент списка');
+        this.RegisterEvent('GroupToggled', false, 'Поднимается, когда изменяется состяние отображения группы');
+        this.RegisterEvent('ScrolledToBottom', false, 'Поднимается, когда доскролили до конца');
+    }
+
+    AddGroup(name, title) {
+        const group = new Colibri.UI.List.Group(name, this);
+        group.value = title;
+        group.shown = true;
+        group.hasContextMenu = this.hasContextMenu;
+        return group;
+    }
+
+    FindItem(searchingItemIdOrCompareMethod) {
+        
+        let found = null;
+        this.ForEach((name, group) => {
+            group.ForEach((n, item) => {
+
+                let condition = false;
+                if(searchingItemIdOrCompareMethod instanceof Function) {
+                    condition = searchingItemIdOrCompareMethod(item);
+                }
+                else {
+                   condition = searchingItemIdOrCompareMethod == n; 
+                }
+
+                if(condition) {
+                    found = item;
+                    return false;
+                }
+
+            });
+            if(found) {
+                return false;
+            }
+        });
+
+        return found;
+    }
+
+    UnselectItem(selected) {
+        if(!this._multiple) {
+            this.ClearSelection(false);
+        }
+        else if(Array.isArray(selected)) {
+            selected.forEach((sel) => {
+                this.UnselectItem(sel);
+            });
+        }
+        else {
+            const index = this._selected.findIndex(i => i.name == selected.name);
+            if(index >= 0) {
+                // уже выбран, надо снять выбор
+                this._selected.splice(index, 1);
+                selected.selected = false;
+            }
+        }
+    }
+
+    /**
+     * Устанавливает выбор на пункт
+     * @param {Colibri.UI.List.Item} selected
+     */
+    SelectItem(selected) {
+        if(!this._multiple) {
+            this.ClearSelection(false);
+            selected = Array.isArray(selected) && selected.length ? selected.shift() : selected;
+            selected.selected = true;
+            this._selected.push(selected);
+        }
+        else if(Array.isArray(selected)) {
+            // если multiple то может быть массив
+            selected.forEach((sel) => {
+                this.SelectItem(sel);
+            });
+        }
+        else {
+            const index = this._selected.findIndex(i => i.name == selected.name);
+            if(index >= 0) {
+                // уже выбран, надо снять выбор
+                this._selected.splice(index, 1);
+                selected.selected = false;
+            }
+            else {
+                selected.selected = true;
+                this._selected.push(selected);
+            }
+        }
+    }
+
+    /**
+     * Устанавливает выбор на пункт
+     * @deprecated
+     * @param {Colibri.UI.List.Item} selected
+     */
+    _selectItem(selected) {
+        return this.SelectItem(selected);
+    }
+
+    get selectedIndex() {
+
+        let indices = [];
+
+        let index = 0;
+        let selected = null;
+        this.ForEach((name, group) => {
+            group.ForEach((n, item) => {
+                if(this._selected.filter(i => i === item).length > 0) {
+                    indices.push(index);
+                }
+                index ++;
+            });
+        });
+
+        return this._multiple ? indices : indices.pop();
+
+    }
+    
+    set selectedIndex(value) {
+
+        const currentSelection = JSON.stringify(this.selectedIndex);
+
+        let index = 0;
+        let selected = null;
+        this.ForEach((name, group) => {
+            group.ForEach((n, item) => {
+                if(index == value) {
+                    selected = item;
+                    return false;
+                }
+                index ++;
+            });
+        });
+
+        if(!selected) {
+            return;
+        }
+
+        this.SelectItem(selected);
+
+        if(JSON.stringify(this.selectedIndex) != currentSelection) {
+            this.Dispatch('SelectionChanged', {selected: this.selected});
+        }
+
+    }
+
+    /** @type {Object} */
+    get selectedValue() {
+        let values = [];
+        this._selected.forEach((item) => {
+            values.push(item.value);
+        });
+        return this._multiple ? values : values.pop();
+    }
+
+    set selectedValue(value) {
+
+        const currentSelection = JSON.stringify(this.selectedIndex);
+
+        // value обьект значения
+        let selected = null;
+        this.ForEach((name, group) => {
+            group.ForEach((n, item) => {
+                if(item.value == value) {
+                    selected = item;
+                    return false;
+                }
+            });
+        });
+
+        if(!selected) {
+            return;
+        }
+
+        this.SelectItem(selected);
+
+        if(JSON.stringify(this.selectedIndex) != currentSelection) {
+            this.Dispatch('SelectionChanged', {selected: this.selected});
+        }
+
+    }
+
+
+    /** @type {Colibri.UI.List.Item} */
+    get selected() {
+        if (!this._multiple) {
+            return this._selected[0];
+        }
+        return this._selected;
+    }
+    set selected(value) {
+        // value - Colibri.UI.Item
+        const currentSelection = JSON.stringify(this.selectedIndex);
+        
+        this.SelectItem(value);
+        
+        if(JSON.stringify(this.selectedIndex) != currentSelection) {
+            this.Dispatch('SelectionChanged', {selected: this.selected});
+        }
+    }
+
+    get multiple() {
+        return this._multiple;
+    }
+
+    set multiple(value) {
+        this._multiple = value;
+    }
+
+    ClearSelection(fireAnEvent = true) {
+        this._selected.forEach((item) => {
+            item.selected = false;
+        });
+        this._selected = [];
+        if(fireAnEvent) {
+            this.Dispatch('SelectionChanged', {selected: this.selected});
+        }
+    }
+
+    _createContextMenuButton() {
+        // Do nothing
+    }
+
+    _removeContextMenuButton() {
+        // Do nothing
+    }
+
+    get value() {
+
+    }
+
+    set value(data) {
+        const renderer = new Colibri.UI.List.JsonRenderer(this, data);
+        renderer.Render();
+    }
+
+    __renderBoundedValues(data) {
+        try {
+            this.value = data;
+        }
+        catch(e) {
+
+        }
+    }
+
+}
+
+Colibri.UI.List.Group = class extends Colibri.UI.Component {
+
+    constructor(name, container) {
+        super(name, container);
+
+        this.AddClass('app-component-list-group');
+        this._element.append(Element.create('span', {}));
+        this._element.append(Element.create('div', {}));
+
+        this._handlerEvents();
+
+    }
+
+    _handlerEvents() {
+
+        this.AddHandler('ContextMenuIconClicked', (event, args) => this.parent.Dispatch('ContextMenuIconClicked', Object.assign({item: args.item}, args)));
+        this.AddHandler('ContextMenuItemClicked', (event, args) => this.parent.Dispatch('ContextMenuItemClicked', Object.assign({item: args.item}, args)));
+
+        this.AddHandler('Clicked', (sender, args) => {
+            if (args.domEvent.target.tagName == 'SPAN' && args.domEvent.target.parentElement == this._element) {
+                this.expanded = !this.expanded;
+            }
+        });
+    }
+
+    AddItem(itemData, id = null, selected = false) {
+        const name = (id || itemData.id || Number.unique());
+        const control = new Colibri.UI.List.Item(name, this);
+        control.value = itemData;
+        control.shown = true;
+        control.selected = selected;
+        control.hasContextMenu = this.hasContextMenu;
+
+        if(selected) {
+            this.parent.SelectItem(control);
+        }
+
+        if(this.parent.tag && this.parent.tag.params && this.parent.tag.params.sort) {
+            const foundIndex = this.parent.tag.params.sort(control, this);
+            this.Children(name, control, foundIndex);
+        }
+
+        return control;
+
+    }
+
+    get label() {
+        return this._element.querySelector('span').html();
+    }
+
+    set label(value) {
+        this._element.querySelector('span').html(value);
+    }
+
+    get expandable() {
+        return this.ContainsClass('app-component-expandable');
+    }
+
+    set expandable(value) {
+        if (value) {
+            this.AddClass('app-component-expandable');
+        } else {
+            this.RemoveClass('app-component-expandable');
+        }
+    }
+
+    get expanded() {
+        return !this.ContainsClass('app-component-collapsed')
+    }
+
+    set expanded(value) {
+        if (this.ContainsClass('app-component-collapsed')) {
+            this.Expand();
+        } else {
+            this.Collapse();
+        }
+    }
+
+    get value() {
+        return this.label;
+    }
+
+    set value(value) {
+        this.label = value;
+    }
+
+    get container() {
+        return this._element.querySelector('div');
+    }
+
+    Expand() {
+        if (this.expandable) {
+            this.RemoveClass('app-component-collapsed');
+            if (this.parent instanceof Colibri.UI.List) {
+                this.parent.Dispatch('GroupToggled', {state: 'expanded'});
+            }
+        }
+    }
+
+    Collapse() {
+        if (this.expandable) {
+            this.AddClass('app-component-collapsed');
+            if (this.parent instanceof Colibri.UI.List) {
+                this.parent.Dispatch('GroupToggled', {state: 'collapsed'});
+            }
+        }
+    }
+
+    _createContextMenuButton() {
+        // Do nothing
+    }
+
+    _removeContextMenuButton() {
+        // Do nothing
+    }
+
+    get contextmenu() {
+        return this.parent.contextmenu;
+    }
+
+    set contextmenu(items) {
+        this.parent.contextmenu = items;
+    }
+
+
+}
+
+Colibri.UI.List.Item = class extends Colibri.UI.Component {
+
+    constructor(name, container) {
+        super(name, container);
+
+        this.AddClass('app-component-list-item');
+
+        this.AddHandler('Clicked', this.__ItemSelected);
+        this.AddHandler('DoubleClicked', this.__ItemDblSelected);
+        this.AddHandler('MouseDown', this.__ItemMouseDown);
+        this.AddHandler('MouseUp', (event, args) => this.parent.parent.Dispatch('ItemMouseUp', args));
+
+        this.AddHandler('ContextMenuIconClicked', (event, args) => this.parent.Dispatch('ContextMenuIconClicked', Object.assign({item: this}, args)));
+        this.AddHandler('ContextMenuItemClicked', (event, args) => this.parent.Dispatch('ContextMenuItemClicked', Object.assign({item: this}, args)));
+
+    }
+
+
+    /** @type {boolean} */
+    get selected() {
+        return this._element.is('.app-component-selected');
+    }
+
+    set selected(value) {
+        if (value) {
+            this.AddClass('app-component-selected');
+        } else {
+            this.RemoveClass('app-component-selected');
+        }
+    }
+
+    __ItemSelected(event, args) {
+        this.parent.parent.Dispatch('ItemClicked', {item: this, domEvent: args.domEvent});
+    }
+
+    __ItemDblSelected(event, args) {
+        this.parent.parent.Dispatch('ItemDoubleClicked', {item: this, domEvent: args.domEvent});
+    }
+
+    __ItemMouseDown(event, args) {
+        this.parent.parent.selected = this;
+        this.parent.parent.Dispatch('ItemMouseDown', {item: this, domEvent: args.domEvent});
+    }
+
+    /** @type {object} */
+    get value() {
+        return this._itemData;
+    }
+
+    set value(value) {
+
+        this._element.html('');
+
+        this._itemData = value;
+        
+        let html = this._itemData.title;
+        if(this.parent.parent.__renderItemContent) {
+            html = this.parent.parent.__renderItemContent(this._itemData, this);
+        }
+        else if(this._itemData.__render) {
+            html = this._itemData.__render.apply(this, [this._itemData]);
+        }
+        if(html) {
+            this._element.html(html);
+        }
+
+        let data = Object.assign({}, this._itemData);
+        delete data.__render;
+
+        this._element.data(data);
+    }
+
+    get contextmenu() {
+        return this.parent.contextmenu;
+    }
+
+    set contextmenu(items) {
+        this.parent.contextmenu = items;
+    }
+
+
+
+}
+
+Colibri.UI.List.JsonRenderer = class extends Colibri.UI.Renderer {
+
+    Render() {
+
+        this._data = Object.values(this._data);
+        this._data.forEach((grp) => {
+
+            const group = this._object.AddGroup(grp.name, grp.label);
+            group.tag = group;
+            grp.children && grp.children.forEach((itm) => {
+                const item = group.AddItem(itm);
+                item.tag = itm;
+            });
+
+        });
+
+    }
+}

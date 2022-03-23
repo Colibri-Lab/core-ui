@@ -1,0 +1,46 @@
+.app-component-filelabel-field {
+
+
+    [data-object-name$="-content"] > [data-object-name$="-container"] {
+
+        background: #FFFFFF;
+        border-radius: 3px;
+        overflow: hidden;
+
+        >div {
+            border: 1px solid;
+            padding: 15px 20px;
+        
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+
+            span {
+                font-style: normal;
+                font-weight: normal;
+                font-size: 14px;
+                line-height: 20px;
+            }
+
+            a {
+                color: #0076E0;
+            }
+        }
+
+    }
+
+    &.-success {
+        [data-object-name$="-content"] > [data-object-name$="-container"] {
+            >div {
+                span {
+                    color: #000000;
+                }
+
+                background: transparentize(#00B333, 0.9);
+            }
+        }
+    }
+
+    
+}

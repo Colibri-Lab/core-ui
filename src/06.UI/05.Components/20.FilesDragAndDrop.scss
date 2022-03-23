@@ -1,0 +1,94 @@
+.app-component-files-drag-and-drop {
+    width: 100%;
+    border-radius: 5px;
+    background: #F5F6FA;
+    height: 35px;
+
+    > input[type=file] {
+        display: none;
+    }
+
+    &.-validation-error {
+        > [data-object-name$="-drop-container"] {
+            > [data-object-name$="-title-container"] {
+                justify-content: center;
+
+                > [data-object-name$="-title"] {
+                    color: #EB5757;
+                }
+
+                > [data-object-name$="-upload-icon"] svg path {
+                    fill: #EB5757;
+                }
+            }
+        }
+    }
+
+    &.-active, &:hover {
+        > [data-object-name$="-drop-container"] {
+            border: 1px dashed #0095FF;
+        }
+    }
+
+    > [data-object-name$="-drop-container"] {
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        border: 1px dashed #C4C8D4;
+        border-radius: 5px;
+
+
+        > [data-object-name$="-title-container"] {
+            width: 100%;
+            height: 100%;
+            padding: 10px 15px;
+            justify-content: left;
+            align-items: center;
+
+            &.app-component-shown {
+                display: flex;
+            }
+
+            > [data-object-name$="-upload-icon"] {
+                margin-right: 10px;
+                padding: 0;
+
+                svg {
+                    display: block;
+                    height: 14px;
+                    width: 13px;
+                    transform: rotate(180deg);
+
+                    path {
+                        fill: #0095FF;
+                    }
+                }
+            }
+
+            > [data-object-name$="-title"] {
+                &.app-component-shown {
+                    display: block;
+                }
+
+                font-style: normal;
+                font-weight: normal;
+                font-size: 14px;
+                color: #0095FF;
+                margin: 0;
+                padding: 0;
+            }
+
+            > [data-object-name$="-extensions"] {
+                &.app-component-shown {
+                    display: block;
+                }
+
+                margin-left: auto;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 12px;
+                color: #828282;
+            }
+        }
+    }
+}

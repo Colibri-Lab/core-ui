@@ -1,0 +1,17 @@
+.app-component-array-grid-field {
+    > [data-object-name$="-content"] > [data-object-name$="-container"] {
+        flex-direction: column;
+
+        &.app-component-shown {
+            display: flex;
+        }
+
+        > [data-object-name$="-add-object-button"] {
+            margin: 10px 0;
+        }
+
+        table [data-object-name^="controls-column-"] {
+            width: 0;
+        }
+    }
+}

@@ -1,0 +1,13 @@
+.app-component-date-field {
+    
+    [data-object-name$="-content"] > [data-object-name$="-container"] {
+
+        width: 160px;
+
+        .app-date-selector-component {
+            width: 160px;
+            padding: 0px 0px 0px 9px;
+        }
+    
+    }
+}

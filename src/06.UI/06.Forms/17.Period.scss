@@ -1,0 +1,18 @@
+.app-component-period-field {
+    
+    [data-object-name$="-content"] > [data-object-name$="-container"] {
+
+        &.app-component-shown {
+            display: flex;
+        }
+        align-items: center;
+        justify-content: flex-start;
+
+        .app-date-selector-component {
+            width: 160px;
+            padding: 0px 0px 0px 9px;
+            margin-right: 10px;
+        }
+    
+    }
+}

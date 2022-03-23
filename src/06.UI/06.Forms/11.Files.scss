@@ -1,0 +1,212 @@
+.app-component-files-field {
+    &.-input-file-enabled {
+        > [data-object-name$="-content"] {
+
+            > [data-object-name$="-note"] {
+                width: 100%;
+                overflow-wrap: break-word;
+            }
+    
+            > [data-object-name$="-container"] {
+                
+                border: 1px solid transparent;
+                border-radius: 3px;
+                overflow: hidden;
+    
+                .app-component-list {
+                    padding: 0px;
+                    .app-component-list-group {
+                        padding: 0px;
+                        >div {
+                            padding: 0px;
+                        }
+                        .app-component-list-item {
+                            padding: 0px;
+                            margin: 0px 0px 5px;
+                            background: transparent;
+
+                            display: flex;
+                            align-items: center;
+                            justify-content: flex-start;
+                            border-bottom: 0px;
+
+                            [data-object-name] {
+                                line-height: 0;
+                            }
+                            [data-object-name="span"] {
+                                line-height: 1;
+                                font-style: normal;
+                                font-weight: normal;
+                                font-size: 14px;
+                                color: #0076E0;
+                            }
+                            [data-object-name="delete"] {
+                                margin-left: 5px;
+                            }
+                            [data-object-name="icon"] {
+                                margin-right: 4px;
+                            }
+                        }
+                    }
+                    
+    
+                    span {
+                        font-style: normal;
+                        font-weight: normal;
+                        font-size: 14px;
+                        line-height: 20px;
+                    }
+                }
+
+                .app-component-input-type-file {
+                    border: 0px;
+                    background: transparent;
+                    text-align: left;
+                    padding: 0px;
+                    margin-left: -1px;
+                    span {
+                        font-style: normal;
+                        font-weight: normal;
+                        font-size: 14px;
+                        line-height: 20px;
+                        color: #0076E0;
+                    }
+                    &.-full {
+                        span {
+                            color: #7D859B;
+                            font-size: 12px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    &.-drop-area-enabled {
+
+        &.-reverse {
+            > [data-object-name$="-content"] {
+                > [data-object-name$="-container"] {
+                    flex-direction: column-reverse;
+                    .app-component-list {
+                        margin-top: 10px;
+                    }
+                }
+            }
+        }
+        
+        > [data-object-name$="-content"] {
+
+            flex-direction: column;
+
+            > [data-object-name$="-note"],
+            > [data-object-name$="-message"] {
+                &.app-component-shown {
+                    display: block;
+                }
+                width: 100%;
+                overflow-wrap: break-word;
+            }
+
+            > [data-object-name$="-container"] {
+                &.app-component-shown {
+                    display: flex;
+                }
+                flex-direction: column;
+            }
+
+            &.app-component-shown {
+                display: flex;
+            }
+
+            .app-component-list {
+                max-height: 150px;
+                margin-bottom: 10px;
+                background: #FFFFFF;
+                border: 1px solid #F2F2F2;
+                border-radius: 0;
+                padding: 0;
+
+                .app-component-list-group {
+                    padding: 0;
+                    > div {
+                        padding: 0;
+                    }
+
+                    .app-component-list-item {
+                        margin: 0;
+                        padding: 0px;
+                        border: none;
+                        justify-content: left;
+                        align-items: center;
+                        border-radius: 0;
+                        background: transparent;
+
+                        &:hover {
+                            background: #D6EEFF;
+                        }
+
+                        &:last-child {
+                            margin-bottom: 0;
+                        }
+
+                        &.app-component-shown {
+                            display: flex;
+                        }
+
+                        .files-file-name {
+                            padding: 8px 0;
+                            margin-right: auto;
+                        }
+
+                        [data-object-name="icon"] {
+                            margin-right: 10px;
+                            padding: 8px 0 8px 15px;
+
+                            svg {
+                                display: block;
+                                width: 15px;
+                                height: 14px;
+
+                                path {
+                                    stroke: none;
+                                    fill: #5B6173;
+                                }
+                            }
+                        }
+
+                        [data-object-name="delete"] {
+                            cursor: pointer;
+                            margin-left: 10px;
+                            padding: 10px 15px;
+
+                            svg {
+                                display: block;
+                                width: 9px;
+                                height: 9px;
+
+                                path {
+                                    stroke: #14151A;
+                                    fill: #14151A;
+                                }
+                            }
+
+                            &:hover svg path {
+                                stroke: #FF6A00;
+                                fill: #FF6A00;
+                            }
+                        }
+
+                        [data-object-name="sign"] {
+                            cursor: pointer;
+                            margin-left: 10px;
+                            padding: 10px 15px;
+                            text-decoration: underline;
+                            color: #0076E0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

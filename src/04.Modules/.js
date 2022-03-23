@@ -1,0 +1,4 @@
+
+Colibri.Modules = class {
+
+}

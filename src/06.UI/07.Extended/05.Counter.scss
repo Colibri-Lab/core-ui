@@ -1,0 +1,22 @@
+.app-indicator-component {
+
+    &.app-component-shown {
+        display: flex;
+    }
+    
+    width: 19px;
+    height: 19px;
+    background: #C4C8D4;
+    color: #ffffff;
+
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 1px;
+    text-align: center;
+    border-radius: 50%;
+
+    align-items: center;
+    justify-content: center;
+
+}

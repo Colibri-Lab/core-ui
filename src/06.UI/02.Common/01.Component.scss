@@ -1,0 +1,110 @@
+.app-ui-component {
+    display: none;
+
+    font-size: 14px;
+    font-weight: normal;
+    user-select: none;
+
+    line-height: 100%;
+    * {
+        line-height: 100%;
+    }
+
+    &.app-component-shown {
+        display: block;
+
+        &.app-component-hascontextmenu {
+            display: flex;
+            > *:first-child {
+                flex: 1 1 100%;
+            }
+        }
+    }
+    &:focus,
+    &.app-ui-focus {
+        box-shadow: $focus-shadow;
+    }
+    &::-webkit-scrollbar-track {
+        background-color: $scrollbar-track-color;
+    }
+    &::-webkit-scrollbar {
+        width: $scrollbar-size;
+        height: $scrollbar-size;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: $scrollbar-thumb-color;
+    }
+    .tip {
+        position: fixed;
+        font-size: 16px;
+        line-height: 20px;
+        text-transform: none;
+        padding: 5px;
+        padding: 8px 12px;
+        background: rgba(0,0,0,.7);
+        border-radius: 2px;
+        max-width: 400px;
+        font-size: 14px;
+        text-align: left;
+        font-weight: normal;
+        color: #fff;
+        visibility: hidden;
+        box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        transition: opacity 0.3s, visiblity 0s;
+    }
+    &:hover {
+        >.tip {
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+
+    .app-contextmenu-icon-component {
+        width: 23px;
+        align-items: center;
+        justify-content: flex-start;
+        cursor: pointer;
+
+        &.app-component-shown {
+            display: flex;
+        }
+
+        &.-selected {
+            .app-component-icon {
+                background: #4CB5FF;
+            }
+        }
+        
+        .app-component-icon {
+            &.app-component-shown {
+                display: block;
+            }
+            width: 17px;
+            height: 32px;
+            background: transparent;
+            border-radius: 2px;
+            &:hover {
+                background: #4CB5FF;
+                svg {
+                    circle {
+                        fill: #ffffff;
+                    }
+                }
+            }
+        }
+    }
+
+
+}
+
+
+.app-component-shadow-div {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    cursor: default;
+}

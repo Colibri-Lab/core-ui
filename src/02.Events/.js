@@ -1,0 +1,3 @@
+Colibri.Events = class {
+    
+}

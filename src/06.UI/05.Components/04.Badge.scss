@@ -1,0 +1,6 @@
+.app-component-badge {
+  vertical-align: middle;
+  &.app-component-shown {
+    display: inline-block;
+  }
+}

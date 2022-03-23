@@ -1,0 +1,128 @@
+.app-component-file-field {
+
+    &.-input-file-enabled {
+        > [data-object-name$="-content"] {
+            > [data-object-name$="-container"] {
+
+                background: #FFFFFF;
+                border: none;
+                border-radius: 5px;
+                overflow: hidden;
+
+                span {
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 14px;
+                    line-height: 20px;
+                }
+            }
+        }
+    }
+
+    &.-drop-area-enabled {
+        > [data-object-name$="-content"] {
+
+            > [data-object-name$="-note"],
+            > [data-object-name$="-message"] {
+                &.app-component-shown {
+                    display: block;
+                }
+                width: 100%;
+                overflow-wrap: break-word;
+            }
+
+            > [data-object-name$="-container"] {
+
+                width: 100%;
+                height: 35px;
+                background: #F5F6FA;
+                border: none;
+                border-radius: 5px;
+                overflow: hidden;
+
+                > [data-object-name$="-file-container"] {
+                    width: 100%;
+                    height: 100%;
+                    border: none;
+                    align-items: center;
+
+                    &.app-component-shown {
+                        display: flex;
+                    }
+
+
+                    > [data-object-name$="-file-title-container"] {
+                        width: 100%;
+                        height: 100%;
+                        padding: 10px 15px;
+                        justify-content: left;
+                        align-items: center;
+
+                        &.app-component-shown {
+                            display: flex;
+                        }
+
+                        > [data-object-name$="-file-icon"] {
+                            margin-right: 10px;
+                            padding: 0;
+
+                            svg {
+                                display: block;
+                                width: 15px;
+                                height: 14px;
+
+                                path {
+                                    stroke: none;
+                                    fill: #5B6173;
+                                }
+                            }
+                        }
+
+                        > [data-object-name$="-file-title"] {
+                            font-style: normal;
+                            font-weight: normal;
+                            font-size: 14px;
+                            height: 19px;
+                            color: #333333;
+                            margin: 0;
+                            padding: 0;
+                        }
+
+                        &:hover {
+                            > [data-object-name$="-file-icon"] svg path {
+                                stroke: none;
+                                fill: #FF6A00;
+                            }
+
+                            > [data-object-name$="-file-title"] {
+                                color: #FF6A00;
+                            }
+                        }
+                    }
+
+                    > [data-object-name$="-remove-icon"] {
+                        cursor: pointer;
+                        padding: 10px 15px;
+                        margin-left: auto;
+
+                        svg {
+                            display: block;
+                            width: 9px;
+                            height: 9px;
+
+                            path {
+                                stroke: #14151A;
+                                fill: #14151A;
+                            }
+                        }
+
+                        &:hover svg path {
+                            stroke: #FF6A00;
+                            fill: #FF6A00;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

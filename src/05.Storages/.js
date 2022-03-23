@@ -1,0 +1,4 @@
+
+Colibri.Storages = class {
+
+}

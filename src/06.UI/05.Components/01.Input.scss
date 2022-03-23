@@ -1,0 +1,87 @@
+.app-input-component {
+    width: 100%;
+
+    background: #FFFFFF;
+    border: 1px solid #D1D7E9;
+    box-sizing: border-box;
+    border-radius: 3px;
+
+    &.app-component-shown {
+        display: flex;
+    }
+    align-items: center;
+    justify-content: stretch;
+    padding: 5px 12px;
+
+    [data-object-name="icon"] {
+        &.app-component-shown {
+            display: block;
+        }
+        outline: none;
+        background: transparent;
+        border: 0;
+        flex: 0 0 12px;
+        width: 12px;
+        height: 12px;
+        padding: 0;
+        svg {
+            display: block;
+            width: 12px;
+            height: 12px;
+        }
+    }
+
+    [data-object-name=loadingicon] {
+        outline: none;
+        flex: 0 0 12px;
+        width: 12px;
+        height: 12px;
+        animation: 2s linear 0s infinite normal rotateInfiniteAnimation;
+        margin-right: 13px;
+
+        svg {
+            display: block;
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    input {
+        border: 0;
+        font-style: normal;
+        font-weight: normal;
+        line-height: 24px;
+        color: #435466;
+        flex: 1 1 calc(100% - 40px);
+        width: calc(100% - 40px);
+        outline: none;
+
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 20px;
+
+        &::placeholder {
+            color: #9DA5BE
+        }
+
+        padding: 0 5px;
+    }
+
+    [data-object-name=clear] {
+        outline: none;
+        background: transparent;
+        border: 0;
+        width: 14px;
+        height: 14px;
+        margin: 0;
+        padding: 0;
+        opacity: 0.5;
+        cursor: pointer;
+        margin-left: 10px;
+
+        svg {
+            margin: 0
+        }
+    }
+}

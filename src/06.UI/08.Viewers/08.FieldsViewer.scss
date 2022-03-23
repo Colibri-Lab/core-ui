@@ -1,0 +1,29 @@
+.app-fields-viewer-component {
+    
+    .app-field-pane {
+        padding: 0px 0px 10px 0px;
+
+        .app-field-title {
+
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 140%;
+            color: #5B6173;
+            padding-bottom: 5px;
+            &.app-component-shown {
+                display: block;
+            }
+
+        }
+        .app-field-container {
+            color: #14151A;
+            .app-field-pane {
+                padding-bottom: 0px;
+            }
+
+        }
+
+    }
+
+}

@@ -1,0 +1,235 @@
+.grid-container > div > button {
+    margin: 10px;
+}
+
+.app-ui-grid-container {
+    background-color: white;
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+    outline: none;
+
+    [data-object-name="app-ui-grid-content"] {
+        width: 100%;
+        outline: none;
+        
+        &.app-component-shown {
+            display: table;
+            table-layout: fixed;
+        }
+
+        [data-object-name="button-container-for-row-selection"] {
+            width: 40px;
+            left: 0;
+            vertical-align: middle;
+        }
+
+        .app-ui-grid-head {
+            background-color: white;
+
+            &.app-component-shown {
+                display: table-header-group;
+            }
+
+            [data-object-name="app-ui-header-columns"] {
+                background-color: inherit;
+
+                &.app-component-shown {
+                    display: table-row;
+                }
+
+                .app-ui-column {
+                    overflow: hidden;
+                    &.app-component-shown {
+                        display: table-cell;
+                    }
+
+                    color: #9DA5BE;
+                    vertical-align: middle;
+
+                    padding: 10px;
+                    margin: 10px;
+                    border-bottom: 1px solid #EAEBF1;
+                    background-color: inherit;
+                    top: 0;
+
+                    .resize-border {
+                        position: absolute;
+                        right: 0px;
+                        top: 0px;
+                        height: 60%;
+                        
+                        width: 5px; 
+                        cursor: e-resize;
+
+                        margin: 8px 0px 5px;
+                        &:after {
+                            content: '';
+                            background: #EAEBF1;
+                            width: 2px;
+                            margin-right: 2px;
+                            height: 100%;
+                            display: block;
+                        }
+
+                    }
+
+                }
+            }
+        }
+
+        .app-ui-grid-rows {
+            
+            &.app-component-shown {
+                display: table-row-group;
+            }
+
+            &.-closed {
+                .app-ui-rows-group {
+                    svg {
+                        transform: rotate(180deg);
+                    }
+                }
+                .app-ui-row {
+                    &.app-component-shown {
+                        display: none;
+                    }
+                }
+            }
+
+            .app-ui-rows-group {
+                &.app-component-shown {
+                    display: table-row;
+                }
+                background: #EDEFF5;
+                border-radius: 3px;
+                cursor: pointer;
+                td {
+                    &.app-component-shown {
+                        display: table-cell;
+                    }
+                    vertical-align: middle;
+                    padding: 5px 10px;
+                    span {
+                        font-style: normal;
+                        font-weight: 600;
+                        font-size: 14px;
+                        line-height: 14px;
+                    }
+                    [data-object-name$="rows-title-icon"] {
+                        margin-left: 10px;
+                    }
+                }
+            }
+
+            .app-ui-row {
+                &.app-component-shown {
+                    display: table-row;
+                }
+
+                &.app-component-hascontextmenu {
+                    .app-ui-row-cell:nth-last-child(-n+2) {
+                        .app-ui-row-cell-value-container, .app-editor-component {
+                            width: calc(100% - 20px);
+                        }
+                    }
+                }
+
+                &:hover {
+                    background: rgba(209, 215, 233, 0.15);
+                }
+
+                .app-contextmenu-icon-component {
+                    position: absolute;
+                    right: 0px;
+                    top: 0px;
+                    height: 100%;
+                }
+
+                background-color: inherit;
+
+                .app-ui-row-cell {
+                    color: #435466;
+
+                    &.app-component-shown {
+                        display: table-cell;
+                    }
+
+                    &.cell-active {
+                        background-color: #f2f4f9;
+                    }
+
+                    &.cell-selected {
+                        background-color: #DFEEFF;
+                    }
+
+                    padding: 10px;
+                    
+                    &.-editing {
+                        padding: 5px;                                
+                    }
+
+                    border-bottom: 1px solid #EAEBF1;
+                    background-color: inherit;
+
+                    &.input-checkbox-shown > .input-checkbox {
+                        display: block;
+                    }
+                }
+
+                &.row-active {
+                    background-color: #f2f4f9;
+                }
+
+                &.row-selected {
+                    background-color: #DFEEFF;
+                }
+            }
+        }
+
+        .position-sticky-y {
+            position: sticky;
+            z-index: 1;
+        }
+
+        .position-sticky-x {
+            position: sticky;
+            z-index: 1;
+        }
+
+        .position-sticky-y.position-sticky-x {
+            z-index: 2;
+        }
+    }
+
+    .app-ui-grid-footer {
+        background-color: #F6F7F9;
+        position: sticky;
+        bottom: 0;
+        left: 0;
+        z-index: 3;
+        height: 45px;
+        align-items: center;
+        padding-left: 10px;
+
+        &.app-component-shown {
+            display: flex;
+        }
+    }
+
+    [data-object-name="app-ui-grid-norows"] {
+        &.app-component-shown {
+            display: flex;
+        }
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+
+        font-style: normal;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 26px;
+        color: #9DA5BE;
+    }
+}

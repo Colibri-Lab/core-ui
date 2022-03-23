@@ -1,0 +1,82 @@
+
+@mixin custom-placeholder($color) {
+    &::-webkit-input-placeholder { /* Edge */
+        color: $color;
+    }
+    
+    &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+        color: $color;
+    }
+    
+    &::placeholder {
+        color: $color;
+    }
+}
+
+@mixin custom-scroll($width, $bc, $stc, $sthc) {
+    /* width */
+    &::-webkit-scrollbar {
+        width: $width;
+        height: $width;
+        border: 0px;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background: $bc;
+        border: 0px;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        background: $stc;
+        border: 0px;
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+        background: $sthc;
+        border: 0px;
+    }
+
+    scrollbar-color: $sthc $bc;
+    scrollbar-width: thin;
+
+    -ms-scrollbar-track-color: $bc;
+    -ms-scrollbar-face-color: $sthc;
+    
+}
+
+@keyframes rotateInfiniteAnimation { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+@mixin rotateInfinite {
+    animation: 2s linear 0s infinite normal rotateInfiniteAnimation;
+}
+
+@mixin rotateOnes($time) {
+    animation: $time linear 0s normal rotateInfiniteAnimation;
+}
+
+@mixin respond-to($width) {
+    @media only screen and (max-width: $width) {
+        @content;
+    }
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }   
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        opacity: 1;
+    }   
+    to {
+        opacity: 0;
+    }
+}

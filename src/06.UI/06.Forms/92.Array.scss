@@ -1,0 +1,29 @@
+.app-component-array-field {
+
+    [data-object-name="add-new"] {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 140%;
+        color: #0076E0;
+        cursor: pointer;
+    }
+
+    > [data-object-name$="-title"] {
+        color: #14151A;
+        font-weight: 600;
+        font-size: 20px;
+    }
+
+    .array-component-container {
+        .app-component-object-field {
+            margin-bottom: 0px;
+            &:only-child {
+                .app-component-remove-field {
+                    display: none;
+                }
+            }
+        }
+    }
+
+}

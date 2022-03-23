@@ -1,0 +1,19 @@
+.app-period-viewer-component {
+    &.strong {
+        font-weight: bold;
+    }
+    &.italic {
+        font-style: italic;
+    }
+    &.underline {
+        text-decoration: underline;
+    }
+    &.uppercase {
+        text-transform: uppercase;
+    }
+    &.inline {
+        &.app-component-shown {
+            display: inline;
+        }
+    }
+}

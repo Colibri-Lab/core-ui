@@ -1,0 +1,16 @@
+.app-read-unread-badge-component {
+    width: 8px;
+    height: 8px;
+    .app-component-shown {
+        display: block;
+    }
+
+    background: #2386FF;
+    border-radius: 50%;
+
+
+    &.app-is-read-component {
+        background: transparent;
+    }
+
+}

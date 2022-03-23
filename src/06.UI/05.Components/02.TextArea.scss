@@ -1,0 +1,43 @@
+.app-textarea-component {
+    width: 100%;
+
+    align-items: flex-start;
+    justify-content: stretch;
+    background: #ffffff;
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+
+    &.app-component-shown {
+        display: flex;
+    }
+
+    textarea {
+        border: 0;
+        font-style: normal;
+        font-weight: normal;
+        line-height: 24px;
+        color: #435466;
+        flex: 1 1;
+        outline: none;
+
+        &::placeholder {
+            color: #9DA5BE
+        }
+    }
+
+    [data-object-name=clear] {
+        outline: none;
+        background: transparent;
+        border: 0;
+        width: 14px;
+        height: 14px;
+        margin: 14px 14px 0 0;
+        padding: 0;
+        opacity: 0.5;
+        cursor: pointer;
+
+        svg {
+            margin: 0
+        }
+    }
+}

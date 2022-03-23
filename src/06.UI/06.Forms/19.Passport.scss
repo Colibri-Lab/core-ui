@@ -1,0 +1,60 @@
+.app-component-passport-field {
+	justify-content: flex-start;
+
+
+	[data-object-name$="-content"] > [data-object-name$="-container"] {
+		background: #ffffff;
+		border-radius: 3px;
+		overflow: hidden;
+		flex-direction: row;
+		width: 100%;
+		
+		.app-component-shown {
+			display: flex;
+		}
+
+		> div {
+
+			width: 70%;
+			&:first-child {
+				width: 30%;
+			}
+
+			span {
+				position: absolute;
+				z-index: 1;
+				height: 100%;
+				display: inline-flex;
+				align-items: center;
+				margin-left: 10px;
+			}
+
+			input {
+				width: 100%;
+				background-color: transparent;
+				border: 1px solid #d9dce3;
+				padding: 5px 12px;
+				font-style: normal;
+				font-weight: normal;
+				font-size: 14px;
+				line-height: 20px;
+				outline: none;
+				color: #000000;
+				&:-internal-autofill-selected {
+					background-color: transparent !important;
+					color: #000000 !important;
+					appearance: auto !important;
+				}
+			}
+
+			&:last-child {
+				input {
+					border-left: 0px;
+					padding-left: 30px;
+				}
+			}
+	
+		}
+
+	}
+}

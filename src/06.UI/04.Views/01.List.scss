@@ -1,0 +1,95 @@
+.app-component-list {
+    width: 100%;
+    border-bottom-left-radius: 3px;
+    overflow: auto;
+    scrollbar-color: #909090 #fff;
+    scrollbar-width: thin;
+    scrollbar-track-color: #fff;
+    scrollbar-face-color: #909090;
+    -ms-scrollbar-track-color: #fff;
+    -ms-scrollbar-face-color: #909090;
+    padding-bottom: 10px;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+        border: 0px
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #fff;
+        border: 0px
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #b5b5b5;
+        border: 0px
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: #909090;
+        border: 0px
+    }
+
+    .app-component-list-group {
+
+        //transition: height 500ms ease-in-out;
+        &.app-component-expandable {
+            cursor: pointer;
+            overflow: hidden;
+
+            > span {
+                &:after {
+                    content: '';
+                    display: inline-block;
+                    vertical-align: middle;
+                    width: 0;
+                    height: 0;
+                    border-style: solid;
+                    border-width: 4px 4.5px 0 4.5px;
+                    border-color: #000000 transparent transparent transparent;
+                    margin-left: 10px;
+                }
+            }
+        }
+
+        &.app-component-collapsed {
+            > span {
+                &:after {
+                    transform: rotate(180deg);
+                }
+            }
+
+            > div {
+                display: none;
+            }
+        }
+
+        > span {
+            user-select: none;
+            display: inline-block;
+            font-weight: 600;
+            font-size: 16px;
+            &:empty {
+                display: none;
+            }
+        }
+
+        > div {
+            padding: 10px 0px;
+        }
+
+        .app-component-list-item:not(.disable-default) {
+            cursor: pointer;
+            user-select: none;
+
+
+            border-bottom: 1px solid #EAEAEA;
+        
+            &:hover, &.app-component-selected {
+                background: #D6EEFF;
+            }
+
+        }
+    }
+}

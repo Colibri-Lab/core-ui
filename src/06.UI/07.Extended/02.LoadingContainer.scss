@@ -1,0 +1,67 @@
+.app-loading-container-component {
+
+    position: fixed;
+    z-index: 100502; 
+    top: 0; 
+    right: 0; 
+    bottom: 0; 
+    left: 0;
+    background: #ffffff;
+
+    align-items: center;
+    justify-content: center;
+
+    &.app-component-shown {
+        display: flex;
+    }
+
+    >div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: -4%;
+
+        .app-progress-bar-container-component {
+            margin-top: 24px;
+            width: 160px;
+            background: #D9DCE3;
+            border-radius: 5px;
+            height: 4px;
+            .app-progress-bar-progress-component {
+                height: 4px;
+                background: #1B9546;
+                border-radius: 5px;
+            }
+        }
+
+    }
+
+    .bo {
+        display: block;
+    }
+    .gbs {
+        display: none;
+    }
+
+    &.gbs-shader {
+        >div {
+            .app-progress-bar-container-component {
+               
+                .app-progress-bar-progress-component {
+                    background: #E21F27;
+                }
+            }
+    
+        }
+
+        .bo {
+            display: none;
+        }
+        .gbs {
+            display: block;
+        }
+    
+    }
+
+}

@@ -1,0 +1,6 @@
+.app-component-input-type-file {
+    cursor: pointer;
+    > input[type=file] {
+        display: none;
+    }
+}

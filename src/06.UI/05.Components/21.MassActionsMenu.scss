@@ -1,0 +1,72 @@
+@keyframes slideUp {
+    0% {
+        margin-bottom: -200px;
+    }
+    100% {
+        margin-bottom: 0px;
+    }
+}
+
+@keyframes slideDown {
+    0% {
+        margin-bottom: 0px;
+        opacity: 1;
+    }
+    100% {
+        margin-bottom: -200px;
+        display: none;
+        opacity: 0;
+    }
+}
+
+.app-mass-actions-menu-component {
+    overflow: hidden;
+    position: fixed;
+    bottom: 0;
+    display: flex;
+
+    border-top: 1px solid rgba(67, 84, 102, 0.1);
+    background: #ffffff;
+    padding: 20px 30px;
+    width: 100%;
+
+    justify-content: left;
+    align-items: center;
+
+    animation-name: slideDown;
+    animation-duration: 0.3s;
+    animation-iteration-count: 1;
+
+    &.app-component-shown {
+        display: flex;
+        animation-name: slideUp;
+        animation-duration: 0.3s;
+        animation-iteration-count: 1;
+    }
+
+    > [data-object-name$="-actions-container"] {
+        margin-right: 20px;
+        align-items: center;
+
+        &.app-component-shown {
+            display: flex;
+        }
+
+        > .app-mass-actions-menu-action-component {
+            margin-right: 10px;
+
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+
+    > [data-object-name$="-selected-counter"] {
+        color: #9DA5BE;
+        align-items: center;
+
+        &.app-component-shown {
+            display: flex;
+        }
+    }
+}

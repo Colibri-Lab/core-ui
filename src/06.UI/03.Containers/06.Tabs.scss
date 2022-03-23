@@ -1,0 +1,76 @@
+.app-tabs-container-component {
+    &.app-component-shown {
+        display: grid;
+    }
+
+    width: 100%;
+    height: 100%;
+
+    grid-template-rows: 40px calc(100% - 40px);
+
+    .tabs-header-container {
+        width: 100%;
+        display: flex;
+        align-items: stretch;
+        justify-content: flex-start;
+
+        border-bottom: 1px solid #C4C8D4;
+
+    }
+
+    .tabs-header {
+        display: flex;
+        align-items: stretch;
+        justify-content: flex-start;
+
+        > .app-component-button {
+            position: relative;
+
+            background: transparent;
+
+            font-style: normal;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 140%;
+            color: #2F323A;
+            margin: 0px 4px;
+            padding: 8px 4px;
+
+            border: 0px;
+            border-bottom: 2px solid transparent;
+            height: calc(100% + 1px);
+            
+
+            &:first-child {
+                margin-left: 0px;
+            }
+
+            &.tab-selected {
+                border-bottom: 2px solid #0076E0;
+                color: #0076E0;
+            }
+
+        }
+
+    }
+
+    .tabs-links {
+        padding-left: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .tabs-container {
+        flex: 1 1 100%;
+
+        padding-top: 20px;
+
+        > .app-ui-component {
+            width: 100%;
+            height: 100%;
+        }
+
+    }
+
+}

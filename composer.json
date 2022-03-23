@@ -1,0 +1,14 @@
+{
+    "name": "colibri/ui",
+    "description": "UI for Colibri Projects",
+    "type": "library",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Vahan P. Grigoryan",
+            "email": "vahan.grigoryan@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
