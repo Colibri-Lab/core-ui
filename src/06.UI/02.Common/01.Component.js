@@ -822,13 +822,15 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         if(!this._storage) {
             this._storage = App.Store;
         } 
+
+        const handler = data => this.isConnected && this.__renderBoundedValues(data);
         this._binding = value;
         this._storage.AsyncQuery(value).then(data => {
             this.__renderBoundedValues(data);
-            this._storage.AddPathHandler(value, data => this.__renderBoundedValues(data));
+            this._storage.AddPathHandler(value, [this, handler]);
         }).catch((response) => {
             this.__renderBoundedValues(null);
-            this._storage.AddPathHandler(value, data => this.__renderBoundedValues(data));
+            this._storage.AddPathHandler(value, [this, handler]);
         });
         
     }
@@ -876,6 +878,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * Удаляет компоненту
      */
     Dispose() {
+
+        this.Clear();
 
         if (this.parent) {
             this.parent.Children(this.name, null);

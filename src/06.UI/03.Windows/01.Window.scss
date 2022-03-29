@@ -40,6 +40,12 @@
             flex-direction: column;
             height: 100%;
         }
+
+        .tabs-header-container {
+            position: sticky;
+            top: 60px;
+            z-index: 1;
+        }
     
     
 
@@ -71,6 +77,7 @@
     }
 
     .app-component-window-content {
+        padding: 20px 30px;
         @include respond-to(500px) {
             width: 100% !important;
             height: 100%;
@@ -84,7 +91,7 @@
         bottom: 0;
         z-index: 2;
         background-color: #F6F7F9;
-        padding: 10px;
+        padding: 10px 30px;
         display: flex;
         overflow: hidden;
         border-bottom-left-radius: 10px;
@@ -103,6 +110,12 @@
             border-radius: 2px;
             margin: 0 5px;
         }
+
+        .app-component-button {
+            margin: 0 10px 0 0;
+            padding: 0px 10px;
+        }
+
     }
 
     button.s-close {

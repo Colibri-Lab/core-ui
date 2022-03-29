@@ -101,6 +101,11 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
                 let module = eval(controller.module);
                 lookupPromise = module.Call(controller.class, controller.method, {term: this._input._input.value, param: dependsValue, lookup: this._lookup});
             }
+            else if(this._lookup?.storage) {
+                let controller = this._lookup?.controller;
+                let module = eval(controller?.module);
+                lookupPromise = module.Call(controller.class, controller.method, {term: this._input._input.value, param: dependsValue, lookup: this._lookup});
+            }
             else {
                 lookupPromise = new Promise((resolve, reject) => { resolve({result: ''}); })
             }

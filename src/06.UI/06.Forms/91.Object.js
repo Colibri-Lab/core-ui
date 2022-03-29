@@ -102,10 +102,10 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
                     fieldValue = fieldValue?.value ?? fieldValue;
                     let conditionResult = true;
                     if(Array.isArray(condition.value)) {
-                        conditionResult = !fieldValue || condition.value.indexOf(fieldValue) !== -1;
+                        conditionResult = !fieldValue !== undefined || condition.value.indexOf(fieldValue) !== -1;
                     }
                     else {
-                        conditionResult = !fieldValue || fieldValue === condition.value;
+                        conditionResult = !fieldValue !== undefined || fieldValue === condition.value;
                     }
                     fieldComponent[type] = conditionResult;
                     if(!conditionResult && empty) {

@@ -1,12 +1,13 @@
 
 Colibri.UI.PopupList = class extends Colibri.UI.List {
 
-    constructor(name, container, multiple, __render, titleField = 'title') {
+    constructor(name, container, multiple, __render, titleField = 'title', valueField = 'value') {
         super(name, container, multiple);
         this.AddClass('app-component-popup-list-component');
 
         this.__renderElement = __render;
         this._titleField = titleField;
+        this._valueField = valueField;
 
         this.AddHandler('ShadowClicked', (event, args) => {
             this.Hide();
@@ -72,12 +73,12 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
             }
             selectedValues.forEach((val) => {
                 group.AddItem(val, null, true);
-                selectedKeys.push(String(val.value ?? val));
+                selectedKeys.push(String(val[this._valueField] ?? val));
             });
         }
 
         for(let val of values) {
-            if(selectedKeys.includes(String(val.value ?? val))) {
+            if(selectedKeys.includes(String(val[this._valueField] ?? val))) {
                 continue;
             }
             group.AddItem(val, null);

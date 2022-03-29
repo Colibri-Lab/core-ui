@@ -27,6 +27,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._valueField = valueField || 'value';
         this._default = defaultValue;
         this._values = values;
+        this._inprooveValues();
         this._value = [];
         this._placeholder = 'Ничего не выбрано';
 
@@ -48,6 +49,17 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._renderValue();
 
         this._handleEvents();
+    }
+
+    _inprooveValues() {
+        let v = [];
+        for(let vv of this._values) {
+            if(!(vv instanceof Object)) {
+                vv = {value: vv, title: vv};
+            }
+            v.push(vv);
+        }
+        this._values = v;
     }
 
     /**
@@ -249,6 +261,9 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         if(this._values) {
             const values = Object.values(this._values);
             for(let vv of values) {
+                if(!(vv instanceof Object)) {
+                    vv = {value: vv, title: vv}
+                }
                 if (vv[this._valueField] == value) {
                     foundValue = vv;
                     break;
@@ -415,7 +430,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     _createPopup(values) {
-        const popup = new Colibri.UI.PopupList('select-popup', this, this._multiple, this.__render, this._titleField);
+        const popup = new Colibri.UI.PopupList('select-popup', this, this._multiple, this.__render, this._titleField, this._valueField);
         popup.multiple = this._multiple;
         popup.parent = this;
 

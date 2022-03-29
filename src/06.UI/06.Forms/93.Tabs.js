@@ -93,22 +93,35 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
     _hideAndShow() {
 
         const data = this.value;
+        const formData = this.root.value;
 
         Object.forEach(this._fieldData.fields, (name, fieldData) => {
             const fieldComponent = this.contentContainer.Children(name);
             if(fieldComponent && fieldData.params && fieldData.params.condition) {
                 const condition = fieldData.params.condition;
-                if(condition.field) {
-                    const fieldValue = data[condition.field];
-                    if(fieldValue && fieldValue.value !== condition.value) {
-                        fieldComponent.shown = false;
+                if(condition.field) {        
+                    const type = condition?.type == 'disable' ? 'enabled' : 'shown';            
+                    const empty = condition?.empty || false;
+                    let fieldValue = eval('data?.' + condition.field.split('.').join('?.'));
+                    if(!fieldValue) {
+                        fieldValue = eval('formData?.' + condition.field.split('.').join('?.'));
+                    }
+                    fieldValue = fieldValue?.value ?? fieldValue;
+                    let conditionResult = true;
+                    if(Array.isArray(condition.value)) {
+                        conditionResult = !fieldValue !== undefined || condition.value.indexOf(fieldValue) !== -1;
                     }
                     else {
-                        fieldComponent.shown = true;
+                        conditionResult = !fieldValue !== undefined || fieldValue === condition.value;
+                    }
+                    fieldComponent[type] = conditionResult;
+                    if(!conditionResult && empty) {
+                        fieldComponent.value = null;  
                     }
                 }
                 else {
                     fieldComponent.shown = true;
+                    fieldComponent.enable = true;
                 }
             }
         });
@@ -117,6 +130,13 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
     Fields(name) {
         return this.contentContainer.Children(name);
+    }
+
+    set selectedIndex(value) {
+        this._tabs.selectedIndex = value;
+    }
+    get selectedIndex() {
+        return this._tabs.selectedIndex;
     }
 
 }

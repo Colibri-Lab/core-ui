@@ -96,14 +96,10 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this.note = this._fieldData.note;
 
         if(this._fieldData.attrs) {
-            /*Object.forEach(this._fieldData.attrs, (name, value) => {
-                this[name] = value;
-            });*/
             Object.assign(this, this._fieldData.attrs);
         }
 
         this.AddHandler(['Changed', 'KeyUp', 'KeyDown'], (event, args) => {
-            // bubble to form/object/array
             if(this._parentField) {
                 this._parentField.Dispatch(event.name, Object.assign({component: event.sender}, args));
             }

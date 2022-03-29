@@ -37,7 +37,12 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
 
     _showValue() {
 
-        const input = this._element.querySelector('input[name="' + this._value + '"]');
+        let value = this._value;
+        if(this._fieldData?.selector?.value && this._value instanceof Object) {
+            value = this._value[this._fieldData?.selector?.value];
+        }
+
+        const input = this._element.querySelector('input[value="' + value + '"]');
         if(input) {
             input.attr('checked', 'checked');
         }

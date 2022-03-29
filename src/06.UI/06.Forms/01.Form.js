@@ -6,6 +6,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         this.AddClass('app-form-component');
         this._fields = [];
         this._download = null;
+        this._value = {};
     }
 
     _registerEvents() {
@@ -37,10 +38,10 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                     fieldValue = fieldValue?.value ?? fieldValue;
                     let conditionResult = true;
                     if(Array.isArray(condition.value)) {
-                        conditionResult = !(fieldValue && condition.value.indexOf(fieldValue) === -1);
+                        conditionResult = !(fieldValue !== undefined && condition.value.indexOf(fieldValue) === -1);
                     }
                     else {
-                        conditionResult = !(fieldValue && fieldValue !== condition.value);
+                        conditionResult = !(fieldValue !== undefined && fieldValue !== condition.value);
                     }
                     fieldComponent[type] = conditionResult;
                     if(!conditionResult && empty) {
@@ -79,12 +80,13 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     set value(value) {
         //this.Clear();
         //this._renderFields(value);
+        this._value = Object.assign({}, value);
         if ([false, null, undefined].includes(value)) {
             this.ForEach((name, component) => component.value = null);
         }
         else {
             this.ForEach((name, component) => {
-                component.value = value[name] ?? component.field.default ?? null;
+                component.value = this._value[name] ?? component.field.default ?? null;
             });
         }
 
@@ -93,7 +95,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     }
 
     get value() {
-        let data = {};
+        let data = Object.assign({}, this._value);
         this.ForEach((name, component) => {
             data[name] = component.value;
         });

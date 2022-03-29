@@ -14,6 +14,7 @@
         font-size: 14px;
         line-height: 140%;
         color: #5B6173;   
+        font-weight: bold;
         display: block;     
         height: 32px;
         &:empty {
@@ -52,11 +53,12 @@
         }
 
         > [data-object-name$="-note"] {
+            display: block;
             width: 100%;
             font-style: normal;
             font-weight: normal;
-            font-size: 14px;
-            line-height: 20px; 
+            font-size: 12px;
+            line-height: 14px; 
             color: #7D859B;
             padding-top: 4px;
             &:empty {

@@ -84,6 +84,18 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
             return childStoreData.child.AddPathHandler(childStoreData.path, handler, prepend);
         }
 
+        let respondent = this;
+        if(Array.isArray(handler)) {
+            respondent = handler[0];
+            handler = handler[1];
+        }
+
+        if(respondent instanceof Colibri.UI.Component) {
+            respondent.AddHandler('ComponentDisposed', (event, args) => {
+                this.RemovePathHandler(path, respondent, handler);
+            });
+        }
+
         if (path instanceof Array) {
             path.forEach((p) => {
                 this.AddPathHandler(p, handler, prepend);
@@ -112,11 +124,10 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         return this;
     }
 
-    RemovePathHandler(path, handler) {
-        const handlerObject = { handler: handler, respondent: this };
+    RemovePathHandler(path, respondent, handler) {
         for (let i = 0; i < this._pathHandlers[path].length; i++) {
             const h = this._pathHandlers[path][i];
-            if (h.handler == handlerObject.handler && h.respondent == handlerObject.respondent) {
+            if (h.handler == handler && h.respondent == respondent) {
                 this._pathHandlers[path].splice(i, 1);
                 break;
             }
