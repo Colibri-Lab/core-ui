@@ -12,7 +12,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @param {string} element наименование тэга
      * @param {(Colibri.UI.Component|Element)} container - обьект в контейнере которого будет создан текущий компонент
      */
-    constructor(name, container, element) {
+     constructor(name, container, element) {
         super();
 
         /** @type {Colibri.UI.Component} */
@@ -183,6 +183,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.RegisterEvent('DragOver', false, 'Когда перетаскиваемый элемент находится над целевым объектом');
         this.RegisterEvent('DragLeave', false, 'Когда перетаскиваемый элемент покидает целевой объект');
         this.RegisterEvent('Drop', false, 'Когда перетаскиваемый элемент "упал" на целевой объект');
+        this.RegisterEvent('ContextMenu', false, 'Контекстное меню');
     }
 
     
@@ -249,54 +250,103 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         
 
     }
-    
+
+    static __domHandlers = {
+        Clicked: {
+            domEvent: 'click',
+        },
+        DoubleClicked: {
+            domEvent: 'dblclick',
+        },
+        MouseUp: {
+            domEvent: 'mouseup',
+        },
+        KeyDown: {
+            domEvent: 'keydown',
+        },
+        KeyUp: {
+            domEvent: 'keyup',
+        },
+        KeyPressed: {
+            domEvent: 'keypress',
+        },
+        ReceiveFocus: {
+            domEvent: 'focus',
+        },
+        LoosedFocus: {
+            domEvent: 'blur',
+        },
+        Pasted: {
+            domEvent: 'paste',
+            delay: 100,
+        },
+        DragOver: {
+            domEvent: 'dragover',
+        },
+        DragLeave: {
+            domEvent: 'dragleave',
+        },
+        Drop: {
+            domEvent: 'drop',
+        },
+        MouseDown: {
+            domEvent: 'mousedown',
+        },
+        ContextMenu: {
+            domEvent: 'contextmenu',
+        },
+        MouseMove: {
+            domEvent: 'mousemove',
+        },
+    };
+
+    __domHandlersAttached = {};
+
+    AddHandler(eventName, handler, prepend = false, respondent = this) {
+        const __domHandlers = Colibri.UI.Component.__domHandlers;
+        __domHandlers[eventName] && this.__bindHtmlEvent(eventName, __domHandlers[eventName]);
+
+        return super.AddHandler(eventName, handler, prepend, respondent);
+    }
+
+    __bindHtmlEvent(eventName, args) {
+        let {domEvent, respondent, delay, handler} = args;
+        handler ??= (e => this.Dispatch(eventName, {domEvent: e}));
+        respondent ??= this._element;
+
+        if(this.__domHandlersAttached[eventName]) {
+            return;
+        }
+
+        if(delay) {
+            handler = e => Colibri.Common.Delay(delay).then(() => handler(e))
+        }
+
+        this.__domHandlersAttached[eventName] = {
+            domEvent,
+            respondent,
+            handler
+        };
+
+        respondent.addEventListener(domEvent, handler);
+    }
+
     _bindHtmlEvents() {
+        /*for(let [name, h] of Object.entries(this.__domHandlers)) {
+            let _handlers = Array.isArray(h) ? h : [h];
 
-        this._element.addEventListener('click', (e) => this.Dispatch('Clicked', { domEvent: e }));
-        this._element.addEventListener('dblclick', (e) => this.Dispatch('DoubleClicked', { domEvent: e }));
-        this._element.addEventListener('mouseup', (e) => this.Dispatch('MouseUp', { domEvent: e }));
-        this._element.addEventListener('mousemove', (e) => this.Dispatch('MouseMove', { domEvent: e }));
-        this._element.addEventListener('keydown', (e) => this.Dispatch('KeyDown', { domEvent: e }));
-        this._element.addEventListener('keyup', (e) => this.Dispatch('KeyUp', { domEvent: e }));
-        this._element.addEventListener('keypress', (e) => this.Dispatch('KeyPressed', { domEvent: e }));
-        this._element.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', { domEvent: e }));
-        this._element.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', { domEvent: e }));
-        this._element.addEventListener('paste', (e) => Colibri.Common.Delay(100).then(() => this.Dispatch('Pasted', { domEvent: e })));
-        this._element.addEventListener('dragover', (e) => this.Dispatch('DragOver', { domEvent: e }));
-        this._element.addEventListener('dragleave', (e) => this.Dispatch('DragLeave', { domEvent: e }));
-        this._element.addEventListener('drop', (e) => this.Dispatch('Drop', { domEvent: e }));
+            _handlers.forEach((_handler) => {
+                (_handler.respondent ?? this._element).addEventListener(name, (_handler.handler ?? _handler));
+            });
+        }*/
+    }
 
-        window.addEventListener('resized', (e) => this.Dispatch('Resized', { domEvent: e }));
-        window.addEventListener('resize', (e) => this.Dispatch('Resize', { domEvent: e }));
+    __removeHtmlEvents() {
+        for(let {domEvent, respondent, handler} of Object.values(this.__domHandlersAttached)) {
+            (respondent !== this._element)  && respondent.removeEventListener(domEvent, handler);
+        }
 
-        this._element.addEventListener('mousedown', (e) => {
-            this.Dispatch('MouseDown', { domEvent: e });
-        });
-        this._element.addEventListener('contextmenu', (e) => {
-            if(this.hasContextMenu && this._getContextMenuIcon()) {
-                this.Dispatch('Clicked', { domEvent: e, isContextMenuEvent: true });
-                this._getContextMenuIcon().Dispatch('Clicked', { domEvent: e, isContextMenuEvent: true });
-                e.stopPropagation();
-                e.preventDefault();
-                return false;
-            }
-            return true;
-        })
-        this._element.addEventListener('mousemove', (e) => {
-            if(this._toolTip) {
-                const bounds = this._element.bounds();
-                const tip = this._element.querySelector(':scope > .tip');
-                tip.css({left: bounds.left + 'px', top: (bounds.top + bounds.height + 10).toFixed(2) + 'px', zIndex: Colibri.UI.zIndex()});
-            }
-        });
-
-        document.body.addEventListener('click', (e) => {
-            if(!this.ContainsElement(e.target)) {
-                this.Dispatch('ClickedOut', {domEvent: e});
-            }
-        });
-
-
+        this.__domHandlersAttached = {};
     }
 
     _registerEventHandlers() {
@@ -310,6 +360,18 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     set hasContextMenu(value) {
         this._hasContextMenu = value === 'true' || value === true || value === 1;
         if(this._hasContextMenu) {
+            if(!this.__domHandlersAttached['ContextMenu']) {
+                this.AddHandler('ContextMenu', (event, args) => {
+                    if(this.hasContextMenu && this._getContextMenuIcon()) {
+                        this.Dispatch('Clicked', { domEvent: args.domEvent, isContextMenuEvent: true });
+                        this._getContextMenuIcon().Dispatch('Clicked', { domEvent: args.domEvent, isContextMenuEvent: true });
+                        args.domEvent.stopPropagation();
+                        args.domEvent.preventDefault();
+                        return false;
+                    }
+                    return true;
+                });
+            }
             this._createContextMenuButton();
         }
         else {
@@ -378,7 +440,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             if(style.boxSizing == 'content-box') {
                 value -= (parseInt(style.paddingLeft) || 0) - (parseInt(style.paddingRight) || 0);
             }
-            this._element.css('width', (value) + 'px');    
+            this._element.css('width', (value) + 'px');
         }
     }
 
@@ -398,7 +460,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             const bounds = this._element.bounds();
             return bounds.outerHeight;
         }
-        
+
     }
     set height(value) {
         if(typeof value == 'string' && (value.indexOf('%') !== -1 || value.includes('calc'))) {
@@ -409,7 +471,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             if(style.boxSizing == 'content-box') {
                 value -= (parseInt(style.paddingTop) || 0) - (parseInt(style.paddingBottom) || 0);
             }
-            this._element.css('height', (value) + 'px');    
+            this._element.css('height', (value) + 'px');
         }
     }
 
@@ -613,6 +675,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         let tip = this._element.querySelector(':scope > .tip');
         if(this._toolTip) {
             if(!tip) {
+                this.AddHandler('MouseMove', (event, args) => {
+                    if(this._toolTip) {
+                        const bounds = this._element.bounds();
+                        const tip = this._element.querySelector(':scope > .tip');
+                        tip.css({left: bounds.left + 'px', top: (bounds.top + bounds.height + 10).toFixed(2) + 'px', zIndex: Colibri.UI.zIndex()});
+                    }
+                });
+
                 tip = Element.create('span', {class: 'tip'});
                 this._element.append(tip);
             }
@@ -823,13 +893,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             this._storage = App.Store;
         } 
 
-        const handler = data => this.isConnected && this.__renderBoundedValues(data);
+        const handler = data => this.isConnected && this.__renderBoundedValues(data)
+
         this._binding = value;
         this._storage.AsyncQuery(value).then(data => {
             this.__renderBoundedValues(data);
             this._storage.AddPathHandler(value, [this, handler]);
         }).catch((response) => {
-            this.__renderBoundedValues(null);
+            this.__renderBoundedValues(null, response);
             this._storage.AddPathHandler(value, [this, handler]);
         });
         
@@ -845,6 +916,35 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     set scrollTop(value) {
         this._element.scrollTop = value;
+    }
+
+    set handleClickedOut(value) {
+        if(value) {
+            this.__bindHtmlEvent('__ClickedOut', {
+                domEvent: 'click',
+                respondent: document.body,
+                handler: (e) => {
+                    if (!this.ContainsElement(e.target)) {
+                        this.Dispatch('ClickedOut', {domEvent: e});
+                    }
+                }
+            });
+        }
+    }
+
+    set handleResize(value) {
+        if(value) {
+            this.__bindHtmlEvent('__Resized', {
+                domEvent: 'resized',
+                respondent: window,
+                handler: (e) => this.Dispatch('Resized', {domEvent: e})
+            });
+            this.__bindHtmlEvent('__Resize', {
+                domEvent: 'resize',
+                respondent: window,
+                handler: (e) => this.Dispatch('Resize', {domEvent: e})
+            });
+        }
     }
 
     ConnectTo(container) {
@@ -884,11 +984,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         if (this.parent) {
             this.parent.Children(this.name, null);
         }
-
+        this.__removeHtmlEvents();
         this._element.remove();
         this.Dispatch('ComponentDisposed');
-
-        // Удалить дочерние
 
     }
 
@@ -1022,5 +1120,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     Hide() {
         this.shown = false;
     }
+
 
 }

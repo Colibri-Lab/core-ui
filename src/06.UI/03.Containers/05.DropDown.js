@@ -4,6 +4,8 @@ Colibri.UI.DropDown = class extends Colibri.UI.Component {
         super(name, container);
         this.AddClass('app-dropdown-component');
 
+        this.handleClickedOut = true;
+
         this._search = new Colibri.UI.Input('search', this);
         this._list = new Colibri.UI.List('list', this);
         this._list.__renderItemContent = this.__renderItemContent;

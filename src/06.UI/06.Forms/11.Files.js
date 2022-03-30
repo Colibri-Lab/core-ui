@@ -63,19 +63,19 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
             });
         }
         else {
-            
+
             this._input.AddHandler('InputFileChanged', (event, args) => {
                 this._files.shown = true;
                 this.lastValue = this.value;
                 this.value = this._input.Files();
-    
-                if(this._fieldData.params && this._fieldData.params.more) {
+
+                if (this._fieldData.params && this._fieldData.params.more) {
                     this._input.title = this._fieldData.params.more;
                     this._input.AddClass('-full');
                 }
-    
+
                 this.Dispatch('Changed', args);
-    
+
             });
         }
     }
@@ -87,26 +87,37 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
     _renderFilesList() {
         this._files = new Colibri.UI.List('list', this.contentContainer);
         this._filesGroup = this._files.AddGroup('group', '');
-
         this._files.__renderItemContent = (itemData, container) => {
+            const picture = new Colibri.UI.Image('picture', container);
             const icon = new Colibri.UI.Icon('icon', container);
             const filename = new Colibri.UI.TextSpan('span', container);
             let sign = null;
-            if(this._fieldData?.params?.canbesigned) {
-                sign = new Colibri.UI.TextSpan('sign', container);                
+            if (this._fieldData?.params?.canbesigned) {
+                sign = new Colibri.UI.TextSpan('sign', container);
             }
             const deleteIcon = new Colibri.UI.TextSpan('delete', container);
 
 
             filename.AddClass('files-file-name');
-            icon.shown = filename.shown = deleteIcon.shown = true;
-            if(sign) {
+
+            if (itemData.file.type.match('image.*')) {
+                picture.shown = filename.shown = deleteIcon.shown = true;
+                picture.image = itemData.file;
+                picture.width = picture.height = 40;
+                
+            } else {
+                icon.shown = filename.shown = deleteIcon.shown = true;
+                icon.value = Colibri.UI.FileLinkIcon;
+                deleteIcon.value = Colibri.UI.ClearIcon;
+            }
+
+            if (sign) {
                 sign.shown = true;
             }
-            icon.value = Colibri.UI.FileLinkIcon;
+
             deleteIcon.value = Colibri.UI.ClearIcon;
 
-            if(sign) {
+            if (sign) {
                 sign.value = 'Подписать';
             }
 
@@ -117,9 +128,9 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
                         this.lastValue = value;
                         args.removed = itemData.file || null;
                         event.sender.parent.Dispose();
-                        if(this._filesGroup.children == 0) {
+                        if (this._filesGroup.children == 0) {
                             this._files.shown = false;
-                            if(this._fieldData.params && this._fieldData.params.button) {
+                            if (this._fieldData.params && this._fieldData.params.button) {
                                 this._input.title = this._fieldData.params.button;
                                 this._input.RemoveClass('-full');
                             }
@@ -127,12 +138,12 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
                         this.Dispatch('Changed', args);
                     };
 
-                if(delParams) {
-                    const dialog = new Colibri.UI.ConfirmDialog(this.name +'-confirm-delete-dialog', document.body);
+                if (delParams) {
+                    const dialog = new Colibri.UI.ConfirmDialog(this.name + '-confirm-delete-dialog', document.body);
                     dialog.Show(delParams.title, delParams.message.replace(/{([^{}]+)}/g, (keyExpr, key) => {
                         return itemData.file[key] || "";
                     }), delParams.button ?? 'Удалить', (result) => {
-                        if(result === true) {
+                        if (result === true) {
                             delAction.call(this);
                         }
                     });
@@ -158,7 +169,6 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
                 args.domEvent?.stopPropagation();
                 return false;
             });
-
             filename.value = itemData.title;
         }
     }
@@ -168,6 +178,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
      * @private
      */
     _renderInput() {
+        console.log('inside render input');
         if (!this._dropAreaEnabled) {
             this._input = new Colibri.UI.Input.File('input', this.contentContainer);
             this.AddClass('-input-file-enabled');
@@ -180,7 +191,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
 
         this._input.shown = true;
         this._input.multiple = true;
-        if(this._fieldData.params?.button) {
+        if (this._fieldData.params?.button) {
             this._input.title = this._fieldData.params.button;
         }
         this._delDialog = this._fieldData.params?.deletedialog ?? false;
@@ -226,11 +237,11 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
             extensionsString.push(extensions.join(', '));
         }
 
-        if(this._maxCount) {
+        if (this._maxCount) {
             extensionsString.push('до ' + this._maxCount + ' файлов');
         }
 
-        if(this._maxFileSize) {
+        if (this._maxFileSize) {
             extensionsString.push('не больше ' + (this._maxFileSize + 0).toSizeString(['байт', 'Кб', 'Мб'], 1024, true) + ' каждый');
         }
 
@@ -266,7 +277,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
                     this._validated = false;
 
                     validatedList.splice(index, 1);
-                    this._errorMessages.push('Файл '+ file.name +' слишком большой');
+                    this._errorMessages.push('Файл ' + file.name + ' слишком большой');
                 }
             });
         }
@@ -302,19 +313,19 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
     }
 
     _itemClicked(value) {
-        if(value.file instanceof File) {
+        if (value.file instanceof File) {
             value.file.download();
         }
-        else if(this._fieldData.params?.download && value.file?.guid) {
+        else if (this._fieldData.params?.download && value.file?.guid) {
             window.open((window.rpchandler ?? '') + this._fieldData.params.download + '?guid=' + value.file.guid);
         }
     }
 
     Rollback() {
-        if(this.lastValue !== undefined) {
+        if (this.lastValue !== undefined) {
             this._filesGroup.Clear();
             this.value = this.lastValue;
-            if(this._filesGroup.children && !(this._filesGroup.Children('lastChild').value instanceof File)) {
+            if (this._filesGroup.children && !(this._filesGroup.Children('lastChild').value instanceof File)) {
                 this._input._input.value = null;
                 this._input._inputFiles.pop();
             }
@@ -368,10 +379,10 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         return ret;
     }
     _setValue(value) {
-        value.forEach((file) => {
+        value.forEach && value.forEach((file) => {
             const item = {title: file.name, file: file};
             this._filesGroup.AddItem(item);
-            if(!this._files.shown) {
+            if (!this._files.shown) {
                 this._files.shown = true;
             }
         });

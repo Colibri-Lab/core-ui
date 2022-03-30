@@ -1,5 +1,11 @@
 .app-component-image {
-  background-size: contain;
-  background-repeat: no-repeat;
-  
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center center;
+	margin-right: 8px;
+	margin-left: 8px;
+	vertical-align: middle;
+	&.app-component-shown {
+		display: inline-block;
+	}
 }
