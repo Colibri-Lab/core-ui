@@ -13,6 +13,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         // });
 
         this._value = null;
+        this._valueData = null;
         this._maxCount = 1;
         this._allowedExtensions = null;
         this._maxFileSize = null;
@@ -34,7 +35,19 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         this._handleEvents();
     }
 
+    _clicked(value) {
+        if (this._value instanceof File) {
+            this._value.download();
+        }
+        else if (this._fieldData.params?.download && value.file?.guid) {
+            window.open((window.rpchandler ?? '') + this._fieldData.params.download + '?guid=' + this._value.guid);
+        }
+    }
+
     _handleEvents() {
+
+        this.AddHandler('Clicked', (event, args) => this._clicked(args));
+
         this._input.AddHandler('InputFileChanged', (event, args) => {
             this._value = this._input.Files();
             this.Dispatch('Changed', args);
@@ -85,7 +98,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
 
             this._fileTitleContainer._fileIcon = new Colibri.UI.Icon(this._name + '-file-icon', this._fileTitleContainer);
             this._fileTitleContainer._fileIcon.value = Colibri.UI.FileLinkIcon;
-
+            this._fileTitleContainer._filePicture = new Colibri.UI.Image(this._name + '-file-image', this._fileTitleContainer);
             this._fileTitleContainer._fileTitle = new Colibri.UI.TextSpan(this._name + '-file-title', this._fileTitleContainer);
 
             this._removeButton = new Colibri.UI.Icon(this._name + '-remove-icon', this._inputFileContainer);
@@ -94,7 +107,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
 
         this._input.shown = true;
         this._input.multiple = false;
-        if(this._fieldData.params && this._fieldData.params.button) {
+        if (this._fieldData.params && this._fieldData.params.button) {
             this._input.title = this._fieldData.params.button;
         }
     }
@@ -106,6 +119,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
     _showFile() {
         if (this._dropAreaEnabled && this._value) {
             let file = this._value;
+            const picture = this._fileTitleContainer._filePicture;
             this.AddClass('-file-chosen');
             this._input.shown = false;
 
@@ -113,7 +127,16 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
 
             this._inputFileContainer.shown = true;
             this._fileTitleContainer.shown = true;
-            this._fileTitleContainer._fileIcon.shown = true;
+
+            if (file.type.match('image.*')) {
+                picture.shown = true;
+                picture.image = file;
+                picture.width = picture.height = 40;
+                this._fileTitleContainer._fileIcon.shown = false;
+            } else {
+                this._fileTitleContainer._fileIcon.shown = true;
+                this._fileTitleContainer._filePicture.shown = false;
+            }
             this._fileTitleContainer._fileTitle.shown = true;
             this._removeButton.shown = true;
         }
@@ -176,7 +199,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
 
         if (this._maxCount && (filesList.length > this._maxCount)) {
             error = true;
-            this._errorMessage = 'Можно выбрать не более '+this._maxCount;
+            this._errorMessage = 'Можно выбрать не более ' + this._maxCount;
         }
 
         if (!error && this._allowedExtensions) {
@@ -191,7 +214,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
 
             if (!extensions.includes(ext)) {
                 error = true;
-                this._errorMessage = 'Недопустимый формат файла ('+ this._extensionsToString() +')';
+                this._errorMessage = 'Недопустимый формат файла (' + this._extensionsToString() + ')';
             }
         }
 
@@ -240,7 +263,21 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         return this._value;
     }
     set value(value) {
-        this._value = value;
+        if(value instanceof File) {
+            this._value = value;
+            this._showFile();
+        }
+        else if(value.guid) {
+            Colibri.IO.Request.Get('/file.stream', {storage: value.storage, field: value.field, guid: value.guid}).then((response) => {
+                if(response.status == 200) {
+                    value.data = response.result;
+                    this._valueData = value;
+                    this._value = Base2File(value.data, value.name, value.mimetype);
+                    this._showFile();
+                }
+            });
+        }
+
     }
 
     set download(value) {

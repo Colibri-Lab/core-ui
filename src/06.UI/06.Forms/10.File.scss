@@ -62,8 +62,14 @@
                             display: flex;
                         }
 
-                        > [data-object-name$="-file-icon"] {
+                        > [data-object-name$="-file-image"] {
+                            width: 30px;
+                            height: 100%;
+                        }
+
+                        > [data-object-name$="-file-icon"], > [data-object-name$="-file-image"] {
                             margin-right: 10px;
+                            margin-left: 0;
                             padding: 0;
 
                             svg {
@@ -82,10 +88,10 @@
                             font-style: normal;
                             font-weight: normal;
                             font-size: 14px;
-                            height: 19px;
                             color: #333333;
                             margin: 0;
                             padding: 0;
+                            cursor: pointer;
                         }
 
                         &:hover {
