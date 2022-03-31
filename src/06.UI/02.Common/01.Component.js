@@ -978,7 +978,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * Удаляет компоненту
      */
     Dispose() {
-
         this.Clear();
 
         if (this.parent) {
@@ -987,6 +986,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.__removeHtmlEvents();
         this._element.remove();
         this.Dispatch('ComponentDisposed');
+
+        super.Dispose();
 
     }
 

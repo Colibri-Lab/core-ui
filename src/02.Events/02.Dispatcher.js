@@ -130,5 +130,10 @@ Colibri.Events.Dispatcher = class {
         return true;
     }
 
+    Dispose() {
+        this.__events = {};
+        this.__handlers = {};
+    }
+
 
 }
