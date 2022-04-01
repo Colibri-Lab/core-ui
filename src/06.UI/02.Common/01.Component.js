@@ -906,6 +906,15 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         
     }
 
+    ReloadBinding() {
+        this._storage.AsyncQuery(this._binding).then((data) => {
+            if(this.__renderBoundedValues) {
+                this.__renderBoundedValues(data);
+            }
+        });
+    }
+
+
     get isConnected() {
         return this._element.isConnected;
     }
@@ -957,13 +966,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._container = null;
     }
 
-    ReloadBinding() {
-        this._storage.AsyncQuery(this._binding).then((data) => {
-            if(this.__renderBoundedValues) {
-                this.__renderBoundedValues(data);
-            }
-        });
-    }
 
     /**
      * Очищает дочерние компоненты

@@ -1,6 +1,6 @@
 Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
-    constructor(name, data, parent) {
+    constructor(name, data = {}, parent = null) {
         super('Store');
 
         this._name = name;
@@ -52,6 +52,10 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         }
 
         let data = this._data;
+        if(!data) {
+            return null;
+        }
+
         while(p.length > 0) {
             first = p.shift();
             if(data[first] !== undefined) {
@@ -78,6 +82,9 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
     }
 
     AddPathHandler(path, handler, prepend) {
+
+        let data = this._parsePathIfHasParam(path);
+        path = data[0];
 
         const childStoreData = this.GetChild(path);
         if(childStoreData) {
@@ -197,8 +204,8 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         loader.loading = true;
         try {
             let response = await loader.loader(param);
-            this.Set(path + (param ? '.' + param : ''), response.result, nodispatch);
-            return response.result;    
+            this.Set(path, response.result, nodispatch);
+            return param ? response.result[param] : response.result;    
         }
         finally {
             loader.loading = false;
@@ -215,6 +222,12 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @returns {object}
      */
     async AsyncQuery(path, param = null) {
+
+        let data = this._parsePathIfHasParam(path);
+        if(data[1]) {
+            path = data[0];
+            param = data[1];
+        }
 
         const res = this.Query(path + (param ? '.' + param : ''));
         if((res instanceof Object && Object.countKeys(res) > 0) || (Array.isArray(res) && res.length > 0)) {
@@ -233,7 +246,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         }
 
         let data = this._data;
-        if (p.length === 0) {
+        if (!data || p.length === 0) {
             return data;
         }
 
@@ -290,6 +303,14 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         }
         return this;
 
+    }
+
+    _parsePathIfHasParam(path) {
+        if(path.indexOf('(') === -1) {
+            return [path, null];
+        }
+        path = path.replaceAll(')', '');
+        return path.split('(');
     }
 
 }

@@ -48,7 +48,6 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
 
         this._actions = new Colibri.Common.HashActions(); 
-        this._storage = new Colibri.Storages.Storage('app', {});
         this._store = new Colibri.Storages.Store('app', {});
         this._request = new Colibri.Web.Request();
         this._router = new Colibri.Web.Router(Colibri.Web.Router.RouteOnHash);

@@ -25,7 +25,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         this.GenerateChildren(element, this._content);
 
         if (title === undefined) {
-            this._element.querySelector('.app-component-window-title').style.display = 'none';
+            this._element.querySelector('.app-component-window-title').hideElement();
         }
 
         let closeButtonContainer = this._element.querySelector('.close-button');
@@ -133,6 +133,12 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
     set title(value) {
         this._element.querySelector('.app-component-window-title > span').innerHTML = value;
+        if(!value) {
+            this._element.querySelector('.app-component-window-title').hideElement();
+        }
+        else {
+            this._element.querySelector('.app-component-window-title').showElement();
+        }
     }
 
     get closable() {

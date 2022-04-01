@@ -130,6 +130,10 @@ Colibri.Events.Dispatcher = class {
         return true;
     }
 
+    ClearHandlers() {
+        this.__handlers = {};
+    }
+
     Dispose() {
         this.__events = {};
         this.__handlers = {};
