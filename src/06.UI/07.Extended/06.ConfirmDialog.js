@@ -6,15 +6,7 @@ Colibri.UI.ConfirmDialog = class extends Colibri.UI.Window {
 
         this._callback = null;
 
-        this.Children('btn-save').AddHandler('Clicked', (event, args) => {
-            this._callback && this._callback.apply(this, [true]);
-            this.Hide();
-        });
-
-        this.Children('btn-cancel').AddHandler('Clicked', (event, args) => {
-            this._callback && this._callback.apply(this, [false]);
-            this.Hide();
-        });
+        
 
 
     }
@@ -23,12 +15,28 @@ Colibri.UI.ConfirmDialog = class extends Colibri.UI.Window {
      * Показывает диалог
      * @param {Function(dialogResult)} callback результат диалога, true - да, false - нет 
      */
-    Show(title, message, button, callback) {
-        this.title = title;
-        this.Children('message').value = message;
-        this.Children('btn-save').value = button || 'Продолжить';
-        this._callback = callback;
-        super.Show();
+    Show(title, message, button) {
+    
+        return new Promise((resolve, reject) => {
+            this.title = title;
+            this.Children('message').value = message;
+            this.Children('btn-save').value = button || 'Продолжить';
+            super.Show();
+
+            this.Children('btn-save').ClearHandlers();
+            this.Children('btn-save').AddHandler('Clicked', (event, args) => {
+                resolve();
+                this.Hide();
+            });
+    
+            this.Children('btn-cancel').ClearHandlers();
+            this.Children('btn-cancel').AddHandler('Clicked', (event, args) => {
+                reject();
+                this.Hide();
+            });
+
+        });
+
     }
 
 }

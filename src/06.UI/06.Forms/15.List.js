@@ -61,3 +61,4 @@ Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
         this._list.tabIndex = value === true ? Colibri.UI.tabIndex++ : value;
     }
 }
+Colibri.UI.Forms.Field.RegisterFieldComponent('List', 'Colibri.UI.Forms.List', 'Список')

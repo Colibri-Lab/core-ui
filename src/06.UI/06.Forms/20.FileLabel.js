@@ -61,3 +61,4 @@ Colibri.UI.Forms.FileLabel = class extends Colibri.UI.Forms.Field {
     
 
 }
+Colibri.UI.Forms.Field.RegisterFieldComponent('FileLabel', 'Colibri.UI.Forms.FileLabel', 'Ссылка на файл')

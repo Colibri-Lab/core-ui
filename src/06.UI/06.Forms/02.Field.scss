@@ -76,13 +76,11 @@
         position: absolute;
         right: 0px;
         top: 0px;
-        margin-top: -14px;
+        margin-top: 10px;
         cursor: pointer;
-    }
-
-    &.app-field-vertical {
-        .app-component-remove-field {
-            margin-top: 14px;
+        svg {
+            width: 14px;
+            height: 14px;
         }
     }
 

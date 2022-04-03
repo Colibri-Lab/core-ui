@@ -60,7 +60,8 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     set value(value) {
         if(value && !(value instanceof Object)) {
-            throw new Error('Передайте обьект')
+            // throw new Error('Передайте обьект')
+            return;
         }
 
         value && Object.forEach(value, (name, v) => {
@@ -126,3 +127,4 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
     }
 
 }
+Colibri.UI.Forms.Field.RegisterFieldComponent('Object', 'Colibri.UI.Forms.Object', 'Обьект с полями')

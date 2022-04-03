@@ -10,7 +10,6 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         this._nodes = new Colibri.UI.TreeNodes('nodes', this);
         this._nodes.tree = this;
         this.AddClass('app-ui-tree-component');
-        this.Show();
 
         this._handleEvents();
     }
@@ -69,12 +68,48 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         return this._allNodes;
     }
 
+    FindNode(name) {
+        let found = null;
+        this._allNodes.forEach((node) => {
+            if(node.name == name) {
+                found = node;
+                return false;
+            }
+            return true;
+        });
+        return found;
+    }
+
     _createContextMenuButton() {
-        // Do nothing
+        if(!this._hasContextMenu || this.Children(this._name + '-contextmenu-icon-parent')) {
+            return;
+        }
+
+
+        this.AddClass('app-component-hascontextmenu');
+
+        const contextMenuParent = new Colibri.UI.Pane(this._name + '-contextmenu-icon-parent', this);
+        contextMenuParent.parent = this;
+        contextMenuParent.AddClass('app-contextmenu-icon-component');
+        contextMenuParent.shown = true;
+        this.Children(this._name + '-contextmenu-icon-parent', contextMenuParent);
+
+        const contextMenuIcon = new Colibri.UI.Icon(this._name + '-contextmenu-icon', contextMenuParent);
+        contextMenuIcon.shown = true;
+        contextMenuIcon.value = Colibri.UI.ContextMenuIcon;
+        contextMenuIcon.AddHandler('Clicked', (event, args) => this.Dispatch('ContextMenuIconClicked', args));    
+
+        this.AddHandler('Scrolled', (event, args) => {
+            contextMenuParent.container.css('bottom', (-1 * this.scrollTop) + 'px');
+        }); 
+
     }
 
     _removeContextMenuButton() {
-        // Do nothing
+        if(this._hasContextMenu && this.Children(this._name + '-contextmenu-icon-parent')) {
+            this.Children(this._name + '-contextmenu-icon-parent').Dispose();
+            this.RemoveClass('app-component-hascontextmenu');
+        }
     }
 
 }
@@ -116,7 +151,7 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
             const contextMenuIcon = new Colibri.UI.Icon(this._name + '-contextmenu-icon', contextMenuParent);
             contextMenuIcon.shown = true;
             contextMenuIcon.value = Colibri.UI.ContextMenuIcon;
-            contextMenuIcon.AddHandler('Clicked', (event, args) => this.Dispatch('ContextMenuIconClicked', args));    
+            contextMenuIcon.AddHandler('Clicked', (event, args) => this.parent.tree.Dispatch('ContextMenuIconClicked', Object.assign({item: this}, args)));    
         }
         
     }
@@ -198,13 +233,11 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
     }
 
     get icon() {
-        return this._element.querySelector('div em.icon').classList.item(1);
+        return this._element.querySelector('div em.icon').html();
     }
 
     set icon(value) {
-        const oldIcon = this.icon;
-        this._element.querySelector('div em.icon').classList.remove(oldIcon);
-        this._element.querySelector('div em.icon').classList.add(value);
+        this._element.querySelector('div em.icon').html(value);
     }
 
     get selected() {

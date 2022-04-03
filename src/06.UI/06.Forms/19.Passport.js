@@ -156,5 +156,6 @@ Colibri.UI.Forms.Passport = class extends Colibri.UI.Forms.Field {
 	}
 
 }
+Colibri.UI.Forms.Field.RegisterFieldComponent('Passport', 'Colibri.UI.Forms.Passport', 'Паспорт')
 
 

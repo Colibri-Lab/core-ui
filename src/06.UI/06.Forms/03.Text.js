@@ -1,3 +1,4 @@
+
 Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
 
     RenderFieldContainer() {
@@ -113,3 +114,4 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
 
 
 }
+Colibri.UI.Forms.Field.RegisterFieldComponent('Text', 'Colibri.UI.Forms.Text', 'Текст');

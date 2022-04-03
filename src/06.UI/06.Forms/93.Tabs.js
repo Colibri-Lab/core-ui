@@ -80,7 +80,8 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
     set value(value) {
         if(value && !(value instanceof Object)) {
-            throw new Error('Передайте обьект')
+            // throw new Error('Передайте обьект')
+            return;
         }
 
         value && Object.forEach(value, (name, v) => {
@@ -140,3 +141,4 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
     }
 
 }
+Colibri.UI.Forms.Field.RegisterFieldComponent('Tabs', 'Colibri.UI.Forms.Tabs', 'Вкладки')

@@ -11,14 +11,17 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
         this._addNew();
 
-        new Colibri.UI.Link('add-new', contentContainer);
+        this._createAddNewLink();
 
-        contentContainer.Children('add-new').value = this._fieldData.params && this._fieldData.params.addlink || 'Добавить еще «' + (this._fieldData.desc) + '»';
-        contentContainer.Children('add-new').shown = true;
-        contentContainer.Children('add-new').AddHandler('Clicked', (event, args) => {
+    }
+
+    _createAddNewLink() {
+        const link = new Colibri.UI.Link('add-new', this.contentContainer);
+        link.value = this._fieldData.params && this._fieldData.params.addlink || 'Добавить еще «' + (this._fieldData.desc) + '»';
+        link.shown = true;
+        link.AddHandler('Clicked', (event, args) => {
             this._addNew();
         });
-
     }
 
     _addNew() {
@@ -27,7 +30,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         object.parent = this.contentContainer;
         object.shown = true;
         object.title = '';
-        object.AddRemoveLink('удалить');
+        object.AddRemoveLink();
         object.AddHandler('Changed', (event, args) => this.Dispatch('Changed', args));
         this.contentContainer.Children(object.name, object);
         this.Dispatch('FieldsRendered');
@@ -69,14 +72,16 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
     set value(value) {
         if(value && !Array.isArray(value)) {
-            throw new Error('Передайте массив')
+            // throw new Error('Передайте массив')
+            return;
         }
 
-        this.contentContainer.Clear()
+        this.contentContainer.Clear();
         value && value.forEach((v) => {
             const object = this._addNew();
             object.value = v;
         });
+        this._createAddNewLink();
 
     }
 
@@ -108,3 +113,4 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     
 
 }
+Colibri.UI.Forms.Field.RegisterFieldComponent('Array', 'Colibri.UI.Forms.Array', 'Массив обьектов')

@@ -76,3 +76,4 @@ Colibri.UI.Forms.Checkbox = class extends Colibri.UI.Forms.Field {
         }
     }
 }
+Colibri.UI.Forms.Field.RegisterFieldComponent('Checkbox', 'Colibri.UI.Forms.Checkbox', 'Чекбокс')

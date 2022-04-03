@@ -14,12 +14,18 @@
         > [data-object-name$="-content"] > [data-object-name$="-container"] {
             padding-top: 10px;
             flex-wrap: wrap;
+            >.app-component-field {
+                margin-bottom: 10px;
+            }
         }
 
     }
     &.app-field-wrap {
         > [data-object-name$="-content"] > [data-object-name$="-container"] {
             flex-wrap: wrap;
+            > .app-component-field {
+                padding-bottom: 7px;
+            }
         }
     }
     

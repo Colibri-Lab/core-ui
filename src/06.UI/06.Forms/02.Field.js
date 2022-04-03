@@ -1,5 +1,13 @@
 Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
+    static Components = {};
+    static RegisterFieldComponent(name, className, description) {
+        Colibri.UI.Forms.Field.Components[name] = {className, description};
+    }
+    static UnregisterFieldComponent(name) {
+        delete Colibri.UI.Forms.Field.Components[name];
+    }
+
     static Create(name, container, field, parent, root = null) {
 
         if(!field.component && !field.type) {
@@ -33,11 +41,8 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
                 }
                 else {
                     component = 'Array';
-                }
-                
+                }   
             }
-
-
         }
 
         if(!component) {
@@ -117,10 +122,10 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
     
     AddRemoveLink(text) {
-        const removeLink = new Colibri.UI.TextSpan(this._name + '-remove', this);
+        const removeLink = new Colibri.UI.Icon(this._name + '-remove', this);
         removeLink.AddClass('app-component-remove-field')
         removeLink.shown = true;
-        removeLink.value = text;
+        removeLink.value = Colibri.UI.CloseIcon;
         removeLink.AddHandler('Clicked', (event, args) => {
             this.Dispose();
         });

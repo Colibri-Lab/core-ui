@@ -87,3 +87,4 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
         }
     }
 }
+Colibri.UI.Forms.Field.RegisterFieldComponent('Period', 'Colibri.UI.Forms.Period', 'Период')

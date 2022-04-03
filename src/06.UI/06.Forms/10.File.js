@@ -332,3 +332,4 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         }
     }
 }
+Colibri.UI.Forms.Field.RegisterFieldComponent('File', 'Colibri.UI.Forms.File', 'Файл')

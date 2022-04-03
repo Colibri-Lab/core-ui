@@ -75,7 +75,10 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
             });
         }
 
-        if (typeof this._lookup == 'function') {
+        if (typeof this._lookup == 'function' || typeof this._lookup == 'string') {
+            if(typeof this._lookup == 'string') {
+                this._lookup = eval(this._lookup);
+            }
             lookupPromise = new Promise((resolve, reject) => {
                 resolve({
                     result: this._lookup()
@@ -270,3 +273,4 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         );
     }
 }
+Colibri.UI.Forms.Field.RegisterFieldComponent('Select', 'Colibri.UI.Forms.Select', 'Выборка')

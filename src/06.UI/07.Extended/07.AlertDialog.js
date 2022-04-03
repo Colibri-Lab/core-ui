@@ -6,10 +6,7 @@ Colibri.UI.AlertDialog = class extends Colibri.UI.Window {
 
         this._callback = null;
 
-        this.Children('btn-cancel').AddHandler('Clicked', (event, args) => {
-            this._callback && this._callback.apply(this, []);
-            this.Hide();
-        });
+        
 
 
     }
@@ -18,12 +15,20 @@ Colibri.UI.AlertDialog = class extends Colibri.UI.Window {
      * Показывает диалог
      * @param {Function(dialogResult)} callback
      */
-    Show(title, message, button, callback) {
-        this.title = title;
-        this.Children('message').value = message;
-        this.Children('btn-cancel').value = button || 'Закрыть';
-        this._callback = callback;
-        super.Show();
+    Show(title, message, button) {
+        return new Promise((resolve, reject) => {
+            this.title = title;
+            this.Children('message').value = message;
+            this.Children('btn-cancel').value = button || 'Закрыть';
+    
+            super.Show();
+
+            this.Children('btn-cancel').ClearHandlers();
+            this.Children('btn-cancel').AddHandler('Clicked', (event, args) => {
+                resolve(this._form.value);
+                this.Hide();
+            });
+        });
     }
 
 }

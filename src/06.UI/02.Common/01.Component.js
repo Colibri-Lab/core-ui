@@ -184,6 +184,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.RegisterEvent('DragLeave', false, 'Когда перетаскиваемый элемент покидает целевой объект');
         this.RegisterEvent('Drop', false, 'Когда перетаскиваемый элемент "упал" на целевой объект');
         this.RegisterEvent('ContextMenu', false, 'Контекстное меню');
+        this.RegisterEvent('Scrolled', false, 'Когда проскроллировали');
     }
 
     
@@ -240,7 +241,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
         contextMenuObject.AddHandler('Clicked', (event, args) => {
             contextMenuObject.Hide();
-            this.Dispatch('ContextMenuItemClicked', args);
+            this.Dispatch('ContextMenuItemClicked', Object.assign(args, {item: this}));
             contextMenuObject.Dispose();            
             this.Children(this._name + '-contextmenu-icon-parent').RemoveClass('-selected');
         });
@@ -293,10 +294,13 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             domEvent: 'mousedown',
         },
         ContextMenu: {
-            domEvent: 'contextmenu',
+            domEvent: 'contextmenu'
         },
         MouseMove: {
-            domEvent: 'mousemove',
+            domEvent: 'mousemove'
+        },
+        Scrolled: {
+            domEvent: 'scroll'
         },
     };
 
@@ -850,7 +854,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             shadow = Element.create('div', {class: 'app-component-shadow-div'});
             shadow.css({zIndex: zIndex});
             shadow.addEventListener('click', (e) => { this.Dispatch('ShadowClicked', {domEvent: e}) });
-            shadow.addEventListener('contextmenu', (e) => { this.Dispatch('ShadowClicked', {domEvent: e}); e.stopPropagation(); e.preventDefault(); return false; });
+            shadow.addEventListener('contextmenu', (e) => { this.Dispatch('ShadowClicked', {domEvent: e}); e.stopPropagation(); e.preventDefault(); e.cancelBubble = true; return false; });
             shadow.after(this._element);
         }
         else {
