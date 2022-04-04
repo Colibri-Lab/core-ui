@@ -23,7 +23,6 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
     }
 
     _addItem(item) {
-        
         const itemObject = new Colibri.UI.TextSpan(item.name, this);
         itemObject.tag = item;
         

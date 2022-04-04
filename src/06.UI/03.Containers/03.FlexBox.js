@@ -1,7 +1,7 @@
 Colibri.UI.FlexBox = class extends Colibri.UI.Component {
 
-    static Horizontally = 'row';
-    static Vertically = 'column'
+    static Horizontal = 'row';
+    static Vertical = 'column'
 
     constructor(name, container, element) {
         super(name, container, element || '<div />');
@@ -29,17 +29,11 @@ Colibri.UI.FlexBox = class extends Colibri.UI.Component {
     }
 
     get direction() {
-        let flexWrap = this._element.css('flex-direction');
-        switch (flexWrap) {
-            case 'row':
-                return 'Horizontally';
-            case 'column':
-                return 'Vertically';
-        }
+        return this._element.css('flex-direction');
     }
 
     set direction(value) {
-        if ([Colibri.UI.FlexBox.Horizontally, Colibri.UI.FlexBox.Vertically].indexOf(value) !== -1) {
+        if ([Colibri.UI.FlexBox.Horizontal, Colibri.UI.FlexBox.Vertical].indexOf(value) !== -1) {
             this._element.css('flex-direction', value);
         }
     }
