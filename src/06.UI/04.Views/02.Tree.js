@@ -257,6 +257,21 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         }
     }
 
+    get parentNode() {
+        return this.parent.parent;
+    }
+
+    set parentNode(value) {
+        this.parent.Children(this.name, null);
+        this.Disconnect();
+        value.nodes.Add(this);
+        this.ConnectTo(value.nodes.container);
+    }
+
+    MoveTo(parent) {
+        this.parentNode = parent;
+    }
+
     Expand() {
         this.expanded = true;
     }
