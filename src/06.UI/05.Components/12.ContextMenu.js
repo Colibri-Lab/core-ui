@@ -55,58 +55,65 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
 
     _setPosition() {
         const iconParent = this.parent.Children(this.parent.name + '-contextmenu-icon-parent') ?? this.parent;
-        const icon = iconParent.Children('firstChild');
+        const icon = this.parent.Children(this.parent.name + '-contextmenu-icon-parent') ? iconParent.Children('firstChild') : this.parent;
 
         const iconBounds = icon.container.bounds();
         const thisBounds = this.container.bounds();
 
-        let point = this._point || {
-            left: iconBounds.left, 
-            top: iconBounds.top + iconBounds.outerHeight
-        }
-
         switch(this._orientation) {
             default:
             case 'right bottom': {
-                if(point.top + thisBounds.outerHeight > window.innerHeight) {
-                    point.top = window.innerHeight - thisBounds.outerHeight;
-                }
-                if(point.left + thisBounds.outerWidth > window.innerWidth) {
-                    point.left = window.innerWidth - thisBounds.outerWidth;
-                }
+                let point = this._point || {
+                    left: iconBounds.left, 
+                    top: iconBounds.top + iconBounds.outerHeight
+                } // нижний левый угол
                 this.styles = {left: point.left + 'px', top: point.top + 'px'};
                 break;
             }
             case 'left bottom': {
-                if(point.top + thisBounds.outerHeight > window.innerHeight) {
-                    point.top = window.innerHeight - thisBounds.outerHeight;
-                }
-                if(point.left - thisBounds.outerWidth < 0) { 
-                    point.left = thisBounds.outerWidth;
-                }
-                this.styles = {left: (point.left + iconBounds.outerWidth - thisBounds.outerWidth) + 'px', top: point.top + 'px'};
+                let point = this._point || {
+                    left: iconBounds.left + iconBounds.outerWidth, 
+                    top: iconBounds.top + iconBounds.outerHeight
+                } // нижний правый угол
+                this.styles = {left: (point.left - thisBounds.outerWidth) + 'px', top: point.top + 'px'};
                 break;
             }
             case 'right top': {
-                if(point.left + thisBounds.outerWidth > window.innerWidth) {
-                    point.left = window.innerWidth - thisBounds.outerWidth;
-                }
-                if(point.top - thisBounds.outerHeight < 0) { 
-                    point.top = thisBounds.outerHeight;
-                } 
-                this.styles = {left: point.left + 'px', top: (point.top - thisBounds.outerHeight) + 'px'};
+                let point = this._point || {
+                    left: iconBounds.left, 
+                    top: iconBounds.top
+                } // верхний левый угол
+                this.styles = {left: point.left + 'px', top: (point.top - thisBounds.outerHeight - 10) + 'px'};
                 break;
             }
             case 'left top': {
-                if(point.top - thisBounds.outerHeight < 0) { 
-                    point.top = thisBounds.outerHeight;
-                }
-                if(point.left - thisBounds.outerWidth < 0) { 
-                    point.left = thisBounds.outerWidth;
-                }
-                this.styles = {left: (point.left - thisBounds.outerWidth + iconBounds.outerWidth) + 'px', top: (point.top - thisBounds.outerHeight) + 'px'};
+                let point = this._point || {
+                    left: iconBounds.left + iconBounds.outerWidth, 
+                    top: iconBounds.top
+                } // верхний правый угол
+                this.styles = {left: (point.left - thisBounds.outerWidth) + 'px', top: (point.top - thisBounds.outerHeight - 10) + 'px'};
                 break;
             }
+        }
+
+        this._checkPosition();
+
+    }
+
+    _checkPosition() {
+        const thisBounds = this.container.bounds();
+
+        let orientation = this._orientation;
+        if(thisBounds.top + thisBounds.outerHeight > window.innerHeight) {
+            orientation = orientation.replaceAll('bottom', 'top');
+        }
+        if(thisBounds.left + thisBounds.outerWidth > window.innerWidth) {
+            orientation = orientation.replaceAll('right', 'left');
+        }
+
+        if(this._orientation != orientation) {
+            this._orientation = orientation;
+            this._setPosition();
         }
 
     }
@@ -131,6 +138,14 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
                 this._element.css('visibility', 'visible');
             });    
         }
+    }
+
+    Show(menu, parent = null) {
+        if(parent) {
+            this.parent = parent;
+        }
+        this.value = menu;
+        this.shown = true;
     }
 
     Dispose() {

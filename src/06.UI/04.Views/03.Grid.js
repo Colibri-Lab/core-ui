@@ -53,6 +53,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
         this.GenerateChildren(element);
 
+        this.tabIndex = 0;
         this._handleEvents();
     }
 
@@ -625,9 +626,17 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                 this.__customScroll(newActiveItem._element, this.container, correctionCoefficient, direction);
                 this.Dispatch('HighlightedItemChanged', {item: newActiveItem});
             }
+            event.stopPropagation();
             event.preventDefault();
             return false;
         }
+        else if(event.code === 'Space') {
+            this.activeRow.checked = !this.activeRow.checked;
+            event.stopPropagation();
+            event.preventDefault();
+            return false;
+        }
+        
     }
 
     /**
@@ -750,6 +759,21 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this._norows.shown = true;
     }
 
+    /**
+     * Удаляет строки из грида, все
+     * @param {bool} removeGroups удалить пустые группы тоже
+     */
+    ClearAll() {
+        this.header.columns.ForEach((name, column) => {
+            if(name != 'button-container-for-row-selection') {
+                column.Dispose();
+            }
+        });
+        this.ClearAllRows(true);
+        this._gridContent.shown = false;
+        this._norows.shown = true;
+    }
+
     ForEveryRow(callback) {
         let cancel = false;
         Object.forEach(this.groups, (name, group) => {
@@ -777,7 +801,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
         this.RegisterEvent('HighlightedItemChanged', false, 'Поднимается, когда меняется подствеченный элемент');
         this.RegisterEvent('SelectionChanged', false, 'Поднимается, когда выбирают элемент');
-        
+        this.RegisterEvent('CheckChanged', false, 'Поднимается, когда изменяется выбор галочек');
+
         this.RegisterEvent('ScrolledToBottom', false, 'Поднимается, когда грид доскролили до конца');
         this.RegisterEvent('VerticalAlignChanged', false, 'Изменилась вертикальная ориентация колонки')
 
@@ -826,6 +851,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             if(this.checked.length == 0) {
                 this.header.checkbox.checked = false;
             }
+            this.Dispatch('CheckChanged');
         });
 
         this.AddHandler('KeyDown', this.__keydownProcessing);
@@ -958,6 +984,40 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             this._massActionsMenuObject.shown = true;
 
         }
+    }
+
+    get draggable() {
+        return this._draggable;
+    }
+
+    set draggable(value) {
+        this._draggable = value;
+    }
+
+    get dropable() {
+        return this._dropable;
+    }
+
+    set dropable(value) {
+        this._dropable = value;
+    }
+
+    set enabled(value) {
+        this._enabled = value === 'true' || value === true;
+        this._setEnabled();
+    }
+
+    get enabled() {
+        return this._enabled;
+    }
+
+    _setEnabled() {
+        // выключаем все группы, те выключают строки, строки выключают чекбоксы
+        this.header.checkbox.enabled = this._enabled;
+        Object.forEach(this.groups, (name, group) => {
+            group.checkbox.enabled = this._enabled;
+        });
+        this.ForEveryRow((rname, row) => row.checkboxEnabled = this._enabled);
     }
 
 }
@@ -1593,6 +1653,10 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         this._handleEvents();
 
         this._data = null;
+
+        this.draggable = this.grid.draggable;
+        this.dropable = this.grid.dropable;
+
     }
 
     _registerEvents() {
@@ -2038,6 +2102,10 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
             this.grid.Dispatch('CellValueChanged', {cell: this, row: this.parentRow, value: event.sender.value, oldValue: oldValue});
             this.grid.Dispatch('CellEditorChanged', {cell: this, field: this.columnName, data: this.parentRow.value});
         });
+
+
+
+
 
     }
 

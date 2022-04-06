@@ -7,8 +7,7 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
 
         this._allNodes = [];
 
-        this._nodes = new Colibri.UI.TreeNodes('nodes', this);
-        this._nodes.tree = this;
+        this._nodes = new Colibri.UI.TreeNodes('nodes', this, this);
         this.AddClass('app-ui-tree-component');
 
         this._handleEvents();
@@ -112,14 +111,31 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         }
     }
 
+    
+    get dropable() {
+        return this._dropable;
+    }
+
+    set dropable(value) {
+        this._dropable = value;
+    }
+
+    
+    get draggable() {
+        return this._draggable;
+    }
+
+    set draggable(value) {
+        this._draggable = value;
+    }
+
 }
 
 Colibri.UI.TreeNode = class extends Colibri.UI.Component {
 
     constructor(name, container) {
         super(name, container, '<div><div><em class="expander"></em><em class="icon none"></em><span></span></div></div>');
-        this._nodes = new Colibri.UI.TreeNodes('nodes', this);
-        this._nodes.tree = container.tree;
+        this._nodes = new Colibri.UI.TreeNodes('nodes', this, container.tree);
 
         this._handleEvents();
 
@@ -127,6 +143,9 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         this.Show();
 
         this.hasContextMenu = container.tree.hasContextMenu;
+        this.dropable = this.tree.dropable;
+        this.draggable = this.tree.draggable;
+
     }
 
     _createContextMenuButton() {
@@ -289,16 +308,24 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         this.Collapse();
         this.nodes.Collapse();
     }
+
+    get tree() {
+        return this.parent.tree;
+    }
 }
 
 Colibri.UI.TreeNodes = class extends Colibri.UI.Component {
 
     _tree = null;
 
-    constructor(name, container) {
+    constructor(name, container, tree) {
         super(name, container, '<div />');
+        this._tree = tree;
+
         this.AddClass('nodes');
         this.Show();
+        
+
     }
 
     Add(name) {
@@ -318,10 +345,6 @@ Colibri.UI.TreeNodes = class extends Colibri.UI.Component {
 
     get tree() {
         return this._tree;
-    }
-
-    set tree(value) {
-        this._tree = value;
     }
 
     Expand() {

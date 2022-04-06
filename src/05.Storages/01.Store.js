@@ -120,7 +120,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
                 }
             }
 
-            const handlerObject = { handler: handler, respondent: this };
+            const handlerObject = { handler: handler, respondent: respondent };
             if (prepend) {
                 this._pathHandlers[path].splice(0, 0, handlerObject);
             } else {

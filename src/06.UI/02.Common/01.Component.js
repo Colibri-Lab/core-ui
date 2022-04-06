@@ -12,7 +12,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @param {string} element наименование тэга
      * @param {(Colibri.UI.Component|Element)} container - обьект в контейнере которого будет создан текущий компонент
      */
-     constructor(name, container, element) {
+    constructor(name, container, element) {
         super();
 
         /** @type {Colibri.UI.Component} */
@@ -180,6 +180,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.RegisterEvent('Shown', false, 'Когда элемент компонента получил класс app-component-shown');
         this.RegisterEvent('Hidden', false, 'Когда с элемента компонта снят класс app-component-shown');   
         this.RegisterEvent('Pasted', false, 'Когда вставили в элемент');
+        this.RegisterEvent('DragStart', false, 'Когда элемент начинают перетаскивать');
+        this.RegisterEvent('DragEnd', false, 'Когда элемент перестают перетаскивать');
         this.RegisterEvent('DragOver', false, 'Когда перетаскиваемый элемент находится над целевым объектом');
         this.RegisterEvent('DragLeave', false, 'Когда перетаскиваемый элемент покидает целевой объект');
         this.RegisterEvent('Drop', false, 'Когда перетаскиваемый элемент "упал" на целевой объект');
@@ -280,6 +282,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         Pasted: {
             domEvent: 'paste',
             delay: 100,
+        },
+        DragStart: {
+            domEvent: 'dragstart'
+        },
+        DragEnd: {
+            domEvent: 'dragend'
         },
         DragOver: {
             domEvent: 'dragover',
@@ -1128,5 +1136,20 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.shown = false;
     }
 
+    get draggable() {
+        return this._element.attr('draggable');
+    }
+
+    set draggable(value) {
+        this._element.attr('draggable', value ? 'true' : null);
+    }
+
+    get dropable() {
+        return this._element.attr('dropable');
+    }
+
+    set dropable(value) {
+        this._element.attr('dropable', value ? 'true' : null);
+    }
 
 }

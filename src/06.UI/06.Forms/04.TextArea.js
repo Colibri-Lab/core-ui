@@ -2,7 +2,7 @@ Colibri.UI.Forms.TextArea = class extends Colibri.UI.Forms.Field {
 
     RenderFieldContainer() {
 
-        this.AddClass('app-component-textarea-field')
+        this.AddClass('app-component-textarea-field');
 
         const contentContainer = this.contentContainer;
 

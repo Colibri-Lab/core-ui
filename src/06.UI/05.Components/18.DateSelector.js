@@ -139,7 +139,7 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         if(typeof value == 'string') {
             this._hiddenElement.value = value;
         }
-        else {
+        else if(value) {
             this._hiddenElement.value = value?.toShortDateString();
         }
         this._showValue();
