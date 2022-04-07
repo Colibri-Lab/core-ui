@@ -171,6 +171,8 @@
 
                     border-bottom: 1px solid #EAEBF1;
                     background-color: inherit;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
 
                     &.input-checkbox-shown > .input-checkbox {
                         display: block;

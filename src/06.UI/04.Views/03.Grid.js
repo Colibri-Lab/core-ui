@@ -356,6 +356,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                 row.selected = false;
             });
         });
+        this.Dispatch('SelectionChanged', {});
     }
 
     /**
@@ -366,7 +367,10 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             group.ForEach((rowName, row) => {
                 row.checked = false;
             });
+            group.checkbox.checked = false;
         });
+        this.header.checkbox.checked = false;
+        this.Dispatch('CheckChanged', {});
     }
 
     /**
@@ -476,7 +480,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
         const event = args.domEvent;
 
-        if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Enter'].indexOf(event.code) !== -1) {
+        if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Enter', 'NumpadEnter'].indexOf(event.code) !== -1) {
 
             let activeItem;
             let newActiveItem;
@@ -757,6 +761,9 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         });
         this._gridContent.shown = false;
         this._norows.shown = true;
+        this.UnselectAllRows();
+        this.UncheckAllRows();
+        
     }
 
     /**
@@ -1018,6 +1025,27 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             group.checkbox.enabled = this._enabled;
         });
         this.ForEveryRow((rname, row) => row.checkboxEnabled = this._enabled);
+    }
+
+    set value(value) {
+
+        if(!data || (!Array.isArray(data) && data instanceof Object)) {
+            data = Object.values(data);
+        }
+
+        this.ClearAllRows();
+        value.forEach((d) => {
+            this.rows.Add('data' + d.id, d);
+        });
+
+    }
+
+    get value() {
+        const ret = [];
+        this.ForEveryRow((row) => {
+            ret.push(row.value);
+        });
+        return ret;
     }
 
 }

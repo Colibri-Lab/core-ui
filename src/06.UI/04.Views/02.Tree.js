@@ -18,11 +18,12 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         this.RegisterEvent('NodeExpanded', false, 'Поднимается, когда ветка дерева раскрывается');
         this.RegisterEvent('NodeCollapsed', false, 'Поднимается, когда ветка дерева закрывается');
         this.RegisterEvent('SelectionChanged', false, 'Поднимается, когда ментяется выбранный элемент');
+        this.RegisterEvent('NodeEditCompleted', false, 'Поднимается, когда заканчивается редактирование узла');
     }
 
     _handleEvents() {
         this.AddHandler('Clicked', (sender, args) => {
-            this.UnselectedAll();
+            this.ClearSelection();
             this.Dispatch('SelectionChanged', {node: null});
         });
     }
@@ -44,13 +45,15 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
     }
 
     Select(node) {
-        this.UnselectedAll();
-        node.selected = true;
+        this.ClearSelection();
         this._selected = node;
+        if(node !== null) {
+            node.selected = true;
+        }
         this.Dispatch('SelectionChanged', {node: node});
     }
 
-    UnselectedAll() {
+    ClearSelection() {
         this._element.querySelectorAll('.selected').forEach(selected => selected.classList.remove('selected'));
         this._selected = null;
     }
@@ -99,8 +102,9 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         contextMenuIcon.AddHandler('Clicked', (event, args) => this.Dispatch('ContextMenuIconClicked', args));    
 
         this.AddHandler('Scrolled', (event, args) => {
-            contextMenuParent.container.css('bottom', (-1 * this.scrollTop) + 'px');
+            contextMenuParent.container.css('bottom', (-1 * this.scrollTop + 10) + 'px');
         }); 
+        this.Dispatch('Scrolled');
 
     }
 
@@ -128,14 +132,18 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
     set draggable(value) {
         this._draggable = value;
     }
+    
 
 }
 
 Colibri.UI.TreeNode = class extends Colibri.UI.Component {
 
     constructor(name, container) {
-        super(name, container, '<div><div><em class="expander"></em><em class="icon none"></em><span></span></div></div>');
+        super(name, container, '<div><div><em class="expander"></em><em class="icon none"></em><span></span><input type="text" /></div></div>');
         this._nodes = new Colibri.UI.TreeNodes('nodes', this, container.tree);
+
+        this._input = this._element.querySelector('input');
+        this._text = this._element.querySelector('div span');
 
         this._handleEvents();
 
@@ -200,6 +208,7 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         });
 
         this.AddHandler('ContextMenuItemClicked', (event, args) => this._nodes.tree.Dispatch('ContextMenuItemClicked', Object.assign({item: this}, args)));
+        this.AddHandler('DoubleClicked', (event, args) => this.__nodeEditableStart(event, args));
 
     }
 
@@ -232,11 +241,11 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
     }
 
     get text() {
-        return this._element.querySelector('div span').innerHTML;
+        return this._text.html();
     }
 
     set text(value) {
-        this._element.querySelector('div span').innerHTML = value;
+        this._text.html(value);
     }
 
     get isLeaf() {
@@ -309,9 +318,59 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         this.nodes.Collapse();
     }
 
+    Edit() {
+        this.__nodeEditableStart(null, null);
+    }
+
     get tree() {
         return this.parent.tree;
     }
+
+    get editable() {
+        return this._editable;
+    }
+
+    set editable(value) {
+        this._editable = value;
+    }
+
+
+    __nodeEditableStart(event, args) {
+        if(!this._editable) {
+            return true;
+        }
+
+        this.AddClass('editing');
+        this._input.value = this.text;
+        this._input.focus();
+        this._input.select();
+        const keydownHandler = (e) => {
+            console.log(e.code);
+            if(e.code == 'Enter' || e.code == 'NumpadEnter') {
+                if(this.tree.Dispatch('NodeEditCompleted', {value: this._input.value, node: this, mode: 'save'})) {
+                    this.text = this._input.value;
+                }
+                this.RemoveClass('editing');
+                this._input.removeEventListener('keydown', keydownHandler);
+                this._input.removeEventListener('blur', blurHandler);
+            }
+            else if(e.code == 'Escape') {
+                this.tree.Dispatch('NodeEditCompleted', {value: this.text, node: this, mode: 'cancel'});
+                this.RemoveClass('editing');
+                this._input.removeEventListener('keydown', keydownHandler);
+                this._input.removeEventListener('blur', blurHandler);
+            }
+        }
+        const blurHandler = (e) => {
+            this.tree.Dispatch('NodeEditCompleted', {value: this.text, node: this, mode: 'cancel'});
+            this.RemoveClass('editing');
+            this._input.removeEventListener('keydown', keydownHandler);
+            this._input.removeEventListener('blur', blurHandler);
+        }
+        this._input.addEventListener('keydown', keydownHandler);
+        this._input.addEventListener('blur', blurHandler);
+    }
+
 }
 
 Colibri.UI.TreeNodes = class extends Colibri.UI.Component {

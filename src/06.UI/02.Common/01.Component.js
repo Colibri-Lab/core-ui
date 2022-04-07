@@ -998,7 +998,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             this.parent.Children(this.name, null);
         }
         this.__removeHtmlEvents();
-        this._element.remove();
+        try {
+            this._element.remove();
+        }
+        catch(e) {}
         this.Dispatch('ComponentDisposed');
 
         super.Dispose();

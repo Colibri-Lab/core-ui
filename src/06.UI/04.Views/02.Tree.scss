@@ -45,13 +45,20 @@
 					border-radius: 3px;
 				}
 
-				> span {
+				> span, > input {
 					margin-left: 12px;
 					font-size: 14px;
 					flex: 1 1;
 					overflow: hidden;
 					white-space: nowrap;
 					text-overflow: ellipsis;
+				}
+				> input {
+					display: none;
+					margin-right: 12px;
+					border: 0px;
+					outline: none;
+					padding: 5px 10px;
 				}
 				> em {
 					padding-left: 10px;
@@ -66,6 +73,17 @@
 					width: 12px;
 					height: 12px;
 					background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0.5' y='0.5' width='11' height='11' rx='1.5' stroke='%23435466'/%3E%3Crect x='2.76929' y='5.53845' width='6.46154' height='0.923077' rx='0.461538' fill='%23435466'/%3E%3Crect x='5.53845' y='2.76923' width='0.923077' height='6.46154' rx='0.461538' fill='%23435466'/%3E%3C/svg%3E%0A");
+				}
+			}
+
+			&.editing {
+				> div:not([data-object-name]) {
+					> input {
+						display: inline-block;
+					}
+					> span {
+						display: none;
+					}
 				}
 			}
 
