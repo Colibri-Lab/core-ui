@@ -43,7 +43,29 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
         text.value = item.title;
         text.shown = true;
 
-        itemObject.AddHandler('Clicked', (event, args) => this.Dispatch('Clicked', {menu: event.sender, menuData: event.sender.tag}));
+        itemObject.AddHandler('Clicked', (event, args) => {
+            if(item.children) {
+                // показываем дочернее меню
+                this._childContextMenu = new AktionDigital.UI.ContextMenu(itemObject.name + '_contextmenu', document.body, 'right');
+                this._childContextMenu.Show(item.children, itemObject);
+                this._childContextMenu.AddHandler('Clicked', (event, args) => {
+                    this.Dispatch('Clicked', args);
+                    this._childContextMenu.Dispose();
+                    this._childContextMenu = null;
+                    args.domEvent.preventDefault();
+                    args.domEvent.stopPropagation();
+                    return false;
+                });
+            }
+            else {
+                this.Dispatch('Clicked', { menu: event.sender, menuData: event.sender.tag, domEvent: args.domEvent });
+            }
+            args.domEvent.preventDefault();
+            args.domEvent.stopPropagation();
+            return false;
+        });
+
+    
 
     }
 

@@ -82,8 +82,16 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         return found;
     }
 
+    get hasTreeContextMenu() {
+        return this._hasTreeContextMenu;
+    }
+
+    set hasTreeContextMenu(value) {
+        this._hasTreeContextMenu = value;
+    }
+
     _createContextMenuButton() {
-        if(!this._hasContextMenu || this.Children(this._name + '-contextmenu-icon-parent')) {
+        if(!this._hasTreeContextMenu || !this._hasContextMenu || this.Children(this._name + '-contextmenu-icon-parent')) {
             return;
         }
 
@@ -109,7 +117,7 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
     }
 
     _removeContextMenuButton() {
-        if(this._hasContextMenu && this.Children(this._name + '-contextmenu-icon-parent')) {
+        if(this._hasTreeContextMenu && this._hasContextMenu && this.Children(this._name + '-contextmenu-icon-parent')) {
             this.Children(this._name + '-contextmenu-icon-parent').Dispose();
             this.RemoveClass('app-component-hascontextmenu');
         }
@@ -319,6 +327,7 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
     }
 
     Edit() {
+        this.tree.selected = this;
         this.__nodeEditableStart(null, null);
     }
 

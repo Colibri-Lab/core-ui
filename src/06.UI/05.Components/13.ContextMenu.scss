@@ -37,10 +37,19 @@
             background: #2f323a;
         }
 
-        .app-component-icon {
-            width: 22x;
+        [data-object-name$="-icon"] {
+            width: 22px;
             height: 22px;
             margin-right: 10px;
+            path, rect, circle {
+                fill: #ffffff;
+            }
+        }
+
+        [data-object-name$="-arrow"] {
+            width: 10px;
+            height: 10px;
+            margin-left: 10px;
         }
 
         .app-component-textspan {

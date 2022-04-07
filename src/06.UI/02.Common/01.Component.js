@@ -228,7 +228,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     ShowContextMenu(orientation = 'right bottom', className = '', point = null) {
 
 
-        this.Children(this._name + '-contextmenu-icon-parent').AddClass('-selected');
+        this.Children(this._name + '-contextmenu-icon-parent') && this.Children(this._name + '-contextmenu-icon-parent').AddClass('-selected');
 
         if(this._contextMenuObject) {
             this._contextMenuObject.Dispose();
@@ -245,7 +245,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             contextMenuObject.Hide();
             this.Dispatch('ContextMenuItemClicked', Object.assign(args, {item: this}));
             contextMenuObject.Dispose();            
-            this.Children(this._name + '-contextmenu-icon-parent').RemoveClass('-selected');
+            this.Children(this._name + '-contextmenu-icon-parent') && this.Children(this._name + '-contextmenu-icon-parent').RemoveClass('-selected');
         });
         
 
