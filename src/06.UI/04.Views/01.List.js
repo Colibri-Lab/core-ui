@@ -467,7 +467,7 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
             html = this.parent.parent.__renderItemContent(this._itemData, this);
         }
         else if(this._itemData.__render) {
-            html = this._itemData.__render.apply(this, [this._itemData]);
+            html = this._itemData.__render.apply(this, [this._itemData, this]);
         }
         if(html) {
             this._element.html(html);

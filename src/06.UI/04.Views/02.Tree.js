@@ -87,14 +87,14 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
     }
 
     set hasTreeContextMenu(value) {
-        this._hasTreeContextMenu = value;
+        this._hasTreeContextMenu = value === true || value === 'true';
+        this._createContextMenuButton();
     }
 
     _createContextMenuButton() {
         if(!this._hasTreeContextMenu || !this._hasContextMenu || this.Children(this._name + '-contextmenu-icon-parent')) {
             return;
         }
-
 
         this.AddClass('app-component-hascontextmenu');
 

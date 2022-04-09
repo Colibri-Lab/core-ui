@@ -20,6 +20,11 @@ if (!XMLHttpRequest.prototype.sendAsBinary) {
  */
 Colibri.IO.Request = class {
 
+    static RequestEncodeTypeSimple = 'simple';
+    static RequestEncodeTypeEncrypted = 'encrypted';
+
+    static type = 'simple';
+
     /** @constructor */
     constructor(base) { 
         this._base = base ? base : '';
@@ -90,6 +95,60 @@ Colibri.IO.Request = class {
 
         return fd;
 
+    }
+
+    /**
+     * Ищет файлы в обьекте и заменяет на file(md5)
+     * @param {object} params обьект параметров
+     * @param {object} files файлы, результат
+     */
+    _findFiles(params, files) {
+
+        if(Array.isArray(params)) {
+            params.forEach((param, index) => {
+                if(param instanceof File) {
+                    // если это файл тогда нужно пихнуть обязательнов в первый уровень
+                    const fileKey = 'file' + String.MD5(param.name);
+                    files[fileKey] = param;
+                    params[index] = 'file(' + fileKey + ')';
+                }
+                else {
+                    this._findFiles(param, files);
+                }
+            });
+        }
+        else if(params instanceof Object) {
+            Object.forEach(params, (key, param) => {
+                if(param instanceof File) {
+                    // если это файл тогда нужно пихнуть обязательнов в первый уровень
+                    const fileKey = 'file' + String.MD5(param.name);
+                    files[fileKey] = param;
+                    params[key] = 'file(' + fileKey + ')';
+                } 
+                else {
+                    this._findFiles(param, files);
+                }
+            });
+        }
+
+    }
+
+    /**
+     * Кодирует данные в json и енкодит
+     * @param {object} params данные формы
+     */
+    _encryptData(params) {
+        // ищем файлы и впихиваем в FormData как файлы
+        let files = {};
+        this._findFiles(params, files);
+        const fd = new FormData();
+        if(Object.countKeys(params) > 0) {
+            fd.append('json_encoded_data', Colibri.Common.Base64.encode(JSON.stringify(params)));
+        }
+        Object.forEach(files, (name, file) => {
+            fd.append(name, file);
+        });
+        return fd;
     }
 
     _getResponseHeaders(xhr) {
@@ -228,8 +287,13 @@ Colibri.IO.Request = class {
                 req.setRequestHeader(name, this._headers[name]);
             });
             let data = params;
-            if (typeof params === 'object') {
-                data = this._createFormData(params);
+            if (typeof params === 'object')  {
+                if(Colibri.IO.Request.type == Colibri.IO.Request.RequestEncodeTypeEncrypted) {
+                    data = this._encryptData(params);
+                }
+                else {
+                    data = this._createFormData(params);
+                }
             }
             req.send(data);
             this._currentRequest = req;

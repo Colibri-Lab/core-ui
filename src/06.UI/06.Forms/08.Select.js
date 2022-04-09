@@ -79,7 +79,8 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
             if(typeof this._lookup == 'string') {
                 this._lookup = eval(this._lookup);
             }
-            lookupPromise = new Promise((resolve, reject) => {
+            const lookupMethodRun = this._lookup();
+            lookupPromise = lookupMethodRun instanceof Promise ? lookupMethodRun : new Promise((resolve, reject) => {
                 resolve({
                     result: this._lookup()
                 });
@@ -182,6 +183,9 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         let value = this._lastValue || this._input.value;
         if(this._fieldData?.params?.emptyAsNull && !value) {
             value = null;
+        }
+        if(value instanceof Object) {
+            value = value[this._fieldData.selector?.value ?? 'value'] ?? value;
         }
         return value;
     }

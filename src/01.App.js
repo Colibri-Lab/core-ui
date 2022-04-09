@@ -46,6 +46,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     InitializeApplication() {
 
+        Colibri.IO.Request.type = Colibri.IO.Request.RequestEncodeTypeEncrypted;
 
         this._actions = new Colibri.Common.HashActions(); 
         this._store = new Colibri.Storages.Store('app', {});

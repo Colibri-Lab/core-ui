@@ -83,6 +83,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
     AddPathHandler(path, handler, prepend) {
 
+        if(Array.isArray(path)) {
+            for(const p of path) {
+                this.AddPathHandler(p, handler, prepend);
+            }
+            return this;
+        }
+
         let data = this._parsePathIfHasParam(path);
         path = data[0];
 
@@ -159,7 +166,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
                 for(let i=0; i<pathHandlers.length; i++) {
 
                     const handlerObject = pathHandlers[i];
-                    if (handlerObject && handlerObject.handler.apply(handlerObject.respondent, [data]) === false) {
+                    if (handlerObject && handlerObject.handler.apply(handlerObject.respondent, [data, path]) === false) {
                         return false;
                     }
         

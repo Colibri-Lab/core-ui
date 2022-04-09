@@ -905,25 +905,65 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             this._storage = App.Store;
         } 
 
-        const handler = data => this.isConnected && this.__renderBoundedValues(data)
+        const handler = (data, path) => this.isConnected && this.__renderBoundedValues(data, path);
 
         this._binding = value;
-        this._storage.AsyncQuery(value).then(data => {
-            this.__renderBoundedValues(data);
-            this._storage.AddPathHandler(value, [this, handler]);
-        }).catch((response) => {
-            this.__renderBoundedValues(null, response);
-            this._storage.AddPathHandler(value, [this, handler]);
-        });
+        let pathsToLoad = this._binding;
+        if(this._binding.indexOf(';') !== -1) {
+            pathsToLoad = this._binding.split(';');
+         
+            let promises = [];
+            for(const path of pathsToLoad) {
+                promises.push(this._storage.AsyncQuery(path));
+            }
+            Promise.all(promises).then(responses => {
+                for(let i=0; i<responses.length; i++) {
+                    this.__renderBoundedValues(responses[i], pathsToLoad[i]);
+                }
+                this._storage.AddPathHandler(pathsToLoad, [this, handler]);
+            }).catch(response => {
+                this.__renderBoundedValues(null, pathsToLoad);
+                this._storage.AddPathHandler(pathsToLoad, [this, handler]);
+            });
+            
+        }
+        else {
+            this._storage.AsyncQuery(value).then(data => {
+                this.__renderBoundedValues(data, value);
+                this._storage.AddPathHandler(value, [this, handler]);
+            }).catch((response) => {
+                this.__renderBoundedValues(null, value);
+                this._storage.AddPathHandler(value, [this, handler]);
+            });    
+        }
+
         
     }
 
     ReloadBinding() {
-        this._storage.AsyncQuery(this._binding).then((data) => {
-            if(this.__renderBoundedValues) {
-                this.__renderBoundedValues(data);
+
+        this._binding = value;
+        let pathsToLoad = this._binding;
+        if(this._binding.indexOf(';') !== -1) {
+            pathsToLoad = this._binding.split(';');
+            let promises = [];
+            for(const path of pathsToLoad) {
+                promises.push(this._storage.AsyncQuery(path));
             }
-        });
+            Promise.all(promises).then(responses => {
+                for(let i=0; i<responses.length; i++) {
+                    this.__renderBoundedValues(responses[i], pathsToLoad[i]);
+                }
+            });
+        }
+        else {
+            this._storage.AsyncQuery(this._binding).then((data) => {
+                if(this.__renderBoundedValues) {
+                    this.__renderBoundedValues(data);
+                }
+            });
+        }
+
     }
 
 
