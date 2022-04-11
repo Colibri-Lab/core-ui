@@ -216,7 +216,12 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         });
 
         this.AddHandler('ContextMenuItemClicked', (event, args) => this._nodes.tree.Dispatch('ContextMenuItemClicked', Object.assign({item: this}, args)));
-        this.AddHandler('DoubleClicked', (event, args) => this.__nodeEditableStart(event, args));
+        this.AddHandler('DoubleClicked', (event, args) => {
+            this.__nodeEditableStart(event, args);
+            args.domEvent.stopPropagation();
+            args.domEvent.preventDefault();
+            return false;
+        });
 
     }
 
@@ -354,7 +359,6 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         this._input.focus();
         this._input.select();
         const keydownHandler = (e) => {
-            console.log(e.code);
             if(e.code == 'Enter' || e.code == 'NumpadEnter') {
                 if(this.tree.Dispatch('NodeEditCompleted', {value: this._input.value, node: this, mode: 'save'})) {
                     this.text = this._input.value;
