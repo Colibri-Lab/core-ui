@@ -12,6 +12,19 @@ Colibri.UI.Forms.Year = class extends Colibri.UI.Forms.Field {
         this._input.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
         this._input.AddHandler('KeyDown', (event, args) => this.Dispatch('KeyDown', args));
 
+        if(this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;    
+        }
+        else {
+            this.readonly = this._fieldData?.params?.readonly;
+        }
+        if(this._fieldData?.params?.enabled === undefined) {
+            this.enabled = true;
+        }
+        else {
+            this.enabled = this._fieldData.params.enabled;
+        }
+
     }
 
 

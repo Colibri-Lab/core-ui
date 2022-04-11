@@ -17,6 +17,19 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
             this.AddClass(this._fieldData.className);
         }
 
+        if(this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;    
+        }
+        else {
+            this.readonly = this._fieldData?.params?.readonly;
+        }
+        if(this._fieldData?.params?.enabled === undefined) {
+            this.enabled = true;
+        }
+        else {
+            this.enabled = this._fieldData.params.enabled;
+        }
+
     }
 
     _renderFields() {
@@ -71,7 +84,12 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
         let data = {};
         Object.forEach(this._tabs.components, (name, component) => {
-            data[name] = component.value;
+            if(name == '_adds') {
+                data = Object.assign(data, component.value);
+            }
+            else {
+                data[name] = component.value;
+            }
         });
 
         return data;
@@ -79,18 +97,39 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
     }
 
     set value(value) {
-        if(value && !(value instanceof Object)) {
-            // throw new Error('Передайте обьект')
-            return;
-        }
-
-        value && Object.forEach(value, (name, v) => {
-            this._tabs.components[name].value = v;
+        
+        Object.forEach(this._tabs.components, (name, component) => {
+            if(name == '_adds') {
+                // если наткнулись на _adds
+                component.ForEveryField((name, field) => {
+                    if(!this._value) {
+                        field.value = component.field.default ?? null;    
+                    }
+                    else {
+                        field.value = this._value[name] ?? field?.field?.default ?? null;
+                    }
+                });
+            }
+            else {
+                if(!value) {
+                    component.value = component.field.default ?? null;    
+                }
+                else {
+                    component.value = value[name] ?? component.field.default ?? null;
+                }
+            }
         });
 
+        
+        if(value) {
+            const oneof = this._tabs.components['_oneof'];
+            if(oneof) {
+                const keys = Object.keys(value);
+                oneof.value = keys[0];
+            }
+        }
     }
 
-    
     _hideAndShow() {
 
         const data = this.value;
@@ -110,10 +149,10 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
                     fieldValue = fieldValue?.value ?? fieldValue;
                     let conditionResult = true;
                     if(Array.isArray(condition.value)) {
-                        conditionResult = !fieldValue !== undefined || condition.value.indexOf(fieldValue) !== -1;
+                        conditionResult = fieldValue === undefined || (fieldValue !== undefined && condition.value.indexOf(fieldValue) !== -1);
                     }
                     else {
-                        conditionResult = !fieldValue !== undefined || fieldValue === condition.value;
+                        conditionResult = fieldValue === undefined || (fieldValue !== undefined && fieldValue === condition.value);
                     }
                     fieldComponent[type] = conditionResult;
                     if(!conditionResult && empty) {
@@ -131,6 +170,10 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
     Fields(name) {
         return this.contentContainer.Children(name);
+    }
+
+    ForEveryField(callback) {
+        Object.forEach(this._tabs.components, callback);
     }
 
     set selectedIndex(value) {

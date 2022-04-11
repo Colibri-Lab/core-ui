@@ -7,6 +7,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
 
         this.AddClass('app-component-select-field');
 
+
         const contentContainer = this.contentContainer;
 
         this._input = this._createSelector();
@@ -20,6 +21,20 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         this._input.AddHandler('KeyDown', (event, args) => this.Dispatch('KeyDown', args));
         this._input.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
         this._input.AddHandler('Clicked', (event, args) => this.Dispatch('Clicked', args));
+
+        if(this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;    
+        }
+        else {
+            this.readonly = this._fieldData?.params?.readonly;
+        }
+        if(this._fieldData?.params?.enabled === undefined) {
+            this.enabled = true;
+        }
+        else {
+            this.enabled = this._fieldData.params.enabled;
+        }
+
     }
 
     /**
@@ -184,7 +199,10 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         if(this._fieldData?.params?.emptyAsNull && !value) {
             value = null;
         }
-        if(value instanceof Object) {
+        if(Array.isArray(value)) {
+            value = value.map((v) => v[this._fieldData.selector?.value ?? 'value'] ?? v);
+        }
+        else if(value instanceof Object) {
             value = value[this._fieldData.selector?.value ?? 'value'] ?? value;
         }
         return value;

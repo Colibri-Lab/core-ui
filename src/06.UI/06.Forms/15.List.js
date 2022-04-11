@@ -20,6 +20,19 @@ Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
 
         this.ReloadValues();
 
+        if(this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;    
+        }
+        else {
+            this.readonly = this._fieldData?.params?.readonly;
+        }
+        if(this._fieldData?.params?.enabled === undefined) {
+            this.enabled = true;
+        }
+        else {
+            this.enabled = this._fieldData.params.enabled;
+        }
+
     } 
 
     

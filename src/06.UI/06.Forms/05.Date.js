@@ -4,6 +4,7 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
 
         this.AddClass('app-component-date-field');
 
+
         const contentContainer = this.contentContainer;
 
         this._input = new Colibri.UI.DateSelector(this._name + '-input', contentContainer);
@@ -16,7 +17,20 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
             args.domEvent.stopPropagation();
             return false;
         });
-        
+
+        if(this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;    
+        }
+        else {
+            this.readonly = this._fieldData?.params?.readonly;
+        }
+        if(this._fieldData?.params?.enabled === undefined) {
+            this.enabled = true;
+        }
+        else {
+            this.enabled = this._fieldData.params.enabled;
+        }
+
     }
 
     Focus() {
@@ -24,11 +38,10 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
     }
 
     get readonly() {
-        return this._fieldData.readonly;
+        return this._input.readonly;
     }
 
     set readonly(value) {
-        this._fieldData.readonly = value;
         this._input.readonly = value;
     }
 

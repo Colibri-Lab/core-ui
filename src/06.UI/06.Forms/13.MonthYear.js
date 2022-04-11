@@ -18,6 +18,19 @@ Colibri.UI.Forms.MonthYear = class extends Colibri.UI.Forms.Field {
         this._year.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp'));
         this._year.AddHandler('KeyDown', (event, args) => this.Dispatch('KeyDown'));
 
+        if(this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;    
+        }
+        else {
+            this.readonly = this._fieldData?.params?.readonly;
+        }
+        if(this._fieldData?.params?.enabled === undefined) {
+            this.enabled = true;
+        }
+        else {
+            this.enabled = this._fieldData.params.enabled;
+        }
+
     }
 
     Focus() {

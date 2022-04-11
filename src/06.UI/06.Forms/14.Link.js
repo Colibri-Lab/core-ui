@@ -7,6 +7,19 @@ Colibri.UI.Forms.Link = class extends Colibri.UI.Forms.Field {
         const contentContainer = this.contentContainer;
         this._input = contentContainer.container.append(Element.create('span', {}));
 
+        if(this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;    
+        }
+        else {
+            this.readonly = this._fieldData?.params?.readonly;
+        }
+        if(this._fieldData?.params?.enabled === undefined) {
+            this.enabled = true;
+        }
+        else {
+            this.enabled = this._fieldData.params.enabled;
+        }
+
     }
 
 

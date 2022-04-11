@@ -14,6 +14,19 @@ Colibri.UI.Forms.Checkbox = class extends Colibri.UI.Forms.Field {
         this._label.AddClass('app-component-checkbox-label');
         this._label.value = this._fieldData.placeholder;
 
+        if(this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;    
+        }
+        else {
+            this.readonly = this._fieldData?.params?.readonly;
+        }
+        if(this._fieldData?.params?.enabled === undefined) {
+            this.enabled = true;
+        }
+        else {
+            this.enabled = this._fieldData.params.enabled;
+        }
+
         this._handleEvents();
     }
 
@@ -38,11 +51,10 @@ Colibri.UI.Forms.Checkbox = class extends Colibri.UI.Forms.Field {
     }
 
     get readonly() {
-        return this._fieldData.readonly;
+        return this._input.readonly;
     }
 
     set readonly(value) {
-        this._fieldData.readonly = value;
         this._input.readonly = value;
     }
 

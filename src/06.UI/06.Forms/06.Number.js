@@ -18,6 +18,18 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
             return false;
         });
 
+        if(this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;    
+        }
+        else {
+            this.readonly = this._fieldData?.params?.readonly;
+        }
+        if(this._fieldData?.params?.enabled === undefined) {
+            this.enabled = true;
+        }
+        else {
+            this.enabled = this._fieldData.params.enabled;
+        }
     }
 
     _registerEvents() {
@@ -30,13 +42,11 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
         this._input.select();
     }
 
-    
     get readonly() {
-        return this._fieldData.readonly;
+        return this._input.attr('readonly') === 'readonly';
     }
 
     set readonly(value) {
-        this._fieldData.readonly = value === true || value === 'true';
         if(value === true || value === 'true') {
             this._input.attr('readonly', 'readonly');
         }

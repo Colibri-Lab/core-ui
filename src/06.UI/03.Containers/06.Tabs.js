@@ -46,14 +46,10 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
 
         this.AddHandler('TabClicked', (event, args) => {
             
-            const currentSelection = this.selectedIndex;
             const newIndex = args.tab.index;
 
             this._selectTab(newIndex);
 
-            if(currentSelection != newIndex) {
-                this.Dispatch('SelectionChanged', {newIndex: newIndex, oldIndex: currentSelection, name: args.tab.name});
-            }
 
         });
     }
@@ -88,6 +84,9 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
 
     _selectTab(index) {
 
+        const currentSelection = this.selectedIndex;
+        const newIndex = index;
+
         index ++;
 
         this._unselectAllTabs();
@@ -108,6 +107,11 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         button.AddClass('tab-selected');
         container.shown = true;
         container.AddClass('tab-selected');
+
+        
+        if(currentSelection != newIndex) {
+            this.Dispatch('SelectionChanged', {newIndex: newIndex, oldIndex: currentSelection, name: button.name});
+        }
 
     }
 
@@ -159,7 +163,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
 
         let ret = {};
         this.ForEach((name, component) => {
-            if(this.container.contains(component.container)) {
+            if(this.container && this.container.contains(component.container)) {
                 ret[name] = component;
             }
         });

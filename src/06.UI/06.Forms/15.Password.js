@@ -7,7 +7,6 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         const contentContainer = this.contentContainer;
         this._input = contentContainer.container.append(Element.create('input', {type: 'password', name: this._name + '-input'}));
 
-        this.readonly = this._fieldData.readonly;
 
         this._input.addEventListener('change', (e) => this.Dispatch('Changed', {domEvent: e}));
         this._input.addEventListener('keyup', (e) => this.Dispatch('KeyUp', {domEvent: e}));
@@ -21,6 +20,20 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
             return false;
         });
 
+        if(this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;    
+        }
+        else {
+            this.readonly = this._fieldData?.params?.readonly;
+        }
+        if(this._fieldData?.params?.enabled === undefined) {
+            this.enabled = true;
+        }
+        else {
+            this.enabled = this._fieldData.params.enabled;
+        }
+
+
     }
 
     _registerEvents() {
@@ -33,11 +46,10 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
     }
 
     get readonly() {
-        return this._fieldData.readonly;
+        return this._input.attr('readonly') === 'readonly';
     }
 
     set readonly(value) {
-        this._fieldData.readonly = value === true || value === 'true';
         if(value === true || value === 'true') {
             this._input.attr('readonly', 'readonly');
         }

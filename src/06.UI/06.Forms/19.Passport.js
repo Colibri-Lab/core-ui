@@ -20,7 +20,18 @@ Colibri.UI.Forms.Passport = class extends Colibri.UI.Forms.Field {
 
 		this._input2 = this._div2.container.append(Element.create('input', { type: 'number', name: this._name + '-input2' }));
 
-		this.readonly = this._fieldData?.readonly;
+        if(this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;    
+        }
+        else {
+            this.readonly = this._fieldData?.params?.readonly;
+        }
+        if(this._fieldData?.params?.enabled === undefined) {
+            this.enabled = true;
+        }
+        else {
+            this.enabled = this._fieldData.params.enabled;
+        }
 		this.placeholder = this._fieldData?.placeholder;
 
         const mask = this._fieldData?.params?.mask;
@@ -67,11 +78,10 @@ Colibri.UI.Forms.Passport = class extends Colibri.UI.Forms.Field {
 	}
 
 	get readonly() {
-		return this._fieldData.readonly;
+		return this._input1.attr('readonly') === 'readonly';
 	}
 
 	set readonly(value) {
-		this._fieldData.readonly = value === true || value === 'true';
 		if (value === true || value === 'true') {
 			this._input1.attr('readonly', 'readonly');
 			this._input2.attr('readonly', 'readonly');

@@ -38,10 +38,10 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                     fieldValue = fieldValue?.value ?? fieldValue;
                     let conditionResult = true;
                     if(Array.isArray(condition.value)) {
-                        conditionResult = !(fieldValue !== undefined && condition.value.indexOf(fieldValue) === -1);
+                        conditionResult = fieldValue === undefined || (fieldValue !== undefined && condition.value.indexOf(fieldValue) !== -1);
                     }
                     else {
-                        conditionResult = !(fieldValue !== undefined && fieldValue !== condition.value);
+                        conditionResult = fieldValue === undefined || (fieldValue !== undefined && fieldValue === condition.value);
                     }
                     fieldComponent[type] = conditionResult;
                     if(!conditionResult && empty) {
@@ -78,16 +78,41 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     }
 
     set value(value) {
-        //this.Clear();
-        //this._renderFields(value);
+
+        
         this._value = Object.assign({}, value);
         if ([false, null, undefined].includes(value)) {
             this.ForEach((name, component) => component.value = null);
         }
         else {
             this.ForEach((name, component) => {
-                component.value = this._value[name] ?? component.field.default ?? null;
+                if(name == '_adds') {
+                    // если наткнулись на _adds
+                    component.ForEveryField((name, field) => {
+                        if(!this._value) {
+                            field.value = component.field.default ?? null;    
+                        }
+                        else {
+                            field.value = this._value[name] ?? field?.field?.default ?? null;
+                        }
+                    });
+                }
+                else {
+                    if(!this._value) {
+                        component.value = component.field.default ?? null;    
+                    }
+                    else {
+                        component.value = this._value[name] ?? component.field.default ?? null;
+                    }
+                }
             });
+
+            const oneof = this.Children('_oneof');
+            if(oneof) {
+                const keys = Object.keys(this._value);
+                oneof.value = keys[0];
+            }
+
         }
 
         this._hideAndShow();
@@ -97,8 +122,30 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     get value() {
         let data = Object.assign({}, this._value);
         this.ForEach((name, component) => {
-            data[name] = component.value;
+            if(name == '_adds') {
+                data = Object.assign(data, component.value);
+            }
+            else {
+                data[name] = component.value;
+            }
         });
+
+        data = this._prepareOneOf(data);
+
+        return data;
+    }
+
+    _prepareOneOf(data) {
+        if(data instanceof Object) {
+            Object.forEach(data, (n, v) => {
+                data[n] = this._prepareOneOf(v);
+            });
+            if(Object.keys(data).indexOf('_oneof') !== -1) {
+                const oneof = {};
+                oneof[data['_oneof']] = data[data['_oneof']] ?? null;
+                data = oneof;
+            }
+        }
         return data;
     }
 

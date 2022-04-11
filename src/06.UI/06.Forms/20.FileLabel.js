@@ -23,6 +23,20 @@ Colibri.UI.Forms.FileLabel = class extends Colibri.UI.Forms.Field {
             return false;
         });
 
+
+        if(this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;    
+        }
+        else {
+            this.readonly = this._fieldData?.params?.readonly;
+        }
+        if(this._fieldData?.params?.enabled === undefined) {
+            this.enabled = true;
+        }
+        else {
+            this.enabled = this._fieldData.params.enabled;
+        }
+
     }
 
 

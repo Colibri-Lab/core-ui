@@ -9,6 +9,20 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         this._objectWindow = null;
 
         this._handleEvents();
+
+        if(this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;    
+        }
+        else {
+            this.readonly = this._fieldData?.params?.readonly;
+        }
+        if(this._fieldData?.params?.enabled === undefined) {
+            this.enabled = true;
+        }
+        else {
+            this.enabled = this._fieldData.params.enabled;
+        }
+
     }
 
     _handleEvents() {
@@ -328,6 +342,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
 
         this._objectsGrid.rows.Clear();
         value && value.forEach((item) => this._addRow(item));
+        
     }
 
     /**

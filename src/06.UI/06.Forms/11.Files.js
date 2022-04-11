@@ -32,6 +32,20 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         this._renderFilesList();
         this._renderInput();
         this._handleEvents();
+
+        if(this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;    
+        }
+        else {
+            this.readonly = this._fieldData?.params?.readonly;
+        }
+        if(this._fieldData?.params?.enabled === undefined) {
+            this.enabled = true;
+        }
+        else {
+            this.enabled = this._fieldData.params.enabled;
+        }
+
     }
 
     _handleEvents() {

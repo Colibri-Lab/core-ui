@@ -226,6 +226,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                 this._value = [];
                 this._value.push(this._lastValue = value.shift());
             } else {
+                value = value.map(v => v instanceof Object ? v : this._findValue(v));
                 this._lastValue = this._value = value;
             }
         }
@@ -420,7 +421,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * @todo проверить правильно ли получаю tabIndex и исправить
      * @type {number}
      */
-     get tabIndex() {
+    get tabIndex() {
         return this._input && this._input.tabIndex;
     }
     set tabIndex(value) {

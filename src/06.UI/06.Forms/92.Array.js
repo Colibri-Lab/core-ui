@@ -9,9 +9,23 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         const containerElement = Element.create('div', {class: 'array-component-container'});
         contentContainer.container.append(containerElement);
 
-        this._addNew();
+        this._link = this._addNew();
 
         this._createAddNewLink();
+
+        if(this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;    
+        }
+        else {
+            this.readonly = this._fieldData?.params?.readonly;
+        }
+        if(this._fieldData?.params?.enabled === undefined) {
+            this.enabled = true;
+        }
+        else {
+            this.enabled = this._fieldData.params.enabled;
+        }
+
 
     }
 
@@ -22,6 +36,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         link.AddHandler('Clicked', (event, args) => {
             this._addNew();
         });
+        return link;
     }
 
     _addNew() {
@@ -55,6 +70,19 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         this.contentContainer.ForEach((name, component) => {
             component.readonly = value; 
         });
+        this._link.enabled = value;
+    }
+
+    get enabled() {
+        const first = this.contentContainer.Children('firstChild');
+        return first.enabled;
+    }
+
+    set enabled(value) {
+        this.contentContainer.ForEach((name, component) => {
+            component.enabled = value; 
+        });
+        this._link.enabled = value;
     }
 
     get value() {

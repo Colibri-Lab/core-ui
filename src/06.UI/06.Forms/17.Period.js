@@ -28,6 +28,19 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
                 this._text.value = '';
             }
         });
+        
+        if(this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;    
+        }
+        else {
+            this.readonly = this._fieldData?.params?.readonly;
+        }
+        if(this._fieldData?.params?.enabled === undefined) {
+            this.enabled = true;
+        }
+        else {
+            this.enabled = this._fieldData.params.enabled;
+        }
 
     }
 
@@ -36,11 +49,10 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
     }
 
     get readonly() {
-        return this._fieldData.readonly;
+        return this._input1.readonly;
     }
 
     set readonly(value) {
-        this._fieldData.readonly = value;
         this._input1.readonly = value;
     }
 

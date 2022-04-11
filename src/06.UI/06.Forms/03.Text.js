@@ -8,8 +8,20 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
         const contentContainer = this.contentContainer;
         this._input = contentContainer.container.append(Element.create('input', {type: 'text', name: this._name + '-input'}));
 
-        this.readonly = this._fieldData.readonly;
-        this.maxlength = this._fieldData.params && this._fieldData.params.maxlength ? this._fieldData.params.maxlength : null;
+        if(this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;    
+        }
+        else {
+            this.readonly = this._fieldData?.params?.readonly;
+        }
+        if(this._fieldData?.params?.enabled === undefined) {
+            this.enabled = true;
+        }
+        else {
+            this.enabled = this._fieldData.params.enabled;
+        }
+        this.maxlength = this._fieldData?.params?.maxlength ?? null;
+        this.value = this._fieldData?.default ?? '';
 
         const mask = this._fieldData?.params?.mask;
         if(mask) {
@@ -47,12 +59,12 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
         return this._input.attr('maxlength');
     }
 
+    
     get readonly() {
-        return this._fieldData.readonly;
+        return this._input.attr('readonly') === 'readonly';
     }
 
     set readonly(value) {
-        this._fieldData.readonly = value === true || value === 'true';
         if(value === true || value === 'true') {
             this._input.attr('readonly', 'readonly');
         }
