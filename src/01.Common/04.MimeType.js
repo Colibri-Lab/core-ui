@@ -195,13 +195,13 @@ Colibri.Common.MimeType = class {
     }
 
     static ext2type(ext) {
-        return types[ext];
+        return Colibri.Common.MimeType.types[ext];
     }
 
     static type2ext(type) {
         var ret = false;
-        Object.keys(types).forEach(key => {
-            if(type == types[key]) { ret = key; return false; }
+        Object.keys(Colibri.Common.MimeType.types).forEach(key => {
+            if(type == Colibri.Common.MimeType.types[key]) { ret = key; return false; }
             return true;
         });
         return ret;
@@ -211,8 +211,8 @@ Colibri.Common.MimeType = class {
         var ret = false;
         var type = base.split('data:')[1];
         type = type.split(';')[0];
-        Object.keys(types).forEach(key => {
-            if(type == types[key]) { ret = key; return false; }
+        Object.keys(Colibri.Common.MimeType.types).forEach(key => {
+            if(type == Colibri.Common.MimeType.types[key]) { ret = key; return false; }
             return true;
         });
         return ret;
