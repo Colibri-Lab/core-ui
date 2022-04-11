@@ -20,6 +20,9 @@ Colibri.UI.DateTimeViewer = class extends Colibri.UI.Viewer {
         if(typeof value === 'string') {
             value = value.toDate();
         }
+        else if(typeof value === 'number') {
+            value = value.toDateFromUnixTime();
+        }
         this._value = value;
         
         if(this._value) {

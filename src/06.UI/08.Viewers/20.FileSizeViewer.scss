@@ -1,0 +1,7 @@
+.app-filesize-viewer-component {
+    .app-component-textspan {
+        &.app-component-shown {
+            display: block;
+        }
+    }
+}
