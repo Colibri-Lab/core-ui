@@ -554,6 +554,10 @@ String.prototype.fio = function() {
     const parts = this.split(' ');
     return (parts[0].capitalize() + ' ' + (parts.length > 1 ? (parts[1].substring(0, 1) + '. ' + (parts.length > 2 ? parts[2].substring(0, 1) + '.' : '')) : '')).trim();
 }
+String.prototype.extractExt = function() {
+    const parts = this.split('.');
+    return parts[parts.length - 1];
+}
 
 String.MD5 = function(e) {
     

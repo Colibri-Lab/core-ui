@@ -155,6 +155,9 @@ Colibri.UI.UploadButton = class extends Colibri.UI.Button {
         super(name, container);
         this.AddClass('app-success-button-component');
         this.AddClass('app-upload-button-component');
+
+        this._allowSize = 900000000;
+        this._allowTypes = '*';
         
         this._uniqueString = Number.unique();
         this._input = Element.create('input', {type:'file', id: 'component-' + name + '-' + this._uniqueString});
@@ -222,7 +225,7 @@ Colibri.UI.UploadButton = class extends Colibri.UI.Button {
     }
 
     set allowSize(value) {
-        this._allowSize = value;
+        this._allowSize = parseInt(value);
     }
 
     get allowSize() {
@@ -237,8 +240,9 @@ Colibri.UI.UploadButton = class extends Colibri.UI.Button {
         let errors = [];
         let success = [];
         for(const file of files) {
-            if(file.size > this._allowSize) {
-                errors.push({file: file, error: 'Файл слишком большой, максимум: ' + this._allowSize.toSizeString(['bytes', 'Kb', 'Mb', 'Gb'], 1024, true)});
+            const ext = file.name.extractExt();
+            if(file.size > this._allowSize || (this._allowTypes !== '*' && this._allowTypes.indexOf(ext) === -1)) {
+                errors.push({file: file, error: 'Файл слишком большой или не подходящего типа. ' + (this._allowTypes !== '*' ? 'Разрешено: ' + this._allowTypes.join(',') + ', ' : '') + 'максимум: ' + this._allowSize.toSizeString(['bytes', 'Kb', 'Mb', 'Gb'], 1024, true)});
             }
             else {
                 success.push(file);
