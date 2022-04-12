@@ -159,6 +159,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         return componentContainer;
     }
 
+
     get components() {
 
         let ret = {};
