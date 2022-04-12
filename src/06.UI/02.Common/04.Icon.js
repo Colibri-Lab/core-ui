@@ -6,7 +6,7 @@ Colibri.UI.Icon = class extends Colibri.UI.Component {
     }
 
     get icon() {
-        return this._element.style.backgroundImage;
+        return this._element.css('background-image');
     }
 
     set icon(value) {

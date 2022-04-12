@@ -19,6 +19,7 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         this.RegisterEvent('NodeCollapsed', false, 'Поднимается, когда ветка дерева закрывается');
         this.RegisterEvent('SelectionChanged', false, 'Поднимается, когда ментяется выбранный элемент');
         this.RegisterEvent('NodeEditCompleted', false, 'Поднимается, когда заканчивается редактирование узла');
+        this.RegisterEvent('NodeClicked', false, 'Поднимается, когда ткнули в узел');
     }
 
     _handleEvents() {
@@ -209,7 +210,9 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
             if(this._element.querySelector('div>em.expander') === args.domEvent.target) {
                 this.expanded = !this.expanded;
             } else {
-                this._nodes.tree.Select(this);
+                if(this._nodes.tree.Dispatch('NodeClicked', Object.assign({item: this}, args)) !== false) {
+                    this._nodes.tree.Select(this);
+                }
             }
             args.domEvent.stopPropagation();
             return false;

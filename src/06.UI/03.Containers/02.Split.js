@@ -10,12 +10,12 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
 
         this.AddClass('app-component-split');
 
-        const left = Element.create('div', {class: 'app-component-split-left'});
+        this._left = Element.create('div', {class: 'app-component-split-left'});
         this._handler = Element.create('div', {class: 'app-component-split-handler'});
-        const right = Element.create('div', {class: 'app-component-split-right'});
-        this._element.append(left);
+        this._right = Element.create('div', {class: 'app-component-split-right'});
+        this._element.append(this._left);
         this._element.append(this._handler);
-        this._element.append(right);
+        this._element.append(this._right);
 
         this._hasHandle = true;
 
@@ -26,7 +26,7 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
         const startResize = (e) => {
             this._resizing = true;
             Colibri.UI.Resizing = true;
-            this._resizeData = left.bounds();
+            this._resizeData = this._left.bounds();
             this.AddClass('-resizing');
 
             // ставим на документ, чтобы точно перехватить        
@@ -35,6 +35,8 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
 
             document.addEventListener("touchmove", doResize, {capture: true});
             document.addEventListener("mousemove", doResize, {capture: true});
+
+            this.Dispatch('SplitResizeStart');
 
             return false;
 
@@ -54,6 +56,8 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
             document.removeEventListener("touchmove", doResize, {capture: true});
             document.removeEventListener("mousemove", doResize, {capture: true});
 
+            this.Dispatch('SplitResizeStop');
+
             return false;
 
         };
@@ -63,13 +67,14 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
                 e.preventDefault();
     
                 if(this._orientation == Colibri.UI.Split.OrientationHorizontal) {
-                    left.css('flex', '0 0 ' + (e.pageX - this._resizeData.left) + 'px');
+                    this._left.css('flex', '0 0 ' + (e.pageX - this._resizeData.left) + 'px');
                 }
     
                 if(this._orientation == Colibri.UI.Split.OrientationVertical) {
-                    left.css('flex', '0 0 ' + (e.pageY - this._resizeData.top) + 'px');
+                    this._left.css('flex', '0 0 ' + (e.pageY - this._resizeData.top) + 'px');
                 }
     
+                this.Dispatch('SplitResizing');
 
                 return false;
             }
@@ -78,6 +83,13 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
         this._handler.addEventListener("touchstart", startResize, false);
         this._handler.addEventListener("mousedown", startResize, false);
 
+    }
+
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('SplitResizeStart', false, 'Когда начинаем изменять размер');
+        this.RegisterEvent('SplitResizing', false, 'В процессе изменения размера');
+        this.RegisterEvent('SplitResizeStop', false, 'Когда закончили изменять размер');
     }
 
     get orientation() {
@@ -141,6 +153,14 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
 
         }
 
+    }
+
+    get rightWidth() {
+        return parseInt(this._right.css('width'));
+    }
+
+    get leftWidth() {
+        return parseInt(this._left.css('width'));
     }
 
 }

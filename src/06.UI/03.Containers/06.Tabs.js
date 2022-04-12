@@ -110,7 +110,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
 
         
         if(currentSelection != newIndex) {
-            this.Dispatch('SelectionChanged', {newIndex: newIndex, oldIndex: currentSelection, name: button.name});
+            this.Dispatch('SelectionChanged', {newIndex: newIndex, oldIndex: currentSelection, tab: button});
         }
 
     }
