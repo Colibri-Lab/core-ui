@@ -67,12 +67,12 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
             }
             request.AddHeaders(headers);
             request[requestMethod](url, params, withCredentials, (progressEvent) => {
-                this.Dispatch('CallProgress', {event: progressEvent});
+                this.Dispatch('CallProgress', {event: progressEvent, request: requestKeyword});
             }).then((data) => {
                 
                 delete this._workingRequests[requestKeyword];
 
-                this.Dispatch('CallCompleted', {result: data.result});
+                this.Dispatch('CallCompleted', {result: data.result, request: requestKeyword});
 
                 try {
                     if(this._requestType == 'json') {
