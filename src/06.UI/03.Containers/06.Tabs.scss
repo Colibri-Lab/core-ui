@@ -1,4 +1,5 @@
 .app-tabs-container-component {
+    contain: strict;
     &.app-component-shown {
         display: grid;
     }

@@ -114,7 +114,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
 
             filename.AddClass('files-file-name');
 
-            if (itemData.file.type.match('image.*')) {
+            if (itemData.file?.type.match('image.*')) {
                 picture.shown = filename.shown = deleteIcon.shown = true;
                 picture.image = itemData.file;
                 picture.width = picture.height = 40;

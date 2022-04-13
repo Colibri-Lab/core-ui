@@ -1036,6 +1036,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         if (this.parent) {
             this.parent.Children(this.name, null);
+            this.parent = null;
         }
         this.__removeHtmlEvents();
         try {

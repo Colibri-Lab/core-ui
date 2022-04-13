@@ -158,6 +158,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
             if(!this.allowempty && (!this._value || !this._value.length) && this._lastValue) {
                 this.value = this._lastValue;
             }
+            this.SendToBack();
         }
     }
 

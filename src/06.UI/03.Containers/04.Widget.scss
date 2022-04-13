@@ -1,7 +1,8 @@
 .app-component-widget {
     width: 100%;
     position: relative;
-
+    contain: strict;
+    
     .app-component-widget-close-button {
         padding: 0;
         margin: 0;

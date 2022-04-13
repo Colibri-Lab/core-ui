@@ -163,4 +163,8 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
         return parseInt(this._left.css('width'));
     }
 
+    set leftWidth(value) {
+        this._left.css('flex', '0 0 ' + value );
+    }
+
 }
