@@ -531,6 +531,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
     set name(value) {
         this._name = value;
+        this._element.data('objectName', this._name);
     }
 
     /**

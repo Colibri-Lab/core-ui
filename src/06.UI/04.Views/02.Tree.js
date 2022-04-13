@@ -340,7 +340,7 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
     }
 
     get tree() {
-        return this.parent.tree;
+        return this?.parent?.tree;
     }
 
     get editable() {
@@ -378,7 +378,7 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
             }
         }
         const blurHandler = (e) => {
-            this.tree.Dispatch('NodeEditCompleted', {value: this.text, node: this, mode: 'cancel'});
+            this.tree?.Dispatch('NodeEditCompleted', {value: this.text, node: this, mode: 'cancel'});
             this.RemoveClass('editing');
             this._input.removeEventListener('keydown', keydownHandler);
             this._input.removeEventListener('blur', blurHandler);

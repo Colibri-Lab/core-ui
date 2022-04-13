@@ -116,6 +116,10 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
     }
 
+    Url(url, options) {
+        return url + (Object.countKeys(options) > 0 ? '?' + String.fromObject(options, ['&', '=']) : '');
+    }
+
     /**
      * Переадресация
      * @param {string} url куда
@@ -144,6 +148,8 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
             this._processRoutePatterns();
         }
 
+        return u;
+
     }
 
     /**
@@ -159,6 +165,14 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
     Pop() {
         const data = this._history.pop();
         this.Navigate(data.url, data.options);
+    }
+
+    get current() {
+        return this._url;
+    }
+
+    get options() {
+        return this._options;
     }
 
 }
