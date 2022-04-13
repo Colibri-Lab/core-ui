@@ -558,6 +558,25 @@ String.prototype.extractExt = function() {
     const parts = this.split('.');
     return parts[parts.length - 1];
 }
+String.prototype.pathinfo = function() {
+    try {
+        var parts = this.split('/');
+        var ret = {};
+        ret.basename = parts[parts.length - 1];
+        
+        var fileparts = ret.basename.split('.');
+        ret.ext = fileparts.length > 1 ? fileparts[fileparts.length - 1] : '';
+        ret.filename = fileparts[0];
+        
+        ret.dirname = this.replaceAll(ret.basename, '');
+        
+        return ret;
+    }
+    catch (e) {
+        return {};
+    }
+};
+
 
 String.MD5 = function(e) {
     
@@ -1283,6 +1302,14 @@ function Base2File(data, filename, mime) {
 
 function DownloadFile(data, filename, mime) {
     var a = Element.create('a', {href: window.URL.createObjectURL(Base2File(data, filename, mime), {type: mime}), download: filename});
+    document.body.append(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+function DownloadFileByPath(path) {
+    const pi = path.pathinfo();
+    var a = Element.create('a', {href: path, download: pi.filename});
     document.body.append(a);
     a.click();
     document.body.removeChild(a);
