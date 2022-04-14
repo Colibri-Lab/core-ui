@@ -162,6 +162,7 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         this.hasContextMenu = container.tree.hasContextMenu;
         this.dropable = this.tree.dropable;
         this.draggable = this.tree.draggable;
+        this.isLeaf = true;
 
     }
 
@@ -233,8 +234,16 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
     }
 
     Dispose() {
+        const node = this.parentNode;
         this._nodes.Dispose();
         super.Dispose();
+
+        try {
+            if(node instanceof Colibri.UI.TreeNode) {
+                node.isLeaf = this.parent.children == 0;
+            }    
+        }
+        catch(e) {}
     }
 
     get expanded() {
@@ -302,14 +311,19 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
     }
 
     get parentNode() {
-        return this.parent.parent;
+        return this?.parent?.parent ?? null;
     }
 
     set parentNode(value) {
+        const node = this.parentNode;
+        
         this.parent.Children(this.name, null);
         this.Disconnect();
-        value.nodes.Add(this);
+        value.nodes.Children(this.name, this);
         this.ConnectTo(value.nodes.container);
+
+        value.isLeaf = false;
+        node.isLeaf = node.nodes.children == 0;
     }
 
     MoveTo(parent) {
@@ -404,14 +418,27 @@ Colibri.UI.TreeNodes = class extends Colibri.UI.Component {
     }
 
     Add(name) {
-        const node = new Colibri.UI.TreeNode(name || 'node', this);
-        node.AddHandler('Expanded', (event, args) => { return this._tree.Dispatch('NodeExpanded', {node: event.sender}); });
-        node.AddHandler('Collapsed', (event, args) => { return this._tree.Dispatch('NodeCollapsed', {node: event.sender}); });
+        let node = null;
+        if(name instanceof Colibri.UI.TreeNode) {
+            node = name;
+        }
+        else {
+            node = new Colibri.UI.TreeNode(name || 'node', this);
+            node.AddHandler('Expanded', (event, args) => { return this._tree.Dispatch('NodeExpanded', {node: event.sender}); });
+            node.AddHandler('Collapsed', (event, args) => { return this._tree.Dispatch('NodeCollapsed', {node: event.sender}); });    
+        }
+
+        if(this.parent instanceof Colibri.UI.TreeNode) {
+            this.parent.isLeaf = false;
+        }
         this._tree.allNodes.push(node);
         return node;
     }
 
     Dispose() {
+        if(this.parent instanceof Colibri.UI.TreeNode) {
+            this.parent.isLeaf = true;
+        }
         this.ForEach((nodeName, node) => {
             node.Dispose();
         });
