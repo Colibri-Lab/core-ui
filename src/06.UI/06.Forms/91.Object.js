@@ -77,7 +77,8 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
     }
 
     set value(value) {
-        
+        value = eval_default_values(value);
+
         this.contentContainer.ForEach((name, component) => {
             if(name == '_adds') {
                 // если наткнулись на _adds
@@ -91,6 +92,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
                 });
             }
             else {
+                
                 if(!value) {
                     component.value = component.field.default ?? null;    
                 }
@@ -164,11 +166,11 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
     }
 
     Fields(name) {
-        return this.contentContainer.Children(name);
+        return this.contentContainer ? this.contentContainer.Children(name) : {};
     }
 
     ForEveryField(callback) {
-        this.contentContainer.ForEach(callback);
+        this.contentContainer && this.contentContainer.ForEach(callback);
     }
 
 }

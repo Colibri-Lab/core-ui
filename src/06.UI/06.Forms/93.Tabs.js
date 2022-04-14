@@ -1,7 +1,7 @@
 Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
     RenderFieldContainer() {
-        this.AddClass('app-component-object-field');
+        this.AddClass('app-component-tabs-field');
 
         this._tabs = new Colibri.UI.Tabs('tabs', this.contentContainer);
         this._tabs.shown = true;
@@ -97,6 +97,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
     }
 
     set value(value) {
+        value = eval_default_values(value);
         
         Object.forEach(this._tabs.components, (name, component) => {
             if(name == '_adds') {

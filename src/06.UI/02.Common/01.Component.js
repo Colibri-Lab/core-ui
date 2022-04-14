@@ -65,8 +65,27 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         this._contextmenu = [];
         this._hasContextMenu = false;
-
+        
         this.Dispatch('ComponentRendered');
+    }
+
+    _registerObserver() {
+        this._observer = new window.IntersectionObserver(([entry]) => {
+            if(this._visible != entry.isIntersecting) {
+                this.Dispatch('VisibilityChanged', {state: entry.isIntersecting});
+            }
+            this._visible = entry.isIntersecting;
+        }, {
+            root: null,
+            threshold: 1,
+        })
+        this._observer.observe(this._element);
+    }
+
+    _unregisterObserver() {
+        if(this._observer) {
+            this._observer.unobserve(this._element);
+        }
     }
 
     ProcessChildren(children, parent, dontDispatch = false) {
@@ -187,6 +206,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.RegisterEvent('Drop', false, 'Когда перетаскиваемый элемент "упал" на целевой объект');
         this.RegisterEvent('ContextMenu', false, 'Контекстное меню');
         this.RegisterEvent('Scrolled', false, 'Когда проскроллировали');
+        this.RegisterEvent('VisibilityChanged', false, 'Когда изменилось состояние отображения');
     }
 
     
@@ -1161,6 +1181,19 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             this._element.ensureInViewport(parentEl);
         } else {
             this._element.scrollIntoView(false);
+        }
+    }
+
+    get visible() {
+        return this._visible;
+    }
+
+    set handleVisibilityChange(value) {
+        if(value) {
+            this._registerObserver();
+        }
+        else {
+            this._unregisterObserver();
         }
     }
 

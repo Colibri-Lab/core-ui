@@ -1,3 +1,19 @@
+
+const json_object = function(v) {
+    return JSON.parse(v || '{}');
+}
+
+const json_array = function(v) {
+    return JSON.parse(v || '[]');
+}
+
+const eval_default_values = function(defaultAsString) {
+    if(typeof defaultAsString == 'string' && (defaultAsString.indexOf('json_object') !== -1 || defaultAsString.indexOf('json_array') !== -1)) {
+        return eval(defaultAsString);
+    }
+    return defaultAsString;
+}
+
 Array.unique = function(a) { return a.filter((v, i, ab) => { return a.indexOf(v) === i; }); }
 Array.merge = function(a, ar) {
     ar.forEach((o) => a.push(o));
@@ -75,7 +91,7 @@ Object.forEach = function(o, callback) {
     let keys = Object.keys(o);
     for (let i = 0; i < keys.length; i++) {
         if (o.hasOwnProperty(keys[i])) {
-            if (callback.apply(o, [keys[i], o[keys[i]]]) === false) {
+            if (callback.apply(o, [keys[i], o[keys[i]], i]) === false) {
                 break;
             }
         }
@@ -911,6 +927,29 @@ Element.prototype.ensureInViewport = function(container) {
     } else if (eBottom > cBottom) {
         container.scrollTop += (eBottom - cBottom);
     }
+}
+
+/**
+ * Проверяет видим ли элемент полностью
+ * @param {Element} container
+ */
+ Element.prototype.inInViewport = function(container) {
+
+    //Determine container top and bottom
+    let cTop = container.scrollTop;
+    let cBottom = cTop + container.clientHeight;
+
+    //Determine element top and bottom
+    let eTop = this.offsetTop;
+    let eBottom = eTop + this.clientHeight;
+
+    //Check if out of view
+    if (eTop - this.clientHeight < cTop) {
+        return false;
+    } else if (eBottom > cBottom) {
+        return false;
+    }
+    return true;
 }
 
 Element.prototype.index = function() {

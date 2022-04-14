@@ -45,7 +45,7 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
             Object.forEach(this._field.Fields(),
                 (name, component) => {
                     className && component.RemoveClass(className);
-                    component._field?.message && (component._field.message = '');
+                    component.field?.message && (component.field.message = '');
                 })
         }
     }

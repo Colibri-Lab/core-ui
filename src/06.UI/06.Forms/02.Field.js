@@ -149,12 +149,20 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     }
 
     get message() {
-        return this._content.Children(this._name + '-message').value;
+        const message = this._content.Children(this._name + '-message');
+        if(!message) {
+            return null;
+        }
+        return message.value;
     }
 
     set message(value) {
-        this._content.Children(this._name + '-message').shown = !!value;
-        this._content.Children(this._name + '-message').value = value;
+        const message = this._content.Children(this._name + '-message');
+        if(!message) {
+            return;
+        }
+        message.shown = !!value;
+        message.value = value;
     }
 
     get title() {

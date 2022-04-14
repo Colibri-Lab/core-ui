@@ -13,6 +13,17 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
             this.Hide();
         });
 
+        this.handleVisibilityChange = true;
+        this.AddHandler('VisibilityChanged', (event, args) => {
+
+            const bounds = this.parent.container.bounds();
+            const b = this.container.bounds();
+            if(!args.state) {
+                this.top =  bounds.top - b.outerHeight;
+            }
+
+        });
+
     }
 
     set shown(value) {
@@ -35,13 +46,14 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
     Show() {
         const bounds = this.parent.container.bounds();
         this.shown = true;
-        this.top = bounds.outerHeight;
-        // this.left = bounds.left;
+        this.top = bounds.top + bounds.outerHeight;
+        this.left = bounds.left;
         this.width = bounds.outerWidth;
         this.shown = true;
         if(this._selected.length && this._selected[0] instanceof Colibri.UI.List.Item) {
             this._selected[0].EnsureVisible(this);
         }
+
     }
 
     __renderItemContent(itemData) {

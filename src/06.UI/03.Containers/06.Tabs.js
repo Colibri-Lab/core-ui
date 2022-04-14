@@ -115,6 +115,19 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
 
     }
 
+    get headerContainer() {
+        return this._element.querySelector(':scope > .tabs-header-container');
+    }
+
+    set headerContainer(value) {
+        if(value) {
+            this.RemoveClass('-header-hidden');
+        }
+        else {
+            this.AddClass('-header-hidden');
+        }
+    }
+
     get header() {
         return this._element.querySelector(':scope > .tabs-header-container > .tabs-header');
     }

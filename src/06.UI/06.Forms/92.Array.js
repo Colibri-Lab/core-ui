@@ -99,13 +99,16 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     }
 
     set value(value) {
+        
+        value = eval_default_values(value);
+
         if(value && !Array.isArray(value)) {
             // throw new Error('Передайте массив')
             return;
         }
 
         this.contentContainer.Clear();
-        value && value.forEach((v) => {
+        value.forEach((v) => {
             const object = this._addNew();
             object.value = v;
         });

@@ -9,6 +9,16 @@
 
     grid-template-rows: 40px calc(100% - 40px);
 
+    &.-header-hidden {
+        grid-template-rows: 0px calc(100% - 0px);
+        .tabs-header-container {
+            border-bottom: 0px;
+        }
+        .tabs-container {
+            padding-top: 0px;
+        }
+    }
+
     .tabs-header-container {
         width: 100%;
         display: flex;
@@ -17,6 +27,7 @@
 
         background: white;
         border-bottom: 1px solid #C4C8D4;
+        overflow: hidden;
 
     }
 

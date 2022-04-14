@@ -336,6 +336,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         return data;
     }
     set value(value) {
+        value = eval_default_values(value);
         if(value && !Array.isArray(value)) { 
             throw new Error('Передайте массив'); 
         }
