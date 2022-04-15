@@ -32,7 +32,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this._recalculateTimerCellPositions = null;
 
         this._groups = false;
-        this._rowSelectionCheckbox = [];
+        this._rowSelectionCheckbox = new Set();
         this._showCheckboxes = false;
         this._multiple = false;
         this._selectionMode = Colibri.UI.Grid.EveryCell;
@@ -643,6 +643,50 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         
     }
 
+    __clickedProcessing(event, args) {
+        const   target = args.domEvent.target,
+                cell = target.closest('.app-ui-row-cell')?.tag('component');
+
+        if(!cell) {
+            return false;
+        }
+
+        const row = target.closest('.app-ui-row').tag('component');
+
+        args.cell = cell;
+        args.row = row;
+
+        this._element.focus();
+
+        switch(this.selectionMode) {
+            case Colibri.UI.Grid.EveryCell:
+                this.DeactivateAllCells();
+                if (!this.multiple) {
+                    this.DeselectAllCells();
+                }
+                cell.activated = !cell.activated;
+                cell.selected = !cell.selected;
+                break;
+            case Colibri.UI.Grid.FullRow:
+                this.DeactivateAllRows();
+
+                if (!this.multiple) {
+                    this.UnselectAllRows();
+                }
+                row.activated = !row.activated;
+                row.selected = !row.selected;
+                break;
+        }
+
+        this.Dispatch('CellClicked', args);
+        cell.EditValue();
+
+        this.Dispatch('RowClicked', args);
+
+        args.item = this.selected;
+        this.Dispatch('SelectionChanged', args);
+    }
+
     /**
      * Пересчитывает высоту строк
      */
@@ -840,6 +884,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      */
     _handleEvents() {
 
+        this.AddHandler('Clicked', this.__clickedProcessing);
+
         this.AddHandler('SelectionChanged', (event, args) => {
             if(args.item) {
                 this.ForEveryRow((name, row) => {
@@ -848,10 +894,6 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                     }
                 })
             }
-        });
-
-        this.AddHandler('Clicked', (event, args) => {
-            this._element.focus();
         });
 
         this.AddHandler('RowSelected', (event, args) => {
@@ -1479,19 +1521,6 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
         this.Dispatch('RowAdded', {row: newRow});
 
-        newRow.AddHandler('RowClicked', (sender, args) => {
-            if (this.grid.selectionMode === Colibri.UI.Grid.FullRow) {
-                this.grid.DeactivateAllRows();
-
-                if (!this.grid.multiple) {
-                    this.grid.UnselectAllRows();
-                }
-                args.row.activated = !args.row.activated;
-                args.row.selected = !args.row.selected;
-                this.Dispatch('RowClicked', args);
-            }
-        });
-
         newRow.AddHandler('RowUpdated', (sender, args) => {
             this.Dispatch('RowUpdated', {row: args.row});
         });
@@ -1687,6 +1716,16 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     }
 
+    _columnAddedHandler(sender, args) {
+        this.__newCell('', args.column);
+    }
+
+    Dispose() {
+        this.grid._rowSelectionCheckbox.delete(this._checkboxContainer);
+        this.header.columns.RemoveHandler('ColumnAdded', this._columnAddedHandler);
+        super.Dispose();
+    }
+
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('RowStickyChange', false, 'Поднимается, когда строка меняет липкость');
@@ -1702,13 +1741,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     _handleEvents() {
 
-        this.AddHandler('Clicked', (sender, args) => {
-            this.Dispatch('RowClicked', Object.assign(args, {row: this}));
-        });
-
-        this.header.columns.AddHandler('ColumnAdded', (sender, args) => {
-            this.__newCell('', args.column);
-        });
+        this.header.columns.AddHandler('ColumnAdded', this._columnAddedHandler);
         
         this.AddHandler('RowStickyChange', (sender, args) => {
             if(!this._checkboxContainer) {
@@ -1746,7 +1779,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         if (this.grid.showCheckboxes) {
             this._checkboxContainer.AddClass('input-checkbox-shown');
         }
-        this.grid._rowSelectionCheckbox.push(this._checkboxContainer);
+        this.grid._rowSelectionCheckbox.add(this._checkboxContainer);
 
         this._checkbox = new Colibri.UI.Checkbox('row-checkbox', this._checkboxContainer);
         this._checkbox.shown = true;
@@ -1831,10 +1864,6 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
             newCell.parentColumn = column;
             newCell.shown = true;
         
-            newCell.AddHandler('CellClicked', (sender, args) => {
-                this.Dispatch('CellClicked', args);
-            });
-
             newCell.AddHandler('CellDoubleClicked', (sender, args) => {
                 this.Dispatch('CellDoubleClicked', args);
             });
@@ -2069,11 +2098,6 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
     }
 
     _handleEvents() {
-
-        this.AddHandler('Clicked', (sender, args) => {
-            this.Dispatch('CellClicked', {cell: this});
-            this.EditValue();
-        });
 
         this.AddHandler('DoubleClicked', (sender, args) => {
             this.Dispatch('CellDoubleClicked', {cell: this, row: this.parentRow});
