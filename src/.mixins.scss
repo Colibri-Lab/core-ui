@@ -80,3 +80,17 @@
         opacity: 0;
     }
 }
+
+@mixin wrapper() {
+    &.app-component-shown {
+        display: flex;
+    }
+    align-items: stretch;
+    justify-content: center;
+}
+
+@mixin wrapped($width) {
+    max-width: $width;
+    width: 100%;
+    flex: 1 1 100%;
+}

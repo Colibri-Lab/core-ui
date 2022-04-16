@@ -14,17 +14,15 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
         this.RegisterEvents();
         this.RegisterEventHandlers();
         
-        this.InitializeModule();
-
-        this._authorizationCookieName = 'ss-jwt';
-        this._useAuthorizationCookie = true;
-
     }
 
     /**
      * Инициализация модуля, запускается автоматически
      */
     InitializeModule() {
+
+        this._authorizationCookieName = 'ss-jwt';
+        this._useAuthorizationCookie = true;
 
     }
 

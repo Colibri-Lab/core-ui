@@ -72,9 +72,16 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         return null;
     }
 
-    AddPathLoader(path, loader) {
+    AddPathLoader(path, loader, params = {}) {
         if(this._pathLoaders[path]) {
             throw new Error('Path loader is Registered')
+        }
+
+        if(typeof loader == 'string') {
+            // значит это Module:Controller.Method
+            const parts = loader.split(':');
+            const module = eval(parts[0]);
+            loader = () => module.Call(parts[1].split('.')[0], parts[1].split('.')[1], params);
         }
 
         this._pathLoaders[path] = {loader: loader, loading: false, loaded: false};

@@ -99,12 +99,16 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
         this.title = this._fieldData.desc;
         this.note = this._fieldData.note;
+        this.placeholder = this._fieldData?.placeholder;
 
         if(this._fieldData.attrs) {
             Object.assign(this, this._fieldData.attrs);
         }
 
         this.AddHandler(['Changed', 'KeyUp', 'KeyDown'], (event, args) => {
+            if(event.name == 'Changed') {
+                this._applyRuntimes();
+            }
             if(this._parentField) {
                 this._parentField.Dispatch(event.name, Object.assign({component: event.sender}, args));
             }
@@ -138,6 +142,14 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this.RegisterEvent('KeyDown', false, 'Когда кнопка нажата')
         this.RegisterEvent('KeyUp', false, 'Когда кнопка отжата')
         this.RegisterEvent('FieldsRendered', false, 'Когда поля созданы');
+    }
+
+    _applyRuntimes() {
+        let runtime = this._fieldData?.params?.runtime;
+        if(runtime) {
+            runtime = eval(runtime);
+            runtime(this, this.root);
+        }
     }
 
     Validate() {

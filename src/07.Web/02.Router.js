@@ -18,6 +18,13 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
         else if(type == Colibri.Web.Router.RouteOnHistory) {
             this._initRouterOnHistory();
         }
+
+        this._handleHashChange = (e) => {
+            this._setCurrentUrl(App.Request.uri, App.Request.query);
+        };
+        this._handlePopState = (e) => {
+            this._setCurrentUrl(App.Request.uri, App.Request.query);
+        };
         
     }
 
@@ -26,7 +33,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
             this._setCurrentUrl(App.Request.uri, App.Request.query);
         }
         else if(this._type == Colibri.Web.Router.RouteOnHistory) {
-            this._setCurrentUrl(App.Request.uri, Object.assign(App.Request.query, e.state));
+            this._setCurrentUrl(App.Request.uri, App.Request.query);
         }
         this._processRoutePatterns();
     }
@@ -51,15 +58,13 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
     }
 
     _initRouterOnHash() {
-        window.addEventListener('hashchange', (e) => {
-            this._setCurrentUrl(App.Request.uri, App.Request.query);
-        });
+        window.removeEventListener('popstate', this._handlePopState);
+        window.addEventListener('hashchange', this._handleHashChange);
     }
 
     _initRouterOnHistory() {
-        window.addEventListener('popstate', (e) => {
-            this._setCurrentUrl(App.Request.uri, Object.assign(App.Request.query, e.state));
-        })
+        window.removeEventListener('hashchange', this._handleHashChange);
+        window.addEventListener('popstate', this._handlePopState);
     }
 
     _processRoutePatterns() {
@@ -133,14 +138,18 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
         let isChanged = false;
         if(this._type == Colibri.Web.Router.RouteOnHash) {
             isChanged = location.hash != '#' + u;
-            location.hash = '#' + u;
         }
         else if(this._type == Colibri.Web.Router.RouteOnHistory) {
-            isChanged = location.href != u;
-            history.pushState({}, "", u);
+            isChanged = location.pathname != u;
         }
 
         if(setImmediately) {
+            if(this._type == Colibri.Web.Router.RouteOnHash) {
+                location.hash = '#' + u;
+            }
+            else if(this._type == Colibri.Web.Router.RouteOnHistory) {
+                history.pushState({}, "", u);
+            }
             this._setCurrentUrl(u, options);
         }
 
@@ -175,9 +184,24 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
         return this._options;
     }
 
+    get type() {
+        return this._type;
+    }
+
+    set type(value) {
+        this._type = value;
+        if(this._type == Colibri.Web.Router.RouteOnHash) {
+            this._initRouterOnHash();
+        }
+        else if(this._type == Colibri.Web.Router.RouteOnHistory) {
+            this._initRouterOnHistory();
+        }
+        this.HandleDomReady();
+    }
+
 }
 
 /** Раутинг на основе Hash */
 Colibri.Web.Router.RouteOnHash = 'hash';
 /** Роутинг на основе истории */
-Colibri.Web.Router.RouteOnHistory = 'hash';
+Colibri.Web.Router.RouteOnHistory = 'history';

@@ -35,16 +35,6 @@ Colibri.UI.Utilities.Mask = class {
         return opts;
     }
 
-    // Fill wildcards past index in output with placeholder
-    _addPlaceholdersToOutput(output, index, placeholder) {
-        for (; index < output.length; index++) {
-            if (output[index] === Colibri.UI.Utilities.Mask.DIGIT || output[index] === Colibri.UI.Utilities.Mask.ALPHA || output[index] === Colibri.UI.Utilities.Mask.ALPHANUM) {
-                output[index] = placeholder;
-            }
-        }
-        return output;
-    }
-
     _unbindElementToMask() {
         for (var i = 0, len = this.elements.length; i < len; i++) {
             this.elements[i].lastOutput = "";
@@ -104,6 +94,16 @@ Colibri.UI.Utilities.Mask = class {
 
     unMask() {
         this._unbindElementToMask();
+    }
+
+    // Fill wildcards past index in output with placeholder
+    static _addPlaceholdersToOutput(output, index, placeholder) {
+        for (; index < output.length; index++) {
+            if (output[index] === Colibri.UI.Utilities.Mask.DIGIT || output[index] === Colibri.UI.Utilities.Mask.ALPHA || output[index] === Colibri.UI.Utilities.Mask.ALPHANUM) {
+                output[index] = placeholder;
+            }
+        }
+        return output;
     }
 
 
@@ -185,7 +185,7 @@ Colibri.UI.Utilities.Mask = class {
                     return output.join("");
                 }
                 else if ((placeholder !== undefined) && (patternChars.length > charsValues.length)) {
-                    return this._addPlaceholdersToOutput(output, i, placeholder).join("");
+                    return Colibri.UI.Utilities.Mask._addPlaceholdersToOutput(output, i, placeholder).join("");
                 }
                 else {
                     break;
@@ -199,7 +199,7 @@ Colibri.UI.Utilities.Mask = class {
                     output[i] = values[index++];
                 } else if (output[i] === Colibri.UI.Utilities.Mask.DIGIT || output[i] === Colibri.UI.Utilities.Mask.ALPHA || output[i] === Colibri.UI.Utilities.Mask.ALPHANUM) {
                     if (placeholder !== undefined) {
-                        return this._addPlaceholdersToOutput(output, i, placeholder).join("");
+                        return Colibri.UI.Utilities.Mask._addPlaceholdersToOutput(output, i, placeholder).join("");
                     }
                     else {
                         return output.slice(0, i).join("");
@@ -220,6 +220,11 @@ Colibri.UI.Utilities.Mask = class {
 
     static toAlphaNumeric(value) {
         return value.toString().replace(/[^a-z0-9 ]+/i, "");
+    }
+
+    static Check(value, pattern) {
+        const v = Colibri.UI.Utilities.Mask.toPattern(value, {pattern: pattern, placeholder: "_"});
+        return v === value;
     }
 
 
