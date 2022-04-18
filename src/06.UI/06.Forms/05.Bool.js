@@ -78,8 +78,13 @@ Colibri.UI.Forms.Bool = class extends Colibri.UI.Forms.Field {
     }
 
     set value(value) {
-        const _value = value[this._fieldData.selector?.value || 'value'] ?? value;
-        if(_value) {
+        
+        if(value === null) {
+            value = {};
+        }
+
+        const _value = value[this._fieldData?.selector?.value ?? 'value'] ?? value;
+        if(_value === '1' || _value === 'true' || _value === true) {
             this._input.attr('checked', 'checked');
         }
         else {

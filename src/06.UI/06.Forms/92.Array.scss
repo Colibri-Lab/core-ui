@@ -27,12 +27,6 @@
         .app-component-object-field {
             margin-bottom: 10px;
             padding-right: 20px;
-            &:only-child {
-                padding-right: 0px;
-                .app-component-remove-field {
-                    display: none;
-                }
-            }
         }
     }
 

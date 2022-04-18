@@ -962,7 +962,14 @@ Element.prototype.index = function() {
  * @param {string} value значение атрибута
  */
 Element.prototype.attr = function(name, value) {
-    if (value === undefined) {
+    if(name === undefined && value === undefined) {
+        let ret = {};
+        for(const attr of this.attributes) {
+            ret[attr.name] = attr.value;
+        }
+        return ret;
+    }
+    else if (value === undefined) {
         return this.getAttribute(name);
     } else {
         value !== null ? this.setAttribute(name, value) : this.removeAttribute(name);

@@ -35,6 +35,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         link.shown = true;
         link.AddHandler('Clicked', (event, args) => {
             this._addNew();
+            this.Dispatch('Changed');            
         });
         return link;
     }
@@ -45,7 +46,9 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         object.parent = this.contentContainer;
         object.shown = true;
         object.title = '';
-        object.AddRemoveLink();
+        object.AddRemoveLink(() => {
+            this.Dispatch('Changed');
+        });
         object.AddHandler('Changed', (event, args) => this.Dispatch('Changed', args));
         this.contentContainer.Children(object.name, object);
         this.Dispatch('FieldsRendered');

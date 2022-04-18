@@ -96,7 +96,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         for (let i = 0; i < children.length; i++) {
             const element = children[i];
             if (element.tagName == 'component') {
-                const objectClass = eval(element.getAttribute('Component'));
+                const objectClass = eval(element.getAttribute('Component') || element.getAttribute('component'));
                 if(!objectClass) {
                     continue;
                 }

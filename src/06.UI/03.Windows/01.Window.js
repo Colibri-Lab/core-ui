@@ -17,6 +17,11 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         /* запихиваем в html */
         this._title.innerHTML = title;
 
+        this._titleContainer = this._element.querySelector('.app-component-window-title');
+        if (title === undefined) {
+            this._titleContainer.hideElement();
+        }
+
         this._content = this._element.querySelector('.app-component-window-content');
 
         this._footer = this._element.querySelector('.app-component-window-footer');
@@ -24,9 +29,6 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
         this.GenerateChildren(element, this._content);
 
-        if (title === undefined) {
-            this._element.querySelector('.app-component-window-title').hideElement();
-        }
 
         let closeButtonContainer = this._element.querySelector('.close-button');
 
@@ -41,6 +43,42 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
         this.Dispatch('WindowContentRendered');
 
+    }
+
+    _movingHandler(e) {
+        const windowElement = e.currentTarget.closest('.app-component-window');
+        const windowContainer = windowElement.querySelector('.app-component-window-container');
+
+        const point = windowElement.tag('movingPoint');
+
+        windowContainer.css('left', (e.pageX - point.left - parseInt(windowContainer.css('margin-left'))) + 'px');
+        windowContainer.css('top', (e.pageY - point.top - parseInt(windowContainer.css('margin-top'))) + 'px');
+    }
+
+    _movingStartHandler(e) {
+        const windowElement = e.currentTarget.closest('.app-component-window');
+        const windowComponent = windowElement.tag('component');
+        windowComponent.moving = true;
+        windowElement.addEventListener('mousemove', windowComponent._movingHandler, true);
+        windowElement.addEventListener('mouseup', windowComponent._movingStopHandler, true);
+        windowElement.tag('movingPoint', {left: e.layerX, top: e.layerY});
+    }
+
+    _movingStopHandler(e) {
+        const windowElement = e.currentTarget.closest('.app-component-window');
+        const windowComponent = windowElement.tag('component');
+        windowComponent.moving = false;
+        windowElement.removeEventListener('mousemove', windowComponent._movingHandler, true);
+        windowElement.removeEventListener('mouseup', windowComponent._movingStopHandler);
+    }
+
+    _setMovableEvents(value) {
+        if(value) {
+            this._titleContainer.addEventListener('mousedown', this._movingStartHandler);
+        }
+        else {
+            this._titleContainer.removeEventListener('mousedown', this._movingStartHandler);
+        }
     }
 
     _registerEvents() {
@@ -61,7 +99,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         const domEvent = args.domEvent;
         domEvent.stopPropagation();
         domEvent.preventDefault();
-        
+        return false;
     }
 
     __MouseDown(event, args) {
@@ -93,6 +131,23 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
     set content(value) {
         return this._content.innerHTML = value;
+    }
+
+    get movable() {
+        return this._movable;
+    }
+
+    set movable(value) {
+        this._movable = value;
+        this._setMovableEvents(value);
+    }
+
+    set moving(value) {
+        this._moving = value;
+    }
+
+    get moving() {
+        return this._moving;
     }
 
     /**
