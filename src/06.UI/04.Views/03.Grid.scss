@@ -127,6 +127,9 @@
                 &.app-component-shown {
                     display: table-row;
                 }
+                &.app-drop-target-component {
+                    border-top: 2px dashed #c0c0c0;
+                }
 
                 &.app-component-hascontextmenu {
                     .app-ui-row-cell:nth-last-child(-n+2) {

@@ -19,8 +19,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._parent = null;
         /** @type {string} */
         this._name = name;
-        /** @type {Object} */
-        this._children = {};
+        /** @type {Array} */
+        this._children = [];
         /** @type {Object} */
         this._tag = {};
         /** @type {HTMLElement} */
@@ -110,7 +110,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 for (let j = 0; j < element.attributes.length; j++) {
                     const attr = element.attributes[j];
 
-                    if (['Component', 'name'].indexOf(attr.name) !== -1) {
+                    if (['Component', 'name', 'component'].indexOf(attr.name) !== -1) {
                         continue;
                     }
 
@@ -364,13 +364,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     _bindHtmlEvents() {
-        /*for(let [name, h] of Object.entries(this.__domHandlers)) {
-            let _handlers = Array.isArray(h) ? h : [h];
-
-            _handlers.forEach((_handler) => {
-                (_handler.respondent ?? this._element).addEventListener(name, (_handler.handler ?? _handler));
-            });
-        }*/
+        
     }
 
     __removeHtmlEvents() {
@@ -649,7 +643,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             this.RemoveClass('ui-disabled')._element.attr('disabled', null);
         }
 
-        Object.forEach(this.Children(), (name, control) => {
+        this.ForEach((name, control) => {
             control.enabled = val;
         });
 
@@ -774,23 +768,33 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     get next() {
-        const keys = Object.keys(this.parent._children);
-        const myIndex = keys.indexOf(this.name);
+        const myIndex = this.parent.indexOf(this.name);
         if(myIndex === -1 || myIndex === keys.length - 1) {
             return  null;
         }
 
-        return this.parent.Children(keys[myIndex + 1]);
+        return this.parent.Children(myIndex + 1);
     }
 
     get prev() {
-        const keys = Object.keys(this.parent._children);
-        const myIndex = keys.indexOf(this.name);
+        const myIndex = this.parent.indexOf(this.name);
         if(myIndex === -1 || myIndex === 0) {
             return  null;
         }
 
-        return this.parent.Children(keys[myIndex - 1]);
+        return this.parent.Children(myIndex - 1);
+    }
+
+    _childByName(name) {
+        const filtered = this._children.filter(c => c.name == name);
+        if(filtered.length > 0) {
+            return filtered.pop();
+        }
+        return null;
+    }
+
+    _moveInDom(insertedElement, parentElement, index) {
+        parentElement.insertBefore(insertedElement, parentElement.children[index]);
     }
 
     /**
@@ -798,71 +802,57 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @param {string} name наименование обьекта
      * @param {Colibri.UI.Component} val дочерний обьект
      * @param {number} [index] индекс в массиве, куда вставить элемент
-     * @returns {Colibri.UI.Component}
+     * @returns {Colibri.UI.Component[]}
      */
     Children(name, val = undefined, index = undefined, container = null) {
+        
         if (name === undefined)
             return this._children;
         if (name === 'firstChild') {
-            for (let f in this._children)
-                return this._children[f];
+            return this._children[0] ?? null;
         } else if (name === 'lastChild') {
-            let l;
-            for (l in this._children);
-            return this._children[l];
+            return this._children[this._children.length - 1];
         }
+        else if(typeof name === 'string' && name.indexOf('/') !== -1) {
+            return this.Find(name);
+        }
+
+        const childIndex = typeof name == 'string' ? this.indexOf(name) : name;
+        if(childIndex === -1 && [null, undefined].indexOf(val) !== -1) {
+            return null;
+        }
+
         if (val === undefined) {
-
-            if(typeof val == 'number') {
-                val = Object.keys(this._children)[val];
-            }
-
-            if(name.indexOf('/') !== -1) {
-                // Это путь, ищем через Find
-                return this.Find(name);
-            }
-            else {
-                return this._children[name];
-            }
-
+            return this._children[childIndex];
         }
-        if (val === null)
-            delete this._children[name];
+        else if(val === null) {
+            this._children.splice(childIndex, 1);
+        }
         else {
-            if (index != undefined) {
-                if(index < this.children && index >= 0) {
-                    
-                    let t = {};
-                    let keys = Object.keys(this._children);
-                    let ar = Object.values(this._children);
-
-                    keys.splice(index, 0, name);
-                    ar.splice(index, 0, val);
-
-                    keys.forEach((v, i) => t[v] = ar[i]);
-                    this._children = t;
-
-                    const insertedElement = val.container;
-                    const parentElement = container || this.container;
-
-                    parentElement.insertBefore(insertedElement, parentElement.children[index]);
-
-                }
-
+            if (index != undefined && index < this.children && index >= 0) {
+                this._children.splice(index, 0, val);
+                this._moveInDom(val.container, container || this.container, index);
             } else {
-                this._children[name] = val;
+                this._children.push(val);
             }
         }
         return val;
     }
 
+    Sort(callback) {
+        this._children.sort(callback);
+        this._children.forEach((child, index) => {
+            this._moveInDom(child.container, this.container, index);
+        });
+    }
+
     /** @type {number} */
     get children() {
-        return Object.countKeys(this.Children());
+        return this.Children().length;
     }
 
     indexOf(name) {
-        return Object.keys(this._children).indexOf(name);
+        return Array.findIndex(this._children, (v) => v.name == name);
     }
 
     get hasShadow() {
@@ -1150,8 +1140,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @param {Function} handler обработчик
      */
     ForEach(handler) {
-        Object.forEach(this.Children(), (name, o) => {
-            return handler.apply(this, [name, o]);
+        this._children.forEach((o, index) => {
+            return handler.apply(this, [o.name, o, index]);
         });
         return this;
     }
@@ -1161,9 +1151,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @param {Function} handler обработчик
      */
     ForReverseEach(handler) {
-        Object.forReverseEach(this.Children(), (name, o) => {
-            return handler.apply(this, [name, o]);
-        });
+        for (let i = this._children.length - 1; i >= 0; i--) {
+            handler.apply(this, [this._children[i].name, this._children[i], i]);
+        }
         return this;
     }
 

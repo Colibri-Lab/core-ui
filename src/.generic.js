@@ -576,11 +576,11 @@ String.prototype.extractExt = function() {
 }
 String.prototype.pathinfo = function() {
     try {
-        var parts = this.split('/');
-        var ret = {};
+        const parts = this.split('/');
+        const ret = {};
         ret.basename = parts[parts.length - 1];
         
-        var fileparts = ret.basename.split('.');
+        const fileparts = ret.basename.split('.');
         ret.ext = fileparts.length > 1 ? fileparts[fileparts.length - 1] : '';
         ret.filename = fileparts[0];
         
@@ -593,6 +593,18 @@ String.prototype.pathinfo = function() {
     }
 };
 
+String.prototype.urlinfo = function() {
+    try {
+        const parts = this.split('?');
+        const ret = {};
+        ret.url = parts[0];
+        ret.options = parts[1] !== undefined ? parts[1].toObject(['&', '=', null, (v) => decodeURIComponent(v)]) : {};
+        return ret;
+    }
+    catch (e) {
+        return {};
+    }
+};
 
 String.MD5 = function(e) {
     

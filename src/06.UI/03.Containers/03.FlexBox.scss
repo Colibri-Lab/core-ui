@@ -4,4 +4,7 @@
   &.app-component-shown {
     display: flex;
   }
+  &.-nowrap {
+    flex-wrap: nowrap;
+  }
 }

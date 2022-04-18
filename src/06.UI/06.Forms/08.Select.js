@@ -104,10 +104,11 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         else if (typeof this._lookup == 'object') {
 
             if(this._lookup?.method) {
-                if (typeof this._lookup.method == 'string') {
-                    let lookupMethod = eval(this._lookup.method);
-                    lookupPromise = lookupMethod(this._input._input.value, dependsValue);
+                let lookupMethod = this._lookup.method;
+                if (typeof lookupMethod == 'string') {
+                    lookupMethod = eval(this._lookup.method);
                 }
+                lookupPromise = lookupMethod(this._input._input.value, dependsValue);
             }
             else if(this._lookup?.binding) {
                 let binding = this._lookup.binding;

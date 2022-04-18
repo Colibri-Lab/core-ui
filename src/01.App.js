@@ -87,6 +87,11 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                     const settings = JSON.parse(response.result);
                     this._store.Set('app.settings', settings);
                 }
+
+                // запускаем обработку экшенов в документе
+                this._actions.HandleDomReady();
+                this._router.HandleDomReady();
+
             });
 
             if(showLoader) {
@@ -95,6 +100,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                     this._loader.Hide();
                 });   
             } 
+
             
         });
 
@@ -104,10 +110,6 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
             this.Dispatch('DocumentReady');
 
             this._notices = new Colibri.UI.Notices('notices', document.body);
-
-            // запускаем обработку экшенов в документе
-            this._actions.HandleDomReady();
-            this._router.HandleDomReady();
 
             if(initComet) {
                 this._comet.AddHandler('MessageReceived', (event, args) => {

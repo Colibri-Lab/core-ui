@@ -414,32 +414,32 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             this.Dispatch('CellDoubleClicked', args);
         });
 
-        rows.AddHandler('RowClicked', (sender, args) => {
+        rows.AddHandler('RowClicked', (event, args) => {
             this.Dispatch('RowClicked', args);
             this.Dispatch('SelectionChanged', Object.assign(args, {item: this.selected}));
         });
 
-        rows.AddHandler('RowSelected', (sender, args) => {
+        rows.AddHandler('RowSelected', (event, args) => {
             if(rows.checked.length == 0) {
                 rows.checkbox.checked = false;
             }
             this.Dispatch('RowSelected', args);
         });
 
-        rows.AddHandler('RowDisposed', (sender, args) => {
+        rows.AddHandler('RowDisposed', (event, args) => {
             this.__recalculateCellPositions();
             this.Dispatch('RowDisposed', args);
         });
 
-        rows.AddHandler('StickyChanged', (sender, args) => {
+        rows.AddHandler('StickyChanged', (event, args) => {
             this.__recalculateCellPositions();
         });
 
-        rows.AddHandler('GridCellsChanged', (sender, args) => {
+        rows.AddHandler('GridCellsChanged', (event, args) => {
             this.__recalculateCellPositions();
         });
 
-        rows.AddHandler('RowAdded', (sender, args) => {
+        rows.AddHandler('RowAdded', (event, args) => {
             this._norows.shown = false;
             this._gridContent.shown = true;
             Object.forEach(this.groups, (name, rows) => {
@@ -449,7 +449,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             this.Dispatch('RowAdded', {row: args.row});
         });
 
-        rows.AddHandler('RowUpdated', (sender, args) => {
+        rows.AddHandler('RowUpdated', (event, args) => {
             this.__recalculateCellPositions();
             this.Dispatch('RowUpdated', {row: args.row});
         });
@@ -476,11 +476,11 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      * @param {Object} args 
      * @returns 
      */
-    __keydownProcessing(sender, args) {
+    __keydownProcessing(event, args) {
 
-        const event = args.domEvent;
+        const e = args.domEvent;
 
-        if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Enter', 'NumpadEnter'].indexOf(event.code) !== -1) {
+        if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Enter', 'NumpadEnter'].indexOf(e.code) !== -1) {
 
             let activeItem;
             let newActiveItem;
@@ -499,15 +499,15 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                 let newActiveRow = null;
 
                 if (activeRow === null) {
-                    if (['ArrowDown', 'ArrowRight'].indexOf(event.code) !==  -1) {
+                    if (['ArrowDown', 'ArrowRight'].indexOf(e.code) !==  -1) {
                         newActiveRow = firstGroup.firstRow;
                     } 
-                    else if (['ArrowUp', 'ArrowLeft'].indexOf(event.code) !== -1) {
+                    else if (['ArrowUp', 'ArrowLeft'].indexOf(e.code) !== -1) {
                         newActiveRow = lastGroup.lastRow;
                     }
                 } else {
-                    if (event.code !== 'Enter') {
-                        if (['ArrowDown', 'ArrowRight'].indexOf(event.code) !== -1) {
+                    if (e.code !== 'Enter') {
+                        if (['ArrowDown', 'ArrowRight'].indexOf(e.code) !== -1) {
                             if (activeRow.nextRow !== null) {
                                 newActiveRow = activeRow.nextRow;
                             }
@@ -525,7 +525,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                         if(newActiveRow) {
                             correctionCoefficient = newActiveRow._heightPrevStickyRow;
                         }
-                    } else if (event.code === 'Enter') {
+                    } else if (e.code === 'Enter') {
                         if (!this.multiple) {
                             this.UnselectAllRows();
                             activeRow.selected = true;
@@ -549,7 +549,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
                 } else {
 
-                    if (event.code === 'ArrowRight') {
+                    if (e.code === 'ArrowRight') {
                         if (activeCell.nextCell !== null) {
                             newActiveCell = activeCell.nextCell;
                             correctionCoefficient = newActiveCell.parentColumn._widthPrevStickyCell;
@@ -564,7 +564,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                                 correctionCoefficient = newActiveCell.parent._heightPrevStickyRow;
                             }
                         }
-                    } else if (event.code === 'ArrowLeft') {
+                    } else if (e.code === 'ArrowLeft') {
                         if (activeCell.prevCell !== null) {
                             newActiveCell = activeCell.prevCell;
                             correctionCoefficient = newActiveCell.parentColumn._widthPrevStickyCell;
@@ -579,7 +579,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                                 correctionCoefficient = newActiveCell.parentColumn._widthPrevStickyCell;
                             }
                         }
-                    } else if (event.code === 'ArrowDown') {
+                    } else if (e.code === 'ArrowDown') {
                         if (activeCell.parent.nextRow !== null) {
                             let nameNewCell = 'app-ui-cell-' + activeCell.parent.nextRow.name + '-' + activeCell.parentColumn.name;
                             newActiveCell = activeCell.parent.nextRow.Children(nameNewCell);
@@ -591,7 +591,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                                 correctionCoefficient = newActiveCell.parentRow._heightPrevStickyRow;
                             }
                         }
-                    } else if (event.code === 'ArrowUp') {
+                    } else if (e.code === 'ArrowUp') {
                         if (activeCell.parent.prevRow !== null) {
                             let nameNewCell = 'app-ui-cell-' + activeCell.parent.prevRow.name + '-' + activeCell.parentColumn.name;
                             newActiveCell = activeCell.parent.prevRow.Children(nameNewCell);
@@ -603,7 +603,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                                 correctionCoefficient = 0;
                             }
                         }
-                    } else if (event.code === 'Enter') {
+                    } else if (e.code === 'Enter') {
                         if (!this.multiple) {
                             this.DeselectAllCells();
                         }
@@ -634,7 +634,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             event.preventDefault();
             return false;
         }
-        else if(event.code === 'Space') {
+        else if(e.code === 'Space') {
             this.activeRow.checked = !this.activeRow.checked;
             event.stopPropagation();
             event.preventDefault();
@@ -827,10 +827,10 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     ForEveryRow(callback) {
         let cancel = false;
-        Object.forEach(this.groups, (name, group) => {
-            group.ForEach((rname, row) => {
+        Object.forEach(this.groups, (name, group, igroup) => {
+            group.ForEach((rname, row, irow) => {
                 if(row instanceof Colibri.UI.Grid.Row) {
-                    if(callback(rname, row) === false) {
+                    if(callback(rname, row, irow) === false) {
                         cancel = true;
                         return false;
                     }
@@ -905,14 +905,14 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
         this.AddHandler('KeyDown', this.__keydownProcessing);
 
-        this.header.columns.AddHandler('ColumnAdded', (sender, args) => {
+        this.header.columns.AddHandler('ColumnAdded', (event, args) => {
             Object.forEach(this.groups, (name, rows) => {
                 rows.columns = this.header.columns.count;
             });
             this.__recalculateCellPositions();
         });
 
-        this.header.AddHandler('ColumnDisposed', (sender, args) => {
+        this.header.AddHandler('ColumnDisposed', (event, args) => {
             this.Dispatch('ColumnDisposed', args);
         });
 
@@ -1511,7 +1511,7 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         newRow.hasContextMenu = this.grid.hasContextMenu;
 
         // добавили, смотрим есть ли сортировка
-        if(this.grid && this.grid.tag && this.grid.tag.params && this.grid.tag.params.sort) {
+        if(this.grid?.tag?.params?.sort) {
             const foundIndex = this.grid.tag.params.sort(newRow, this);
             this.Children(name, newRow, foundIndex);
         }
@@ -1521,23 +1521,27 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
         this.Dispatch('RowAdded', {row: newRow});
 
-        newRow.AddHandler('RowUpdated', (sender, args) => {
+        newRow.AddHandler('RowUpdated', (event, args) => {
+            if(this.grid?.tag?.params?.sort) {
+                const foundIndex = this.grid.tag.params.sort(newRow, this);
+                this.Children(newRow.name, newRow, foundIndex);
+            }
             this.Dispatch('RowUpdated', {row: args.row});
         });
 
-        newRow.AddHandler('RowStickyChange', (sender, args) => {
+        newRow.AddHandler('RowStickyChange', (event, args) => {
             this.Dispatch('RowStickyChange', args);
         });
 
-        newRow.AddHandler('CellClicked', (sender, args) => {
+        newRow.AddHandler('CellClicked', (event, args) => {
             this.Dispatch('CellClicked', args);
         });
 
-        newRow.AddHandler('CellDoubleClicked', (sender, args) => {
+        newRow.AddHandler('CellDoubleClicked', (event, args) => {
             this.Dispatch('CellDoubleClicked', args);
         });
 
-        newRow.AddHandler('RowSelected', (sender, args) => {
+        newRow.AddHandler('RowSelected', (event, args) => {
             if (this.grid.selectionMode === Colibri.UI.Grid.FullRow) {
                 if (!this.grid.multiple) { 
                     this.grid.UnselectAllRows();
@@ -1547,11 +1551,11 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
             }
         });
 
-        newRow.AddHandler('ComponentDisposed', (sender, args) => {
+        newRow.AddHandler('ComponentDisposed', (event, args) => {
             this.Dispatch('RowDisposed', {row: newRow});
         });
 
-        newRow.AddHandler('CellHorizontalStickyChanged', (sender, args) => {
+        newRow.AddHandler('CellHorizontalStickyChanged', (event, args) => {
             this._tempCountRowsReportedCellsChange = this._tempCountRowsReportedCellsChange + 1;
             if (this.rowsCount === this._tempCountRowsReportedCellsChange) {
                 this._tempCountRowsReportedCellsChange = 0;
@@ -1559,7 +1563,7 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
             }
         });
 
-        newRow.AddHandler('CellDisposed', (sender, args) => {
+        newRow.AddHandler('CellDisposed', (event, args) => {
             this._tempCountRowsReportedCellsChange = this._tempCountRowsReportedCellsChange + 1;
             if (this.rowsCount === this._tempCountRowsReportedCellsChange) {
                 this._tempCountRowsReportedCellsChange = 0;
@@ -1567,7 +1571,7 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
             }
         });
 
-        newRow.AddHandler('StickyChanged', (sender, args) => {
+        newRow.AddHandler('StickyChanged', (event, args) => {
             this.Dispatch('StickyChanged', args);
         });
 
@@ -1683,6 +1687,16 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         });
     }
 
+    ForEveryRow(callback) {
+        this.ForEach((rname, row, irow) => {
+            if(row instanceof Colibri.UI.Grid.Row) {
+                if(callback(rname, row, irow) === false) {
+                    return false;
+                }
+            }
+            return true;
+        });
+    }
 }
 
 /**
@@ -1716,7 +1730,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     }
 
-    _columnAddedHandler(sender, args) {
+    _columnAddedHandler(event, args) {
         this.__newCell('', args.column);
     }
 
@@ -1733,6 +1747,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         this.RegisterEvent('CellDoubleClicked', false, 'Поднимается, когда дважды щелкнули по ячейке');
         this.RegisterEvent('RowSelected', false, 'Поднимается, когда выбирают строку');
         this.RegisterEvent('RowClicked', false, 'Поднимается, когда кликнули по строке');
+        this.RegisterEvent('RowUpdated', false, 'Поднимается, когда обновили данные строки');
         this.RegisterEvent('CellHorizontalStickyChanged', false, 'Поднимается, когда ячейка меняет sticky по горизонтали');
         this.RegisterEvent('StickyChanged', false, 'Поднимается, когда все ячейки сообщили об изменинии sticky');
         this.RegisterEvent('CellDisposed', false, 'Поднимается, когда удалили ячейку');
@@ -1743,7 +1758,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
         this.header.columns.AddHandler('ColumnAdded', this._columnAddedHandler);
         
-        this.AddHandler('RowStickyChange', (sender, args) => {
+        this.AddHandler('RowStickyChange', (event, args) => {
             if(!this._checkboxContainer) {
                 return true;
             }
@@ -1756,7 +1771,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
             this._checkboxContainer._stickyVertically = args.row.sticky;
         });
 
-        this.AddHandler('RowPositionChange', (sender, args) => {
+        this.AddHandler('RowPositionChange', (event, args) => {
             if(!this._checkboxContainer) {
                 return true;
             }
@@ -1817,7 +1832,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
                 this.__newCell(this._data, column);
             }
         });
-        this.parent.Dispatch('RowUpdated', {row: this});
+        this.Dispatch('RowUpdated', {row: this});
         return this;
     }
 
@@ -1864,15 +1879,15 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
             newCell.parentColumn = column;
             newCell.shown = true;
         
-            newCell.AddHandler('CellDoubleClicked', (sender, args) => {
+            newCell.AddHandler('CellDoubleClicked', (event, args) => {
                 this.Dispatch('CellDoubleClicked', args);
             });
     
-            newCell.AddHandler('CellHorizontalStickyChanged', (sender, args) => {
+            newCell.AddHandler('CellHorizontalStickyChanged', (event, args) => {
                 this.Dispatch('CellHorizontalStickyChanged', args);
             });
     
-            newCell.AddHandler('CellVerticalStickyChanged', (sender, args) => {
+            newCell.AddHandler('CellVerticalStickyChanged', (event, args) => {
                 this._tempCountCellsReportedChange = this._tempCountCellsReportedChange + 1;
                 if (this.countCells === this._tempCountCellsReportedChange) {
                     this._tempCountCellsReportedChange = 0;
@@ -1880,7 +1895,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
                 }
             });
     
-            newCell.AddHandler('CellDisposed', (sender, args) => {
+            newCell.AddHandler('CellDisposed', (event, args) => {
                 this.Dispatch('CellDisposed', args);
             });
         }
@@ -2099,28 +2114,28 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
 
     _handleEvents() {
 
-        this.AddHandler('DoubleClicked', (sender, args) => {
+        this.AddHandler('DoubleClicked', (event, args) => {
             this.Dispatch('CellDoubleClicked', {cell: this, row: this.parentRow});
         });
 
-        this.AddHandler('ComponentDisposed', (sender, args) => {
+        this.AddHandler('ComponentDisposed', (event, args) => {
             this.Dispatch('CellDisposed', {cell: this});
         });
 
-        this.AddHandler('ParentColumnChanged', (sender, args) => {
+        this.AddHandler('ParentColumnChanged', (event, args) => {
 
             if(this.parentColumn !== null) {
 
                 this.stickyHorizontally = this.parentColumn.sticky;
-                this.parentColumn.AddHandler('ColumnStickyChange', (sender, args) => {
+                this.parentColumn.AddHandler('ColumnStickyChange', (event, args) => {
                     this.stickyHorizontally = args.column.sticky;
                 });
 
-                this.parentColumn.AddHandler('ColumnDisposed', (sender, args) => {
+                this.parentColumn.AddHandler('ColumnDisposed', (event, args) => {
                     this.Dispose();
                 });
 
-                this.parentColumn.AddHandler('ColumnPositionChange', (sender, args) => {
+                this.parentColumn.AddHandler('ColumnPositionChange', (event, args) => {
                     if (this.stickyHorizontally) {
                         this.left = args.column._positionLeft;
                     }
@@ -2128,11 +2143,11 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
             }
         });
 
-        this.parentRow.AddHandler('RowStickyChange', (sender, args) => {
+        this.parentRow.AddHandler('RowStickyChange', (event, args) => {
             this.stickyVertically = args.row.sticky;
         });
 
-        this.parentRow.AddHandler('RowPositionChange', (sender, args) => {
+        this.parentRow.AddHandler('RowPositionChange', (event, args) => {
             if (this.stickyVertically) {
                 this._element.css('top', args.row._positionTop + 'px');
             }
