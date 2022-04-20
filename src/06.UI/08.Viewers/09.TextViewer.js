@@ -11,3 +11,4 @@ Colibri.UI.TextViewer = class extends Colibri.UI.Viewer {
 
 
 }
+Colibri.UI.Viewer.Register('Colibri.UI.TextViewer', 'Текст');

@@ -20,3 +20,4 @@ Colibri.UI.ReadUnreadBadge = class extends Colibri.UI.Viewer {
     }
 
 }
+Colibri.UI.Viewer.Register('Colibri.UI.ReadUnreadBadge', 'Отображение Да/Нет');

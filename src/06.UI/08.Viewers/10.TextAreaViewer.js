@@ -14,3 +14,4 @@ Colibri.UI.TextAreaViewer = class extends Colibri.UI.Viewer {
 
 
 }
+Colibri.UI.Viewer.Register('Colibri.UI.TextAreaViewer', 'Большой текст');

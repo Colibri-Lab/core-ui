@@ -25,3 +25,4 @@ Colibri.UI.CheckboxViewer = class extends Colibri.UI.Viewer {
 
 
 }
+Colibri.UI.Viewer.Register('Colibri.UI.CheckboxViewer', 'Чекбокс');

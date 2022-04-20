@@ -41,6 +41,9 @@
 
                 .app-ui-column {
                     overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+
                     &.app-component-shown {
                         display: table-cell;
                     }
@@ -73,6 +76,22 @@
                             display: block;
                         }
 
+                    }
+
+                    .sort-handler {
+                        position: absolute;
+                        right: 10px;
+                        /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#e5e5e5+0,ffffff+100&0+0,1+100 */
+                        background: -moz-linear-gradient(left,  rgba(229,229,229,0) 0%, rgba(255,255,255,1) 100%); /* FF3.6-15 */
+                        background: -webkit-linear-gradient(left,  rgba(229,229,229,0) 0%,rgba(255,255,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
+                        background: linear-gradient(to right,  rgba(229,229,229,0) 0%,rgba(255,255,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+                        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00e5e5e5', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 */
+                        padding: 0px 3px 0px 15px;
+                        svg {
+                            path {
+                                stroke: #9DA5BE
+                            }
+                        }
                     }
 
                 }

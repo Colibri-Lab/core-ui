@@ -7,9 +7,10 @@ Colibri.UI.HtmlDataViewer = class extends Colibri.UI.Viewer {
 
     set value(value) {
         let v = !value ? '&mdash;' : value.replaceAll(/\n/, '<br />');
-        v = v.stripHtml();
+        v = v.stripHtml().words(20);
         super.value = v;
     }
 
 
 }
+Colibri.UI.Viewer.Register('Colibri.UI.HtmlDataViewer', 'HTML код');

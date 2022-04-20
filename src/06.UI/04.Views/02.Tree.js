@@ -5,7 +5,7 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
     constructor(name, container) {
         super(name, container, '<div />');
 
-        this._allNodes = [];
+        this._allNodes = new Set();
 
         this._nodes = new Colibri.UI.TreeNodes('nodes', this, this);
         this.AddClass('app-ui-tree-component');
@@ -141,6 +141,23 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
     set draggable(value) {
         this._draggable = value;
     }
+
+    get sorting() {
+        return this._sorting;
+    }
+    set sorting(value) {
+        this._sorting = value;
+        this._setSorting();
+    }
+
+    _setSorting() {
+        if(this._sorting) {
+            this.AddClass('-sortable');
+        }
+        else {
+            this.RemoveClass('-sortable');
+        }
+    }
     
 
 }
@@ -148,7 +165,7 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
 Colibri.UI.TreeNode = class extends Colibri.UI.Component {
 
     constructor(name, container) {
-        super(name, container, '<div><div><em class="expander"></em><em class="icon none"></em><span></span><input type="text" /></div></div>');
+        super(name, container, '<div><div><dd drop="before"></dd><em class="expander"></em><em class="icon none"></em><span></span><input type="text" /><dd drop="after"></dd></div></div>');
         this._nodes = new Colibri.UI.TreeNodes('nodes', this, container.tree);
 
         this._input = this._element.querySelector('input');
@@ -234,6 +251,12 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
     }
 
     Dispose() {
+        
+        try {
+            this.tree.allNodes.delete(this);
+        }
+        catch(e) {}
+        
         const node = this.parentNode;
         this._nodes.Dispose();
         super.Dispose();
@@ -244,6 +267,7 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
             }    
         }
         catch(e) {}
+
     }
 
     get expanded() {
@@ -431,7 +455,7 @@ Colibri.UI.TreeNodes = class extends Colibri.UI.Component {
         if(this.parent instanceof Colibri.UI.TreeNode) {
             this.parent.isLeaf = false;
         }
-        this._tree.allNodes.push(node);
+        this._tree.allNodes.add(node);
         return node;
     }
 

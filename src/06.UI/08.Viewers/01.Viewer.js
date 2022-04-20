@@ -37,4 +37,12 @@ Colibri.UI.Viewer = class extends Colibri.UI.Component {
     set root(value) {
         this._root = value;
     }
+
+    static _registered = [];
+    static Register(name, desc) {
+        Colibri.UI.Viewer._registered.push({value: name, title: desc});
+    }
+    static Enum() {
+        return Colibri.UI.Viewer._registered;
+    }
 }

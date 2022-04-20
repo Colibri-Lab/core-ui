@@ -15,3 +15,4 @@ Colibri.UI.MonthYearViewer = class extends Colibri.UI.Viewer {
 
 
 }
+Colibri.UI.Viewer.Register('Colibri.UI.MonthYearViewer', 'Месяц/Год');

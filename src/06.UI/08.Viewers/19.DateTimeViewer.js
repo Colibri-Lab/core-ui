@@ -33,3 +33,4 @@ Colibri.UI.DateTimeViewer = class extends Colibri.UI.Viewer {
     }
 
 }
+Colibri.UI.Viewer.Register('Colibri.UI.DateTimeViewer', 'Дата и время');

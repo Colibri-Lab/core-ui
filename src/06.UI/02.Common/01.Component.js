@@ -201,6 +201,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.RegisterEvent('Pasted', false, 'Когда вставили в элемент');
         this.RegisterEvent('DragStart', false, 'Когда элемент начинают перетаскивать');
         this.RegisterEvent('DragEnd', false, 'Когда элемент перестают перетаскивать');
+        this.RegisterEvent('DragEnter', false, 'Когда перетаскиваемый элемент заходит в область целевого элемента');
         this.RegisterEvent('DragOver', false, 'Когда перетаскиваемый элемент находится над целевым объектом');
         this.RegisterEvent('DragLeave', false, 'Когда перетаскиваемый элемент покидает целевой объект');
         this.RegisterEvent('Drop', false, 'Когда перетаскиваемый элемент "упал" на целевой объект');
@@ -308,6 +309,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         },
         DragEnd: {
             domEvent: 'dragend'
+        },
+        DragEnter: {
+            domEvent: 'dragenter',
         },
         DragOver: {
             domEvent: 'dragover',
@@ -1140,7 +1144,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @param {Function} handler обработчик
      */
     ForEach(handler) {
-        this._children.forEach((o, index) => {
+        const children = [...this._children];
+        children.forEach((o, index) => {
             return handler.apply(this, [o.name, o, index]);
         });
         return this;

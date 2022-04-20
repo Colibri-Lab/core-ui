@@ -16,6 +16,7 @@
 		right: 0px;
 	}
 
+
 	.nodes {
 		flex: 1 1 100%;
 
@@ -28,6 +29,8 @@
 		}
 
 		.node {
+			position: relative;
+
 			> div:not([data-object-name]) {
 				display: flex;
 				align-items: center;
@@ -35,7 +38,24 @@
 				padding: 12px 0 10px 10px;
 				border: 1px solid transparent;
 				cursor: pointer;
-
+				position: relative;
+				>dd:first-of-type {
+					display: none;
+					position: absolute;
+					height: 10px;
+					width: 100%;
+					top: 0px;
+					margin-left: -10px;
+				}
+				>dd:last-of-type { 
+					display: none;
+					position: absolute;
+					height: 10px;
+					width: 100%;
+					bottom: 0px;
+					margin-left: -10px;
+					z-index: 1;
+				}
 				&:hover {
 					background-color: #f6f7f9;
 				}
@@ -104,8 +124,24 @@
 
 	&.app-drop-component {
 		.node.app-drop-target-component {
-			> div:first-child {
+			> div:first-of-type {
 				border: 1px dashed #4CB5FF;
+				>dd:first-of-type {
+					border: 1px dashed #4CB5FF;
+					border-right: 0px;
+					border-left: 0px;
+					&.drag-element {
+						background: #4CB5FF;
+					}
+				}
+				>dd:last-of-type { 
+					border: 1px dashed #4CB5FF;
+					border-right: 0px;
+					border-left: 0px;
+					&.drag-element {
+						background: #4CB5FF;
+					}
+				}
 			}	
 			
 		}
@@ -118,6 +154,14 @@
 			font-size: 16px;
 			color: #2f323a;
 			font-weight: bold;
+		}
+	}
+	
+	&.-sortable {
+		.nodes .node > div:not([data-object-name]) {
+			> dd {
+				display: block;				 
+			}	
 		}
 	}
 }

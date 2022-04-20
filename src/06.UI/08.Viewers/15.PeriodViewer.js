@@ -37,3 +37,4 @@ Colibri.UI.PeriodViewer = class extends Colibri.UI.Viewer {
     }
 
 }
+Colibri.UI.Viewer.Register('Colibri.UI.PeriodViewer', 'Период');

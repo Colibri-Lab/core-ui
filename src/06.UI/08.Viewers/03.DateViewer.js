@@ -23,3 +23,4 @@ Colibri.UI.DateViewer = class extends Colibri.UI.Viewer {
     }
 
 }
+Colibri.UI.Viewer.Register('Colibri.UI.DateViewer', 'Дата');

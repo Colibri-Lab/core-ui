@@ -18,6 +18,11 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     /** Выделять ячейки отдельно */
     static EveryCell = 'everycell';
 
+    /** Сортировка по возрастанию */
+    static SortAsc = 'asc';
+    /** Сортировка по убыванию */
+    static SortDesc = 'desc';
+
     /**
      * Конструктор
      * @param {string} name название компонента
@@ -286,6 +291,13 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     set emptyMessage(value) {
         this._norows.value = value;
+    }
+
+    get sortColumn() {
+        return this._sortColumn;
+    }
+    get sortOrder() {
+        return this._sortOrder;
     }
 
     /**
@@ -679,7 +691,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         }
 
         this.Dispatch('CellClicked', args);
-        cell.EditValue();
+        cell.EditValue && cell.EditValue();
 
         this.Dispatch('RowClicked', args);
 
@@ -844,6 +856,21 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         });
     }
 
+    DeleteAllExcept(found) {
+        
+        let collected = [];
+        this.ForEveryRow((name, row) => {
+            if(found.indexOf(name) === -1) {
+                collected.push(row);
+            }
+        });
+
+        for(const row of collected) {
+            row.Dispose();
+        }
+
+    }
+
     /**
      * Регистрация событий
      */
@@ -877,6 +904,29 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this.RegisterEvent('CellEditorChanged', false, 'Когда редактирование ячейки завершено');
         this.RegisterEvent('MassActionsMenuActionClicked', false, 'Когда кликнули на кнопку внутри меню массовых операций');
 
+    }
+
+    _setSortAndOrder(column) {
+        if(this._sortColumn && this._sortColumn === column) {
+            if(this._sortOrder === null) {
+                this._sortOrder = Colibri.UI.Grid.SortAsc;
+            }
+            else if(this._sortOrder === Colibri.UI.Grid.SortAsc) {
+                this._sortOrder = Colibri.UI.Grid.SortDesc;
+            }
+            else if(this._sortOrder === Colibri.UI.Grid.SortDesc) {
+                this._sortOrder = null;
+            }
+        }
+        else if(!this._sortColumn || this._sortColumn !== column) {
+            // убираем со старого
+            this._sortColumn && (this._sortColumn.sortState = null);
+
+            this._sortColumn = column;
+            this._sortOrder = Colibri.UI.Grid.SortAsc;
+        }
+
+        this._sortColumn.sortState = this._sortOrder;
     }
 
     /**
@@ -921,6 +971,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         });
 
         this.header.AddHandler('ColumnClicked', (event, args) => {
+            this._setSortAndOrder(args.column);
             this.Dispatch('ColumnClicked', args);
         });
 
@@ -1250,6 +1301,10 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
 
         this._editor = null;
         this._viewer = null;
+        this._sortIcons = {
+            asc: Colibri.UI.SortAscIcon,
+            desc: Colibri.UI.SortDescIcon
+        };
 
         this.GenerateChildren(element);
 
@@ -1305,6 +1360,29 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         }
     }
 
+    get sortable() {
+        return this._sortable;
+    }
+
+    set sortable(value) {
+        value = (value === 'true' || value === true);
+        this._sortable = value;
+        if(this._sortable) {
+            this._createSortHandler();
+        }
+        else {
+            this._removeSortHandler();
+        }
+    }
+
+    get sortState() {
+        return this._sortState;
+    }
+    set sortState(value) {
+        this._sortState = value;
+        this._sortHandler && this._sortHandler.html(value ? this._sortIcons[value] : '');
+    }
+
     _bindResizeEvents() {
 
         const stopClick = (e) => { e.preventDefault(); e.stopPropagation(); return false; };
@@ -1328,6 +1406,8 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
             document.addEventListener("touchmove", doResize, {capture: true});
             document.addEventListener("mousemove", doResize, {capture: true});
 
+            e.preventDefault();
+            e.stopPropagation();
             return false;
 
         };
@@ -1352,6 +1432,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         const doResize = (e) => {
             if (this._resizing) {
                 e.preventDefault();
+                e.stopPropagation();
 
                 const next = this.container.next().tag('component');
                 const newWidth = (this._resizeData.width + (e.pageX - this._resizeData.x)).percentOf(this._resizeData.full);
@@ -1370,6 +1451,8 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
 
         this._resizeHandler.addEventListener("touchstart", startResize, false);
         this._resizeHandler.addEventListener("mousedown", startResize, false);
+        this._resizeHandler.addEventListener("click", stopClick, false);
+        this._resizeHandler.addEventListener("dblclick", stopClick, false);
 
     }
 
@@ -1381,6 +1464,15 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
 
     _removeResizeHandler() {
         this._resizeHandler && this._resizeHandler.remove();
+    }
+
+    _createSortHandler() {
+        this._sortHandler = Element.create('span', {class: 'sort-handler'});
+        this._element.append(this._sortHandler);
+    }
+
+    _removeSortHandler() {
+        this._sortHandler && this._sortHandler.remove();
     }
 
     get grid() {
@@ -1730,7 +1822,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     }
 
-    _columnAddedHandler(event, args) {
+    _columnAddedHandler = (event, args) => {
         this.__newCell('', args.column);
     }
 

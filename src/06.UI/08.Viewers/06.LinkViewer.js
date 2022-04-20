@@ -75,3 +75,4 @@ Colibri.UI.LinkViewer = class extends Colibri.UI.Viewer {
 
 
 }
+Colibri.UI.Viewer.Register('Colibri.UI.LinkViewer', 'Ссылка');
