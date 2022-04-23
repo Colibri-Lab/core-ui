@@ -226,4 +226,9 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         this._input.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
     }
 
+    set mask(value) {
+        this._masker = new Colibri.UI.Utilities.Mask([this._input]);
+        this._masker.maskPattern(value);
+    }
+
 }

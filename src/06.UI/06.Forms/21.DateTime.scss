@@ -1,0 +1,27 @@
+.app-component-datetime-field {
+    
+    
+    [data-object-name$="-content"] > [data-object-name$="-container"] {
+
+        &.app-component-shown {
+            display: flex;
+        } 
+        align-items: center;
+        justify-content: flex-start;
+        width: 250px;
+
+        .app-date-selector-component {
+            width: 160px;
+            padding: 0px 0px 0px 9px;
+        }
+
+        [data-object-name$="-input"] {
+            width: 150px;
+        }
+        [data-object-name$="-time"] {
+            width: 100px;
+            margin-left: 10px;
+        }
+    
+    }
+}

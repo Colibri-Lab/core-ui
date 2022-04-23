@@ -300,6 +300,11 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         return this._sortOrder;
     }
 
+    ResetSort() {
+        this._sortColumn = null;
+        this._sortOrder = Colibri.UI.Grid.SortAsc;
+    }
+
     /**
      * Найти строку во всех группах
      * @param {string} key название строки

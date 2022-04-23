@@ -350,6 +350,17 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         node.isLeaf = node.nodes.children == 0;
     }
 
+    FindParent(method) {
+        let p = this;
+        while(p instanceof Colibri.UI.TreeNode) {
+            if(method(p)) {
+                return p;
+            }
+            p = p.parentNode;
+        }
+        return null;
+    }
+
     MoveTo(parent) {
         this.parentNode = parent;
     }

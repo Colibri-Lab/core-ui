@@ -178,6 +178,7 @@ Colibri.UI.Utilities.Mask = class {
             placeholder = (typeof opts === 'object' ? opts.placeholder : undefined)
             ;
 
+
         for (i = 0; i < outputLength; i++) {
             // Reached the end of input
             if (index >= values.length) {

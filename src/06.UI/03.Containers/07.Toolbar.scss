@@ -1,5 +1,14 @@
 .app-toolbar-container-component {
 
+    overflow: auto;
+
+    @include custom-scroll(
+        1px,
+        inherit,
+        inherit,
+        inherit
+    );
+
     &.app-component-shown {
         display: flex;
     }
@@ -17,6 +26,7 @@
     .app-component-icon {
         width: 28px;
         height: 28px;
+        flex: 0 0 28px;
         margin: 5px 0px 5px 0px;
     }
 

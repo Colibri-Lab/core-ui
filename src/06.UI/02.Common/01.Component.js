@@ -1047,6 +1047,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * Удаляет компоненту
      */
     Dispose() {
+        this.hasShadow = false;
         this.Clear();
 
         if (this.parent) {

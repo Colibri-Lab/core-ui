@@ -47,7 +47,6 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
 
         this._format = new Intl.DateTimeFormat('ru-RU', {day: '2-digit', month: 'short', year: 'numeric'});
 
-        this._popup = new Colibri.UI.DateSelectorPopup('popup', this);
 
         this.AddHandler(['Clicked', 'ReceiveFocus'], (event, args) => {
             this.Open();
@@ -65,27 +64,37 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
     }
 
     _showValue() {
-        try {
-            this._viewElement.value = this._format.format(this.value);
-            this._popup.value = this.value;
-        }
-        catch(e) {
-            this._viewElement.value = '';
-            this._popup.value = new Date();
+        if(this._popup) {
+            try {
+                this._viewElement.value = this._format.format(this.value);
+                this._popup.value = this.value;
+            }
+            catch(e) {
+                this._viewElement.value = '';
+                this._popup.value = new Date();
+            }    
         }
     }
 
     Open() {
+        if(!this._popup) {
+            this._popup = new Colibri.UI.DateSelectorPopup('popup', document.body);
+            this._popup.parent = this;
+        }
         this._popup.mode = 'datepicker';
         this._popup.shown = true;
         this._popup.value = this.value;
+        this._showValue();
         this.ToggleView(true);
         this._hiddenElement.focus();
     }
 
     Close() {
         this.ToggleView(false);
-        this._popup.shown = false;
+        if(this._popup) {
+            this._popup.Dispose();
+            this._popup = null;
+        }
     }
 
     Focus() {
@@ -194,7 +203,7 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
         });
 
         this._pickerheader = this._element.append(Element.fromHtml('<div class="calendar__dropdown-pickerheader"></div>'));
-        this._pickerheader.append(Element.fromHtml('<table><tr><td class="left"><i class="fas fa-angle-left"></i></td><td class="calendar__dropdown-pickerheader_title"></td><td class="right"><i class="fas fa-angle-right"></i></td></tr></table>'));
+        this._pickerheader.append(Element.fromHtml('<table><tr><td class="left">' + Colibri.UI.ArrowLeft + '</td><td class="calendar__dropdown-pickerheader_title"></td><td class="right">' + Colibri.UI.ArrowRight + '</td></tr></table>'));
         this._headerText = this._element.querySelector('.calendar__dropdown-pickerheader_title');
 
         this._datePicker = new Colibri.UI.DatePicker('date-picker', this);
@@ -206,6 +215,17 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
         this._datePicker.value = this._value;
         this._yearPicker.value = this._value;
         this._monthPicker.value = this._value;
+
+        this.handleVisibilityChange = true;
+        this.AddHandler('VisibilityChanged', (event, args) => {
+            const bounds = this.parent.container.bounds();
+            const b = this.container.bounds();
+            if(!args.state) {
+                this.top =  bounds.top - b.outerHeight - 5;
+                this.AddClass('-up');
+            }
+
+        });
 
         this._headerText.addEventListener('click', (e) => {
             this.ToggleMode();
@@ -283,6 +303,10 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
 
     set shown(value) {
         super.shown = value;
+        const bounds = this.parent.container.bounds();
+        this.top = bounds.top + bounds.outerHeight;
+        this.left = bounds.left;
+        this.RemoveClass('-up');        
         if(value) {
             this.BringToFront();
             this._show();
