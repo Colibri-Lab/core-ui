@@ -88,6 +88,63 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
+    CreateComponentClass(element, parent) {
+        let comp = null;
+        try {
+            comp = element.getAttribute('Component') || element.getAttribute('component') || element.tagName; 
+        }
+        catch(e) {
+            return null;
+        }
+
+        // пытаемся создать компонент
+        let objectClass = null;
+        try {
+            objectClass = eval(comp);
+            if(objectClass) {
+                return objectClass;
+            }
+        }
+        catch(e) {
+
+        }
+        try {
+            objectClass = eval('Colibri.UI.' + comp);
+            if(objectClass) {
+                return objectClass;
+            }
+        }
+        catch(e) {
+
+        }
+
+        return null;
+    }
+
+    CreateComponent(objectClass, element, parent) {
+
+        const name = element.getAttribute('name') || 'component-' + (new Date()).getTime(); 
+
+        let component = new objectClass(name, parent);
+        component.parent = this;
+        this.Children(name, component);
+        for (let j = 0; j < element.attributes.length; j++) {
+            const attr = element.attributes[j];
+
+            if (['Component', 'name', 'component'].indexOf(attr.name) !== -1) {
+                continue;
+            }
+
+            if (attr.name.indexOf('On') === 0) {
+                component.AddHandler(attr.name.substr(2), eval(attr.value));
+            } else {
+                component[attr.name] = attr.value;
+            }
+        }
+
+        return component;
+    }
+
     ProcessChildren(children, parent, dontDispatch = false) {
         if (parent === undefined) {
             parent = this._element;
@@ -95,55 +152,36 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         for (let i = 0; i < children.length; i++) {
             const element = children[i];
-            if (element.tagName == 'component') {
-                const objectClass = eval(element.getAttribute('Component') || element.getAttribute('component'));
-                if(!objectClass) {
-                    continue;
-                }
-                const name = element.getAttribute('name') || 'component-' + (new Date()).getTime();
-
-                // element component
-                // нужно создать новый htmlelement и внутренности запиннуть в него
-                let component = new objectClass(name, parent);
-                component.parent = this;
-                this.Children(name, component);
-                for (let j = 0; j < element.attributes.length; j++) {
-                    const attr = element.attributes[j];
-
-                    if (['Component', 'name', 'component'].indexOf(attr.name) !== -1) {
-                        continue;
-                    }
-
-                    if (attr.name.indexOf('On') === 0) {
-                        component.AddHandler(attr.name.substr(2), eval(attr.value));
-                    } else {
-                        component[attr.name] = attr.value;
+            const componentClass = this.CreateComponentClass(element, parent);
+            if(componentClass) {
+                let component = this.CreateComponent(componentClass, element, parent);
+                component && component.ProcessChildren(element.childNodes, component.container);
+            }
+            else if(element.tagName) {
+                if(element.tagName == 'params') {
+                    let data = element.childNodes[0].textContent;
+                    try { eval('data = ' + data + ';'); } catch(e) { console.log(data); console.log(e); }
+                    if(data instanceof Object) {
+                        this.tag.params = data;
                     }
                 }
-
-                component.ProcessChildren(element.childNodes, component.container);
-
-            } else if(element.tagName == 'params') {
-                let data = element.childNodes[0].textContent;
-                try { eval('data = ' + data + ';'); } catch(e) { console.log(data); console.log(e); }
-                if(data instanceof Object) {
-                    this.tag.params = data;
-                }
-            } else if(element.nodeName !== '#text' && element.tagName && element.tagName.indexOf('component-') !== -1) {
-                const tagName = element.tagName.substr('component-'.length);
-                if(parent instanceof Colibri.UI.Component) {
-                    this.ProcessChildren(element.childNodes, parent[tagName], true);
+                else if(element.tagName.indexOf('component-') !== -1) {
+                    const tagName = element.tagName.substr('component-'.length);
+                    if(parent instanceof Colibri.UI.Component) {
+                        this.ProcessChildren(element.childNodes, parent[tagName], true);
+                    }
+                    else {
+                        this.ProcessChildren(element.childNodes, this[tagName], true);
+                    }
                 }
                 else {
-                    this.ProcessChildren(element.childNodes, this[tagName], true);
-                }
-            } else if (element.nodeName !== '#text') {
-                if(element.tagName) {
                     const e = element.clone(element.attr('xmlns') ? element.attr('xmlns') : parent.attr('xmlns'));
                     parent.append(e);
                     this.ProcessChildren(element.childNodes, e, true);
                 }
-            } else {
+            } 
+            else {
+                // какая то текстовая хрень
                 if(parent instanceof Colibri.UI.Component) {
                     parent.container.append(document.createTextNode(element.textContent));
                 }
@@ -151,6 +189,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                     parent.append(document.createTextNode(element.textContent));
                 }
             }
+            
 
         }
 

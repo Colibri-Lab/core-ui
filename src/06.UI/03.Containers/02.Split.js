@@ -126,31 +126,11 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
 
         for (let i = 0; i < children.length; i++) {
             const element = children[i];
-            if (element.tagName == 'component') {
-                const objectClass = eval(element.getAttribute('Component'));
-                const name = element.getAttribute('name') || 'component-' + (new Date()).getTime();
-
-                // element component
-                // нужно создать новый htmlelement и внутренности запиннуть в него
-                let component = new objectClass(name, this);
-                for (let j = 0; j < element.attributes.length; j++) {
-                    const attr = element.attributes[j];
-
-                    if (['Component', 'name'].indexOf(attr.name) !== -1) {
-                        continue;
-                    }
-
-                    if (attr.name.indexOf('On') === 0) {
-                        component.AddHandler(attr.name.substr(2), eval(attr.value));
-                    } else {
-                        component[attr.name] = attr.value;
-                    }
-                }
-
-                component.ProcessChildren(element.childNodes, component.container);
-
-            } 
-
+            const componentClass = this.CreateComponentClass(element);
+            if(componentClass) {
+                let component = this.CreateComponent(componentClass, element, this);
+                component && component.ProcessChildren(element.childNodes, component.container);
+            }
         }
 
     }
