@@ -101,7 +101,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         let objectClass = null;
         try {
             objectClass = eval(comp);
-            if(objectClass) {
+            if(objectClass && Colibri.UI.Component.isPrototypeOf(objectClass)) {
                 return objectClass;
             }
         }
@@ -110,7 +110,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
         try {
             objectClass = eval('Colibri.UI.' + comp);
-            if(objectClass) {
+            if(objectClass && Colibri.UI.Component.isPrototypeOf(objectClass)) {
                 return objectClass;
             }
         }
@@ -122,30 +122,36 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     CreateComponent(objectClass, element, parent) {
+        try {
 
-        const name = element.getAttribute('name') || 'component-' + (new Date()).getTime(); 
+            const name = element.getAttribute('name') || 'component-' + (new Date()).getTime(); 
 
-        let component = new objectClass(name, parent);
-        component.parent = this;
-        this.Children(name, component);
-        for (let j = 0; j < element.attributes.length; j++) {
-            const attr = element.attributes[j];
+            let component = new objectClass(name, parent);
+            component.parent = this;
+            this.Children(name, component);
+            for (let j = 0; j < element.attributes.length; j++) {
+                const attr = element.attributes[j];
 
-            if (['Component', 'name', 'component'].indexOf(attr.name) !== -1) {
-                continue;
+                if (['Component', 'name', 'component'].indexOf(attr.name) !== -1) {
+                    continue;
+                }
+
+                if (attr.name.indexOf('On') === 0) {
+                    component.AddHandler(attr.name.substr(2), eval(attr.value));
+                } else {
+                    component[attr.name] = attr.value;
+                }
             }
-
-            if (attr.name.indexOf('On') === 0) {
-                component.AddHandler(attr.name.substr(2), eval(attr.value));
-            } else {
-                component[attr.name] = attr.value;
-            }
+            return component;
         }
-
-        return component;
+        catch(e) {
+            console.log(e);
+        }
+        return null;
     }
 
     ProcessChildren(children, parent, dontDispatch = false) {
+        
         if (parent === undefined) {
             parent = this._element;
         }

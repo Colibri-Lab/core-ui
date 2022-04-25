@@ -864,7 +864,6 @@ Date.prototype.toTimeString = function() {
     if(this == 'Invalid Date') {
         return '00:00:00';
     }
-    console.log(this);
     return (this.getHours() + '').expand('0', 2) + ':' + (this.getMinutes() + '').expand('0', 2) + ':' + (this.getSeconds() + '').expand('0', 2);
 }
 Date.prototype.timezoneoffset = (new Date()).getTimezoneOffset() / 60;
