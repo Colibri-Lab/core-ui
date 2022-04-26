@@ -6,7 +6,7 @@ Colibri.UI.Forms.Email = class extends Colibri.UI.Forms.Field {
 
         const contentContainer = this.contentContainer;
 
-        this._validationText = 'Пожалуйста, введите корректный email';
+        this._validationText = '#{app-email-validation-message;Пожалуйста, введите корректный email}';
 
         this._input = contentContainer.container.append(Element.create('input', {type: 'text', name: this._name + '-input'}));
         this._input.addEventListener('change', (e) => this.Dispatch('Changed', {domEvent: e}));
@@ -116,4 +116,4 @@ Colibri.UI.Forms.Email = class extends Colibri.UI.Forms.Field {
         this._input && this._input.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Email', 'Colibri.UI.Forms.Email', 'Эл. адрес')
+Colibri.UI.Forms.Field.RegisterFieldComponent('Email', 'Colibri.UI.Forms.Email', '#{app-fields-email;Эл. адрес}')

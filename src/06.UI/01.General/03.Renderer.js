@@ -3,15 +3,15 @@ Colibri.UI.Renderer = class {
     constructor(object, data) {
 
         if (!object) {
-            throw new Error('Передайте в конструктор обьект для рендеринга');
+            throw new Error('#{app-renderer-error1;Передайте в конструктор обьект для рендеринга}');
         }
 
         if (!(object instanceof Colibri.UI.Component)) {
-            throw new Error('Передайнный обьект не компонент');
+            throw new Error('#{app-renderer-error2;Передайнный обьект не компонент}');
         }
 
         if (!data) {
-            throw new Error('Передайте данные для отображения');
+            throw new Error('#{app-renderer-error3;Передайте данные для отображения}');
         }
 
         this._object = object;
@@ -20,7 +20,7 @@ Colibri.UI.Renderer = class {
     }
 
     Render() {
-        throw new Error('Необходимо переопределить этот метод');
+        throw new Error('#{app-renderer-error4;Необходимо переопределить этот метод}');
     }
 
 

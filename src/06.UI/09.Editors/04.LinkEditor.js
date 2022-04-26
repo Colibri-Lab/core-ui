@@ -36,7 +36,7 @@ Colibri.UI.LinkEditor = class extends Colibri.UI.Editor {
             }
         }
         else if(this.field) {
-            this._text.value = this.field.desc + ' (скачать)';
+            this._text.value = this.field.desc + ' #{app-editors-link-download;(скачать)}';
         }
         else {
             this._text.value = 'Скачать';

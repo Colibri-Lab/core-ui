@@ -17,4 +17,4 @@ Colibri.UI.RadioViewer = class extends Colibri.UI.Viewer {
     }
 
 }
-Colibri.UI.Viewer.Register('Colibri.UI.RadioViewer', 'Переключатель');
+Colibri.UI.Viewer.Register('Colibri.UI.RadioViewer', '#{app-viewers-radio;Переключатель}');

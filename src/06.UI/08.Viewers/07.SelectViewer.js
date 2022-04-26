@@ -105,4 +105,4 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
         return lookupPromise;
     }
 }
-Colibri.UI.Viewer.Register('Colibri.UI.SelectViewer', 'Выборка');
+Colibri.UI.Viewer.Register('Colibri.UI.SelectViewer', '#{app-viewers-select;Выборка}');

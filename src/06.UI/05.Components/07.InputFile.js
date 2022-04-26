@@ -9,7 +9,7 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
 
         this._title = '';
 
-        this._element.querySelector('.app-component-input-type-file-text').html(this.multiple ? 'Выбрать файлы' : 'Выбрать файл');
+        this._element.querySelector('.app-component-input-type-file-text').html(this.multiple ? '#{app-files-choosefiles;Выбрать файлы}' : '#{app-files-choosefile;Выбрать файл}');
     }
 
     _registerEvents() {
@@ -42,7 +42,7 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
 
     set title(value) {
         this._title = value;
-        this._element.querySelector('.app-component-input-type-file-text').html(value || (this.multiple ? 'Выбрать файлы' : 'Выбрать файл'));
+        this._element.querySelector('.app-component-input-type-file-text').html(value || (this.multiple ? '#{app-files-choosefiles;Выбрать файлы}' : '#{app-files-choosefile;Выбрать файл}'));
     }
 
     get multiple() {
@@ -56,7 +56,7 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
             this._input.removeAttribute('multiple');
         }
         if(!this._title) {
-            this._element.querySelector('.app-component-input-type-file-text').html(this.multiple ? 'Выбрать файлы' : 'Выбрать файл');
+            this._element.querySelector('.app-component-input-type-file-text').html(this.multiple ? '#{app-files-choosefiles;Выбрать файлы}' : '#{app-files-choosefile;Выбрать файл}');
         }
     }
 

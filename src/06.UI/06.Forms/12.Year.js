@@ -58,4 +58,4 @@ Colibri.UI.Forms.Year = class extends Colibri.UI.Forms.Field {
         }
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Year', 'Colibri.UI.Forms.Year', 'Выбор года')
+Colibri.UI.Forms.Field.RegisterFieldComponent('Year', 'Colibri.UI.Forms.Year', '#{app-fields-year;Выбор года}')

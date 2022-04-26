@@ -47,4 +47,4 @@ Colibri.UI.Forms.Link = class extends Colibri.UI.Forms.Field {
         this._input && this._input.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Link', 'Colibri.UI.Forms.Link', 'Ссылка')
+Colibri.UI.Forms.Field.RegisterFieldComponent('Link', 'Colibri.UI.Forms.Link', '#{app-fields-link;Ссылка}')

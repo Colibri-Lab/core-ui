@@ -12,10 +12,10 @@ Colibri.Common.Validation = class {
             error.message = 'БИК пуст';
         } else if (/[^0-9]/.test(bik)) {
             error.code = 2;
-            error.message = 'БИК может состоять только из цифр';
+            error.message = '#{app-validation-bik-error1;БИК может состоять только из цифр}';
         } else if (bik.length !== 9) {
             error.code = 3;
-            error.message = 'БИК может состоять только из 9 цифр';
+            error.message = '#{app-validation-bik-error2;БИК может состоять только из 9 цифр}';
         } else {
             result = true;
         }
@@ -31,13 +31,13 @@ Colibri.Common.Validation = class {
         }
         if (!inn.length) {
             error.code = 1;
-            error.message = 'ИНН пуст';
+            error.message = '#{app-validation-inn-error1;ИНН пуст}';
         } else if (/[^0-9]/.test(inn)) {
             error.code = 2;
-            error.message = 'ИНН может состоять только из цифр';
+            error.message = '#{app-validation-inn-error2;ИНН может состоять только из цифр}';
         } else if ([10, 12].indexOf(inn.length) === -1) {
             error.code = 3;
-            error.message = 'ИНН может состоять только из 10 или 12 цифр';
+            error.message = '#{app-validation-inn-error3;ИНН может состоять только из 10 или 12 цифр}';
         } else {
             var checkDigit = function (inn, coefficients) {
                 var n = 0;
@@ -63,7 +63,7 @@ Colibri.Common.Validation = class {
             }
             if (!result) {
                 error.code = 4;
-                error.message = 'Неправильное контрольное число';
+                error.message = '#{app-validation-inn-error4;Неправильное контрольное число}';
             }
         }
         return result;
@@ -78,13 +78,13 @@ Colibri.Common.Validation = class {
         }
         if (!kpp.length) {
             error.code = 1;
-            error.message = 'КПП пуст';
+            error.message = '#{app-validation-kpp-error1;КПП пуст}';
         } else if (kpp.length !== 9) {
             error.code = 2;
-            error.message = 'КПП может состоять только из 9 знаков (цифр или заглавных букв латинского алфавита от A до Z)';
+            error.message = '#{app-validation-kpp-error2;КПП может состоять только из 9 знаков (цифр или заглавных букв латинского алфавита от A до Z)}';
         } else if (!/^[0-9]{4}[0-9A-Z]{2}[0-9]{3}$/.test(kpp)) {
             error.code = 3;
-            error.message = 'Неправильный формат КПП';
+            error.message = '#{app-validation-kpp-error3;Неправильный формат КПП}';
         } else {
             result = true;
         }
@@ -104,10 +104,10 @@ Colibri.Common.Validation = class {
                 error.message = 'К/С пуст';
             } else if (/[^0-9]/.test(ks)) {
                 error.code = 2;
-                error.message = 'К/С может состоять только из цифр';
+                error.message = '#{app-validation-ks-error1;К/С может состоять только из цифр}';
             } else if (ks.length !== 20) {
                 error.code = 3;
-                error.message = 'К/С может состоять только из 20 цифр';
+                error.message = '#{app-validation-ks-error2;К/С может состоять только из 20 цифр}';
             } else {
                 var bikKs = '0' + bik.toString().slice(4, 6) + ks;
                 var checksum = 0;
@@ -119,7 +119,7 @@ Colibri.Common.Validation = class {
                     result = true;
                 } else {
                     error.code = 4;
-                    error.message = 'Неправильное контрольное число';
+                    error.message = '#{app-validation-ks-error3;Неправильное контрольное число}';
                 }
             }
         }
@@ -135,20 +135,20 @@ Colibri.Common.Validation = class {
         }
         if (!ogrn.length) {
             error.code = 1;
-            error.message = 'ОГРН пуст';
+            error.message = '#{app-validation-ogrn-error1;ОГРН пуст}';
         } else if (/[^0-9]/.test(ogrn)) {
             error.code = 2;
-            error.message = 'ОГРН может состоять только из цифр';
+            error.message = '#{app-validation-ogrn-error2;ОГРН может состоять только из цифр}';
         } else if (ogrn.length !== 13) {
             error.code = 3;
-            error.message = 'ОГРН может состоять только из 13 цифр';
+            error.message = '#{app-validation-ogrn-error3;ОГРН может состоять только из 13 цифр}';
         } else {
             var n13 = parseInt((parseInt(ogrn.slice(0, -1)) % 11).toString().slice(-1));
             if (n13 === parseInt(ogrn[12])) {
                 result = true;
             } else {
                 error.code = 4;
-                error.message = 'Неправильное контрольное число';
+                error.message = '#{app-validation-ogrn-error4;Неправильное контрольное число}';
             }
         }
         return result;
@@ -163,20 +163,20 @@ Colibri.Common.Validation = class {
         }
         if (!ogrnip.length) {
             error.code = 1;
-            error.message = 'ОГРНИП пуст';
+            error.message = '#{app-validation-ogrnip-error1;ОГРНИП пуст}';
         } else if (/[^0-9]/.test(ogrnip)) {
             error.code = 2;
-            error.message = 'ОГРНИП может состоять только из цифр';
+            error.message = '#{app-validation-ogrnip-error2;ОГРНИП может состоять только из цифр}';
         } else if (ogrnip.length !== 15) {
             error.code = 3;
-            error.message = 'ОГРНИП может состоять только из 15 цифр';
+            error.message = '#{app-validation-ogrnip-error3;ОГРНИП может состоять только из 15 цифр}';
         } else {
             var n15 = parseInt((parseInt(ogrnip.slice(0, -1)) % 13).toString().slice(-1));
             if (n15 === parseInt(ogrnip[14])) {
                 result = true;
             } else {
                 error.code = 4;
-                error.message = 'Неправильное контрольное число';
+                error.message = '#{app-validation-ogrnip-error4;Неправильное контрольное число}';
             }
         }
         return result;
@@ -192,13 +192,13 @@ Colibri.Common.Validation = class {
             }
             if (!rs.length) {
                 error.code = 1;
-                error.message = 'Р/С пуст';
+                error.message = '#{app-validation-rs-error1;Р/С пуст}';
             } else if (/[^0-9]/.test(rs)) {
                 error.code = 2;
-                error.message = 'Р/С может состоять только из цифр';
+                error.message = '#{app-validation-rs-error2;Р/С может состоять только из цифр}';
             } else if (rs.length !== 20) {
                 error.code = 3;
-                error.message = 'Р/С может состоять только из 20 цифр';
+                error.message = '#{app-validation-rs-error3;Р/С может состоять только из 20 цифр}';
             } else {
                 var bikRs = bik.toString().slice(-3) + rs;
                 var checksum = 0;
@@ -210,7 +210,7 @@ Colibri.Common.Validation = class {
                     result = true;
                 } else {
                     error.code = 4;
-                    error.message = 'Неправильное контрольное число';
+                    error.message = '#{app-validation-rs-error4;Неправильное контрольное число}';
                 }
             }
         }
@@ -226,13 +226,13 @@ Colibri.Common.Validation = class {
         }
         if (!snils.length) {
             error.code = 1;
-            error.message = 'СНИЛС пуст';
+            error.message = '#{app-validation-snils-error1;СНИЛС пуст}';
         } else if (/[^0-9]/.test(snils)) {
             error.code = 2;
-            error.message = 'СНИЛС может состоять только из цифр';
+            error.message = '#{app-validation-snils-error2;СНИЛС может состоять только из цифр}';
         } else if (snils.length !== 11) {
             error.code = 3;
-            error.message = 'СНИЛС может состоять только из 11 цифр';
+            error.message = '#{app-validation-snils-error3;СНИЛС может состоять только из 11 цифр}';
         } else {
             var sum = 0;
             for (var i = 0; i < 9; i++) {
@@ -251,7 +251,7 @@ Colibri.Common.Validation = class {
                 result = true;
             } else {
                 error.code = 4;
-                error.message = 'Неправильное контрольное число';
+                error.message = '#{app-validation-snils-error4;Неправильное контрольное число}';
             }
         }
         return result;

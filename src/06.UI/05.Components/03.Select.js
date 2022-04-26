@@ -179,7 +179,7 @@ Colibri.UI.Select.DefaultDropdown = class extends Colibri.UI.Select.Dropdown {
         this.list.shown = true;
         this.options.shown = false;
 
-        this._emptySearchResult = this.list.AddGroup('emptySearchResult', 'Нет подходящих вариантов');
+        this._emptySearchResult = this.list.AddGroup('emptySearchResult', '#{app-select-emptyresult;Нет подходящих вариантов}');
         this._emptySearchResult.shown = false;
 
         this._handleEvents();

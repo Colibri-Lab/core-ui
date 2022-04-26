@@ -46,7 +46,7 @@ Colibri.UI.PromptDialog = class extends Colibri.UI.Window {
             this._form.value = {};
 
 
-            this._save.value = button || 'Продолжить';
+            this._save.value = button || '#{app-prompt-ok;Продолжить}';
             super.Show();
 
             this._form.Children('firstChild').Focus();

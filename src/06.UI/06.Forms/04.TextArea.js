@@ -118,4 +118,4 @@ Colibri.UI.Forms.TextArea = class extends Colibri.UI.Forms.Field {
     }
 
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('TextArea', 'Colibri.UI.Forms.TextArea', 'Большой текст');
+Colibri.UI.Forms.Field.RegisterFieldComponent('TextArea', 'Colibri.UI.Forms.TextArea', '#{app-fields-textarea;Большой текст}');

@@ -1,7 +1,7 @@
 Colibri.UI.Window = class extends Colibri.UI.Component {
 
     constructor(name, container, element, title, width, height) {
-        super(name, container, '<div><div class="app-component-window-container"><div class="app-component-window-title"><span>Заголовок</span><div class="close-button"></div></div><div class="app-component-window-content"></div><div class="app-component-window-footer"></div></div></div>');
+        super(name, container, '<div><div class="app-component-window-container"><div class="app-component-window-title"><span></span><div class="close-button"></div></div><div class="app-component-window-content"></div><div class="app-component-window-footer"></div></div></div>');
 
         this.AddClass('app-component-window');
 

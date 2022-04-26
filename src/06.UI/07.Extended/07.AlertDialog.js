@@ -19,7 +19,7 @@ Colibri.UI.AlertDialog = class extends Colibri.UI.Window {
         return new Promise((resolve, reject) => {
             this.title = title;
             this.Children('message').value = message;
-            this.Children('btn-cancel').value = button || 'Закрыть';
+            this.Children('btn-cancel').value = button || '#{app-alert-close;Закрыть}';
     
             super.Show();
 

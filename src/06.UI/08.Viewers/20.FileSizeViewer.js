@@ -25,4 +25,4 @@ Colibri.UI.FileSizeViewer = class extends Colibri.UI.Viewer {
     }
 
 }
-Colibri.UI.Viewer.Register('Colibri.UI.FileSizeViewer', 'Отображение размера файла');
+Colibri.UI.Viewer.Register('Colibri.UI.FileSizeViewer', '#{app-viewers-filesize;Отображение размера файла}');

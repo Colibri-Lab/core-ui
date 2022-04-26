@@ -132,7 +132,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
             deleteIcon.value = Colibri.UI.ClearIcon;
 
             if (sign) {
-                sign.value = 'Подписать';
+                sign.value = '#{app-files-sign;Подписать}';
             }
 
             deleteIcon.AddHandler('Clicked', (event, args) => {
@@ -252,11 +252,11 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         }
 
         if (this._maxCount) {
-            extensionsString.push('до ' + this._maxCount + ' файлов');
+            extensionsString.push('#{app-files-about;до} ' + this._maxCount + ' #{app-files-files;файлов}');
         }
 
         if (this._maxFileSize) {
-            extensionsString.push('не больше ' + (this._maxFileSize + 0).toSizeString(['байт', 'Кб', 'Мб'], 1024, true) + ' каждый');
+            extensionsString.push('#{app-files-more;не больше} ' + (this._maxFileSize + 0).toSizeString(['байт', 'Кб', 'Мб'], 1024, true) + ' #{app-files-everyone;каждый}');
         }
 
 
@@ -280,7 +280,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
 
                 let countAvailable = this._maxCount - this._getValue().length;
                 validatedList.splice(countAvailable);
-                this._errorMessages.push('Можно выбрать не более ' + this._maxCount + ' файлов');
+                this._errorMessages.push('#{app-files-choosenomore;Можно выбрать не более} ' + this._maxCount + ' #{app-files-files;файлов}');
             }
         }
 
@@ -291,7 +291,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
                     this._validated = false;
 
                     validatedList.splice(index, 1);
-                    this._errorMessages.push('Файл ' + file.name + ' слишком большой');
+                    this._errorMessages.push('#{app-files-file;Файл} ' + file.name + ' #{app-files-verybig;слишком большой}');
                 }
             });
         }
@@ -313,7 +313,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
                     this._validated = false;
 
                     validatedList.splice(index, 1);
-                    this._errorMessages.push('Недопустимый формат файла ' + fileName);
+                    this._errorMessages.push('#{app-files-format;Недопустимый формат файла} ' + fileName);
                 }
             });
         }
@@ -443,11 +443,11 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
      */
     get tabIndex() {
         return this._input && this._input.tabIndex;
-    }
+    } 
     set tabIndex(value) {
         if (this._input) {
             this._input.tabIndex = value === true ? Colibri.UI.tabIndex++ : value;
         }
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Files', 'Colibri.UI.Forms.Files', 'Список файлов')
+Colibri.UI.Forms.Field.RegisterFieldComponent('Files', 'Colibri.UI.Forms.Files', '#{app-fields-files;Список файлов}')

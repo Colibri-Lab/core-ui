@@ -31,7 +31,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
     _createAddNewLink() {
         const link = new Colibri.UI.Link('add-new', this.contentContainer);
-        link.value = this._fieldData.params && this._fieldData.params.addlink || 'Добавить еще «' + (this._fieldData.desc) + '»';
+        link.value = this._fieldData.params && this._fieldData.params.addlink || '#{app-array-add;Добавить еще} «' + (this._fieldData.desc) + '»';
         link.shown = true;
         link.AddHandler('Clicked', (event, args) => {
             this._addNew();
@@ -147,4 +147,4 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     
 
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Array', 'Colibri.UI.Forms.Array', 'Массив обьектов')
+Colibri.UI.Forms.Field.RegisterFieldComponent('Array', 'Colibri.UI.Forms.Array', '#{app-fields-array;Массив обьектов}')

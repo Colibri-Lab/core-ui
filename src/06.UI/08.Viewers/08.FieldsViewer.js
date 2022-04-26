@@ -123,4 +123,4 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
     }
 
 }
-Colibri.UI.Viewer.Register('Colibri.UI.FieldsViewer', 'Поля (JSON)');
+Colibri.UI.Viewer.Register('Colibri.UI.FieldsViewer', '#{app-viewers-fields;Поля (JSON)}');
