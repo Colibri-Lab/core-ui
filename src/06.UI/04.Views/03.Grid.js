@@ -647,14 +647,14 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                 this.__customScroll(newActiveItem._element, this.container, correctionCoefficient, direction);
                 this.Dispatch('HighlightedItemChanged', {item: newActiveItem});
             }
-            event.stopPropagation();
-            event.preventDefault();
+            e.stopPropagation();
+            e.preventDefault();
             return false;
         }
         else if(e.code === 'Space') {
             this.activeRow.checked = !this.activeRow.checked;
-            event.stopPropagation();
-            event.preventDefault();
+            e.stopPropagation();
+            e.preventDefault();
             return false;
         }
         
@@ -1331,6 +1331,11 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
             this.Dispatch('ColumnDisposed', {column: this});
         });
     }
+    
+    Dispose() {
+        super.Dispose();
+        this.Dispatch('ColumnDisposed', {column: this});
+    }
 
     get sticky() {
         return this._sticky;
@@ -1972,6 +1977,11 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
         let newCell = this.Children(this.name + '-' + column.name);
         if(!newCell) {
+
+            if(this.hasContextMenu) {
+                this._removeContextMenuButton();
+            }
+
             newCell = new Colibri.UI.Grid.Cell(this.name + '-' + column.name, this);
             newCell.parentColumn = column;
             newCell.shown = true;
@@ -1998,6 +2008,10 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         }
 
         newCell.value = column.name.indexOf('.') === -1 ? value[column.name] : eval(`value.${column.name}`);
+        
+        if(this.hasContextMenu) {
+            this._createContextMenuButton();
+        }
 
     }
 
@@ -2088,33 +2102,13 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
     }
     
     _createContextMenuButton() {
-        if(!this._hasContextMenu || this.Children(this._name + '-contextmenu-icon-parent')) {
-            return;
-        }
-
+        this.lastCell.CreateContextMenuButton();
         this.AddClass('app-component-hascontextmenu');
-
-        const contextMenuParent = new Colibri.UI.Component(this.lastCell.name + '-contextmenu-icon-parent', this.lastCell);
-        contextMenuParent.AddClass('app-contextmenu-icon-component');
-        contextMenuParent.shown = true;
-        
-        const contextMenuIcon = new Colibri.UI.Icon(this.lastCell.name + '-contextmenu-icon', contextMenuParent);
-        contextMenuIcon.shown = true;
-        contextMenuIcon.value = Colibri.UI.ContextMenuIcon;
-        contextMenuIcon.AddHandler(['Clicked', 'DoubleClicked'], (event, args) => {
-            this.Dispatch('ContextMenuIconClicked', args);
-            args.domEvent.stopPropagation();
-            args.domEvent.preventDefault();
-            args.domEvent.returnValue = true;
-            return false;
-        });
     }
 
     _removeContextMenuButton() {
-        if(this._hasContextMenu && this.Children(this.lastCell.name + '-contextmenu-icon-parent')) {
-            this.lastCell.Children(this.lastCell.name + '-contextmenu-icon-parent').Dispose();
-            this.RemoveClass('app-component-hascontextmenu');
-        }
+        this.lastCell.RemoveContextMenuButton();
+        this.RemoveClass('app-component-hascontextmenu');
     }
 
     EndEdit() {
@@ -2123,13 +2117,6 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         })
     }
 
-    _getContextMenuIcon() {
-        const cell = this.Children('lastChild');
-        if(cell.Children(cell._name + '-contextmenu-icon-parent')) {
-            return cell.Children(cell._name + '-contextmenu-icon-parent/' + cell._name + '-contextmenu-icon');
-        }
-        return null;
-    }
 
     ShowContextMenu(orientation = 'right bottom', className = '', point = null) {
         const cell = this.Children('lastChild');
@@ -2156,6 +2143,14 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         
 
         this._contextMenuObject = contextMenuObject;
+    }
+
+    
+    _getContextMenuIcon() {
+        if(this.lastCell.Children(this.lastCell.name + '-contextmenu-icon-parent')) {
+            return this.lastCell.Children(this.lastCell.name + '-contextmenu-icon-parent/' + this.lastCell.name + '-contextmenu-icon');
+        }
+        return null;
     }
 
 
@@ -2201,7 +2196,6 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         super._registerEvents();
         this.RegisterEvent('CellClicked', false, 'Поднимается, когда щелкнули по ячейке');
         this.RegisterEvent('CellDoubleClicked', false, 'Поднимается, когда дважды щелкнули по ячейке');
-        this.RegisterEvent('ParentColumnChanged', false, 'Поднимается, когда меняется родительская колонка');
         this.RegisterEvent('CellDisposed', false, 'Поднимается, когда удалили ячейку');
         this.RegisterEvent('CellHorizontalStickyChanged', false, 'Поднимается, когда ячейка меняет липкость по горизонтали');
         this.RegisterEvent('CellVerticalStickyChanged', false, 'Поднимается, когда ячейка меняет липкость по вертикали');
@@ -2219,26 +2213,6 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
             this.Dispatch('CellDisposed', {cell: this});
         });
 
-        this.AddHandler('ParentColumnChanged', (event, args) => {
-
-            if(this.parentColumn !== null) {
-
-                this.stickyHorizontally = this.parentColumn.sticky;
-                this.parentColumn.AddHandler('ColumnStickyChange', (event, args) => {
-                    this.stickyHorizontally = args.column.sticky;
-                });
-
-                this.parentColumn.AddHandler('ColumnDisposed', (event, args) => {
-                    this.Dispose();
-                });
-
-                this.parentColumn.AddHandler('ColumnPositionChange', (event, args) => {
-                    if (this.stickyHorizontally) {
-                        this.left = args.column._positionLeft;
-                    }
-                });
-            }
-        });
 
         this.parentRow.AddHandler('RowStickyChange', (event, args) => {
             this.stickyVertically = args.row.sticky;
@@ -2350,9 +2324,27 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
     }
 
     set parentColumn(value) {
-        if (this._parentColumn !== value) {
-            this._parentColumn = value;
-            this.Dispatch('ParentColumnChanged', {parentColumn: value});
+        this._parentColumn = value;
+        if(this.parentColumn !== null) {
+
+            this.stickyHorizontally = this.parentColumn.sticky;
+            this.parentColumn.AddHandler('ColumnStickyChange', (event, args) => {
+                this.stickyHorizontally = args.column.sticky;
+            });
+
+            this.parentColumn.AddHandler('ColumnDisposed', (event, args) => {
+                const parent = this.parent;
+                this.Dispose();
+                if(parent?.hasContextMenu) {
+                    parent?.lastCell && parent.lastCell.CreateContextMenuButton();   
+                }
+            });
+
+            this.parentColumn.AddHandler('ColumnPositionChange', (event, args) => {
+                if (this.stickyHorizontally) {
+                    this.left = args.column._positionLeft;
+                }
+            });
         }
     }
 
@@ -2515,6 +2507,34 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         }
         hide && this._editorObject && this._editorObject.Hide();
     } 
+
+    CreateContextMenuButton() {
+        let contextMenuParent = this.Children(this._name + '-contextmenu-icon-parent');
+        if(!this.parent.hasContextMenu || contextMenuParent) {
+            return;
+        }
+
+        contextMenuParent = new Colibri.UI.Component(this._name + '-contextmenu-icon-parent', this);
+        contextMenuParent.AddClass('app-contextmenu-icon-component');
+        contextMenuParent.shown = true;
+        
+        const contextMenuIcon = new Colibri.UI.Icon(this._name + '-contextmenu-icon', contextMenuParent);
+        contextMenuIcon.shown = true;
+        contextMenuIcon.value = Colibri.UI.ContextMenuIcon;
+        contextMenuIcon.AddHandler(['Clicked', 'DoubleClicked'], (event, args) => {
+            this.parent.Dispatch('ContextMenuIconClicked', args);
+            args.domEvent.stopPropagation();
+            args.domEvent.preventDefault();
+            args.domEvent.returnValue = true;
+            return false;
+        });
+    }
+
+    RemoveContextMenuButton() {
+        if(this.parent.hasContextMenu && this.Children(this._name + '-contextmenu-icon-parent')) {
+            this.Children(this._name + '-contextmenu-icon-parent').Dispose();
+        }
+    }
 
 
 }

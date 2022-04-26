@@ -31,6 +31,12 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
         
         const icon = new Colibri.UI.Icon(item.name + '-icon', itemObject);
         const text = new Colibri.UI.TextSpan(item.name + '-text', itemObject);
+        const arrow = new Colibri.UI.Icon(item.name + '-arrow', itemObject);
+        arrow.value = Colibri.UI.ContextMenuRightArrowIcon;
+
+        if (item.children) {
+            arrow.shown = true;
+        } 
 
         if(item.icon) {
             icon.value = item.icon;
@@ -46,7 +52,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
         itemObject.AddHandler('Clicked', (event, args) => {
             if(item.children) {
                 // показываем дочернее меню
-                this._childContextMenu = new AktionDigital.UI.ContextMenu(itemObject.name + '_contextmenu', document.body, 'right');
+                this._childContextMenu = new Colibri.UI.ContextMenu(itemObject.name + '_contextmenu', document.body, 'right');
                 this._childContextMenu.Show(item.children, itemObject);
                 this._childContextMenu.AddHandler('Clicked', (event, args) => {
                     this.Dispatch('Clicked', args);
@@ -114,6 +120,22 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
                     top: iconBounds.top
                 } // верхний правый угол
                 this.styles = {left: (point.left - thisBounds.outerWidth) + 'px', top: (point.top - thisBounds.outerHeight - 10) + 'px'};
+                break;
+            }
+            case 'right': {
+                let point = this._point || {
+                    left: iconBounds.left + iconBounds.outerWidth + 2,
+                    top: iconBounds.top
+                } // правый верхний угол
+                this.styles = { left: point.left + 'px', top: point.top + 'px' };
+                break;
+            }
+            case 'left': {
+                let point = this._point || {
+                    left: iconBounds.left - 2,
+                    top: iconBounds.top
+                } // левый верхний угол
+                this.styles = { left: (point.left - thisBounds.outerWidth) + 'px', top: point.top + 'px' };
                 break;
             }
         }

@@ -234,6 +234,14 @@ Object.getValue = function(obj, path, _default = undefined) {
     }
 }
 
+Object.map = function(obj, func) {
+    let newObject = {};
+    Object.forEach(obj, (key, value) => {
+        newObject[key] = func(key, value);
+    });
+    return newObject;
+}
+
 
 /* String prototype expansion */
 String.prototype.stripHtml = function() { return this.replace(/<[^>]+>/gim, "").replace(/<\/[^>]+>/gim, "").replace(/&nbsp;/gim, ""); }

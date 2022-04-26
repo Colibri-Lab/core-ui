@@ -818,7 +818,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     get next() {
         const myIndex = this.parent.indexOf(this.name);
-        if(myIndex === -1 || myIndex === keys.length - 1) {
+        if(myIndex === -1 || myIndex === this.parent.children - 1) {
             return  null;
         }
 
@@ -938,7 +938,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             }
         }
         catch(e) {
-
+            console.log(e);
         }
     }
 
