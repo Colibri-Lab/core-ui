@@ -1254,7 +1254,7 @@ Element.prototype.css = function(name, value) {
 /**
  * Возвращает местоположение и размеры элемента
  */
-Element.prototype.bounds = function(includeBorders = false) {
+Element.prototype.bounds = function(includeBorders = false, includeMargin = false) {
 
     const rect = this.getBoundingClientRect();
     const win = this.ownerDocument.defaultView;
@@ -1273,9 +1273,14 @@ Element.prototype.bounds = function(includeBorders = false) {
     position.outerHeight = position.height;
 
     if(style.boxSizing == 'content-box') {
-        position.outerWidth += (parseInt(style.paddingLeft ?? 0)) + (parseInt(style.paddingRight ?? 0)) + (includeBorders ? ((parseInt(style.borderRightWidth ?? 0)) + (parseInt(style.borderLeftWidth ?? 0))) : 0);
-        position.outerHeight += (parseInt(style.paddingTop ?? 0)) + (parseInt(style.paddingBottom ?? 0)) + (includeBorders ? ((parseInt(style.borderTopWidth ?? 0)) + (parseInt(style.borderBottomWidth ?? 0))) : 0);
+        position.outerWidth += (parseInt(style.paddingLeft ?? 0)) + (parseInt(style.paddingRight ?? 0));
+        position.outerHeight += (parseInt(style.paddingTop ?? 0)) + (parseInt(style.paddingBottom ?? 0));
     }
+
+    position.outerWidth += (includeBorders ? ((parseInt(style.borderRightWidth ?? 0)) + (parseInt(style.borderLeftWidth ?? 0))) : 0)
+    position.outerWidth += (includeMargin ? ((parseInt(style.marginRight ?? 0)) + (parseInt(style.marginLeft ?? 0))) : 0);
+    position.outerHeight += (includeBorders ? ((parseInt(style.borderTopWidth ?? 0)) + (parseInt(style.borderBottomWidth ?? 0))) : 0)
+    position.outerHeight += (includeMargin ? ((parseInt(style.marginTop ?? 0)) + (parseInt(style.marginBottom ?? 0))) : 0);
 
     return position;
 

@@ -291,7 +291,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
-    ShowContextMenu(orientation = 'right bottom', className = '', point = null) {
+    ShowContextMenu(orientation = [Colibri.UI.ContextMenu.RT, Colibri.UI.ContextMenu.RB], className = '', point = null) {
 
 
         this.Children(this._name + '-contextmenu-icon-parent') && this.Children(this._name + '-contextmenu-icon-parent').AddClass('-selected');
@@ -301,20 +301,18 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
         
         const contextMenuObject = new Colibri.UI.ContextMenu(this._name + '-contextmenu', document.body, orientation, point);
-        contextMenuObject.parent = this;
-        contextMenuObject.value = this.contextmenu;
-        contextMenuObject.shown = true;
+        contextMenuObject.Show(this.contextmenu, this);
         if(className) {
             contextMenuObject.AddClass(className);
         }
         contextMenuObject.AddHandler('Clicked', (event, args) => {
             contextMenuObject.Hide();
             this.Dispatch('ContextMenuItemClicked', Object.assign(args, {item: this}));
-            contextMenuObject.Dispose();            
+            contextMenuObject.Dispose();   
+            this._contextMenuObject = null;         
             this.Children(this._name + '-contextmenu-icon-parent') && this.Children(this._name + '-contextmenu-icon-parent').RemoveClass('-selected');
         });
         
-
         this._contextMenuObject = contextMenuObject;
         
 

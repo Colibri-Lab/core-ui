@@ -127,6 +127,52 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         }
     }
 
+    set selected(value) {
+
+        if(value === null) {
+            this.UnselectAllRows();
+            return;
+        }
+
+        let cell = value instanceof Colibri.UI.Grid.Cell ? value : null;
+        let row = value instanceof Colibri.UI.Grid.Row ? value : null;
+
+        if (!cell && !row) {
+            return;
+        }
+        
+        let args = {};
+        args.cell = cell;
+        args.row = row;
+
+        switch(this.selectionMode) {
+            case Colibri.UI.Grid.EveryCell:
+                if (cell) {
+                    this.DeactivateAllCells();
+                    if (!this.multiple) {
+                        this.DeselectAllCells();
+                    }
+                    cell.activated = !cell.activated;
+                    cell.selected = !cell.selected;
+                }
+                break;
+            case Colibri.UI.Grid.FullRow:
+                if (row) {
+                    this.DeactivateAllRows();
+
+                    if (!this.multiple) {
+                        this.UnselectAllRows();
+                    }
+                    row.activated = !row.activated;
+                    row.selected = !row.selected;
+                }
+                break;
+        }
+
+        args.item = this.selected;
+        this.Dispatch('SelectionChanged', args);
+    }
+
     /**
      * Возвращает список прочеканных строк  
      * @returns Colibri.UI.Component[]
@@ -652,7 +698,9 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             return false;
         }
         else if(e.code === 'Space') {
+            this.selected = null;
             this.activeRow.checked = !this.activeRow.checked;
+            this.Dispatch('CheckChanged');
             e.stopPropagation();
             e.preventDefault();
             return false;
@@ -2118,7 +2166,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
     }
 
 
-    ShowContextMenu(orientation = 'right bottom', className = '', point = null) {
+    ShowContextMenu(orientation = [Colibri.UI.ContextMenu.RT, Colibri.UI.ContextMenu.RB], className = '', point = null) {
         const cell = this.Children('lastChild');
 
         cell.Children(cell.name + '-contextmenu-icon-parent').AddClass('-selected');
@@ -2128,9 +2176,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         }
         
         const contextMenuObject = new Colibri.UI.ContextMenu(cell.name + '-contextmenu', document.body, orientation, point);
-        contextMenuObject.parent = cell;
-        contextMenuObject.value = this.contextmenu;
-        contextMenuObject.shown = true;
+        contextMenuObject.Show(this.contextmenu, cell);
         if(className) {
             contextMenuObject.AddClass(className);
         }
