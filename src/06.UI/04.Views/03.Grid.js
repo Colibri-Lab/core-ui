@@ -880,12 +880,12 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      * @param {bool} removeGroups удалить пустые группы тоже
      */
     ClearAll() {
+        this.ClearAllRows(true);
         this.header.columns.ForEach((name, column) => {
             if(name != 'button-container-for-row-selection') {
                 column.Dispose();
             }
         });
-        this.ClearAllRows(true);
         this._gridContent.shown = false;
         this._norows.shown = true;
     }
