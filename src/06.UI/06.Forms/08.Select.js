@@ -35,6 +35,25 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
             this.enabled = this._fieldData.params.enabled;
         }
 
+        if(this._fieldData?.selector?.ondemand) {
+            this._input.__BeforeFilled = () => {
+                return new Promise((resolve, reject) => {
+                    if (this._fieldData.lookup) {
+                        this.loading = true;
+                        this.AddClass('app-select-loading');
+                        this._setLookup(this._fieldData.lookup).then((response) => {
+                            this.values = response.result || response;
+                        }).finally(() => {
+                            this.loading = false;                        
+                            this.RemoveClass('app-select-loading');
+                            this._setEnabled();
+                            resolve(true);
+                        });
+                    }
+                });
+            };
+        }
+
     }
 
     /**

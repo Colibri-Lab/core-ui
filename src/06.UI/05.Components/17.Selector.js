@@ -102,11 +102,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                 return;
             }
             const values = this._search(this._input.value);
-            if (this._popup) {
-                this._popup.FillItems(values, this._lastValue);
-            } else {
-                this._showPopup(values);
-            }
+            this._showPopup(values);
 
             if(this.allowempty) {
                 this.Dispatch('Changed', args);
@@ -171,6 +167,9 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         if(!this._popup) {
             this._popup = this._createPopup(values);
             this._registerPopupEventHandlers(this._popup);
+        }
+        else {
+            this._popup.FillItems(values, this._lastValue);
         }
 
         if(!this._popup.shown) {
