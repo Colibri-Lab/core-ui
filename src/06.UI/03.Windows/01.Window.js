@@ -56,6 +56,11 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     }
 
     _movingStartHandler(e) {
+        
+        if(e.target.is('button')) {
+            return false;
+        }
+
         const windowElement = e.currentTarget.closest('.app-component-window');
         const windowComponent = windowElement.tag('component');
         windowComponent.moving = true;
