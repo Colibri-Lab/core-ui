@@ -64,13 +64,19 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
     }
 
     _showValue() {
+
+        try {
+            this._viewElement.value = this._format.format(this.value);
+        }
+        catch(e) {
+            this._viewElement.value = '';
+        }    
+
         if(this._popup) {
             try {
-                this._viewElement.value = this._format.format(this.value);
                 this._popup.value = this.value;
             }
             catch(e) {
-                this._viewElement.value = '';
                 this._popup.value = new Date();
             }    
         }
