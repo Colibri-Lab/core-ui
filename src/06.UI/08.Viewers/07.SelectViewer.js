@@ -7,7 +7,10 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
 
     set value(value) {
         if(value) {
-            if (this._field?.lookup) {
+            if(value instanceof Object) {
+                super.value = value[this._field?.selector?.title ?? 'title'];
+            }
+            else if (this._field?.lookup) {
                 let selected = false;
                 value = value.value ?? value;
                 this.AddClass('app-viewer-loading');
@@ -15,8 +18,8 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                     const _result = (response.result ?? response);
                     if(_result?.length) {
                         for (let val of _result) {
-                            if (val[this._field.selector.value || 'value'] == value) {
-                                super.value = val[this._field.selector.title || 'title'];
+                            if (val[this._field?.selector?.value || 'value'] == value) {
+                                super.value = val[this._field?.selector?.title || 'title'];
                                 selected = true;
                                 break;
                             }
@@ -25,12 +28,12 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                 }).finally(() => {
                     this.RemoveClass('app-viewer-loading')
                     if(!selected) {
-                        super.value = value === Object(value) ? value[this._field?.selector?.title ?? 'title'] : value;
+                        super.value = value[this._field?.selector?.title ?? 'title'];
                     }
                 });
-            } else {
-                super.value = value === Object(value) ? value[this._field?.selector?.title ?? 'title'] : value;
             }
+
+            
         }
     }
 
@@ -53,10 +56,9 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
      * Установить новое значение свойству lookup
      * Загрузить значения селектора альтернативным способом, указанным в lookup
      */
-    _setLookup() {
-        let lookupPromise,
-            lookup = this._field.lookup,
-            dependsValue = this._getDependsValue();
+     _setLookup(value) {
+        let lookupPromise;
+        let dependsValue = this._getDependsValue();
 
         if(dependsValue !== undefined && !dependsValue) {
             return new Promise((resolve, reject) => {
@@ -64,40 +66,44 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
             });
         }
 
-        if (typeof lookup == 'function') {
-            lookupPromise = new Promise((resolve, reject) => {
+        if (typeof this._field.lookup == 'function' || typeof this._field.lookup == 'string') {
+            if(typeof this._field.lookup == 'string') {
+                this._field.lookup = eval(this._field.lookup);
+            }
+            const lookupMethodRun = this._field.lookup();
+            lookupPromise = lookupMethodRun instanceof Promise ? lookupMethodRun : new Promise((resolve, reject) => {
                 resolve({
-                    result: this._field._lookup()
+                    result: this._field.lookup()
                 });
             });
         }
-        else if (typeof lookup == 'object') {
-            let lookupType = Object.keys(lookup)[0];
+        else if (typeof this._field.lookup == 'object') {
 
-            switch (lookupType) {
-                case 'method':
-                    if (typeof lookup[lookupType] == 'string') {
-                        let lookupMethod = eval(lookup[lookupType]);
-                        lookupPromise = lookupMethod(null, dependsValue);
-                    }
-
-                    break;
-                case 'binding':
-                    let binding = lookup[lookupType];
-                    if (typeof binding == 'string') {
-                        lookupPromise = App.Store.AsyncQuery(binding, dependsValue);
-                    }
-
-                    break;
-                case 'controller':
-                    let controller = lookup[lookupType];
-
-                    let module = eval(controller.module);
-                    lookupPromise = module.Call(controller.class, controller.method, {term: null, param: dependsValue});
-
-                    break;
-                default:
-                    lookupPromise = new Promise((resolve, reject) => { resolve({result: ''}); })
+            if(this._field.lookup?.method) {
+                let lookupMethod = this._field.lookup.method;
+                if (typeof lookupMethod == 'string') {
+                    lookupMethod = eval(this._field.lookup.method);
+                }
+                lookupPromise = lookupMethod('', dependsValue);
+            }
+            else if(this._field.lookup?.binding) {
+                let binding = this._field.lookup.binding;
+                if (typeof binding == 'string') {
+                    lookupPromise = App.Store.AsyncQuery(binding, dependsValue);
+                }
+            }
+            else if(this._field.lookup?.controller) {
+                let controller = this._field.lookup.controller;
+                let module = eval(controller.module);
+                lookupPromise = module.Call(controller.class, controller.method, {term: '', param: dependsValue, lookup: this._field.lookup});
+            }
+            else if(this._field.lookup?.storage) {
+                let controller = this._field.lookup?.storage?.controller;
+                let module = eval(controller?.module);
+                lookupPromise = module.Call(controller.class, controller.method, {term: '', param: dependsValue, lookup: this._field.lookup});
+            }
+            else {
+                lookupPromise = new Promise((resolve, reject) => { resolve({result: ''}); })
             }
         }
 

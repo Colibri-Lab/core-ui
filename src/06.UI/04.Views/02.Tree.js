@@ -1,5 +1,6 @@
 Colibri.UI.Tree = class extends Colibri.UI.Component {
 
+    /** @type {Colibri.UI.TreeNode|null} */
     _selected = null;
 
     constructor(name, container) {
@@ -29,6 +30,7 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         });
     }
 
+    /** @type {Colibri.UI.TreeNodes} */
     get nodes() {
         return this._nodes;
     }
@@ -59,28 +61,32 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         this._selected = null;
     }
 
+    /** @type {Colibri.UI.TreeNode} */
     get selected() {
         return this._selected;
     }
 
+    /**
+     * @param {Colibri.UI.TreeNode} node
+     */
     set selected(node) {
         this.Select(node);
     }
 
+    /**
+     * @returns {Set}
+     */
     get allNodes() {
         return this._allNodes;
     }
 
     FindNode(name) {
-        let found = null;
-        this._allNodes.forEach((node) => {
+        for(const node of this._allNodes) {
             if(node.name == name) {
-                found = node;
-                return false;
+                return node;
             }
-            return true;
-        });
-        return found;
+        }
+        return null;
     }
 
     get hasTreeContextMenu() {
@@ -440,6 +446,7 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
 
 Colibri.UI.TreeNodes = class extends Colibri.UI.Component {
 
+    /** @type {Colibri.UI.Tree} */
     _tree = null;
 
     constructor(name, container, tree) {
