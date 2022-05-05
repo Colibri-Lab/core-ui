@@ -459,7 +459,7 @@ Colibri.UI.TreeNodes = class extends Colibri.UI.Component {
 
     }
 
-    Add(name) {
+    Add(name, index) {
         let node = null;
         if(name instanceof Colibri.UI.TreeNode) {
             node = name;
@@ -474,7 +474,28 @@ Colibri.UI.TreeNodes = class extends Colibri.UI.Component {
             this.parent.isLeaf = false;
         }
         this._tree.allNodes.add(node);
+        if(index != node.childIndex) {
+            this.Children(name, node, index);
+        }
         return node;
+    }
+
+    Move(node, relation) {
+
+        let index = relation;
+        if(relation instanceof Colibri.UI.TreeNode) {
+            this.ForEach((name, n, i) => {
+                if(relation.name == name) {
+                    index = i;
+                    return false;
+                }
+                return true;
+            });
+        }
+
+        this.Children(node.name, node, index);
+
+
     }
 
     Dispose() {

@@ -673,6 +673,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return this._element.index();
     }
 
+    get childIndex() {
+        return this.parent.indexOf(this.name);
+    }
+
     /**
      * Элемент выключен
      * @type {boolean}
@@ -876,6 +880,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             this._children.splice(childIndex, 1);
         }
         else {
+            childIndex !== -1 && this._children.splice(childIndex, 1);
             if (index != undefined && index < this.children && index >= 0) {
                 this._children.splice(index, 0, val);
                 this._moveInDom(val.container, container || this.container, index);
