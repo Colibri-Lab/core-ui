@@ -72,7 +72,7 @@ Colibri.UI.Forms.DateTime = class extends Colibri.UI.Forms.Field {
             value = new Date(value);
         }
         this._input.value = value;
-        this._time.value = value.toTimeString();
+        this._time.value = value instanceof Date ? value.toTimeString() : '';
     }
 
     
