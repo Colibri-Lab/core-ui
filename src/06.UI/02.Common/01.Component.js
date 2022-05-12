@@ -561,6 +561,18 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
+     * Позиция элемента относительно левого края документа
+     * @type {number}
+     */
+    get right() {
+        const bounds = this._element.bounds();
+        return bounds.left + bounds.outerWidth;
+    }
+    set right(value) {
+        this._element.css('right', value ? value + 'px' : null);
+    }
+
+    /**
      * Позиция элемента относительно верхнего края документа
      * @type {number}
      */
@@ -569,7 +581,19 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return bounds.top;
     }
     set top(value) {
-        this._element.css('top', value + 'px');
+        this._element.css('top', value ? value + 'px' : null);
+    }
+
+    /**
+     * Позиция элемента относительно верхнего края документа
+     * @type {number}
+     */
+     get bottom() {
+        const bounds = this._element.bounds();
+        return bounds.top + bounds.outerHeight;
+    }
+    set bottom(value) {
+        this._element.css('bottom', value ? value + 'px' : null);
     }
 
     /**
@@ -1194,9 +1218,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     ForEach(handler) {
         const children = [...this._children];
-        children.forEach((o, index) => {
-            return handler.apply(this, [o.name, o, index]);
-        });
+        let index = 0;
+        for(const o of children) {
+            if(handler.apply(this, [o.name, o, index++]) === false) {
+                return this;
+            }
+        }
         return this;
     }
 
@@ -1205,8 +1232,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @param {Function} handler обработчик
      */
     ForReverseEach(handler) {
-        for (let i = this._children.length - 1; i >= 0; i--) {
-            handler.apply(this, [this._children[i].name, this._children[i], i]);
+        const children = [...this._children];
+        for (let i = children.length - 1; i >= 0; i--) {
+            if(handler.apply(this, [children[i].name, children[i], i]) === false) {
+                return this;
+            }
         }
         return this;
     }

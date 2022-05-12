@@ -134,18 +134,24 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
     get selectedIndex() {
 
-        let indices = [];
+        // let indices = [];
 
-        let index = 0;
-        let selected = null;
-        this.ForEach((name, group) => {
-            group.ForEach((n, item) => {
-                if(this._selected.filter(i => i === item).length > 0) {
-                    indices.push(index);
-                }
-                index ++;
-            });
-        });
+        // let index = 0;
+        // let selected = null;
+        // this.ForEach((name, group) => {
+        //     group.ForEach((n, item) => {
+        //         if(this._selected.filter(i => i === item).length > 0) {
+        //             indices.push(index);
+        //         }
+        //         index ++;
+        //     });
+        // });
+
+        if(this._selected.length == 0) {
+            return null;
+        }
+
+        const indices = this._selected.map(o => o.childIndex);
 
         return this._multiple ? indices : indices.pop();
 
@@ -164,7 +170,12 @@ Colibri.UI.List = class extends Colibri.UI.Component {
                     return false;
                 }
                 index ++;
+                return true;
             });
+            if(selected) {
+                return false;
+            }
+            return true;
         });
 
         if(!selected) {
@@ -436,6 +447,7 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
         } else {
             this.RemoveClass('app-component-selected');
         }
+        this._element.ensureInViewport(this.parent?.parent?.container ?? document.body);
     }
 
     __ItemSelected(event, args) {

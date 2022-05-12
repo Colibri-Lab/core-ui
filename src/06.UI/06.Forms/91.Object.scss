@@ -2,6 +2,16 @@
     
     padding-bottom: 0px;
 
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #D9DCE3;
+
+    > [data-object-name$="-title"] {
+        display: block;
+        font-size: 18px;
+    }
+
     [data-object-name$="-content"] > [data-object-name$="-container"] {
         width: 100%;
         display: flex;

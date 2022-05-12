@@ -40,6 +40,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
         this.AddHandler('MouseUp', (event, args) => this.__MouseUp(event, args));
         this.AddHandler('MouseDown', (event, args) => this.__MouseDown(event, args));
+        this.AddHandler('KeyDown', (event, args) => this.__KeyDown(event, args));
 
         this.Dispatch('WindowContentRendered');
 
@@ -95,7 +96,6 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     __CloseClicked(event, args) {
         if (this._closable === true) {
             this.shown = false;
-            this.__changeBodyScroll();
             this.Dispatch('WindowClosed', {});
         }
     }
@@ -114,11 +114,20 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         }
     }
 
-    __changeBodyScroll() {
-        if (this.shown) {
-            document.body.css('overflow', 'hidden')
-        } else {
-            document.body.css('overflow', 'unset')
+    __KeyDown(event, args) {
+        const domEvent = args.domEvent;
+        if(domEvent.code === 'Escape') {
+            this.Children('closebutton').Dispatch('Clicked', {domEvent: domEvent});
+            return false;
+        }
+        return true;
+    }
+
+
+    StartTabIndexRoutine() {
+        const firstInput = this._element.querySelector('input');
+        if(firstInput) {
+            firstInput.focus();
         }
     }
 
@@ -226,7 +235,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         else {
             this.SendToBack();
         }
-        this.__changeBodyScroll();
+        this.StartTabIndexRoutine();
     }
 
     get shown() {

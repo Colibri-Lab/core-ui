@@ -200,4 +200,12 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             this.Children(name).value = value;
         });
     }
+
+    Focus() {
+        const firstComponent = this.Children('firstChild');
+        if(firstComponent) {
+            firstComponent.Focus();
+        }
+    }
+
 } 

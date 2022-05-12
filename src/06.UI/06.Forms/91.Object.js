@@ -33,19 +33,33 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         this._fieldData?.params?.merged && this.AddClass('app-merged-object-component');
         this._fieldData?.params?.wrap && this.AddClass('app-field-wrap');
 
-        Object.forEach(this._fieldData.fields, (name, fieldData) => {
-            
-            const field = Object.assign({}, fieldData);
-            const placeholder = (this._fieldData?.vertical || this._fieldData?.params?.vertical) ? field.placeholder : field.desc;
-            (!this._fieldData?.vertical && !this._fieldData?.params?.vertical) && delete field.desc;
-            
-            const component = Colibri.UI.Forms.Field.Create(name, this.contentContainer, field, this, this.root);
-            component.placeholder = placeholder;
+        if(!this._fieldData.fields) {
+
+            const component = Colibri.UI.Forms.Field.Create('nofields', this.contentContainer, {
+                component: 'TextArea'
+            }, this, this.root);
+            component.placeholder = 'Введите JSON обьекта';
             component.message = false;
             component.shown = true;
             component.AddHandler('Changed', (event, args) => this.Dispatch('Changed'))
+        
+        }
+        else {
+            Object.forEach(this._fieldData.fields, (name, fieldData) => {
             
-        });
+                const field = Object.assign({}, fieldData);
+                const placeholder = (this._fieldData?.vertical || this._fieldData?.params?.vertical) ? field.placeholder : field.desc;
+                (!this._fieldData?.vertical && !this._fieldData?.params?.vertical) && delete field.desc;
+                
+                const component = Colibri.UI.Forms.Field.Create(name, this.contentContainer, field, this, this.root);
+                component.placeholder = placeholder;
+                component.message = false;
+                component.shown = true;
+                component.AddHandler('Changed', (event, args) => this.Dispatch('Changed'))
+                
+            });    
+        }
+
 
 
         this.Dispatch('FieldsRendered');
@@ -62,6 +76,14 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     get value() {
 
+        if(this.contentContainer.Children('nofields')) {
+            const v = this.contentContainer.Children('nofields').value;
+            if(!v) {
+                return {};
+            }
+            return JSON.parse(v);
+        }
+
         let data = {};
         this.contentContainer.ForEach((name, component) => {
             if(name == '_adds') {
@@ -77,6 +99,12 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
     }
 
     set value(value) {
+
+        if(this.contentContainer.Children('nofields')) {
+            this.contentContainer.Children('nofields').value = JSON.stringify(value);
+            return 
+        }
+
         value = eval_default_values(value);
 
         this.contentContainer.ForEach((name, component) => {

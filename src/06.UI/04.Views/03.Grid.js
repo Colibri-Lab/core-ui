@@ -539,7 +539,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      * @param {Object} args 
      * @returns 
      */
-    __keydownProcessing(event, args) {
+    __processKeydown(event, args) {
 
         const e = args.domEvent;
 
@@ -1006,7 +1006,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             this.Dispatch('CheckChanged');
         });
 
-        this.AddHandler('KeyDown', this.__keydownProcessing);
+        this.AddHandler('KeyDown', this.__processKeydown);
 
         this.header.columns.AddHandler('ColumnAdded', (event, args) => {
             Object.forEach(this.groups, (name, rows) => {

@@ -244,7 +244,14 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
 
         this.AddHandler('ContextMenuItemClicked', (event, args) => this._nodes.tree.Dispatch('ContextMenuItemClicked', Object.assign({item: this}, args)));
         this.AddHandler('DoubleClicked', (event, args) => {
-            this.__nodeEditableStart(event, args);
+            
+            if(this._editable) {
+                this.__nodeEditableStart(event, args);
+            }
+            else {
+                this._nodes.tree.Dispatch('DoubleClicked', Object.assign({item: this}, args));
+            }
+            
             args.domEvent.stopPropagation();
             args.domEvent.preventDefault();
             return false;

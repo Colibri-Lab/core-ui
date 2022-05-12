@@ -130,10 +130,9 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
      */
     _toggleBodyScroll(value) {
         if (value === false) {
-            document.body.css('overflow', 'hidden');
-        }
-        else {
-            document.body.css('overflow', '');
+            document.body.disableScrolling();
+        } else {
+            document.body.enableScrolling();
         }
     }
 

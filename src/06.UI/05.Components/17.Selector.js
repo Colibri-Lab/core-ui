@@ -71,28 +71,76 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this.RegisterEvent('Changed', false, 'Когда выбор изменился');
     }
 
+    __preventScrolling(e) {
+        e.preventDefault();
+    }
+    
+    _changeBodyScroll() {
+
+        let wnd = this._element.closest('.app-component-window');
+        wnd = wnd ?? document.body;
+        if (this._popup && this._popup.shown) {
+            wnd.disableScrolling();
+        } else {
+            wnd.enableScrolling();
+        }
+    }
+
     /**
      * Регистрация обработчиков событий
      */
     _handleEvents() {
 
         this._input.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
-        this._input.AddHandler('KeyDown', (event, args) => this.Dispatch('KeyDown', args));
 
         this._input.AddHandler('Filled', (event, args) => this.__Filled(event, args));
         this._input.AddHandler('Cleared', (event, args) => this.__Cleared(event, args));
         this._input.AddHandler('Clicked', (event, args) => this.__Clicked(event, args));
 
-        this._arrow.addEventListener('click', (e) => { this.enabled && this._showPopup(this._search()); e.stopPropagation(); return false; });
+        this._arrow.addEventListener('click', (e) => { this.Focus(); return false; });
 
         this._input.AddHandler('LoosedFocus', (event, args) => {
             if(!this._skipLooseFocus) {
-                //Colibri.Common.Delay(500).then(() => {
-                    this._removePopup();
-                    this._input.SendToBack();
-                //});
+                this._hidePopup();
             }
         });
+
+        // перехватить keydown и обработать Escape
+        this._input.AddHandler('KeyDown', (event, args) => {
+
+            if(['Escape', 'Space', 'ArrowUp', 'ArrowDown', 'Enter', 'NumpadEnter'].indexOf(args.domEvent.code) !== -1) {
+
+                if(args.domEvent.code === 'Escape') {
+                    this._hidePopup();
+                }
+                else if(args.domEvent.code === 'Space') {
+                    this.Focus();
+                }
+                else if(args.domEvent.code === 'ArrowUp') {
+                    if(!this._popup) {
+                        this.Focus();
+                    }
+                    this.__moveSelection(-1);
+                }
+                else if(args.domEvent.code === 'ArrowDown') {
+                    if(!this._popup) {
+                        this.Focus();
+                    }
+                    this.__moveSelection(1);
+                }
+                else if(args.domEvent.code === 'Enter') {
+                    this._popup.Dispatch('Clicked', {domEvent: args.domEvent});
+                }
+    
+                args.domEvent.stopPropagation();
+                args.domEvent.preventDefault();
+                return false;
+            }
+
+
+            return this.Dispatch('KeyDown', args);        
+        });
+
     }
 
     __Filled(event, args) {
@@ -158,6 +206,12 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         }
     }
 
+    _hidePopup() {
+        this._removePopup();
+        this._input.SendToBack();
+        this._changeBodyScroll();
+    }
+
     /**
      * Показать выпадащий список
      * @param {array} values массив значений
@@ -179,6 +233,19 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
             }
             this._input.BringToFront();
         }
+
+        this._changeBodyScroll();
+
+    }
+
+    __moveSelection(positionDelta) {
+        if(!this._popup?.selected) {
+            this._popup.selectedIndex = 0;
+            return;
+        }
+
+        this._popup.selectedIndex = this._popup.selectedIndex + positionDelta;
+
     }
 
     /**
@@ -466,7 +533,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
             }
 
             if(JSON.stringify(selected) === JSON.stringify(this._value)) {
-                return;
+                return false;
             }
 
             this._setValue(selected);
@@ -475,13 +542,13 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                 this._input._input.focus();//возвращаем фокус на инпут
             }
             this.Dispatch('Changed', args);
+            
             return false;
         });
+        
 
         popup.AddHandler('ShadowClicked', () => {
-            this._removePopup();
-            this._renderValue();
-            this._input.SendToBack();
+            this._hidePopup();
         });
     }
 }
