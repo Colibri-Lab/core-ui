@@ -30,9 +30,9 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
                 this.Close();
             }
         });
-        this._hiddenElement.addEventListener('keydown', (e) => {
-            e.stopPropagation(); 
-        });
+        // this._hiddenElement.addEventListener('keydown', (e) => {
+        //     e.stopPropagation(); 
+        // });
 
         this._viewElement.addEventListener('click', (e) => this.Dispatch('Clicked', { domEvent: e }));
         this._viewElement.addEventListener('dblclick', (e) => this.Dispatch('DoubleClicked', { domEvent: e }));
@@ -47,12 +47,30 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
 
         this._format = new Intl.DateTimeFormat('ru-RU', {day: '2-digit', month: 'short', year: 'numeric'});
 
-
-        this.AddHandler(['Clicked', 'ReceiveFocus'], (event, args) => {
+        this.AddHandler('Clicked', (event, args) => {
             this.Open();
             args.domEvent.stopPropagation();
             args.domEvent.preventDefault();
             return false;
+        });
+
+        this.AddHandler('KeyDown', (event, args) => {
+            if(['Escape', 'Enter', 'Space'].indexOf(args.domEvent.code) !== -1) {
+                
+                if(args.domEvent.code === 'Space') {
+                    this.Open();
+                }
+                else if(args.domEvent.code === 'Escape') {
+                    this.Close();
+                }
+                else if(args.domEvent.code === 'Enter') {
+                    this.Close();
+                }
+
+                args.domEvent.stopPropagation();
+                args.domEvent.preventDefault();
+                return false;
+            }
         });
 
 
@@ -93,6 +111,8 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         this._showValue();
         this.ToggleView(true);
         this._hiddenElement.focus();
+
+
     }
 
     Close() {
@@ -101,6 +121,7 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
             this._popup.Dispose();
             this._popup = null;
         }
+        this._viewElement.focus();
     }
 
     Focus() {

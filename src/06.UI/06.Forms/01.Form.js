@@ -86,23 +86,25 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         }
         else {
             this.ForEach((name, component) => {
-                if(name == '_adds') {
-                    // если наткнулись на _adds
-                    component.ForEveryField((name, field) => {
-                        if(!this._value) {
-                            field.value = component.field.default ?? null;    
-                        }
-                        else {
-                            field.value = this._value[name] ?? field?.field?.default ?? null;
-                        }
-                    });
-                }
-                else {
-                    if(!this._value) {
-                        component.value = component.field.default ?? null;    
+                if(component instanceof Colibri.UI.Forms.Field) {
+                    if(name == '_adds') {
+                        // если наткнулись на _adds
+                        component.ForEveryField((name, field) => {
+                            if(!this._value) {
+                                field.value = component.field.default ?? null;    
+                            }
+                            else {
+                                field.value = this._value[name] ?? field?.field?.default ?? null;
+                            }
+                        });
                     }
                     else {
-                        component.value = this._value[name] ?? component.field.default ?? null;
+                        if(!this._value) {
+                            component.value = component.field.default ?? null;    
+                        }
+                        else {
+                            component.value = this._value[name] ?? component.field.default ?? null;
+                        }
                     }
                 }
             });
@@ -122,11 +124,13 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     get value() {
         let data = Object.assign({}, this._value);
         this.ForEach((name, component) => {
-            if(name == '_adds') {
-                data = Object.assign(data, component.value);
-            }
-            else {
-                data[name] = component.value;
+            if(component instanceof Colibri.UI.Forms.Field) {
+                if(name == '_adds') {
+                    data = Object.assign(data, component.value);
+                }
+                else {
+                    data[name] = component.value;
+                }
             }
         });
 
@@ -173,25 +177,64 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         return field;
     }
 
-    _renderFields(value) {
+    _renderField(name, fieldData, value, shown = true) {
         const root = this.root || this;
+        const component = Colibri.UI.Forms.Field.Create(name, this, fieldData, null, root);
+        component.shown = shown;
+        component.AddHandler('Validated', (event, args) => this.Dispatch('Validated', args));
+        component.AddHandler('Changed', (event, args) => {
+            args ??= {};
+            if(component._timeout) {
+                clearTimeout(component._timeout);
+                component._timeout = null;
+            }
+            args.component = component;
+            component._timeout = setTimeout(() => this.Dispatch('Changed', args), 50);
+        });
+        component.download = this._download;
+        if(value && value[name] !== undefined) {
+            component.value = value[name];
+        }
+    }
+
+    _renderFields(value) {
+        
         Object.forEach(this._fields, (name, fieldData) => {
-            const component = Colibri.UI.Forms.Field.Create(name, this, fieldData, null, root);
-            component.AddHandler('Validated', (event, args) => this.Dispatch('Validated', args));
-            component.AddHandler('Changed', (event, args) => {
-                args ??= {};
-                if(component._timeout) {
-                    clearTimeout(component._timeout);
-                    component._timeout = null;
-                }
-                args.component = component;
-                component._timeout = setTimeout(() => this.Dispatch('Changed', args), 50);
-            });
-            component.download = this._download;
-            if(value && value[name] !== undefined) {
-                component.value = value[name];
+            if(!fieldData.group || fieldData.group === 'window') {
+                this._renderField(name, fieldData, value, true);
             }
         });
+
+        const groups = new Colibri.UI.ButtonGroup('groups', this);
+        groups.shown = true;
+        Object.forEach(this._fields,(name, fieldData) => {
+            if(fieldData.group && fieldData.group !== 'window') {
+                groups.AddButton(fieldData.group, fieldData.group);
+            }
+        });
+
+        Object.forEach(this._fields, (name, fieldData) => {
+            if(fieldData.group && fieldData.group !== 'window') {
+                this._renderField(name, fieldData, value, false);
+            }
+        });
+
+        groups.AddHandler('Changed', (event, args) => {
+            const groupName = args.button.name;
+            Object.forEach(this._fields, (name, fieldData) => {
+                if(fieldData.group !== 'window') {
+                    if(fieldData.group === groupName) {
+                        this.Children(name).shown = true;
+                    }
+                    else {
+                        this.Children(name).shown = false;
+                    }
+                }
+            });
+        });
+
+        groups.SelectButton('firstChild');
+
         this.Dispatch('FieldsRendered');
     }
 

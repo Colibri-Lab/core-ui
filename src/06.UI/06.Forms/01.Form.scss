@@ -1,1 +1,31 @@
 
+.app-form-component {
+
+    .app-buttongroup-component {
+        
+        &.app-component-shown {
+            display: inline-flex;
+        }
+
+        background: #FFFFFF;
+        border: 1px solid #D9DCE3;
+        border-radius: 3px;
+
+        button {
+            padding: 6px 12px;
+            height: 32px;
+            color: #000000;
+            background: transparent;
+            border: 0px;
+            border-right: 1px solid #D9DCE3;
+            &:last-child {
+                border-right: 0px;
+            } 
+            &.-selected {
+                background: #0095FF;
+                color: #ffffff;
+            }
+        }
+    }
+
+}

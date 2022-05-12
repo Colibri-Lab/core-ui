@@ -19,6 +19,13 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
     }
 
     SelectButton(button) {
+        if(typeof button == 'string' || typeof button == 'number') {
+            button = this.Children(button);
+        }
+        if(!button) {
+            return;
+        }
+
         this.ForEach((name, button) => {
             button.RemoveClass('-selected');
         });
@@ -29,8 +36,12 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
     
 
     AddButton(name, title) {
+        if(this.Children(name)) {
+            return this.Children(name);
+        }
         const button = new Colibri.UI.Button(name, this);
         button.value = title;
+        button.shown = true;
         button.AddHandler('Clicked', (event, args) => {
             this.SelectButton(button);
         });
