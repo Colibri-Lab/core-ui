@@ -199,41 +199,48 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     _renderFields(value) {
         
+        let hasGroups = false;
         Object.forEach(this._fields, (name, fieldData) => {
             if(!fieldData.group || fieldData.group === 'window') {
                 this._renderField(name, fieldData, value, true);
             }
-        });
-
-        const groups = new Colibri.UI.ButtonGroup('groups', this);
-        groups.shown = true;
-        Object.forEach(this._fields,(name, fieldData) => {
-            if(fieldData.group && fieldData.group !== 'window') {
-                groups.AddButton(fieldData.group, fieldData.group);
+            else {
+                hasGroups = true;
             }
         });
 
+        let groups = null;
+        if(hasGroups) {
+            groups = new Colibri.UI.ButtonGroup('groups', this);
+            groups.shown = true;
+            Object.forEach(this._fields,(name, fieldData) => {
+                if(fieldData.group && fieldData.group !== 'window') {
+                    groups.AddButton(fieldData.group, fieldData.group);
+                }
+            });
+            groups.AddHandler('Changed', (event, args) => {
+                const groupName = args.button.name;
+                Object.forEach(this._fields, (name, fieldData) => {
+                    if(fieldData.group !== 'window') {
+                        if(fieldData.group === groupName) {
+                            this.Children(name).shown = true;
+                        }
+                        else {
+                            this.Children(name).shown = false;
+                        }
+                    }
+                });
+            });
+        }
+        
         Object.forEach(this._fields, (name, fieldData) => {
             if(fieldData.group && fieldData.group !== 'window') {
                 this._renderField(name, fieldData, value, false);
             }
         });
 
-        groups.AddHandler('Changed', (event, args) => {
-            const groupName = args.button.name;
-            Object.forEach(this._fields, (name, fieldData) => {
-                if(fieldData.group !== 'window') {
-                    if(fieldData.group === groupName) {
-                        this.Children(name).shown = true;
-                    }
-                    else {
-                        this.Children(name).shown = false;
-                    }
-                }
-            });
-        });
-
-        groups.SelectButton('firstChild');
+        
+        groups && groups.SelectButton('firstChild');
 
         this.Dispatch('FieldsRendered');
     }
