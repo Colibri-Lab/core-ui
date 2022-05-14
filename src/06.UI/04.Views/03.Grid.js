@@ -1999,11 +1999,19 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
     }
 
     get firstCell() {
-        return this.Children('firstChild').next;
+        const firstCell = this.Children('firstChild');
+        if(firstCell instanceof Colibri.UI.Grid.Cell) {
+            return firstCell;
+        }
+        return null;
     }
 
     get lastCell() {
-        return this.Children('lastChild');
+        const lastCell = this.Children('lastChild');
+        if(lastCell instanceof Colibri.UI.Grid.Cell) {
+            return lastCell;
+        }
+        return null;
     }
 
     get prevRow() {
@@ -2150,12 +2158,12 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
     }
     
     _createContextMenuButton() {
-        this.lastCell.CreateContextMenuButton();
+        this.lastCell && this.lastCell.CreateContextMenuButton();
         this.AddClass('app-component-hascontextmenu');
     }
 
     _removeContextMenuButton() {
-        this.lastCell.RemoveContextMenuButton();
+        this.lastCell && this.lastCell.RemoveContextMenuButton();
         this.RemoveClass('app-component-hascontextmenu');
     }
 

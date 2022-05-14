@@ -2,7 +2,7 @@ Colibri.UI.ObjectViewer = class extends Colibri.UI.Viewer {
 
     constructor(name, container, element = '<span />', root = null) {
         super(name, container, element, root);
-        this.AddClass('app-bool-viewer-component');
+        this.AddClass('app-object-viewer-component');
     }
 
     _showValue() {
