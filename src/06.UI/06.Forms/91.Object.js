@@ -189,6 +189,9 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
                     fieldComponent.enable = true;
                 }
             }
+            else if(fieldData.params && fieldData.params.hidden) {
+                fieldComponent.shown = false;
+            }
         });
 
     }

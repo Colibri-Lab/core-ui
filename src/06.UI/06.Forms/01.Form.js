@@ -53,6 +53,10 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                     fieldComponent.enable = true;
                 }
             }
+            else if(fieldData.params && fieldData.params.hidden) {
+                fieldComponent.shown = false;
+            }
+            
             if(fieldComponent._hideAndShow) {
                 fieldComponent._hideAndShow();
             }

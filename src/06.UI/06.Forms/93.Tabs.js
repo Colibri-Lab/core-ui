@@ -165,6 +165,9 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
                     fieldComponent.enable = true;
                 }
             }
+            else if(fieldData.params && fieldData.params.hidden) {
+                fieldComponent.shown = false;
+            }
         });
 
     }
