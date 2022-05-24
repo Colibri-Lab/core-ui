@@ -111,7 +111,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         }
 
         this.contentContainer.Clear();
-        value.forEach((v) => {
+        value && value.forEach((v) => {
             const object = this._addNew();
             object.value = v;
         });
