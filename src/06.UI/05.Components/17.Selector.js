@@ -149,7 +149,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
             if(ret === false || this._itemSelected === true) {
                 return;
             }
-            const values = this._search(this._input.value);
+            const values = this._search(this.readonly ? '' : this._input.value);
             this._showPopup(values);
 
             if(this.allowempty) {
@@ -159,8 +159,8 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
             this._renderValue(false);
         });
 
-        args.domEvent?.preventDefault();
-        args.domEvent?.stopPropagation();
+        args?.domEvent?.preventDefault();
+        args?.domEvent?.stopPropagation();
 
         return false;
     }
@@ -170,7 +170,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     __Cleared(event, args) {
-        const values = this._search(this._input.value);
+        const values = this._search(this.readonly ? '' : this._input.value);
         this._setValue(null);
 
         if (this._popup) {
@@ -374,7 +374,8 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     Focus() {
         this._input.Focus();
         if(this.enabled) {
-            this._showPopup(this._search());
+            this.__Filled(null, null);
+            // this._showPopup(this._search());
         }
     }
 

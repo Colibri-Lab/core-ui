@@ -235,7 +235,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @param {string|int|null} param доп путь
      * @returns {object}
      */
-    async AsyncQuery(path, param = null) {
+    async AsyncQuery(path, param = null, reload = false) {
 
         let data = this._parsePathIfHasParam(path);
         if(data[1]) {
@@ -244,7 +244,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         }
 
         const res = this.Query(path + (param ? '.' + param : ''));
-        if((res instanceof Object && Object.countKeys(res) > 0) || (Array.isArray(res) && res.length > 0)) {
+        if(!reload && ((res instanceof Object && Object.countKeys(res) > 0) || (Array.isArray(res) && res.length > 0))) {
             return res;
         }
 
