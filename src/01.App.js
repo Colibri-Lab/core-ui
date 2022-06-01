@@ -46,10 +46,14 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         routerType = Colibri.Web.Router.RouteOnHash, 
         requestType = Colibri.IO.Request.RequestEncodeTypeEncrypted,
         initComet = false,
-        showLoader = true
+        showLoader = true,
+        remoteDomain = null
     ) {
 
         Colibri.IO.Request.type = requestType;
+        if(remoteDomain) {
+            Colibri.IO.RpcRequest.remoteDomain = remoteDomain;
+        }
 
         this._actions = new Colibri.Common.HashActions(); 
         this._store = new Colibri.Storages.Store('app', {});

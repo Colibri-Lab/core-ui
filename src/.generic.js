@@ -9,13 +9,13 @@ const json_array = function(v) {
 
 const eval_default_values = function(defaultAsString) {
     if(typeof defaultAsString == 'string' && (defaultAsString.indexOf('json_object') !== -1 || defaultAsString.indexOf('json_array') !== -1)) {
-        return eval(defaultAsString);
+        return eval(defaultAsString); 
     }
-    return defaultAsString;
+    return defaultAsString; 
 }
 
 Array.unique = function(a) { return a.filter((v, i, ab) => { return a.indexOf(v) === i; }); }
-Array.merge = function(a, ar) {
+Array.merge = function(a, ar) { 
     ar.forEach((o) => a.push(o));
     return this;
 }
