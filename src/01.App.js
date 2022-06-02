@@ -246,6 +246,10 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     get RemoteDomain() {
         return this._remoteDomain;
     }
+    
+    get Initialized() {
+        return this._initialized;
+    }
 
 }
 
