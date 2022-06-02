@@ -5,7 +5,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
      * @constructor 
      * @param {string} entryName - наименование модуля
      * @param {string} [type] - тип данных
-     */
+     */ 
     constructor(entryName, type, remoteDomain) {
         super(entryName, type, remoteDomain);
 
