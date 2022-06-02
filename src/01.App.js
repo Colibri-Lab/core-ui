@@ -8,6 +8,8 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     constructor() {
         super('App');
 
+        this._initialized = false;
+
         this._changeLastTime = Date.Now().getTime();
 
         this.RegisterEvents();
@@ -50,9 +52,16 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         remoteDomain = null
     ) {
 
+        if(this._initialized) {
+            return;
+        }
+
         Colibri.IO.Request.type = requestType;
         if(remoteDomain) {
-            Colibri.IO.RpcRequest.remoteDomain = remoteDomain;
+            this._remoteDomain = remoteDomain;
+        }
+        else {
+            this._remoteDomain = '';
         }
 
         this._actions = new Colibri.Common.HashActions(); 
@@ -83,7 +92,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
             
         this.AddHandler('ApplicationReady', (event, args) => {
 
-            Colibri.IO.Request.Post('/settings.json').then((response) => {
+            Colibri.IO.Request.Post(this._remoteDomain + '/settings.json').then((response) => {
                 if(response.status != 200) {
                     App.Notices.Add(new Colibri.UI.Notice('#{app-messages-cannotgetsettings;Невозможно получить настройки!}'));
                 }
@@ -96,6 +105,8 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                 this._actions.HandleDomReady();
                 this._router.HandleDomReady();
 
+            }).catch(response => {
+                App.Notices.Add(new Colibri.UI.Notice('Невозможно получить настройки!'));
             });
 
             if(showLoader) {
@@ -133,6 +144,8 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
             }
             
         });
+
+        this._initialized = true;
 
     }
 
@@ -228,6 +241,10 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     get ToolTip() {
         return this._customToolTip;
+    }
+
+    get RemoteDomain() {
+        return this._remoteDomain;
     }
 
 }

@@ -187,7 +187,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         component.shown = shown;
         component.AddHandler('Validated', (event, args) => this.Dispatch('Validated', args));
         component.AddHandler('Changed', (event, args) => {
-            args ??= {};
+            args = args ? args : {};
             if(component._timeout) {
                 clearTimeout(component._timeout);
                 component._timeout = null;

@@ -390,8 +390,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     __bindHtmlEvent(eventName, args) {
         let {domEvent, respondent, delay, handler} = args;
-        handler ??= (e => this.Dispatch(eventName, {domEvent: e}));
-        respondent ??= this._element;
+        handler = handler ? handler : (e => this.Dispatch(eventName, {domEvent: e}));
+        respondent = respondent ? respondent : this._element;
 
         if(this.__domHandlersAttached[eventName]) {
             return;

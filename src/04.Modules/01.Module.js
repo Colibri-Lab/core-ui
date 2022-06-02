@@ -23,6 +23,9 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
 
         this._authorizationCookieName = 'ss-jwt';
         this._useAuthorizationCookie = true;
+        if(!this.remoteDomain && App.RemoteDomain) {
+            this.remoteDomain = App.RemoteDomain;
+        }
 
     }
 
