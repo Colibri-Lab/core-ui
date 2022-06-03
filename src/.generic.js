@@ -614,6 +614,15 @@ String.prototype.urlinfo = function() {
     }
 };
 
+String.prototype.removeXmlEntities = function() {
+    let s = this + '';
+    s = s.replaceAll('&laquo;', '«');
+    s = s.replaceAll('&raquo;', '»');
+    s = s.replaceAll('&ndash;', '–');
+    s = s.replaceAll('&mdash;', '—');
+    return s;
+}
+
 String.MD5 = function(e) {
     
     function h(a, b) {
