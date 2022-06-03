@@ -620,7 +620,12 @@ String.prototype.removeXmlEntities = function() {
     s = s.replaceAll('&raquo;', '»');
     s = s.replaceAll('&ndash;', '–');
     s = s.replaceAll('&mdash;', '—');
+    s = s.replaceAll('&nbsp;', ' ');
     return s;
+}
+
+String.prototype.setBaseUrl = function(baseUrl) {
+    return this.replaceAll('src="/', 'src="' + baseUrl + '/');
 }
 
 String.MD5 = function(e) {
