@@ -1207,6 +1207,20 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
+     * Находит компоненту по наименованию, поиск по дереву, наименование должно быть уникальным, иначе будет найдено первое
+     * @param {string} path путь к компоненту в дереве
+     * @returns {Colibri.UI.Component}
+     */
+    FindByName(name) {
+        const query = '[data-object-name="' + name + '"]';
+        const component = this._element.querySelector(query);
+        if(!component) {
+            return null;
+        }
+        return component.tag('component') || null;
+    }
+
+    /**
      * Добавляет класс в список classList
      * @param {string} val название класса
      * @returns {this}
