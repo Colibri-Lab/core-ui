@@ -8,7 +8,7 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
         
         this.AddHandler('ChildsProcessed', (event, args) => {
             this.ForEach((name, button) => {
-                button.AddHandler('Clicked', (event, args) => this.SelectButton(event.sender));
+                button.AddHandler('Clicked', (event, args) => this.SelectButton(button));
             });
         });
     }
@@ -57,18 +57,14 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
     }
 
     set selectedIndex(index) {
-        const keys = Object.keys(this.Children());
-        if(!keys[index]) {
-            return;
-        }
-        const button = this.Children(keys[index]);
+        const button = this.Children(index);
         if(button) {
             this.selected = button;
         }
     }
 
     get selectedIndex() {
-        return this._selectedButton.childIndex();
+        return this._selectedButton ? this._selectedButton.childIndex : null;
     }
 
 }

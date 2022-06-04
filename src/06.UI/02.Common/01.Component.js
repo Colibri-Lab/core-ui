@@ -714,7 +714,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     get childIndex() {
-        return this.parent.indexOf(this.name);
+        return this._parent.indexOf(this.name);
     }
 
     /**
@@ -1127,19 +1127,20 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 const xUp = args.domEvent.touches[0].clientX;                                    
                 const yUp = args.domEvent.touches[0].clientY;
             
+                console.log(args.domEvent.touches);
                 const xDiff = this.__touchStartedPos.x - xUp;
                 const yDiff = this.__touchStartedPos.y - yUp;
                                                                                      
                 if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
-                    if ( xDiff > 0 ) {
+                    if ( xDiff > 10 ) {
                         this.Dispatch('SwipedToRight', args);
-                    } else {
+                    } else if ( xDiff < -10 ) {
                         this.Dispatch('SwipedToLeft', args);
                     }                       
                 } else {
-                    if ( yDiff > 0 ) {
+                    if ( yDiff > 10 ) {
                         this.Dispatch('SwipedToDown', args);
-                    } else { 
+                    } else if ( yDiff < -10 ) { 
                         this.Dispatch('SwipedToUp', args);
                     }                                                                 
                 }
