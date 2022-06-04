@@ -29,9 +29,12 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
         this.ForEach((name, button) => {
             button.RemoveClass('-selected');
         });
+        
         this._selectedButton = button;
         this._selectedButton.AddClass('-selected');
+
         this.Dispatch('Changed', {button: this._selectedButton});
+
     }
     
 

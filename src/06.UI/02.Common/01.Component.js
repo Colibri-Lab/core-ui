@@ -1127,7 +1127,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 const xUp = args.domEvent.touches[0].clientX;                                    
                 const yUp = args.domEvent.touches[0].clientY;
             
-                console.log(args.domEvent.touches);
                 const xDiff = this.__touchStartedPos.x - xUp;
                 const yDiff = this.__touchStartedPos.y - yUp;
                                                                                      
