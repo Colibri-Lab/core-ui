@@ -67,4 +67,8 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
         }
     }
 
+    get selectedIndex() {
+        return this._selectedButton.childIndex();
+    }
+
 }

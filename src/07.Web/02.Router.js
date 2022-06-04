@@ -16,6 +16,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
             this._setCurrentUrl(App.Request.uri, App.Request.query);
         };
         this._handlePopState = (e) => {
+            console.log(e)
             this._setCurrentUrl(App.Request.uri, App.Request.query);
         };
         

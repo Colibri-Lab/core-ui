@@ -253,6 +253,13 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.RegisterEvent('ContextMenu', false, 'Контекстное меню');
         this.RegisterEvent('Scrolled', false, 'Когда проскроллировали');
         this.RegisterEvent('VisibilityChanged', false, 'Когда изменилось состояние отображения');
+        this.RegisterEvent('SwipedToLeft', false, 'Когда пользователь провел пальцем/мышью влево');
+        this.RegisterEvent('SwipedToRight', false, 'Когда пользователь провел пальцем/мышью вправо');
+        this.RegisterEvent('SwipedToUp', false, 'Когда пользователь провел пальцем/мышью вверх');
+        this.RegisterEvent('SwipedToDown', false, 'Когда пользователь провел пальцем/мышью вниз');
+        this.RegisterEvent('TouchStarted', false, 'Когда пальцем нажали на экран');
+        this.RegisterEvent('TouchEnded', false, 'Когда палец убрали с экрана');
+        this.RegisterEvent('TouchMoved', false, 'Когда вазюкают пальцем по экрану');
     }
 
     
@@ -377,6 +384,15 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         Scrolled: {
             domEvent: 'scroll'
         },
+        TouchStarted: {
+            domEvent: 'touchstart'
+        },
+        TouchEnded: {
+            domEvent: 'touchend'
+        },
+        TouchMoved: {
+            domEvent: 'touchmove'
+        }
     };
 
     __domHandlersAttached = {};
@@ -1091,6 +1107,43 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 domEvent: 'resize',
                 respondent: window,
                 handler: (e) => this.Dispatch('Resize', {domEvent: e})
+            });
+        }
+    }
+
+    set handleSwipe(value) {
+        if(value) {
+            this.__touchStartedPos = null;
+            this.AddHandler('TouchStarted', (event, args) => {
+                this.__touchStartedPos = null;
+                const firstTouch = args.domEvent.touches[0];      
+                this.__touchStartedPos = {x: firstTouch.clientX, y: firstTouch.clientY};                                
+            });
+            this.AddHandler('TouchMoved', (event, args) => {
+                if ( !this.__touchStartedPos ) {
+                    return;
+                }
+            
+                const xUp = args.domEvent.touches[0].clientX;                                    
+                const yUp = args.domEvent.touches[0].clientY;
+            
+                const xDiff = this.__touchStartedPos.x - xUp;
+                const yDiff = this.__touchStartedPos.y - yUp;
+                                                                                     
+                if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
+                    if ( xDiff > 0 ) {
+                        this.Dispatch('SwipedToRight', args);
+                    } else {
+                        this.Dispatch('SwipedToLeft', args);
+                    }                       
+                } else {
+                    if ( yDiff > 0 ) {
+                        this.Dispatch('SwipedToDown', args);
+                    } else { 
+                        this.Dispatch('SwipedToUp', args);
+                    }                                                                 
+                }
+                this.__touchStartedPos = null;
             });
         }
     }

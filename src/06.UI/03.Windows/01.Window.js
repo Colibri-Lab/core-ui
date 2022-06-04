@@ -15,7 +15,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         /* запоминаем компонент заголовок */
         this._title = this._element.querySelector('.app-component-window-title > span');
         /* запихиваем в html */
-        this._title.innerHTML = title;
+        !!title && (this._title.innerHTML = title);
 
         this._titleContainer = this._element.querySelector('.app-component-window-title');
         if (title === undefined) {
