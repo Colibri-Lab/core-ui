@@ -1413,50 +1413,33 @@ function DownloadOnDevice(path, filename) {
             return false;
         }
 
-        Colibri.IO.Request.Get(path, {}, [], true).then((response) => {
-            console.log(response);
+        const fileTransfer = new FileTransfer();
+        fileTransfer.download(path, cordova.file.externalRootDirectory + 'Download/' + filename,  function(entry) {
 
-            const mime = response.headers['content-type'].replaceAll('; charset=utf-8', '');
-            const data = response.data;
+            const mime = Colibri.Common.MimeType.ext2type(entry.name.pathinfo().ext);
 
-            window.requestFileSystem(window.TEMPORARY, 5 * 1024 * 1024, function (fs) {
+            cordova.plugins.fileOpener2.open(
+                cordova.file.externalRootDirectory + 'Download/' + filename,
+                mime,
+                {
+                    error : function(e) {
+                        console.log('Error status: ' + e.status + ' - Error message: ' + e.message);
+                    },
+                    success : function () {
+                        console.log('file opened successfully');
+                    }
+                }
+            );
 
-                fs.root.getFile(filename, {create: true, exclusive: false}, function(fileEntry) {
-            
-                    fileEntry.createWriter(function (fileWriter) {
-
-                        fileWriter.onwriteend = function() {
-                            console.log("Successful file write..." + fileEntry.toURL());
-                            // readFile(fileEntry);
-                        };
-                
-                        fileWriter.onerror = function (e) {
-                            console.log("Failed file write: " + e.toString());
-                        };
-                
-                        fileWriter.write(new Blob([data], { type: mime }));
-                    
-                    });
-            
-                }, () => {
-
-                });
-
-
-            }, () => {
-
-            });
-            
-
-        }).catch((response) => {
-            console.log(response);
+        }, function(err) {
+            console.log("Error");
+            console.dir(err);
         });
 
-
+        return true;
         
     }
     catch(e) {
-        alert(e);
         return false;
     }
 
