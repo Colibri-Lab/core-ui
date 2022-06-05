@@ -1395,12 +1395,68 @@ function DownloadFile(data, filename, mime, isBase = true) {
     document.body.removeChild(a);
 }
 
+
 function DownloadFileByPath(path, filename) {
-    const pi = path.pathinfo();
-    var a = Element.create('a', {href: path, download: filename ?? pi.filename});
-    document.body.append(a);
-    a.click();
-    document.body.removeChild(a);
+    if(!DownloadOnDevice(path, filename)) {
+        const pi = path.pathinfo();
+        var a = Element.create('a', {href: path, download: filename ?? pi.filename});
+        document.body.append(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+}
+
+function DownloadOnDevice(path, filename) {
+
+    try {
+        Colibri.IO.Request.Get(path, {}, [], true).then((response) => {
+            console.log(response);
+
+            const mime = response.headers['content-type'].replaceAll('; charset=utf-8', '');
+            const data = response.data;
+
+            window.requestFileSystem(window.TEMPORARY, 5 * 1024 * 1024, function (fs) {
+
+                fs.root.getFile(filename, {create: true, exclusive: false}, function(fileEntry) {
+            
+                    fileEntry.createWriter(function (fileWriter) {
+
+                        fileWriter.onwriteend = function() {
+                            console.log("Successful file write..." + fileEntry.toURL());
+                            // readFile(fileEntry);
+                        };
+                
+                        fileWriter.onerror = function (e) {
+                            console.log("Failed file write: " + e.toString());
+                        };
+                
+                        fileWriter.write(new Blob([data], { type: mime }));
+                    
+                    });
+            
+                }, () => {
+
+                });
+
+
+            }, () => {
+
+            });
+            
+
+        }).catch((response) => {
+            console.log(response);
+        });
+
+
+        
+    }
+    catch(e) {
+        alert(e);
+        return false;
+    }
+
+
 }
 
 File.prototype.download = function() {
