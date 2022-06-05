@@ -1378,8 +1378,8 @@ Element.prototype.emitHtmlEvents = function (object, type) {
 }
 
 
-function Base2File(data, filename, mime) {
-    var bstr = atob(data), 
+function Base2File(data, filename, mime, isBase) {
+    var bstr = isBase ? atob(data) : data, 
         n = bstr.length, 
         u8arr = new Uint8Array(n);
     while(n--){
@@ -1388,16 +1388,16 @@ function Base2File(data, filename, mime) {
     return new File([u8arr], filename, {type:mime});
 }
 
-function DownloadFile(data, filename, mime) {
-    var a = Element.create('a', {href: window.URL.createObjectURL(Base2File(data, filename, mime), {type: mime}), download: filename});
+function DownloadFile(data, filename, mime, isBase = true) {
+    var a = Element.create('a', {href: window.URL.createObjectURL(Base2File(data, filename, mime, isBase), {type: mime}), download: filename});
     document.body.append(a);
     a.click();
     document.body.removeChild(a);
 }
 
-function DownloadFileByPath(path) {
+function DownloadFileByPath(path, filename) {
     const pi = path.pathinfo();
-    var a = Element.create('a', {href: path, download: pi.filename});
+    var a = Element.create('a', {href: path, download: filename ?? pi.filename});
     document.body.append(a);
     a.click();
     document.body.removeChild(a);
