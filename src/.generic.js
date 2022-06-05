@@ -1413,8 +1413,16 @@ function DownloadOnDevice(path, filename) {
             return false;
         }
 
+        let storage = '';
+        if(cordova.platformId === 'android') {
+            storage = cordova.file.externalRootDirectory;
+        } 
+        else if(cordova.platformId === 'electron') {
+            return false;
+        }
+
         const fileTransfer = new FileTransfer();
-        fileTransfer.download(path, cordova.file.externalRootDirectory + 'Download/' + filename,  function(entry) {
+        fileTransfer.download(path, storage + 'Download/' + filename,  function(entry) {
 
             const mime = Colibri.Common.MimeType.ext2type(entry.name.pathinfo().ext);
 

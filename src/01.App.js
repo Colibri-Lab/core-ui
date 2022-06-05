@@ -31,19 +31,6 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     RegisterEventHandlers() {
     }
 
-    InitializeMutationObserver() {
-        new MutationObserver(list => {
-            this._changeLastTime = Date.Now().getTime();
-            this.Dispatch('DocumentChanged', {changes: list});
-        }).observe(document.body, {childList: true, subtree: true});
-        Colibri.Common.Wait(() => { 
-            this._loader && this._loader.BringToFront(); 
-            return Date.Now().getTime() - this._changeLastTime > 500; 
-        }).then(() => {
-            this.Dispatch('ApplicationReady', {});
-        });
-    }
-
     InitializeApplication(
         routerType = Colibri.Web.Router.RouteOnHash, 
         requestType = Colibri.IO.Request.RequestEncodeTypeEncrypted,
@@ -73,9 +60,9 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         }
         this._browser = new Colibri.Common.BrowserStorage();
 
+
         Colibri.Common.WaitForBody().then(() => {
             this.InitializeModules();
-            this.InitializeMutationObserver();
             if(showLoader) {
                 this._loader = new Colibri.UI.LoadingContainer('app-loader', document.body);
                 this._loader.Show();
@@ -90,7 +77,11 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
         });
             
-        this.AddHandler('ApplicationReady', (event, args) => {
+        
+        // Делаем всякое после того, как DOM загрузился окончательно
+
+        Colibri.Common.WaitForDocumentReady().then(() => {
+            this.Dispatch('DocumentReady');
 
             Colibri.IO.Request.Post(this._remoteDomain + '/settings.json').then((response) => {
                 if(response.status != 200) {
@@ -105,6 +96,8 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                 this._actions.HandleDomReady();
                 this._router.HandleDomReady();
 
+                this.Dispatch('ApplicationReady');
+
             }).catch(response => {
                 App.Notices.Add(new Colibri.UI.Notice('Невозможно получить настройки!'));
             });
@@ -115,14 +108,6 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                     this._loader.Hide();
                 });   
             } 
-
-            
-        });
-
-        // Делаем всякое после того, как DOM загрузился окончательно
-
-        Colibri.Common.WaitForDocumentReady().then(() => {
-            this.Dispatch('DocumentReady');
 
             this._notices = new Colibri.UI.Notices('notices', document.body);
 
