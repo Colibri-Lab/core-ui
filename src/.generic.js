@@ -1409,6 +1409,10 @@ function DownloadFileByPath(path, filename) {
 function DownloadOnDevice(path, filename) {
 
     try {
+        if(!window.hasOwnProperty("cordova")){
+            return false;
+        }
+
         Colibri.IO.Request.Get(path, {}, [], true).then((response) => {
             console.log(response);
 
