@@ -55,6 +55,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         this._store = new Colibri.Storages.Store('app', {});
         this._request = new Colibri.Web.Request();
         this._router = new Colibri.Web.Router(routerType);
+        this._device = new Colibri.Devices.Device();
         if(initComet) {
             this._comet = new Colibri.Web.Comet();
         }
@@ -226,6 +227,10 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     get ToolTip() {
         return this._customToolTip;
+    }
+
+    get Device() {
+        return this._device;
     }
 
     get RemoteDomain() {
