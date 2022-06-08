@@ -124,13 +124,15 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
     }
 
-    
     AddRemoveLink(callback) {
         const removeLink = new Colibri.UI.Icon(this._name + '-remove', this);
         removeLink.AddClass('app-component-remove-field')
         removeLink.shown = true;
         removeLink.value = Colibri.UI.CloseIcon;
         removeLink.AddHandler('Clicked', (event, args) => {
+            if(!this.enabled) {
+                return;
+            }
             this.Dispose();
             callback && callback();
         });

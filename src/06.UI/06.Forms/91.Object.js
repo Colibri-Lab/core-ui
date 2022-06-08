@@ -154,6 +154,28 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         return first.tabIndex;
     }
 
+    get readonly() {
+        const first = this.contentContainer.Children('firstChild');
+        return first.readonly;
+    }
+
+    set readonly(value) {
+        this.contentContainer.ForEach((name, component) => {
+            component.readonly = value; 
+        });
+    }
+
+    get enabled() {
+        return this._enabled;
+    }
+
+    set enabled(value) {
+        this._enabled = value;
+        this.ForEveryField((name, component) => {
+            component.enabled = this._enabled; 
+        });
+    }
+
     
     _hideAndShow() {
 

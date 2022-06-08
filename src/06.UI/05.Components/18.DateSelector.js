@@ -48,7 +48,9 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         this._format = new Intl.DateTimeFormat('ru-RU', {day: '2-digit', month: 'short', year: 'numeric'});
 
         this.AddHandler('Clicked', (event, args) => {
-            this.Open();
+            if(this.enabled) {
+                this.Open();
+            }
             args.domEvent.stopPropagation();
             args.domEvent.preventDefault();
             return false;
@@ -56,15 +58,16 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
 
         this.AddHandler('KeyDown', (event, args) => {
             if(['Escape', 'Enter', 'Space'].indexOf(args.domEvent.code) !== -1) {
-                
-                if(args.domEvent.code === 'Space') {
-                    this.Open();
-                }
-                else if(args.domEvent.code === 'Escape') {
-                    this.Close();
-                }
-                else if(args.domEvent.code === 'Enter') {
-                    this.Close();
+                if(this.enabled) {                    
+                    if(args.domEvent.code === 'Space') {
+                        this.Open();
+                    }
+                    else if(args.domEvent.code === 'Escape') {
+                        this.Close();
+                    }
+                    else if(args.domEvent.code === 'Enter') {
+                        this.Close();
+                    }
                 }
 
                 args.domEvent.stopPropagation();
@@ -125,6 +128,9 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
     }
 
     Focus() {
+        if(!this.enabled) {
+            return;
+        }
         this.ToggleView(true);
         this._hiddenElement.focus();
     }
@@ -156,11 +162,11 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
     }
 
     set enabled(value) {
-        this.readonly = value;
+        this._viewElement.attr('disabled', value ? null: 'disabled');
     }
 
     get enabled() {
-        return this.readonly;
+        return this._viewElement.attr('disabled') !== 'disabled';
     }
 
     set readonly(value) {

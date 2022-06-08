@@ -30,6 +30,10 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     }
 
     _createAddNewLink() {
+        if(this._fieldData.params && this._fieldData.params.addlink === null) {
+            return;
+        }
+
         const link = new Colibri.UI.Link('add-new', this.contentContainer);
         link.value = this._fieldData.params && this._fieldData.params.addlink || '#{app-array-add;Добавить еще} «' + (this._fieldData.desc) + '»';
         link.shown = true;
@@ -46,9 +50,12 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         object.parent = this.contentContainer;
         object.shown = true;
         object.title = '';
-        object.AddRemoveLink(() => {
-            this.Dispatch('Changed');
-        });
+        object.enabled = this.enabled;
+        if(this._fieldData.params && this._fieldData.params.addlink !== null) {
+            object.AddRemoveLink(() => {
+                this.Dispatch('Changed');
+            });
+        }
         object.AddHandler('Changed', (event, args) => this.Dispatch('Changed', args));
         this.contentContainer.Children(object.name, object);
         this.Dispatch('FieldsRendered');
@@ -77,15 +84,15 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     }
 
     get enabled() {
-        const first = this.contentContainer.Children('firstChild');
-        return first.enabled;
+        return this._enabled ?? true;
     }
 
     set enabled(value) {
+        this._enabled = value;
         this.contentContainer.ForEach((name, component) => {
-            component.enabled = value; 
+            component.enabled = this._enabled; 
         });
-        this._link.enabled = value;
+        this._link.enabled = this._enabled;
     }
 
     get value() {
