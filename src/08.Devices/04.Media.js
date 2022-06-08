@@ -86,7 +86,7 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
     /**
      * Pause recording of an audio file.
      */
-    PauseRecord() {
+    PauseRecording() {
         return this._object.pauseRecord();
     }
 
@@ -100,7 +100,7 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
     /**
      * Resume recording of an audio file.
      */
-    ResumeRecord() {
+    ResumeRecording() {
         return this._object.resumeRecord();
     }
 
@@ -121,14 +121,14 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
     /**
      * Start recording an audio file.
      */
-    StartRecord() {
+    StartRecording() {
         return this._object.startRecord();
     }
 
     /**
      * Stop recording an audio file.
      */
-    StopRecord() {
+    StopRecording() {
         return this._object.stopRecord();
     }
 
@@ -148,9 +148,9 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
 
 }
 
-Colibri.Devices.Media.StartRecord = function(mediaFile) {
+Colibri.Devices.Media.StartRecording = function(mediaFile) {
     const media = new Colibri.Devices.Media(mediaFile);
-    media.StartRecord();
+    media.StartRecording();
     return media;
 }
 
