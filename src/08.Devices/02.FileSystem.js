@@ -14,6 +14,7 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
     static PathExists = 12;
 
     _device = null;
+    _plugin = null;
 
     constructor(device) {
         super();
@@ -117,8 +118,36 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
     }
 
     Blob(name, content) {
+        if(content instanceof Blob) {
+            return content;
+        }
         const mimetype = Colibri.Common.MimeType.ext2type(name.pathinfo().ext);
         return new Blob([content], { type: mimetype });
+    }
+
+    B64ToBlob(b64Data, contentType, sliceSize = 512) {
+        
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+        return new Blob(byteArrays, {type: contentType});
+    
     }
 
     Get(type = LocalFileSystem.PERSISTENT, quota = 0) {
