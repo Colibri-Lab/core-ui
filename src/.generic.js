@@ -1377,6 +1377,12 @@ Element.prototype.emitHtmlEvents = function (object, type) {
     }
 }
 
+DOMTokenList.prototype.clear = function() {
+    for(let i = 0; i < this.length; i++) {
+        this.remove(this.item(i));
+    }
+}
+
 
 function Base2File(data, filename, mime, isBase) {
     var bstr = isBase ? atob(data) : data, 

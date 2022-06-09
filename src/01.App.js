@@ -91,6 +91,17 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                 else {
                     const settings = JSON.parse(response.result);
                     this._store.Set('app.settings', settings);
+
+                    if(settings?.screen?.theme === 'follow-device') {
+                        this._device.AddHandler('ThemeChanged', (event, args) => {
+                            this.SetTheme(args.current);
+                        });
+                        this.SetTheme(this._device.Theme);
+                    }    
+                    else {
+                        this.SetTheme(settings?.screen?.theme ?? 'light');
+                    }
+
                 }
 
                 // запускаем обработку экшенов в документе
@@ -98,8 +109,9 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                 this._router.HandleDomReady();
 
                 this.Dispatch('ApplicationReady');
-
+ 
             }).catch(response => {
+                console.log(response);
                 App.Notices.Add(new Colibri.UI.Notice('Невозможно получить настройки!'));
             });
 
@@ -133,6 +145,12 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
         this._initialized = true;
 
+    }
+
+    SetTheme(theme) {
+        document.body.classList.remove('prefer-dark');
+        document.body.classList.remove('prefer-light');
+        document.body.classList.add('prefer-' + theme);
     }
 
     InitializeModules() {

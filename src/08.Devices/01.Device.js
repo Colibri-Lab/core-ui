@@ -5,8 +5,14 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     static Android = 'android';
     static Windows = 'electron';
 
+    static Light = 'light';
+    static Dark = 'dark';
+
     _platform = '';
     _fileSystem = null;
+    _theme = 'light';
+    _themeDetectionPlugin = null;
+    _pushNotifications = null;
     
     constructor() {
         super();
@@ -23,15 +29,33 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     _registerEvents() {
         this.RegisterEvent('OrientationChanged', false, 'Когда ориентация была изменена');
+        this.RegisterEvent('ThemeChanged', false, 'Когда тема изменена');
     }
 
     _detect() {
         if(!window.hasOwnProperty("cordova")){
             this._platform = 'web';
+            this._theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? Colibri.Devices.Device.Dark : Colibri.Devices.Device.Light;
         }
         else {
             this._platform = cordova.platformId;
+            this._themeDetectionPlugin = this.Plugin('AutoTheme');
+            if(this._themeDetectionPlugin) {
+                this._themeDetectionPlugin.getTheme((isdark) => {
+                    this._theme = isdark ? Colibri.Devices.Device.Dark : Colibri.Devices.Device.Light;
+                });
+            }
+            this._pushNotifications = this.Plugin('pushNotification');
+            if(this._pushNotifications) {
+                this._pushNotifications.registration((token) => {
+                    console.log(token);
+                }, e => console.log(e));
+                this._pushNotifications.tapped((payload) => {
+                    console.log(payload);
+                }, e => console.log(e));
+            }       
         }
+
     }
 
     _bindDeviceEvents() {
@@ -40,6 +64,19 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             this._currentOrientation = screen.orientation.type;
             this.Dispatch('OrientationChanged', {current: this._currentOrientation, old: old});
         });
+        window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+            const old = this._theme;
+            this._theme = e.matches ? Colibri.Devices.Device.Dark : Colibri.Devices.Device.Light;
+            this.Dispatch('ThemeChanged', {current: this._theme, old: old});
+        });
+        if(this._themeDetectionPlugin) {
+            window.onThemeChange = (isdark) => {
+                const old = this._theme;
+                this._theme = isdark ? Colibri.Devices.Device.Dark : Colibri.Devices.Device.Light;
+                this.Dispatch('ThemeChanged', {current: this._theme, old: old});
+            };
+        }
+        
     }
 
     get platform() {
@@ -47,21 +84,34 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     }
 
     get isAndroid() {
-        return this._platform === Colibri.Devices.Detect.Android;
+        return this._platform === Colibri.Devices.Device.Android;
     }
 
     get isIOs() {
-        return this._platform === Colibri.Devices.Detect.IOs;
+        return this._platform === Colibri.Devices.Device.IOs;
     }
 
     get isWindows() {
-        return this._platform === Colibri.Devices.Detect.Windows;
+        return this._platform === Colibri.Devices.Device.Windows;
+    }
+
+    get isWeb() {
+        return this._platform === Colibri.Devices.Device.Web;
     }
 
     Plugin(query) {
         let plugin = eval('cordova.' + query);
         if(!plugin) {
             plugin = eval('navigator.' + query);
+        }
+        if(!plugin) {
+            plugin = eval('cordova.plugins.' + query);
+        }
+        if(!plugin) {
+            plugin = eval('window.' + query);
+        }
+        if(!plugin) {
+            plugin = eval(query);
         }
         return plugin;
     } 
@@ -115,6 +165,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             isVirtual: device.isVirtual,
             serial: device.serial,
         }
+    }
+
+    get Theme() {
+        return this._theme;
     }
 
 }

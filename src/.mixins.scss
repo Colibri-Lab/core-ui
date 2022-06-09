@@ -100,3 +100,9 @@
     width: 100%;
     flex: 1 1 100%;
 }
+
+@mixin prefer($mode) {
+    @media (prefers-color-scheme: dark) {
+        @content;
+    }
+}
