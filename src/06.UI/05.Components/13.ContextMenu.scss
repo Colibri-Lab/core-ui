@@ -42,8 +42,10 @@
             width: 22px;
             height: 22px;
             margin-right: 10px;
-            path, rect, circle {
-                fill: #ffffff;
+            svg:not(.colored) {
+                path, rect, circle {
+                    fill: #ffffff;
+                }
             }
         }
 

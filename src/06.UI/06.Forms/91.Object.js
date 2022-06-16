@@ -33,7 +33,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         this._fieldData?.params?.merged && this.AddClass('app-merged-object-component');
         this._fieldData?.params?.wrap && this.AddClass('app-field-wrap');
 
-        if(!this._fieldData.fields) {
+        if(!this._fieldData.fields || this._fieldData.fields.length == 0) {
 
             const component = Colibri.UI.Forms.Field.Create('nofields', this.contentContainer, {
                 component: 'TextArea'
