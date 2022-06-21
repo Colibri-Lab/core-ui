@@ -1,5 +1,5 @@
 
-Colibri.Events.Event = class {
+Colibri.Events.Event = class extends Destructable {
 
     /**
      * Событие
@@ -9,6 +9,7 @@ Colibri.Events.Event = class {
      * @param {boolean} [bubbles] поднимается ли вверх по дереву компонентов или нет
      */
     constructor(sender, name, bubbles) {
+        super();
 
         /** @type {*} - отправитель */
         this._sender = sender;
@@ -18,6 +19,10 @@ Colibri.Events.Event = class {
 
         /** @type {boolean} */
         this._bubbles = bubbles || false;
+
+    }
+
+    destructor() {
 
     }
 

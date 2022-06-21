@@ -1,7 +1,8 @@
-Colibri.UI.Renderer = class {
+Colibri.UI.Renderer = class extends Destructable {
 
     constructor(object, data) {
-
+        super();
+        
         if (!object) {
             throw new Error('#{app-renderer-error1;Передайте в конструктор обьект для рендеринга}');
         }

@@ -24,12 +24,14 @@
  * 
  * 
  */
-Colibri.Devices.Notification = class {
+Colibri.Devices.Notification = class extends Destructable {
 
     _device = null;
     _payload = null;
 
     constructor(device, payload) {
+        super();
+        
         this._device = device;
         this._payload = payload;
     }

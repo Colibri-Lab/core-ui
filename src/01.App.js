@@ -56,9 +56,6 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         this._request = new Colibri.Web.Request();
         this._router = new Colibri.Web.Router(routerType);
         this._device = new Colibri.Devices.Device();
-        if(initComet) {
-            this._comet = new Colibri.Web.Comet();
-        }
         this._browser = new Colibri.Common.BrowserStorage();
 
 
@@ -92,6 +89,24 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                     const settings = JSON.parse(response.result);
                     this._store.Set('app.settings', settings);
 
+                    if(initComet && settings.comet) {
+                        this._comet = new Colibri.Web.Comet(settings.comet);
+                        this._comet.AddHandler('MessageReceived', (event, args) => {
+                            if(!document.hasFocus()) {
+                                this.StartFlashTitle();
+                            }
+                        });
+                        document.addEventListener('visibilitychange', (e) => {
+                            this.StopFlashTitle();
+                            if(document.hidden) {
+                                this.Dispatch('DocumentHidden', {});
+                            }
+                            else {
+                                this.Dispatch('DocumentShown', {});
+                            }
+                        });
+                    } 
+
                     if(settings?.screen?.theme === 'follow-device') {
                         this._device.AddHandler('ThemeChanged', (event, args) => {
                             this.SetTheme(args.current);
@@ -124,22 +139,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
             this._notices = new Colibri.UI.Notices('notices', document.body);
 
-            if(initComet) {
-                this._comet.AddHandler('MessageReceived', (event, args) => {
-                    if(!document.hasFocus()) {
-                        this.StartFlashTitle();
-                    }
-                });
-                document.addEventListener('visibilitychange', (e) => {
-                    this.StopFlashTitle();
-                    if(document.hidden) {
-                        this.Dispatch('DocumentHidden', {});
-                    }
-                    else {
-                        this.Dispatch('DocumentShown', {});
-                    }
-                });
-            }
+            
             
         });
 

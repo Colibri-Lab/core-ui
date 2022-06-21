@@ -18,7 +18,7 @@ if (!XMLHttpRequest.prototype.sendAsBinary) {
  * @author Vahan P. Grigoran
  * 
  */
-Colibri.IO.Request = class {
+Colibri.IO.Request = class extends Destructable {
 
     static RequestEncodeTypeSimple = 'simple';
     static RequestEncodeTypeEncrypted = 'encrypted';
@@ -27,6 +27,7 @@ Colibri.IO.Request = class {
 
     /** @constructor */
     constructor(base) { 
+        super();
         this._base = base ? base : '';
         this._headers = {};
     }

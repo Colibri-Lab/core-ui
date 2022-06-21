@@ -1,11 +1,16 @@
-Colibri.Events.Dispatcher = class {
+Colibri.Events.Dispatcher = class extends Destructable {
 
     /** @constructor */
     constructor() {
+        super();
         /** @type {Object.<string, Array<Object.<handler: Function, respondent: Object>>>} - список обработчиков */
         this.__handlers = {};
         /** @type {Object.<string, Colibri.Events.Event>} - список зарегистрированых событий */
         this.__events = {};
+    }
+
+    destructor() {
+        this.Dispose();
     }
 
     /**

@@ -6,16 +6,95 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     _storeMessages = '';
     _storeUnread = '';
 
+    _settings = null;
+    _ws = null;
+    _connected = false;
+    _user = null;
+
     /**
      * Создает обьект
      */
-    constructor() {
+    constructor(settings) {
         super();
-
+        
+        this._settings = settings;
         this.RegisterEvent('MessageReceived', false, 'Когда получили новое сообщение');
-
-        Colibri.Common.LoadScript((window.rpchandler ? window.rpchandler : '') + '/comet.json');
+        this.RegisterEvent('ConnectionError', false, 'Не смогли подключиться');
+        this.RegisterEvent('Connected', false, 'Успешно подключились');
+        
     }
+
+    destructor() {
+        super.destructor();
+        if(this._ws) {
+            this._ws.close();
+        }
+    }
+
+    _initConnection() {
+        this._ws = new WebSocket('ws://' + this._settings.host + ':' + this._settings.port);
+        this._ws.onopen = () => this.__onCometOpened();
+        this._ws.onmessage = (message) => this.__onCometMessage(message);
+        this._ws.onerror = error => this.__onCometError(error);
+    }
+    
+    /**
+     * 
+     * @param {number} organizationId ID организации
+     * @param {Colibri.Storages.Store} store хрналище
+     * @param {string} storeMessages куда выбрасывать сообщения
+     */
+    Init(userGuid, store, storeMessages) {
+
+        this._user = userGuid;
+        this._store = store;
+        this._storeMessages = storeMessages;
+        
+        this._initConnection();
+        this._saveToStore();
+
+        Colibri.Common.StartTimer('comet-timer', 5000, () => {
+            if(this._ws && this._ws.readyState !== 1) {
+                console.log('connection closed, may be server down');
+                this._initConnection();
+            }
+        });
+
+    }
+
+    __onCometOpened() {
+        this._connected = true;
+        this.Send(this._user, 'register');
+    }
+
+    __onCometMessage(message) {
+        message = JSON.parse(message.data);
+        if(message.action == 'connection-success') {
+            console.log('Connection to Comet Server ok');
+        }
+        else if(message.action == 'register-success') {
+            console.log('User registered successfuly');
+        }
+        else if(message.action == 'register-error') {
+            console.log('User registration error');
+        }
+        else {
+
+            message.date = new Date();
+            message.read = false;
+            var messages = this._getStoredMessages();
+            messages.push(message);
+            this._setStoredMessages(messages);
+            this._saveToStore();
+            this.Dispatch('MessageReceived', {message: message});
+        }
+    }
+
+    __onCometError(error) {
+        console.log(error);
+        App.Notices.Add(new Colibri.UI.Notice('#{app-comet-connection-error;Ошибка подключения}'));
+    }
+
 
     /**
      * Берет из локального хранилища
@@ -49,35 +128,6 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     }
 
     /**
-     * 
-     * @param {number} organizationId ID организации
-     * @param {Colibri.Storages.store} store хрналище
-     * @param {string} storeMessages куда выбрасывать сообщения
-     */
-    Init(organizationId, store, storeMessages) {
-        this._store = store;
-        this._storeMessages = storeMessages;
-
-        CometServer().start({dev_id: 0, user_id: organizationId, user_key: String.MD5(organizationId + ''), node: window.COMET_SERVER});
-        CometServer().onAuthSuccess(() => {
-            CometServer().subscription('msg', (message) => {
-                message.date = new Date();
-                message.read = false;
-                var messages = this._getStoredMessages();
-                messages.push(message);
-                this._setStoredMessages(messages);
-                this._saveToStore();
-                this.Dispatch('MessageReceived', {message: message});
-            });
-            CometServer().get_pipe_log('msg');
-            this._saveToStore();
-        });
-        CometServer().onAuthFalill(() => {
-            this.ClearMessages();
-        });
-    }
-
-    /**
      * Очистить сообщения
      */
     ClearMessages() {
@@ -102,5 +152,21 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this._saveToStore();
     }
 
+    // функция для отправки echo-сообщений на сервер
+    Send(userGuid, action, message = null) {
+        try {
+            if(this._ws.readyState === 1) {
+                this._ws.send(JSON.stringify({action: action, user: userGuid, message: message}));
+            }
+            else {
+                console.log('server goes away');
+            }
+        }
+        catch(e) {
+            console.log(e);
+        }
+    }
+
+    
 
 }

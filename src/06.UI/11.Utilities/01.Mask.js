@@ -1,4 +1,4 @@
-Colibri.UI.Utilities.Mask = class {
+Colibri.UI.Utilities.Mask = class extends Destructable {
 
     static DIGIT = "9";
     static ALPHA = "A";
@@ -7,6 +7,7 @@ Colibri.UI.Utilities.Mask = class {
 
 
     constructor(elements) {
+        super();
         this.elements = elements;
     }
 

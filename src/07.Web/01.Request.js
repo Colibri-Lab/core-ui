@@ -1,4 +1,8 @@
-Colibri.Web.Request = class {
+Colibri.Web.Request = class extends Destructable {
+
+    constructor() {
+        super();
+    }
 
     /**
      * Возвращает путь запроса 
