@@ -24,6 +24,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
             }
             this._scrollY = event.target.scrollTop;
         });
+
     }
 
     _registerEvents() {
@@ -302,6 +303,8 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
 
         this._handlerEvents();
 
+        this._element.querySelector('div').attr('data-empty', '#{app-list-group-empty;Записей нет}');
+
     }
 
     _handlerEvents() {
@@ -375,6 +378,14 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
 
     set value(value) {
         this.label = value;
+    }
+
+    set noItemsText(value) {
+        this._element.querySelector('div').attr('data-empty', value);
+    }
+    
+    get noItemsText() {
+        return this._element.querySelector('div').attr('data-empty');
     }
 
     get container() {
@@ -459,8 +470,10 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
     }
 
     __ItemMouseDown(event, args) {
-        this.parent.parent.selected = this;
-        this.parent.parent.Dispatch('ItemMouseDown', {item: this, domEvent: args.domEvent});
+        if(this.parent?.parent) {
+            this.parent.parent.selected = this;
+            this.parent.parent.Dispatch('ItemMouseDown', {item: this, domEvent: args.domEvent});
+        }
     }
 
     /** @type {object} */

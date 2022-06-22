@@ -91,9 +91,12 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
                     if(initComet && settings.comet) {
                         this._comet = new Colibri.Web.Comet(settings.comet);
-                        this._comet.AddHandler('MessageReceived', (event, args) => {
+                        this._comet.AddHandler(['MessageReceived', 'MessagesMarkedAsRead', 'MessageRemoved'], (event, args) => {
                             if(!document.hasFocus()) {
                                 this.StartFlashTitle();
+                            }
+                            else {
+                                this.StopFlashTitle();
                             }
                         });
                         document.addEventListener('visibilitychange', (e) => {

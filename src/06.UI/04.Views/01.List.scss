@@ -2,12 +2,8 @@
     width: 100%;
     border-bottom-left-radius: 3px;
     overflow: auto;
-    scrollbar-color: #909090 #fff;
-    scrollbar-width: thin;
-    scrollbar-track-color: #fff;
-    scrollbar-face-color: #909090;
-    -ms-scrollbar-track-color: #fff;
-    -ms-scrollbar-face-color: #909090;
+    @include custom-scroll($scrollbar-size, $scrollbar-track-color, $scrollbar-thumb-color, $scrollbar-thumb-hover-color);
+
     padding-bottom: 10px;
     
     &::-webkit-scrollbar {
@@ -77,6 +73,15 @@
 
         > div {
             padding: 10px 0px;
+            &:empty:after {
+                content: attr(data-empty);
+                font-size: 14px;
+                color: gray;
+                width: 100%;
+                text-align: center;
+                padding: 50px 0px;
+                display: block;
+            }
         }
 
         .app-component-list-item:not(.disable-default) {

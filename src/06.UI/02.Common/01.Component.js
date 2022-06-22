@@ -714,7 +714,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     get childIndex() {
-        return this._parent.indexOf(this.name);
+        return this._parent ? this._parent.indexOf(this.name) : 0;
     }
 
     /**

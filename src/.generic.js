@@ -314,6 +314,10 @@ String.prototype.toDate = function() {
     }
 
     let t = this.replace('T', ' ');
+    if(t.indexOf('.') !== -1) {
+        t = t.split(/\./);
+        t = t[0];
+    }
 
     t = t.split('+')[0];
     let parts = t.split(' ');

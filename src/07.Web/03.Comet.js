@@ -19,6 +19,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         
         this._settings = settings;
         this.RegisterEvent('MessageReceived', false, 'Когда получили новое сообщение');
+        this.RegisterEvent('MessagesMarkedAsRead', false, 'Когда сообщения помечены как прочтенные');
+        this.RegisterEvent('MessageRemoved', false, 'Когда сообщение удалено');
         this.RegisterEvent('ConnectionError', false, 'Не смогли подключиться');
         this.RegisterEvent('Connected', false, 'Успешно подключились');
         
@@ -80,6 +82,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         }
         else {
 
+            message.id = message.id ?? Number.Rnd4();
             message.date = new Date();
             message.read = false;
             var messages = this._getStoredMessages();
@@ -91,7 +94,6 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     }
 
     __onCometError(error) {
-        console.log(error);
         App.Notices.Add(new Colibri.UI.Notice('#{app-comet-connection-error;Ошибка подключения}'));
     }
 
@@ -143,13 +145,17 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         messages.forEach(message => message.read = true);
         this._setStoredMessages(messages);
         this._saveToStore();
+        this.Dispatch('MessagesMarkedAsRead', {});
     }
 
     RemoveMessage(message) {
         let messages = this._getStoredMessages();
-        messages = messages.filter(m => m.data.message_id != message.data.message_id);
+        console.log(message);
+        messages = messages.filter(m => m.id != message.id);
+        console.log(messages);
         this._setStoredMessages(messages);
         this._saveToStore();
+        this.Dispatch('MessageRemoved', {});
     }
 
     // функция для отправки echo-сообщений на сервер
