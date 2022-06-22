@@ -302,9 +302,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         this._element.append(Element.create('div', {}));
 
         this._handlerEvents();
-
-        this._element.querySelector('div').attr('data-empty', '#{app-list-group-empty;Записей нет}');
-
+        
     }
 
     _handlerEvents() {
