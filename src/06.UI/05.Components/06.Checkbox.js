@@ -39,6 +39,7 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
      */
     _renderInput() {
         this._checkIcon = new Colibri.UI.Icon(this.name + '-icon', this);
+        this._checkIcon.shown = true;
         this._setIcon();
 
         this._input = Element.create('input', {id: this.name + '-input-' + Date.Now().getTime()});
@@ -75,10 +76,8 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
         this._input.checked = value;
         if (value) {
             this.AddClass('-checked');
-            this._checkIcon.shown = true;
         } else {
             this.RemoveClass('-checked');
-            this._checkIcon.shown = false;
         }
     }
 
@@ -130,4 +129,24 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
         this._thirdState ? this.AddClass('-third-state') : this.RemoveClass('-third-state');
         this._setIcon();
     }
+
+    get placeholder() {
+        return this._placeholder?.value;
+    }
+    set placeholder(value) {
+        this._setPlaceholder(value);
+    }
+    
+    _setPlaceholder(value) {
+        if(!value) {
+            this._placeholder.Dispose();
+        }
+        else {
+            this._placeholder = new Colibri.UI.TextSpan(this.name + '_placeholder', this);
+            this._placeholder.shown = true;
+            this._placeholder.value = value;
+        }
+    }
+
+
 }

@@ -1,40 +1,46 @@
 .app-component-checkbox {
     user-select: none;
-    width: 17px;
-    height: 17px;
-    border: 1px solid #D4D4D4;
-    background-color: transparent;
-    border-radius: 2px;
     cursor: pointer;
     margin: 0;
 
-    &.app-component-shown {
-        display: flex;
-    }
+    .app-component-icon {
+        width: 17px;
+        height: 17px;
+        border: 1px solid #D4D4D4;
+        background-color: transparent;
+        border-radius: 2px;
 
-    &.ui-disabled {
-        background: #F5F6FA;
-    }
-
-    input {
-        display: none;
-    }
-
-    &.-checked {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #2196f3;
-        border: 1px solid #2196f3;
-
-         [data-object-name$="-icon"] svg {
+        svg {
             display: block;
             height: 15px;
             width: 13px;
 
             path {
-                fill: #FFFFFF;
+                fill: transparent;
             }
+        }
+    
+    }
+
+    .app-component-textspan {
+        margin-left: 5px;
+    }
+
+    &.-checked {
+        
+        .app-component-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #2196f3;
+            border: 1px solid #2196f3;
+
+            svg {
+                path {
+                    fill: #ffffff;
+                }
+            }
+            
         }
 
         &.-third-state {
@@ -49,5 +55,25 @@
             }
         }
     }
+
+    &.app-component-shown {
+        display: flex;
+        align-items: center;
+    }
+
+    &.ui-disabled {
+        .app-component-icon {
+            background: #F5F6FA;
+        }
+        .app-component-textspan {
+            color: #888888;
+        }
+    }
+
+    input {
+        display: none;
+    }
+
+    
 
 }
