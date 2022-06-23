@@ -632,6 +632,46 @@ String.prototype.setBaseUrl = function(baseUrl) {
     return this.replaceAll('src="/', 'src="' + baseUrl + '/');
 }
 
+String.prototype.copyToClipboard = function() {
+    const text = this + '';
+    return new Promise((resolve, reject) => {
+        if (!navigator.clipboard) {
+            var textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                var successful = document.execCommand('copy');
+                if(!successful) {
+                    throw 'error';
+                }
+                document.body.removeChild(textArea);
+                resolve();
+            } catch (err) {
+                reject('can not copy');
+            }
+            finally {
+                document.body.removeChild(textArea);
+            }
+
+            return;
+        }
+        
+        navigator.clipboard.writeText(text).then(function() {
+            resolve();
+        }, function(err) {
+            reject('can not copy');
+        });
+    });
+
+}
+
 String.MD5 = function(e) {
     
     function h(a, b) {
@@ -715,6 +755,7 @@ String.Password = function(l) {
 String.EscapeRegExp = function(string) {
     return string ? string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') : string;
 }
+
 
 /**
  * Например:
@@ -1524,3 +1565,4 @@ Element.prototype.enableScrolling = function(element) {
     this.removeEventListener('touchmove', __preventDefault, wheelOpt);
     this.removeEventListener('keydown', __preventDefaultForScrollKeys, false);
 }
+

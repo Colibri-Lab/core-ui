@@ -39,54 +39,59 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
     }
 
     _addItem(item) {
-        const itemObject = new Colibri.UI.TextSpan(item.name, this);
-        itemObject.tag = item;
-        
-        itemObject.shown = true;
-        itemObject.AddClass('app-contextmenu-item-component');
-        
-        const icon = new Colibri.UI.Icon(item.name + '-icon', itemObject);
-        const text = new Colibri.UI.TextSpan(item.name + '-text', itemObject);
-        const arrow = new Colibri.UI.Icon(item.name + '-arrow', itemObject);
-        arrow.value = Colibri.UI.ContextMenuRightArrowIcon;
-
-        if (item.children) {
-            arrow.shown = true;
-        } 
-
-        if(item.icon) {
-            icon.value = item.icon;
-            icon.shown = true;
+        if(item.name === 'separator' || item.name == '-') {
+            const itemObject = new Colibri.UI.Hr('separator-' + Date.Mc(), this);
+            itemObject.shown = true;
         }
         else {
-            icon.shown = false;
-        }
+            const itemObject = new Colibri.UI.TextSpan(item.name, this);
+            itemObject.tag = item;
+            
+            itemObject.shown = true;
+            itemObject.AddClass('app-contextmenu-item-component');
+            
+            const icon = new Colibri.UI.Icon(item.name + '-icon', itemObject);
+            const text = new Colibri.UI.TextSpan(item.name + '-text', itemObject);
+            const arrow = new Colibri.UI.Icon(item.name + '-arrow', itemObject);
+            arrow.value = Colibri.UI.ContextMenuRightArrowIcon;
 
-        text.value = item.title;
-        text.shown = true;
+            if (item.children) {
+                arrow.shown = true;
+            } 
 
-        itemObject.AddHandler('Clicked', (event, args) => {
-            if(item.children) {
-                // показываем дочернее меню
-                this._childContextMenu = new Colibri.UI.ContextMenu(itemObject.name + '_contextmenu', document.body, [Colibri.UI.ContextMenu.RT, Colibri.UI.ContextMenu.RB]);
-                this._childContextMenu.Show(item.children, itemObject);
-                this._childContextMenu.AddHandler('Clicked', (event, args) => {
-                    this.Dispatch('Clicked', args);
-                    this._childContextMenu.Dispose();
-                    this._childContextMenu = null;
-                    args.domEvent && args.domEvent.preventDefault();
-                    args.domEvent && args.domEvent.stopPropagation();
-                    return false;
-                });
+            if(item.icon) {
+                icon.value = item.icon;
+                icon.shown = true;
             }
             else {
-                this.Dispatch('Clicked', { menu: event.sender, menuData: event.sender.tag, domEvent: args.domEvent });
+                icon.shown = false;
             }
-            args.domEvent.preventDefault();
-            args.domEvent.stopPropagation();
-            return false;
-        });
 
+            text.value = item.title;
+            text.shown = true;
+
+            itemObject.AddHandler('Clicked', (event, args) => {
+                if(item.children) {
+                    // показываем дочернее меню
+                    this._childContextMenu = new Colibri.UI.ContextMenu(itemObject.name + '_contextmenu', document.body, [Colibri.UI.ContextMenu.RT, Colibri.UI.ContextMenu.RB]);
+                    this._childContextMenu.Show(item.children, itemObject);
+                    this._childContextMenu.AddHandler('Clicked', (event, args) => {
+                        this.Dispatch('Clicked', args);
+                        this._childContextMenu.Dispose();
+                        this._childContextMenu = null;
+                        args.domEvent && args.domEvent.preventDefault();
+                        args.domEvent && args.domEvent.stopPropagation();
+                        return false;
+                    });
+                }
+                else {
+                    this.Dispatch('Clicked', { menu: event.sender, menuData: event.sender.tag, domEvent: args.domEvent });
+                }
+                args.domEvent.preventDefault();
+                args.domEvent.stopPropagation();
+                return false;
+            });
+        }
     
 
     }
