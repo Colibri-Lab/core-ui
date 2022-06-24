@@ -8,6 +8,9 @@ Colibri.UI.ObjectViewer = class extends Colibri.UI.Viewer {
     _showValue() {
         let ret = [];
         Object.forEach(this._value, (name, value) => {
+            if(value instanceof Object && value.value && value.title) {
+                value = value.title;
+            }
             ret.push(value);
         });
         this._element.html(ret.join(' '));

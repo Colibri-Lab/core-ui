@@ -318,7 +318,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
     }
 
     AddItem(itemData, id = null, selected = false) {
-        const name = (id || itemData.id || Number.unique());
+        const name = (id || itemData.id || '_' + Number.unique());
         const control = new Colibri.UI.List.Item(name, this);
         control.value = itemData;
         control.shown = true;
