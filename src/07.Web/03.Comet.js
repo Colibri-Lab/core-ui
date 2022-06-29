@@ -21,6 +21,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('MessageReceived', false, 'Когда получили новое сообщение');
         this.RegisterEvent('MessagesMarkedAsRead', false, 'Когда сообщения помечены как прочтенные');
         this.RegisterEvent('MessageRemoved', false, 'Когда сообщение удалено');
+        this.RegisterEvent('EventReceived', false, 'Когда произошло событие');
         this.RegisterEvent('ConnectionError', false, 'Не смогли подключиться');
         this.RegisterEvent('Connected', false, 'Успешно подключились');
         
@@ -80,8 +81,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         else if(message.action == 'register-error') {
             console.log('User registration error');
         }
-        else {
-
+        else if(message.action == 'message') {
             message.id = message.id ?? Number.Rnd4();
             message.date = new Date();
             message.read = false;
@@ -90,6 +90,9 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             this._setStoredMessages(messages);
             this._saveToStore();
             this.Dispatch('MessageReceived', {message: message});
+        }
+        else {
+            this.Dispatch('EventReceived', {event: message});
         }
     }
 

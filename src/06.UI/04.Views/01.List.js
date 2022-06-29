@@ -15,7 +15,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         this._scrollY = -1;
         this._element.addEventListener('scroll', (event) => {
             if(event.target.scrollTop > this._scrollY) {
-                if (this._element.lastChild.getBoundingClientRect().bottom < (event.target.getBoundingClientRect().bottom + 10)) {
+                if (this.Children('lastChild').container.getBoundingClientRect().bottom < (event.target.getBoundingClientRect().bottom + 10)) {
                     clearTimeout(this._scrolling);
                     this._scrolling = setTimeout(() => {
                         this.Dispatch('ScrolledToBottom', {});
