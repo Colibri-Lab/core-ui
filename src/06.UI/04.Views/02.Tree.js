@@ -89,6 +89,18 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         return null;
     }
 
+    FindByPath(nodePath) {
+        nodePath = nodePath.split('/');
+        let parent = this;
+        for(const n of nodePath) {
+            parent = parent.nodes.Children(n);
+            if(!parent) {
+                break;
+            }
+        }
+        return parent;
+    }
+
     get hasTreeContextMenu() {
         return this._hasTreeContextMenu;
     }

@@ -153,9 +153,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     RemoveMessage(message) {
         let messages = this._getStoredMessages();
-        console.log(message);
         messages = messages.filter(m => m.id != message.id);
-        console.log(messages);
         this._setStoredMessages(messages);
         this._saveToStore();
         this.Dispatch('MessageRemoved', {});
