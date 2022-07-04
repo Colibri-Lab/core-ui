@@ -1,22 +1,104 @@
 .app-color-component {
     
     &.app-component-shown {
-        display: flex;
+        display: block;
     }
 
-    align-items: center;
-    justify-content: flex-start;
+    height: 220px;
+    border: 1px solid #D9DCE3;
+    padding: 5px;
 
-    [type=color] {
-        width: 30px;
-        height: 30px;
+    .app-color-grid-component {
+        display: grid;
+        grid-template-columns: repeat(20, 1fr);
+        grid-template-rows: repeat(20, 1fr);
+        grid-column-gap: 5px;
+        grid-row-gap: 5px;
+        height: 100%;
+            
+        > * {
+            border: 1px solid #D9DCE3;
+            position: relative;
+        }
+
+            
+        .app-color-grad-component { 
+            grid-row-start: 1;
+            grid-column-start: 1;
+            grid-row-end: 3;
+            grid-column-end: 21;
+            background-image: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta, red); 
+        }
+        .app-color-selected-grad-component { 
+            grid-row-start: 3;
+            grid-column-start: 1;
+            grid-row-end: 19;
+            grid-column-end: 19; 
+        }
+        .app-color-opacity-grad-component { 
+            grid-row-start: 3;
+            grid-column-start: 19;
+            grid-row-end: 19;
+            grid-column-end: 21; 
+        }
+        .app-color-hex-component { 
+            grid-row-start: 19;
+            grid-column-start: 1;
+            grid-row-end: 21;
+            grid-column-end: 12; 
+        }
+        .app-color-selected-component { 
+            grid-row-start: 19;
+            grid-column-start: 12;
+            grid-row-end: 21;
+            grid-column-end: 21; 
+        }
+
+        input {
+            background: transparent;
+            padding: 12px;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 20px;
+            outline: none;
+        }
+
+        .app-track-colorgrad-component {
+            height: calc(100% + 4px);
+            width: 10px;
+            top: -2px;
+            left: -5px;
+            position: absolute;
+            border: 1px solid #000000;
+            cursor: pointer;
+        }
+
+        .app-track-opacitygrad-component {
+            width: calc(100% + 4px);
+            height: 10px;
+            left: -2px;
+            top: -5px;
+            position: absolute;
+            border: 1px solid #000000;
+            cursor: pointer;
+        }
+
+        .app-track-selectedcolor-component {
+            width: 10px;
+            height: 10px;
+            left: -5px;
+            top: -5px;
+            border-radius: 50%;
+            position: absolute;
+            border: 1px solid #000000;
+            cursor: pointer;
+        }
+
     }
 
-    [type=text] {
-        border: 0px;
-        padding: 0px;
-        background: transparent;
-        margin-left: 10px;
-    }
+
+    
+
 
 }
