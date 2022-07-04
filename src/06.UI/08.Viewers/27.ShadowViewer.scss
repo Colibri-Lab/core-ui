@@ -1,0 +1,14 @@
+.app-shadow-viewer-component {
+    &.app-component-shown {
+        display: flex;
+    }
+    align-items: center;
+    justify-content: flex-start;
+
+    .app-component-textspan:first-child {
+        width: 30px;
+        height: 30px;
+        margin: 10px 20px 10px 10px;
+    }
+
+}

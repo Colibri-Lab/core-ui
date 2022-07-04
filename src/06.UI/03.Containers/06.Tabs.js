@@ -12,14 +12,14 @@
  *          <component Component="Colibri.UI.Button" name="tab2-button" value="Личные кабинеты" />
  *      </component-header>     
  * 
- *      <component-content>
+ *      <component-container>
  *          <component Component="Colibri.UI.Pane" name="tab1-content">
  *              ...
  *          </component>
  *          <component Component="Colibri.UI.Pane" name="tab2-content">
  *              ...
  *          </component>
- *      </component-content>
+ *      </component-container>
  * 
  * </component>
  * 
@@ -101,7 +101,11 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         let container = button.contentContainer;
         if(!container) {
             const foundContainer = this.container.querySelector(':scope > .app-ui-component:nth-child(' + index + ')');
-            container = foundContainer.tag('component');
+            container = foundContainer?.tag('component');
+        }
+
+        if(!container) {
+            return;
         }
         
         button.AddClass('tab-selected');

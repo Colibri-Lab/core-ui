@@ -1,0 +1,18 @@
+.app-image-viewer-component {
+    &.app-component-shown {
+        display: flex;
+    }
+    align-items: center;
+    justify-content: flex-start;
+
+    .app-component-textspan:first-child {
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+        border: 1px solid #c0c0c0;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center center;
+    }
+
+}

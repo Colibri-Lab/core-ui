@@ -1004,6 +1004,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             return;
         }
 
+        if(typeof value !== 'string') {
+            this.__renderBoundedValues(value);
+            return;
+        }
+
         if(!this._storage) {
             this._storage = App.Store;
         } 
