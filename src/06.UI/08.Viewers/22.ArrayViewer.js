@@ -8,12 +8,11 @@ Colibri.UI.ArrayViewer = class extends Colibri.UI.Viewer {
     _showValue() {
         let ret = [];
         this._value.forEach(v => {
-            Object.forEach(this._value, (name, value) => {
+            Object.forEach(v, (name, value) => {
                 ret.push(value);
             });
-            ret.push('<br />');
         });
-        this._element.html(ret.join(' '));
+        this._element.html(ret.join(', '));
     }
 
     get value() {

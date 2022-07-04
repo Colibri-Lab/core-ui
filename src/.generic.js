@@ -1566,3 +1566,22 @@ Element.prototype.enableScrolling = function(element) {
     this.removeEventListener('keydown', __preventDefaultForScrollKeys, false);
 }
 
+
+function EnumerateFonts() {
+    let { fonts } = document;
+    const it = fonts.entries();
+    
+    let arr = [];
+    let done = false;
+    
+    while (!done) {
+        const font = it.next();
+        if (!font.done) {
+            arr.push(font.value[0].family);
+        } else {
+            done = font.done;
+        }
+    }
+        
+    return Array.unique(arr).map(v => { return {value: v, title: v}; });
+}

@@ -1,0 +1,22 @@
+.app-color-component {
+    
+    &.app-component-shown {
+        display: flex;
+    }
+
+    align-items: center;
+    justify-content: flex-start;
+
+    [type=color] {
+        width: 30px;
+        height: 30px;
+    }
+
+    [type=text] {
+        border: 0px;
+        padding: 0px;
+        background: transparent;
+        margin-left: 10px;
+    }
+
+}
