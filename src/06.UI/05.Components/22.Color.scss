@@ -16,6 +16,7 @@
     > * {
         border: 1px solid #D9DCE3;
         position: relative;
+        z-index: 0;
     }
     
     .app-color-hex-component { 
@@ -50,6 +51,7 @@
     grid-row-end: 19;
     grid-column-end: 21; 
     background-image: linear-gradient(to bottom, #000000, #ffffff);
+    z-index: 1;
         
     .app-color-alpha-pointer-component {
         width: calc(100% + 4px);
@@ -67,6 +69,7 @@
     grid-column-start: 1;
     grid-row-end: 3;
     grid-column-end: 21;
+    z-index: 1;
     
     .app-color-line-canvas-component {
         width: 100%;
@@ -93,6 +96,7 @@
     grid-column-end: 19; 
     width: 100%;
     height: 100%;
+    z-index: 1;
     
     .grad {
         background-image: linear-gradient(180deg, rgba(255,255,255,0), rgba(0,0,0,1));

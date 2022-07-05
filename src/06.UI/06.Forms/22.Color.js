@@ -57,7 +57,7 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
     }
 
     get value() {
-        let value = this._input.value;
+        let value = this._input.value.hex;
         if(this._fieldData?.params?.emptyAsNull && !value) {
             value = null;
         }

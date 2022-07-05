@@ -4,6 +4,8 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
         super(name, container, '<div />');
         this.AddClass('app-color-component');
 
+        this.RegisterEvent('Changed', false, 'Когда значение изменилось');
+
         this._colorGrad = new Colibri.UI.Color.Line(this.name + '_grad', this);
 
         this._colorSelectedColorGrad = new Colibri.UI.Color.Block(this.name + '_block', this);
@@ -23,6 +25,10 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
         this._colorGrad.AddHandler('Changed', (event, args) => this.__lineValueChanged(event, args));
         this._colorSelectedColorGrad.AddHandler('Changed', (event, args) => this.__blockValueChanged(event, args));
         this._colorOpacityGrad.AddHandler('Changed', (event, args) => this.__opacityValueChanged(event, args));
+
+        this._colorHex.addEventListener('change', (e) => {
+            this.value = this._colorHex.value;
+        });
     }
 
     _updateUIComponents() {
@@ -34,6 +40,7 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
     _showValue() {
         this._colorHex.value = this._value.hex;
         this._colorSelected.css('background-color', this._colorHex.value);
+        this.Dispatch('Changed');
     }
 
     __lineValueChanged(event, args) {
@@ -45,7 +52,9 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
     }
 
     __blockValueChanged(event, args) {
+        const alpha = this._value.alpha;
         this._value = this._colorSelectedColorGrad.value;
+        this._value.alpha = alpha;
         this._showValue();
     }
 
@@ -352,7 +361,6 @@ Colibri.UI.Color.Block = class extends Colibri.UI.Component {
     }
 
 }
-
 Colibri.UI.Color.Alpha = class extends Colibri.UI.Component {
     constructor(name, container) {
         super(name, container, '<div />');

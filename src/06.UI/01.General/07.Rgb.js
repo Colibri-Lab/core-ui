@@ -125,8 +125,13 @@ Colibri.UI.Rgb = class {
     }
 
     _toHex() {
-        let alpha = this._a.toString(16).expand('0', 2);
-        return '#' + this._r.toString(16).expand('0', 2) + this._g.toString(16).expand('0', 2) + this._b.toString(16).expand('0', 2) + (alpha == 'ff' ? '' : alpha); 
+        try {
+            let alpha = this._a.toString(16).expand('0', 2);
+            return '#' + this._r.toString(16).expand('0', 2) + this._g.toString(16).expand('0', 2) + this._b.toString(16).expand('0', 2) + (alpha == 'ff' ? '' : alpha); 
+        }
+        catch(e) {
+            return '';
+        }
     }
 
     _getHue() {
