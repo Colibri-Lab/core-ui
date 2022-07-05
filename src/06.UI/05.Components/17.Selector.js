@@ -79,10 +79,11 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
         let wnd = this._element.closest('.app-component-window');
         wnd = wnd ?? document.body;
+        const scrolling = new Colibri.Common.Scrolling(wnd);
         if (this._popup && this._popup.shown) {
-            wnd.disableScrolling();
+            scrolling.Disable();
         } else {
-            wnd.enableScrolling();
+            scrolling.Enable();
         }
     }
 

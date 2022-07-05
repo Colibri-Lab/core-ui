@@ -242,7 +242,6 @@ Object.map = function(obj, func) {
     return newObject;
 }
 
-
 /* String prototype expansion */
 String.prototype.stripHtml = function() { return this.replace(/<[^>]+>/gim, "").replace(/<\/[^>]+>/gim, "").replace(/&nbsp;/gim, ""); }
 String.prototype.ltrim = function(c) { return this.replace(new RegExp('^' + (c != undefined ? c : '\\s') + '+'), ""); }
@@ -1512,7 +1511,6 @@ File.prototype.download = function() {
     document.body.removeChild(a);
 }
 
-
 window.resizeEndTimeout = -1;
 window.addEventListener('resize', (e) => {
 
@@ -1530,58 +1528,3 @@ Function.isPromise = function(p) {
     return (typeof p === 'object' && typeof p.then === 'function');
 }
 
-
-const __preventDefault = (e) => e.preventDefault();
-
-const __preventDefaultForScrollKeys = (e) => {
-    const keys = [37,38,39,40];
-    if (keys.indexOf(e.keyCode) !== -1) {
-        __preventDefault(e);
-        return false;
-    }
-    return true;
-}
-
-let supportsPassive = false;
-try {
-  window.addEventListener('test', null, Object.defineProperty({}, 'passive', { get: function () { supportsPassive = true; }  }));
-} catch(e) {}
-
-const wheelOpt = supportsPassive ? { passive: false } : false;
-const wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
-
-Element.prototype.disableScrolling = function() {
-
-    this.addEventListener('DOMMouseScroll', __preventDefault, false); // older FF
-    this.addEventListener(wheelEvent, __preventDefault, wheelOpt); // modern desktop
-    this.addEventListener('touchmove', __preventDefault, wheelOpt); // mobile
-    this.addEventListener('keydown', __preventDefaultForScrollKeys, false);
-
-}
-
-Element.prototype.enableScrolling = function(element) {
-    this.removeEventListener('DOMMouseScroll', __preventDefault, false);
-    this.removeEventListener(wheelEvent, __preventDefault, wheelOpt); 
-    this.removeEventListener('touchmove', __preventDefault, wheelOpt);
-    this.removeEventListener('keydown', __preventDefaultForScrollKeys, false);
-}
-
-
-function EnumerateFonts() {
-    let { fonts } = document;
-    const it = fonts.entries();
-    
-    let arr = [];
-    let done = false;
-    
-    while (!done) {
-        const font = it.next();
-        if (!font.done) {
-            arr.push(font.value[0].family);
-        } else {
-            done = font.done;
-        }
-    }
-        
-    return Array.unique(arr).map(v => { return {value: v, title: v}; });
-}

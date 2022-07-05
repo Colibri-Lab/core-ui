@@ -1,13 +1,13 @@
 
 Colibri.UI.FontFamilySelector = class extends Colibri.UI.Selector {
 
-    constructor(name, container, startYear, endYear) {
+    constructor(name, container) {
         super(
             name, 
             container, 
             false, 
             true, 
-            EnumerateFonts(), 
+            Colibri.Common.Font.Create().lookup, 
             '', 
             'title', 
             'value', 

@@ -129,10 +129,11 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
      * @private
      */
     _toggleBodyScroll(value) {
+        const scrolling = new Colibri.Common.Scrolling(document.body);
         if (value === false) {
-            document.body.disableScrolling();
+            scrolling.Disable();
         } else {
-            document.body.enableScrolling();
+            scrolling.Enable();
         }
     }
 
