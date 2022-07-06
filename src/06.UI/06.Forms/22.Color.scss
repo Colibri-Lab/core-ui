@@ -14,6 +14,18 @@
     .app-component-flexbox {
         position: relative;
         flex-wrap: nowrap;
+        .app-component-pane {
+            width: 20px;
+            height: calc(100% - 4px);
+            position: absolute;
+            left: 2px;
+            top: 2px;
+        }
+        .app-input-component {
+            input {
+                padding-left: 20px;
+            }
+        }
         .app-component-button {
             position: absolute;
             right: 2px;

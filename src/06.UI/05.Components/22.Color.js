@@ -146,7 +146,6 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
 
 
 }
-
 Colibri.UI.Color.Line = class extends Colibri.UI.Component {
 
     constructor(name, container) {
@@ -275,7 +274,6 @@ Colibri.UI.Color.Block = class extends Colibri.UI.Component {
         this.RegisterEvent('Changed', false, 'Когда значение изменилось');
 
         new Colibri.UI.Drag(this._pointer.container, this.container, (left, top) => {
-            this._pointer.styles = {left: left + 'px', top: top + 'px'};
             this._setNewColor(left, top);     
         });
 
@@ -284,6 +282,8 @@ Colibri.UI.Color.Block = class extends Colibri.UI.Component {
     }
 
     _setNewColor(left, top) {
+        this._setPoint(left, top);
+
         const bounds = this._element.bounds();
 
         left = left + this._pointer.container.bounds().outerWidth / 2;
@@ -295,27 +295,27 @@ Colibri.UI.Color.Block = class extends Colibri.UI.Component {
         this._S = S / 100;
         this._V = V / 100;
 
-        this._setPoint();
         this.Dispatch('Changed', {value: this.value});
 
     }
 
     __blockClicked(event, args) {
         const bounds = this._element.bounds();
+        const pointBounds = this._pointer.container.bounds();
         const e = args.domEvent;
-        let top = e.pageY - bounds.top;
-        let left = e.pageX - bounds.left;
+        let top = e.pageY - bounds.top - pointBounds.outerHeight / 2;
+        let left = e.pageX - bounds.left - pointBounds.outerWidth / 2;
         this._setNewColor(left, top);     
     }
 
-    _setPoint() {
+    _setPoint(left = null, top = null) {
         const bounds = this._element.bounds();
         const pointBounds = this._pointer.container.bounds();
         let S = this._S * 100;
         let V = this._V * 100;
 
-        let left = bounds.outerWidth * S / 100 - pointBounds.outerWidth / 2;
-        let top = bounds.outerHeight - bounds.outerHeight * V / 100 - pointBounds.outerHeight / 2;
+        left = left ? left : bounds.outerWidth * S / 100 - pointBounds.outerWidth / 2;
+        top = top ? top : bounds.outerHeight - bounds.outerHeight * V / 100 - pointBounds.outerHeight / 2;
         this._pointer.styles = {left: (left) + 'px', top: (top) + 'px'};
     }
 

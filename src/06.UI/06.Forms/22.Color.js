@@ -33,7 +33,10 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
 
         this._button.AddHandler('Clicked', (event, args) => this.__buttonClicked(event, args));
 
-        this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', args));
+        this._input.AddHandler('Changed', (event, args) => {
+            this._color.styles = {backgroundColor: this._input.value};
+            this.Dispatch('Changed', args);
+        });
         this._input.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
         this._input.AddHandler('KeyDown', (event, args) => this.Dispatch('KeyDown', args));
         this._input.AddHandler('Clicked', (event, args) => this.Dispatch('Clicked', args));
@@ -48,6 +51,7 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
         this._colorPopup.BringToFront();
         this._colorPopup.AddHandler('Changed', (event, args) => {
             this._input.value = this._colorPopup.value.hex;
+            this._color.styles = {backgroundColor: this._input.value};
             this.Dispatch('Changed', args);
         });
         this._colorPopup.AddHandler('ShadowClicked', (event, args) => {
@@ -88,7 +92,7 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
     }
 
     get value() {
-        let value = this._input.value.hex;
+        let value = this._input.value;
         if(this._fieldData?.params?.emptyAsNull && !value) {
             value = null;
         }
@@ -100,6 +104,7 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
 
     set value(value) {
         this._input.value = value ?? '';
+        this._color.styles = {backgroundColor: this._input.value};
     }
 
     
