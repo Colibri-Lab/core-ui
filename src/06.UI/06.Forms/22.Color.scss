@@ -1,3 +1,27 @@
 .app-component-color-field {
-    
+
+
+
+    .app-color-component {
+        position: absolute;
+        width: 100%;
+        min-width: 300px;
+
+        background: white;
+        
+    }
+
+    .app-component-flexbox {
+        position: relative;
+        flex-wrap: nowrap;
+        .app-component-button {
+            position: absolute;
+            right: 2px;
+            top: 2px;
+            height: calc(100% - 4px);
+            background: transparent;
+            border: 0px;
+            padding: 0px 10px;
+        }
+    }
 }

@@ -170,7 +170,6 @@ Colibri.UI.Color.Line = class extends Colibri.UI.Component {
         this.AddHandler('KeyDown', (event, args) => this.__keyDown(event, args));
 
         new Colibri.UI.Drag(this._pointer.container, this.container, (left, top) => {
-            console.log(left);
             this._pointer.styles = {left: left + 'px'};
             this._setNewValue(left);            
         });
@@ -235,7 +234,6 @@ Colibri.UI.Color.Line = class extends Colibri.UI.Component {
 		}
 
         canva.fillStyle = gradient;
-        console.log(bounds);
 		canva.fillRect(0, 0, bounds.outerWidth + 100, bounds.outerHeight * 100);
     }
 
