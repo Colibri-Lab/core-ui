@@ -2494,11 +2494,9 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
 
             this._valueContainer.shown = false;
         }
-        else {
-            if(this._viewerObject) {
-                this._viewerObject.Dispose();
-                this._valueContainer.shown = true;
-            }
+        else if(!this._viewer && this._viewerObject) {
+            this._viewerObject.Dispose();
+            this._valueContainer.shown = true;
         }
     }
 
@@ -2527,7 +2525,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
                 this.EndEdit();
             });
         }
-        else if(this._editorObject) {
+        else if(!this._editor && this._editorObject) {
             this._editorObject.Dispose();
         }
     }
