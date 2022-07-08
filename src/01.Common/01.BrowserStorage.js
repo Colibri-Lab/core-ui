@@ -13,7 +13,7 @@ Colibri.Common.BrowserStorage = class {
     }
 
     Has(name) {
-        return this.Get(name) === true || this.Get(name) === 'true';
+        return !!this.Get(name);
     }
 
     
