@@ -47,9 +47,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {Colibri.Storages.Store} store хрналище
      * @param {string} storeMessages куда выбрасывать сообщения
      */
-    Init(userGuid, store, storeMessages) {
+    Init(userData, store, storeMessages) {
 
-        this._user = userGuid;
+        this._user = userData.guid;
+        this._userName = userData.name;
         this._store = store;
         this._storeMessages = storeMessages;
         
@@ -67,7 +68,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     __onCometOpened() {
         this._connected = true;
-        this.Send(this._user, 'register');
+        this.Command(this._user, 'register', {name: this._userName});
     }
 
     __onCometMessage(message) {
@@ -163,11 +164,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this.Dispatch('MessageRemoved', {});
     }
 
-    // функция для отправки echo-сообщений на сервер
-    Send(userGuid, action, message = null) {
+    Command(userGuid, action, message = null) {
         try {
             if(this._ws.readyState === 1) {
-                this._ws.send(JSON.stringify({action: action, user: userGuid, message: message}));
+                this._ws.send(JSON.stringify({action: action, user: userGuid, message: message, domain: document.domain}));
             }
             else {
                 console.log('server goes away');
@@ -178,6 +178,18 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         }
     }
 
-    
+    SendTo(userGuid, action, message = null) {
+        try {
+            if(this._ws.readyState === 1) {
+                this._ws.send(JSON.stringify({action: action, recipient: userGuid, message: message, domain: document.domain}));
+            }
+            else {
+                console.log('server goes away');
+            }
+        }
+        catch(e) {
+            console.log(e);
+        }
+    }
 
 }
