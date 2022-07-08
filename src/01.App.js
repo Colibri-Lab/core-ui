@@ -89,7 +89,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                     const settings = JSON.parse(response.result);
                     this._store.Set('app.settings', settings);
 
-                    if(initComet && settings.comet) {
+                    if(initComet && settings.comet && settings.comet.host) {
                         this._comet = new Colibri.Web.Comet(settings.comet);
                         this._comet.AddHandler(['MessageReceived', 'MessagesMarkedAsRead', 'MessageRemoved'], (event, args) => {
                             if(!document.hasFocus()) {
