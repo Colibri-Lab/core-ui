@@ -12,6 +12,10 @@ Colibri.Common.BrowserStorage = class {
         return window.localStorage.getItem(name);
     }
 
+    Delete(name) {
+        window.localStorage.removeItem(name);
+    }
+
     Has(name) {
         return !!this.Get(name);
     }
