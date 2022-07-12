@@ -66,6 +66,14 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     }
 
+    Disconnect() {
+        console.log(this._ws);
+        if(this._ws) {
+            this._ws.close();
+            this._ws = null;
+        }
+    }
+
     __onCometOpened() {
         this._connected = true;
         this.Command(this._user, 'register', {name: this._userName});
@@ -180,8 +188,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     SendTo(userGuid, action, message = null) {
         try {
+            const id = Date.Mc();
             if(this._ws.readyState === 1) {
-                this._ws.send(JSON.stringify({action: action, recipient: userGuid, message: message, domain: document.domain}));
+                this._ws.send(JSON.stringify({action: action, recipient: userGuid, message: {text: message, id: id}, domain: document.domain}));
+                return id;
             }
             else {
                 console.log('server goes away');
@@ -190,6 +200,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         catch(e) {
             console.log(e);
         }
+        return null;
     }
 
 }

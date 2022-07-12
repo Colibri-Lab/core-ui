@@ -1,6 +1,7 @@
 Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
     
     _db = null;
+    _lastTransaction = null;
     _name = null;
     _version = null;
 
@@ -51,8 +52,11 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
         return this._db.objectStoreNames.contains(name);
     }
 
-    CreateStore(name, keyPath = 'id', autoIncrement = false) {
-        return this._db.createObjectStore(name, {keyPath: keyPath, autoIncrement: autoIncrement});
+    CreateStore(name, keyPath = 'id', autoIncrement = false, indices = []) {
+        const store = this._db.createObjectStore(name, {keyPath: keyPath, autoIncrement: autoIncrement});
+        for(const index of indices) {
+            store.createIndex(index.name, index.keyPath, {unique: index.unique, multiEntry: index.multiEntry});
+        }
     }
 
     CreateIndex(name, indexName, key, unique = false, multiEntry = false) {
@@ -143,6 +147,12 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
             request.onerror = () => {
                 reject(request.error);
             }
+            transaction.oncomplete = () => {
+                this.Dispatch('DatabaseTransactionComplete', {transaction: transaction});
+            };
+            transaction.onerror = () => {
+                this.Dispatch('DatabaseTransactionError', {transaction: transaction, error: transaction.error});
+            };
         });
     }
 
@@ -170,6 +180,12 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
             request.onerror = () => {
                 reject(request.error);
             }
+            transaction.oncomplete = () => {
+                this.Dispatch('DatabaseTransactionComplete', {transaction: transaction});
+            };
+            transaction.onerror = () => {
+                this.Dispatch('DatabaseTransactionError', {transaction: transaction, error: transaction.error});
+            };
         });
     }
 
@@ -185,6 +201,12 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
             request.onerror = () => {
                 reject(request.error);
             }
+            transaction.oncomplete = () => {
+                this.Dispatch('DatabaseTransactionComplete', {transaction: transaction});
+            };
+            transaction.onerror = () => {
+                this.Dispatch('DatabaseTransactionError', {transaction: transaction, error: transaction.error});
+            };
         });
     }
 
@@ -213,6 +235,12 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
             request.onerror = () => {
                 reject(request.error);
             }
+            transaction.oncomplete = () => {
+                this.Dispatch('DatabaseTransactionComplete', {transaction: transaction});
+            };
+            transaction.onerror = () => {
+                this.Dispatch('DatabaseTransactionError', {transaction: transaction, error: transaction.error});
+            };
         });
     }
 
@@ -228,6 +256,12 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
             request.onerror = () => {
                 reject(request.error);
             }
+            transaction.oncomplete = () => {
+                this.Dispatch('DatabaseTransactionComplete', {transaction: transaction});
+            };
+            transaction.onerror = () => {
+                this.Dispatch('DatabaseTransactionError', {transaction: transaction, error: transaction.error});
+            };
         });
     }
 
@@ -242,7 +276,36 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
             request.onerror = () => {
                 reject(request.error);
             };
+            transaction.oncomplete = () => {
+                this.Dispatch('DatabaseTransactionComplete', {transaction: transaction});
+            };
+            transaction.onerror = () => {
+                this.Dispatch('DatabaseTransactionError', {transaction: transaction, error: transaction.error});
+            };
         });
+    }
+
+    DeleteByIndex(name, indexName, key) {
+        return new Promise((resolve, reject) => {
+            const transaction = this._db.transaction(name, "readwrite"); 
+            const store = transaction.objectStore(name);
+            const index = store.index(indexName);
+            const request = index.openCursor(key);
+            request.onsuccess = () => {
+                let cursor = request.result;
+                if(cursor) {
+                    cursor.delete();
+                    cursor.continue();
+                }
+                else {
+                    resolve();
+                }
+            };
+        });
+    }
+
+    GetCursor(name, idFrom = null, idTo = null) {
+        
     }
 
 

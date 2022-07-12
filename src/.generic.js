@@ -773,6 +773,44 @@ String.Pluralize = function(template, count) {
     return words[(count % 100 > 4 && count % 100 < 20) ? 2 : cases[Math.min(count % 10, 5)]].replace('{n}', count);
 }
 
+
+String.prototype.sha256 = function() {
+    const msgBuffer = new TextEncoder().encode(this);
+    return new Promise((resolve, reject) => {
+        crypto.subtle.digest('SHA-256', msgBuffer).then(hashBuffer => {
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            resolve(hashHex);
+        }).catch(error => reject(error));            
+    });
+
+}
+
+String.prototype.rc4 = function(key) {
+    let str = this;
+    var s = [], j = 0, x, res = '';
+    for (var i = 0; i < 256; i++) {
+        s[i] = i;
+    }
+    for (i = 0; i < 256; i++) {
+        j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;
+        x = s[i];
+        s[i] = s[j];
+        s[j] = x;
+    }
+    i = 0;
+    j = 0;
+    for (var y = 0; y < str.length; y++) {
+        i = (i + 1) % 256;
+        j = (j + s[i]) % 256;
+        x = s[i];
+        s[i] = s[j];
+        s[j] = x;
+        res += String.fromCharCode(str.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);
+    }
+    return res;
+}
+
 /* number prototype expansion */
 Number.prototype.toDateFromUnixTime = function() {
     let d = new Date();

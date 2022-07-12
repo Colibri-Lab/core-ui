@@ -470,7 +470,7 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
     __ItemMouseDown(event, args) {
         if(this.parent?.parent) {
             this.parent.parent.selected = this;
-            this.parent.parent.Dispatch('ItemMouseDown', {item: this, domEvent: args.domEvent});
+            this.parent?.parent?.Dispatch('ItemMouseDown', {item: this, domEvent: args.domEvent});
         }
     }
 

@@ -177,6 +177,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                 document.title = this._title;
             }
             clearInterval(this._flashInterval);
+            this._flashInterval = -1;
         }
     }
 
