@@ -902,17 +902,26 @@ Number.prototype.toTimeString = function(daySplitter) {
         secs = number;
     }
 
-    let txt = "";
-    txt += (days + '').expand("0", 2) + ":";
-    txt += (hours + '').expand("0", 2) + ":";
-    txt += (mins + '').expand("0", 2) + ":";
-    txt += (secs + '').expand("0", 2) + ":";
+    let txt = [];
+    days > 0 && txt.push((days + '').expand("0", 2));
+    hours > 0 && txt.push((hours + '').expand("0", 2));
+    mins > 0 && txt.push((mins + '').expand("0", 2));
+    secs > 0 && txt.push((secs + '').expand("0", 2));
+    txt = txt.join(':');
 
     txt = txt.ltrim("0");
     txt = txt.ltrim(":");
     txt = txt.rtrim(":");
 
-    if (daySplitter && txt.split(':').length > 3) {
+    if (daySplitter && Array.isArray(daySplitter)) {
+        let ret = [];
+        const parts = txt.split(':');
+        parts.forEach((part, index) => {
+            ret.push(parseInt(part).formatSequence(daySplitter[4 - parts.length + index], true));
+        });
+        txt = ret.join(' ');
+    }
+    else if (daySplitter && txt.split(':').length > 3) {
         // day exists
         txt = txt.replace(':', daySplitter);
     }
@@ -974,8 +983,8 @@ Date.prototype.timezoneoffset = (new Date()).getTimezoneOffset() / 60;
 Date.prototype.toLocalTime = function() { this.setTime(this.getTime() - this.timezoneoffset * 60 * 60 * 1000); return this; };
 Date.prototype.addMinute = function(min) { this.setTime(this.getTime() + min * 60 * 1000); return this; }
 Date.prototype.Diff = function(dt) { return parseInt((dt.getTime() - this.getTime()) / 1000); }
-Date.prototype.Age = function(removeNazad = false) {
-    let time = (new Date()).getTime() / 1000 - this.getTime() / 1000; // to get the time since that moment
+Date.prototype.Age = function(removeNazad = false, returnFull = false) {
+    let time = Math.abs((new Date()).getTime() / 1000 - this.getTime() / 1000); // to get the time since that moment
 
     let tokens = [
         [31536000, ['год', 'года', 'лет']],
@@ -987,6 +996,7 @@ Date.prototype.Age = function(removeNazad = false) {
         [1, ['секунду', 'секунды', 'секунд']]
     ];
 
+    let retArray = [];
     for (let u = 0; u < tokens.length; u++) {
         let labels = tokens[u][1];
         let unit = tokens[u][0];
@@ -996,10 +1006,20 @@ Date.prototype.Age = function(removeNazad = false) {
         let ret = (numberOfUnits > 1 ? numberOfUnits + ' ' : '') + numberOfUnits.formatSequence(labels, false) + (removeNazad ? '' : ' назад');
         if (ret == 'день' + (removeNazad ? '' : ' назад'))
             ret = 'вчера';
-        return ret;
+        
+        if(returnFull) {
+            retArray.push(ret);
+        }
+        else {
+            return ret;
+        }
     }
-
-    return 'только что';
+    if(returnFull) {
+        return retArray.join(' ');
+    }
+    else {
+        return 'только что';
+    }
 }
 Date.prototype.format = function(formatString) { return this.toString(formatString); }
 Date.prototype.DayIndex = function() {
