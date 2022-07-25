@@ -94,20 +94,30 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                     if(name == '_adds') {
                         // если наткнулись на _adds
                         component.ForEveryField((name, field) => {
+                            let def = field?.field?.default;
+                            if(field?.field?.params?.generator) {
+                                const gen = eval(component.field.params.generator);
+                                def = gen(value);
+                            }    
                             if(!this._value) {
-                                field.value = component.field.default ?? null;    
+                                field.value = def ?? null;    
                             }
                             else {
-                                field.value = this._value[name] ?? field?.field?.default ?? null;
+                                field.value = this._value[name] ?? def ?? null;
                             }
                         });
                     }
                     else {
+                        let def = component?.field?.default;
+                        if(component?.field?.params?.generator) {
+                            const gen = eval(component.field.params.generator);
+                            def = gen(value);
+                        }
                         if(!this._value) {
-                            component.value = component.field.default ?? null;    
+                            component.value = def ?? null;    
                         }
                         else {
-                            component.value = this._value[name] ?? component.field.default ?? null;
+                            component.value = this._value[name] ?? def ?? null;
                         }
                     }
                 }
