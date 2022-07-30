@@ -192,7 +192,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                         this.tag.params = data;
                     }
                 }
-                else if(element.tagName == 'fields' && parent instanceof Colibri.UI.Forms.Form) {
+                else if(element.tagName == 'fields') {
                     let data = element.childNodes[0].textContent;
                     try { eval('data = ' + data + ';'); } catch(e) { console.log(data); console.log(e); }
                     if(data instanceof Object) {
