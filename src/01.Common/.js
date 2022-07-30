@@ -87,7 +87,13 @@ Colibri.Common = class {
      * Загружает скрипт по URL
      * @param {string} url ссылка на скрипт
      */
-    static LoadScript(url) {
+    static LoadScript(url, id = null) {
+
+        if(document.getElementById(id)) {
+            return new Promise((resolve, reject) => {
+                resolve(id);
+            });
+        }
 
         return new Promise((resolve, reject) => {
             var script = document.createElement('script');
@@ -100,8 +106,38 @@ Colibri.Common = class {
             script.onerror = (e) => {
                 reject(e);
             };
-            script.id = 'script_' + (new Date()).getTime();
+            script.id = id ? id : 'script_' + (new Date()).getTime();
             document.getElementsByTagName('head')[0].appendChild(script);
+        });
+
+    }
+
+    /**
+     * Загружает стили по URL
+     * @param {string} url ссылка на стили
+     */
+     static LoadStyles(url, id = null) {
+
+        if(document.getElementById(id)) {
+            return new Promise((resolve, reject) => {
+                resolve(id);
+            });
+        }
+
+        return new Promise((resolve, reject) => {
+            var link = document.createElement('link');
+            link.async = true;
+            link.defer = true;
+            link.rel = 'stylesheet';
+            link.href = url;
+            link.onload = () => {
+                resolve(link.id);
+            };
+            link.onerror = (e) => {
+                reject(e);
+            };
+            link.id = id ? id : 'link_' + (new Date()).getTime();
+            document.getElementsByTagName('head')[0].appendChild(link);
         });
 
     }

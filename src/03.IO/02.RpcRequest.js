@@ -29,6 +29,13 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
         this._remoteDomain = value;
     }
 
+    get requestType() {
+        return this._requestType;
+    }
+    set requestType(value) {
+        this._requestType = value;
+    }
+
     /**
      * Преобразует строку
      * @param {string} string строка для преобразования 
