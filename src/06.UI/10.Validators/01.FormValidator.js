@@ -13,6 +13,7 @@ Colibri.UI.FormValidator = class extends Colibri.Events.Dispatcher {
         this._form.AddHandler('FieldsRendered', (event, args) => {
             this._createValidators();
         });
+        this._createValidators();
     }
 
     _createValidators() {

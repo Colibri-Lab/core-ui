@@ -11,7 +11,7 @@ Colibri.UI = class {
     /**
      * Таб индекс элемента
      */
-    static tabIndex = 0;
+    static tabIndex = 1;
 
     /**
      * Возвращает самый высокий z-index на странице

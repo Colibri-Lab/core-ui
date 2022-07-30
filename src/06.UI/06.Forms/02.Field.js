@@ -114,6 +114,9 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             }
         });
 
+        this.AddHandler('ReceiveFocus', (event, args) => this.AddClass('-focused'));
+        this.AddHandler('LoosedFocus', (event, args) => this.RemoveClass('-focused'));
+
         if(this._fieldData.hidden && this._fieldData.hidden === true) {
             this.AddClass('app-component-field-hidden');
         }

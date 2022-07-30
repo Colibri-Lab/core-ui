@@ -164,6 +164,7 @@ Colibri.UI.Forms.Passport = class extends Colibri.UI.Forms.Field {
 			this._div2.width
 		];
 	}
+	
 
 }
 Colibri.UI.Forms.Field.RegisterFieldComponent('Passport', 'Colibri.UI.Forms.Passport', '#{app-fields-passport;Паспорт}')

@@ -2,6 +2,7 @@ Colibri.UI.SuccessButton = class extends Colibri.UI.Button {
     
     constructor(name, container) {
         super(name, container);
+        this.AddClass('app-extended-button-component');
         this.AddClass('app-success-button-component');
         
         this._icon = new Colibri.UI.Icon('icon', this);
@@ -32,6 +33,7 @@ Colibri.UI.ErrorButton = class extends Colibri.UI.Button {
     
     constructor(name, container) {
         super(name, container);
+        this.AddClass('app-extended-button-component');
         this.AddClass('app-error-button-component');
         
         this._icon = new Colibri.UI.Icon('icon', this);
@@ -62,6 +64,7 @@ Colibri.UI.GrayButton = class extends Colibri.UI.Button {
     
     constructor(name, container) {
         super(name, container);
+        this.AddClass('app-extended-button-component');
         this.AddClass('app-gray-button-component');
         
         this._icon = new Colibri.UI.Icon('icon', this);
@@ -93,6 +96,7 @@ Colibri.UI.SimpleButton = class extends Colibri.UI.Button {
     
     constructor(name, container) {
         super(name, container);
+        this.AddClass('app-extended-button-component');
         this.AddClass('app-simple-button-component');
 
         this._icon = new Colibri.UI.Icon('icon', this);
@@ -123,6 +127,7 @@ Colibri.UI.OutlineBlueButton = class extends Colibri.UI.Button {
 
     constructor(name, container) {
         super(name, container);
+        this.AddClass('app-extended-button-component');
         this.AddClass('app-outline-blue-button-component');
 
         this._icon = new Colibri.UI.Icon('icon', this);
@@ -153,6 +158,7 @@ Colibri.UI.UploadButton = class extends Colibri.UI.Button {
     
     constructor(name, container) {
         super(name, container);
+        this.AddClass('app-extended-button-component');
         this.AddClass('app-success-button-component');
         this.AddClass('app-upload-button-component');
 

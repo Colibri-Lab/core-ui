@@ -29,6 +29,12 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
             this._masker.maskPattern(mask);
         } 
 
+        if(this._fieldData?.params?.icon) {
+            this.icon = this._fieldData?.params?.icon;
+        }
+
+        this._input.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', {domEvent: e}));
+        this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', {domEvent: e}));
         this._input.addEventListener('change', (e) => this.Dispatch('Changed', {domEvent: e}));
         this._input.addEventListener('keyup', (e) => this.Dispatch('KeyUp', {domEvent: e}));
         this._input.addEventListener('keydown', (e) => this.Dispatch('KeyDown', {domEvent: e}));
@@ -124,6 +130,29 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
         this._input && this._input.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
     }
 
+    _showIcon() {
+        const contentContainer = this.contentContainer;
+        if(!this._icon) {
+            this.RemoveClass('-has-icon');
+            contentContainer.Children('icon').Dispose();
+            return;
+        }
+
+        const icon = new Colibri.UI.Icon(this._name + '-icon', contentContainer);
+        icon.value = this._icon;
+        icon.shown = true;
+
+        this.AddClass('-has-icon');
+
+    }
+
+    set icon(value) {
+        this._icon = value;
+        this._showIcon();
+    }
+    get icon() {
+        return this._icon;
+    }
 
 }
 Colibri.UI.Forms.Field.RegisterFieldComponent('Text', 'Colibri.UI.Forms.Text', '#{app-fields-text;Текст}');

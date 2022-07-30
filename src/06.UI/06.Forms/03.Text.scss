@@ -25,7 +25,28 @@
                 appearance: auto !important;
             }
         }
+
+        [data-object-name$="-icon"] {
+            position: absolute;
+            left: 12px;
+            top: 0px;
+            height: 100%;
+            &.app-component-shown {
+                display: flex;
+            }
+            align-items: center;
+            justify-content: center;
+            svg {
+                height: auto;
+            }
+        }
+
     }
 
+    &.-has-icon {
+        input {
+            padding: 5px 12px 5px 24px;
+        }
+    }
     
 }
