@@ -7,6 +7,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         const contentContainer = this.contentContainer;
         this._input = contentContainer.container.append(Element.create('input', {type: 'password', name: this._name + '-input'}));
 
+        this.RegisterEvent('PasswordValidated', false, 'Когда сила пароля проверена');
 
         this._input.addEventListener('change', (e) => this.Dispatch('Changed', {domEvent: e}));
         this._input.addEventListener('keyup', (e) => this.Dispatch('KeyUp', {domEvent: e}));
@@ -37,6 +38,51 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
             this.icon = this._fieldData?.params?.icon;
         }
 
+        this.AddHandler(['Changed', 'KeyUp', 'Paste'], (event, args) => {
+            const strength = this.CalcPasswordStrength();
+            this.Dispatch('PasswordValidated', {strength: strength});
+        });
+
+
+    }
+
+    CalcPasswordStrength() {
+        const password = this.value;
+
+        if (password.length < 8) {
+            return 0;
+        }
+
+        // count how many lowercase, uppercase, and digits are in the password 
+        let uc = 0, lc = 0, num = 0, other = 0, j = 0, i = 0;
+        for (i = 0, j = password.length; i < j; i++) {
+            const c = password.substr(i, 1);
+            if (/^[A-Z]/.test(c)) {
+                uc++;
+            } else if (/^[a-z]/.test(c)) {
+                lc++;
+            } else if (/^[0-9]/.test(c)) {
+                num++;
+            } else {
+                other++;
+            }
+        }
+    
+        let max = j - 2;
+
+        uc = uc * 100 / max;
+        lc = lc * 100 / max;
+        num = num * 100 / max;
+        other = other * 100 / max;
+
+        let percents = [uc, lc, num, other];
+        for(const p of percents) {
+            if(p === 0) {
+                return 0;
+            }
+        }
+        
+        return percents.reduce((a, b) => a + b, 0) / percents.length;
 
     }
 

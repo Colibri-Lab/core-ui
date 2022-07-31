@@ -65,6 +65,14 @@ Colibri.UI.FormValidator = class extends Colibri.Events.Dispatcher {
         return this._validated;
     }
 
+    Invalidate(field, message, className = 'app-validate-error') {
+        for (let validator of this._validators) {
+            if(validator.field.name == field) {
+                validator.Invalidate(message, className);
+            }
+        }
+    }
+
     get form() {
         return this._form;
     }
