@@ -45,7 +45,8 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         this._viewElement.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', { domEvent: e }));
         this._viewElement.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', { domEvent: e }));
 
-        this._format = new Intl.DateTimeFormat('ru-RU', {day: '2-digit', month: 'short', year: 'numeric'});
+        let dateformat = App.DateFormat || 'ru-RU';
+        this._format = new Intl.DateTimeFormat(dateformat, {day: '2-digit', month: 'short', year: 'numeric'});
 
         this.AddHandler('Clicked', (event, args) => {
             if(this.enabled) {
@@ -107,6 +108,8 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         if(!this._popup) {
             this._popup = new Colibri.UI.DateSelectorPopup('popup', document.body);
             this._popup.parent = this;
+            const el = this.container.closest('[namespace]');
+            el && this._popup.container.attr('namespace', el.attr('namespace'));
         }
         this._popup.mode = 'datepicker';
         this._popup.shown = true;
@@ -252,9 +255,9 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
         this.handleVisibilityChange = true;
         this.AddHandler('VisibilityChanged', (event, args) => {
             const bounds = this.parent.container.bounds();
-            const b = this.container.bounds();
+            const b = this.container.bounds(true, true);
             if(!args.state) {
-                this.top =  bounds.top - b.outerHeight - 5;
+                this.top =  bounds.top - b.outerHeight;
                 this.AddClass('-up');
             }
 
@@ -336,18 +339,21 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
 
     set shown(value) {
         super.shown = value;
-        const bounds = this.parent.container.bounds();
-        this.top = bounds.top + bounds.outerHeight;
-        this.left = bounds.left;
-        this.RemoveClass('-up');        
-        if(value) {
-            this.BringToFront();
-            this._show();
-        }
-        else {
-            this.SendToBack();
-        }
-        this.hasShadow = value;
+        this.container.hideShowProcess(() => {
+            const bounds = this.parent.container.bounds(true, true);
+            this.top = bounds.top + bounds.outerHeight;
+            this.left = bounds.left;
+            this.RemoveClass('-up');        
+            if(value) {
+                this.BringToFront();
+                this._show();
+            }
+            else {
+                this.SendToBack();
+            }
+            this.hasShadow = value;
+            this.Dispatch('VisibilityChanged', {state: true});
+        });
     }
 
     set mode(value) {
@@ -414,11 +420,12 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
     _showPickerTitle() {
 
         let value = this.value.copy();
+        let dateformat = App.DateFormat || 'ru-RU';
         if (this.mode == 'datepicker') {
-            const formatter = Intl.DateTimeFormat('ru-RU', { month: 'long', year: 'numeric' });
+            const formatter = Intl.DateTimeFormat(dateformat, { month: 'long', year: 'numeric' });
             this._headerText.html(formatter.format(value).replaceAll('г.', ''));
         } else if (this.mode == 'monthpicker') {
-            const formatter = Intl.DateTimeFormat('ru-RU', { year: 'numeric' });
+            const formatter = Intl.DateTimeFormat(dateformat, { year: 'numeric' });
             this._headerText.html(formatter.format(value));
         } else if (this.mode == 'yearpicker') {
             this._headerText.html(this._yearPicker.startYear + '&nbsp;&ndash;&nbsp;' + (this._yearPicker.startYear + 10));
@@ -445,9 +452,9 @@ Colibri.UI.DatePicker = class extends Colibri.UI.Pane {
     _renderContent() {
 
         this._element.html('');
-
-        const formatter = new Intl.DateTimeFormat('ru-RU', { day: '2-digit' });
-        const weekformatter = new Intl.DateTimeFormat('ru-RU', { weekday: 'narrow' });
+        let dateformat = App.DateFormat || 'ru-RU';
+        const formatter = new Intl.DateTimeFormat(dateformat, { day: '2-digit' });
+        const weekformatter = new Intl.DateTimeFormat(dateformat, { weekday: 'narrow' });
 
         const table = this._element.append(Element.fromHtml('<table cellspacing="2"><thead></thead><tbody></tbody><tfoot></tfoot></table>'));
 
@@ -543,7 +550,8 @@ Colibri.UI.MonthPicker = class extends Colibri.UI.Pane {
         this._element.html('');
 
         const format = { "month": "short" };
-        const formatter = new Intl.DateTimeFormat('ru-RU', format);
+        let dateformat = App.DateFormat || 'ru-RU';
+        const formatter = new Intl.DateTimeFormat(dateformat, format);
 
         const table = this._element.append(Element.fromHtml('<table cellspacing="2"><tbody></tbody><tfoot></tfoot></table>'));
         const tbody = table.querySelector('tbody');
@@ -616,7 +624,8 @@ Colibri.UI.YearPicker = class extends Colibri.UI.Pane {
         this._element.html('');
 
         const format = { "year": "numeric" };
-        const formatter = new Intl.DateTimeFormat('ru-RU', format);
+        let dateformat = App.DateFormat || 'ru-RU';
+        const formatter = new Intl.DateTimeFormat(dateformat, format);
 
         const table = this._element.append(Element.fromHtml('<table cellspacing="2"><tbody></tbody><tfoot></tfoot></table>'));
         const tbody = table.querySelector('tbody');

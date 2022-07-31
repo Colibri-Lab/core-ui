@@ -501,8 +501,10 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
     _createPopup(values) {
         const popup = new Colibri.UI.PopupList('select-popup', document.body, this._multiple, this.__render, this._titleField, this._valueField);
-        popup.multiple = this._multiple;
         popup.parent = this;
+        popup.multiple = this._multiple;
+        const el = this.container.closest('[namespace]');
+        el && popup.container.attr('namespace', el.attr('namespace'));
 
         //заполнение списка перед хэндлерами, чтобы не сработал SelectionChanged
         popup.FillItems(values, this._value);

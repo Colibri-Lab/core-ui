@@ -1458,6 +1458,17 @@ Element.prototype.clone = function(ns) {
 
 }
 
+Element.prototype.hideShowProcess = function(callback, timeout = 50) {
+    this.css('visibility', 'hidden');
+    document.body.css('overflow', 'hidden');
+    Colibri.Common.Delay(timeout).then(() => {
+        callback(); 
+        this.css('visibility', null);
+        document.body.css('overflow', null);
+    });
+}
+
+
 Element.prototype.emitCustomEvent = function (eventName, args) {
     var event = new CustomEvent(eventName, { detail: args });
     this.dispatchEvent(event);

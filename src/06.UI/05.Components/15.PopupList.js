@@ -16,7 +16,7 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
         this.handleVisibilityChange = true;
         this.AddHandler('VisibilityChanged', (event, args) => {
 
-            const bounds = this.parent.container.bounds();
+            const bounds = this.parent.container.bounds(true, true);
             if(!args.state) {
                 this.top = null;
                 this.bottom = (window.innerHeight - bounds.top);
@@ -33,34 +33,33 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
 
 
     set shown(value) {
-        if(value) {
-            this.AddClass(this.parent.name + '-selector-popup');
-            this.hasShadow = value;
-            this.BringToFront();
-        } else {
-            this.RemoveClass(this.parent.name + '-selector-popup');
-            this.hasShadow = false;
-            this.SendToBack();
-        }
         super.shown = value;
         
+        this.container.hideShowProcess(() => {
+            
+            const bounds = this.parent.container.bounds();
+            this.top = bounds.top + bounds.outerHeight;
+            this.left = bounds.left;
+            this.width = bounds.outerWidth;
+            if(value) {
+                this.AddClass(this.parent.name + '-selector-popup');
+                this.BringToFront();
+            } else {
+                this.RemoveClass(this.parent.name + '-selector-popup');
+                this.SendToBack();
+            }    
+            this.hasShadow = value;
+            this.Dispatch('VisibilityChanged', {state: true});
+            if(this._selected.length && this._selected[0] instanceof Colibri.UI.List.Item) {
+                this._selected[0].EnsureVisible(this);
+            }
+    
+        });
+
     }
 
     get shown() {
         return super.shown;
-    }
-
-    Show() {
-        const bounds = this.parent.container.bounds();
-        this.shown = true;
-        this.top = bounds.top + bounds.outerHeight;
-        this.left = bounds.left;
-        this.width = bounds.outerWidth;
-        this.shown = true;
-        if(this._selected.length && this._selected[0] instanceof Colibri.UI.List.Item) {
-            this._selected[0].EnsureVisible(this);
-        }
-
     }
 
     __renderItemContent(itemData) {

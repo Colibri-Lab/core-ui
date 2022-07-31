@@ -36,7 +36,8 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         requestType = Colibri.IO.Request.RequestEncodeTypeEncrypted,
         initComet = false,
         showLoader = true,
-        remoteDomain = null
+        remoteDomain = null,
+        dateformat = null
     ) {
 
         if(this._initialized) {
@@ -57,6 +58,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         this._router = new Colibri.Web.Router(routerType);
         this._device = new Colibri.Devices.Device();
         this._browser = new Colibri.Common.BrowserStorage();
+        this._dateformat = dateformat;
 
 
         Colibri.Common.WaitForBody().then(() => {
@@ -261,6 +263,13 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     
     get Initialized() {
         return this._initialized;
+    }
+
+    get DateFormat() {
+        return this._dateformat;
+    }
+    set DateFormat(value) {
+        this._dateformat = value;
     }
 
 }
