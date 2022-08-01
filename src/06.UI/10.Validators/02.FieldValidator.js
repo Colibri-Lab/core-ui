@@ -78,7 +78,7 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
 
                 if (!method(this._field, this)) {
                     this._validated = false;
-                    message = v.message instanceof Function ? v.message(this._field) : v.message;
+                    message = v.message instanceof Function ? v.message(this._field, this) : v.message;
                     break;
                 }
             }
@@ -88,7 +88,7 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
             this._field.message = '';
             className && this.Clear(className);
         } else {
-            messages && message && (this._field.message = (message instanceof Function ? message(this._field) : message));
+            messages && message && (this._field.message = (message instanceof Function ? message(this._field, this) : message));
             className && this._field.AddClass(className);
         }
 

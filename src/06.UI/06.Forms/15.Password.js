@@ -40,49 +40,89 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
 
         this.AddHandler(['Changed', 'KeyUp', 'Paste'], (event, args) => {
             const strength = this.CalcPasswordStrength();
+            this._showPasswordTip(strength);
             this.Dispatch('PasswordValidated', {strength: strength});
         });
 
 
     }
 
-    CalcPasswordStrength() {
-        const password = this.value;
+    _showPasswordTip(strength) {
+        
 
-        if (password.length < 8) {
+        if(this._fieldData?.params?.tip) {
+            if(!this._passwordTip) {
+                this._passwordTip = new Colibri.UI.ToolTip(this.name + '_tip', this.Children(this.name + '-content'), [Colibri.UI.ToolTip.RT, Colibri.UI.ToolTip.RB]);
+            }
+            const tipData = this._fieldData?.params?.tip;
+
+            let cls = '';
+            if (strength > 80) {
+                cls = "strong";
+            }
+            else if (strength > 60) {
+                cls = "good";
+            }
+            else if (strength >= 30) {
+                cls = "weak";
+            }
+            const requirements = this._fieldData?.params?.requirements || {digits: 8, strength: 40};
+            let tipText = '<p>' + tipData.text + '</p>' + 
+                '<ul><li>' + requirements.digits.formatSequence(tipData.digits, true) + '</li>' + tipData.additional.map(f => '<li>' + f + '</li>').join('') + '</ul>' + 
+                '<div class="password-progress ' + cls + '"><span style="width: ' + strength + '%"></span></div>' +  
+                '<p>' + (strength < requirements.strength ? tipData.error : tipData.success) + '</p>' + 
+                '<a href="#">' + tipData.generate + '</a>';
+            this._passwordTip.Show(tipText);
+
+            this._passwordTip.container.querySelector('a').addEventListener('click', (e) => this._generatePassword());
+        }
+    }
+
+    _generatePassword() {
+        const tipData = this._fieldData?.params?.tip;
+        this.value = String.Password(16);
+        this.value.copyToClipboard().then(() => {
+            App.Alert.Show(tipData.copied, tipData.copied, '#{app-alert-close;Закрыть}');
+        });
+    }
+
+    CalcPasswordStrength() {
+        const pass = this.value;
+        const requirements = this._fieldData?.params?.requirements || {digits: 8, strength: 40};
+
+        if (!pass || pass.length < requirements.digits) {
             return 0;
         }
 
-        // count how many lowercase, uppercase, and digits are in the password 
-        let uc = 0, lc = 0, num = 0, other = 0, j = 0, i = 0;
-        for (i = 0, j = password.length; i < j; i++) {
-            const c = password.substr(i, 1);
-            if (/^[A-Z]/.test(c)) {
-                uc++;
-            } else if (/^[a-z]/.test(c)) {
-                lc++;
-            } else if (/^[0-9]/.test(c)) {
-                num++;
-            } else {
-                other++;
-            }
+        let score = 0;
+        // award every unique letter until 5 repetitions
+        let letters = {};
+        for (let i=0; i<pass.length; i++) {
+            letters[pass[i]] = (letters[pass[i]] || 0) + 1;
+            score += 5.0 / letters[pass[i]];
         }
-    
-        let max = j - 2;
 
-        uc = uc * 100 / max;
-        lc = lc * 100 / max;
-        num = num * 100 / max;
-        other = other * 100 / max;
-
-        let percents = [uc, lc, num, other];
-        for(const p of percents) {
-            if(p === 0) {
-                return 0;
-            }
+        // bonus points for mixing it up
+        let variations = {
+            digits: /\d/.test(pass),
+            lower: /[a-z]/.test(pass),
+            upper: /[A-Z]/.test(pass),
+            nonWords: /\W/.test(pass),
         }
-        
-        return percents.reduce((a, b) => a + b, 0) / percents.length;
+
+        let variationCount = 0;
+        for (let check in variations) {
+            variationCount += (variations[check] == true) ? 1 : 0;
+        }
+        score += (variationCount - 1) * 10;
+
+        if(score > 100) {
+            score = 100;
+        }
+
+        score = parseInt(score);
+
+        return score;
 
     }
 
@@ -178,6 +218,14 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
     }
     get icon() {
         return this._icon;
+    }
+
+    Dispose() {
+        if(this._passwordTip) {
+            this._passwordTip.Dispose();
+            this._passwordTip = null;
+        }
+        super.Dispose();
     }
 
 }

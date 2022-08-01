@@ -1,54 +1,24 @@
-
 Colibri.UI.ToolTip = class extends Colibri.UI.Component {
 
-    static LeftTop = 'left top';
-    static RightTop = 'right top';
-    static RightBottom = 'right bottom';
-    static LeftBottom = 'left bottom';
-    static Left = 'left';
-    static Right = 'right';
+    static LB = 'lb';
+    static RB = 'rb';
+    static LT = 'lt';
+    static RT = 'rt';
 
-
-
-    constructor(name, container) {
-        super(name, container, '<div><em></em></div>');
+    /**
+     * 
+     * @param {string} name Coponent name
+     * @param {*} container Component container|parenbt
+     * @param {Array} orientation coords on container to point to, and orientation around the container, example: rt, rb; rt - container coords, rb - orientation
+     */
+    constructor(name, container, orientation = [Colibri.UI.ToolTip.RT, Colibri.UI.ToolTip.RB], point = null) {
+        super(name, container, '<div />');
 
         this.AddClass('app-tooltip-component');
-        this._closable = true;
-        this.closeOnShadow = true;
 
-        this._closedButton = new Colibri.UI.Pane(this.name + '-close-button-container', this._element);
-        this._closedButton.AddClass('app-component-close-button-container')
-        this._closedButton.shown = this._closable;
+        this._orientation = orientation;
+        this._point = point;
 
-        this._icon = new Colibri.UI.Icon(this.name + '-icon-container', this._closedButton)
-        this._icon.value = Colibri.UI.CloseIcon;
-        this._icon.shown = this._closable;
-
-        this._messageContainer = new Colibri.UI.Pane(this.name + '-message-container', this._element);
-        this._messageContainer.AddClass('app-component-message-container');
-        this._messageContainer.shown = true;
-
-        this._actionContainer = new Colibri.UI.Pane(this.name + '-action-container', this._element);
-        this._actionContainer.AddClass('app-component-action-container');
-        this._actionContainer.shown = true;
-
-        this._icon.AddHandler('Clicked', (event, args) => this.__CloseByClick(event, args));
-        this.AddHandler('ShadowClicked', () => this.closeOnShadow ? this.Hide() : false);
-
-    }
-
-    _registerEvents() {
-        super._registerEvents();
-        this.RegisterEvent('WindowClosed', false, 'Поднимается когда окно закрылось');
-        this.RegisterEvent('WindowContentRendered', false, 'Когда содержание окна отрисовалось');
-    }
-
-    __CloseByClick(event, args) {
-        if (this._closable === true) {
-            this.shown = false;
-            this.Dispatch('WindowClosed', {});
-        }
     }
 
     get orientation() {
@@ -59,198 +29,134 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
         this._orientation = value;
     }
 
-    _setPosition(handleComponent, orientation = Colibri.UI.ToolTip.Right) {
-        // координаты подсказки 
-        const parentBounds = this.parent.container.bounds(true);
-        const tipBounds = this.container.bounds(true);
-        // координаты стрелки на подсказке
-        const arrow = this._element.querySelector(':scope > em');
-        // координаты родителя подсказки
-        const handleComponentBounds = handleComponent.container.bounds(true);
+    _findParent() {
+        const iconParent = this.parent.Children(this.parent.name + '-contextmenu-icon-parent') ?? this.parent;
+        return this.parent.Children(this.parent.name + '-contextmenu-icon-parent') ? iconParent.Children('firstChild') : this.parent;
+    }
 
-        switch (orientation) {
+    _findPointOnParent() {
+        const parent = this._findParent();
+        const ori = this._orientation[0];
+        const parentBounds = parent.container.bounds(true, true);
+        switch(ori) {
             default:
-            case 'left bottom': {
-                // меняю положение превдоэлемента 'before' (стрелка подсказки)
-                this._getSelectorSearch('bottom');
-                // меняю положение подсказки относительно родительского элемента
-                this.styles = {
-                    left: handleComponentBounds.left + 'px',
-                    top: handleComponentBounds.top + handleComponentBounds.height + arrow.offsetHeight + 'px'
+            case Colibri.UI.ToolTip.RB: {
+                return {
+                    left: parentBounds.left + parentBounds.outerWidth, 
+                    top: parentBounds.top + parentBounds.outerHeight
                 };
-                break;
             }
-            case 'right top': {
-                this._getSelectorSearch('top');
-                this.styles = {
-                    left: (((handleComponentBounds.left + handleComponentBounds.width) - tipBounds.width)) + 'px',
-                    top: (handleComponentBounds.top - (tipBounds.height + arrow.offsetHeight)) + 'px'
+            case Colibri.UI.ToolTip.LB: {
+                return {
+                    left: parentBounds.left, 
+                    top: parentBounds.top + parentBounds.outerHeight
                 };
-                break;
             }
-            case 'right bottom': {
-                this._getSelectorSearch('bottom');
-                this.styles = {
-                    left: handleComponentBounds.left + (handleComponentBounds.width - tipBounds.width) + 'px',
-                    top: handleComponentBounds.top + handleComponentBounds.height + arrow.offsetHeight + 'px'
+            case Colibri.UI.ToolTip.LT: {
+                return {
+                    left: parentBounds.left, 
+                    top: parentBounds.top
                 };
-                break;
             }
-            case 'left top': {
-                this._getSelectorSearch('top');
-                this.styles = {
-                    left: handleComponentBounds.left + 'px',
-                    top: handleComponentBounds.top - (tipBounds.height + arrow.offsetHeight) + 'px'
+            case Colibri.UI.ToolTip.RT: {
+                return {
+                    left: parentBounds.left + parentBounds.outerWidth, 
+                    top: parentBounds.top
                 };
-                break;
-            }
-            case 'right': {
-                this._getSelectorSearch('right');
-                this.styles = {
-                    left: handleComponentBounds.left + handleComponentBounds.width + arrow.offsetWidth + 'px',
-                    top: (handleComponentBounds.top + (handleComponentBounds.height / 2)) - ((arrow.offsetHeight / 2) + parseInt(arrow.css('top'))) + 'px',
-                };
-                break;
-            }
-            case 'left': {
-                this._getSelectorSearch('left');
-                this.styles = {
-                    left: (handleComponentBounds.left - (tipBounds.width + arrow.offsetWidth)) + 'px',
-                    top: (handleComponentBounds.top + (handleComponentBounds.height / 2)) - ((arrow.offsetHeight / 2) + parseInt(arrow.css('top'))) + 'px'
-                };
-                break;
             }
         }
     }
 
-    set content(value) {
-        this._messageContainer.value = value;
+    _getOrientationPoint(pointOnParent) {
+        const ori = this._orientation[1];
+        const thisBounds = this.container.bounds(true, true);
+        const parentBounds = this.parent.container.bounds(true, true);
+        switch(ori) {
+            default:
+            case Colibri.UI.ToolTip.RB: {
+                return {
+                    left: pointOnParent.left - parentBounds.left, 
+                    top: pointOnParent.top - parentBounds.top
+                };
+            }
+            case Colibri.UI.ToolTip.LB: {
+                return {
+                    left: pointOnParent.left - thisBounds.outerWidth - parentBounds.left, 
+                    top: pointOnParent.top - parentBounds.top
+                };
+            }
+            case Colibri.UI.ToolTip.LT: {
+                return {
+                    left: pointOnParent.left - thisBounds.outerWidth - parentBounds.left, 
+                    top: pointOnParent.top - thisBounds.outerHeight - parentBounds.top
+                };
+            }
+            case Colibri.UI.ToolTip.RT: {
+                return {
+                    left: pointOnParent.left - parentBounds.left, 
+                    top: pointOnParent.top - thisBounds.outerHeight - parentBounds.top
+                };
+            }
+        }
     }
 
-    get content() {
-        return this._messageContainer;
-    }
-    get actions() {
-        return this._actionContainer;
+    _setPosition() {
+
+        const pointOnParent = this._point || this._findPointOnParent();
+        const point = this._getOrientationPoint(pointOnParent);
+        this.styles = {left: point.left + 'px', top: point.top + 'px'};
+
     }
 
-    get closable() {
-        return this._closable;
-    }
+    _checkPosition() {
+        const thisBounds = this.container.bounds(true, true);
 
-    set closable(value) {
-        this._closable = value === true || value === 'true';
-        this._closedButton.shown = this._closable;
-    }
+        let orientation = [].concat(this._orientation);
+        if(thisBounds.top + thisBounds.outerHeight > window.innerHeight) {
+            // надо двинуть точку на паренте и относительную ориентацию
+            // справа на лево, или слева на право
+            orientation[0] = orientation[0].replaceAll('t', 'b');
+            orientation[1] = orientation[1].replaceAll('b', 't');
+            
+        }
+        if(thisBounds.left + thisBounds.outerWidth > window.innerWidth) {
+            // надо двинуть точку на паренте и относительную ориентацию
+            // справа на лево, или слева на право
+            orientation[0] = orientation[0].replaceAll('r', 'l');
+            orientation[1] = orientation[1].replaceAll('r', 'l');
+        }
 
-    get closeOnShadow() {
-        return this._closeOnShadow;
-    }
+        console.log(orientation, this._orientation)
+        if(this._orientation != orientation) {
+            this._orientation = orientation;
+            this._setPosition();
+        }
 
-    set closeOnShadow(value) {
-        this._closeOnShadow = value === true || value === 'true';
-    }
-
-    get value() {
-        return this._messageContainer.html();
-    }
-    set value(value) {
-        this._messageContainer.html(value);
     }
 
     get shown() {
         return super.shown;
     }
-
     set shown(value) {
         super.shown = value;
-        if (super.shown) {
-            this.BringToFront();
-            this.hasShadow = value;
-        } else {
-            this.SendToBack();
-        }
-        if (this._closeOnShadow) {
-            this.hasShadow = super.shown;
+        this.BringToFront();
+        if(value) {
+            this._element.css('visibility', 'hidden');
+            Colibri.Common.Delay(10).then(() => {
+                this._setPosition();
+                this._element.css('visibility', 'visible');
+            });    
         }
     }
 
-    // метод для изменения свойств превдоэлемента 'before'
-    _getSelectorSearch(position, top, right, bottom, left) {
-
-        this.RemoveClass('top').RemoveClass('left').RemoveClass('right').RemoveClass('bottom');
-        this.AddClass(position);
-
-
-        const em = this._element.querySelector(':scope > em');
-        const css = em.css();
-        if (position === 'left') {
-            em.css({
-                'top': parseInt(css['border-top-width']) / 3 + 'px',
-                'right': parseInt(css['border-top-width']) * -1 + 'px'
-            })
+    Show(text, parent = null) {
+        if(parent) {
+            this.parent = parent;
         }
-        if (position === 'right') {
-            console.log('inside right===>');
-            em.css({
-                'top': parseInt(css['border-top-width']) / 3 + 'px',
-                'left': parseInt(css['border-top-width']) * -1 + 'px'
-            });
-            console.log('===>', em.css(['top']));
-        }
-        if (position === 'bottom') {
-            em.css({
-                'top': parseInt(css['border-bottom-width']) * -1 + 'px'
-                // 'right': parseInt(css['border-bottom-width'])/3 + 'px'
-            });
-        }
-        if (position === 'top') {
-            em.css({
-                // 'right': parseInt(css['border-top-width'])*2 /3 + 'px',
-                'bottom': parseInt(css['border-top-width']) * -1 + 'px'
-            });
-        }
-
-        return;
-    }
-
-    Show(handleComponent, orientation = Colibri.UI.ToolTip.Right, message = '', buttons = [], closable = true, closeOnShadow = true) {
-
-        return new Promise((resolve, reject) => {
-
-            this.closable = closable;
-            this.closeOnShadow = closeOnShadow;
-
-            if (message) {
-                this._messageContainer.Clear();
-                this._messageContainer.container.html(message);
-            }
-
-            if (buttons.length > 0) {
-                this._actionContainer.Clear();
-                buttons.forEach((button) => {
-                    const b = new Colibri.UI.Button(button.name, this._actionContainer);
-                    b.value = button.title;
-                    b.shown = true;
-                    if (button.class) {
-                        b.AddClass(button.class);
-                    }
-                    b.AddHandler('Clicked', (event, args) => {
-                        resolve(b.name);
-                    });
-                });
-            }
-
+        this.value = text;
+        if(!this.shown) {
             this.shown = true;
-            if (super.shown) {
-                this._element.css('visibility', 'hidden');
-                Colibri.Common.Delay(100).then(() => {
-                    this._setPosition(handleComponent, orientation);
-                    this._element.css('visibility', 'visible');
-                });
-            }
-        });
-
+        }
     }
 
 }
