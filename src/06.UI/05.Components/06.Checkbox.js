@@ -31,6 +31,16 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
             args.domEvent.preventDefault();
             return false;
         });
+        this.AddHandler('KeyUp', (event, args) => {
+            if(args.domEvent.code === 'Space') {
+                this.Dispatch('Clicked', args);
+            }
+            args.domEvent.stopPropagation();
+            args.domEvent.preventDefault();
+            return false;
+        });
+        this._checkIcon.AddHandler('ReceiveFocus', (event, args) => this.Dispath('ReceiveFocus', args));
+        this._checkIcon.AddHandler('LoosedFocus', (event, args) => this.Dispath('LoosedFocus', args));
     }
 
     /**
@@ -145,6 +155,29 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
             this._placeholder = new Colibri.UI.TextSpan(this.name + '_placeholder', this);
             this._placeholder.shown = true;
             this._placeholder.value = value;
+        }
+    }
+
+    /**
+     * Индекс табуляции
+     * @todo проверить правильно ли получаю tabIndex и исправить
+     * @type {number}
+     */
+    get tabIndex() {
+        if (this._placeholder) {
+            return this._placeholder && this._placeholder.tabIndex;
+        }
+        else if(this._checkIcon) {
+            return this._checkIcon && this._checkIcon.tabIndex;
+        }
+        
+    }
+    set tabIndex(value) {
+        if (this._placeholder) {
+            this._placeholder.tabIndex = value === true ? Colibri.UI.tabIndex++ : value;
+        }
+        else if(this._checkIcon) {
+            this._checkIcon.tabIndex = value === true ? Colibri.UI.tabIndex++ : value;
         }
     }
 

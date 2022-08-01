@@ -8,6 +8,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         this._input = contentContainer.container.append(Element.create('input', {type: 'password', name: this._name + '-input'}));
 
         this.RegisterEvent('PasswordValidated', false, 'Когда сила пароля проверена');
+        this.RegisterEvent('PasswordGenerated', false, 'Когда пароль сгенерирован');
 
         this._input.addEventListener('change', (e) => this.Dispatch('Changed', {domEvent: e}));
         this._input.addEventListener('keyup', (e) => this.Dispatch('KeyUp', {domEvent: e}));
@@ -51,10 +52,10 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         
 
         if(this._fieldData?.params?.tip) {
-            if(!this._passwordTip) {
-                this._passwordTip = new Colibri.UI.ToolTip(this.name + '_tip', this.Children(this.name + '-content'), [Colibri.UI.ToolTip.RT, Colibri.UI.ToolTip.RB]);
-            }
             const tipData = this._fieldData?.params?.tip;
+            if(!this._passwordTip) {
+                this._passwordTip = new Colibri.UI.ToolTip(this.name + '_tip', this.container.closest('[data-object-name="' + tipData.parent + '"]').tag('component').Children(tipData.parent + '-content'), [Colibri.UI.ToolTip.RT, Colibri.UI.ToolTip.RB]);
+            }
 
             let cls = '';
             if (strength > 80) {
@@ -82,8 +83,9 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         const tipData = this._fieldData?.params?.tip;
         this.value = String.Password(16);
         this.value.copyToClipboard().then(() => {
-            App.Alert.Show(tipData.copied, tipData.copied, '#{app-alert-close;Закрыть}');
+            App.Notices.Add(new Colibri.UI.Notice(tipData.copied, Colibri.UI.Notice.Success));
         });
+        this.Dispatch('PasswordValidated', {value: this.value});
     }
 
     CalcPasswordStrength() {

@@ -36,18 +36,19 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
         super.shown = value;
         
         this.container.hideShowProcess(() => {
-            
-            const bounds = this.parent.container.bounds();
-            this.top = bounds.top + bounds.outerHeight;
-            this.left = bounds.left;
-            this.width = bounds.outerWidth;
-            if(value) {
-                this.AddClass(this.parent.name + '-selector-popup');
-                this.BringToFront();
-            } else {
-                this.RemoveClass(this.parent.name + '-selector-popup');
-                this.SendToBack();
-            }    
+            if(this.parent) {
+                const bounds = this.parent.container.bounds();
+                this.top = bounds.top + bounds.outerHeight;
+                this.left = bounds.left;
+                this.width = bounds.outerWidth;    
+                if(value) {
+                    this.AddClass(this.parent.name + '-selector-popup');
+                    this.BringToFront();
+                } else {
+                    this.RemoveClass(this.parent.name + '-selector-popup');
+                    this.SendToBack();
+                }    
+            }
             this.hasShadow = value;
             this.Dispatch('VisibilityChanged', {state: true});
             if(this._selected.length && this._selected[0] instanceof Colibri.UI.List.Item) {

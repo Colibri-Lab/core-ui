@@ -3,6 +3,7 @@ Colibri.UI.Icon = class extends Colibri.UI.Component {
     constructor(name, container) {
         super(name, container, '<span />');
         this.AddClass('app-component-icon');
+        
     }
 
     get icon() {
@@ -30,4 +31,5 @@ Colibri.UI.Icon = class extends Colibri.UI.Component {
         }
         return el.attr('fill');
     }
+    
 }

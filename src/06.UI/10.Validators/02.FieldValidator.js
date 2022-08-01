@@ -13,6 +13,7 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('Validated', false, 'Когда поле валидировано');
         this._form = formComponent;
         this._field = fieldComponent;
+        fieldComponent.container.tag('validator', this);
         this._field.AddHandler(['Changed', 'KeyUp', 'Pasted'], (event, args) => {
             const messages = !(event.sender._fieldData?.params && event.sender._fieldData.params.messages === false);
             this.Validate(messages);

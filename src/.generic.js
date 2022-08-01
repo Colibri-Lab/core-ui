@@ -743,10 +743,15 @@ String.GUID = function() {
 };
 
 String.Password = function(l) {
-    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%^&*()";
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const charset2 = '!@#%^&*()';
     let retVal = "";
     for (let i = 0, n = charset.length; i < l; ++i) {
         retVal += charset.charAt(Math.floor(Math.random() * n));
+    }
+    for(let i = 0, n2 = charset2.length, n = retVal.length; i < retVal.length / 4; i++) {
+        const index = Math.floor(Math.random() * n);
+        retVal = retVal.substring(0, index - 1) + charset2.charAt(Math.floor(Math.random() * n2)) + retVal.substring(index);
     }
     return retVal;
 }

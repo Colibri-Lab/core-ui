@@ -887,8 +887,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return this._element.attr('tabIndex');
     }
     set tabIndex(value) {
-        value = value === 'true' || value === true;
-        this._element.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
+        this._element.attr('tabIndex', value === 'true' || value === true ? Colibri.UI.tabIndex++ : value);
     }
 
     get next() {
