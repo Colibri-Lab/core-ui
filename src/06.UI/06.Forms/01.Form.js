@@ -8,6 +8,13 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         this._download = null;
         this._shuffleFieldNames = false;
         this._value = {};
+
+        this._element.addEventListener('submit', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        });
+
     }
 
     _registerEvents() {

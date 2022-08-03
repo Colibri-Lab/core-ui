@@ -1300,6 +1300,7 @@ Element.prototype.wrapWith = function(element) {
 Element.prototype.hideElement = function() {
     this.dataset.shown = this.css('display');
     this.css('display', 'none');
+    return this;
 }
 
 Element.prototype.showElement = function(element) {
@@ -1308,6 +1309,7 @@ Element.prototype.showElement = function(element) {
     } else {
         this.css('display', 'block');
     }
+    return this;
 }
 
 /**

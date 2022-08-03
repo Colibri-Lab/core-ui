@@ -254,6 +254,10 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
 
         this.handleVisibilityChange = true;
         this.AddHandler('VisibilityChanged', (event, args) => {
+            if(!this.parent) {
+                return;
+            }
+
             const bounds = this.parent.container.bounds();
             const b = this.container.bounds(true, true);
             if(!args.state) {
@@ -263,7 +267,11 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
 
         });
 
+        this._headerText.addEventListener('mousedown', (e) => {
+            this.parent._skipLooseFocus = true;
+        });
         this._headerText.addEventListener('click', (e) => {
+            this.parent._skipLooseFocus = false;
             this.ToggleMode();
             e.stopPropagation();
             e.preventDefault();
@@ -352,7 +360,7 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
                 this.SendToBack();
             }
             this.hasShadow = value;
-            this.Dispatch('VisibilityChanged', {state: true});
+            this.Dispatch('VisibilityChanged', {state: false});
         });
     }
 
@@ -415,6 +423,7 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
             this._yearPicker.shown = true;
         }
         this._showPickerTitle();
+        this.Dispatch('VisibilityChanged', {state: this._visibilityState});
     }
 
     _showPickerTitle() {

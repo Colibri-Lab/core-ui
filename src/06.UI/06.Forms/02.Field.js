@@ -112,7 +112,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             if(this._parentField) {
                 this._parentField.Dispatch(event.name, Object.assign({component: event.sender}, args));
             }
-            args.domEvent.stopPropagation();
+            args && args.domEvent && args.domEvent.stopPropagation();
             return true;
         });
 
