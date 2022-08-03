@@ -6,7 +6,11 @@ Colibri.UI.Forms.TextArea = class extends Colibri.UI.Forms.Field {
 
         const contentContainer = this.contentContainer;
 
-        this._input = contentContainer.container.append(Element.create('textarea', {name: this._name + '-input'}));
+        const params = {name: (this.form.shuffleFieldNames ? 'field-' + Date.Mc() : this._name + '-input')};
+        if(this.form.shuffleFieldNames) {
+            params.autocomplete = 'off';
+        }
+        this._input = contentContainer.container.append(Element.create('textarea', params));
 
         this.maxlength = this._fieldData?.params?.maxlength ?? null;
         this.value = this._fieldData?.default ?? '';

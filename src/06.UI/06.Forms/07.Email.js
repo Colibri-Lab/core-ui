@@ -8,7 +8,11 @@ Colibri.UI.Forms.Email = class extends Colibri.UI.Forms.Field {
 
         this._validationText = '#{app-email-validation-message;Пожалуйста, введите корректный email}';
 
-        this._input = contentContainer.container.append(Element.create('input', {type: 'text', name: this._name + '-input'}));
+        const params = {type: 'number', name: (this.form.shuffleFieldNames ? 'field-' + Date.Mc() : this._name + '-input')};
+        if(this.form.shuffleFieldNames) {
+            params.autocomplete = 'off';
+        }
+        this._input = contentContainer.container.append(Element.create('input', params));
         this._input.addEventListener('change', (e) => this.Dispatch('Changed', {domEvent: e}));
         this._input.addEventListener('paste', (e) => Colibri.Common.Delay(100).then(() => this.Dispatch('Pasted', { domEvent: e })));
         this._input.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', {domEvent: e}));

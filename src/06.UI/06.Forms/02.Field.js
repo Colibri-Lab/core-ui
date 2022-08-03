@@ -112,6 +112,8 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             if(this._parentField) {
                 this._parentField.Dispatch(event.name, Object.assign({component: event.sender}, args));
             }
+            args.domEvent.stopPropagation();
+            return true;
         });
 
         this.AddHandler('ReceiveFocus', (event, args) => this.AddClass('-focused'));
@@ -219,6 +221,11 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
     set root(value) {
         this._root = value;
+    }
+
+    get form() {
+        const formElement = this._element.closest('.app-form-component');
+        return formElement ? formElement.tag('component') : null;
     }
 
 

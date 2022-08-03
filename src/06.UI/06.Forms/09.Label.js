@@ -24,8 +24,7 @@ Colibri.UI.Forms.Label = class extends Colibri.UI.Forms.Field {
 
 
     Focus() {
-        this._input.focus();
-        this._input.select();
+        // do nothing
     }
     get value() {
         return this._input.html();

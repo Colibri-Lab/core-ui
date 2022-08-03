@@ -55,7 +55,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         this._registerEvents();
 
-        this.ProcessChildren(element.childNodes, null, false, this);
+        this.ProcessChildren(element.childNodes, null, false);
 
         // вводим в DOM
         this._container && this._container.append(this._element);
@@ -88,7 +88,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
-    CreateComponentClass(element, parent, rootNameSpaceObject) {
+    CreateComponentClass(element, parent) {
         let comp = null;
         try {
             comp = element.getAttribute('Component') || element.getAttribute('component') || element.tagName; 
@@ -113,7 +113,15 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         // и найти в нем парент значение
         // найти так же и у парента и в нем тоже поискать, а то некрасиво
         
-        let namespace = rootNameSpaceObject?.namespace?.split('.');
+        let namespace = '';
+        if(parent instanceof Colibri.UI.Component) {
+            namespace = parent.namespace;
+        }
+        else {
+            namespace = parent?.closest('[namespace]')?.attr('namespace') ?? '';
+        }
+        namespace = namespace.split('.');
+        
         if(namespace) {
             while(namespace.length > 0) {
                 try {
@@ -171,7 +179,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return null;
     }
 
-    ProcessChildren(children, parent, dontDispatch = false, root = null) {
+    ProcessChildren(children, parent, dontDispatch = false) {
         
         if (!parent) {
             parent = this._element;
@@ -179,10 +187,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         for (let i = 0; i < children.length; i++) {
             const element = children[i];
-            const componentClass = this.CreateComponentClass(element, parent, root);
+            const componentClass = this.CreateComponentClass(element, parent);
             if(componentClass) {
                 let component = this.CreateComponent(componentClass, element, parent);
-                component && component.ProcessChildren(element.childNodes, component.container, root);
+                component && component.ProcessChildren(element.childNodes, component.container);
             }
             else if(element.tagName) {
                 if(element.tagName == 'params') {
@@ -202,16 +210,16 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 else if(element.tagName.indexOf('component-') !== -1) {
                     const tagName = element.tagName.substr('component-'.length);
                     if(parent instanceof Colibri.UI.Component) {
-                        this.ProcessChildren(element.childNodes, parent[tagName], true, root);
+                        this.ProcessChildren(element.childNodes, parent[tagName], true);
                     }
                     else {
-                        this.ProcessChildren(element.childNodes, this[tagName], true, root);
+                        this.ProcessChildren(element.childNodes, this[tagName], true);
                     }
                 }
                 else {
                     const e = element.clone(element.attr('xmlns') ? element.attr('xmlns') : parent.attr('xmlns'));
                     parent.append(e);
-                    this.ProcessChildren(element.childNodes, e, true, root);
+                    this.ProcessChildren(element.childNodes, e, true);
                 }
             } 
             else {
@@ -471,7 +479,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     get namespace() {
-        return this._element.attr('namespace') ?? null;
+        return this._element.attr('namespace') ?? this._element.closest('[namespace]')?.attr('namespace') ?? null;
+    }
+
+    set namespace(value) {
+        this._element.attr('namespace', value);
     }
 
     get hasContextMenu() {

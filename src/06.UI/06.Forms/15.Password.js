@@ -5,7 +5,11 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         this.AddClass('app-component-password-field');
 
         const contentContainer = this.contentContainer;
-        this._input = contentContainer.container.append(Element.create('input', {type: 'password', name: this._name + '-input'}));
+        const params = {type: 'password', name: (this.form.shuffleFieldNames ? 'field-' + Date.Mc() : this._name + '-input')};
+        if(this.form.shuffleFieldNames) {
+            params.autocomplete = 'new-password';
+        }
+        this._input = contentContainer.container.append(Element.create('input', params));
 
         this.RegisterEvent('PasswordValidated', false, 'Когда сила пароля проверена');
         this.RegisterEvent('PasswordGenerated', false, 'Когда пароль сгенерирован');

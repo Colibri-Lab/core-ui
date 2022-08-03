@@ -6,6 +6,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         this.AddClass('app-form-component');
         this._fields = {};
         this._download = null;
+        this._shuffleFieldNames = false;
         this._value = {};
     }
 
@@ -151,6 +152,17 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         data = this._prepareOneOf(data);
 
         return data;
+    }
+
+    set shuffleFieldNames(value) {
+        this._shuffleFieldNames = value === true || value === 'true';
+        if(this._shuffleFieldNames) {
+            this._element.attr('autocomplete', 'off');
+        }
+    }
+
+    get shuffleFieldNames() {
+        return this._shuffleFieldNames;
     }
 
     _prepareOneOf(data) {
