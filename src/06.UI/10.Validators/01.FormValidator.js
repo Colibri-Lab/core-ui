@@ -66,7 +66,12 @@ Colibri.UI.FormValidator = class extends Colibri.Events.Dispatcher {
     }
 
     Invalidate(field, message, className = 'app-validate-error') {
-        const validator = this._form.FindField(field).container.tag('validator');
+        const fieldObject = this._form.FindField(field);
+        if(!fieldObject) {
+            return;
+        }
+
+        const validator = fieldObject.container.tag('validator');
         validator.Invalidate(message, className);
     }
 

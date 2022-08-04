@@ -98,15 +98,8 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
 
     Invalidate(message, className) {
         this._validated = false;
-        if (this._validators.length > 0) {
-            this._validators.forEach((validator) => {
-                validator.Invalidate(message, className);
-            });
-        }
-        else {
-            this._field.message = message;
-            this._field.AddClass(className);    
-        }
+        this._field.message = message;
+        this._field.AddClass(className);    
     }
 
     get validated() {
