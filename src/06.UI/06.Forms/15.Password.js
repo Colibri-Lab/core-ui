@@ -58,7 +58,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         if(this._fieldData?.params?.tip) {
             const tipData = this._fieldData?.params?.tip;
             if(!this._passwordTip) {
-                this._passwordTip = new Colibri.UI.ToolTip(this.name + '_tip', this.container.closest('[data-object-name="' + tipData.parent + '"]').tag('component').Children(tipData.parent + '-content'), [Colibri.UI.ToolTip.RT, Colibri.UI.ToolTip.RB]);
+                this._passwordTip = new Colibri.UI.ToolTip(this.name + '_tip', tipData.parent ? this.container.closest('[data-object-name="' + tipData.parent + '"]').tag('component').Children(tipData.parent + '-content') : this.Children(this.name + '-content'), [Colibri.UI.ToolTip.RT, Colibri.UI.ToolTip.RB]);
             }
 
             let cls = '';
