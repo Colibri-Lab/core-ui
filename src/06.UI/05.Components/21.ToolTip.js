@@ -17,6 +17,7 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
         this.AddClass('app-tooltip-component');
 
         this._orientation = orientation;
+        this._element.data('orientation', orientation);
         this._point = point;
 
     }
@@ -27,6 +28,7 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
 
     set orientation(value) {
         this._orientation = value;
+        this._element.data('orientation', value);
     }
 
     _findParent() {

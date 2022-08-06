@@ -58,7 +58,8 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
 
         if (this._validators.length > 0) {
             this._validators.forEach((validator) => {
-                this._validated = this._validated && validator.Validate(messages, className);
+                const v = validator.Validate(messages, className);
+                this._validated = this._validated && v;
             });
         }
 

@@ -38,6 +38,26 @@
         left: -10px;
     }
 
+    &[data-orientation*="lt"] {
+        margin-left: 0px;
+        margin-right: 15px;
+
+        &:before {
+            content: '';
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 9px 0 10px 9px;
+            border-color: transparent transparent transparent #ffffff;
+            position: absolute;
+            top: 10px;
+            right: -9px;
+            left: unset;
+    
+        }
+    }
+        
+
     p, ul, div {
         margin: 0px 0px 10px 0px;
         &:last-child {
