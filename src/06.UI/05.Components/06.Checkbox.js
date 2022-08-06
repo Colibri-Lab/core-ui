@@ -39,8 +39,8 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
             args.domEvent.preventDefault();
             return false;
         });
-        this._checkIcon.AddHandler('ReceiveFocus', (event, args) => this.Dispath('ReceiveFocus', args));
-        this._checkIcon.AddHandler('LoosedFocus', (event, args) => this.Dispath('LoosedFocus', args));
+        this._checkIcon.AddHandler('ReceiveFocus', (event, args) => this.Dispatch('ReceiveFocus', args));
+        this._checkIcon.AddHandler('LoosedFocus', (event, args) => this.Dispatch('LoosedFocus', args));
     }
 
     /**
