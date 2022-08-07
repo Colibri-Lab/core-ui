@@ -9,7 +9,7 @@ Colibri.Web.Request = class extends Destructable {
      * приоритет на location.hash
      */
     get uri() {
-        let h = location.hash ? location.hash.substr(1) : location.pathname;
+        let h = location.hash ? location.hash.substring(1) : location.pathname;
         if(h.indexOf('?') !== -1) {
             h = h.split('?')[0];
         }
@@ -17,11 +17,19 @@ Colibri.Web.Request = class extends Destructable {
     }
 
     /**
+     * Возвращает путь запроса 
+     * приоритет на location.hash
+     */
+    get path() {
+        return this.uri.split('/').filter(v => v != '');
+    }
+
+    /**
      * Возвращает параметры запроса
      * приоритет на location.hash
      */
      get query() {
-        let h = location.hash ? location.hash.substr(1) : location.search;
+        let h = location.hash ? location.hash.substring(1) : location.search;
         if(h.indexOf('?') !== -1) {
             h = h.split('?')[1];
             if(h) {
@@ -35,7 +43,7 @@ Colibri.Web.Request = class extends Destructable {
      * Возвращает путь в hash
      */
     get hash() {
-        let h = location.hash ? location.hash.substr(1) : '/';
+        let h = location.hash ? location.hash.substring(1) : '/';
         if(h.indexOf('?') !== -1) {
             h = h.split('?')[0];
         }

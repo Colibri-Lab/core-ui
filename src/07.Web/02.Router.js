@@ -6,6 +6,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
         this._type = type;
         this._history = [];
         this._url = null;
+        this._path = null;
         this._options = {};
         this._routeHandlers = [];
 
@@ -45,6 +46,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
     _setCurrentUrl(url, options) {
 
         this._url = url;
+        this._path = url.split('/').filter(v => v != '');
         this._options = options;
         this._history.push({url: this._url, options: this._options});
 
@@ -77,7 +79,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
                 const handlers = this._routeHandlers[pattern];
                 for(let j=0; j < handlers.length; j++) {
                     const handler = handlers[j];
-                    if(handler(this._url, this._options) === false) {
+                    if(handler(this._url, this._options, this._path) === false) {
                         return false;
                     }
                 }
