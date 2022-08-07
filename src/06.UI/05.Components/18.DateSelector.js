@@ -360,7 +360,9 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
                 this.SendToBack();
             }
             this.hasShadow = value;
-            this.Dispatch('VisibilityChanged', {state: false});
+            if(this.ContainsClass('-up')) {
+                this.Dispatch('VisibilityChanged', {state: false});
+            }    
         });
     }
 
@@ -423,7 +425,9 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
             this._yearPicker.shown = true;
         }
         this._showPickerTitle();
-        this.Dispatch('VisibilityChanged', {state: this._visibilityState});
+        if(this.ContainsClass('-up')) {
+            this.Dispatch('VisibilityChanged', {state: false});
+        }
     }
 
     _showPickerTitle() {

@@ -38,8 +38,8 @@ Colibri.UI.Forms.Checkbox = class extends Colibri.UI.Forms.Field {
             args.domEvent.preventDefault();
             return false;
         });
-        this._input.AddHandler('ReceiveFocus', (event, args) => this.Dispath('ReceiveFocus', args));
-        this._input.AddHandler('LoosedFocus', (event, args) => this.Dispath('LoosedFocus', args));
+        this._input.AddHandler('ReceiveFocus', (event, args) => this.Dispatch('ReceiveFocus', args));
+        this._input.AddHandler('LoosedFocus', (event, args) => this.Dispatch('LoosedFocus', args));
 
         this._label.AddHandler('Clicked', (event, args) => {
             this._input.Dispatch('Clicked', args);

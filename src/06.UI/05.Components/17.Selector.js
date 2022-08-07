@@ -188,7 +188,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         return false;
     }
 
-    __Clicked(event, args) {
+    __Clicked(event, args) { 
         this.Focus();
         args.domEvent.stopPropagation();
         args.domEvent.preventDefault();
