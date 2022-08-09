@@ -6,6 +6,7 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
     _validated = true;
     _message = '';
 
+    _validating = false;
     _validators = [];
 
     constructor(fieldComponent, formComponent) {
