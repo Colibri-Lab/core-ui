@@ -1245,14 +1245,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @returns {Colibri.UI.Component}
      */
     Find(path) {
-        let p = this;
-        let splitedPath = path.split('/');
-        splitedPath.forEach(function(v) {
-            p = p.Children(v);
-            if (!p)
-                return false;
-        });
-        return p;
+        return Colibri.UI.Find(path, this);
     }
 
     /**

@@ -30,10 +30,10 @@ Colibri.UI = class {
      * @param {string} componentPath путь к компоненту, например: имя/имя/имя
      * @returns Colibri.UI.Component компонент или наследники
      */
-    static Find(componentPath) {
+    static Find(componentPath, parent = null) {
         const path = componentPath.split('/');
         const query = '[data-object-name="' + path.join('"] [data-object-name="') + '"]';
-        const component = document.querySelector(query);
+        const component = (parent ? parent._element : document).querySelector(query);
         if(!component) {
             return null;
         }
