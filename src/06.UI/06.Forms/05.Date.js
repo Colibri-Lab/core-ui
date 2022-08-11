@@ -18,6 +18,9 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
             return false;
         });
 
+        this._input.AddHandler('PopupOpened', (event, args) => this.AddClass('-opened'));
+        this._input.AddHandler('PopupClosed', (event, args) => this.RemoveClass('-opened'));
+
         if(this._fieldData?.params?.readonly === undefined) {
             this.readonly = false;    
         }

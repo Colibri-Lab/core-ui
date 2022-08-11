@@ -9,7 +9,6 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         this._hiddenElement = Element.create('input', {type: 'date', class: 'ui-hidden', name: name});
         this._viewElement = Element.create('input', {type: 'text', name: name + '_view'});
 
-
         this._icon = new Colibri.UI.Icon('icon', this);
         this._icon.value = Colibri.UI.CalendarIcon;
         this._icon.shown = true;
@@ -83,6 +82,8 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'Когда значение изменилось');
+        this.RegisterEvent('PopupOpened', false, 'Попап открыт');
+        this.RegisterEvent('PopupClosed', false, 'Попап закрыт');
     }
 
     _showValue() {
@@ -117,17 +118,20 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         this._showValue();
         this.ToggleView(true);
         this._hiddenElement.focus();
-
+        this.Dispatch('PopupOpened', {});
 
     }
 
     Close() {
+        
         this.ToggleView(false);
         if(this._popup) {
             this._popup.Dispose();
             this._popup = null;
         }
         this._viewElement.focus();
+
+        this.Dispatch('PopupClosed', {});
     }
 
     Focus() {

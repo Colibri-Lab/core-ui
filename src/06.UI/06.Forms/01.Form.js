@@ -31,6 +31,13 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         this.AddHandler('Changed', (event, args) => this._hideAndShow());
     }
 
+    _setFilledMark() {
+        Object.forEach(this._fields, (name, fieldData) => {
+            const fieldComponent = this.Children(name);
+            fieldComponent._setFilledMark();
+        });
+    }
+
     _hideAndShow() {
 
         const data = this.value;
@@ -84,6 +91,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         this.Clear();
         this._renderFields();
         this._hideAndShow();
+        this._setFilledMark();
     }
     get fields() {
         return this._fields;
@@ -141,6 +149,8 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
         this._hideAndShow();
         this.Dispatch('Validated');
+        this._setFilledMark();
+
     }
 
     get value() {

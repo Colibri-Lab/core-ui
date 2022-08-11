@@ -108,6 +108,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this.AddHandler(['Changed', 'KeyUp', 'KeyDown'], (event, args) => {
             if(event.name == 'Changed') {
                 this._applyRuntimes();
+                this._setFilledMark();
             }
             if(this._parentField) {
                 this._parentField.Dispatch(event.name, Object.assign({component: event.sender}, args));
@@ -157,6 +158,15 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         if(runtime) {
             runtime = eval(runtime);
             runtime(this, this.root);
+        }
+    }
+
+    _setFilledMark() {
+        if(this.value) {
+            this.AddClass('-filled');
+        }
+        else {
+            this.RemoveClass('-filled');
         }
     }
 
