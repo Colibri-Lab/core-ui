@@ -182,6 +182,10 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
         return this._url;
     }
 
+    get path() {
+        return this._path;
+    }
+
     get options() {
         return this._options;
     }
