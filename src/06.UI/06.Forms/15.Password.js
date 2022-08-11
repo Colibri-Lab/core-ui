@@ -116,8 +116,6 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
             nonWords: /\W/.test(pass),
         }
 
-        console.log(variations);
-
         let variationCount = 0;
         for (let check in variations) {
             variationCount += (variations[check] == true) ? 1 : 0;
@@ -129,7 +127,6 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         }
 
         score = parseInt(score);
-        console.log(score);
 
         return score;
 
