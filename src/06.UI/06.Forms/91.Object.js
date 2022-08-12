@@ -227,8 +227,11 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     }
 
-    Fields(name) {
-        return this.contentContainer ? this.contentContainer.Children(name) : {};
+    Fields(name = null) {
+        if(!this.contentContainer) {
+            return [];
+        }
+        return name ? this.contentContainer.Children(name) : this.contentContainer.Children();
     }
 
     ForEveryField(callback) {

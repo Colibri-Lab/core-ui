@@ -6,6 +6,7 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
     _validated = true;
     _message = '';
 
+    _className = null;
     _validating = false;
     _validators = [];
 
@@ -16,8 +17,9 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
         this._field = fieldComponent;
         fieldComponent.container.tag('validator', this);
         this._field.AddHandler(['Changed', 'KeyUp', 'Pasted'], (event, args) => {
+            this.Clear();
             const messages = !(event.sender._fieldData?.params && event.sender._fieldData.params.messages === false);
-            this.Validate(messages);
+            this.Validate(messages, this._className);
             this.Dispatch('Validated', {messages: messages});
         });
         this._field.AddHandler('FieldsRendered', (event, args) => {
@@ -40,19 +42,19 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
     }
 
     Clear(className = null) {
+        this._validated = true;
+        this._message = '';
         this._field.message = '';
         className && this._field.RemoveClass(className);
+        this._className && this._field.RemoveClass(this._className);
 
-        if (this._field?.Fields) {
-            Object.forEach(this._field.Fields(),
-                (name, component) => {
-                    className && component.RemoveClass(className);
-                    component.field?.message && (component.field.message = '');
-                })
+        if (this._validators.length > 0) {
+            this._validators.forEach(validator => validator.Clear());
         }
     }
 
     Validate(messages = true, className = null) {
+        this._className = className;
         // валидируем и потом выставляем поля validated и message
         let message;
         this._validated = true;

@@ -49,13 +49,19 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
             this.eyeIcon = this._fieldData?.params?.eyeicon;
         }
 
-        this.AddHandler(['Changed', 'KeyUp', 'Paste'], (event, args) => {
+        this.AddHandler(['Changed', 'KeyUp', 'Paste', 'ReceiveFocus'], (event, args) => {
             const strength = this.CalcPasswordStrength();
             this._showPasswordTip(strength);
             this.Dispatch('PasswordValidated', {strength: strength});
         });
 
 
+    }
+
+    _hidePasswordTip() {
+        if(this._passwordTip) {
+            this._passwordTip.Hide();
+        }
     }
 
     _showPasswordTip(strength) {
@@ -66,7 +72,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
                 this._passwordTip = new Colibri.UI.ToolTip(this.name + '_tip', tipData.parent ? this.container.closest('[data-object-name="' + tipData.parent + '"]').tag('component').Children(tipData.parent + '-content') : this.Children(this.name + '-content'), tipData.orientation ? tipData.orientation : [Colibri.UI.ToolTip.RT, Colibri.UI.ToolTip.RB]);
             }
 
-            let cls = '';
+            let cls = 'bad';
             if (strength > 80) {
                 cls = "strong";
             }
@@ -82,19 +88,32 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
                 '<div class="password-progress ' + cls + '"><span style="width: ' + strength + '%"></span></div>' +  
                 '<p>' + (strength < requirements.strength ? tipData.error : tipData.success) + '</p>' + 
                 '<a href="#">' + tipData.generate + '</a>';
-            this._passwordTip.Show(tipText);
+            
+            if(cls != 'weak' && cls != 'bad') {
+                this._hidePasswordTip();
+            }
+            else {
+                this._passwordTip.Show(tipText);
+            }
 
-            this._passwordTip.container.querySelector('a').addEventListener('click', (e) => this._generatePassword());
+            this._passwordTip.container.querySelector('a').addEventListener('click', (e) => this._generatePassword(e));
+
+            
+            
         }
     }
 
-    _generatePassword() {
+    _generatePassword(e) {
         const tipData = this._fieldData?.params?.tip;
         this.value = String.Password(16);
         this.value.copyToClipboard().then(() => {
             App.Notices.Add(new Colibri.UI.Notice(tipData.copied, Colibri.UI.Notice.Success));
         });
+        this.Dispatch('Changed');
         this.Dispatch('PasswordValidated', {value: this.value});
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
     }
 
     CalcPasswordStrength() {

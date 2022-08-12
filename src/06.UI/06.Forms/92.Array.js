@@ -127,6 +127,9 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     }
 
     Fields(name) {
+        if(!this.contentContainer) {
+            return [];
+        }
 
         if(name) {
             return this.contentContainer.Children(name);

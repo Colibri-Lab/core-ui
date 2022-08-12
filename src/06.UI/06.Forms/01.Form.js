@@ -97,6 +97,10 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         return this._fields;
     }
 
+    Fields() {
+        return this.Children();
+    }
+
     set value(value) {
 
         

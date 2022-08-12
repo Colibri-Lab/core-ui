@@ -172,8 +172,11 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
     }
 
-    Fields(name) {
-        return this.contentContainer.Children(name);
+    Fields(name = null) {
+        if(!this.contentContainer) {
+            return [];
+        }
+        return name ? this.contentContainer.Children(name) : this.contentContainer.Children();
     }
 
     ForEveryField(callback) {

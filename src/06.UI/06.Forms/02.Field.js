@@ -162,6 +162,10 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     }
 
     _setFilledMark() {
+        if(this._fieldData.fields) {
+            return;
+        }
+
         if(this.value) {
             this.AddClass('-filled');
         }
