@@ -20,7 +20,6 @@ Colibri.UI.SimpleFormValidator = class {
     }
 
     __validateField(field) {
-        console.log('validation')
         field.message = '';
         field.RemoveClass('app-validate-error');
         field.field.params && (field.field.params.validated = true);
