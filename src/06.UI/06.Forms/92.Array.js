@@ -53,11 +53,24 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         object.enabled = this.enabled;
         if(this._fieldData.params && this._fieldData.params.addlink !== null) {
             object.AddRemoveLink(() => {
+                Object.forEach(this.Fields(), (name, field) => {
+                    field.Dispatch('Changed');
+                });
                 this.Dispatch('Changed');
             });
         }
-        object.AddHandler('Changed', (event, args) => this.Dispatch('Changed', args));
+        object.AddHandler('Changed', (event, args) => {
+            if(this._fieldData.params && this._fieldData.params.title !== null) {
+                const f = eval(this._fieldData.params.title);
+                f(object, this);
+            }
+            return this.Dispatch('Changed', args);
+        });
         this.contentContainer.Children(object.name, object);
+        if(this._fieldData.params && this._fieldData.params.title !== null) {
+            const f = eval(this._fieldData.params.title);
+            f(object, this);
+        }
         this.Dispatch('FieldsRendered');
         return object;
     }

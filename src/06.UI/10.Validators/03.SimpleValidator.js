@@ -48,6 +48,10 @@ Colibri.UI.SimpleFormValidator = class {
             fields = this._form.Fields();
         }
 
+        if(!Array.isArray(fields)) {
+            fields = Object.values(fields);
+        }
+
         if(fields.length == 0) {
             return true;
         }

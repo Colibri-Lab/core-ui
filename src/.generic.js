@@ -114,6 +114,11 @@ Object.forReverseEach = function(o, callback) {
     }
 }
 
+Object.indexOf = function(o, name) {
+    const keys = Object.keys(o);
+    return keys.indexOf(name);
+};
+
 Object.countKeys = function(o) { return Object.keys(o).length; };
 
 Object.toQueryString = function(o, splittersArray) {
