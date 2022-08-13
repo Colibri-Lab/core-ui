@@ -6,9 +6,12 @@ Colibri.Common.Scrolling = class {
         this._element = element;
 
         this.supportsPassive = false;
-        try {
-          window.addEventListener('test', null, Object.defineProperty({}, 'passive', { get: function () { this.supportsPassive = true; }  }));
-        } catch(e) {}
+        // try {
+        //   window.addEventListener('test', null, Object.defineProperty({}, 'passive', { get: function () { this.supportsPassive = true; }  }));
+        // } catch(e) {
+        //     console.log('supportsPassive', e)
+        // }
+        // console.log('supportsPassive', this.supportsPassive);
         
         this.wheelOpt = this.supportsPassive ? { passive: false } : false;
         this.wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
@@ -20,7 +23,7 @@ Colibri.Common.Scrolling = class {
     }
 
     __preventDefault(e) {
-        e.preventDefault();
+        try { e.preventDefault(); } catch(e) {}
     }
 
     __preventDefaultForScrollKeys(e) {
