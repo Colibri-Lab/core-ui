@@ -9,9 +9,9 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         const containerElement = Element.create('div', {class: 'array-component-container'});
         contentContainer.container.append(containerElement);
 
-        this._link = this._addNew();
+        this._addNew();
 
-        this._createAddNewLink();
+        this._link = this._createAddNewLink();
 
         if(this._fieldData?.params?.readonly === undefined) {
             this.readonly = false;    
@@ -57,6 +57,14 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
                     field.Dispatch('Changed');
                 });
                 this.Dispatch('Changed');
+
+                if(this._fieldData.params && this._fieldData.params.maxadd !== null) {
+                    const count = Object.countKeys(this.Fields());
+                    if(count < this._fieldData.params.maxadd && !this._link) {
+                        this._link = this._createAddNewLink();
+                    }
+                }
+
             });
         }
         object.AddHandler('Changed', (event, args) => {
@@ -71,6 +79,15 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
             const f = eval(this._fieldData.params.title);
             f(object, this);
         }
+
+        if(this._fieldData.params && this._fieldData.params.maxadd !== null) {
+            const count = Object.countKeys(this.Fields());
+            if(count >= this._fieldData.params.maxadd) {
+                this._link.Dispose();
+                this._link = null;
+            }
+        }
+
         this.Dispatch('FieldsRendered');
         return object;
     }
