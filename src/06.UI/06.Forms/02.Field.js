@@ -166,7 +166,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             return;
         }
 
-        if(this.value) {
+        if((Array.isArray(this.value) ? this.value.length > 0 : this.value)) {
             this.AddClass('-filled');
         }
         else {
