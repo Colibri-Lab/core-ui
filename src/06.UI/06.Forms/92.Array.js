@@ -70,14 +70,14 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         object.AddHandler('Changed', (event, args) => {
             if(this._fieldData.params && this._fieldData.params.title !== null) {
                 const f = eval(this._fieldData.params.title);
-                f(object, this);
+                f && f(object, this);
             }
             return this.Dispatch('Changed', args);
         });
         this.contentContainer.Children(object.name, object);
         if(this._fieldData.params && this._fieldData.params.title !== null) {
             const f = eval(this._fieldData.params.title);
-            f(object, this);
+            f && f(object, this);
         }
 
         if(this._fieldData.params && this._fieldData.params.maxadd !== null) {

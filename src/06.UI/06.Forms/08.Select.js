@@ -303,7 +303,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         return new Colibri.UI.Selector(
             'input',
             this.contentContainer,
-            this._fieldData.multiple ?? this._fieldData.params.multiple ?? false,
+            this._fieldData.multiple ?? this._fieldData?.params?.multiple ?? false,
             this._fieldData.readonly,
             this._fieldData.values,
             this._fieldData.default,
