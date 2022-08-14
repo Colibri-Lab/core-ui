@@ -198,7 +198,6 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
             orientation[1] = orientation[1].replaceAll('r', 'l');
         }
 
-        console.log(orientation, this._orientation)
         if(this._orientation != orientation) {
             this._orientation = orientation;
             this._setPosition();
