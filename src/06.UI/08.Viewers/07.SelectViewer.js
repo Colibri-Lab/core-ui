@@ -7,33 +7,91 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
 
     set value(value) {
         if(value) {
-            if(value instanceof Object) {
-                super.value = value[this._field?.selector?.title ?? 'title'];
+            
+            if((this._field.multiple ?? this._field.params.multiple)) {
+                // надо обработать вариант с мультизначениями
+                if(typeof value == 'string') {
+                    value = value.split(',');
+                }
+                if(Array.isArray(value)) {
+                    let r = [];
+                    for(const vv of value) {
+                        if(vv instanceof Object) {
+                            r.push(vv[this._field?.selector?.title ?? 'title']);
+                        }
+                        else if (this._field?.lookup) {
+                            let selected = false;
+                            vv = vv.value ?? vv;
+                            this.AddClass('app-viewer-loading');
+                            this._setLookup(this._field.lookup).then((response) => {
+                                const _result = (response.result ?? response);
+                                if(_result?.length) {
+                                    for (let val of _result) {
+                                        if (val[this._field?.selector?.value || 'value'] == vv) {
+                                            r.push(val[this._field?.selector?.title || 'title']);
+                                            selected = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }).finally(() => {
+                                this.RemoveClass('app-viewer-loading')
+                                if(!selected) {
+                                    r.push(vv[this._field?.selector?.title ?? 'title']);
+                                }
+                            });
+                        }
+                        else if(this._field.values) {
+                            for(const v of this._field.values) {
+                                if(vv == (v.value ?? v.title ?? v)) {
+                                    r.push(v.title);
+                                }
+                            }
+                        }   
+                    }
+                    super.value = r.join(', ');
+                }
             }
-            else if (this._field?.lookup) {
-                let selected = false;
-                value = value.value ?? value;
-                this.AddClass('app-viewer-loading');
-                this._setLookup(this._field.lookup).then((response) => {
-                    const _result = (response.result ?? response);
-                    if(_result?.length) {
-                        for (let val of _result) {
-                            if (val[this._field?.selector?.value || 'value'] == value) {
-                                super.value = val[this._field?.selector?.title || 'title'];
-                                selected = true;
-                                break;
+            else {
+                if(value instanceof Object) {
+                    super.value = value[this._field?.selector?.title ?? 'title'];
+                }
+                else if (this._field?.lookup) {
+                    let selected = false;
+                    value = value.value ?? value;
+                    this.AddClass('app-viewer-loading');
+                    this._setLookup(this._field.lookup).then((response) => {
+                        const _result = (response.result ?? response);
+                        if(_result?.length) {
+                            for (let val of _result) {
+                                if (val[this._field?.selector?.value || 'value'] == value) {
+                                    super.value = val[this._field?.selector?.title || 'title'];
+                                    selected = true;
+                                    break;
+                                }
                             }
                         }
+                    }).finally(() => {
+                        this.RemoveClass('app-viewer-loading')
+                        if(!selected) {
+                            super.value = value[this._field?.selector?.title ?? 'title'];
+                        }
+                    });
+                }
+                else if(this._field.values) {
+                    for(const v of this._field.values) {
+                        if(v == (value.value ?? value.title ?? value)) {
+                            super.value = v.title;
+                        }
                     }
-                }).finally(() => {
-                    this.RemoveClass('app-viewer-loading')
-                    if(!selected) {
-                        super.value = value[this._field?.selector?.title ?? 'title'];
-                    }
-                });
+                } 
             }
 
+               
             
+        }
+        else {
+            super.value = '';
         }
     }
 
