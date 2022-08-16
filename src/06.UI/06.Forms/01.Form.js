@@ -103,7 +103,6 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     }
 
     set value(value) {
-
         
         this._value = Object.assign({}, value);
         if ([false, null, undefined].includes(value)) {
