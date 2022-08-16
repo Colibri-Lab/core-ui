@@ -16,6 +16,9 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
 
         this._input.shown = true;
         this.placeholder = this._fieldData.placeholder;
+        if(this._fieldData.params.placeholderinfo) {
+            this.placeholderinfo = this._fieldData.params.placeholderinfo;
+        }
 
         this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', args));
         this._input.AddHandler('KeyDown', (event, args) => this.Dispatch('KeyDown', args));

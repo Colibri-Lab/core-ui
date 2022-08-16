@@ -99,7 +99,13 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     }
 
     Fields() {
-        return this.Children();
+        const ret = {};
+        this.ForEach((name, component) => {
+            if(component instanceof Colibri.UI.Forms.Field) {
+                ret[name] = component;
+            }
+        });
+        return ret;
     }
 
     set value(value) {
@@ -173,6 +179,13 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         data = this._prepareOneOf(data);
 
         return data;
+    }
+
+    set message(value) {
+        this._error.value = value;
+    }
+    get message() {
+        return this._error.value;
     }
 
     set shuffleFieldNames(value) {
@@ -289,6 +302,9 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         
         groups && groups.SelectButton('firstChild');
 
+        this._error = new Colibri.UI.Pane('form-message', this);
+        this._error.shown = true;
+        
         this.Dispatch('FieldsRendered');
     }
 
@@ -304,5 +320,6 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             firstComponent.Focus();
         }
     }
+
 
 } 

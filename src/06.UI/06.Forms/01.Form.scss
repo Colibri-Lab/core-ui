@@ -1,6 +1,22 @@
 
 .app-form-component {
 
+    [data-object-name="form-message"] {
+        width: 100%;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 20px;      
+        color: #ED3545;  
+        margin-bottom: 10px;
+        &.app-component-shown {
+            display: block;
+        }
+        &:empty {
+            display: none;
+        }
+    }
+
     .app-buttongroup-component {
         
         &.app-component-shown {

@@ -124,7 +124,12 @@ Array.prototype.equals = function (array) {
             // recurse into the nested arrays
             if (!this[i].equals(array[i]))
                 return false;       
-        }           
+        }    
+        else if(this[i] instanceof Object && array[i] instanceof Object) {
+            if(!Object.shallowEqual(this[i], array[i])) {
+                return false;
+            }
+        }       
         else if (this[i] != array[i]) { 
             // Warning - two different object instances will never be equal: {x:20} != {x:20}
             return false;   
@@ -267,6 +272,11 @@ Object.shallowEqual = function(object1, object2) {
         }
         if (Array.isArray(object1[key])) {
             if(!object1[key].equals(object2[key])) {
+                return false;
+            }
+        }
+        else if(object1[key] instanceof Object) {
+            if(!Object.shallowEqual(object1[key], object2[key])) {
                 return false;
             }
         }
