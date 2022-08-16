@@ -308,11 +308,23 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         else {
             if (!this._multiple) {
                 this._value = [];
+                let _found = this._findValue(value);
+                if(_found) {
+                    this._value.push(_found);
+                    this._lastValue = _found;
+                }
+            
             }
-            let _found = this._findValue(value);
-            if(_found) {
-                this._value.push(_found);
-                this._lastValue = _found;
+            else {
+                this._value = [];
+                value = !Array.isArray(value) ? value.split(',') : value;
+                for(const v of value) {
+                    let _found = this._findValue(v);
+                    if(_found) {
+                        this._value.push(_found);
+                        this._lastValue = _found;
+                    }        
+                }
             }
         }
     }
