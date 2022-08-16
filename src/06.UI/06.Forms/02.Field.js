@@ -162,16 +162,23 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     }
 
     _setFilledMark() {
-        if(this._fieldData.fields) {
-            return;
+        if(this instanceof Colibri.UI.Forms.Array || this instanceof Colibri.UI.Forms.ArrayGrid) {
+            this.contentContainer.ForEach((name, component) => {
+                component instanceof Colibri.UI.Forms.Field && component._setFilledMark()
+            });
         }
-
-        if((Array.isArray(this.value) ? this.value.length > 0 : this.value)) {
-            this.AddClass('-filled');
+        else if(this instanceof Colibri.UI.Forms.Object) {
+            Object.forEach(this._fieldData?.fields, (name, fieldData) => this.contentContainer.Children(name) instanceof Colibri.UI.Forms.Field && this.contentContainer.Children(name)._setFilledMark());   
         }
         else {
-            this.RemoveClass('-filled');
+            if((Array.isArray(this.value) ? this.value.length > 0 : this.value)) {
+                this.AddClass('-filled');
+            }
+            else {
+                this.RemoveClass('-filled');
+            }    
         }
+
     }
 
     Validate() {

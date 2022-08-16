@@ -83,6 +83,31 @@ Array.toObject = function(a) {
     return ret;
 }
 
+Array.findObject = function(arr, field, value) {
+    for(const o of arr) {
+        if(o[field] == value) {
+            return o;
+        }
+    }
+    return null;
+};
+
+Array.replaceObject = function(arr, field, value, replace = null) {
+    for(let i=0; i<arr.length;i++) {
+        if(arr[i][field] == value) {
+            if(replace) {
+                arr[i] = replace;
+            }
+            else {
+                arr.splice(i, 1);
+            }
+            return arr;
+        }
+    }
+    arr.push(replace);
+    return arr;
+};
+
 Object.forEach = function(o, callback) {
     if(!o) {
         return;
