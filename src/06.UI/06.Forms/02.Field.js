@@ -211,6 +211,12 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     }
     set title(value) {
         this.Children(this._name + '-title').value = value;
+        if(!value) {
+            this.AddClass('-without-title');
+        }
+        else {
+            this.RemoveClass('-without-title');
+        }
     }
 
     get note() {

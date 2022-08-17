@@ -16,7 +16,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
 
         this._input.shown = true;
         this.placeholder = this._fieldData.placeholder;
-        if(this._fieldData.params.placeholderinfo) {
+        if(this._fieldData?.params?.placeholderinfo) {
             this.placeholderinfo = this._fieldData.params.placeholderinfo;
         }
 
@@ -81,11 +81,14 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    _getDependsValue() {
-        if (this.root && this._fieldData?.lookup &&
-            this._fieldData.lookup['depends']) {
+    _getDependsValue(type = null) {
+        if (this.root && this._fieldData?.lookup) {
 
-            let dependsField = this._fieldData.lookup['depends'];
+            if((type && !this._fieldData.lookup[type]['depends']) || (!type && !this._fieldData.lookup['depends'])) {
+                return;
+            }
+
+            let dependsField = type ? this._fieldData.lookup[type]['depends'] : this._fieldData.lookup['depends'];
             if (dependsField) {
                 const rootValues = this.root?.value;
                 if(eval(`typeof rootValues?.${dependsField}`) !== 'undefined') {
@@ -104,19 +107,16 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
     _setLookup(value) {
         let lookupPromise;
         this._lookup = value;
-        let dependsValue = this._getDependsValue();
-
-        if(dependsValue !== undefined && !dependsValue) {
-            return new Promise((resolve, reject) => {
-                resolve({});
-            });
-        }
 
         if (typeof this._lookup == 'function' || typeof this._lookup == 'string') {
             if(typeof this._lookup == 'string') {
                 this._lookup = eval(this._lookup);
             }
-            const lookupMethodRun = this._lookup();
+
+            let dependsValue = this._getDependsValue();
+            let dependsField = this._lookup.depends ?? null;
+    
+            const lookupMethodRun = this._lookup(dependsValue, dependsField);
             lookupPromise = lookupMethodRun instanceof Promise ? lookupMethodRun : new Promise((resolve, reject) => {
                 resolve({
                     result: this._lookup()
@@ -130,23 +130,32 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
                 if (typeof lookupMethod == 'string') {
                     lookupMethod = eval(this._lookup.method);
                 }
-                lookupPromise = lookupMethod(this._input._input.value, dependsValue);
+
+                let dependsValue = this._getDependsValue();
+                let dependsField = this._lookup.depends ?? null;
+    
+                lookupPromise = lookupMethod(this._input._input.value, dependsValue, dependsField);
             }
             else if(this._lookup?.binding) {
                 let binding = this._lookup.binding;
                 if (typeof binding == 'string') {
+                    let dependsValue = this._getDependsValue('controller');
                     lookupPromise = App.Store.AsyncQuery(binding, dependsValue);
                 }
             }
             else if(this._lookup?.controller) {
                 let controller = this._lookup.controller;
                 let module = eval(controller.module);
-                lookupPromise = module.Call(controller.class, controller.method, {term: this._input._input.value, param: dependsValue, lookup: this._lookup});
+                let dependsValue = this._getDependsValue('controller');
+                let dependsField = this._lookup.controller.depends ?? null;
+                lookupPromise = module.Call(controller.class, controller.method, {term: this._input._input.value, param: dependsValue, depends: dependsField, lookup: this._lookup});
             }
             else if(this._lookup?.storage) {
                 let controller = this._lookup?.storage?.controller;
                 let module = eval(controller?.module);
-                lookupPromise = module.Call(controller.class, controller.method, {term: this._input._input.value, param: dependsValue, lookup: this._lookup});
+                let dependsValue = this._getDependsValue('storage');
+                let dependsField = this._lookup?.storage?.depends ?? null;
+                lookupPromise = module.Call(controller.class, controller.method, {term: this._input._input.value, param: dependsValue, depends: dependsField, lookup: this._lookup});
             }
             else {
                 lookupPromise = new Promise((resolve, reject) => { resolve({result: ''}); })
