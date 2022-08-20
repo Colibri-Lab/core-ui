@@ -11,6 +11,7 @@ Colibri.UI.FontFamilySelector = class extends Colibri.UI.Selector {
             '', 
             'title', 
             'value', 
+            null,
             itemData => itemData.title);
 
     }

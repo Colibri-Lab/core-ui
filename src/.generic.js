@@ -14,6 +14,10 @@ const eval_default_values = function(defaultAsString) {
     return defaultAsString; 
 }
 
+const isIterable = (value) => {
+    return Symbol.iterator in Object(value);
+}
+
 Array.unique = function(a) { return a.filter((v, i, ab) => { return a.indexOf(v) === i; }); }
 Array.merge = function(a, ar) { 
     ar.forEach((o) => a.push(o));
@@ -312,7 +316,10 @@ Object.getValue = function(obj, path, _default = undefined) {
 Object.map = function(obj, func) {
     let newObject = {};
     Object.forEach(obj, (key, value) => {
-        newObject[key] = func(key, value);
+        const newval = func(key, value);
+        if(newval) {
+            newObject[key] = newval;
+        }
     });
     return newObject;
 }

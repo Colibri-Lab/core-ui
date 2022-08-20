@@ -1,13 +1,14 @@
 
 Colibri.UI.PopupList = class extends Colibri.UI.List {
 
-    constructor(name, container, multiple, __render, titleField = 'title', valueField = 'value') {
+    constructor(name, container, multiple, __render, titleField = 'title', valueField = 'value', groupField = null) {
         super(name, container, multiple);
         this.AddClass('app-component-popup-list-component');
         
         this.__renderElement = __render;
         this._titleField = titleField;
         this._valueField = valueField;
+        this._groupField = groupField;
 
         this.AddHandler('ShadowClicked', (event, args) => {
             this.Hide();
@@ -83,25 +84,62 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
         this.ClearSelection(false);
 
         const values = Object.values(value);
-        const group = this.AddGroup('group', '');
-        const selectedKeys = [];
+        console.log(this._groupField);
+        if(this._groupField) {
 
-        if(selectedValues) {
-            if(!Array.isArray(selectedValues)) {
-                selectedValues = [selectedValues];
+            const groups = {};
+
+            const selectedKeys = [];
+    
+            if(selectedValues) {
+                if(!Array.isArray(selectedValues)) {
+                    selectedValues = [selectedValues];
+                }
+                selectedValues.forEach((val) => {
+                    if(!groups[val[this._groupField]]) {
+                        groups[val[this._groupField]] = this.AddGroup('group', val[this._groupField]);
+                    }
+                    groups[val[this._groupField]].AddItem(val, null, true);
+                    selectedKeys.push(String(val[this._valueField] ?? val));
+                });
             }
-            selectedValues.forEach((val) => {
-                group.AddItem(val, null, true);
-                selectedKeys.push(String(val[this._valueField] ?? val));
-            });
+    
+            for(let val of values) {
+                if(selectedKeys.includes(String(val[this._valueField] ?? val))) {
+                    continue;
+                }
+                if(!groups[val[this._groupField]]) {
+                    groups[val[this._groupField]] = this.AddGroup('group', val[this._groupField]);
+                }
+                groups[val[this._groupField]].AddItem(val, null);
+                
+            }
+
+        }
+        else {
+
+            const group = this.AddGroup('group', '');
+            const selectedKeys = [];
+    
+            if(selectedValues) {
+                if(!Array.isArray(selectedValues)) {
+                    selectedValues = [selectedValues];
+                }
+                selectedValues.forEach((val) => {
+                    group.AddItem(val, null, true);
+                    selectedKeys.push(String(val[this._valueField] ?? val));
+                });
+            }
+    
+            for(let val of values) {
+                if(selectedKeys.includes(String(val[this._valueField] ?? val))) {
+                    continue;
+                }
+                group.AddItem(val, null);
+            }
+                
         }
 
-        for(let val of values) {
-            if(selectedKeys.includes(String(val[this._valueField] ?? val))) {
-                continue;
-            }
-            group.AddItem(val, null);
-        }
     }
 
 

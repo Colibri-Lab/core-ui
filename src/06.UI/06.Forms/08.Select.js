@@ -139,7 +139,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
             else if(this._lookup?.binding) {
                 let binding = this._lookup.binding;
                 if (typeof binding == 'string') {
-                    let dependsValue = this._getDependsValue('controller');
+                    let dependsValue = this._getDependsValue('binding');
                     lookupPromise = App.Store.AsyncQuery(binding, dependsValue);
                 }
             }
@@ -171,6 +171,16 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
      * @param {array} value
      * */
     set values(value) {
+        let required = this._fieldData?.params?.required;
+        if(required === undefined) {
+            required = false;
+        }
+        if(!required) {
+            const o = {};
+            o[this._fieldData?.selector?.title] = '---';
+            o[this._fieldData?.selector?.value] = 0;
+            value = isIterable(value) ? [o, ...value] : [o];
+        }
         this._input.values = value;
     }
 
@@ -321,6 +331,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
             this._fieldData.default,
             this._fieldData.selector?.title ?? 'title',
             this._fieldData.selector?.value ?? 'value',
+            this._fieldData.selector?.group ?? null,
             this._fieldData.selector?.__render ?? null,
             (this._fieldData.allowempty === undefined ? true : this._fieldData.allowempty),
             (this._fieldData.clearicon === undefined ? false : this._fieldData.clearicon)

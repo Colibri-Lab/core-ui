@@ -15,7 +15,7 @@ Colibri.UI.MonthSelector = class extends Colibri.UI.Selector {
             {title: '#{app-monthselector-october;Октябрь}', value: '10'},
             {title: '#{app-monthselector-november;Ноябрь}', value: '11'},
             {title: '#{app-monthselector-december;Декабрь}', value: '12'},
-        ], '01', 'title', 'value', itemData => itemData.title);
+        ], '01', 'title', 'value', null, itemData => itemData.title);
 
         this.width = 125;
 

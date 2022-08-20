@@ -18,6 +18,18 @@
         > div {
             padding: 0px;
         }
+        > span {
+            user-select: none;
+            display: inline-block;
+            width: 100%;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 6px 12px;
+            background: #e4f4ff;
+            &:empty {
+                display: none;
+            }
+        }
         >span:empty {
             display: none;
         }

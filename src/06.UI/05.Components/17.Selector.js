@@ -16,7 +16,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * @param {boolean} allowEmpty разрешено пустое значение
      * @param {boolean} clearIcon показать clearIcon
      */
-    constructor(name, container, multiple = false, readonly = true, values = [], defaultValue = null, titleField = 'title', valueField = 'value', __render = null, allowEmpty = true, clearIcon = false) {
+    constructor(name, container, multiple = false, readonly = true, values = [], defaultValue = null, titleField = 'title', valueField = 'value', groupField = null, __render = null, allowEmpty = true, clearIcon = false) {
         super(name, container, '<div />');
 
         this.AddClass('app-selector-component');
@@ -25,6 +25,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this.__render = __render;
         this._titleField = titleField || 'title';
         this._valueField = valueField || 'value';
+        this._groupField = groupField || null;
         this._default = defaultValue;
         this._values = values;
         this._inprooveValues();
@@ -491,7 +492,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         let startMatches = [];
 
         Array.isArray(values) && values.forEach((value) => {
-            let stringPosition = value[this._titleField].search(searchPattern);
+            let stringPosition = value[this._titleField] ? value[this._titleField].search(searchPattern) : 0;
             if (stringPosition !== -1) {
                 stringPosition === 0 ? startMatches.push(value) : matches.push(value);
             }
@@ -520,7 +521,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     _createPopup(values) {
-        const popup = new Colibri.UI.PopupList('select-popup', document.body, this._multiple, this.__render, this._titleField, this._valueField);
+        const popup = new Colibri.UI.PopupList('select-popup', document.body, this._multiple, this.__render, this._titleField, this._valueField, this._groupField);
         popup.parent = this;
         popup.multiple = this._multiple;
         const el = this.container.closest('[namespace]');
