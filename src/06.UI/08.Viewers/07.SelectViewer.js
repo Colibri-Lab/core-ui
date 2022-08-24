@@ -80,7 +80,7 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                 }
                 else if(this._field.values) {
                     for(const v of this._field.values) {
-                        if(v == (value.value ?? value.title ?? value)) {
+                        if((v.value ?? v.title) == (value.value ?? value.title ?? value)) {
                             super.value = v.title;
                         }
                     }

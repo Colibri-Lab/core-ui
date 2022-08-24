@@ -35,7 +35,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     _setFilledMark() {
         Object.forEach(this._fields, (name, fieldData) => {
             const fieldComponent = this.Children(name);
-            fieldComponent._setFilledMark();
+            fieldComponent._setFilledMark && fieldComponent._setFilledMark();
         });
     }
 

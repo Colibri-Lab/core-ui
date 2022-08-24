@@ -344,6 +344,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
         
         const contextMenuObject = new Colibri.UI.ContextMenu(this._name + '-contextmenu', document.body, orientation, point);
+        contextMenuObject.parent = this;
+        contextMenuObject.namespace = this.namespace;
         contextMenuObject.Show(this.contextmenu, this);
         if(className) {
             contextMenuObject.AddClass(className);

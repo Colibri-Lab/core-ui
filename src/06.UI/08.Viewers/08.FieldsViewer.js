@@ -106,8 +106,14 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                     this._createFields(field.fields, value[name], fieldContainer, false);
                 }
                 else {
-                    const viewerComponentName = field.viewer || ('Colibri.UI.' + field.component + 'Viewer');
-                    const viewer = eval('new '+ viewerComponentName + '(name + \'-viewer\', fieldContainer, null, root)');
+                    const viewerComponentName = field.viewer || field.params.viewer || ('Colibri.UI.' + field.component + 'Viewer');
+                    let viewer = null;
+                    try {
+                        viewer = eval('new '+ viewerComponentName + '(name + \'-viewer\', fieldContainer, null, root)');
+                    }
+                    catch(e) { 
+                        viewer = new Colibri.UI.TextViewer(name + '-viewer', fieldContainer, null, root);
+                    }
                     viewer.field = field;
                     viewer.shown = true;
                     viewer.download = this._download;

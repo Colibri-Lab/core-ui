@@ -49,6 +49,9 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
             
             itemObject.shown = true;
             itemObject.AddClass('app-contextmenu-item-component');
+            if(item.className) {
+                itemObject.AddClass('-' + item.className);
+            }
             
             const icon = new Colibri.UI.Icon(item.name + '-icon', itemObject);
             const text = new Colibri.UI.TextSpan(item.name + '-text', itemObject);

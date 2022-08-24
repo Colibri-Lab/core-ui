@@ -1,8 +1,11 @@
 Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
     static Components = {};
-    static RegisterFieldComponent(name, className, description) {
-        Colibri.UI.Forms.Field.Components[name] = {className, description};
+    static RegisterFieldComponent(name, className, description, icon) {
+        if(!icon) {
+            icon = Colibri.UI.FieldIcons[className];
+        }
+        Colibri.UI.Forms.Field.Components[name] = {className, description, icon};
     }
     static UnregisterFieldComponent(name) {
         delete Colibri.UI.Forms.Field.Components[name];
