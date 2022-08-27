@@ -101,16 +101,20 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                                 this.StopFlashTitle();
                             }
                         });
-                        document.addEventListener('visibilitychange', (e) => {
-                            this.StopFlashTitle();
-                            if(document.hidden) {
-                                this.Dispatch('DocumentHidden', {});
-                            }
-                            else {
-                                this.Dispatch('DocumentShown', {});
-                            }
-                        });
                     } 
+                    document.addEventListener('visibilitychange', (e) => {
+                        
+                        if(initComet && settings.comet && settings.comet.host) {
+                            this.StopFlashTitle();
+                        }
+
+                        if(document.hidden) {
+                            this.Dispatch('DocumentHidden', {});
+                        }
+                        else {
+                            this.Dispatch('DocumentShown', {});
+                        }
+                    });
 
                     if(settings?.screen?.theme === 'follow-device') {
                         this._device.AddHandler('ThemeChanged', (event, args) => {
