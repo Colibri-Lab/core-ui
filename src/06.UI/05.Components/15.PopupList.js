@@ -84,7 +84,6 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
         this.ClearSelection(false);
 
         const values = Object.values(value);
-        console.log(this._groupField);
         if(this._groupField) {
 
             const groups = {};
