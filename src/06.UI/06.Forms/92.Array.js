@@ -9,7 +9,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         const containerElement = Element.create('div', {class: 'array-component-container'});
         contentContainer.container.append(containerElement);
 
-        this._addNew();
+        this.AddNew();
 
         this._link = this._createAddNewLink();
 
@@ -38,13 +38,13 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         link.value = this._fieldData.params && this._fieldData.params.addlink || '#{app-array-add;Добавить еще} «' + (this._fieldData.desc) + '»';
         link.shown = true;
         link.AddHandler('Clicked', (event, args) => {
-            this._addNew();
+            this.AddNew();
             this.Dispatch('Changed');            
         });
         return link;
     }
 
-    _addNew() {
+    AddNew() {
         const containerElement = this.contentContainer.container.querySelector('.array-component-container');
         const object = new Colibri.UI.Forms.Object('object-' + Date.Now().getTime(), containerElement, this._fieldData, this, this.root);
         object.parent = this.contentContainer;
@@ -149,7 +149,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
         this.contentContainer.Clear();
         value && value.forEach((v) => {
-            const object = this._addNew();
+            const object = this.AddNew();
             object.value = v;
         });
         this._createAddNewLink();
