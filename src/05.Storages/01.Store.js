@@ -37,7 +37,6 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         const newStore = new Colibri.Storages.Store(paths[paths.length - 1], data, this);
         this.Set(path, newStore);
         return newStore;
-
     }
 
     GetChild(path) {
@@ -317,6 +316,16 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         }
         return this;
 
+    }
+
+    UpdateList(path, searchField, searchValue, newData = null) {
+        let list = EcoloPlace.Store.Query(path);
+        if(!Array.isArray(list)) {
+            list = [];
+        }
+        list = Array.replaceObject(list, searchField, searchValue, newData);
+        EcoloPlace.Store.Set(path, list);
+        return list;
     }
 
     _parsePathIfHasParam(path) {
