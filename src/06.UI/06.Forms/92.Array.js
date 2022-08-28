@@ -51,7 +51,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         object.shown = true;
         object.title = '';
         object.enabled = this.enabled;
-        if(this._fieldData.params && this._fieldData.params.addlink !== null) {
+        if(this._fieldData.params && this._fieldData.params.removelink !== false) {
             object.AddRemoveLink(() => {
                 Object.forEach(this.Fields(), (name, field) => {
                     field.Dispatch('Changed');
@@ -83,7 +83,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         if(this._fieldData.params && this._fieldData.params.maxadd !== null) {
             const count = Object.countKeys(this.Fields());
             if(count >= this._fieldData.params.maxadd) {
-                this._link.Dispose();
+                this._link && this._link.Dispose();
                 this._link = null;
             }
         }
@@ -110,7 +110,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         this.contentContainer.ForEach((name, component) => {
             component.readonly = value; 
         });
-        this._link.enabled = value;
+        this._link && (this._link.enabled = value);
     }
 
     get enabled() {
@@ -122,7 +122,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         this.contentContainer.ForEach((name, component) => {
             component.enabled = this._enabled; 
         });
-        this._link.enabled = this._enabled;
+        this._link && (this._link.enabled = this._enabled);
     }
 
     get value() {
