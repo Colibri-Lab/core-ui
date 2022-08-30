@@ -39,8 +39,9 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
         Object.forEach(this._fieldData.fields, (name, fieldData) => {
 
-            const field = Object.assign({}, fieldData);
+            const field = Object.cloneRecursive(fieldData);
             const tabTitle = field.desc;
+
             delete field.desc;
             
             const component = Colibri.UI.Forms.Field.Create(name, this._tabs.container, field, this, this.root);

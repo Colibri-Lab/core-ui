@@ -29,7 +29,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     _renderFields() {
 
-        (this._fieldData?.vertical || this._fieldData?.params?.vertical) && this.AddClass('app-field-vertical');
+        this._fieldData?.params?.vertical && this.AddClass('app-field-vertical');
         this._fieldData?.params?.merged && this.AddClass('app-merged-object-component');
         this._fieldData?.params?.wrap && this.AddClass('app-field-wrap');
 
@@ -47,9 +47,11 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         else {
             Object.forEach(this._fieldData.fields, (name, fieldData) => {
             
-                const field = Object.assign({}, fieldData);
-                const placeholder = (this._fieldData?.vertical || this._fieldData?.params?.vertical) ? field.placeholder : field.desc;
-                (!this._fieldData?.vertical && !this._fieldData?.params?.vertical) && delete field.desc;
+                const field = Object.cloneRecursive(fieldData);
+                const placeholder = this._fieldData?.params?.vertical ? field.placeholder : field.desc;
+                if(!this._fieldData?.params?.vertical) {
+                    delete field.desc;
+                }
                 
                 const component = Colibri.UI.Forms.Field.Create(name, this.contentContainer, field, this, this.root);
                 component.placeholder = placeholder;

@@ -88,7 +88,8 @@ Array.toObject = function(a) {
 }
 
 Array.findObject = function(arr, field, value) {
-    for(const o of arr) {
+    for(let i=0; i<arr.length; i++) {
+        const o = arr[i];
         if(o[field] == value) {
             return o;
         }
