@@ -1,164 +1,80 @@
-Colibri.UI.SuccessButton = class extends Colibri.UI.Button {
-    
+Colibri.UI.ExtendedButton = class extends Colibri.UI.Button {
+
     constructor(name, container) {
         super(name, container);
         this.AddClass('app-extended-button-component');
+        this._icon = new Colibri.UI.Icon('icon', this);
+        this._span = new Colibri.UI.TextSpan('span', this);
+        this._span.shown = true;
+    }
+
+    get icon() {
+        return this._icon.iconSVG;
+    }
+
+    set icon(value) {
+        this._icon.shown = true;
+        this._icon.iconSVG = value;
+    }
+
+    get value() {
+        return this._span.value;
+    }
+
+    set value(value) {
+        this._span.value = value;
+    }
+
+    set iconPosition(value) {
+        if(value) {
+            this.AddClass('ui-icon-right');
+        }
+        else {
+            this.RemoveClass('ui-icon-right');
+        }
+    }
+
+}
+
+Colibri.UI.SuccessButton = class extends Colibri.UI.ExtendedButton {
+    constructor(name, container) {
+        super(name, container);
         this.AddClass('app-success-button-component');
-        
-        this._icon = new Colibri.UI.Icon('icon', this);
-        this._span = new Colibri.UI.TextSpan('span', this);
-        this._span.shown = true;
     }
-
-    get icon() {
-        return this._icon.iconSVG;
-    }
-
-    set icon(value) {
-        this._icon.shown = true;
-        this._icon.iconSVG = value;
-    }
-
-    get value() {
-        return this._span.value;
-    }
-
-    set value(value) {
-        this._span.value = value;
-    }
-
 }
 
-Colibri.UI.ErrorButton = class extends Colibri.UI.Button {
-    
+Colibri.UI.ErrorButton = class extends Colibri.UI.ExtendedButton {
     constructor(name, container) {
         super(name, container);
-        this.AddClass('app-extended-button-component');
         this.AddClass('app-error-button-component');
-        
-        this._icon = new Colibri.UI.Icon('icon', this);
-        this._span = new Colibri.UI.TextSpan('span', this);
-        this._span.shown = true;
     }
-
-    get icon() {
-        return this._icon.iconSVG;
-    }
-
-    set icon(value) {
-        this._icon.shown = true;
-        this._icon.iconSVG = value;
-    }
-
-    get value() {
-        return this._span.value;
-    }
-
-    set value(value) {
-        this._span.value = value;
-    }
-
 }
 
-Colibri.UI.GrayButton = class extends Colibri.UI.Button {
-    
+Colibri.UI.GrayButton = class extends Colibri.UI.ExtendedButton {
     constructor(name, container) {
         super(name, container);
-        this.AddClass('app-extended-button-component');
         this.AddClass('app-gray-button-component');
-        
-        this._icon = new Colibri.UI.Icon('icon', this);
-        this._span = new Colibri.UI.TextSpan('span', this);
-        this._span.shown = true;
-
     }
-
-    get icon() {
-        return this._icon.iconSVG;
-    }
-
-    set icon(value) {
-        this._icon.shown = true;
-        this._icon.iconSVG = value;
-    }
-
-    get value() {
-        return this._span.value;
-    }
-
-    set value(value) {
-        this._span.value = value;
-    }
-
 }
 
-Colibri.UI.SimpleButton = class extends Colibri.UI.Button {
-    
+Colibri.UI.SimpleButton = class extends Colibri.UI.ExtendedButton {
     constructor(name, container) {
         super(name, container);
-        this.AddClass('app-extended-button-component');
         this.AddClass('app-simple-button-component');
-
-        this._icon = new Colibri.UI.Icon('icon', this);
-        this._span = new Colibri.UI.TextSpan('span', this);
-        this._span.shown = true;
     }
-
-    get icon() {
-        return this._icon.iconSVG;
-    }
-
-    set icon(value) {
-        this._icon.shown = true;
-        this._icon.iconSVG = value;
-    }
-
-    get value() {
-        return this._span.value;
-    }
-
-    set value(value) {
-        this._span.value = value;
-    }
-
 }
 
-Colibri.UI.OutlineBlueButton = class extends Colibri.UI.Button {
-
+Colibri.UI.OutlineBlueButton = class extends Colibri.UI.ExtendedButton {
     constructor(name, container) {
         super(name, container);
-        this.AddClass('app-extended-button-component');
         this.AddClass('app-outline-blue-button-component');
-
-        this._icon = new Colibri.UI.Icon('icon', this);
-        this._span = new Colibri.UI.TextSpan('span', this);
-        this._span.shown = true;
     }
-
-    get icon() {
-        return this._icon.iconSVG;
-    }
-
-    set icon(value) {
-        this._icon.shown = true;
-        this._icon.iconSVG = value;
-    }
-
-    get value() {
-        return this._span.value;
-    }
-
-    set value(value) {
-        this._span.value = value;
-    }
-
 }
 
-Colibri.UI.UploadButton = class extends Colibri.UI.Button {
+Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
     
     constructor(name, container) {
         super(name, container);
-        this.AddClass('app-extended-button-component');
         this.AddClass('app-success-button-component');
         this.AddClass('app-upload-button-component');
 
@@ -168,10 +84,6 @@ Colibri.UI.UploadButton = class extends Colibri.UI.Button {
         this._uniqueString = Number.unique();
         this._input = Element.create('input', {type:'file', id: 'component-' + name + '-' + this._uniqueString});
         this._element.append(this._input);
-        
-        this._icon = new Colibri.UI.Icon('icon', this);
-        this._span = new Colibri.UI.TextSpan('span', this);
-        this._span.shown = true;
 
         this.AddHandler('Clicked', (event, args) => this.__clicked(event, args));
         this._input.addEventListener('change', (event) => {
@@ -186,23 +98,6 @@ Colibri.UI.UploadButton = class extends Colibri.UI.Button {
 
         this.RegisterEvent('FileChoosen', false, 'Когда выбраны файлы');
 
-    }
-
-    get icon() {
-        return this._icon.iconSVG;
-    }
-
-    set icon(value) {
-        this._icon.shown = true;
-        this._icon.iconSVG = value;
-    }
-
-    get value() {
-        return this._span.value;
-    }
-
-    set value(value) {
-        this._span.value = value;
     }
 
     set multiple(value) {

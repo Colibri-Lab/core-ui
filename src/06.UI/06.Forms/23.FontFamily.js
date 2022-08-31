@@ -94,4 +94,4 @@ Colibri.UI.Forms.FontFamily = class extends Colibri.UI.Forms.Field {
 
 
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Text', 'Colibri.UI.Forms.FontFamily', '#{app-fields-fontfamily;Шрифт}');
+Colibri.UI.Forms.Field.RegisterFieldComponent('FontFamily', 'Colibri.UI.Forms.FontFamily', '#{app-fields-fontfamily;Шрифт}');
