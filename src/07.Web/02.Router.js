@@ -152,7 +152,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
             else if(this._type == Colibri.Web.Router.RouteOnHistory) {
                 history.pushState({}, "", u);
             }
-            this._setCurrentUrl(u, options);
+            this._setCurrentUrl(url, options);
         }
 
         if(isChanged) {

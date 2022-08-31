@@ -899,6 +899,22 @@ String.prototype.rc4 = function(key) {
     return res;
 }
 
+String.prototype.hex2bin = function() {
+    var bytes = [];
+    for(var i=0; i< this.length-1; i+=2)
+        bytes.push(parseInt(this.substring(i, i + 2), 16));
+    return String.fromCharCode.apply(String, bytes);    
+}
+
+String.prototype.bin2hex = function() {
+    var i = 0, l = this.length, chr, hex = '';
+    for (i; i < l; ++i) {
+        chr = this.charCodeAt(i).toString(16)
+        hex += chr.length < 2 ? '0' + chr : chr
+    }
+    return hex;
+}
+
 /* number prototype expansion */
 Number.prototype.toDateFromUnixTime = function() {
     let d = new Date();
@@ -1160,7 +1176,7 @@ Element.prototype.ensureInViewport = function(container) {
  * Проверяет видим ли элемент полностью
  * @param {Element} container
  */
- Element.prototype.inInViewport = function(container) {
+Element.prototype.inInViewport = function(container) {
 
     //Determine container top and bottom
     let cTop = container.scrollTop;

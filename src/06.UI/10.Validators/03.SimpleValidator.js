@@ -18,6 +18,7 @@ Colibri.UI.SimpleFormValidator = class {
         Object.forEach(fields, (name, field) => {
             field.field.params && (field.field.params.validated = true);
             field.AddHandler('Changed', (event, args) => this.__validateField(field));
+            field.AddHandler('FieldsRendered', (event, args) => this._init(event.sender.Fields()));
             this._init(field.Fields ? field.Fields() : []);
         });
     }
