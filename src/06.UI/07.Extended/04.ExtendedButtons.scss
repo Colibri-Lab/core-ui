@@ -60,6 +60,7 @@
 }
 
 .app-success-button-component {
+    color: white;
     .app-component-textspan {
         color: white;
     }
@@ -70,6 +71,7 @@
 
 .app-gray-button-component {
     background: #9DA5BE;
+    color: white;
     .app-component-textspan {
         color: white;
     }
@@ -79,6 +81,7 @@
 
 .app-error-button-component {
     background: #ED3545;
+    color: white;
     .app-component-textspan {
         color: white;
     }
@@ -91,6 +94,7 @@
     background: #FFFFFF;
     border: 1px solid #D1D7E9;
     border-radius: 3px;
+    color: #14151A;
     .app-component-textspan {
         color: #14151A;
     }
@@ -103,6 +107,9 @@
     border-radius: 3px;
     height: 32px;
     color: #4CB5FF;
+    .app-component-textspan {
+        color: #4CB5FF;
+    }
 
 }
 
