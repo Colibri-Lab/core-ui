@@ -60,7 +60,9 @@
 }
 
 .app-success-button-component {
-    color: white;
+    .app-component-textspan {
+        color: white;
+    }
     background: #50C14E;
     border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 3px;
@@ -68,14 +70,18 @@
 
 .app-gray-button-component {
     background: #9DA5BE;
-    color: white;
+    .app-component-textspan {
+        color: white;
+    }
     border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 3px;
 }
 
 .app-error-button-component {
     background: #ED3545;
-    color: white;
+    .app-component-textspan {
+        color: white;
+    }
     border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 3px;
 }
@@ -85,7 +91,9 @@
     background: #FFFFFF;
     border: 1px solid #D1D7E9;
     border-radius: 3px;
-    color: #14151A;
+    .app-component-textspan {
+        color: #14151A;
+    }
 }
 
 .app-outline-blue-button-component {
