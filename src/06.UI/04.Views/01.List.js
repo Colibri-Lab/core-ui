@@ -481,8 +481,6 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
 
     set value(value) {
 
-        this._element.html('');
-
         this._itemData = value;
         
         let html = this._itemData.title;

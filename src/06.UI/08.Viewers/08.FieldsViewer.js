@@ -49,6 +49,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         fields = fields || this._fields;
         value = value || this._value;
 
+        this.Clear();
         Object.forEach(fields, (name, field) => {
 
             if(field.component == 'Hidden') {
@@ -94,7 +95,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                 fieldContainer.AddClass('app-field-' + shortComponentName);
                 fieldContainer.shown = field.hidden === undefined || field.hidden === true;
 
-                if(field.component == 'Array') {
+                if(field.component == 'Colibri.UI.Forms.Array') {
                     if(value[name] instanceof Object) {
                         value[name] = Object.values(value[name]);
                     }
@@ -102,11 +103,12 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                         this._createFields(field.fields, v, fieldContainer, false);
                     });
                 }
-                else if(field.component == 'Object' && !field.params && !field.params.single) {
+                else if(field.component == 'Colibri.UI.Forms.Object' && !field.params && !field.params.single) {
                     this._createFields(field.fields, value[name], fieldContainer, false);
                 }
                 else {
-                    const viewerComponentName = field.viewer || field.params.viewer || ('Colibri.UI.' + field.component + 'Viewer');
+                    const componentName = field.component.replaceAll('Colibri.UI.Forms.', '');
+                    const viewerComponentName = field.viewer || field.params.viewer || ('Colibri.UI.' + componentName + 'Viewer');
                     let viewer = null;
                     try {
                         viewer = eval('new '+ viewerComponentName + '(name + \'-viewer\', fieldContainer, null, root)');
