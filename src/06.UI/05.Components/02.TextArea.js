@@ -97,7 +97,7 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
      * @type {boolean}
      */
     get readonly() {
-        return this._input.is(':readonly');
+        return this._input.is(':scope[readonly]');
     }
     set readonly(value) {
         this._input.attr('readonly', value);

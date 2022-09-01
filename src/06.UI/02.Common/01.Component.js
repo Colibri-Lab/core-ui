@@ -743,7 +743,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @type {boolean}
      */
     get readonly() {
-        return this._element.is(':readonly');
+        return this._element.is(':scope[readonly]');
     }
     set readonly(value) {
         value = value === true || value === 'true';

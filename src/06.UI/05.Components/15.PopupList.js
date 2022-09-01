@@ -95,22 +95,20 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
                     selectedValues = [selectedValues];
                 }
                 selectedValues.forEach((val) => {
-                    if(!groups[val[this._groupField]]) {
-                        groups[val[this._groupField]] = this.AddGroup('group', val[this._groupField]);
-                    }
-                    groups[val[this._groupField]].AddItem(val, null, true);
                     selectedKeys.push(String(val[this._valueField] ?? val));
                 });
             }
     
             for(let val of values) {
-                if(selectedKeys.includes(String(val[this._valueField] ?? val))) {
-                    continue;
-                }
                 if(!groups[val[this._groupField]]) {
                     groups[val[this._groupField]] = this.AddGroup('group', val[this._groupField]);
                 }
-                groups[val[this._groupField]].AddItem(val, null);
+                if(selectedKeys.includes(String(val[this._valueField] ?? val))) {
+                    groups[val[this._groupField]].AddItem(val, null, true);
+                }
+                else {
+                    groups[val[this._groupField]].AddItem(val, null);
+                }
                 
             }
 
@@ -125,16 +123,17 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
                     selectedValues = [selectedValues];
                 }
                 selectedValues.forEach((val) => {
-                    group.AddItem(val, null, true);
                     selectedKeys.push(String(val[this._valueField] ?? val));
                 });
             }
     
             for(let val of values) {
                 if(selectedKeys.includes(String(val[this._valueField] ?? val))) {
-                    continue;
+                    group.AddItem(val, null, true);
                 }
-                group.AddItem(val, null);
+                else { 
+                    group.AddItem(val, null);
+                }
             }
                 
         }
