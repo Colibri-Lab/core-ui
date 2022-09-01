@@ -244,7 +244,10 @@ Object.toPlain = function(object, prefix) {
 Object.cloneRecursive = function(object) {
     const ret = {};
     Object.forEach(object, (prop, value) => {
-        if(Array.isArray(value)) {
+        if(value instanceof Function) {
+            ret[prop] =  value;
+        }
+        else if(Array.isArray(value)) {
             ret[prop] = value.map((v) => {
                 return v instanceof Object && !(v instanceof File) ? Object.cloneRecursive(v) : v;
             });
