@@ -95,7 +95,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
         this._input.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
 
-        this._input.AddHandler('Filled', (event, args) => this.__Filled(event, args));
+        this._input.AddHandler('Filled', (event, args) => this.__Filled(event, Object.assign(args, {search: true})));
         this._input.AddHandler('Cleared', (event, args) => this.__Cleared(event, args));
         this._input.AddHandler('Clicked', (event, args) => this.__Clicked(event, args));
 
@@ -151,8 +151,12 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
             if(ret === false || this._itemSelected === true) {
                 return;
             }
-            const values = this._search(this.readonly ? '' : this._input.value);
-            this._showPopup(values);
+            if(args.search) {                
+                this._showPopup(this._search(this.readonly ? '' : this._input.value));
+            }
+            else {
+                this._showPopup(this._values);
+            }
 
             if(this.allowempty) {
                 this.Dispatch('Changed', args);
@@ -360,12 +364,19 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      */
     _renderValue(renderValue = true) {
         if (!this.multiple) {
-            renderValue && (this._input.value = this._value[0] ? (this._value[0][this._titleField] ?? this._value[0]) : this._value);
+            if(renderValue) {
+                if(Array.isArray(this._value)) {
+                    this._input.value = (this._value[0] ? (this._value[0][this._titleField] ?? this._value[0] ?? '') : '').stripHtml();
+                }
+                else {
+                    this._input.value = this._value.stripHtml();
+                }
+            }
 
             if(!this._placeholderempty || this.HaveValues()) {
-                this._input.placeholder = this.placeholder ?? '';
+                this._input.placeholder = (this.placeholder ?? '').stripHtml();
             } else {
-                this._input.placeholder = this._placeholderempty;
+                this._input.placeholder = this._placeholderempty.stripHtml();
             }
         } else {
             let itemCount = this._value.length;
@@ -379,13 +390,13 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                 try {
                     info = eval(this._placeholderinfo);
                     info(this._value).then((text) => {
-                        this._input.placeholder = text;
+                        this._input.placeholder = text.stripHtml();
                     });
                 } catch(e) {
-                    this._input.placeholder = String.Pluralize(this._placeholderinfo, itemCount);
+                    this._input.placeholder = String.Pluralize(this._placeholderinfo, itemCount).stripHtml();
                 }
             } else {
-                this._input.placeholder = `#{app-selector-choosed;Выбрано} ${itemCount} ${this.parent.parent.title || ""}`;
+                this._input.placeholder = `#{app-selector-choosed;Выбрано} ${itemCount} ${this.parent.parent.title || ""}`.stripHtml();
             }
         }
     }
@@ -396,7 +407,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     Focus() {
         this._input.Focus();
         if(this.enabled) {
-            this.__Filled(null, null);
+            this.__Filled(null, {search: false});
             // this._showPopup(this._search());
         }
     }
@@ -486,7 +497,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
             return this._values ?? {};
         }
 
-        let searchPattern = new RegExp(String.EscapeRegExp(searchString), 'i');
+        let searchPattern = new RegExp('.*?' + String.EscapeRegExp(searchString.stripHtml()).replaceAll(/\s+/, '.+') + '.*?', 'i');
         let values = this._values;
         let matches = [];
         let startMatches = [];
