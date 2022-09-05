@@ -101,7 +101,7 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
     
             for(let val of values) {
                 if(!groups[val[this._groupField]]) {
-                    groups[val[this._groupField]] = this.AddGroup('group', val[this._groupField]);
+                    groups[val[this._groupField]] = this.AddGroup(val[this._groupField], val[this._groupField]);
                 }
                 if(selectedKeys.includes(String(val[this._valueField] ?? val))) {
                     groups[val[this._groupField]].AddItem(val, null, true);

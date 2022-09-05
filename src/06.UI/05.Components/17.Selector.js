@@ -151,13 +151,10 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
             if(ret === false || this._itemSelected === true) {
                 return;
             }
-            if(args.search) {                
-                this._showPopup(this._search(this.readonly ? '' : this._input.value));
-            }
-            else {
-                this._showPopup(this._values);
-            }
-
+            
+            this._values = this._search(this.readonly || !args.search ? '' : this._input.value);
+            this._showPopup(this._values);
+            
             if(this.allowempty) {
                 this.Dispatch('Changed', args);
             }
