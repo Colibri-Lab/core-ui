@@ -100,14 +100,14 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
             }
     
             for(let val of values) {
-                if(!groups[val[this._groupField]]) {
-                    groups[val[this._groupField]] = this.AddGroup(val[this._groupField], val[this._groupField]);
+                if(!groups[String.MD5(val[this._groupField])]) {
+                    groups[String.MD5(val[this._groupField])] = this.AddGroup(String.MD5(val[this._groupField]), val[this._groupField]);
                 }
                 if(selectedKeys.includes(String(val[this._valueField] ?? val))) {
-                    groups[val[this._groupField]].AddItem(val, null, true);
+                    groups[String.MD5(val[this._groupField])].AddItem(val, null, true);
                 }
                 else {
-                    groups[val[this._groupField]].AddItem(val, null);
+                    groups[String.MD5(val[this._groupField])].AddItem(val, null);
                 }
                 
             }

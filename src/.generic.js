@@ -758,6 +758,9 @@ String.prototype.copyToClipboard = function() {
 }
 
 String.MD5 = function(e) {
+    if(!e) {
+        e = '';
+    }
     
     function h(a, b) {
         var c, d, e, f, g;
