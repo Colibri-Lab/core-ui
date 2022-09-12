@@ -1,0 +1,58 @@
+
+.app-chooser-component {
+
+    width: 100%;
+    
+    &.app-component-shown {
+        display: flex;
+    }
+
+    align-items: center;
+    justify-content: flex-start;
+    cursor: pointer;
+
+    position: relative;
+    background: #FFFFFF;
+    border: 1px solid #D9DCE3;
+    border-radius: 3px;
+
+    .arrow {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 0 10px;
+        align-self: stretch;
+        &:hover {
+            svg {
+                path {
+                    fill: #000000;
+                }
+            }
+        }
+    }
+
+    .app-input-component {
+        width: 100%;
+        background: transparent;
+        border: 0;
+        padding: 5px 2px 5px 12px;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 20px;        
+        outline: none;
+        input {
+            padding: 0;
+        }
+        position: relative;
+    }
+
+    &.app-component-readonly {
+        input {
+            cursor: pointer;
+            user-select: none;
+        }
+    }
+
+
+}
