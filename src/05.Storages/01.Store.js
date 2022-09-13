@@ -318,7 +318,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
     }
 
-    UpdateList(path, searchField, searchValue, newData = null) {
+    UpdateList(path, searchField, searchValue = null, newData = null) {
         let list = EcoloPlace.Store.Query(path);
         if(!Array.isArray(list)) {
             list = [];
