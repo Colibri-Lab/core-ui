@@ -65,12 +65,13 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         this.RegisterEvent('ChooserClicked', false, 'Когда нажали на кнопку выбора');
     }
 
-    _showChooser() {
+    ShowChooser() {
         if(this._chooser) {
             const component = this._chooser;
             this._chooserObject = new component(this.name + '-chooser', document.body, this._selector?.params || {});
             this._chooserObject.AddHandler('Choosed', (event, args) => {
                 this.value = args.value;
+                this.Dispatch('Changed', {});
             });
             this._chooserObject.Show();
         } 
@@ -91,7 +92,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         this._input.AddHandler('Cleared', (event, args) => this.__Cleared(event, args));
 
         this._arrow.addEventListener('click', (e) => {
-            this._showChooser();
+            this.ShowChooser();
             return false; 
         });
 
@@ -99,7 +100,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         this._input.AddHandler('KeyDown', (event, args) => {
 
             if(['Enter', 'NumpadEnter'].indexOf(args.domEvent.code) !== -1) {
-                this._showChooser();
+                this.ShowChooser();
                 args.domEvent.stopPropagation();
                 args.domEvent.preventDefault();
                 return false;
@@ -114,7 +115,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
     __Filled(event, args) {
         let v = {};
         v[this._valueField] = this._input.value;
-        super.value = v;
+        this.value = v;
     }
 
     __Cleared(event, args) {

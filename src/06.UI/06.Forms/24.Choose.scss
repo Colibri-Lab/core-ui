@@ -1,4 +1,10 @@
 .app-component-choose-field {
 
+    &.-openonnote {
+        [data-object-name*="-note"] {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
 
 }
