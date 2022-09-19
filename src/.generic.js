@@ -142,6 +142,16 @@ Array.prototype.equals = function (array) {
     }       
     return true;
 }
+
+Array.toObjectWithKeys = function(array, fieldKey, fieldValue) {
+    let ret = {};
+    array.forEach((item) => {
+        ret[item[fieldKey]] = item[fieldValue];
+    });
+    return ret;
+}
+
+
 // Hide method from for-in loops
 Object.defineProperty(Array.prototype, "equals", {enumerable: false});
 
@@ -755,6 +765,14 @@ String.prototype.copyToClipboard = function() {
         });
     });
 
+}
+
+String.prototype.replaceCallback = function(pattern, callback) {
+    let string = this;
+    [...string.matchAll(pattern)].forEach(value => {
+        string = string.replace(value[0], callback(value));
+    });
+    return string;
 }
 
 String.MD5 = function(e) {
