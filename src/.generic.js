@@ -767,14 +767,6 @@ String.prototype.copyToClipboard = function() {
 
 }
 
-String.prototype.replaceCallback = function(pattern, callback) {
-    let string = this;
-    [...string.matchAll(pattern)].forEach(value => {
-        string = string.replace(value[0], callback(value));
-    });
-    return string;
-}
-
 String.MD5 = function(e) {
     if(!e) {
         e = '';
