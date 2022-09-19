@@ -192,6 +192,12 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         throw new Error('#{app-field-needtooverload-error;Нужно переопределить}');
     }
 
+    ResetValidation() {
+        this.params && (this.params.validated = true);
+        this.RemoveClass('app-validate-error');
+        this.message = '';
+    }
+
     get message() {
         const message = this._content.Children(this._name + '-message');
         if(!message) {
