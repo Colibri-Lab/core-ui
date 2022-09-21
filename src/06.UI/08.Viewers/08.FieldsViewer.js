@@ -8,6 +8,8 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         this._value = {};
         this._download = null;
         this._downloadlink = null;
+
+        this.RegisterEvent('FieldsToggled', false, 'Когда скрытое открыто или закрыто');
     }
 
     set download(value) {
@@ -43,6 +45,13 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         this._root = value;
     }
 
+    __toggleHidden(event, args) {
+        this._hidden.shown = !this._hidden.shown;
+        this._hiddenLink1.shown = !this._hiddenLink1.shown;
+        this._hiddenLink2.shown = !this._hiddenLink2.shown;
+        this.Dispatch('FieldsToggled', {});
+    }
+
     _createFields(fields = null, value = null, contentElement = null, showTitles = true) {
         const root = this.root || this;
         contentElement = contentElement || this;
@@ -50,13 +59,37 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         value = value || this._value;
 
         this.Clear();
+
+        this._shown = new Colibri.UI.Pane(this.name + '_shown', contentElement);
+        this._shown.shown = true;
+
+        let isHidden = false;
+        Object.forEach(fields, (name, field) => {
+            isHidden = field?.params?.fieldsviewer && field?.params?.fieldsviewer.hidden;
+        });
+
+        if(isHidden) {
+            this._hidden = new Colibri.UI.Pane(this.name + '_hidden', contentElement);
+            this._hiddenLink1 = new Colibri.UI.Link(this.name + '_link1', contentElement);
+            this._hiddenLink2 = new Colibri.UI.Link(this.name + '_link2', contentElement);
+            this._hidden.shown = false;
+            this._hiddenLink1.shown = true;
+            this._hiddenLink2.shown = false;
+            this._hiddenLink1.value = '<svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 9L9.5 13L15 9" stroke="#0074FF" stroke-width="1.7" stroke-linecap="round"/></svg>&nbsp;Развернуть';
+            this._hiddenLink2.value = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.25 9.5L7 4.5L0.75 9.5" stroke="#0074FF" stroke-width="1.5" stroke-linecap="round"/></svg>&nbsp;Свернуть';
+
+            this._hiddenLink1.AddHandler('Clicked', (event, args) => this.__toggleHidden(event, args));
+            this._hiddenLink2.AddHandler('Clicked', (event, args) => this.__toggleHidden(event, args));
+
+        }
+
         Object.forEach(fields, (name, field) => {
 
             if(field.component == 'Hidden') {
                 return true;
             }
 
-            const pane = new Colibri.UI.Pane(name + 'pane', contentElement);
+            const pane = new Colibri.UI.Pane(name + 'pane', isHidden && (field?.params?.fieldsviewer && field?.params?.fieldsviewer.hidden) ? this._hidden : this._shown);
             const shortComponentName = field.component.substr(field.component.lastIndexOf('.') + 1).toLowerCase();
 
             pane.AddClass(`app-field-pane app-${shortComponentName}-pane`);

@@ -93,6 +93,11 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
         else {
             super.value = '';
         }
+
+        if(!super.value) {
+            super.value = '&mdash;';
+        }
+
     }
 
     _getDependsValue() {
