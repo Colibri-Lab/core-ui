@@ -14,6 +14,12 @@ Colibri.UI.Viewer = class extends Colibri.UI.Component {
         this.root = root;
     }
 
+    _injectParams() {
+        if(this._field?.params && this._field?.params?.className) {
+            this.AddClass(this._field?.params?.className);
+        }
+    }
+
     get viewedObject() {
         return this._object;
     }
@@ -24,10 +30,22 @@ Colibri.UI.Viewer = class extends Colibri.UI.Component {
 
     set field(value) {
         this._field = value;
+        this._injectParams();
     }
 
     get field() {
         return this._field;
+    }
+
+    set value(value) {
+        if(this.field?.params?.post) {
+            value = value + ' ' + this.field?.params?.post;
+        }
+        super.value = value;
+    }
+
+    get value() {
+        return super.value;
     }
 
     get root() {

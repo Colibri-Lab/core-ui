@@ -63,6 +63,11 @@
                 color: #0076E0;
             }
 
+            &.-error {
+                border-bottom: 2px solid #C90000;
+                color: #C90000;
+            }
+
         }
 
     }

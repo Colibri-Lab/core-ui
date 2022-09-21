@@ -194,5 +194,13 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         return this._tabs.selectedIndex;
     }
 
+    get buttons() {
+        return this._tabs.buttons;
+    }
+
+    get panes() {
+        return this._tabs.components;
+    }
+
 }
 Colibri.UI.Forms.Field.RegisterFieldComponent('Tabs', 'Colibri.UI.Forms.Tabs', '#{app-fields-tabs;Вкладки}')

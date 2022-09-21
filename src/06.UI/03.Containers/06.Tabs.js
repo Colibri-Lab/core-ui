@@ -188,6 +188,17 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         return ret;
 
     }
-    
+
+    get buttons() {
+
+        let ret = {};
+        this.ForEach((name, component) => {
+            if(this.container && this.header.contains(component.container)) {
+                ret[name] = component;
+            }
+        });
+        return ret;
+
+    }
 
 }

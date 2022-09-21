@@ -119,6 +119,12 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                 title.AddClass('app-field-title');
                 title.value = field.desc;
                 title.shown = showTitles;
+                if(field?.params?.fieldsviewer?.info) {
+                    const icon = new Colibri.UI.Icon(name + '-icon', title);
+                    icon.shown = true;
+                    icon.iconSVG = field?.params?.fieldsviewer?.info?.icon;
+                    icon.toolTip = field?.params?.fieldsviewer?.info.text;
+                }
             }
 
             if(value[name] !== undefined) {
