@@ -9,7 +9,7 @@ Colibri.UI.NumberViewer = class extends Colibri.UI.Viewer {
         let v = !value ? '&mdash;' : value;
         
         if(this.field?.params?.format === 'money') {
-            v = v !== '&mdash;' ? parseFloat(v).toMoney() : v;
+            v = v !== '&mdash;' ? parseFloat(v).toMoney(this.field?.params?.decimal ?? 2) : v;
         }
 
         super.value = v;
