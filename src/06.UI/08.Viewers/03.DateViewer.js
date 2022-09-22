@@ -4,6 +4,8 @@ Colibri.UI.DateViewer = class extends Colibri.UI.Viewer {
         super(name, container, element, root);
         this.AddClass('app-date-viewer-component');
 
+        let dateformat = App.DateFormat || 'ru-RU';
+        this._format = new Intl.DateTimeFormat(dateformat, {day: '2-digit', month: 'short', year: 'numeric'});
         this._value = null;
 
     }
@@ -17,8 +19,8 @@ Colibri.UI.DateViewer = class extends Colibri.UI.Viewer {
             value = value.toDate();
         }
         this._value = value;
-        
-        super.value = this._value && this._value.toShortRUString();
+    
+        super.value = this._value && this._format.format(this.value);
 
     }
 
