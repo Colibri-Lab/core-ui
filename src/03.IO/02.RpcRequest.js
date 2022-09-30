@@ -90,6 +90,7 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
                     }
                 }
                 catch(e) {
+                    console.error(e);
                     data.result = {};
                 }
 

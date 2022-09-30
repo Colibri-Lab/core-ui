@@ -1098,7 +1098,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     ReloadBinding() {
 
-        this._binding = value;
+        // this._binding = value;
         let pathsToLoad = this._binding;
         if(this._binding.indexOf(';') !== -1) {
             pathsToLoad = this._binding.split(';');
@@ -1115,7 +1115,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         else {
             this._storage.AsyncQuery(this._binding).then((data) => {
                 if(this.__renderBoundedValues) {
-                    this.__renderBoundedValues(data);
+                    this.__renderBoundedValues(data, this._binding);
                 }
             });
         }
