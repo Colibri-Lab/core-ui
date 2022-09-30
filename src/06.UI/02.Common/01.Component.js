@@ -1016,7 +1016,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
         else {
             const shadow = document.querySelector('.app-component-shadow-div');
-            shadow && shadow.remove();
+            if(shadow) {
+                shadow.remove();
+            }
         }
     }
 
