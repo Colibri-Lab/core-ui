@@ -61,10 +61,11 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
         this._workingRequests[requestKeyword] = request;
         
         const requestMethod = params && params._requestMethod && params._requestMethod === 'get' ? 'Get' : 'Post'; 
+        const requestType = params && params._requestType ? params._requestType : this._requestType;
         params && delete params._requestMethod;
 
         return new Promise((resolve, reject) => {
-            let url = this._prepareStrings((this._moduleEntry ? '\\Modules\\' + this._moduleEntry : '') + '\\' +  controller + '\\' + method + '.' + this._requestType);
+            let url = this._prepareStrings((this._moduleEntry ? '\\Modules\\' + this._moduleEntry : '') + '\\' +  controller + '\\' + method + '.' + requestType);
             if(this._remoteDomain) {
                 url = this._remoteDomain + url;
             }
@@ -82,10 +83,10 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
                 this.Dispatch('CallCompleted', {result: data.result, request: requestKeyword});
 
                 try {
-                    if(this._requestType == 'json') {
+                    if(requestType == 'json') {
                         data.result = JSON.parse(data.result);
                     }
-                    else if(this._requestType == 'xml') {
+                    else if(requestType == 'xml') {
                         data.result = new DOMParser().parseFromString(data.result, "text/xml");
                     }
                 }
