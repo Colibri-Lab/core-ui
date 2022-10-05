@@ -20,7 +20,7 @@ Colibri.UI.DateViewer = class extends Colibri.UI.Viewer {
         }
         this._value = value;
     
-        super.value = this._value && this._format.format(this.value);
+        super.value = this._value && this._format.format(this._value);
 
     }
 
