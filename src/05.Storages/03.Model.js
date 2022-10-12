@@ -7,6 +7,14 @@ Colibri.Storages.Models.Model = class extends Colibri.Events.Dispatcher {
     }
 
     /**
+     * Таблица
+     * @type {Colibri.Storages.Models.Table}
+     */
+    get table() {
+        return this._table;
+    }
+    
+    /**
      * Данные
      * @type {object}
      */
