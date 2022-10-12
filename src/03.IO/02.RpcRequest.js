@@ -63,15 +63,12 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
         const requestMethod = params && params._requestMethod && params._requestMethod === 'get' ? 'Get' : 'Post'; 
         const requestType = params && params._requestType ? params._requestType : this._requestType;
         params && delete params._requestMethod;
+        headers.requester = document.domain;
 
         return new Promise((resolve, reject) => {
             let url = this._prepareStrings((this._moduleEntry ? '\\Modules\\' + this._moduleEntry : '') + '\\' +  controller + '\\' + method + '.' + requestType);
             if(this._remoteDomain) {
                 url = this._remoteDomain + url;
-            }
-            else if(window.rpchandler) {
-                // хак для ГБС
-                url = window.rpchandler + url;
             }
             request.AddHeaders(headers);
             request[requestMethod](url, params, withCredentials, (progressEvent) => {

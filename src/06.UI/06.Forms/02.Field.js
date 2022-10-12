@@ -54,7 +54,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
         let componentObject = null;
 
-        if(component === 'Hidden') {
+        if(component === 'Colibri.UI.Forms.Hidden') {
             componentObject = new Colibri.UI.Forms.HiddenField(name, container, field, parent, root);
         } else {
 
