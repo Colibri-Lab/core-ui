@@ -58,7 +58,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         fields = fields || this._fields;
         value = value || this._value;
 
-        this.Clear();
+        contentElement.Clear();
 
         this._shown = new Colibri.UI.Pane(this.name + '_shown', contentElement);
         this._shown.shown = true;
