@@ -50,10 +50,11 @@ Colibri.UI.DocumentViewer = class extends Colibri.UI.Viewer {
 
         this._value = value;
         
-        this._element.html('');
+        
         if(value instanceof Object) {
             // remote file
             this._downloadHandler(value.guid).then((data) => {
+                this._element.html('');
                 const uri = window.URL.createObjectURL(Base2File(data.data, value.name, value.mimetype, true), {type: value.mimetype});
                 if(this._isFileViewable(value.mimetype)) {
                     const ext = Colibri.Common.MimeType.type2ext(value.mimetype);
@@ -71,6 +72,7 @@ Colibri.UI.DocumentViewer = class extends Colibri.UI.Viewer {
 
         }
         else if(typeof value === 'string') {
+            this._element.html('');
             const pathinfo = value.pathinfo();
             const mimetype = Colibri.Common.MimeType.ext2type(pathinfo.ext);
             if(this._isFileViewable(mimetype)) {
