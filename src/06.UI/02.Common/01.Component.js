@@ -907,7 +907,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     get next() {
         const myIndex = this.parent.indexOf(this.name);
         if(myIndex === -1 || myIndex === this.parent.children - 1) {
-            return  null;
+            return null;
         }
 
         return this.parent.Children(myIndex + 1);
@@ -920,6 +920,22 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
 
         return this.parent.Children(myIndex - 1);
+    }
+
+    MoveUp() {
+        if(!this.prev) {
+            return;
+        }    
+        const index = this.childIndex;        
+        this.parent.Children(this.name, this, index - 1);
+    }
+
+    MoveDown() {
+        if(!this.next) {
+            return;
+        }    
+        const index = this.childIndex;        
+        this.parent.Children(this.name, this, index + 1);
     }
 
     _childByName(name) {

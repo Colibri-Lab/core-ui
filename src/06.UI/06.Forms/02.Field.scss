@@ -71,7 +71,7 @@
         }
     }
 
-    .app-component-remove-field {
+    .app-component-remove-field, .app-component-up-field, .app-component-down-field {
         font-style: normal;
         font-weight: normal;
         font-size: 12px;
@@ -79,13 +79,19 @@
         color: #5B6173;
         position: absolute;
         right: 8px;
-        top: 0px;
-        margin-top: 10px;
+        top: 10px;
         cursor: pointer;
         svg {
-            width: 14px;
-            height: 14px;
+            width: 15px;
+            height: 15px;
         }
+    }
+
+    .app-component-up-field {
+        top: 25px;
+    } 
+    .app-component-down-field {
+        top: 40px;
     }
 
 }

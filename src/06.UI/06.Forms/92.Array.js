@@ -6,12 +6,13 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
         const contentContainer = this.contentContainer;
 
-        const containerElement = Element.create('div', {class: 'array-component-container'});
-        contentContainer.container.append(containerElement);
+        // const containerElement = Element.create('div', {class: 'array-component-container'});
+        // contentContainer.container.append(containerElement);
 
         this.AddNew();
 
         this._link = this._createAddNewLink();
+        
 
         if(this._fieldData?.params?.readonly === undefined) {
             this.readonly = false;    
@@ -45,9 +46,9 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     }
 
     AddNew() {
-        const containerElement = this.contentContainer.container.querySelector('.array-component-container');
-        const object = new Colibri.UI.Forms.Object('object-' + Date.Now().getTime(), containerElement, this._fieldData, this, this.root);
-        object.parent = this.contentContainer;
+        // const containerElement = this.contentContainer.container.querySelector('.array-component-container');
+        const object = new Colibri.UI.Forms.Object('object-' + Date.Now().getTime(), this.contentContainer, this._fieldData, this, this.root);
+        // object.parent = this.contentContainer;
         object.shown = true;
         object.title = '';
         object.enabled = this.enabled;
@@ -66,6 +67,14 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
                 }
 
             });
+            object.AddUpDownLink(() => {
+                object.MoveUp();
+                this.Dispatch('Changed');
+            }, () => {
+                object.MoveDown();
+                this.Dispatch('Changed');
+            });
+
         }
         object.AddHandler('Changed', (event, args) => {
             if(this._fieldData.params && this._fieldData.params.title !== null) {

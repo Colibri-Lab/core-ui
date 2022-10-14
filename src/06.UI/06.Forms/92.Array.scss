@@ -34,11 +34,9 @@
         }
     }
 
-    .array-component-container {
-        .app-component-object-field {
-            margin-bottom: 10px;
-            padding-right: 30px;
-        }
+    .app-component-object-field {
+        margin-bottom: 10px;
+        padding-right: 30px;
+        min-height: 65px;
     }
-
 }

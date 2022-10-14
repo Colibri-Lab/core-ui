@@ -137,13 +137,36 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         const removeLink = new Colibri.UI.Icon(this._name + '-remove', this);
         removeLink.AddClass('app-component-remove-field')
         removeLink.shown = true;
-        removeLink.value = Colibri.UI.CloseIcon;
+        removeLink.value = Colibri.UI.RemoveIcon;
         removeLink.AddHandler('Clicked', (event, args) => {
             if(!this.enabled) {
                 return;
             }
             this.Dispose();
             callback && callback();
+        });
+    }
+
+    AddUpDownLink(upCallback, downCallback) {
+        const upLink = new Colibri.UI.Icon(this._name + '-up', this);
+        upLink.AddClass('app-component-up-field')
+        upLink.shown = true;
+        upLink.value = Colibri.UI.UpIcon;
+        upLink.AddHandler('Clicked', (event, args) => {
+            if(!this.enabled) {
+                return;
+            }
+            upCallback && upCallback();
+        });
+        const downLink = new Colibri.UI.Icon(this._name + '-down', this);
+        downLink.AddClass('app-component-down-field')
+        downLink.shown = true;
+        downLink.value = Colibri.UI.DownIcon;
+        downLink.AddHandler('Clicked', (event, args) => {
+            if(!this.enabled) {
+                return;
+            }
+            downCallback && downCallback();
         });
     }
 
