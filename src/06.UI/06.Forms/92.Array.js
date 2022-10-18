@@ -39,8 +39,8 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         link.value = this._fieldData.params && this._fieldData.params.addlink || '#{app-array-add;Добавить еще} «' + (this._fieldData.desc) + '»';
         link.shown = true;
         link.AddHandler('Clicked', (event, args) => {
-            this.AddNew();
-            this.MoveUp();
+            const object = this.AddNew();
+            object.MoveUp();
             this.Dispatch('Changed');            
         });
         return link;
