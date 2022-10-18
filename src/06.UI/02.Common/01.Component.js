@@ -928,6 +928,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }    
         const index = this.childIndex;        
         this.parent.Children(this.name, this, index - 1);
+        console.log(index, this.parent._children);
     }
 
     MoveDown() {
@@ -936,6 +937,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }    
         const index = this.childIndex;        
         this.parent.Children(this.name, this, index + 1);
+        console.log(index, this.parent._children);
     }
 
     _childByName(name) {
@@ -947,6 +949,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     _moveInDom(insertedElement, parentElement, index) {
+        insertedElement.remove();
         parentElement.insertBefore(insertedElement, parentElement.children[index]);
     }
 

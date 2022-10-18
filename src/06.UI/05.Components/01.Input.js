@@ -86,6 +86,17 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
             this.Dispatch('LoosedFocus', { value: this.value, domEvent: e });
         });
 
+        this.AddHandler('LoosedFocus', (event, args) => {
+            if(this._popup) {
+                this._popup.Hide();
+                this._popup.Dispose();
+                this._popup = null;
+            }
+        });
+        this.AddHandler('ReceiveFocus', (event, args) => {
+            this._showSuggestions();
+        });
+
     }
 
     _registerEvents() {
@@ -237,6 +248,44 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
     set mask(value) {
         this._masker = new Colibri.UI.Utilities.Mask([this._input]);
         this._masker.maskPattern(value);
+    }
+
+    /**
+     * Подсказки
+     * @type {Array}
+     */
+    get suggestions() {
+        return this._suggestions;
+    }
+    /**
+     * Подсказки
+     * @type {Array}
+     */
+    set suggestions(value) {
+        this._suggestions = value;
+    }
+
+    _createPopup(values) {
+        const popup = new Colibri.UI.PopupList('select-popup', document.body, this._multiple, this.__render, this._titleField, this._valueField, this._groupField);
+        popup.parent = this;
+        popup.multiple = this._multiple;
+        const el = this.container.closest('[namespace]');
+        el && popup.container.attr('namespace', el.attr('namespace'));
+        //заполнение списка перед хэндлерами, чтобы не сработал SelectionChanged
+        popup.FillItems(values, this._value);
+        popup.AddHandler('MouseDown', (event, args) => {
+            this._input.value = popup?.selected?.value;
+        });
+        return popup;
+    }
+
+    _showSuggestions() {
+        if(this._suggestions && this._suggestions.length > 0) {
+            if(!this._popup) {
+                this._popup = this._createPopup(this._suggestions);
+            }
+            this._popup.Show();    
+        }
     }
 
 }

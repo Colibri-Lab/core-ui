@@ -40,6 +40,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         link.shown = true;
         link.AddHandler('Clicked', (event, args) => {
             this.AddNew();
+            this.MoveUp();
             this.Dispatch('Changed');            
         });
         return link;
@@ -55,7 +56,9 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         if(this._fieldData.params && this._fieldData.params.removelink !== false) {
             object.AddRemoveLink(() => {
                 Object.forEach(this.Fields(), (name, field) => {
-                    field.Dispatch('Changed');
+                    if(field instanceof Colibri.UI.Forms.Field) {
+                        field.Dispatch('Changed');
+                    }
                 });
                 this.Dispatch('Changed');
 
@@ -71,7 +74,9 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
                 object.MoveUp();
                 this.Dispatch('Changed');
             }, () => {
-                object.MoveDown();
+                if(object.childIndex < this.children - 1) {
+                    object.MoveDown();
+                }
                 this.Dispatch('Changed');
             });
 
@@ -150,7 +155,6 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     set value(value) {
         
         value = eval_default_values(value);
-
         if(value && !Array.isArray(value)) {
             // throw new Error('Передайте массив')
             return;
