@@ -1174,7 +1174,7 @@ Date.from = function(from) {
  * Удостоверяется, что элемент виден в паренте
  * @param {Element} container
  */
-Element.prototype.ensureInViewport = function(container) {
+Element.prototype.ensureInViewport = function(container, top = null) {
 
     //Determine container top and bottom
     let cTop = container.scrollTop;
@@ -1189,6 +1189,10 @@ Element.prototype.ensureInViewport = function(container) {
         container.scrollTop -= (cTop - eTop) + this.clientHeight;
     } else if (eBottom > cBottom) {
         container.scrollTop += (eBottom - cBottom);
+    }
+    if(top) {
+        console.log(top);
+        container.scrollTop -= top;
     }
 }
 
