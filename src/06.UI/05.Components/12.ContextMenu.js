@@ -219,6 +219,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
 
     set shown(value) {
         super.shown = value;
+        
         this.BringToFront();
         this.hasShadow = value;
         if(value) {
@@ -239,8 +240,10 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
     }
 
     Dispose() {
-        const shadow = document.querySelector('.app-component-shadow-div');
-        shadow && shadow.remove();
+        const shadow = this._element.next();
+        if(shadow && shadow.classList.contains('app-component-shadow-div')) {
+            shadow.remove();
+        }
         super.Dispose();
     }
 

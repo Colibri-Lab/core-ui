@@ -143,6 +143,10 @@ Array.prototype.equals = function (array) {
     return true;
 }
 
+Array.prototype.intersect = function(arr) {
+    return this.filter(value => arr.includes(value));
+}
+
 Array.toObjectWithKeys = function(array, fieldKey, fieldValue) {
     let ret = {};
     array.forEach((item) => {

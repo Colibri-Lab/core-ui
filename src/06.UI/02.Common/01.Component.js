@@ -1023,8 +1023,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 this._element.css('z-index', Colibri.UI.zIndex() + 1);
             }
 
-            let shadow = document.querySelector('.app-component-shadow-div');
-            shadow && shadow.remove();
+            let shadow = this._element.next();
+            if(shadow && shadow.classList.contains('app-component-shadow-div')) {
+                shadow.remove();
+            }
 
             const zIndex = this._element.css('z-index') - 1;
             shadow = Element.create('div', {class: 'app-component-shadow-div'});
@@ -1034,8 +1036,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             shadow.after(this._element);
         }
         else {
-            const shadow = document.querySelector('.app-component-shadow-div');
-            if(shadow) {
+            const shadow = this._element.next();
+            if(shadow && shadow.classList.contains('app-component-shadow-div')) {
                 shadow.remove();
             }
         }
