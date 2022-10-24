@@ -318,12 +318,41 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
     }
 
-    UpdateList(path, searchField, searchValue = null, newData = null) {
+    UpdateList(path, searchField, searchValue = null, newData = null, sortField = null, sortOrder = 'asc') {
         let list = EcoloPlace.Store.Query(path);
         if(!Array.isArray(list)) {
             list = [];
         }
         list = Array.replaceObject(list, searchField, searchValue, newData);
+        if(sortField) {
+            list.sort((a, b) => {
+                if(a[sortField] > b[sortField]) {
+                    return sortOrder === 'asc' ? -1 : 1;
+                }
+                else if(a[sortField] < b[sortField]) {
+                    return sortOrder === 'asc' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+        EcoloPlace.Store.Set(path, list);
+        return list;
+    }
+
+    SortList(path, sortField, sortOrder = 'asc') {
+        let list = EcoloPlace.Store.Query(path);
+        if(!Array.isArray(list)) {
+            list = [];
+        }
+        list.sort((a, b) => {
+            if(a[sortField] > b[sortField]) {
+                return sortOrder === 'asc' ? -1 : 1;
+            }
+            else if(a[sortField] < b[sortField]) {
+                return sortOrder === 'asc' ? 1 : -1;
+            }
+            return 0;
+        });
         EcoloPlace.Store.Set(path, list);
         return list;
     }

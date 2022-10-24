@@ -14,15 +14,20 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         this._scrolling = -1;
         this._scrollY = -1;
         this._element.addEventListener('scroll', (event) => {
-            if(event.target.scrollTop > this._scrollY) {
-                if (this.Children('lastChild').container.getBoundingClientRect().bottom < (event.target.getBoundingClientRect().bottom + 10)) {
-                    clearTimeout(this._scrolling);
-                    this._scrolling = setTimeout(() => {
-                        this.Dispatch('ScrolledToBottom', {});
-                    }, 66);
+            try {
+                if(event.target.scrollTop > this._scrollY) {
+                    if (this.Children('lastChild').container.getBoundingClientRect().bottom < (event.target.getBoundingClientRect().bottom + 10)) {
+                        clearTimeout(this._scrolling);
+                        this._scrolling = setTimeout(() => {
+                            this.Dispatch('ScrolledToBottom', {});
+                        }, 66);
+                    }
                 }
+                this._scrollY = event.target.scrollTop;    
             }
-            this._scrollY = event.target.scrollTop;
+            catch(e) {
+
+            }
         });
 
     }
