@@ -327,10 +327,10 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         if(sortField) {
             list.sort((a, b) => {
                 if(a[sortField] > b[sortField]) {
-                    return sortOrder === 'asc' ? -1 : 1;
+                    return sortOrder === 'asc' ? 1 : -1;
                 }
                 else if(a[sortField] < b[sortField]) {
-                    return sortOrder === 'asc' ? 1 : -1;
+                    return sortOrder === 'asc' ? -1 : 1;
                 }
                 return 0;
             });
@@ -356,10 +356,10 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         }
         list.sort((a, b) => {
             if(a[sortField] > b[sortField]) {
-                return sortOrder === 'asc' ? -1 : 1;
+                return sortOrder === 'asc' ? 1 : -1;
             }
             else if(a[sortField] < b[sortField]) {
-                return sortOrder === 'asc' ? 1 : -1;
+                return sortOrder === 'asc' ? -1 : 1;
             }
             return 0;
         });
