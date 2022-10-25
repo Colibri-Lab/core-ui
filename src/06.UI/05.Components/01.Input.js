@@ -41,15 +41,9 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
                 this._fillTimeout = null;
             }
 
-            if (this._input.value.length >= 3) {
-                this._fillTimeout = setTimeout(() => {
-                    this.Dispatch('Filled', { value: this.value });
-                }, 500);
-            }
-            else {
-                this.loading = false;
-                this.Dispatch('Filled', { value: ''});
-            }
+            this._fillTimeout = setTimeout(() => {
+                this.Dispatch('Filled', { value: this.value });
+            }, 500);
 
         });
 

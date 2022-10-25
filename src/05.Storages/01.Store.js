@@ -339,6 +339,16 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         return list;
     }
 
+    ListAddPage(path, pageItems) {
+        let list = EcoloPlace.Store.Query(path);
+        if(!Array.isArray(list)) {
+            list = [];
+        }
+        list = list.concat(pageItems);
+        EcoloPlace.Store.Set(path, list);
+        return list;
+    }
+
     SortList(path, sortField, sortOrder = 'asc') {
         let list = EcoloPlace.Store.Query(path);
         if(!Array.isArray(list)) {
