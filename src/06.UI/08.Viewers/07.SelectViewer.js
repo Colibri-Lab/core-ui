@@ -8,7 +8,7 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
     set value(value) {
         if(value) {
             
-            if((this._field.multiple ?? this._field.params.multiple)) {
+            if((this._field?.multiple ?? this._field?.params?.multiple)) {
                 // надо обработать вариант с мультизначениями
                 if(typeof value == 'string') {
                     value = value.split(',');
