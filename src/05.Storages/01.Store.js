@@ -15,6 +15,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
     }
     
+    Clear(path) {
+        if(!path) {
+            this._data = {};
+        }
+        this.Set(path, null);
+    }
+    
     get name() {
         return this._name;
     }
@@ -308,7 +315,12 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
             }
         }
 
-        eval(realpath + ' = d;');
+        if(d !== null) {
+            eval(realpath + ' = d;');
+        }
+        else {
+            eval('delete ' + realpath + ';');
+        }
 
         if(!nodispatch) {
             this.DispatchPath(path);
