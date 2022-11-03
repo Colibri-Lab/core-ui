@@ -45,6 +45,8 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
             Colibri.Common.Delay(100).then(() => {
                 this.Dispatch('Changed', {domEvent: e});
             });
+            e.stopPropagation();
+            return false;
         });
         this._input.addEventListener('keydown', (e) => this.Dispatch('KeyDown', {domEvent: e}));
         this._input.addEventListener('click', (e) => {
