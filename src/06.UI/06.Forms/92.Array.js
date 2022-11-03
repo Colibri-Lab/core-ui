@@ -48,7 +48,9 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
     AddNew() {
         // const containerElement = this.contentContainer.container.querySelector('.array-component-container');
-        const object = new Colibri.UI.Forms.Object('object-' + Date.Now().getTime(), this.contentContainer, this._fieldData, this, this.root);
+        const fieldData = Object.cloneRecursive(this._fieldData);
+        delete fieldData.note;
+        const object = new Colibri.UI.Forms.Object('object-' + Date.Now().getTime(), this.contentContainer, fieldData, this, this.root);
         // object.parent = this.contentContainer;
         object.shown = true;
         object.title = '';

@@ -98,6 +98,10 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this._content.Children(this._name + '-note').shown = true;
         this._content.Children(this._name + '-message').shown = false;
 
+        if(this._fieldData?.params?.noteClass) {
+            this._content.Children(this._name + '-note').AddClass(this._fieldData.params.noteClass);
+        }
+
         this.RenderFieldContainer();
 
         this.title = this._fieldData.desc;
