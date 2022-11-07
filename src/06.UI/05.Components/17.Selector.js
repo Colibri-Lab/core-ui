@@ -16,7 +16,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * @param {boolean} allowEmpty разрешено пустое значение
      * @param {boolean} clearIcon показать clearIcon
      */
-    constructor(name, container, multiple = false, readonly = true, values = [], defaultValue = null, titleField = 'title', valueField = 'value', groupField = null, __render = null, allowEmpty = true, clearIcon = false) {
+    constructor(name, container, multiple = false, readonly = true, values = [], defaultValue = null, titleField = 'title', valueField = 'value', groupField = null, __render = null, allowEmpty = true, clearIcon = false, canSelectGroup = false) {
         super(name, container, '<div />');
 
         this.AddClass('app-selector-component');
@@ -45,6 +45,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
         this.readonly = readonly;
         this.allowempty = allowEmpty;
+        this.canSelectGroup = canSelectGroup;
 
         this._setValue(this._default);
         this._renderValue();
@@ -584,5 +585,21 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
             this._hidePopup();
         });
     }
+
+    /**
+     * Можно ли выбирать группу
+     * @type {boolean}
+     */
+    get canSelectGroup() {
+        return this._canSelectGroup;
+    }
+    /**
+     * Можно ли выбирать группу
+     * @type {boolean}
+     */
+    set canSelectGroup(value) {
+        this._canSelectGroup = value;
+    }
+
 }
 

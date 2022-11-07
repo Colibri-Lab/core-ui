@@ -1,7 +1,7 @@
 
 Colibri.UI.PopupList = class extends Colibri.UI.List {
 
-    constructor(name, container, multiple, __render, titleField = 'title', valueField = 'value', groupField = null) {
+    constructor(name, container, multiple, __render, titleField = 'title', valueField = 'value', groupField = null, canSelectGroup = false) {
         super(name, container, multiple);
         this.AddClass('app-component-popup-list-component');
         
@@ -9,6 +9,7 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
         this._titleField = titleField;
         this._valueField = valueField;
         this._groupField = groupField;
+        this._canSelectGroup = canSelectGroup;
 
         this.AddHandler('ShadowClicked', (event, args) => {
             this.Hide();
