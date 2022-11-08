@@ -530,7 +530,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     _createPopup(values) {
-        const popup = new Colibri.UI.PopupList('select-popup', document.body, this._multiple, this.__render, this._titleField, this._valueField, this._groupField);
+        const popup = new Colibri.UI.PopupList('select-popup', document.body, this._multiple, this.__render, this._titleField, this._valueField, this._groupField, this._canSelectGroup);
         popup.parent = this;
         popup.multiple = this._multiple;
         const el = this.container.closest('[namespace]');

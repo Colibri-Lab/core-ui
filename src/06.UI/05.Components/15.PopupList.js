@@ -87,7 +87,7 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
         const values = Object.values(value);
         if(this._groupField) {
 
-            const groups = {};
+            
 
             const selectedKeys = [];
     
@@ -99,19 +99,35 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
                     selectedKeys.push(String(val[this._valueField] ?? val));
                 });
             }
-    
-            for(let val of values) {
-                if(!groups[String.MD5(val[this._groupField])]) {
-                    groups[String.MD5(val[this._groupField])] = this.AddGroup(String.MD5(val[this._groupField]), val[this._groupField]);
+
+            if(this._canSelectGroup) {
+                const group = this.AddGroup('group', '');
+                for(let val of values) {
+                    console.log(this._groupField, val[this._groupField], val[this._groupField] === true);
+                    if(val[this._groupField] === true) {
+                        const item = group.AddItem(val, null);
+                        item.AddClass('-group');
+                    }
+                    group.AddItem(val, null);
                 }
-                if(selectedKeys.includes(String(val[this._valueField] ?? val))) {
-                    groups[String.MD5(val[this._groupField])].AddItem(val, null, true);
-                }
-                else {
-                    groups[String.MD5(val[this._groupField])].AddItem(val, null);
-                }
-                
             }
+            else {
+                const groups = {};
+                for(let val of values) {
+                    if(!groups[String.MD5(val[this._groupField])]) {
+                        groups[String.MD5(val[this._groupField])] = this.AddGroup(String.MD5(val[this._groupField]), val[this._groupField]);
+                    }
+                    if(selectedKeys.includes(String(val[this._valueField] ?? val))) {
+                        groups[String.MD5(val[this._groupField])].AddItem(val, null, true);
+                    }
+                    else {
+                        groups[String.MD5(val[this._groupField])].AddItem(val, null);
+                    }
+                    
+                }
+            }
+    
+            
 
         }
         else {
