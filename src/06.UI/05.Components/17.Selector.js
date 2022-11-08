@@ -111,14 +111,15 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         // перехватить keydown и обработать Escape
         this._input.AddHandler('KeyDown', (event, args) => {
 
-            if(['Escape', 'Space', 'ArrowUp', 'ArrowDown', 'Enter', 'NumpadEnter'].indexOf(args.domEvent.code) !== -1) {
+            // , 'Space'
+            if(['Escape', 'ArrowUp', 'ArrowDown', 'Enter', 'NumpadEnter'].indexOf(args.domEvent.code) !== -1) {
 
                 if(args.domEvent.code === 'Escape') {
                     this._hidePopup();
                 }
-                else if(args.domEvent.code === 'Space') {
-                    this.Focus();
-                }
+                // else if(args.domEvent.code === 'Space') {
+                //     this.Focus();
+                // }
                 else if(args.domEvent.code === 'ArrowUp') {
                     if(!this._popup) {
                         this.Focus();
