@@ -164,7 +164,10 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     InitializeModules() {
         Object.keys(App.Modules).forEach((module) => {
-            eval(module + '.InitializeModule();');
+            try {
+                eval(module + '.InitializeModule();');
+            }
+            catch(e) { }
         })
     }
 
