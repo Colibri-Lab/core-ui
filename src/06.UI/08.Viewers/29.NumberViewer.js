@@ -12,6 +12,10 @@ Colibri.UI.NumberViewer = class extends Colibri.UI.Viewer {
             v = v !== '&mdash;' ? parseFloat(v).toMoney(this.field?.params?.decimal ?? 2) : v;
         }
 
+        if(this.field?.params?.unit) {
+            v = v !== '&mdash;' ? v + ' ' + this.field?.params?.unit : v;
+        }
+
         super.value = v;
     }
 
