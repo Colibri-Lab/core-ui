@@ -28,7 +28,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         }
 
 
-    }
+    } 
 
     _createAddNewLink() {
         if(this._fieldData.params && this._fieldData.params.addlink === null) {
