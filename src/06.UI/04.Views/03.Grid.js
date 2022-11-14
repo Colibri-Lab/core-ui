@@ -1175,8 +1175,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     set value(value) {
 
-        if(!data || (!Array.isArray(data) && data instanceof Object)) {
-            data = Object.values(data);
+        if(!value || (!Array.isArray(value) && value instanceof Object)) {
+            value = Object.values(value);
         }
 
         this.ClearAllRows();
