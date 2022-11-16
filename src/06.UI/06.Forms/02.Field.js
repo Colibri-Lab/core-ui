@@ -104,11 +104,11 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
         this.RenderFieldContainer();
 
-        this.title = this._fieldData.desc;
-        this.note = this._fieldData.note;
+        this.title = this._fieldData?.desc ?? '';
+        this.note = this._fieldData?.note ?? '';
         this.placeholder = this._fieldData?.placeholder;
 
-        if(this._fieldData.attrs) {
+        if(this._fieldData?.attrs) {
             Object.assign(this, this._fieldData.attrs);
         }
 
@@ -127,7 +127,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this.AddHandler('ReceiveFocus', (event, args) => this.AddClass('-focused'));
         this.AddHandler('LoosedFocus', (event, args) => this.RemoveClass('-focused'));
 
-        if(this._fieldData.hidden && this._fieldData.hidden === true) {
+        if(this._fieldData?.hidden && this._fieldData?.hidden === true) {
             this.AddClass('app-component-field-hidden');
         }
 

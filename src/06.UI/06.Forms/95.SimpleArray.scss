@@ -1,0 +1,42 @@
+.app-component-array-field {
+
+    
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #D9DCE3;
+
+    > [data-object-name$="-title"] {
+        display: block;
+        font-size: 18px;
+    }
+
+    [data-object-name="add-new"] {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 140%;
+        color: #0076E0;
+        cursor: pointer;
+        margin-top: 8px;
+        display: inline-block;
+    }
+
+    > [data-object-name$="-title"] {
+
+    }
+
+    > [data-object-name$="-content"] {
+        > [data-object-name$="-container"] {
+            &.app-component-shown{
+                display: block;
+            }
+        }
+    }
+
+    .app-component-object-field {
+        margin-bottom: 10px;
+        padding-right: 30px;
+        min-height: 65px;
+    }
+}
