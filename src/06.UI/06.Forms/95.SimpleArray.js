@@ -78,8 +78,9 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
     get value() {
 
         let val = [];
-        this._grid.ForEveryRow((row) => {
+        this._grid.ForEveryRow((name, row) => {
             let v = [];
+            console.log(row);
             Object.forEach(row.value, (key, value) => {
                 if(key != 'col0') {
                     v.push(value);
@@ -97,7 +98,7 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
         for(let i=0; i < value.length; i++) {
             let v = {col0: i + 1};
             for(let j=0; j < value[i].length; j++) {
-                v['col' + (j + 1)] = value[i][j];
+                v['col' + (j + 1)] = value[i][j] ?? '';
             }    
             this._grid.rows.Children('item' + (i + 1)).value = v;
         }
