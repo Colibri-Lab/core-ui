@@ -103,7 +103,6 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
             if(this._canSelectGroup) {
                 const group = this.AddGroup('group', '');
                 for(let val of values) {
-                    console.log(this._groupField, val[this._groupField], val[this._groupField] === true);
                     if(val[this._groupField] === true) {
                         const item = group.AddItem(val, null);
                         item.AddClass('-group');
