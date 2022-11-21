@@ -80,7 +80,6 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
         let val = [];
         this._grid.ForEveryRow((name, row) => {
             let v = [];
-            console.log(row);
             Object.forEach(row.value, (key, value) => {
                 if(key != 'col0') {
                     v.push(value);
