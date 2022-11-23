@@ -87,11 +87,24 @@ Array.toObject = function(a) {
     return ret;
 }
 
-Array.findObject = function(arr, field, value) {
+Array.findObject = function(arr, field, value = null) {
     for(let i=0; i<arr.length; i++) {
         const o = arr[i];
-        if(o[field] == value) {
-            return o;
+        if(value === null && typeof field === 'function') {
+            if(field(o)) {
+                return o;
+            }
+        }
+        else if(field.indexOf('.') !== -1) {
+            const v = eval('o[\'' + field.replaceAll('.', '\'][\'') + '\']');
+            if(v == value) {
+                return o;
+            }
+        }
+        else {
+            if(o[field] == value) {
+                return o;
+            }
         }
     }
     return null;
@@ -1110,6 +1123,9 @@ Date.prototype.Diff = function(dt) { return parseInt((dt.getTime() - this.getTim
 Date.prototype.DiffInMonths = function(dateTo) {
     return dateTo.getMonth() - this.getMonth() + 
       (12 * (dateTo.getFullYear() - this.getFullYear()))
+}
+Date.prototype.DiffInDays = function(dateTo) {
+    return this.Diff(dateTo) / 86400;
 }
 Date.prototype.Age = function(removeNazad = false, returnFull = false) {
     let time = Math.abs((new Date()).getTime() / 1000 - this.getTime() / 1000); // to get the time since that moment
