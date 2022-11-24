@@ -295,6 +295,21 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Компонент отрисовщик
+     * @type {string|Colibri.UI.Component}
+     */
+    get rendererComponent() {
+        return this._rendererComponent;
+    }
+    /**
+     * Компонент отрисовщик
+     * @type {string|Colibri.UI.Component}
+     */
+    set rendererComponent(value) {
+        this._rendererComponent = value;
+    }
+
 }
 
 Colibri.UI.List.Group = class extends Colibri.UI.Component {
@@ -495,6 +510,13 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
         else if(this._itemData.__render) {
             html = this._itemData.__render.apply(this, [this._itemData, this]);
         }
+        else if(this.parent.parent.rendererComponent) {
+            let comp = this.parent.parent.rendererComponent;
+            if(!(comp instanceof Colibri.UI.Component)) {
+                comp = eval(comp);
+            }
+            new comp(this.name + '_renderer', this);
+        }
         if(html) {
             this._element.html(html);
         }
@@ -502,7 +524,7 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
         let data = Object.assign({}, this._itemData);
         delete data.__render;
 
-        this._element.data(data);
+        this._element.tag(data);
     }
 
     get contextmenu() {
