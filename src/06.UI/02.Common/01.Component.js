@@ -223,12 +223,20 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 }
             } 
             else {
-                // какая то текстовая хрень
-                if(parent instanceof Colibri.UI.Component) {
-                    parent.container.append(document.createTextNode(element.textContent));
+                let node = null;
+                if(element.nodeType === Node.COMMENT_NODE) {
+                    node = document.createComment(element.textContent);
                 }
                 else {
-                    parent.append(document.createTextNode(element.textContent));
+                    node = document.createTextNode(element.textContent);
+                }
+                
+                // какая то текстовая хрень
+                if(parent instanceof Colibri.UI.Component) {
+                    parent.container.append(node);
+                }
+                else {
+                    parent.append(node);
                 }
             }
             
