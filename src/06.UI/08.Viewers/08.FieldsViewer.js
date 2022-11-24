@@ -10,6 +10,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         this._downloadlink = null;
 
         this.RegisterEvent('FieldsToggled', false, 'Когда скрытое открыто или закрыто');
+        this.RegisterEvent('EditorChanged', false, 'Когда редактор изменился');
     }
 
     set download(value) {
@@ -147,7 +148,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                 }
                 else {
                     const componentName = field.component.replaceAll('Colibri.UI.Forms.', '');
-                    const viewerComponentName = field.viewer || field.params.viewer || ('Colibri.UI.' + componentName + 'Viewer');
+                    const viewerComponentName = field.viewer || field.params.viewer || (field.params?.editor ? 'Colibri.UI.' + componentName + 'Editor' : 'Colibri.UI.' + componentName + 'Viewer');
                     let viewer = null;
                     try {
                         viewer = eval('new '+ viewerComponentName + '(name + \'-viewer\', fieldContainer, null, root)');
@@ -160,6 +161,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                     viewer.download = this._download;
                     viewer.downloadlink = this._downloadlink;
                     viewer.value = value[name];
+                    viewer.AddHandler('Changed', (event, args) => this.Dispatch('EditorChanged', {domEvent: args.domEvent, editor: viewer, field: field, name: name}));
                 }
     
             }

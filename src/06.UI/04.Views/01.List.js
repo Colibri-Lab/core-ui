@@ -41,6 +41,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         this.RegisterEvent('ItemDoubleClicked', false, 'Поднимается, при двойном нажатии на элемент списка');
         this.RegisterEvent('GroupToggled', false, 'Поднимается, когда изменяется состяние отображения группы');
         this.RegisterEvent('ScrolledToBottom', false, 'Поднимается, когда доскролили до конца');
+        this.RegisterEvent('ItemEventHandled', false, 'Поднимается, какое то событие рендерера произошло');
     }
 
     AddGroup(name, title) {
@@ -511,11 +512,15 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
             html = this._itemData.__render.apply(this, [this._itemData, this]);
         }
         else if(this.parent.parent.rendererComponent) {
-            let comp = this.parent.parent.rendererComponent;
-            if(!(comp instanceof Colibri.UI.Component)) {
-                comp = eval(comp);
+            let content = this.Children(this.name + '_renderer');
+            if(!content) {
+                let comp = this.parent.parent.rendererComponent;
+                if(!(comp instanceof Colibri.UI.Component)) {
+                    comp = eval(comp);
+                }
+                content = new comp(this.name + '_renderer', this);
+                content.shown = true;
             }
-            const content = new comp(this.name + '_renderer', this);
             content.value = this._itemData;
         }
         if(html) {

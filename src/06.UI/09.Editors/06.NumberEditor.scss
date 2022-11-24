@@ -1,0 +1,21 @@
+.app-number-editor-component {
+
+    width: 100%;
+    height: 100%;
+
+    background: #FFFFFF;
+    border: 1px solid #EAEBF1;
+    border-radius: 3px;
+    overflow: hidden;
+    padding: 5px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;        
+    outline: none;
+
+    &.-invalid {
+        background: transparentize(#ED3545, .8);
+    }
+
+}
