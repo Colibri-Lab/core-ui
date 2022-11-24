@@ -515,7 +515,8 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
             if(!(comp instanceof Colibri.UI.Component)) {
                 comp = eval(comp);
             }
-            new comp(this.name + '_renderer', this);
+            const content = new comp(this.name + '_renderer', this);
+            content.value = this._itemData;
         }
         if(html) {
             this._element.html(html);
