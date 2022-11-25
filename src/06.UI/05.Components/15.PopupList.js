@@ -91,7 +91,7 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
 
             const selectedKeys = [];
     
-            if(selectedValues) {
+            if(selectedValues !== undefined && selectedValues !== null && selectedValues !== '') {
                 if(!Array.isArray(selectedValues)) {
                     selectedValues = [selectedValues];
                 }
@@ -134,7 +134,7 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
             const group = this.AddGroup('group', '');
             const selectedKeys = [];
     
-            if(selectedValues) {
+            if(selectedValues !== undefined && selectedValues !== null && selectedValues !== '') {
                 if(!Array.isArray(selectedValues)) {
                     selectedValues = [selectedValues];
                 }

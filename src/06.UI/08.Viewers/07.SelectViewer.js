@@ -6,7 +6,7 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
     }
 
     set value(value) {
-        if(value) {
+        if(value !== null && value !== undefined && value !== '') {
             
             if((this._field?.multiple ?? this._field?.params?.multiple)) {
                 // надо обработать вариант с мультизначениями

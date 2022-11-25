@@ -330,12 +330,12 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
     }
 
-    UpdateList(path, searchField, searchValue = null, newData = null, sortField = null, sortOrder = 'asc') {
+    UpdateList(path, searchField, searchValue = null, newData = null, sortField = null, sortOrder = 'asc', insertIfNotExists = true) {
         let list = EcoloPlace.Store.Query(path);
         if(!Array.isArray(list)) {
             list = [];
         }
-        list = Array.replaceObject(list, searchField, searchValue, newData);
+        list = Array.replaceObject(list, searchField, searchValue, newData, insertIfNotExists);
         if(sortField) {
             list.sort((a, b) => {
                 if(a[sortField] > b[sortField]) {

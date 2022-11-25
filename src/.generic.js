@@ -110,7 +110,7 @@ Array.findObject = function(arr, field, value = null) {
     return null;
 };
 
-Array.replaceObject = function(arr, field, value, replace = null) {
+Array.replaceObject = function(arr, field, value, replace = null, insertIfNotExists = true) {
     for(let i=0; i<arr.length;i++) {
         if(arr[i][field] == value) {
             if(replace) {
@@ -122,7 +122,9 @@ Array.replaceObject = function(arr, field, value, replace = null) {
             return arr;
         }
     }
-    arr.push(replace);
+    if(insertIfNotExists) {
+        arr.push(replace);
+    }
     return arr;
 };
 

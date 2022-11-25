@@ -3,16 +3,35 @@ Colibri.UI.NumberEditor = class extends Colibri.UI.Editor {
         super(name, container, '<input type="number" />');
         this.AddClass('app-number-editor-component');
 
+        this._element.addEventListener('focus', (e) => this.Focus());
+        this._element.addEventListener('blur', (e) => this.Blur());
+        this._element.addEventListener('change', (e) => this._addFilledClass());
+        this._element.addEventListener('keydown', (e) => this._addFilledClass());
+
     }
 
     Validate() {
         
     }
 
+    _addFilledClass() {
+        if(this.value) {
+            this.parent.parent.AddClass('-filled');
+        }
+        else {
+            this.parent.parent.RemoveClass('-filled');
+        }
+    }
+
     Focus() {
         this._element.focus();
         this._element.select();
+        this.parent.parent.AddClass('-focused');
     } 
+
+    Blur() {
+        this.parent.parent.RemoveClass('-focused');
+    }
 
     get readonly() {
         return this._fieldData.readonly;
@@ -43,6 +62,7 @@ Colibri.UI.NumberEditor = class extends Colibri.UI.Editor {
     set value(value) {
         this._element.value = value;
         this.Validate();
+        this._addFilledClass();
     }
 
     get enabled() {

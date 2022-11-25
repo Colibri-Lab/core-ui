@@ -2,6 +2,9 @@ Colibri.UI.TextEditor = class extends Colibri.UI.Editor {
     constructor(name, container) {
         super(name, container, '<input />');
         this.AddClass('app-text-editor-component');
+        
+        this._element.addEventListener('focus', (e) => this.Focus());
+        this._element.addEventListener('blur', (e) => this.Blur());
 
     }
 
@@ -12,7 +15,12 @@ Colibri.UI.TextEditor = class extends Colibri.UI.Editor {
     Focus() {
         this._element.focus();
         this._element.select();
+        this.parent.parent.AddClass('-focused');
     } 
+
+    Blur() {
+        this.parent.parent.RemoveClass('-focused');
+    }
 
     get readonly() {
         return this._fieldData.readonly;
