@@ -74,11 +74,23 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
         if(this._fieldData?.params?.emptyAsNull && value === '') {
             value = null;
         }
-        return value;
+        return this._convertValue(value, false);
     }
 
     set value(value) {
-        this._input.value = value ?? '';
+        if(value === '' || value === null) {
+            this._input.value = '';
+        }
+        else {
+            this._input.value = this._convertValue(value, true);
+        }
+    }
+
+    _convertValue(value, direction = true) {
+        if(this._fieldData?.params?.format === 'percent') {
+            value = direction ? value * 100 : value / 100;
+        }
+        return value;
     }
 
     
