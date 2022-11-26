@@ -6,20 +6,20 @@ Colibri.UI.NumberViewer = class extends Colibri.UI.Viewer {
     }
 
     set value(value) {
-        let v = !value || !isFinite(value) ? '&mdash;' : value;
+        let v = !value || !isFinite(value) ? '0' : value;
         
         if(this.field?.params?.format === 'money') {
-            v = v !== '&mdash;' ? parseFloat(v).toMoney(this.field?.params?.decimal ?? 2) : v;
+            v = parseFloat(v).toMoney(this.field?.params?.decimal ?? 2);
         }
         else if(this.field?.params?.format === 'percent') {
             if(v < 1) {
                 v = v * 100;
             }
-            v = v !== '&mdash;' ? parseFloat(v).toMoney(this.field?.params?.decimal ?? 2) : v;
+            v = parseFloat(v).toMoney(this.field?.params?.decimal ?? 2);
         }
 
         if(this.field?.params?.unit) {
-            v = v !== '&mdash;' ? v + ' ' + this.field?.params?.unit : v;
+            v = v + ' ' + this.field?.params?.unit;
         }
 
         super.value = v;
