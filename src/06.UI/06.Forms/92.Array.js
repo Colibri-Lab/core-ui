@@ -114,7 +114,9 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     }
 
     Focus() {
-        this.contentContainer.Children('firstChild').Focus();
+        if(this.contentContainer.Children('firstChild')) {
+            this.contentContainer.Children('firstChild').Focus();
+        }
     }
 
     get readonly() {
