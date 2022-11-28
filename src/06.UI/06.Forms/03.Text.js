@@ -6,8 +6,8 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
         this.AddClass('app-component-text-field');
 
         const contentContainer = this.contentContainer;
-        const params = {type: 'text', name: (this.form.shuffleFieldNames ? 'field-' + Date.Mc() : this._name + '-input')};
-        if(this.form.shuffleFieldNames) {
+        const params = {type: 'text', name: (this?.form?.shuffleFieldNames ? 'field-' + Date.Mc() : this._name + '-input')};
+        if(this?.form?.shuffleFieldNames) {
             params.autocomplete = 'off';
         }
         this._input = contentContainer.container.append(Element.create('input', params));

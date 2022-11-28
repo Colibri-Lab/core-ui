@@ -78,7 +78,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     get value() {
 
-        if(this.contentContainer.Children('nofields')) {
+        if(this.contentContainer?.Children('nofields')) {
             const v = this.contentContainer.Children('nofields').value;
             if(!v) {
                 return {};
@@ -102,7 +102,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     set value(value) {
 
-        if(this.contentContainer.Children('nofields')) {
+        if(this.contentContainer?.Children('nofields')) {
             this.contentContainer.Children('nofields').value = JSON.stringify(value);
             return 
         }
@@ -162,12 +162,12 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     get tabIndex() {
         const first = this.contentContainer.Children('firstChild');
-        return first.tabIndex;
+        return first && first.tabIndex;
     }
 
     get readonly() {
         const first = this.contentContainer.Children('firstChild');
-        return first.readonly;
+        return first && first.readonly;
     }
 
     set readonly(value) {
