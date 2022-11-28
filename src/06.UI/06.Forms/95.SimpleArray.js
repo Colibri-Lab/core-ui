@@ -2,7 +2,7 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
 
     RenderFieldContainer() {
 
-        this.AddClass('app-component-array-field');
+        this.AddClass('app-component-simplearray-field');
 
         const contentContainer = this.contentContainer;
 

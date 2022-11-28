@@ -21,10 +21,12 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         this._validated = false;
         this._errorMessage = '';
 
-        if (this._fieldData.params && this._fieldData.params.allow) {
-            this._allowedExtensions = this._fieldData.params.allow.exts ?? null;
-            this._maxFileSize = this._fieldData.params.allow.size ?? null;
+        if(!Array.isArray(this._fieldData.params.allow)) {
+            this._fieldData.params.allow = this._fieldData.params.allow.split(',');
         }
+
+        this._allowedExtensions = this._fieldData.params.allow ?? null;
+        this._maxFileSize = this._fieldData.params.size ?? null;
 
         this._dropAreaEnabled = false;
         if (this._fieldData.params && this._fieldData.params.droparea) {

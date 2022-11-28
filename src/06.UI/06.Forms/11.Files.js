@@ -8,11 +8,13 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         this._allowedExtensions = null;
         this._maxFileSize = null;
 
-        if (this._fieldData.params && this._fieldData.params.allow) {
-            this._allowedExtensions = this._fieldData.params.allow.exts ?? null;
-            this._maxFileSize = this._fieldData.params.allow.size ?? null;
-            this._maxCount = this._fieldData.params.allow.count ?? null;
+        if(!Array.isArray(this._fieldData.params.allow)) {
+            this._fieldData.params.allow = this._fieldData.params.allow.split(',');
         }
+        
+        this._allowedExtensions = this._fieldData.params.allow ?? null;
+        this._maxFileSize = this._fieldData.params.size ?? null;
+        this._maxCount = this._fieldData.params.maxadd ?? null;
 
         this._validated = false;
         this._errorMessages = [];

@@ -11,7 +11,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
         this.AddNew();
 
-        this._link = this._createAddNewLink();
+        this._createAddNewLink();
         
 
         if(this._fieldData?.params?.readonly === undefined) {
@@ -35,15 +35,16 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
             return;
         }
 
-        const link = new Colibri.UI.Link('add-new', this.contentContainer);
-        link.value = this._fieldData.params && this._fieldData.params.addlink || '#{app-array-add;Добавить еще} «' + (this._fieldData.desc) + '»';
-        link.shown = true;
-        link.AddHandler('Clicked', (event, args) => {
+        this._link = new Colibri.UI.Link('add-new', this.contentContainer);
+        this._link.value = this._fieldData.params && this._fieldData.params.addlink || '#{app-array-add;Добавить еще} «' + (this._fieldData.desc) + '»';
+        this._link.shown = true;
+        this._link.AddHandler('Clicked', (event, args) => {
             const object = this.AddNew();
             object.MoveUp();
+            this._link = this.contentContainer.Children('add-new');
             this.Dispatch('Changed');            
         });
-        return link;
+        return this._link;
     }
 
     AddNew() {
@@ -64,10 +65,10 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
                 });
                 this.Dispatch('Changed');
 
-                if(this._fieldData.params && this._fieldData.params.maxadd !== null) {
+                if(this._fieldData.params && !!this._fieldData.params.maxadd) {
                     const count = Object.countKeys(this.Fields());
-                    if(count < this._fieldData.params.maxadd && !this._link) {
-                        this._link = this._createAddNewLink();
+                    if(count < parseInt(this._fieldData.params.maxadd)) {
+                        this._link.Show();
                     }
                 }
 
@@ -96,11 +97,10 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
             f && f(object, this);
         }
 
-        if(this._fieldData.params && this._fieldData.params.maxadd !== null) {
+        if(this._fieldData.params && !!this._fieldData.params.maxadd) {
             const count = Object.countKeys(this.Fields());
-            if(count >= this._fieldData.params.maxadd) {
-                this._link && this._link.Dispose();
-                this._link = null;
+            if(count >= parseInt(this._fieldData.params.maxadd)) {
+                this._link.Hide();
             }
         }
 

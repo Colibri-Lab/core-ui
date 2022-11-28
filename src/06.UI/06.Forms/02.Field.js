@@ -102,6 +102,11 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             this._content.Children(this._name + '-note').AddClass(this._fieldData.params.noteClass);
         }
 
+        if(this._fieldData?.params?.fieldgenerator) {
+            const f = eval(this._fieldData?.params?.fieldgenerator);
+            this._fieldData.params = f(this._fieldData);
+        }
+
         this.RenderFieldContainer();
 
         this.title = this._fieldData?.desc ?? '';

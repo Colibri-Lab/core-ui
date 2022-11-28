@@ -348,7 +348,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
                 return 0;
             });
         }
-        if(oldLength != list.length) {
+        if(oldLength != list.length && incrementIfInserted) {
             this.Set(incrementIfInserted, list.length, true);
         }
         this.Set(path, list);

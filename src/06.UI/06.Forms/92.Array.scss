@@ -19,7 +19,9 @@
         color: #0076E0;
         cursor: pointer;
         margin-top: 8px;
-        display: inline-block;
+        &.app-component-shown {
+            display: inline-block;
+        }
     }
 
     > [data-object-name$="-title"] {
