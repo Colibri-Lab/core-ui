@@ -330,11 +330,12 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
     }
 
-    UpdateList(path, searchField, searchValue = null, newData = null, sortField = null, sortOrder = 'asc', insertIfNotExists = true) {
-        let list = EcoloPlace.Store.Query(path);
+    UpdateList(path, searchField, searchValue = null, newData = null, sortField = null, sortOrder = 'asc', insertIfNotExists = true, incrementIfInserted = '') {
+        let list = this.Query(path);
         if(!Array.isArray(list)) {
             list = [];
         }
+        const oldLength = list.length;
         list = Array.replaceObject(list, searchField, searchValue, newData, insertIfNotExists);
         if(sortField) {
             list.sort((a, b) => {
@@ -347,22 +348,25 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
                 return 0;
             });
         }
-        EcoloPlace.Store.Set(path, list);
+        if(oldLength != list.length) {
+            this.Set(incrementIfInserted, list.length, true);
+        }
+        this.Set(path, list);
         return list;
     }
 
     ListAddPage(path, pageItems) {
-        let list = EcoloPlace.Store.Query(path);
+        let list = this.Query(path);
         if(!Array.isArray(list)) {
             list = [];
         }
         list = list.concat(pageItems);
-        EcoloPlace.Store.Set(path, list);
+        this.Set(path, list);
         return list;
     }
 
     SortList(path, sortField, sortOrder = 'asc') {
-        let list = EcoloPlace.Store.Query(path);
+        let list = this.Query(path);
         if(!Array.isArray(list)) {
             list = [];
         }
@@ -375,7 +379,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
             }
             return 0;
         });
-        EcoloPlace.Store.Set(path, list);
+        this.Set(path, list);
         return list;
     }
 
