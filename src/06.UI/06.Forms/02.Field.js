@@ -104,7 +104,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
         if(this._fieldData?.params?.fieldgenerator) {
             const f = eval(this._fieldData?.params?.fieldgenerator);
-            this._fieldData.params = f(this._fieldData);
+            f(this._fieldData);
         }
 
         this.RenderFieldContainer();

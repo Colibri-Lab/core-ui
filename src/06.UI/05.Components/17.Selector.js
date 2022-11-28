@@ -395,7 +395,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                     this._input.placeholder = String.Pluralize(this._placeholderinfo, itemCount).stripHtml();
                 }
             } else {
-                this._input.placeholder = `#{app-selector-choosed;Выбрано} ${itemCount} ${this.parent.parent.title || ""}`.stripHtml();
+                this._input.placeholder = `#{app-selector-choosed;Выбрано} ${itemCount} ${this?.parent?.parent?.title || ""}`.stripHtml();
             }
         }
     }

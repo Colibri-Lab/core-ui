@@ -86,6 +86,10 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
 
         Object.forEach(fields, (name, field) => {
 
+            if(!field) {
+                return true;
+            }
+
             if(field.component == 'Hidden') {
                 return true;
             }
