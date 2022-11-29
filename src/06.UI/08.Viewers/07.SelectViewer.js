@@ -7,7 +7,6 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
 
     set value(value) {
         if(value !== null && value !== undefined && value !== '') {
-            
             if((this._field?.multiple ?? this._field?.params?.multiple)) {
                 // надо обработать вариант с мультизначениями
                 if(typeof value == 'string') {
@@ -49,7 +48,14 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                             }
                         }   
                     }
-                    super.value = r.join(', ');
+
+                    // надо сделать настройку
+                    let v = r.join(', ');
+                    if(r.length > 2) {
+                        v = r.splice(0, 2).join(', ') + '...';
+                    }
+
+                    super.value = v;
                 }
             }
             else {

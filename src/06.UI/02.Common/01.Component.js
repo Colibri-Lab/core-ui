@@ -658,7 +658,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * Позиция элемента относительно верхнего края документа
      * @type {number}
      */
-     get bottom() {
+    get bottom() {
         const bounds = this._element.bounds();
         return bounds.top + bounds.outerHeight;
     }

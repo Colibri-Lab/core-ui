@@ -8,6 +8,8 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         this._value = {};
         this._download = null;
         this._downloadlink = null;
+        this._showUnsetFields = true;
+        this._hideFields = [];
 
         this.RegisterEvent('FieldsToggled', false, 'Когда скрытое открыто или закрыто');
         this.RegisterEvent('EditorChanged', false, 'Когда редактор изменился');
@@ -94,6 +96,14 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                 return true;
             }
 
+            if(!this._showUnsetFields && (value[name] === undefined || value[name] === null || value[name] === '' || (Array.isArray(value[name]) && value[name].length === 0))) {
+                return true;
+            }
+
+            if(this._hideFields.indexOf(name) !== -1) {
+                return true;
+            }
+
             const pane = new Colibri.UI.Pane(name + 'pane', isHidden && (field?.params?.fieldsviewer && field?.params?.fieldsviewer.hidden) ? this._hidden : this._shown);
             const shortComponentName = field.component.substr(field.component.lastIndexOf('.') + 1).toLowerCase();
 
@@ -173,6 +183,44 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         });
 
 
+    }
+
+    /**
+     * Отображать поля без значения
+     * @type {boolean}
+     */
+    get showUnsetFields() {
+        return this._showUnsetFields;
+    }
+    /**
+     * Отображать поля без значения
+     * @type {boolean}
+     */
+    set showUnsetFields(value) {
+        this._showUnsetFields = value === 'true' || value === true;
+        this._showShowUnsetFields();
+    }
+    _showShowUnsetFields() {
+        this._createFields();
+    }
+
+    /**
+     * Не отображать поля
+     * @type {string|Array}
+     */
+    get hideFields() {
+        return this._hideFields;
+    }
+    /**
+     * Не отображать поля
+     * @type {string|Array}
+     */
+    set hideFields(value) {
+        this._hideFields = typeof value === 'string' ? value.split(',') : value;
+        this._showHideFields();
+    }
+    _showHideFields() {
+        this._createFields();
     }
 
 }

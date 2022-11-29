@@ -18,6 +18,10 @@ Colibri.UI.Viewer = class extends Colibri.UI.Component {
         if(this._field?.params && this._field?.params?.className) {
             this.AddClass(this._field?.params?.className);
         }
+        if(this._field?.params?.fieldgenerator) {
+            const f = eval(this._field?.params?.fieldgenerator);
+            f(this._field);
+        }
     }
 
     get viewedObject() {
