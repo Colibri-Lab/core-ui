@@ -3,4 +3,14 @@
     font-weight: normal;
     font-size: 14px;
     line-height: 140%;
+    .app-component-icon {
+        display: inline-flex;
+        align-items: center; 
+        cursor: pointer;
+        margin-left: 10px;
+        em {
+            font-style: normal;
+            margin-right: 2px;
+        }
+    }
 }
