@@ -128,20 +128,20 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
         this._grid.height = value;
     }
 
-    /**
-     * Ширина
-     * @type {number}
-     */
-     get width() {
-        return this._grid.width;
-    }
-    /**
-     * Высота
-     * @type {number}
-     */
-    set width(value) {
-        this._grid.width = value;
-    }
+    // /**
+    //  * Ширина
+    //  * @type {number}
+    //  */
+    // get width() {
+    //     return this._grid.width;
+    // }
+    // /**
+    //  * Высота
+    //  * @type {number}
+    //  */
+    // set width(value) {
+    //     this._element.css('width', value + 'px');
+    // }
     
 
 }
