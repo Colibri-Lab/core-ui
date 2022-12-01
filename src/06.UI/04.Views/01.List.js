@@ -311,6 +311,24 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         this._rendererComponent = value;
     }
 
+    /**
+     * Атрибуты для передачи в компонент отрисовщик
+     * @type {string|Object}
+     */
+    get rendererAttrs() {
+        return this._rendererAttrs;
+    }
+    /**
+     * Атрибуты для передачи в компонент отрисовщик
+     * @type {string|Object}
+     */
+    set rendererAttrs(value) {
+        if(typeof value === 'string') {
+            eval('value = ' + value + ';');
+        }
+        this._rendererAttrs = value;
+    }
+
 }
 
 Colibri.UI.List.Group = class extends Colibri.UI.Component {
@@ -514,12 +532,14 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
         else if(this.parent.parent.rendererComponent) {
             let content = this.Children(this.name + '_renderer');
             if(!content) {
+                const attrs = this.parent.parent.rendererAttrs;
                 let comp = this.parent.parent.rendererComponent;
                 if(!(comp instanceof Colibri.UI.Component)) {
                     comp = eval(comp);
                 }
                 content = new comp(this.name + '_renderer', this);
                 content.shown = true;
+                Object.forEach(attrs, (key, value) => content[key] = value);
             }
             content.value = this._itemData;
         }
