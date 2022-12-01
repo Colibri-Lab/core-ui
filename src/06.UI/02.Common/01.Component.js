@@ -564,7 +564,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     get width() {
         const cssWidth = this._element.css('width');
         if(cssWidth && cssWidth.indexOf('px') !== -1) {
-            return parseInt(cssWidth);
+            return parseInt(cssWidth); 
         }
         else if(cssWidth && cssWidth.indexOf('%') !== -1) {
             return cssWidth;
