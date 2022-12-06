@@ -18,11 +18,18 @@ Colibri.UI = class {
      * @returns number
      */
     static zIndex(selector = 'body *') {
-        return Array.from(typeof selector === 'string' ? document.querySelectorAll(selector) : selector.querySelectorAll('*'))
-            .map(a => parseFloat(window.getComputedStyle(a).zIndex))
-            .filter(a => !isNaN(a))
-            .sort((a, b) => a - b)
-            .pop();
+        return [...document.querySelectorAll(selector)].reduce((accumulator, current_value) => {
+            current_value = +getComputedStyle(current_value).zIndex;
+            if (current_value === current_value) {
+              return Math.max(accumulator, current_value) 
+            }
+            return accumulator;
+        }, 0);
+        // return Array.from(typeof selector === 'string' ? document.querySelectorAll(selector) : selector.querySelectorAll('*'))
+        //     .map(a => parseFloat(window.getComputedStyle(a).zIndex))
+        //     .filter(a => !isNaN(a))
+        //     .sort((a, b) => a - b)
+        //     .pop();
     }
 
     /**
