@@ -6,10 +6,9 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
         const contentContainer = this.contentContainer;
 
-        // const containerElement = Element.create('div', {class: 'array-component-container'});
-        // contentContainer.container.append(containerElement);
-
-        this.AddNew();
+        if(!this._fieldData?.params?.initempty) {
+            this.AddNew();
+        }
 
         this._createAddNewLink();
         
@@ -35,6 +34,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
             return;
         }
 
+        this.contentContainer.Children('add-new') && this.contentContainer.Children('add-new').Dispose();
         this._link = new Colibri.UI.Link('add-new', this.contentContainer);
         this._link.value = this._fieldData.params && this._fieldData.params.addlink || '#{app-array-add;Добавить еще} «' + (this._fieldData.desc) + '»';
         this._link.shown = true;
@@ -47,10 +47,15 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         return this._link;
     }
 
+    __updateObjectFields(fieldData) {
+        return fieldData;
+    }
+
     AddNew() {
         // const containerElement = this.contentContainer.container.querySelector('.array-component-container');
-        const fieldData = Object.cloneRecursive(this._fieldData);
+        let fieldData = Object.cloneRecursive(this._fieldData);
         delete fieldData.note;
+        fieldData = this.__updateObjectFields(fieldData);
         const object = new Colibri.UI.Forms.Object('object-' + Date.Now().getTime(), this.contentContainer, fieldData, this, this.root);
         // object.parent = this.contentContainer;
         object.shown = true;
@@ -73,6 +78,8 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
                 }
 
             });
+        }
+        if(this._fieldData.params && this._fieldData.params.updownlink !== false) {
             object.AddUpDownLink(() => {
                 object.MoveUp();
                 this.Dispatch('Changed');
@@ -82,8 +89,8 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
                 }
                 this.Dispatch('Changed');
             });
-
         }
+
         object.AddHandler('Changed', (event, args) => {
             if(this._fieldData.params && this._fieldData.params.title !== null) {
                 const f = eval(this._fieldData.params.title);

@@ -692,7 +692,7 @@ String.prototype.isFloat = function() {
 String.prototype.isDate = function() {
     return (new Date(this) !== "Invalid Date") && !isNaN(new Date(this));
 }
-String.prototype.fio = function() {
+String.prototype.makeFio = function() {
     const parts = this.split(' ');
     return (parts[0].capitalize() + ' ' + (parts.length > 1 ? (parts[1].substring(0, 1) + '. ' + (parts.length > 2 ? parts[2].substring(0, 1) + '.' : '')) : '')).trim();
 }

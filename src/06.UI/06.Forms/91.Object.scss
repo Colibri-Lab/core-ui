@@ -14,7 +14,9 @@
 
     [data-object-name$="-content"] > [data-object-name$="-container"] {
         width: 100%;
-        display: flex;
+        &.app-component-shown {
+            display: flex;
+        } 
         align-items: flex-start;
         justify-content: stretch;
         
