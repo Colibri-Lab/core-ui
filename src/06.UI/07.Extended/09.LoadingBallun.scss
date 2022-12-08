@@ -1,0 +1,48 @@
+.colibri-ui-loadingballun {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+    background: #ffffff;
+
+    border-radius: 25px;
+
+    &.app-component-shown {
+        display: flex;
+    }
+
+    padding: 10px;
+    gap: 10px;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    transition: all 5s;
+
+    .app-component-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    &.-loading {
+        .app-component-icon {
+            @include rotateInfinite;
+        }
+    }
+
+    &.-complete {
+        svg {
+            path {
+                fill: #0074FF;
+            }
+        }
+    }
+    &.-error {
+        svg {
+            path {
+                fill: #ff0000;
+            }
+        }
+    }
+
+}

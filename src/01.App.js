@@ -74,6 +74,8 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
             this._promptDialog = new Colibri.UI.PromptDialog('prompt', document.body, 600);
             this._alertDialog = new Colibri.UI.AlertDialog('alert', document.body, 600);
             this._customToolTip = new Colibri.UI.ToolTip('tooltip', document.body);
+            this._loadingBallun = new Colibri.UI.LoadingBallun('ballun', document.body);
+
 
         });
             
@@ -246,6 +248,10 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     get Loading() {
         return this._loadingBox;
+    }
+    
+    get LoadingBallun() {
+        return this._loadingBallun;
     }
 
     get Comet() {
