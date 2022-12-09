@@ -34,10 +34,11 @@
 Colibri.UI.Tabs = class extends Colibri.UI.Component {
 
     constructor(name, container, element) {
-        super(name, container, Colibri.UI.Templates['Colibri.UI.Tabs']);
+        super(name, container, element || '<div />');
         this.AddClass('app-tabs-container-component');
 
-        this.GenerateChildren(element);
+        this._element.append(Element.fromHtml('<div class="tabs-header-container"><div class="tabs-header"></div><div class="tabs-links"></div></div>'));
+        this._element.append(Element.fromHtml('<div class="tabs-container"></div>'));
 
         this.AddHandler('ChildsProcessed', (event, args) => {
             this._processEvents();
