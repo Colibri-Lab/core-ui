@@ -92,7 +92,9 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         this._input.AddHandler('Cleared', (event, args) => this.__Cleared(event, args));
 
         this._arrow.addEventListener('click', (e) => {
-            this.ShowChooser();
+            if(!this.readonly) {
+                this.ShowChooser();
+            }
             return false; 
         });
 
@@ -100,7 +102,9 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         this._input.AddHandler('KeyDown', (event, args) => {
 
             if(['Enter', 'NumpadEnter'].indexOf(args.domEvent.code) !== -1) {
-                this.ShowChooser();
+                if(!this.readonly) {
+                    this.ShowChooser();
+                }
                 args.domEvent.stopPropagation();
                 args.domEvent.preventDefault();
                 return false;
