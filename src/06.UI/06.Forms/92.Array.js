@@ -6,7 +6,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
         const contentContainer = this.contentContainer;
 
-        if(!this._fieldData?.params?.initempty || this._fieldData?.params?.initempty === true) {
+        if(this._fieldData?.params?.initempty === undefined || this._fieldData?.params?.initempty === true) {
             this.AddNew();
         }
 
@@ -178,7 +178,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         });
         this._createAddNewLink();
 
-        if(value.length === 0 && this._fieldData?.params?.initempty) {
+        if(Array.isArray(value) && value.length === 0 && this._fieldData?.params?.initempty) {
             this.AddNew();            
         }
 

@@ -50,7 +50,9 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
                 const field = Object.cloneRecursive(fieldData);
                 
                 const component = Colibri.UI.Forms.Field.Create(name, this.contentContainer, field, this, this.root);
-
+                if(!component) {
+                    return true;
+                }
                 if(this._fieldData?.params?.removedesc !== false) {
                     const placeholder = this._fieldData?.params?.vertical ? field.placeholder : field.desc;
                     if(!this._fieldData?.params?.vertical) {
@@ -202,6 +204,10 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         const formData = this.root.value;
 
         Object.forEach(this._fieldData.fields, (name, fieldData) => {
+            if(!fieldData) {
+                return true;
+            }
+            
             const fieldComponent = this.contentContainer.Children(name);
             if(fieldComponent && fieldData.params && fieldData.params.condition) {
                 const condition = fieldData.params.condition;
