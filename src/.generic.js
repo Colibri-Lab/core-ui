@@ -10,7 +10,7 @@ const json_array = function (v) {
 const eval_default_values = function (defaultAsString) { 
     if (typeof defaultAsString == 'string' && (defaultAsString.indexOf('json_object') !== -1 || defaultAsString.indexOf('json_array') !== -1)) {
         return eval(defaultAsString);
-    }
+    }  
     return defaultAsString; 
 };  
 
