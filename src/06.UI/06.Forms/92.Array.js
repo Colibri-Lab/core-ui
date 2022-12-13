@@ -39,6 +39,11 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         this._link.value = this._fieldData.params && this._fieldData.params.addlink || '#{app-array-add;Добавить еще} «' + (this._fieldData.desc) + '»';
         this._link.shown = true;
         this._link.AddHandler('Clicked', (event, args) => {
+
+            if(this._link.ContainsClass('ui-disabled')) {
+                return;
+            }
+
             const object = this.AddNew();
             object.MoveUp();
             this._link = this.contentContainer.Children('add-new');
@@ -63,6 +68,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         object.enabled = this.enabled;
         if(this._fieldData.params && this._fieldData.params.removelink !== false) {
             object.AddRemoveLink(() => {
+                 
                 Object.forEach(this.Fields(), (name, field) => {
                     if(field instanceof Colibri.UI.Forms.Field) {
                         field.Dispatch('Changed');
