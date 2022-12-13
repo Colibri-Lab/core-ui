@@ -1,37 +1,37 @@
 
-const json_object = function(v) {
+const json_object = function (v) {
     return JSON.parse(v || '{}');
-}
+};
 
-const json_array = function(v) {
+const json_array = function (v) {
     return JSON.parse(v || '[]');
-}
+};
 
-const eval_default_values = function(defaultAsString) {
-    if(typeof defaultAsString == 'string' && (defaultAsString.indexOf('json_object') !== -1 || defaultAsString.indexOf('json_array') !== -1)) {
-        return eval(defaultAsString); 
+const eval_default_values = function (defaultAsString) { 
+    if (typeof defaultAsString == 'string' && (defaultAsString.indexOf('json_object') !== -1 || defaultAsString.indexOf('json_array') !== -1)) {
+        return eval(defaultAsString);
     }
     return defaultAsString; 
-}
+};  
 
 const isIterable = (value) => {
     return Symbol.iterator in Object(value);
-}
+};
 
-Array.unique = function(a) { return a.filter((v, i, ab) => { return a.indexOf(v) === i; }); }
-Array.merge = function(a, ar) { 
+Array.unique = function (a) { return a.filter((v, i, ab) => { return a.indexOf(v) === i; }); }
+Array.merge = function (a, ar) {
     ar.forEach((o) => a.push(o));
     return this;
-}
-Array.part = function(a, e) {
+};
+Array.part = function (a, e) {
     var r = [];
     a.forEach((o) => {
         if (eval(e))
             r.push(o);
     });
     return r;
-}
-Array.find = function(a, k, v) {
+};
+Array.find = function (a, k, v) {
     var found = false;
     a.forEach((vv) => {
         if (vv[k] == v) {
@@ -40,9 +40,9 @@ Array.find = function(a, k, v) {
         }
     });
     return found;
-}
+};
 
-Array.findIndex = function(a, predicate) {
+Array.findIndex = function (a, predicate) {
     if (a == null) {
         throw new TypeError('Array.prototype.findIndex called on null or undefined');
     }
@@ -63,46 +63,46 @@ Array.findIndex = function(a, predicate) {
     return -1;
 };
 
-Array.enumerate = function(start, end, callback) {
+Array.enumerate = function (start, end, callback) {
     let ret = [];
-    for(let i=start; i<=end; i++) {
+    for (let i = start; i <= end; i++) {
         ret.push(callback(i));
     }
     return ret;
-}
+};
 
-Array.enumerateRev = function(start, end, callback) {
+Array.enumerateRev = function (start, end, callback) {
     let ret = [];
-    for(let i=end; i>=start; i--) {
+    for (let i = end; i >= start; i--) {
         ret.push(callback(i));
     }
     return ret;
-}
+};
 
-Array.toObject = function(a) {
+Array.toObject = function (a) {
     let ret = {};
     a.forEach((v, i) => {
         ret[i] = v;
     });
     return ret;
-}
+};
 
-Array.findObject = function(arr, field, value = null) {
-    for(let i=0; i<arr.length; i++) {
+Array.findObject = function (arr, field, value = null) {
+    for (let i = 0; i < arr.length; i++) {
         const o = arr[i];
-        if(value === null && typeof field === 'function') {
-            if(field(o)) {
+        if (value === null && typeof field === 'function') {
+            if (field(o)) {
                 return o;
             }
         }
-        else if(field.indexOf('.') !== -1) {
+        else if (field.indexOf('.') !== -1) {
             const v = eval('o[\'' + field.replaceAll('.', '\'][\'') + '\']');
-            if(v == value) {
+            if (v == value) {
                 return o;
             }
         }
         else {
-            if(o[field] == value) {
+            if (o[field] == value) {
                 return o;
             }
         }
@@ -110,10 +110,10 @@ Array.findObject = function(arr, field, value = null) {
     return null;
 };
 
-Array.replaceObject = function(arr, field, value, replace = null, insertIfNotExists = true) {
-    for(let i=0; i<arr.length;i++) {
-        if(arr[i][field] == value) {
-            if(replace) {
+Array.replaceObject = function (arr, field, value, replace = null, insertIfNotExists = true) {
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i][field] == value) {
+            if (replace) {
                 arr[i] = replace;
             }
             else {
@@ -122,7 +122,7 @@ Array.replaceObject = function(arr, field, value, replace = null, insertIfNotExi
             return arr;
         }
     }
-    if(insertIfNotExists) {
+    if (insertIfNotExists) {
         arr.push(replace);
     }
     return arr;
@@ -138,44 +138,44 @@ Array.prototype.equals = function (array) {
     if (this.length != array.length)
         return false;
 
-    for (var i = 0, l=this.length; i < l; i++) {
+    for (var i = 0, l = this.length; i < l; i++) {
         // Check if we have nested arrays
         if (this[i] instanceof Array && array[i] instanceof Array) {
             // recurse into the nested arrays
             if (!this[i].equals(array[i]))
-                return false;       
-        }    
-        else if(this[i] instanceof Object && array[i] instanceof Object) {
-            if(!Object.shallowEqual(this[i], array[i])) {
+                return false;
+        }
+        else if (this[i] instanceof Object && array[i] instanceof Object) {
+            if (!Object.shallowEqual(this[i], array[i])) {
                 return false;
             }
-        }       
-        else if (this[i] != array[i]) { 
+        }
+        else if (this[i] != array[i]) {
             // Warning - two different object instances will never be equal: {x:20} != {x:20}
-            return false;   
-        }           
-    }       
+            return false;
+        }
+    }
     return true;
-}
+};
 
-Array.prototype.intersect = function(arr) {
+Array.prototype.intersect = function (arr) {
     return this.filter(value => arr.includes(value));
-}
+};
 
-Array.toObjectWithKeys = function(array, fieldKey, fieldValue) {
+Array.toObjectWithKeys = function (array, fieldKey, fieldValue) {
     let ret = {};
     array.forEach((item) => {
         ret[item[fieldKey]] = item[fieldValue];
     });
     return ret;
-}
+};
 
 
 // Hide method from for-in loops
-Object.defineProperty(Array.prototype, "equals", {enumerable: false});
+Object.defineProperty(Array.prototype, "equals", { enumerable: false });
 
-Object.forEach = function(o, callback) {
-    if(!o) {
+Object.forEach = function (o, callback) {
+    if (!o) {
         return;
     }
 
@@ -187,13 +187,13 @@ Object.forEach = function(o, callback) {
             }
         }
     }
-}
+};
 
-Object.forReverseEach = function(o, callback) {
-    if(!o) {
+Object.forReverseEach = function (o, callback) {
+    if (!o) {
         return;
     }
-    
+
     let keys = Object.keys(o);
     for (let i = keys.length - 1; i >= 0; i--) {
         let k = keys[i];
@@ -203,16 +203,16 @@ Object.forReverseEach = function(o, callback) {
             }
         }
     }
-}
+};
 
-Object.indexOf = function(o, name) {
+Object.indexOf = function (o, name) {
     const keys = Object.keys(o);
     return keys.indexOf(name);
 };
 
-Object.countKeys = function(o) { return Object.keys(o).length; };
+Object.countKeys = function (o) { return Object.keys(o).length; };
 
-Object.toQueryString = function(o, splittersArray) {
+Object.toQueryString = function (o, splittersArray) {
     let ret = [];
     Object.keys(o).forEach((key) => {
         ret.push(key + splittersArray[1] + encodeURI(o[key]));
@@ -220,18 +220,18 @@ Object.toQueryString = function(o, splittersArray) {
     return ret.join(splittersArray[0]);
 };
 
-Object.toStyles = function(o) {
+Object.toStyles = function (o) {
     let splittersArray = [';', ':'];
     let ret = [];
     Object.keys(o).forEach((key) => {
-        if(o[key]) {
+        if (o[key]) {
             ret.push(key.fromCamelCase('-') + splittersArray[1] + o[key]);
         }
     });
     return ret.join(splittersArray[0]);
 };
 
-Object.insertAt = function(object, key, value, index) {
+Object.insertAt = function (object, key, value, index) {
 
     // Create a temp object and index variable
     let temp = {};
@@ -255,12 +255,12 @@ Object.insertAt = function(object, key, value, index) {
 
     return temp;
 
-}
+};
 
-Object.toPlain = function(object, prefix) {
+Object.toPlain = function (object, prefix) {
     let ret = {};
     Object.forEach(object, (k, v) => {
-        if(v instanceof Object) {
+        if (v instanceof Object) {
             ret = Object.assign(ret, Object.toPlain(v, k + '-'));
         }
         else {
@@ -268,34 +268,34 @@ Object.toPlain = function(object, prefix) {
         }
     });
     return ret;
-}
+};
 
-Object.cloneRecursive = function(object) {
+Object.cloneRecursive = function (object) {
     const ret = {};
     Object.forEach(object, (prop, value) => {
-        if(value instanceof Function) {
-            ret[prop] =  value;
+        if (value instanceof Function) {
+            ret[prop] = value;
         }
-        else if(Array.isArray(value)) {
+        else if (Array.isArray(value)) {
             ret[prop] = value.map((v) => {
                 return v instanceof Object && !(v instanceof File) ? Object.cloneRecursive(v) : v;
             });
         }
-        else if(value instanceof Object && !(value instanceof File)) {
-            ret[prop] =  Object.cloneRecursive(value);
+        else if (value instanceof Object && !(value instanceof File)) {
+            ret[prop] = Object.cloneRecursive(value);
         }
         else {
-            ret[prop] =  value;
+            ret[prop] = value;
         }
     });
     return ret;
-}
+};
 
-Object.shallowEqual = function(object1, object2) {
-    if(!object1 || !object2) {
+Object.shallowEqual = function (object1, object2) {
+    if (!object1 || !object2) {
         return object1 == object2;
     }
-    if(typeof object1 !== 'object' || typeof object2 !== 'object') {
+    if (typeof object1 !== 'object' || typeof object2 !== 'object') {
         return object1 == object2;
     }
     const keys1 = Object.keys(object1);
@@ -308,12 +308,12 @@ Object.shallowEqual = function(object1, object2) {
             return false;
         }
         if (Array.isArray(object1[key])) {
-            if(!object1[key].equals(object2[key])) {
+            if (!object1[key].equals(object2[key])) {
                 return false;
             }
         }
-        else if(object1[key] instanceof Object) {
-            if(!Object.shallowEqual(object1[key], object2[key])) {
+        else if (object1[key] instanceof Object) {
+            if (!Object.shallowEqual(object1[key], object2[key])) {
                 return false;
             }
         }
@@ -322,9 +322,9 @@ Object.shallowEqual = function(object1, object2) {
         }
     }
     return true;
-}
+};
 
-Object.setValue = function(obj, path, value) {
+Object.setValue = function (obj, path, value) {
     let properties = Array.isArray(path) ? path : path.split(".");
 
     if (properties.length > 1) {
@@ -334,9 +334,9 @@ Object.setValue = function(obj, path, value) {
         obj[properties[0]] = value
         return true
     }
-}
+};
 
-Object.getValue = function(obj, path, _default = undefined) {
+Object.getValue = function (obj, path, _default = undefined) {
     let properties = Array.isArray(path) ? path : path.split(".");
 
     if (properties.length > 1) {
@@ -344,25 +344,25 @@ Object.getValue = function(obj, path, _default = undefined) {
     } else {
         return obj[properties[0]] ?? _default;
     }
-}
+};
 
-Object.map = function(obj, func) {
+Object.map = function (obj, func) {
     let newObject = {};
     Object.forEach(obj, (key, value) => {
         const newval = func(key, value);
-        if(newval) {
+        if (newval) {
             newObject[key] = newval;
         }
     });
     return newObject;
-}
+};
 
 /* String prototype expansion */
-String.prototype.stripHtml = function() { return this.replace(/<[^>]+>/gim, "").replace(/<\/[^>]+>/gim, "").replace(/&nbsp;/gim, ""); }
-String.prototype.ltrim = function(c) { return this.replace(new RegExp('^' + (c != undefined ? c : '\\s') + '+'), ""); }
-String.prototype.rtrim = function(c) { return this.replace(new RegExp((c != undefined ? c : '\\s') + '+$'), ""); }
-String.prototype.trim = function(c) { return this.replace(new RegExp('^' + (c != undefined ? c : '\\s') + '*(.*?)' + (c != undefined ? c : '\\s') + '*$'), '$1'); }
-String.prototype.splitA = function(separator) {
+String.prototype.stripHtml = function () { return this.replace(/<[^>]+>/gim, "").replace(/<\/[^>]+>/gim, "").replace(/&nbsp;/gim, ""); }
+String.prototype.ltrim = function (c) { return this.replace(new RegExp('^' + (c != undefined ? c : '\\s') + '+'), ""); }
+String.prototype.rtrim = function (c) { return this.replace(new RegExp((c != undefined ? c : '\\s') + '+$'), ""); }
+String.prototype.trim = function (c) { return this.replace(new RegExp('^' + (c != undefined ? c : '\\s') + '*(.*?)' + (c != undefined ? c : '\\s') + '*$'), '$1'); }
+String.prototype.splitA = function (separator) {
     var retArr = new Array();
     var s = this;
 
@@ -379,13 +379,13 @@ String.prototype.splitA = function(separator) {
             retArr[i] = s.substring(i, i + 1);
     }
     return retArr;
-}
-String.prototype.toInt = function() {
+};
+String.prototype.toInt = function () {
     return this / 1;
-}
-String.prototype.isFinite = function() { return isFinite(this); }
-String.prototype.isNumeric = function() { return this.isFinite((this * 1.0)); }
-String.prototype.isEmail = function() {
+};
+String.prototype.isFinite = function () { return isFinite(this); }
+String.prototype.isNumeric = function () { return this.isFinite((this * 1.0)); }
+String.prototype.isEmail = function () {
     if (this.indexOf(" ") != -1) {
         return false;
     } else if (this.indexOf("@") == -1) {
@@ -405,30 +405,30 @@ String.prototype.isEmail = function() {
         return false;
     }
     return true;
-}
-String.prototype.repeat = function(n) {
+};
+String.prototype.repeat = function (n) {
     var a = [];
     var s = this;
     while (a.length < n) {
         a.push(s);
     }
     return a.join('');
-}
-String.prototype.expand = function(c, l) {
+};
+String.prototype.expand = function (c, l) {
     if (this.length >= l) {
         return this;
     } else {
         return c.repeat(l - this.length) + this;
     }
-}
-String.prototype.toDate = function() {
+};
+String.prototype.toDate = function () {
 
     if (this.isNumeric()) {
         return parseInt(this).toDateFromUnixTime();
     }
 
     let t = this.replace('T', ' ');
-    if(t.indexOf('.') !== -1) {
+    if (t.indexOf('.') !== -1) {
         t = t.split(/\./);
         t = t[0];
     }
@@ -438,13 +438,13 @@ String.prototype.toDate = function() {
     let dateParts = parts[0].split('-');
     let timeParts = parts[1] ? parts[1].split(':') : ['0', '0', '0'];
     return new Date((dateParts[0] + '').toInt(), (dateParts[1] + '').toInt() - 1, (dateParts[2] + '').toInt(), (timeParts[0] + '').toInt(), (timeParts[1] + '').toInt(), (timeParts[2] + '').toInt());
-}
-String.prototype.toShortDate = function() {
+};
+String.prototype.toShortDate = function () {
     var parts = this.split(/\/|\.|\-/);
     return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parts[0]);
 
-}
-String.prototype.words = function(l) {
+};
+String.prototype.words = function (l) {
     var a = this.split(/ |,|\.|-|;|:|\(|\)|\{|\}|\[|\]/);
 
     if (a.length > 0) {
@@ -462,8 +462,8 @@ String.prototype.words = function(l) {
     } else {
         return this.substr(0, l) + '...';
     }
-}
-String.prototype.replaceAll = function(from, to) {
+};
+String.prototype.replaceAll = function (from, to) {
     let s = this;
     let s1 = s.replace(from, to);
     while (s != s1) {
@@ -471,37 +471,37 @@ String.prototype.replaceAll = function(from, to) {
         s1 = s.replace(from, to);
     }
     return s1;
-}
-String.prototype.template = function(values) {
+};
+String.prototype.template = function (values) {
     return this.replace(/{(.+?)(?:\|(.*?))?}/g, (keyExpr, key, defaultVal) => {
         return eval(`typeof values?.${key}`) === 'undefined' ? (defaultVal ?? "") : eval(`values.${key}`);
     })
-}
-String.prototype.replaceArray = function(from, to) {
+};
+String.prototype.replaceArray = function (from, to) {
     let ret = this;
-    from.forEach(function(el) {
+    from.forEach(function (el) {
         ret = ret.replaceAll(el, to);
     });
     return ret;
-}
-String.prototype.replaceObject = function(obj, wrappers) {
+};
+String.prototype.replaceObject = function (obj, wrappers) {
     let ret = this;
-    Object.forEach(obj, function(name, value) {
+    Object.forEach(obj, function (name, value) {
         ret = ret.replaceAll((wrappers && wrappers.length > 0 ? wrappers[0] : '') + name + (wrappers && wrappers.length > 1 ? wrappers[1] : ''), value);
     });
     return ret;
-}
-String.prototype.fromMoney = function() {
+};
+String.prototype.fromMoney = function () {
     return parseInt(val.replace(/\s*/g, ''));
-}
-String.prototype.fromTimeString = function() {
+};
+String.prototype.fromTimeString = function () {
     let parts = this.split(':');
     return parseInt(parseInt(parts[2]) + parseInt(parts[1]) * 60 + parseInt(parts[0]) * 60 * 60);
-}
-String.prototype.capitalize = function() {
+};
+String.prototype.capitalize = function () {
     return this.substr(0, 1).toUpperCase() + this.substr(1);
-}
-String.prototype.Transliterate = function() {
+};
+String.prototype.Transliterate = function () {
     let val = this;
 
     let A = new Array();
@@ -573,13 +573,13 @@ String.prototype.Transliterate = function() {
     A["ю"] = "yu";
 
     val = val.replace(/([\u0410-\u0451])/g,
-        function(str, p1, offset, s) {
+        function (str, p1, offset, s) {
             if (A[str] != 'undefined') { return A[str]; }
         }
     )
     return val;
 };
-String.prototype.CyrToUrl = function(words) {
+String.prototype.CyrToUrl = function (words) {
     if (words == undefined) words = 3;
 
     let val = this.Transliterate()
@@ -591,14 +591,14 @@ String.prototype.CyrToUrl = function(words) {
 
     val = val.split('-');
     let v = [];
-    val.forEach(function(vv) {
+    val.forEach(function (vv) {
         v.push(vv.trim());
     });
     val = v.splice(0, words).join('-');
     return val.trim();
 
-}
-String.prototype.ellipsis = function(length) {
+};
+String.prototype.ellipsis = function (length) {
     var str = this;
     if (!str) {
         return str;
@@ -613,9 +613,9 @@ String.prototype.ellipsis = function(length) {
 
     let cliplen = parseInt((length - 3) / 2);
     return str.substr(0, cliplen) + '...' + str.substr(strlen - cliplen - 1, strlen);
-}
-String.prototype.reverse = function() { return this.split("").reverse().join(""); }
-String.prototype.hexToString = function() {
+};
+String.prototype.reverse = function () { return this.split("").reverse().join(""); }
+String.prototype.hexToString = function () {
     let string = '';
     for (let i = 0; i < this.length; i += 2) {
         string += String.fromCharCode(parseInt(this.substr(i, 2), 16));
@@ -623,22 +623,22 @@ String.prototype.hexToString = function() {
     return string;
 };
 
-String.fromObject = function(object, delimiters, callback) {
+String.fromObject = function (object, delimiters, callback) {
     let ret = [];
-    Object.forEach(object, function(name, value) {
+    Object.forEach(object, function (name, value) {
         ret.push(name + delimiters[1] + (callback ? callback(value) : value));
     });
     return ret.join(delimiters[0]);
-}
-String.prototype.toObject = function(delimiters, callback, keyCallback) {
-    
+};
+String.prototype.toObject = function (delimiters, callback, keyCallback) {
+
     let ret = {};
-    if(!(this + '')) {
+    if (!(this + '')) {
         return ret;
     }
-    
+
     let parts = this.split(delimiters[0]);
-    if(parts.length == 0) {
+    if (parts.length == 0) {
         return ret;
     }
 
@@ -646,18 +646,18 @@ String.prototype.toObject = function(delimiters, callback, keyCallback) {
         part = part.split(delimiters[1]);
         ret[keyCallback ? keyCallback(part[0]) : part[0]] = callback ? callback(part[1]) : part[1];
     });
-    
+
     return ret;
-}
-String.prototype.replaceDateMonthName = function(months) {
+};
+String.prototype.replaceDateMonthName = function (months) {
     let n = this + '';
     const enMonths = ['Jan', 'Feb', 'Mar', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     for (let i = 0; i < enMonths.length; i++) {
         n = n.replaceAll(enMonths[i], months[i]);
     }
     return n;
-}
-String.prototype.toCamelCase = function(splitter, firstIsCapital) {
+};
+String.prototype.toCamelCase = function (splitter, firstIsCapital) {
     splitter = splitter || '-';
     if (this.trim().indexOf('--') === 0) { return this; }
 
@@ -667,51 +667,51 @@ String.prototype.toCamelCase = function(splitter, firstIsCapital) {
         ret.push(index == 0 && firstIsCapital || index > 0 ? part.capitalize() : part);
     });
     return ret.join('');
-}
-String.prototype.fromCamelCase = function(splitter) {
+};
+String.prototype.fromCamelCase = function (splitter) {
     splitter = splitter || '-';
     if (this.trim().indexOf('--') === 0) { return this; }
 
     return this.replaceAll(new RegExp('([A-Z])'), (v) => { return splitter + v.toLowerCase(); }).rtrim('-').ltrim('-');
 
-}
-String.prototype.firstCharsOfWords = function() {
+};
+String.prototype.firstCharsOfWords = function () {
     let parts = this.split(' ');
     let chars = [];
     parts.forEach((part) => {
         chars.push(part.substr(0, 1).toUpperCase());
     });
     return chars.join('');
-}
-String.prototype.isInt = function() {
+};
+String.prototype.isInt = function () {
     return Number.isInteger(Number(this));
-}
-String.prototype.isFloat = function() {
+};
+String.prototype.isFloat = function () {
     return this.isNumeric() && !Number.isInteger(this);
-}
-String.prototype.isDate = function() {
+};
+String.prototype.isDate = function () {
     return (new Date(this) !== "Invalid Date") && !isNaN(new Date(this));
-}
-String.prototype.makeFio = function() {
+};
+String.prototype.makeFio = function () {
     const parts = this.split(' ');
     return (parts[0].capitalize() + ' ' + (parts.length > 1 ? (parts[1].substring(0, 1) + '. ' + (parts.length > 2 ? parts[2].substring(0, 1) + '.' : '')) : '')).trim();
-}
-String.prototype.extractExt = function() {
+};
+String.prototype.extractExt = function () {
     const parts = this.split('.');
     return parts[parts.length - 1];
-}
-String.prototype.pathinfo = function() {
+};
+String.prototype.pathinfo = function () {
     try {
         const parts = this.split('/');
         const ret = {};
         ret.basename = parts[parts.length - 1];
-        
+
         const fileparts = ret.basename.split('.');
         ret.ext = fileparts.length > 1 ? fileparts[fileparts.length - 1] : '';
         ret.filename = fileparts[0];
-        
+
         ret.dirname = this.replaceAll(ret.basename, '');
-        
+
         return ret;
     }
     catch (e) {
@@ -719,7 +719,7 @@ String.prototype.pathinfo = function() {
     }
 };
 
-String.prototype.urlinfo = function() {
+String.prototype.urlinfo = function () {
     try {
         const parts = this.split('?');
         const ret = {};
@@ -732,7 +732,7 @@ String.prototype.urlinfo = function() {
     }
 };
 
-String.prototype.removeXmlEntities = function() {
+String.prototype.removeXmlEntities = function () {
     let s = this + '';
     s = s.replaceAll('&laquo;', '«');
     s = s.replaceAll('&raquo;', '»');
@@ -740,13 +740,13 @@ String.prototype.removeXmlEntities = function() {
     s = s.replaceAll('&mdash;', '—');
     s = s.replaceAll('&nbsp;', ' ');
     return s;
-}
+};
 
-String.prototype.setBaseUrl = function(baseUrl) {
+String.prototype.setBaseUrl = function (baseUrl) {
     return this.replaceAll('src="/', 'src="' + baseUrl + '/');
-}
+};
 
-String.prototype.copyToClipboard = function() {
+String.prototype.copyToClipboard = function () {
     const text = this + '';
     return new Promise((resolve, reject) => {
         if (!navigator.clipboard) {
@@ -762,7 +762,7 @@ String.prototype.copyToClipboard = function() {
 
             try {
                 var successful = document.execCommand('copy');
-                if(!successful) {
+                if (!successful) {
                     throw 'error';
                 }
                 document.body.removeChild(textArea);
@@ -776,21 +776,21 @@ String.prototype.copyToClipboard = function() {
 
             return;
         }
-        
-        navigator.clipboard.writeText(text).then(function() {
+
+        navigator.clipboard.writeText(text).then(function () {
             resolve();
-        }, function(err) {
+        }, function (err) {
             reject('can not copy');
         });
     });
 
-}
+};
 
-String.MD5 = function(e) {
-    if(!e) {
+String.MD5 = function (e) {
+    if (!e) {
         e = '';
     }
-    
+
     function h(a, b) {
         var c, d, e, f, g;
         e = a & 2147483648;
@@ -830,7 +830,7 @@ String.MD5 = function(e) {
     }
     var f = [],
         q, r, s, t, a, b, c, d;
-    e = function(a) {
+    e = function (a) {
         a = a.replace(/\r\n/g, "\n");
         for (var b = "", d = 0; d < a.length; d++) {
             var c = a.charCodeAt(d);
@@ -838,7 +838,7 @@ String.MD5 = function(e) {
         }
         return b
     }(e);
-    f = function(b) {
+    f = function (b) {
         var a, c = b.length;
         a = c + 8;
         for (var d = 16 * ((a - a % 64) / 64 + 1), e = Array(d - 1), f = 0, g = 0; g < c;) a = (g - g % 4) / 4, f = g % 4 * 8, e[a] |= b.charCodeAt(g) << f, g++;
@@ -856,27 +856,27 @@ String.MD5 = function(e) {
     return (p(a) + p(b) + p(c) + p(d)).toLowerCase()
 };
 
-String.GUID = function() {
+String.GUID = function () {
     return (Number.Rnd4() + Number.Rnd4() + Number.Rnd4() + Number.Rnd4() + Number.Rnd4() + Number.Rnd4() + Number.Rnd4() + Number.Rnd4());
 };
 
-String.Password = function(l) {
+String.Password = function (l) {
     const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     const charset2 = '!@#%^&*()';
     let retVal = "";
     for (let i = 0, n = charset.length; i < l; ++i) {
         retVal += charset.charAt(Math.floor(Math.random() * n));
     }
-    for(let i = 0, n2 = charset2.length, n = retVal.length; i < retVal.length / 4; i++) {
+    for (let i = 0, n2 = charset2.length, n = retVal.length; i < retVal.length / 4; i++) {
         const index = Math.floor(Math.random() * n);
         retVal = retVal.substring(0, index - 1) + charset2.charAt(Math.floor(Math.random() * n2)) + retVal.substring(index);
     }
     return retVal;
-}
+};
 
-String.EscapeRegExp = function(string) {
+String.EscapeRegExp = function (string) {
     return string ? string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') : string;
-}
+};
 
 
 /**
@@ -889,27 +889,27 @@ String.EscapeRegExp = function(string) {
  * @returns {string}
  * @constructor
  */
-String.Pluralize = function(template, count) {
+String.Pluralize = function (template, count) {
     let cases = [2, 0, 1, 1, 1, 2],
         words = template.split("|");
-    while(words.length <= 2) words.push(words[words.length - 1]);
+    while (words.length <= 2) words.push(words[words.length - 1]);
     return words[(count % 100 > 4 && count % 100 < 20) ? 2 : cases[Math.min(count % 10, 5)]].replace('{n}', count);
-}
+};
 
 
-String.prototype.sha256 = function() {
+String.prototype.sha256 = function () {
     const msgBuffer = new TextEncoder().encode(this);
     return new Promise((resolve, reject) => {
         crypto.subtle.digest('SHA-256', msgBuffer).then(hashBuffer => {
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
             resolve(hashHex);
-        }).catch(error => reject(error));            
+        }).catch(error => reject(error));
     });
 
-}
+};
 
-String.prototype.rc4 = function(key) {
+String.prototype.rc4 = function (key) {
     let str = this;
     var s = [], j = 0, x, res = '';
     for (var i = 0; i < 256; i++) {
@@ -932,31 +932,31 @@ String.prototype.rc4 = function(key) {
         res += String.fromCharCode(str.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);
     }
     return res;
-}
+};
 
-String.prototype.hex2bin = function() {
+String.prototype.hex2bin = function () {
     var bytes = [];
-    for(var i=0; i< this.length-1; i+=2)
+    for (var i = 0; i < this.length - 1; i += 2)
         bytes.push(parseInt(this.substring(i, i + 2), 16));
-    return String.fromCharCode.apply(String, bytes);    
-}
+    return String.fromCharCode.apply(String, bytes);
+};
 
-String.prototype.bin2hex = function() {
+String.prototype.bin2hex = function () {
     var i = 0, l = this.length, chr, hex = '';
     for (i; i < l; ++i) {
         chr = this.charCodeAt(i).toString(16)
         hex += chr.length < 2 ? '0' + chr : chr
     }
     return hex;
-}
+};
 
 /* number prototype expansion */
-Number.prototype.toDateFromUnixTime = function() {
+Number.prototype.toDateFromUnixTime = function () {
     let d = new Date();
     d.setTime(this * 1000);
     return d;
-}
-Number.prototype.formatSequence = function(labels, viewnumber) {
+};
+Number.prototype.formatSequence = function (labels, viewnumber) {
     let s = this + " ";
     if (!viewnumber)
         s = "";
@@ -982,16 +982,16 @@ Number.prototype.formatSequence = function(labels, viewnumber) {
                 return s + labels[2];
         }
     }
-}
-Number.prototype.decPlaces = function() {
+};
+Number.prototype.decPlaces = function () {
     var n = this + '';
     n = n.split('.');
     if (n.length <= 1) {
         return 0;
     }
     return n[1].length;
-}
-Number.prototype.toMoney = function(digits, force, space) {
+};
+Number.prototype.toMoney = function (digits, force, space) {
     var result = '';
     if (digits == undefined) {
         digits = 2;
@@ -1015,8 +1015,8 @@ Number.prototype.toMoney = function(digits, force, space) {
 
     result = price.substr(0, len - count * 3) + result;
     return result + (dec ? ',' + dec : (force ? ',' + '0'.repeat(digits) : ''));
-}
-Number.prototype.toTimeString = function(daySplitter) {
+};
+Number.prototype.toTimeString = function (daySplitter) {
     let days = 0;
     let hours = 0;
     let mins = 0;
@@ -1066,8 +1066,8 @@ Number.prototype.toTimeString = function(daySplitter) {
     }
 
     return txt;
-}
-Number.prototype.toSizeString = function(postfixes, range, remove0s) {
+};
+Number.prototype.toSizeString = function (postfixes, range, remove0s) {
     let number = this;
     let j = 0;
     for (j = 0; j < postfixes.length; j++) {
@@ -1077,59 +1077,59 @@ Number.prototype.toSizeString = function(postfixes, range, remove0s) {
             number = number / range;
     }
     number = number.toFixed(2)
-    if(remove0s) {
+    if (remove0s) {
         number = number.replaceAll('.00', '');
     }
     return number + " " + postfixes[j];
-}
-Number.prototype.percentOf = function(max) {
+};
+Number.prototype.percentOf = function (max) {
     return (this * 100) / max;
-}
-Number.prototype.isInt = function() {
+};
+Number.prototype.isInt = function () {
     return Number.isInteger(this);
-}
-Number.prototype.isFloat = function() {
+};
+Number.prototype.isFloat = function () {
     return Number.isFloat(this);
-}
-Number.random = function(min, max) {
+};
+Number.random = function (min, max) {
     return Math.floor(min + Math.random() * (max + 1));
-}
-Number.Rnd4 = function() {
+};
+Number.Rnd4 = function () {
     return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-}
-Number.unique = function() {
+};
+Number.unique = function () {
     return (window.performance.getEntries()[0].duration + window.performance.now() + Math.random()) * 1e13;
-}
+};
 
 
 /* date prototype expansion */
-Date.prototype.toDbDate = function() {
+Date.prototype.toDbDate = function () {
     return this.getFullYear() + '-' + ((this.getMonth() + 1) + '').expand('0', 2) + '-' + (this.getDate() + '').expand('0', 2) + ' ' + (this.getHours() + '').expand('0', 2) + ':' + (this.getMinutes() + '').expand('0', 2) + ':' + (this.getSeconds() + '').expand('0', 2);
-}
-Date.prototype.toUnixTime = function() {
+};
+Date.prototype.toUnixTime = function () {
     return this.getTime() / 1000;
-}
-Date.prototype.toShortDateString = function() {
+};
+Date.prototype.toShortDateString = function () {
     return this.getFullYear() + '-' + ((this.getMonth() + 1) + '').expand('0', 2) + '-' + (this.getDate() + '').expand('0', 2);
-}
-Date.prototype.toTimeString = function() {
-    if(this == 'Invalid Date') {
+};
+Date.prototype.toTimeString = function () {
+    if (this == 'Invalid Date') {
         return '00:00:00';
     }
     return (this.getHours() + '').expand('0', 2) + ':' + (this.getMinutes() + '').expand('0', 2) + ':' + (this.getSeconds() + '').expand('0', 2);
-}
+};
 Date.prototype.timezoneoffset = (new Date()).getTimezoneOffset() / 60;
-Date.prototype.toLocalTime = function() { this.setTime(this.getTime() - this.timezoneoffset * 60 * 60 * 1000); return this; };
-Date.prototype.addMinute = function(min) { this.setTime(this.getTime() + min * 60 * 1000); return this; }
-Date.prototype.Diff = function(dt) { return parseInt((dt.getTime() - this.getTime()) / 1000); }
-Date.prototype.DiffInMonths = function(dateTo) {
-    return dateTo.getMonth() - this.getMonth() + 
-      (12 * (dateTo.getFullYear() - this.getFullYear()))
-}
-Date.prototype.DiffInDays = function(dateTo) {
+Date.prototype.toLocalTime = function () { this.setTime(this.getTime() - this.timezoneoffset * 60 * 60 * 1000); return this; };
+Date.prototype.addMinute = function (min) { this.setTime(this.getTime() + min * 60 * 1000); return this; }
+Date.prototype.Diff = function (dt) { return parseInt((dt.getTime() - this.getTime()) / 1000); }
+Date.prototype.DiffInMonths = function (dateTo) {
+    return dateTo.getMonth() - this.getMonth() +
+        (12 * (dateTo.getFullYear() - this.getFullYear()))
+};
+Date.prototype.DiffInDays = function (dateTo) {
     return this.Diff(dateTo) / 86400;
-}
-Date.prototype.Age = function(removeNazad = false, returnFull = false) {
+};
+Date.prototype.Age = function (removeNazad = false, returnFull = false) {
     let time = Math.abs((new Date()).getTime() / 1000 - this.getTime() / 1000); // to get the time since that moment
 
     let tokens = [
@@ -1152,51 +1152,51 @@ Date.prototype.Age = function(removeNazad = false, returnFull = false) {
         let ret = (numberOfUnits > 1 ? numberOfUnits + ' ' : '') + numberOfUnits.formatSequence(labels, false) + (removeNazad ? '' : ' назад');
         if (ret == 'день' + (removeNazad ? '' : ' назад'))
             ret = 'вчера';
-        
-        if(returnFull) {
+
+        if (returnFull) {
             retArray.push(ret);
         }
         else {
             return ret;
         }
     }
-    if(returnFull) {
+    if (returnFull) {
         return retArray.join(' ');
     }
     else {
         return 'только что';
     }
-}
-Date.prototype.format = function(formatString) { return this.toString(formatString); }
-Date.prototype.DayIndex = function() {
+};
+Date.prototype.format = function (formatString) { return this.toString(formatString); }
+Date.prototype.DayIndex = function () {
     var start = new Date(this.getFullYear(), 0, 0);
     var diff = this - start;
     var oneDay = 1000 * 60 * 60 * 24;
     return Math.floor(diff / oneDay);
-}
-Date.prototype.toShortRUString = function(showYear, showDay) {
+};
+Date.prototype.toShortRUString = function (showYear, showDay) {
     const months = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
     return (showDay === undefined || showDay === true ? this.getDate() + ' ' : '') + months[this.getMonth()] + (showYear === undefined || showYear === true ? ' ' + this.getFullYear() : '');
-}
-Date.prototype.copy = function() {
+};
+Date.prototype.copy = function () {
     let dt = new Date();
     dt.setTime(this.getTime());
     return dt;
-}
-Date.Now = function() { return new Date(); }
-Date.Ms = function() { return Date.Now().getTime(); }
-Date.Mc = function() { return (window.performance.getEntries()[0].duration + window.performance.now()) * 1e13; }
-Date.from = function(from) {
+};
+Date.Now = function () { return new Date(); }
+Date.Ms = function () { return Date.Now().getTime(); }
+Date.Mc = function () { return (window.performance.getEntries()[0].duration + window.performance.now()) * 1e13; }
+Date.from = function (from) {
     let dt = new Date();
     dt.setTime(parseInt(from));
     return dt;
-}
+};
 
 /**
  * Удостоверяется, что элемент виден в паренте
  * @param {Element} container
  */
-Element.prototype.ensureInViewport = function(container, top = null) {
+Element.prototype.ensureInViewport = function (container, top = null) {
 
     //Determine container top and bottom
     let cTop = container.scrollTop;
@@ -1212,17 +1212,17 @@ Element.prototype.ensureInViewport = function(container, top = null) {
     } else if (eBottom > cBottom) {
         container.scrollTop += (eBottom - cBottom);
     }
-    if(top) {
+    if (top) {
         console.log(top);
         container.scrollTop -= top;
     }
-}
+};
 
 /**
  * Проверяет видим ли элемент полностью
  * @param {Element} container
  */
-Element.prototype.inInViewport = function(container) {
+Element.prototype.inInViewport = function (container) {
 
     //Determine container top and bottom
     let cTop = container.scrollTop;
@@ -1239,21 +1239,21 @@ Element.prototype.inInViewport = function(container) {
         return false;
     }
     return true;
-}
+};
 
-Element.prototype.index = function() {
+Element.prototype.index = function () {
     return Array.prototype.indexOf.call(this.parentElement.children, this);
-}
+};
 
 /**
  * Краткая запись для установки атрибута
  * @param {string} name название атрибута
  * @param {string} value значение атрибута
  */
-Element.prototype.attr = function(name, value) {
-    if(name === undefined && value === undefined) {
+Element.prototype.attr = function (name, value) {
+    if (name === undefined && value === undefined) {
         let ret = {};
-        for(const attr of this.attributes) {
+        for (const attr of this.attributes) {
             ret[attr.name] = attr.value;
         }
         return ret;
@@ -1264,7 +1264,7 @@ Element.prototype.attr = function(name, value) {
         value !== null ? this.setAttribute(name, value) : this.removeAttribute(name);
         return this;
     }
-}
+};
 
 /**
  * Создает элемент
@@ -1274,12 +1274,12 @@ Element.prototype.attr = function(name, value) {
  * @param ns
  * @returns {HTMLElement}
  */
-Element.create = function(name, attr, data = null, ns = null) {
+Element.create = function (name, attr, data = null, ns = null) {
     const element = ns ? document.createElementNS(ns, name) : document.createElement(name);
     Object.forEach(attr, (n, v) => element.attr(n, v));
     data && element.data(data);
     return element;
-}
+};
 
 
 /**
@@ -1290,19 +1290,19 @@ Element.create = function(name, attr, data = null, ns = null) {
  * @param ns
  * @returns {HTMLElement}
  */
-Element.fromHtml = function(html) {
+Element.fromHtml = function (html) {
     var template = document.createElement('template');
     html = html.trim();
     template.innerHTML = html;
     return template.content.childNodes;
-}
+};
 
 /**
  * Краткая запись для работы с dataset
  * @param {string} name название свойства data-
  * @param {*} value значение свойства
  */
-Element.prototype.data = function(name, value) {
+Element.prototype.data = function (name, value) {
     if (name === undefined) {
         return this.dataset;
     } else if (name instanceof Object) {
@@ -1316,14 +1316,14 @@ Element.prototype.data = function(name, value) {
         this.dataset[name] = value;
         return this;
     }
-}
+};
 
 /**
  * Дополнительные данные обьекта
  * @param {string} name название свойства data-
  * @param {*} value значение свойства
  */
-Element.prototype.tag = function(name, value) {
+Element.prototype.tag = function (name, value) {
     if (!this._tag) {
         this._tag = {};
     }
@@ -1336,28 +1336,28 @@ Element.prototype.tag = function(name, value) {
         this._tag[name] = value;
         return this;
     }
-}
+};
 
 /**
  * Запихивает элемент в конец списка дочерних элементов родителя
  * @param {HTMLElement} parent родительский элемент
  */
-Element.prototype.appendTo = function(parent) {
+Element.prototype.appendTo = function (parent) {
     parent.appendChild(this);
     return this;
-}
+};
 
 /**
  * Запихивает заданный элемент в список дочерних элементов текущего элемента в конец
  * @param {HTMLElement} child дочерний элемент
  */
-Element.prototype.append = function(child) {
+Element.prototype.append = function (child) {
 
     try {
         this.appendChild(child);
         return child;
     }
-    catch(e) {
+    catch (e) {
         let lastNode = null;
         for (let i = 0; i < child.length; i++) {
             if (child[i].nodeName != '#text') {
@@ -1366,37 +1366,37 @@ Element.prototype.append = function(child) {
         }
         return lastNode;
     }
-    
-    
-}
+
+
+};
 
 /**
  * Запихивает текущий элемент в список дочерних элементов заданного элемента в начало
  * @param {HTMLElement} parent родительский элемент
  */
-Element.prototype.prependTo = function(parent) {
+Element.prototype.prependTo = function (parent) {
     if (parent.childNodes.length > 0) {
         parent.insertBefore(this, parent.childNodes[0]);
     } else {
         parent.appendChild(this);
     }
     return this;
-}
+};
 
 /**
  * Запихивает заданный элемент в список дочерних элементов текущего элемента в начало
  * @param {HTMLElement} child дочерний элемент
  */
-Element.prototype.prepend = function(child) {
+Element.prototype.prepend = function (child) {
     try {
         if (this.childNodes.length > 0) {
             this.insertBefore(child, this.childNodes[0]);
         } else {
             this.appendChild(child);
-        }    
+        }
         return child;
     }
-    catch(e) {
+    catch (e) {
         let lastNode = null;
         for (let i = 0; i < child.length; i++) {
             if (child[i].nodeName != '#text') {
@@ -1409,79 +1409,79 @@ Element.prototype.prepend = function(child) {
         }
         return lastNode;
     }
-}
+};
 
 /**
  * Запихивает заданный элемент в прямо за текущим элементом
  * @param {HTMLElement} element элемент
  */
-Element.prototype.after = function(element) {
+Element.prototype.after = function (element) {
     if (element.nextElementSibling) {
         element.parentElement.insertBefore(this, element.nextElementSibling);
     } else {
         element.parentElement.appendChild(this);
     }
     return this;
-}
+};
 
 /**
  * Запихивает заданный элемент перед текущим элементом
  * @param {HTMLElement} element элемент
  */
-Element.prototype.before = function(element) {
+Element.prototype.before = function (element) {
     this.parentElement.insertBefore(element, this);
     return this;
-}
+};
 
 /**
  * Окружает элемент другим элементом
  */
-Element.prototype.wrapWith = function(element) {
+Element.prototype.wrapWith = function (element) {
     this.remove();
     element.append(this);
     return this;
-}
+};
 
-Element.prototype.hideElement = function() {
+Element.prototype.hideElement = function () {
     this.dataset.shown = this.css('display');
     this.css('display', 'none');
     return this;
-}
+};
 
-Element.prototype.showElement = function(element) {
+Element.prototype.showElement = function (element) {
     if (this.dataset.shown && this.dataset.shown !== 'none') {
         this.css('display', this.dataset.shown);
     } else {
         this.css('display', 'block');
     }
     return this;
-}
+};
 
 /**
  * Возвращает следующий элемент
  */
-Element.prototype.next = function() {
+Element.prototype.next = function () {
     return this.nextElementSibling;
-}
+};
 
 /**
  * Возвращает предыдущий элемент
  */
-Element.prototype.prev = function() {
+Element.prototype.prev = function () {
     return this.previousElementSibling;
-}
+};
 
 /**
  * Возвращает родительский элемент
  */
-Element.prototype.parent = function() {
+Element.prototype.parent = function () {
     return this.parentElement;
-}
+};
 
 /**
  * Возвращает родительский элемент
  */
- !Element.prototype.closest  && (Element.prototype.closest = function(selector) {
+(!Element.prototype.closest && (Element.prototype.closest = function (selector) {
     let elem = this;
 
     while (elem !== document.body) {
@@ -1490,14 +1490,14 @@ Element.prototype.parent = function() {
     }
 
     return null;
-});
+}));
 
 /**
  * Устанавливает или возвращает стили
  * @param {(string|Object)} [name] название стиля или обьект содержащий все стили
  * @param {string} [value] значение
  */
-Element.prototype.css = function(name, value) {
+Element.prototype.css = function (name, value) {
 
     let styleObject = this.attr('style');
     styleObject = styleObject ? styleObject.toObject([';', ':'], null, (v) => v && v.toCamelCase()) : {};
@@ -1509,7 +1509,7 @@ Element.prototype.css = function(name, value) {
         return this;
     } else {
         if (value === undefined) {
-            return styleObject && styleObject[name] !== undefined ? styleObject[name] : getComputedStyle(this)[name]; 
+            return styleObject && styleObject[name] !== undefined ? styleObject[name] : getComputedStyle(this)[name];
         } else {
             styleObject[name.toCamelCase()] = value;
             this.attr('style', Object.toStyles(styleObject, [';', ':']));
@@ -1517,12 +1517,12 @@ Element.prototype.css = function(name, value) {
         }
     }
 
-}
+};
 
 /**
  * Возвращает местоположение и размеры элемента
  */
-Element.prototype.bounds = function(includeBorders = false, includeMargin = false) {
+Element.prototype.bounds = function (includeBorders = false, includeMargin = false) {
 
     const rect = this.getBoundingClientRect();
     const win = this.ownerDocument.defaultView;
@@ -1540,7 +1540,7 @@ Element.prototype.bounds = function(includeBorders = false, includeMargin = fals
     position.outerWidth = position.width;
     position.outerHeight = position.height;
 
-    if(style.boxSizing == 'content-box') {
+    if (style.boxSizing == 'content-box') {
         position.outerWidth += (parseInt(style.paddingLeft ?? 0)) + (parseInt(style.paddingRight ?? 0));
         position.outerHeight += (parseInt(style.paddingTop ?? 0)) + (parseInt(style.paddingBottom ?? 0));
     }
@@ -1552,42 +1552,42 @@ Element.prototype.bounds = function(includeBorders = false, includeMargin = fals
 
     return position;
 
-}
+};
 
 /**
  * Устанавливает или возвращает содержание в виде HTML
  * @param {string} value содержание
  */
-Element.prototype.html = function(value) {
+Element.prototype.html = function (value) {
     if (value === undefined) {
         return this.innerHTML;
     } else {
         this.innerHTML = value;
         return this;
     }
-}
+};
 
 /**
  * Устанавливает или возвращает содержание в виде text
  * @param {string} value содержание
  */
-Element.prototype.text = function(value) {
+Element.prototype.text = function (value) {
     if (value === undefined) {
         return this.innerText;
     } else {
         this.innerText = value;
         return this;
     }
-}
+};
 
 if (!Element.prototype.matches) {
     Element.prototype.matches = Element.prototype.matchesSelector || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector || Element.prototype.mozMatchesSelector || Element.prototype.oMatchesSelector;
-}
-Element.prototype.is = function(selector) {
+};
+Element.prototype.is = function (selector) {
     return this.matches(selector);
-}
+};
 
-Element.prototype.clone = function(ns) {
+Element.prototype.clone = function (ns) {
 
     let attr = {};
     let data = {};
@@ -1601,36 +1601,36 @@ Element.prototype.clone = function(ns) {
         }
     }
 
-    if(!ns) {
+    if (!ns) {
         ns = attr['xmlns'] ?? null;
         delete attr['xmlns'];
     }
 
     return Element.create(this.tagName, attr, data, ns);
 
-}
+};
 
-Element.prototype.hideShowProcess = function(callback, timeout = 50) {
+Element.prototype.hideShowProcess = function (callback, timeout = 50) {
     this.css('visibility', 'hidden');
     document.body.css('overflow', 'hidden');
     Colibri.Common.Delay(timeout).then(() => {
-        callback(); 
+        callback();
         this.css('visibility', null);
         document.body.css('overflow', null);
     });
-}
+};
 
 
 Element.prototype.emitCustomEvent = function (eventName, args) {
     var event = new CustomEvent(eventName, { detail: args });
     this.dispatchEvent(event);
-}
+};
 
 Element.prototype.emitMouseEvent = function (eventType) {
     const event = document.createEvent('MouseEvents');
     event.initMouseEvent(eventType, true, true, window, 0, 0, 345, 7, 220, false, false, true, false, 0, null);
     this.dispatchEvent(event);
-}
+};
 
 Element.prototype.emitHtmlEvents = function (object, type) {
     if ("createEvent" in document) {
@@ -1640,60 +1640,60 @@ Element.prototype.emitHtmlEvents = function (object, type) {
     } else {
         this.fireEvent("on" + type);
     }
-}
+};
 
-DOMTokenList.prototype.clear = function() {
-    for(let i = 0; i < this.length; i++) {
+DOMTokenList.prototype.clear = function () {
+    for (let i = 0; i < this.length; i++) {
         this.remove(this.item(i));
     }
-}
+};
 
 
 function Base2File(data, filename, mime, isBase) {
-    var bstr = isBase ? atob(data) : data, 
-        n = bstr.length, 
+    var bstr = isBase ? atob(data) : data,
+        n = bstr.length,
         u8arr = new Uint8Array(n);
-    while(n--){
+    while (n--) {
         u8arr[n] = bstr.charCodeAt(n);
     }
-    return new File([u8arr], filename, {type:mime});
-}
+    return new File([u8arr], filename, { type: mime });
+};
 
 function DownloadFile(data, filename, mime, isBase = true) {
-    var a = Element.create('a', {href: window.URL.createObjectURL(Base2File(data, filename, mime, isBase), {type: mime}), download: filename});
+    var a = Element.create('a', { href: window.URL.createObjectURL(Base2File(data, filename, mime, isBase), { type: mime }), download: filename });
     document.body.append(a);
     a.click();
     document.body.removeChild(a);
-}
+};
 
 
 function DownloadFileByPath(path, filename) {
-    if(!DownloadOnDevice(path, filename)) {
+    if (!DownloadOnDevice(path, filename)) {
         const pi = path.pathinfo();
-        var a = Element.create('a', {href: path, download: filename ?? pi.filename});
+        var a = Element.create('a', { href: path, download: filename ?? pi.filename });
         document.body.append(a);
         a.click();
         document.body.removeChild(a);
     }
-}
+};
 
 function DownloadOnDevice(path, filename) {
 
     try {
-        if(!window.hasOwnProperty("cordova")){
+        if (!window.hasOwnProperty("cordova")) {
             return false;
         }
 
         let storage = '';
-        if(cordova.platformId === 'android') {
+        if (cordova.platformId === 'android') {
             storage = cordova.file.externalRootDirectory;
-        } 
-        else if(cordova.platformId === 'electron') {
+        }
+        else if (cordova.platformId === 'electron') {
             return false;
         }
 
         const fileTransfer = new FileTransfer();
-        fileTransfer.download(path, storage + 'Download/' + filename,  function(entry) {
+        fileTransfer.download(path, storage + 'Download/' + filename, function (entry) {
 
             const mime = Colibri.Common.MimeType.ext2type(entry.name.pathinfo().ext);
 
@@ -1701,36 +1701,36 @@ function DownloadOnDevice(path, filename) {
                 cordova.file.externalRootDirectory + 'Download/' + filename,
                 mime,
                 {
-                    error : function(e) {
+                    error: function (e) {
                         console.log('Error status: ' + e.status + ' - Error message: ' + e.message);
                     },
-                    success : function () {
+                    success: function () {
                         console.log('file opened successfully');
                     }
                 }
             );
 
-        }, function(err) {
+        }, function (err) {
             console.log("Error");
             console.dir(err);
         });
 
         return true;
-        
+
     }
-    catch(e) {
+    catch (e) {
         return false;
     }
 
 
-}
+};
 
-File.prototype.download = function() {
-    var a = Element.create('a', {href: window.URL.createObjectURL(this, {type: this.type}), download: this.name});
+File.prototype.download = function () {
+    var a = Element.create('a', { href: window.URL.createObjectURL(this, { type: this.type }), download: this.name });
     document.body.append(a);
     a.click();
     document.body.removeChild(a);
-}
+};
 
 window.resizeEndTimeout = -1;
 window.addEventListener('resize', (e) => {
@@ -1745,7 +1745,7 @@ window.addEventListener('resize', (e) => {
 
 });
 
-Function.isPromise = function(p) {
+Function.isPromise = function (p) {
     return (typeof p === 'object' && typeof p.then === 'function');
-}
+};
 
