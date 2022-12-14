@@ -2,27 +2,27 @@
  * Основной класс приложения
  * ! нужно исправить инициализацию модулей, они должны родиться после приложения!
  */
-Colibri.App = class extends Colibri.Events.Dispatcher {
+Colibri.App = class extends Colibri.Events.Dispatcher { 
     
-    /** @constructor */
+    /** @constructor */ 
     constructor() {
-        super('App');
+        super('App'); 
 
         this._initialized = false;
-
-        this._changeLastTime = Date.Now().getTime();
-
-        this.RegisterEvents();
-
+ 
+        this._changeLastTime = Date.Now().getTime(); 
+   
+        this.RegisterEvents();  
+ 
         this.RegisterEventHandlers();
-        
-    }
+  
+    } 
 
-    RegisterEvents() {
+    RegisterEvents() { 
         this.RegisterEvent('DocumentReady', false, 'Когда DOM готов');
-        this.RegisterEvent('DocumentChanged', false, 'Когда DOM изменился');
+        this.RegisterEvent('DocumentChanged', false, 'Когда DOM изменился'); 
         this.RegisterEvent('ApplicationReady', false, 'Приложение загружено');
-        this.RegisterEvent('UserAuthorized', false, 'Пользователь вошел');
+        this.RegisterEvent('UserAuthorized', false, 'Пользователь вошел'); 
         this.RegisterEvent('UserUnauthorized', false, 'Пользователь вышел');
         this.RegisterEvent('DocumentShown', false, 'Документ отображен');
         this.RegisterEvent('DocumentHidden', false, 'Документ скрыт');
