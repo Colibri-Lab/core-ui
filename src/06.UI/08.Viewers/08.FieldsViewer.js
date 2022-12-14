@@ -108,6 +108,9 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
             const shortComponentName = field.component.substr(field.component.lastIndexOf('.') + 1).toLowerCase();
 
             pane.AddClass(`app-field-pane app-${shortComponentName}-pane`);
+            if(field?.params?.className) {
+                pane.AddClass(field.params.className);
+            }
             pane.shown = field.hidden === undefined || field.hidden === true;
 
             field.name = name;
