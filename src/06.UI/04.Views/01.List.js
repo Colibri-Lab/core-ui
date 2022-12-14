@@ -562,7 +562,6 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
     }
 
 
-
 }
 
 Colibri.UI.List.JsonRenderer = class extends Colibri.UI.Renderer {

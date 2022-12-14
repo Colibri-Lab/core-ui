@@ -1263,7 +1263,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         try {
             this._element.remove();
         }
-        catch(e) {}
+        catch(e) { console.log('error removing element from DOM', e); }
         this.Dispatch('ComponentDisposed');
 
         super.Dispose();
