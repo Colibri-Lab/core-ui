@@ -174,8 +174,13 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     }
 
     set width(value) {
-        const style = this._element.querySelector('.app-component-window-content').css();
-        this._element.querySelector('.app-component-window-content').css('width', (value - (parseInt(style.paddingLeft) || 0) - (parseInt(style.paddingRight) || 0)) + 'px');
+        if(value === null) {
+            this._element.querySelector('.app-component-window-content').css('width', null);    
+        }
+        else {
+            const style = this._element.querySelector('.app-component-window-content').css();
+            this._element.querySelector('.app-component-window-content').css('width', (value - (parseInt(style.paddingLeft) || 0) - (parseInt(style.paddingRight) || 0)) + 'px');
+        }
     }
 
     /**
@@ -188,8 +193,13 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     }
 
     set height(value) {
-        const style = this._element.querySelector('.app-component-window-content').css();
-        this._element.querySelector('.app-component-window-content').css('height', (value - (parseInt(style.paddingTop) || 0) - (parseInt(style.paddingBottom) || 0)) + 'px');
+        if(value === null) {
+            this._element.querySelector('.app-component-window-content').css('height', null);    
+        }
+        else {
+            const style = this._element.querySelector('.app-component-window-content').css();
+            this._element.querySelector('.app-component-window-content').css('height', (value - (parseInt(style.paddingTop) || 0) - (parseInt(style.paddingBottom) || 0)) + 'px');
+        }
     }
 
     /**

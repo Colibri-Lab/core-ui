@@ -575,7 +575,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
     set width(value) {
-        if(typeof value == 'string' && (value.indexOf('%') !== -1 || value.includes('calc'))) {
+        if(value === null) {
+            this._element.css('width', null);
+        }
+        else if(typeof value == 'string' && (value.indexOf('%') !== -1 || value.includes('calc'))) {
             this._element.css('width', value);
         }
         else {
@@ -606,7 +609,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     }
     set height(value) {
-        if(typeof value == 'string' && (value.indexOf('%') !== -1 || value.includes('calc'))) {
+        if(value === null) {
+            this._element.css('height', null);
+        }
+        else if(typeof value == 'string' && (value.indexOf('%') !== -1 || value.includes('calc'))) {
             this._element.css('height', value);
         }
         else {
