@@ -14,56 +14,79 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                 }
                 if(Array.isArray(value)) {
                     let r = [];
-                    for(const vv of value) {
+                    
+                    let isObject = false;
+                    for(let vv of value) {
                         if(vv instanceof Object) {
                             r.push(vv[this._field?.selector?.title ?? 'title']);
+                            isObject = true;
                         }
-                        else if (this._field?.lookup) {
-                            let selected = false;
-                            vv = vv.value ?? vv;
-                            this.AddClass('app-viewer-loading');
-                            this._setLookup(this._field.lookup).then((response) => {
-                                const _result = (response.result ?? response);
-                                if(_result?.length) {
-                                    for (let val of _result) {
-                                        if (val[this._field?.selector?.value || 'value'] == vv) {
-                                            r.push(val[this._field?.selector?.title || 'title']);
-                                            selected = true;
-                                            break;
-                                        }
+                    }
+
+                    if(isObject) {
+                        if(r.length > 1) {
+                            let v1 = r.splice(0, 1);
+                            let v2 = r.join('<br />');
+                            super.value = v1;
+                            const icon1 = new Colibri.UI.Icon(this.name + '-hover', this);
+                            icon1.shown = true;
+                            icon1.value = '<em>+' + r.length + '</em> ' + App.Modules.EcoloPlace.Icons.Size20x20.Info;
+                            icon1.toolTip = v2;
+                        }
+                        else {
+                            super.value = r.pop();
+                        }
+                    }
+                    else if(this._field?.lookup) {
+                        this._setLookup(this._field.lookup).then((response) => {
+                            const _result = (response.result ?? response);
+                            if(_result?.length) {
+                                for (let val of _result) {
+                                    if (value.indexOf(val[this._field?.selector?.value || 'value']) !== -1) {
+                                        r.push(val[this._field?.selector?.title || 'title']);
                                     }
                                 }
-                            }).finally(() => {
-                                this.RemoveClass('app-viewer-loading')
-                                if(!selected) {
-                                    r.push(vv[this._field?.selector?.title ?? 'title']);
-                                }
-                            });
-                        }
-                        else if(this._field.values) {
-                            for(const v of this._field.values) {
-                                if(vv == (v.value ?? v.title ?? v)) {
-                                    r.push(v.title);
-                                }
                             }
-                        }   
-                    }
+                        }).finally(() => {
+                            this.RemoveClass('app-viewer-loading')
 
-                    // надо сделать настройку
-                    if(r.length > 1) {
-                        let v1 = r.splice(0, 1);
-                        let v2 = r.join('<br />');
-
-                        super.value = v1;
-                        const icon1 = new Colibri.UI.Icon(this.name + '-hover', this);
-                        icon1.shown = true;
-                        icon1.value = '<em>+' + r.length + '</em> ' + App.Modules.EcoloPlace.Icons.Size20x20.Info;
-                        icon1.toolTip = v2;
-
+                            if(r.length > 1) {
+                                let v1 = r.splice(0, 1);
+                                let v2 = r.join('<br />');
+                                super.value = v1;
+                                const icon1 = new Colibri.UI.Icon(this.name + '-hover', this);
+                                icon1.shown = true;
+                                icon1.value = '<em>+' + r.length + '</em> ' + App.Modules.EcoloPlace.Icons.Size20x20.Info;
+                                icon1.toolTip = v2;
+                            }
+                            else {
+                                super.value = r.pop();
+                            }
+    
+                        });
                     }
-                    else {
-                        super.value = r.pop();
-                    }
+                    else if(this._field.values) {
+                        for(const v of this._field.values) {
+                            if(vv == (v.value ?? v.title ?? v)) {
+                                r.push(v.title);
+                            }
+                        }
+                        if(r.length > 1) {
+                            let v1 = r.splice(0, 1);
+                            let v2 = r.join('<br />');
+                            super.value = v1;
+                            const icon1 = new Colibri.UI.Icon(this.name + '-hover', this);
+                            icon1.shown = true;
+                            icon1.value = '<em>+' + r.length + '</em> ' + App.Modules.EcoloPlace.Icons.Size20x20.Info;
+                            icon1.toolTip = v2;
+                        }
+                        else {
+                            super.value = r.pop();
+                        }
+                    } 
+
+                    
+                    
                 }
             }
             else {
