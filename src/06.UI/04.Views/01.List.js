@@ -539,7 +539,9 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
                 }
                 content = new comp(this.name + '_renderer', this);
                 content.shown = true;
-                Object.forEach(attrs, (key, value) => content[key] = value);
+                Object.forEach(attrs, (key, value) => {
+                    content[key] = value;
+                });
             }
             content.value = this._itemData;
         }
