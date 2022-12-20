@@ -187,6 +187,7 @@ Colibri.IO.Request = class extends Destructable {
      */
     AddHeaders(headers) {
         this._headers = Object.assign({}, this._headers, headers);
+        console.log(this._headers);
         return this;
     }
 

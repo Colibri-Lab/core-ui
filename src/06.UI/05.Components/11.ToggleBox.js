@@ -18,6 +18,11 @@ Colibri.UI.ToggleBox = class extends Colibri.UI.Component {
 
     }
 
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('Changed', false, 'Когда изменилось состояние переключателя');
+    }
+
     _showState() {
         if(this._input.checked) {
             this.AddClass('-selected');
@@ -29,7 +34,7 @@ Colibri.UI.ToggleBox = class extends Colibri.UI.Component {
 
     _registerEventHandlers() {
         super._registerEventHandlers();
-
+ 
         this.AddHandler('Clicked', () => {
             this.Toggle();
         });
@@ -39,6 +44,7 @@ Colibri.UI.ToggleBox = class extends Colibri.UI.Component {
     Toggle() {
         this._input.checked = !this._input.checked;
         this._showState(); 
+        this.Dispatch('Changed', {state: this._input.checked});
     }
 
     get checked() {
