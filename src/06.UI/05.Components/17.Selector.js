@@ -157,9 +157,9 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
             this._values = this._search(this.readonly || !args.search ? '' : this._input.value);
             this._showPopup(this._values);
             
-            if(this.allowempty) {
-                this.Dispatch('Changed', args);
-            }
+            // if(this.allowempty) {
+            //     this.Dispatch('Changed', args);
+            // }
 
             this._renderValue(false);
         });
@@ -531,7 +531,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     _createPopup(values) {
-        const popup = new Colibri.UI.PopupList('select-popup', document.body, this._multiple, this.__render, this._titleField, this._valueField, this._groupField, this._canSelectGroup);
+        const popup = new Colibri.UI.PopupList(this.name + '-select-popup', document.body, this._multiple, this.__render, this._titleField, this._valueField, this._groupField, this._canSelectGroup);
         popup.parent = this;
         popup.multiple = this._multiple;
         const el = this.container.closest('[namespace]');
