@@ -271,6 +271,10 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         return this._content.Children(this._name + '-container');
     }
 
+    get contentPane() {
+        return this._content;
+    }
+
     get field() {
         return this._fieldData;
     }
@@ -295,6 +299,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         const formElement = this._element.closest('.app-form-component');
         return formElement ? formElement.tag('component') : null;
     }
+
 
 
 }

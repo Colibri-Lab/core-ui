@@ -95,7 +95,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         }
 
         let data = {};
-        this.contentContainer.ForEach((name, component) => {
+        this.contentContainer && this.contentContainer.ForEach((name, component) => {
             if(name == '_adds') {
                 data = Object.assign(data, component.value);
             }
@@ -117,7 +117,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
         value = eval_default_values(value);
 
-        this.contentContainer.ForEach((name, component) => {
+        this.contentContainer && this.contentContainer.ForEach((name, component) => {
             if(name == '_adds') {
                 // если наткнулись на _adds
                 component.ForEveryField((name, field) => {
@@ -179,7 +179,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
     }
 
     set readonly(value) {
-        this.contentContainer.ForEach((name, component) => {
+        this.contentContainer && this.contentContainer.ForEach((name, component) => {
             if(!component.readonly) {
                 component.readonly = value; 
             }
@@ -204,7 +204,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         const formData = this.root.value;
 
         Object.forEach(this._fieldData.fields, (name, fieldData) => {
-            if(!fieldData) {
+            if(!fieldData || !this.contentContainer) {
                 return true;
             }
             
@@ -254,5 +254,6 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         this.contentContainer && this.contentContainer.ForEach(callback);
     }
 
+    
 }
 Colibri.UI.Forms.Field.RegisterFieldComponent('Object', 'Colibri.UI.Forms.Object', '#{app-fields-object;Обьект с полями}')
