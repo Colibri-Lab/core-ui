@@ -8,8 +8,8 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         this.AddClass('app-component-password-field');
 
         const contentContainer = this.contentContainer;
-        const params = {type: 'password', name: (this.form.shuffleFieldNames ? 'field-' + Date.Mc() : this._name + '-input')};
-        if(this.form.shuffleFieldNames) {
+        const params = {type: 'password', name: (this.form && this.form.shuffleFieldNames ? 'field-' + Date.Mc() : this._name + '-input')};
+        if(this.form && this.form.shuffleFieldNames) {
             params.autocomplete = 'new-password';
         }
         this._input = contentContainer.container.append(Element.create('input', params));

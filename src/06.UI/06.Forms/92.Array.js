@@ -141,7 +141,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         this.contentContainer.ForEach((name, component) => {
             component.readonly = value; 
         });
-        this._link && (this._link.enabled = value);
+        this._link && (this._link.enabled = !value);
     }
 
     get enabled() {

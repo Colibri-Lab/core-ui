@@ -6,8 +6,8 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
 
         const contentContainer = this.contentContainer;
 
-        const params = {type: 'number', name: (this.form.shuffleFieldNames ? 'field-' + Date.Mc() : this._name + '-input')};
-        if(this.form.shuffleFieldNames) {
+        const params = {type: 'number', name: (this.form && this.form.shuffleFieldNames ? 'field-' + Date.Mc() : this._name + '-input')};
+        if(this.form && this.form.shuffleFieldNames) {
             params.autocomplete = 'off';
         }
         this._input = contentContainer.container.append(Element.create('input', params));

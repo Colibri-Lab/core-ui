@@ -40,5 +40,8 @@
         margin-bottom: 10px;
         padding-right: 30px;
         min-height: 65px;
+        &:first-child {
+            padding-top: 0px;
+        }
     }
 }

@@ -176,7 +176,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             }
         });
 
-        data = this._prepareOneOf(data);
+        data = this._prepareOneOf(data, this);
 
         return data;
     }
@@ -199,13 +199,21 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         return this._shuffleFieldNames;
     }
 
-    _prepareOneOf(data) {
+    _prepareOneOf(data, field) {
         if(data instanceof Object) {
             Object.forEach(data, (n, v) => {
-                data[n] = this._prepareOneOf(v);
+                data[n] = this._prepareOneOf(v, this._fields[n]);
             });
             if(Object.keys(data).indexOf('_oneof') !== -1) {
                 const oneof = {};
+                const allfields = Object.keys(field.fields);
+                const oneofvalues = field.fields['_oneof'].values.map((f) => f.value);
+                const otherfields = allfields.filter((v) => !oneofvalues.includes(v));
+                otherfields.forEach((f) => {
+                    if(data[f] && f != '_oneof') {
+                        oneof[f] = data[f];
+                    }
+                })
                 oneof[data['_oneof']] = data[data['_oneof']] ?? null;
                 data = oneof;
             }
