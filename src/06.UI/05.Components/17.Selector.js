@@ -364,12 +364,25 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     _renderValue(renderValue = true) {
         if (!this.multiple) {
             if(renderValue) {
+                let v = '';
                 if(Array.isArray(this._value)) {
-                    this._input.value = (this._value[0] !== '' && this._value[0] !== null && this._value[0] !== undefined ? (this._value[0][this._titleField] ?? this._value[0] ?? '') : '').stripHtml();
+                    v = (this._value[0] !== '' && this._value[0] !== null && this._value[0] !== undefined ? (this._value[0][this._titleField] ?? this._value[0] ?? '') : '');
+                    if(v instanceof Object) {
+                        try { v = v[Lang.Current] } catch(e) { v = ''; };
+                    }
+                    else {
+                        v = v.stripHtml();
+                    }
                 }
                 else {
-                    this._input.value = this._value.stripHtml();
+                    if(this._value instanceof Object) {
+                        try { v = this._value[Lang.Current] } catch(e) { v = ''; };
+                    }
+                    else {
+                        v = this._value.stripHtml();
+                    }
                 }
+                this._input.value = v;
             }
 
             if(!this._placeholderempty || this.HaveValues()) {
@@ -395,7 +408,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                     this._input.placeholder = String.Pluralize(this._placeholderinfo, itemCount).stripHtml();
                 }
             } else {
-                this._input.placeholder = '#{ui-selector-choosed;Выбрано}'.replaceAll('%s1', itemCount).replaceAll('%s2', this?.parent?.parent?.title).stripHtml();
+                this._input.placeholder = '#{ui-selector-choosed}'.replaceAll('%s1', itemCount).replaceAll('%s2', this?.parent?.parent?.title).stripHtml();
             }
         }
     }
