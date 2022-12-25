@@ -97,3 +97,4 @@ Colibri.UI.GridFileViewer = class extends Colibri.UI.Viewer {
     }
 
 }
+Colibri.UI.Viewer.Register('Colibri.UI.GridFileViewer', '#{ui-viewers-gridfile}');

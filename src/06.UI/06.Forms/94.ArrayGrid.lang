@@ -1,0 +1,21 @@
+ui-arraygrid-add:
+  ru: Добавить
+  en: Add
+ui-arraygrid-contextmenu-edit:
+  ru: Редактировать
+  en: Edit
+ui-arraygrid-contextmenu-remove:
+  ru: Удалить
+  en: Delete
+ui-arraygrid-massactions-remove:
+  ru: удалить
+  en: remove
+ui-arraygrid-errors:
+  ru: Передайте массив
+  en: Pass an array
+ui-arraygrid-save:
+  ru: Сохранить
+  en: Save
+ui-fields-arraygrid:
+  ru: Массив в виде грида
+  en: Array as Grid

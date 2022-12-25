@@ -13,4 +13,4 @@ Colibri.UI.HtmlDataViewer = class extends Colibri.UI.Viewer {
 
 
 }
-Colibri.UI.Viewer.Register('Colibri.UI.HtmlDataViewer', '#{app-viewers-htmldata;HTML код}');
+Colibri.UI.Viewer.Register('Colibri.UI.HtmlDataViewer', '#{ui-viewers-htmldata}');

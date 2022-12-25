@@ -27,4 +27,4 @@ Colibri.UI.NumberViewer = class extends Colibri.UI.Viewer {
 
 
 }
-Colibri.UI.Viewer.Register('Colibri.UI.NumberViewer', '#{app-viewers-number;Цифра}');
+Colibri.UI.Viewer.Register('Colibri.UI.NumberViewer', '#{ui-viewers-number}');

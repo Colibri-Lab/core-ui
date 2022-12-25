@@ -27,4 +27,4 @@ Colibri.UI.ObjectViewer = class extends Colibri.UI.Viewer {
 
 
 }
-Colibri.UI.Viewer.Register('Colibri.UI.ObjectViewer', '#{app-viewers-object;Обьект}');
+Colibri.UI.Viewer.Register('Colibri.UI.ObjectViewer', '#{ui-viewers-object}');

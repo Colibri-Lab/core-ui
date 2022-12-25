@@ -1,0 +1,9 @@
+ui-editors-files-message:
+  ru: Можно выбрать не более %s файлов
+  en: You can select up to %s files
+ui-editors-files-message3:
+  ru: Файл %s слишком большой
+  en: File %s is too large
+ui-editors-files-message5:
+  ru: Недопустимый формат файла
+  en: Invalid file format

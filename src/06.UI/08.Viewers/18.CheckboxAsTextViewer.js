@@ -1,8 +1,8 @@
-Colibri.UI.CheckboxViewer = class extends Colibri.UI.Viewer {
+Colibri.UI.CheckboxAsTextViewer = class extends Colibri.UI.Viewer {
 
     constructor(name, container, element = '<span />', root = null) {
         super(name, container, element, root);
-        this.AddClass('app-checkbox-viewer-component');
+        this.AddClass('app-checkboxastext-viewer-component');
 
         this._value = false;
     }
@@ -25,4 +25,4 @@ Colibri.UI.CheckboxViewer = class extends Colibri.UI.Viewer {
 
 
 }
-Colibri.UI.Viewer.Register('Colibri.UI.CheckboxViewer', '#{app-viewers-checkbox;Чекбокс}');
+Colibri.UI.Viewer.Register('Colibri.UI.CheckboxAsTextViewer', '#{ui-viewers-checkboxastext}');

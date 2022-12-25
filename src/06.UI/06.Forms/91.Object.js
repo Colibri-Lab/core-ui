@@ -256,4 +256,4 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Object', 'Colibri.UI.Forms.Object', '#{app-fields-object;Обьект с полями}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('Object', 'Colibri.UI.Forms.Object', '#{ui-fields-object}')

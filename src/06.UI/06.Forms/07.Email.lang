@@ -1,0 +1,6 @@
+ui-email-validation-message:
+  ru: Пожалуйста, введите корректный email
+  en: Please enter a valid email
+ui-fields-email:
+  ru: Эл. адрес
+  en: Email

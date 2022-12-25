@@ -9,7 +9,7 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
 
         this._title = '';
 
-        this._element.querySelector('.app-component-input-type-file-text').html(this.multiple ? '#{app-files-choosefiles;Выбрать файлы}' : '#{app-files-choosefile;Выбрать файл}');
+        this._element.querySelector('.app-component-input-type-file-text').html(this._title());
     }
 
     _registerEvents() {
@@ -32,6 +32,10 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
         });
     }
 
+    _title() {
+        return this.multiple ? '#{ui-files-choosefiles}' : '#{ui-files-choosefile}';
+    }
+
     get container() {
         return this._element.querySelector('.app-component-input-type-file-text');
     }
@@ -42,7 +46,7 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
 
     set title(value) {
         this._title = value;
-        this._element.querySelector('.app-component-input-type-file-text').html(value || (this.multiple ? '#{app-files-choosefiles;Выбрать файлы}' : '#{app-files-choosefile;Выбрать файл}'));
+        this._element.querySelector('.app-component-input-type-file-text').html(value || this._title());
     }
 
     get multiple() {
@@ -56,7 +60,7 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
             this._input.removeAttribute('multiple');
         }
         if(!this._title) {
-            this._element.querySelector('.app-component-input-type-file-text').html(this.multiple ? '#{app-files-choosefiles;Выбрать файлы}' : '#{app-files-choosefile;Выбрать файл}');
+            this._element.querySelector('.app-component-input-type-file-text').html(this._title());
         }
     }
 

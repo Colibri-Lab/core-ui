@@ -40,4 +40,4 @@ Colibri.UI.BoolViewer = class extends Colibri.UI.Viewer {
 
 
 }
-Colibri.UI.Viewer.Register('Colibri.UI.BoolViewer', '#{app-viewers-bool;Логическое}');
+Colibri.UI.Viewer.Register('Colibri.UI.BoolViewer', '#{ui-viewers-bool}');

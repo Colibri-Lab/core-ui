@@ -221,7 +221,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     }
 
     RenderFieldContainer() {
-        throw new Error('#{app-field-needtooverload-error;Нужно переопределить}');
+        throw new Error('#{ui-field-needtooverload-error}');
     }
 
     ResetValidation() {

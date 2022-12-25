@@ -68,7 +68,7 @@ Colibri.UI.MassActionsMenu = class extends Colibri.UI.Component {
     }
     set selectedItems(value) {
         this._selectedItems = value;
-        this._selectedItemsCounter.value = '#{app-massactions-choosed;Выбрано} ' + this._selectedItems.length;
+        this._selectedItemsCounter.value = '#{ui-massactions-choosed}'.replaceAll('%s', this._selectedItems.length);
     }
 
     Dispose() {

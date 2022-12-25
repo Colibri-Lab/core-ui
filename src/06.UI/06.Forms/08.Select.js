@@ -342,4 +342,4 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         );
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Select', 'Colibri.UI.Forms.Select', '#{app-fields-select;Выборка}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('Select', 'Colibri.UI.Forms.Select', '#{ui-fields-select}')

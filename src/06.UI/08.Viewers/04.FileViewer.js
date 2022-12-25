@@ -34,4 +34,4 @@ Colibri.UI.FileViewer = class extends Colibri.UI.Viewer {
     }
 
 }
-Colibri.UI.Viewer.Register('Colibri.UI.FileViewer', '#{app-viewers-file;Файл}');
+Colibri.UI.Viewer.Register('Colibri.UI.FileViewer', '#{ui-viewers-file}');

@@ -91,4 +91,4 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
         }
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Date', 'Colibri.UI.Forms.Date', '#{app-fields-date;Поле Дата}');
+Colibri.UI.Forms.Field.RegisterFieldComponent('Date', 'Colibri.UI.Forms.Date', '#{ui-fields-date}');

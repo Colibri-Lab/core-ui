@@ -1,0 +1,35 @@
+ui-files-sign:
+  ru: Подписать
+  en: Sign
+ui-files-about:
+  ru: до
+ui-files-files:
+  ru: файлов
+ui-files-more:
+  ru: не больше
+ui-files-everyone:
+  ru: каждый
+ui-files-choosenomore:
+  ru: Можно выбрать не более
+ui-files-file:
+  ru: Файл
+ui-files-verybig:
+  ru: слишком большой
+ui-files-format:
+  ru: Недопустимый формат файла
+  en: Invalid file format
+ui-fields-files:
+  ru: Список файлов
+  en: Files list
+ui-files-filescount:
+  ru: до %s файлов
+  en: up to %s files
+ui-files-size:
+  ru: не больше %s
+  en: no more than %s
+ui-files-filescount2:
+  ru: Можно выбрать не больше %s файлов
+  en: You can select no more than %s files
+ui-files-filehuge:
+  ru: Файл %s слишком большой
+  en: File %s is too large

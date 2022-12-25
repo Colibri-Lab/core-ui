@@ -289,4 +289,4 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
     }
 
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Password', 'Colibri.UI.Forms.Password', '#{app-fields-password;Пароль}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('Password', 'Colibri.UI.Forms.Password', '#{ui-fields-password}')

@@ -1,0 +1,6 @@
+ui-selector-nothingchoosed:
+  ru: Ничего не выбрано
+  en: Nothing selected
+ui-selector-choosed:
+  ru: Выбрано
+  en: Selected %s1 items of %s2

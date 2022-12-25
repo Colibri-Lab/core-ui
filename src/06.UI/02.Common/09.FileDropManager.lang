@@ -1,0 +1,14 @@
+ui-filedropmanager-message:
+  ru: Пожалуйста, отпустите файлы в этой области. Загрузка будет произведена в
+    выбранную папку
+  en: Please release files in this area. The download will be made in the selected
+    folder
+ui-filedropmanager-error1:
+  ru: Файл слишком большой или не подходящего типа.
+  en: The file is too large or of the wrong type.
+ui-renderer-allowed:
+  ru: "Разрешено: %s"
+  en: "Allowed: %s"
+ui-renderer-max:
+  ru: максимум %s
+  en: "%s maximum"

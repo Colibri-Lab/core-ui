@@ -1,0 +1,12 @@
+ui-period-day1:
+  ru: день
+  en: day
+ui-period-day2:
+  ru: дня
+  en: days
+ui-period-day3:
+  ru: дней
+  en: days
+ui-fields-period:
+  ru: Период
+  en: Period

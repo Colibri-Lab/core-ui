@@ -216,7 +216,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
 
         if (this._maxCount && (filesList.length > this._maxCount)) {
             error = true;
-            this._errorMessage = '#{app-files-error-max;Можно выбрать не более} ' + this._maxCount;
+            this._errorMessage = '#{ui-files-error-max}'.replaceAll('%s', this._maxCount);
         }
 
         if (!error && this._allowedExtensions) {
@@ -231,13 +231,13 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
 
             if (!extensions.includes(ext)) {
                 error = true;
-                this._errorMessage = '#{app-files-error-format;Недопустимый формат файла} (' + this._extensionsToString() + ')';
+                this._errorMessage = '#{ui-files-error-format} (' + this._extensionsToString() + ')';
             }
         }
 
         if (!error && this._maxFileSize && (filesList[0].size > this._maxFileSize)) {
             error = true;
-            this._errorMessage = '#{app-files-error-size;Выбранный файл слишком большой}';
+            this._errorMessage = '#{ui-files-error-size}';
         }
 
         if (error) {
@@ -349,4 +349,4 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         }
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('File', 'Colibri.UI.Forms.File', '#{app-fields-file;Файл}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('File', 'Colibri.UI.Forms.File', '#{ui-fields-file}')

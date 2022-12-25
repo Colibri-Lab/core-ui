@@ -143,7 +143,7 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
         for(const file of files) {
             const ext = file.name.extractExt();
             if(file.size > this._allowSize || (this._allowTypes !== '*' && this._allowTypes.indexOf(ext) === -1)) {
-                errors.push({file: file, error: '#{app-uploadbutton-error1;Файл слишком большой или не подходящего типа.} ' + (this._allowTypes !== '*' ? '#{app-uploadbutton-allow;Разрешено}: ' + this._allowTypes.join(',') + ', ' : '') + '#{app-uploadbutton-max;максимум}: ' + this._allowSize.toSizeString(['bytes', 'Kb', 'Mb', 'Gb'], 1024, true)});
+                errors.push({file: file, error: '#{ui-uploadbutton-error1;Файл слишком большой или не подходящего типа.} ' + (this._allowTypes !== '*' ? '#{ui-uploadbutton-allow}'.replaceAll('%s', this._allowTypes.join(',')) + ', ' : '') + '#{ui-uploadbutton-max}'.replaceAll('%s', this._allowSize.toSizeString(['bytes', 'Kb', 'Mb', 'Gb'], 1024, true))});
             }
             else {
                 success.push(file);

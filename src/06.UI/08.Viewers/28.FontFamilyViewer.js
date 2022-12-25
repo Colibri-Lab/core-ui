@@ -25,4 +25,4 @@ Colibri.UI.FontFamilyViewer = class extends Colibri.UI.Viewer {
 
 
 }
-Colibri.UI.Viewer.Register('Colibri.UI.FontFamilyViewer', '#{app-viewers-font-family;Шрифт}');
+Colibri.UI.Viewer.Register('Colibri.UI.FontFamilyViewer', '#{ui-viewers-font-family}');

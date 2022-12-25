@@ -1,0 +1,91 @@
+ui-validation-bik-error1:
+  ru: БИК может состоять только из цифр
+  en: BIC can only consist of numbers
+ui-validation-bik-error2:
+  ru: БИК может состоять только из 9 цифр
+  en: BIC can only consist of 9 digits
+ui-validation-inn-error1:
+  ru: ИНН пуст
+  en: TIN is empty
+ui-validation-inn-error2:
+  ru: ИНН может состоять только из цифр
+  en: TIN can only consist of numbers
+ui-validation-inn-error3:
+  ru: ИНН может состоять только из 10 или 12 цифр
+  en: TIN can only consist of 10 or 12 digits
+ui-validation-inn-error4:
+  ru: Неправильное контрольное число
+  en: Wrong check digit
+ui-validation-kpp-error1:
+  ru: КПП пуст
+  en: KPP is empty
+ui-validation-kpp-error2:
+  ru: КПП может состоять только из 9 знаков (цифр или заглавных букв латинского
+    алфавита от A до Z)
+  en: The KPP can only consist of 9 characters (numbers or capital letters of the
+    Latin alphabet from A to Z)
+ui-validation-kpp-error3:
+  ru: Неправильный формат КПП
+  en: Wrong KPP format
+ui-validation-ks-error1:
+  ru: Корреспондентский счет может состоять только из цифр
+  en: Correspondent account can only consist of numbers
+ui-validation-ks-error2:
+  ru: Корреспондентский счет может состоять только из 20 цифр
+  en: Correspondent account can only consist of 20 digits
+ui-validation-ks-error3:
+  ru: Неправильное контрольное число
+  en: Wrong check digit
+ui-validation-ogrn-error1:
+  ru: ОГРН пуст
+  en: OGRN is empty
+ui-validation-ogrn-error2:
+  ru: ОГРН может состоять только из цифр
+  en: OGRN can only consist of numbers
+ui-validation-ogrn-error3:
+  ru: ОГРН может состоять только из 13 цифр
+  en: OGRN can only consist of 13 digits
+ui-validation-ogrn-error4:
+  ru: Неправильное контрольное число
+  en: Wrong check digit
+ui-validation-ogrnip-error1:
+  ru: ОГРНИП пуст
+  en: OGRNIP is empty
+ui-validation-ogrnip-error2:
+  ru: ОГРНИП может состоять только из цифр
+  en: OGRNIP can only consist of numbers
+ui-validation-ogrnip-error3:
+  ru: ОГРНИП может состоять только из 15 цифр
+  en: OGRNIP can only consist of 15 digits
+ui-validation-ogrnip-error4:
+  ru: Неправильное контрольное число
+  en: Wrong check digit
+ui-validation-rs-error1:
+  ru: Расчетный счет пуст
+  en: Current account is empty
+ui-validation-rs-error2:
+  ru: Расчетный счет может состоять только из цифр
+  en: Current account can only consist of numbers
+ui-validation-rs-error3:
+  ru: Расчетный счет может состоять только из 20 цифр
+  en: Current account can only consist of 20 digits
+ui-validation-rs-error4:
+  ru: Неправильное контрольное число
+  en: Wrong check digit
+ui-validation-snils-error1:
+  ru: СНИЛС пуст
+  en: SNILS is empty
+ui-validation-snils-error2:
+  ru: СНИЛС может состоять только из цифр
+  en: SNILS can only consist of numbers
+ui-validation-snils-error3:
+  ru: СНИЛС может состоять только из 11 цифр
+  en: SNILS can only consist of 11 digits
+ui-validation-snils-error4:
+  ru: Неправильное контрольное число
+  en: Wrong check digit
+ui-validation-kpp-error2): {}
+ui-validation-kpp-error: {}
+ui-validation-ks-error0:
+  ru: Корреспондентский счет пуст
+  en: Correspondent account empty

@@ -1,0 +1,12 @@
+ui-files-error-max:
+  ru: Можно выбрать не более %s файлов
+  en: You can select up to %s files
+ui-files-error-format:
+  ru: Недопустимый формат файла
+  en: Invalid file format
+ui-files-error-size:
+  ru: Выбранный файл слишком большой
+  en: Selected file is too large
+ui-fields-file:
+  ru: Файл
+  en: File

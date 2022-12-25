@@ -5,7 +5,7 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
      * @param {Colibri.UI.Component[]} sources массив источников
      * @param {Colibri.UI.Component[]} destinations массив назначений 
      */
-    constructor(container, message = '#{app-filedropmanager-message;Пожалуйста, отпустите файлы в этой области. Загрузка будет произведена в выбранную папку}') {
+    constructor(container, message = '#{ui-filedropmanager-message}') {
         super();
 
         this._allowSize = 900000000;
@@ -175,7 +175,7 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
         for(const file of files) {
             const ext = file.name.extractExt();
             if(file.size > this._allowSize || (this._allowTypes !== '*' && this._allowTypes.indexOf(ext) === -1)) {
-                errors.push({file: file, error: '#{app-filedropmanager-error1;Файл слишком большой или не подходящего типа.} ' + (this._allowTypes !== '*' ? '#{app-renderer-allowed;Разрешено}: ' + this._allowTypes.join(',') + ', ' : '') + '#{app-renderer-max;максимум}: ' + this._allowSize.toSizeString(['bytes', 'Kb', 'Mb', 'Gb'], 1024, true)});
+                errors.push({file: file, error: '#{ui-filedropmanager-error1} ' + (this._allowTypes !== '*' ? '#{ui-renderer-allowed}'.replaceAll('%s', this._allowTypes.join(',')) + ', ' : '') + '#{ui-renderer-max}'.replaceAll('%s', this._allowSize.toSizeString(['bytes', 'Kb', 'Mb', 'Gb'], 1024, true))});
             }
             else {
                 success.push(file);

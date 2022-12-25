@@ -1,2 +1,4 @@
 app-messages-cannotgetsettings:
   ru: Невозможно получить настройки!
+ui-messages-cannotgetsettings:
+  ru: Невозможно получить настройки!

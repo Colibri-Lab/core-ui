@@ -30,7 +30,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._values = values;
         this._inprooveValues();
         this._value = [];
-        this._placeholder = '#{app-selector-nothingchoosed;Ничего не выбрано}';
+        this._placeholder = '#{ui-selector-nothingchoosed}';
 
         this._input =  new Colibri.UI.Input(this._name + '-input', this);
         this._input.shown = true;
@@ -395,7 +395,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                     this._input.placeholder = String.Pluralize(this._placeholderinfo, itemCount).stripHtml();
                 }
             } else {
-                this._input.placeholder = `#{app-selector-choosed;Выбрано} ${itemCount} ${this?.parent?.parent?.title || ""}`.stripHtml();
+                this._input.placeholder = '#{ui-selector-choosed;Выбрано}'.replaceAll('%s1', itemCount).replaceAll('%s2', this?.parent?.parent?.title).stripHtml();
             }
         }
     }

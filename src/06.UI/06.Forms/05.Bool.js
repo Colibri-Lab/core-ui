@@ -123,4 +123,4 @@ Colibri.UI.Forms.Bool = class extends Colibri.UI.Forms.Field {
 
 
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Bool', 'Colibri.UI.Forms.Bool', '#{app-fields-bool;Да/Нет}');
+Colibri.UI.Forms.Field.RegisterFieldComponent('Bool', 'Colibri.UI.Forms.Bool', '#{ui-fields-bool}');

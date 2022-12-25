@@ -31,4 +31,4 @@ Colibri.UI.ImageViewer = class extends Colibri.UI.Viewer {
 
 
 }
-Colibri.UI.Viewer.Register('Colibri.UI.ImageViewer', '#{app-viewers-image;Изображение}');
+Colibri.UI.Viewer.Register('Colibri.UI.ImageViewer', '#{ui-viewers-image}');

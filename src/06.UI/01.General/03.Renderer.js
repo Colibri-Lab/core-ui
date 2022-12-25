@@ -4,15 +4,15 @@ Colibri.UI.Renderer = class extends Destructable {
         super();
         
         if (!object) {
-            throw new Error('#{app-renderer-error1;Передайте в конструктор обьект для рендеринга}');
+            throw new Error('#{ui-renderer-error1}');
         }
 
         if (!(object instanceof Colibri.UI.Component)) {
-            throw new Error('#{app-renderer-error2;Передайнный обьект не компонент}');
+            throw new Error('#{ui-renderer-error2}');
         }
 
         if (!data) {
-            throw new Error('#{app-renderer-error3;Передайте данные для отображения}');
+            throw new Error('#{ui-renderer-error3}');
         }
 
         this._object = object;
@@ -21,7 +21,7 @@ Colibri.UI.Renderer = class extends Destructable {
     }
 
     Render() {
-        throw new Error('#{app-renderer-error4;Необходимо переопределить этот метод}');
+        throw new Error('#{ui-renderer-error4}');
     }
 
 

@@ -47,4 +47,4 @@ Colibri.UI.Forms.Label = class extends Colibri.UI.Forms.Field {
     }
     
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Label', 'Colibri.UI.Forms.Label', '#{app-fields-label;Кусок текста}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('Label', 'Colibri.UI.Forms.Label', '#{ui-fields-label}')

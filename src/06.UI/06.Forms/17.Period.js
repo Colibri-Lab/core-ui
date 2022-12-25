@@ -22,7 +22,7 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
         this.AddHandler('Changed', (event, args) => {
             if(this._input1.value != 'Invalid Date' && this._input2.value != 'Invalid Date') {
                 const days = parseInt((this._input2.value.getTime() - this._input1.value.getTime()) / 1000 / 86400) + 1;
-                this._text.value = days.formatSequence(['#{app-period-day1;день}', '#{app-period-day2;дня}', '#{app-period-day3;дней}'], true);
+                this._text.value = days.formatSequence(['#{ui-period-day1}', '#{ui-period-day2}', '#{ui-period-day3}'], true);
             }
             else {
                 this._text.value = '';
@@ -99,4 +99,4 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
         }
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Period', 'Colibri.UI.Forms.Period', '#{app-fields-period;Период}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('Period', 'Colibri.UI.Forms.Period', '#{ui-fields-period}')

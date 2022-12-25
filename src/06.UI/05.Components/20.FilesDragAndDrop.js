@@ -150,7 +150,7 @@ Colibri.UI.FilesDragAndDrop = class extends Colibri.UI.Component {
      * @private
      */
     _setTitle(value) {
-        this._title.value = value ?? (this._multiple ? '#{app-filesdragdrop-choosefiles;Выберите или перетащите файлы}' : '#{app-filesdragdrop-choosefile;Выберите или перетащите файл}');
+        this._title.value = value ?? (this._multiple ? '#{ui-filesdragdrop-choosefiles}' : '#{ui-filesdragdrop-choosefile}');
     }
 
     /**

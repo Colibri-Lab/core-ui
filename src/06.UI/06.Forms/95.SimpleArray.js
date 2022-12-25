@@ -145,4 +145,4 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
     
 
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('SimpleArray', 'Colibri.UI.Forms.SimpleArray', '#{app-fields-simplearray;Массив данных}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('SimpleArray', 'Colibri.UI.Forms.SimpleArray', '#{ui-fields-simplearray}')

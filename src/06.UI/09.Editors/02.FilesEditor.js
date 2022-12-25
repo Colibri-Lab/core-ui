@@ -97,7 +97,7 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
 
                 let countAvailable = this._maxCount - this.value.length;
                 validatedList.splice(countAvailable);
-                this._errorMessages.push('#{app-editors-files-message1;Можно выбрать не более} ' + this._maxCount + ' #{app-editors-files-message2;файлов}');
+                this._errorMessages.push('#{ui-editors-files-message}'.replaceAll('%s', this._maxCount));
             }
         }
 
@@ -108,7 +108,7 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
                     this._validated = false;
 
                     validatedList.splice(index, 1);
-                    this._errorMessages.push('#{app-editors-files-message3;Файл} '+ file.name +' #{app-editors-files-message4;слишком большой}');
+                    this._errorMessages.push('#{ui-editors-files-message3}'.replaceAll('%s', file.name));
                 }
             });
         }
@@ -130,7 +130,7 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
                     this._validated = false;
 
                     validatedList.splice(index, 1);
-                    this._errorMessages.push('#{app-editors-files-message5;Недопустимый формат файла} ' + fileName);
+                    this._errorMessages.push('#{ui-editors-files-message5} ' + fileName);
                 }
             });
         }

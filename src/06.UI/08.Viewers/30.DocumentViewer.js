@@ -66,7 +66,7 @@ Colibri.UI.DocumentViewer = class extends Colibri.UI.Viewer {
                     }
                 }
                 else {
-                    this._element.append(Element.fromHtml('<div class="download"><div>' + (this._unknownFormatText ? this._unknownFormatText : 'Unknown format') + '<a href="' + uri + '" class="app-component-button app-extended-button-component app-success-button-component" download="' + value.name + '">' + value.name +  '</a></div></div>'));
+                    this._element.append(Element.fromHtml('<div class="download"><div>' + (this._unknownFormatText ? this._unknownFormatText : '#{ui-viewers-document-unknownformat}') + '<a href="' + uri + '" class="app-component-button app-extended-button-component app-success-button-component" download="' + value.name + '">' + value.name +  '</a></div></div>'));
                }
             });
 
@@ -84,7 +84,7 @@ Colibri.UI.DocumentViewer = class extends Colibri.UI.Viewer {
                 }
             }
             else {
-                this._element.append(Element.fromHtml('<div class="download"><div>' + (this._unknownFormatText ? this._unknownFormatText : 'Unknown format') + '<a href="' + value + '" class="app-extended-button-component app-success-button-component" download="' + pathinfo.filename + '">Download ' + pathinfo.filename +  '</a></div></div>'));
+                this._element.append(Element.fromHtml('<div class="download"><div>' + (this._unknownFormatText ? this._unknownFormatText : '#{ui-viewers-document-unknownformat}') + '<a href="' + value + '" class="app-extended-button-component app-success-button-component" download="' + pathinfo.filename + '">Download ' + pathinfo.filename +  '</a></div></div>'));
             }
 
         }
@@ -93,4 +93,4 @@ Colibri.UI.DocumentViewer = class extends Colibri.UI.Viewer {
 
 
 }
-Colibri.UI.Viewer.Register('Colibri.UI.DocumentViewer', '#{app-viewers-document;Документ}');
+Colibri.UI.Viewer.Register('Colibri.UI.DocumentViewer', '#{ui-viewers-document}');

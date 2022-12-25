@@ -31,4 +31,4 @@ Colibri.UI.ColorViewer = class extends Colibri.UI.Viewer {
 
 
 }
-Colibri.UI.Viewer.Register('Colibri.UI.ColorViewer', '#{app-viewers-color;Цвет}');
+Colibri.UI.Viewer.Register('Colibri.UI.ColorViewer', '#{ui-viewers-color}');

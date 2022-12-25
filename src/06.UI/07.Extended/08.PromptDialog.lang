@@ -1,0 +1,6 @@
+ui-prompt-ok:
+  ru: Продолжить
+  en: \
+ui-prompt-cancel:
+  ru: Отмена
+  en: Cancel

@@ -15,4 +15,4 @@ Colibri.UI.YearViewer = class extends Colibri.UI.Viewer {
 
 
 }
-Colibri.UI.Viewer.Register('Colibri.UI.YearViewer', '#{app-viewers-year;Год}');
+Colibri.UI.Viewer.Register('Colibri.UI.YearViewer', '#{ui-viewers-year}');

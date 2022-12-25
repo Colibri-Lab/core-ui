@@ -76,4 +76,4 @@ Colibri.UI.Forms.MonthYear = class extends Colibri.UI.Forms.Field {
         }
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('MonthYear', 'Colibri.UI.Forms.MonthYear', '#{app-fields-monthyear;Выбор года и месяца}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('MonthYear', 'Colibri.UI.Forms.MonthYear', '#{ui-fields-monthyear}')

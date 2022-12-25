@@ -26,4 +26,4 @@ Colibri.UI.ArrayViewer = class extends Colibri.UI.Viewer {
 
 
 }
-Colibri.UI.Viewer.Register('Colibri.UI.ArrayViewer', '#{app-viewers-array;Массив}');
+Colibri.UI.Viewer.Register('Colibri.UI.ArrayViewer', '#{ui-viewers-array}');

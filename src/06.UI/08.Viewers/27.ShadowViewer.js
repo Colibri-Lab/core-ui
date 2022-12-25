@@ -31,4 +31,4 @@ Colibri.UI.ShadowViewer = class extends Colibri.UI.Viewer {
 
 
 }
-Colibri.UI.Viewer.Register('Colibri.UI.ShadowViewer', '#{app-viewers-shadow;Тень}');
+Colibri.UI.Viewer.Register('Colibri.UI.ShadowViewer', '#{ui-viewers-shadow}');

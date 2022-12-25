@@ -82,12 +82,12 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         
         // Делаем всякое после того, как DOM загрузился окончательно
 
-        Colibri.Common.WaitForDocumentReady().then(() => {
+        Colibri.Common.WaitForDocumentReady().then(() => { 
             this.Dispatch('DocumentReady');
 
             Colibri.IO.Request.Post(this._remoteDomain + '/settings.json').then((response) => {
                 if(response.status != 200) {
-                    App.Notices.Add(new Colibri.UI.Notice('#{app-messages-cannotgetsettings;Невозможно получить настройки!}'));
+                    App.Notices.Add(new Colibri.UI.Notice('#{ui-messages-cannotgetsettings;Невозможно получить настройки!}'));
                 }
                 else {
                     const settings = JSON.parse(response.result);

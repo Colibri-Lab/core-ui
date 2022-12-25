@@ -8,7 +8,7 @@ Colibri.UI.EmailEditor = class extends Colibri.UI.Editor {
     Validate() {
         if(this._element.value && !this._element.value.isEmail()) {
             this.AddClass('-invalid');
-            this.toolTip = '#{app-editors-email-message;Пожалуйста, введите корректный email}';
+            this.toolTip = '#{ui-editors-email-message}';
         }
         else {
             this.RemoveClass('-invalid');

@@ -1,0 +1,12 @@
+ui-renderer-error1:
+  ru: Передайте в конструктор обьект для рендеринга
+  en: Pass an object to the constructor to render
+ui-renderer-error2:
+  ru: Передайнный обьект не компонент
+  en: The passed object is not a component
+ui-renderer-error3:
+  ru: Передайте данные для отображения
+  en: Pass data to display
+ui-renderer-error4:
+  ru: Необходимо переопределить этот метод
+  en: You need to override this method

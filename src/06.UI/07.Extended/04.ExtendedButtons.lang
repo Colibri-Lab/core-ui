@@ -1,0 +1,10 @@
+ui-uploadbutton-error1:
+  ru: Файл слишком большой или не подходящего типа.
+  en: The file is too large or of the wrong type.
+ui-uploadbutton-allow:
+  ru: Разрешены %s
+  en: Allowed %s
+ui-uploadbutton-max:
+  ru: максимум %s
+  en: "%s maximum"
+ui-uploadbut4ton-allow: {}

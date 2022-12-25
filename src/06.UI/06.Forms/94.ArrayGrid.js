@@ -54,7 +54,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
      */
     _renderAddObjectButton() {
         this._addObjectButton = new Colibri.UI.OutlineBlueButton(this._name + '-add-object-button', this.contentContainer);
-        this._addObjectButton.value = this._fieldData.params?.addlink || '#{app-arraygrid-add;Добавить} «' + (this._fieldData.desc) + '»';
+        this._addObjectButton.value = this._fieldData.params?.addlink || '#{ui-arraygrid-add} «' + (this._fieldData.desc) + '»';
         this._addObjectButton.shown = true;
     }
 
@@ -198,12 +198,12 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         let contextmenu = [
             {
                 name: 'show-object',
-                title: '#{app-arraygrid-contextmenu-edit;Редактировать}',
+                title: '#{ui-arraygrid-contextmenu-edit}',
                 icon: Colibri.UI.ContextMenuEditIcon
             },
             {
                 name: 'remove-object-row',
-                title: '#{app-arraygrid-contextmenu-remove;Удалить}',
+                title: '#{ui-arraygrid-contextmenu-remove}',
                 icon: Colibri.UI.ContextMenuRemoveIcon
             },
         ];
@@ -240,7 +240,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
             this._objectsGrid.massActionsMenu = [
                 {
                     name: 'remove-object-rows',
-                    title: '#{app-arraygrid-massactions-remove;удалить}'
+                    title: '#{ui-arraygrid-massactions-remove}'
                 }
             ];
 
@@ -338,7 +338,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
     set value(value) {
         value = eval_default_values(value);
         if(value && !Array.isArray(value)) { 
-            throw new Error('#{app-arraygrid-errors;Передайте массив}'); 
+            throw new Error('#{ui-arraygrid-errors}'); 
         }
 
         this._objectsGrid.rows.Clear();
@@ -383,7 +383,7 @@ Colibri.UI.Forms.ArrayGrid.ObjectWindow = class extends Colibri.UI.ModelessWindo
 
         this._form = new Colibri.UI.Forms.Form(this._name + '-form', this.container);
         this._saveButton = new Colibri.UI.SuccessButton(this._name + '-save-button', this.footer);
-        this._saveButton.value = '#{app-arraygrid-save;Сохранить}';
+        this._saveButton.value = '#{ui-arraygrid-save}';
 
         this._form.AddHandler('Changed', () => this.Dispatch('Changed', {formValues: this._form.value}));
         this._saveButton.AddHandler('Clicked', (event, args) => {
@@ -473,4 +473,4 @@ Colibri.UI.Forms.ArrayGrid.ObjectWindow = class extends Colibri.UI.ModelessWindo
 
 }
 
-Colibri.UI.Forms.Field.RegisterFieldComponent('ArrayGrid', 'Colibri.UI.Forms.ArrayGrid', '#{app-fields-arraygrid;Массив в виде грида}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('ArrayGrid', 'Colibri.UI.Forms.ArrayGrid', '#{ui-fields-arraygrid}')

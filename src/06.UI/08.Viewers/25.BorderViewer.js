@@ -31,4 +31,4 @@ Colibri.UI.BorderViewer = class extends Colibri.UI.Viewer {
 
 
 }
-Colibri.UI.Viewer.Register('Colibri.UI.BorderViewer', '#{app-viewers-border;Рамка}');
+Colibri.UI.Viewer.Register('Colibri.UI.BorderViewer', '#{ui-viewers-border}');

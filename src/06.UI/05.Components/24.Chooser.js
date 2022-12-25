@@ -33,7 +33,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
             this._chooser = this._selector?.chooser ? this._selector?.chooser : null;
         }
         this._value = [];
-        this._placeholder = placeholder || '#{app-selector-nothingchoosed;Ничего не выбрано}';
+        this._placeholder = placeholder || '#{ui-selector-nothingchoosed}';
 
         this._input =  new Colibri.UI.Input(this._name + '-input', this);
         this._input.shown = true;

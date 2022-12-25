@@ -107,8 +107,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     __onCometError(error) {
         
-        console.log('#{app-comet-connection-error;Ошибка подключения}');
-        // App.Notices.Add(new Colibri.UI.Notice('#{app-comet-connection-error;Ошибка подключения}'));
+        console.log('#{ui-comet-connection-error}');
+        // App.Notices.Add(new Colibri.UI.Notice('#{ui-comet-connection-error}'));
         // Colibri.Common.StopTimer('comet-timer');
 
     } 

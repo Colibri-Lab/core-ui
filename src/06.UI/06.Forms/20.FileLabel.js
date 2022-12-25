@@ -11,7 +11,7 @@ Colibri.UI.Forms.FileLabel = class extends Colibri.UI.Forms.Field {
 
         this._value = null;
         this.placeholder = this._fieldData.placeholder;
-        this._link.html(this._fieldData?.button || '#{app-filelabel-download;Скачать}');
+        this._link.html(this._fieldData?.button || '#{ui-filelabel-download}');
 
         
         this._link.addEventListener('click', (e) => {
@@ -75,4 +75,4 @@ Colibri.UI.Forms.FileLabel = class extends Colibri.UI.Forms.Field {
     
 
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('FileLabel', 'Colibri.UI.Forms.FileLabel', '#{app-fields-filelabel;Ссылка на файл}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('FileLabel', 'Colibri.UI.Forms.FileLabel', '#{ui-fields-filelabel}')
