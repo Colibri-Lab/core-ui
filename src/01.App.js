@@ -87,7 +87,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
             Colibri.IO.Request.Post(this._remoteDomain + '/settings.json').then((response) => {
                 if(response.status != 200) {
-                    App.Notices.Add(new Colibri.UI.Notice('#{ui-messages-cannotgetsettings;Невозможно получить настройки!}'));
+                    App.Notices.Add(new Colibri.UI.Notice('#{ui-messages-cannotgetsettings}'));
                 }
                 else {
                     const settings = JSON.parse(response.result);
