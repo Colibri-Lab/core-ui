@@ -84,8 +84,6 @@ ui-validation-snils-error3:
 ui-validation-snils-error4:
   ru: Неправильное контрольное число
   en: Wrong check digit
-ui-validation-kpp-error2): {}
-ui-validation-kpp-error: {}
 ui-validation-ks-error0:
   ru: Корреспондентский счет пуст
   en: Correspondent account empty
