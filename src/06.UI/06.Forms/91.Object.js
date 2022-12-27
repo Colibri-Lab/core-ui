@@ -54,7 +54,8 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
                     return true;
                 }
                 if(this._fieldData?.params?.removedesc !== false) {
-                    const placeholder = this._fieldData?.params?.vertical ? field.placeholder : field.desc;
+                    let placeholder = this._fieldData?.params?.vertical ? field.placeholder : field.desc;
+                    placeholder = placeholder ? placeholder[Lang.Current] ?? placeholder : '';
                     if(!this._fieldData?.params?.vertical) {
                         delete field.desc;
                     }

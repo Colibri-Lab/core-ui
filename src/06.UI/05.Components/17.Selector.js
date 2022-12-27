@@ -453,6 +453,9 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         return this._placeholder;
     }
     set placeholder(value) {
+        if(value instanceof Object) {
+            value = value[Lang.Current];
+        }
         this._placeholder = value;
         this._input.placeholder = this._placeholder;
         this._renderValue(false);

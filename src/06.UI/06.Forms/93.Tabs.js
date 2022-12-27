@@ -42,7 +42,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         Object.forEach(this._fieldData.fields, (name, fieldData) => {
 
             const field = Object.cloneRecursive(fieldData);
-            const tabTitle = field.desc;
+            const tabTitle = field.desc[Lang.Current] ?? field.desc ?? '';
 
             delete field.desc;
             

@@ -34,6 +34,8 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
             return;
         }
 
+        this._fieldData.params.addlink = this._fieldData.params.addlink ? this._fieldData.params.addlink[Lang.Current] ?? this._fieldData.params.addlink : '';
+
         this.contentContainer.Children('add-new') && this.contentContainer.Children('add-new').Dispose();
         this._link = new Colibri.UI.Link('add-new', this.contentContainer);
         this._link.value = this._fieldData.params && this._fieldData.params.addlink || '#{ui-array-add} «' + (this._fieldData.desc) + '»';

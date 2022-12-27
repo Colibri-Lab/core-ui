@@ -109,9 +109,9 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
         this.RenderFieldContainer();
 
-        this.title = this._fieldData?.desc ?? '';
-        this.note = this._fieldData?.note ?? '';
-        this.placeholder = this._fieldData?.placeholder;
+        this.title = this._fieldData?.desc ? this._fieldData?.desc[Lang.Current] ?? this._fieldData?.desc ?? '' : '';
+        this.note = this._fieldData?.note ? this._fieldData?.note[Lang.Current] ?? this._fieldData?.note ?? '' : '';
+        this.placeholder = this._fieldData?.placeholder ? this._fieldData?.placeholder[Lang.Current] ?? this._fieldData?.placeholder ?? '' : '';
 
         if(this._fieldData?.attrs) {
             Object.assign(this, this._fieldData.attrs);
