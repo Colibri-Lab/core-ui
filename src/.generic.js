@@ -18,6 +18,7 @@ const isIterable = (value) => {
     return Symbol.iterator in Object(value);
 };
 
+
 Array.unique = function (a) { return a.filter((v, i, ab) => { return a.indexOf(v) === i; }); }
 Array.merge = function (a, ar) {
     ar.forEach((o) => a.push(o));
@@ -49,7 +50,7 @@ Array.findIndex = function (a, predicate) {
     if (typeof predicate !== 'function') {
         throw new TypeError('predicate must be a function');
     }
-    var list = Object(a);
+    var list = [...a];
     var length = list.length >>> 0;
     var thisArg = arguments[1];
     var value;
@@ -170,6 +171,9 @@ Array.toObjectWithKeys = function (array, fieldKey, fieldValue) {
     return ret;
 };
 
+Object.convertToExtended = function(object) {
+    return object;
+}
 
 // Hide method from for-in loops
 Object.defineProperty(Array.prototype, "equals", { enumerable: false });
@@ -270,8 +274,20 @@ Object.toPlain = function (object, prefix) {
     return ret;
 };
 
-Object.cloneRecursive = function (object) {
-    const ret = {};
+Object.cloneRecursive = function (object, callback = null) {
+    if(typeof object == 'string') {
+        object = JSON.parse(object);    
+    }
+
+    if(Array.isArray(object)) {
+        let ret = [];
+        for(const o of object) {
+            ret.push(Object.cloneRecursive(o));
+        }
+        return ret;
+    }
+
+    let ret = {};
     Object.forEach(object, (prop, value) => {
         if (value instanceof Function) {
             ret[prop] = value;
@@ -282,12 +298,15 @@ Object.cloneRecursive = function (object) {
             });
         }
         else if (value instanceof Object && !(value instanceof File)) {
-            ret[prop] = Object.cloneRecursive(value);
+            ret[prop] = Object.cloneRecursive(value, callback);
         }
         else {
             ret[prop] = value;
         }
     });
+    if(callback) {
+        ret = callback(ret);
+    }
     return ret;
 };
 

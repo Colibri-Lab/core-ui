@@ -92,6 +92,9 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
                     data.result = {};
                 }
 
+                // ! для конвертации 
+                // data.result = Object.cloneRecursive(data.result, Object.convertToExtended);
+
                 this.Dispatch('ResultsProcessed', {result: data.result});
 
                 resolve(data); 

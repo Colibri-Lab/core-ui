@@ -90,7 +90,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                     App.Notices.Add(new Colibri.UI.Notice('#{ui-messages-cannotgetsettings}'));
                 }
                 else {
-                    const settings = JSON.parse(response.result);
+                    const settings = (typeof response.result === 'string' ? JSON.parse(response.result) : response.result);
                     this._store.Set('app.settings', settings);
 
                     if(initComet && settings.comet && settings.comet.host) {
