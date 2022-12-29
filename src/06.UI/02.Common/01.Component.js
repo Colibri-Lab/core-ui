@@ -147,6 +147,16 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         }
 
+        try {
+            objectClass = eval('App.Modules.' + comp);
+            if(objectClass && Colibri.UI.Component.isPrototypeOf(objectClass)) {
+                return objectClass;
+            }
+        }
+        catch(e) {
+
+        }
+
         return null;
     }
 
