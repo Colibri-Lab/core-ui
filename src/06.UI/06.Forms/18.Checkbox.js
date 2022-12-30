@@ -31,7 +31,7 @@ Colibri.UI.Forms.Checkbox = class extends Colibri.UI.Forms.Field {
     }
 
     _handleEvents() {
-        this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', args));
+        this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args, {component: this})));
         this._input.AddHandler('Clicked', (event, args) => {
             this.Dispatch('Clicked', args)
             args.domEvent.stopPropagation();

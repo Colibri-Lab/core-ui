@@ -62,8 +62,8 @@ Colibri.UI.Forms.Passport = class extends Colibri.UI.Forms.Field {
 
         } 
 
-		this._input1.addEventListener('change', (e) => this.Dispatch('Changed', { domEvent: e }));
-		this._input2.addEventListener('change', (e) => this.Dispatch('Changed', { domEvent: e }));
+		this._input1.addEventListener('change', (e) => this.Dispatch('Changed', { domEvent: e, component: this }));
+		this._input2.addEventListener('change', (e) => this.Dispatch('Changed', { domEvent: e, component: this }));
 
 		this._input1.addEventListener('click', (e) => this.Dispatch('Clicked', { domEvent: e }));
 		this._input2.addEventListener('click', (e) => this.Dispatch('Clicked', { domEvent: e }));

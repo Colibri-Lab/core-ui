@@ -35,7 +35,7 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
 
         this._input.AddHandler('Changed', (event, args) => {
             this._color.styles = {backgroundColor: this._input.value};
-            this.Dispatch('Changed', args);
+            this.Dispatch('Changed', Object.assign(args, {component: this}));
         });
         this._input.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
         this._input.AddHandler('KeyDown', (event, args) => this.Dispatch('KeyDown', args));

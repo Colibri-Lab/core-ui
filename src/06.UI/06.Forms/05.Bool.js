@@ -11,7 +11,7 @@ Colibri.UI.Forms.Bool = class extends Colibri.UI.Forms.Field {
         this._input = contentContainer.container.append(Element.create('input', {type: 'checkbox', id: this._name + '-id-' + this._uniqueString, name: this._name + '-input'}));
         this._label = contentContainer.container.append(Element.create('label', {for: this._name + '-id-' + this._uniqueString}));
         
-        this._input.addEventListener('change', (e) => this.Dispatch('Changed', {domEvent: e}));
+        this._input.addEventListener('change', (e) => this.Dispatch('Changed', {domEvent: e, component: this}));
         this._input.addEventListener('keyup', (e) => this.Dispatch('KeyUp', {domEvent: e}));
         this._input.addEventListener('keydown', (e) => this.Dispatch('KeyDown', {domEvent: e}));
         this._input.addEventListener('click', (e) => {

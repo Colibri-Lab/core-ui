@@ -78,7 +78,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
                     if (!this._validated) {
                         this._showError();
                     }
-                    this.Dispatch('Changed', args);
+                    this.Dispatch('Changed', Object.assign(args, {component: this}));
                 }
             });
         }
@@ -94,7 +94,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
                     this._input.AddClass('-full');
                 }
 
-                this.Dispatch('Changed', args);
+                this.Dispatch('Changed', Object.assign(args, {component: this}));
 
             });
         }
@@ -155,7 +155,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
                                 this._input.RemoveClass('-full');
                             }
                         }
-                        this.Dispatch('Changed', args);
+                        this.Dispatch('Changed', Object.assign(args, {component: this}));
                     };
 
                 if (delParams) {

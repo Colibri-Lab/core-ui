@@ -67,7 +67,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
 
         this._input.AddHandler('InputFileChanged', (event, args) => {
             this._value = this._input.Files();
-            this.Dispatch('Changed', args);
+            this.Dispatch('Changed', Object.assign(args, {component: this}));
         });
 
         if (this._dropAreaEnabled) {

@@ -14,7 +14,7 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
 
         this._input.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', {domEvent: e}));
         this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', {domEvent: e}));
-        this._input.addEventListener('change', (e) => this.Dispatch('Changed', {domEvent: e}));
+        this._input.addEventListener('change', (e) => this.Dispatch('Changed', {domEvent: e, component: this}));
         this._input.addEventListener('keyup', (e) => this.Dispatch('KeyUp', {domEvent: e}));
         this._input.addEventListener('keydown', (e) => this.Dispatch('KeyDown', {domEvent: e}));
         this._input.addEventListener('click', (e) => {

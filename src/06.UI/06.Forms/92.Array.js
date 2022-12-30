@@ -50,7 +50,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
             const object = this.AddNew();
             object.MoveUp();
             this._link = this.contentContainer.Children('add-new');
-            this.Dispatch('Changed');            
+            this.Dispatch('Changed', {component: this});            
         });
         return this._link;
     }
@@ -77,7 +77,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
                         field.Dispatch('Changed');
                     }
                 });
-                this.Dispatch('Changed');
+                this.Dispatch('Changed', {component: this});
 
                 if(this._fieldData.params && !!this._fieldData.params.maxadd) {
                     const count = Object.countKeys(this.Fields());
@@ -91,12 +91,12 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         if(this._fieldData.params && this._fieldData.params.updownlink !== false) {
             object.AddUpDownLink(() => {
                 object.MoveUp();
-                this.Dispatch('Changed');
+                this.Dispatch('Changed', {component: this});
             }, () => {
                 if(object.childIndex < this.children - 1) {
                     object.MoveDown();
                 }
-                this.Dispatch('Changed');
+                this.Dispatch('Changed', {component: this});
             });
         }
 
@@ -105,7 +105,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
                 const f = eval(this._fieldData.params.title);
                 f && f(object, this);
             }
-            return this.Dispatch('Changed', args);
+            return this.Dispatch('Changed', Object.assign(args, {component: this}));
         });
         this.contentContainer.Children(object.name, object);
         if(this._fieldData.params && this._fieldData.params.title !== null) {

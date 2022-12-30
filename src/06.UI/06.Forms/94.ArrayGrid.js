@@ -385,7 +385,7 @@ Colibri.UI.Forms.ArrayGrid.ObjectWindow = class extends Colibri.UI.ModelessWindo
         this._saveButton = new Colibri.UI.SuccessButton(this._name + '-save-button', this.footer);
         this._saveButton.value = '#{ui-arraygrid-save}';
 
-        this._form.AddHandler('Changed', () => this.Dispatch('Changed', {formValues: this._form.value}));
+        this._form.AddHandler('Changed', () => this.Dispatch('Changed', {formValues: this._form.value, component: this}));
         this._saveButton.AddHandler('Clicked', (event, args) => {
             this.Dispatch('FormSubmitted', {formValues: this._form.value});
             this.close();

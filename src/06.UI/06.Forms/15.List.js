@@ -14,7 +14,7 @@ Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
             return this._fieldData.selector && this._fieldData.selector.title ? itemData[this._fieldData.selector.title] : itemData.title;
         };
         
-        this._list.AddHandler('SelectionChanged', (event, args) => this.Dispatch('Changed', args));
+        this._list.AddHandler('SelectionChanged', (event, args) => this.Dispatch('Changed', Object.assign(args, {component: this})));
         this._list.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
         this._list.AddHandler('KeyDown', (event, args) => this.Dispatch('KeyDown', args));
 

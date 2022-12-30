@@ -17,7 +17,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         this.RegisterEvent('PasswordValidated', false, 'Когда сила пароля проверена');
         this.RegisterEvent('PasswordGenerated', false, 'Когда пароль сгенерирован');
 
-        this._input.addEventListener('change', (e) => this.Dispatch('Changed', {domEvent: e}));
+        this._input.addEventListener('change', (e) => this.Dispatch('Changed', {domEvent: e, component: this}));
         this._input.addEventListener('keyup', (e) => this.Dispatch('KeyUp', {domEvent: e}));
         this._input.addEventListener('paste', (e) => Colibri.Common.Delay(100).then(() => this.Dispatch('Pasted', { domEvent: e })));
         this._input.addEventListener('keydown', (e) => this.Dispatch('KeyDown', {domEvent: e}));
@@ -60,7 +60,9 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
 
     _hidePasswordTip() {
         if(this._passwordTip) {
-            this._passwordTip.Hide();
+            Colibri.Common.Delay(2000).then(() => {
+                this._passwordTip.Hide();
+            })
         }
     }
 
@@ -70,6 +72,10 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
             const tipData = this._fieldData?.params?.tip;
             if(!this._passwordTip) {
                 this._passwordTip = new Colibri.UI.ToolTip(this.name + '_tip', tipData.parent ? this.container.closest('[data-object-name="' + tipData.parent + '"]').tag('component').Children(tipData.parent + '-content') : this.Children(this.name + '-content'), tipData.orientation ? tipData.orientation : [Colibri.UI.ToolTip.RT, Colibri.UI.ToolTip.RB]);
+            }
+
+            if(tipData.className) {
+                this._passwordTip.AddClass(tipData.className);
             }
 
             let cls = 'bad';
@@ -89,16 +95,13 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
                 '<p>' + (strength < requirements.strength ? tipData.error : tipData.success) + '</p>' + 
                 '<a href="#">' + tipData.generate + '</a>';
             
-            if(cls != 'weak' && cls != 'bad') {
-                this._hidePasswordTip();
-            }
-            else {
-                this._passwordTip.Show(tipText);
-            }
-
+            
+            this._passwordTip.Show(tipText);
             this._passwordTip.container.querySelector('a').addEventListener('click', (e) => this._generatePassword(e));
 
-            
+            if(cls != 'weak' && cls != 'bad') {
+                this._hidePasswordTip();
+            }            
             
         }
     }
@@ -106,10 +109,12 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
     _generatePassword(e) {
         const tipData = this._fieldData?.params?.tip;
         this.value = String.Password(16);
+        const strength = this.CalcPasswordStrength();
+        this._showPasswordTip(strength);
         this.value.copyToClipboard().then(() => {
             App.Notices.Add(new Colibri.UI.Notice(tipData.copied, Colibri.UI.Notice.Success));
         });
-        this.Dispatch('Changed');
+        this.Dispatch('Changed', {component: this});
         this.Dispatch('PasswordValidated', {value: this.value});
         e.preventDefault();
         e.stopPropagation();

@@ -44,6 +44,8 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
             this._grid.rows.Add('item' + (j + 1), val);
         }
 
+        this._grid.AddHandler('CellEditorChanged', (event, args) => this.Dispatch('Changed', {component: this}));
+
     } 
 
     _registerEvents() {

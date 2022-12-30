@@ -8,12 +8,12 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
 
         this._input1 = new Colibri.UI.DateSelector(this._name + '-input1', contentContainer);
         this._input1.shown = true;
-        this._input1.AddHandler('Changed', (event, args) => this.Dispatch('Changed', args));
+        this._input1.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args, {component: this})));
         this._input1.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
 
         this._input2 = new Colibri.UI.DateSelector(this._name + '-input2', contentContainer);
         this._input2.shown = true;
-        this._input2.AddHandler('Changed', (event, args) => this.Dispatch('Changed', args));
+        this._input2.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args, {component: this})));
         this._input2.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
 
         this._text = new Colibri.UI.TextSpan(this._name + '-text', contentContainer);

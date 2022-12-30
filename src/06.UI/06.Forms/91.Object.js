@@ -41,7 +41,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
             component.placeholder = 'Введите JSON обьекта';
             component.message = false;
             component.shown = true;
-            component.AddHandler('Changed', (event, args) => this.Dispatch('Changed'))
+            component.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign({component: this}, args)));
         
         }
         else {
@@ -64,7 +64,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
                 component.message = false;
                 component.shown = true;
-                component.AddHandler('Changed', (event, args) => this.Dispatch('Changed'))
+                component.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign({component: this}, args)))
                 
             });    
         }

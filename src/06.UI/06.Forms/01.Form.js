@@ -256,7 +256,9 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                 clearTimeout(component._timeout);
                 component._timeout = null;
             }
-            args.component = component;
+            if(!args.component) {
+                args.component = component;
+            }
             component._timeout = setTimeout(() => this.Dispatch('Changed', args), 50);
         });
         component.download = this._download;

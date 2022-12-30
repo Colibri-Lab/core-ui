@@ -135,7 +135,7 @@ Colibri.UI.SimpleFormValidator = class {
             this._form.message = message;
             return;
         }
-        const f = this._form.FindField(field);
+        const f = typeof field === 'string' ? this._form.FindField(field) : field;
         if(!f) {
             return;
         }
