@@ -83,7 +83,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
                 cls = "weak";
             }
             const requirements = this._fieldData?.params?.requirements || {digits: 8, strength: 40};
-            let tipText = '<p>' + tipData.text + '</p>' + 
+            let tipText = '<p>' + (Array.isArray(tipData.text) ? tipData.text.join('</p><p>') : tipData.text) + '</p>' + 
                 '<ul><li>' + requirements.digits.formatSequence(tipData.digits, true) + '</li>' + tipData.additional.map(f => '<li>' + f + '</li>').join('') + '</ul>' + 
                 '<div class="password-progress ' + cls + '"><span style="width: ' + strength + '%"></span></div>' +  
                 '<p>' + (strength < requirements.strength ? tipData.error : tipData.success) + '</p>' + 

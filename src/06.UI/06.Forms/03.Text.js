@@ -96,6 +96,12 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
 
     set placeholder(value) {
         this._input.attr('placeholder', value);
+        if(value) {
+            this.AddClass('-has-placeholder');
+        }
+        else {
+            this.RemoveClass('-has-placeholder');
+        }
     }
 
     get value() {

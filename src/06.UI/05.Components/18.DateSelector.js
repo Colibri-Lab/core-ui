@@ -43,6 +43,8 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         this._viewElement.addEventListener('keypress', (e) => this.Dispatch('KeyPressed', { domEvent: e }));
         this._viewElement.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', { domEvent: e }));
         this._viewElement.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', { domEvent: e }));
+        this._hiddenElement.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', { domEvent: e }));
+        this._hiddenElement.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', { domEvent: e }));
 
         let dateformat = App.DateFormat || 'ru-RU';
         this._format = new Intl.DateTimeFormat(dateformat, {day: '2-digit', month: 'short', year: 'numeric'});
