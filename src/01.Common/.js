@@ -3,7 +3,7 @@ Colibri.Common = class {
     /** @constructor */
     constructor() {
         // Do nothing
-    }
+    } 
 
     
     /**
