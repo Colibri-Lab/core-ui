@@ -9,7 +9,7 @@ Colibri.UI.Forms.DateTime = class extends Colibri.UI.Forms.Field {
 
         this._input = new Colibri.UI.DateSelector(this._name + '-input', contentContainer);
         this._input.shown = true;
-        this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args, {component: this})));
+        this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args || {}, {component: this})));
         this._input.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
         this._input.AddHandler('Clicked', (event, args) => {
             this.Focus();

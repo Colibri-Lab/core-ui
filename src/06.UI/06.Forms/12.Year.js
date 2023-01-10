@@ -8,7 +8,7 @@ Colibri.UI.Forms.Year = class extends Colibri.UI.Forms.Field {
         this._input = new Colibri.UI.YearSelector('selector', contentContainer, 2000, Date.Now().getFullYear());
         this._input.shown = true;
 
-        this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args, {component: this})));
+        this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args || {}, {component: this})));
         this._input.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
         this._input.AddHandler('KeyDown', (event, args) => this.Dispatch('KeyDown', args));
 

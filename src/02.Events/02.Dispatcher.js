@@ -102,7 +102,7 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * @param {object} args аргументы
      * @returns {Colibri.Events.Dispatcher}
      */
-    Dispatch(event, args = {}) {
+    Dispatch(event, args = null) {
 
         if (!(event instanceof Colibri.Events.Event)) {
             // ищем сoбытие в стандартных
