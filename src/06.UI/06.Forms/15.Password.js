@@ -90,7 +90,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
             }
             const requirements = this._fieldData?.params?.requirements || {digits: 8, strength: 40};
             let tipText = '<p>' + (Array.isArray(tipData.text) ? tipData.text.join('</p><p>') : tipData.text) + '</p>' + 
-                '<ul><li>' + requirements.digits.formatSequence(tipData.digits, true) + '</li>' + tipData.additional.map(f => '<li>' + f + '</li>').join('') + '</ul>' + 
+                '<ul><li>' + (Array.isArray(tipData.digits) ? requirements.digits.formatSequence(tipData.digits, true) : tipData.digits.replaceAll('%s', requirements.digits)) + '</li>' + tipData.additional.map(f => '<li>' + f + '</li>').join('') + '</ul>' + 
                 '<div class="password-progress ' + cls + '"><span style="width: ' + strength + '%"></span></div>' +  
                 '<p>' + (strength < requirements.strength ? tipData.error : tipData.success) + '</p>' + 
                 '<a href="#">' + tipData.generate + '</a>';
