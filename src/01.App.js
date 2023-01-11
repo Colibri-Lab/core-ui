@@ -37,7 +37,9 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         initComet = false,
         showLoader = true,
         remoteDomain = null,
-        dateformat = null
+        dateformat = null,
+        numberformat = null,
+        currency = null,
     ) {
 
         if(this._initialized) {
@@ -59,6 +61,8 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         this._device = new Colibri.Devices.Device();
         this._browser = new Colibri.Common.BrowserStorage();
         this._dateformat = dateformat;
+        this._numberformat = numberformat;
+        this._currency = currency;
 
 
         Colibri.Common.WaitForBody().then(() => {
@@ -283,6 +287,18 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     }
     set DateFormat(value) {
         this._dateformat = value;
+    }
+    get NumberFormat() {
+        return this._numberformat;
+    }
+    set NumberFormat(value) {
+        this._numberformat = value;
+    }
+    get Currency() {
+        return this._currency;
+    }
+    set Currency(value) {
+        this._currency = value;
     }
 
 }

@@ -1036,6 +1036,30 @@ Number.prototype.toMoney = function (digits, force, space) {
     result = price.substr(0, len - count * 3) + result;
     return result + (dec ? ',' + dec : (force ? ',' + '0'.repeat(digits) : ''));
 };
+Number.prototype.intlFormat = function(type, decimal = 2, unit = null, currencyCode = null) {
+    let v = this;
+    if(type === 'money') {
+        const formatter = new Intl.NumberFormat(App.NumberFormat, {style: 'currency', currency: currencyCode ?? App.Currency.code, maximumFractionDigits: decimal ?? 2});
+        v = formatter.format(parseFloat(v));
+        // v = parseFloat(v).toMoney(decimal ?? 2);
+    }
+    else if(type === 'percent') {
+        const formatter = new Intl.NumberFormat(App.NumberFormat, {style: 'percent', maximumFractionDigits: decimal ?? 2, minimumFractionDigits: decimal ?? 2});
+        if(v > 1) {
+            v = v / 100;
+        }
+        v = formatter.format(parseFloat(v));
+        // v = parseFloat(v).toMoney(decimal ?? 2);
+    }
+    else {
+        const formatter = new Intl.NumberFormat(App.NumberFormat, {style: 'decimal', maximumFractionDigits: decimal ?? 2, minimumFractionDigits: decimal ?? 2});
+        v = formatter.format(parseFloat(v));
+        if(unit) {
+            v = v + ' ' + (Array.isArray(unit) ? parseFloat(v).formatSequence(unit, false) : unit);
+        }
+    }
+    return v;
+};
 Number.prototype.toTimeString = function (daySplitter) {
     let days = 0;
     let hours = 0;
