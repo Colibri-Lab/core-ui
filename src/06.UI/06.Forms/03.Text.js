@@ -61,13 +61,11 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
     }
 
     _setChanged(value) {
-        console.log('set changed', value);
         this._changed = value;
         return true;
     }
 
     _isChanged() {
-        console.log('changed', this._changed);
         return this._changed;
     }
 
