@@ -32,6 +32,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     }
 
     InitializeApplication(
+        name = 'app',
         routerType = Colibri.Web.Router.RouteOnHash, 
         requestType = Colibri.IO.Request.RequestEncodeTypeEncrypted,
         initComet = false,
@@ -46,6 +47,8 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         if(this._initialized) {
             return;
         }
+
+        this._name = name;
 
         Colibri.IO.Request.type = requestType;
         if(remoteDomain) {
@@ -215,6 +218,9 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    get name() {
+        return this._name;
+    }
 
     get Actions() {
         return this._actions;
