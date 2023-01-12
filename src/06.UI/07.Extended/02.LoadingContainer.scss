@@ -37,31 +37,5 @@
 
     }
 
-    .bo {
-        display: block;
-    }
-    .gbs {
-        display: none;
-    }
-
-    &.gbs-shader {
-        >div {
-            .app-progress-bar-container-component {
-               
-                .app-progress-bar-progress-component {
-                    background: #E21F27;
-                }
-            }
-    
-        }
-
-        .bo {
-            display: none;
-        }
-        .gbs {
-            display: block;
-        }
-    
-    }
 
 }

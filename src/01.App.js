@@ -40,6 +40,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         dateformat = null,
         numberformat = null,
         currency = null,
+        loadingIcon = null
     ) {
 
         if(this._initialized) {
@@ -69,6 +70,10 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
             this.InitializeModules();
             if(showLoader) {
                 this._loader = new Colibri.UI.LoadingContainer('app-loader', document.body);
+                if(loadingIcon) {
+                    this._loader.icon = loadingIcon;
+                    this._loader.showIcon = true;
+                }
                 this._loader.Show();
                 this._loader.StartProgress(200, 1.5);
                 this._loader.BringToFront();
@@ -138,6 +143,15 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                 this._actions.HandleDomReady();
                 this._router.HandleDomReady();
 
+
+
+                if(showLoader) {
+                    Colibri.Common.Delay(1500).then(() => {
+                        this._loader.StopProgress();  
+                        this._loader.Hide();
+                    });   
+                }
+                 
                 this.Dispatch('ApplicationReady');
  
             }).catch(response => {
@@ -145,12 +159,6 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                 App.Notices.Add(new Colibri.UI.Notice('Невозможно получить настройки!'));
             });
 
-            if(showLoader) {
-                Colibri.Common.Delay(1500).then(() => {
-                    this._loader.StopProgress();  
-                    this._loader.Hide();
-                });   
-            } 
 
             this._notices = new Colibri.UI.Notices('notices', document.body);
 

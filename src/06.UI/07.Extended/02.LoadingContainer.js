@@ -7,10 +7,16 @@ Colibri.UI.LoadingContainer = class extends Colibri.UI.Component {
     }
 
     set icon(value) {
-        this.Children('buhsofticon').shown = value === 'true' || value === true;
+        this.Children('loadingicon').icon = value;
     }
     get icon() {
-        return this.Children('buhsofticon').shown;
+        return this.Children('loadingicon').icon;
+    }
+    set shownIcon(value) {
+        this.Children('loadingicon').shown = value === 'true' || value === true;
+    }
+    get shownIcon() {
+        return this.Children('loadingicon').shown;
     }
 
     set progress(value) {
