@@ -1676,13 +1676,13 @@ Element.prototype.emitMouseEvent = function (eventType) {
     this.dispatchEvent(event);
 };
 
-Element.prototype.emitHtmlEvents = function (object, type) {
+Element.prototype.emitHtmlEvents = function (eventType) {
     if ("createEvent" in document) {
         var evt = document.createEvent("HTMLEvents");
-        evt.initEvent(type, false, true);
+        evt.initEvent(eventType, false, true);
         this.dispatchEvent(evt);
     } else {
-        this.fireEvent("on" + type);
+        this.fireEvent("on" + eventType);
     }
 };
 
