@@ -69,14 +69,12 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         Colibri.Common.WaitForBody().then(() => {
             this.InitializeModules();
             if(showLoader) {
-                this._loader = new Colibri.UI.LoadingContainer('app-loader', document.body);
                 if(loadingIcon) {
-                    this._loader.icon = loadingIcon;
-                    this._loader.showIcon = true;
+                    this.Loader.icon = loadingIcon
+                    this.Loader.showIcon = true;
                 }
-                this._loader.Show();
-                this._loader.StartProgress(200, 1.5);
-                this._loader.BringToFront();
+                this.Loader.Show();
+                this.Loader.StartProgress(200, 1.5);
             }
             this._loadingBox = new Colibri.UI.Loading('app-loading-box', document.body);
             this._confirmDialog = new Colibri.UI.ConfirmDialog('confirm', document.body, 600);
@@ -147,8 +145,8 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
                 if(showLoader) {
                     Colibri.Common.Delay(1500).then(() => {
-                        this._loader.StopProgress();  
-                        this._loader.Hide();
+                        this.Loader.StopProgress();  
+                        this.Loader.Hide();
                     });   
                 }
                  
@@ -243,6 +241,9 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     }
 
     get Loader() {
+        if(!this._loader) {
+            this._loader = new Colibri.UI.LoadingContainer('app-loader', document.body);
+        }
         return this._loader;
     }
 
