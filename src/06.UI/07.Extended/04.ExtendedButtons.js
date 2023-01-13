@@ -1,3 +1,6 @@
+/**
+ * Extended buttons base class
+ */
 Colibri.UI.ExtendedButton = class extends Colibri.UI.Button {
 
     constructor(name, container) {
@@ -36,6 +39,9 @@ Colibri.UI.ExtendedButton = class extends Colibri.UI.Button {
 
 }
 
+/**
+ * Successful action related button
+ */
 Colibri.UI.SuccessButton = class extends Colibri.UI.ExtendedButton {
     constructor(name, container) {
         super(name, container);
@@ -43,6 +49,9 @@ Colibri.UI.SuccessButton = class extends Colibri.UI.ExtendedButton {
     }
 }
 
+/**
+ * Error action related button
+ */
 Colibri.UI.ErrorButton = class extends Colibri.UI.ExtendedButton {
     constructor(name, container) {
         super(name, container);
@@ -50,6 +59,9 @@ Colibri.UI.ErrorButton = class extends Colibri.UI.ExtendedButton {
     }
 }
 
+/**
+ * Grayed button
+ */
 Colibri.UI.GrayButton = class extends Colibri.UI.ExtendedButton {
     constructor(name, container) {
         super(name, container);
@@ -57,6 +69,9 @@ Colibri.UI.GrayButton = class extends Colibri.UI.ExtendedButton {
     }
 }
 
+/**
+ * Simple button, not submit or reset
+ */
 Colibri.UI.SimpleButton = class extends Colibri.UI.ExtendedButton {
     constructor(name, container) {
         super(name, container);
@@ -64,6 +79,9 @@ Colibri.UI.SimpleButton = class extends Colibri.UI.ExtendedButton {
     }
 }
 
+/**
+ * Outlined button
+ */
 Colibri.UI.OutlineBlueButton = class extends Colibri.UI.ExtendedButton {
     constructor(name, container) {
         super(name, container);
@@ -71,6 +89,9 @@ Colibri.UI.OutlineBlueButton = class extends Colibri.UI.ExtendedButton {
     }
 }
 
+/**
+ * Button with upload support
+ */
 Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
     
     constructor(name, container) {
@@ -162,6 +183,9 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
 
 }
 
+/**
+ * Button viewed as link
+ */
 Colibri.UI.AsLinkButton = class extends Colibri.UI.ExtendedButton {
     constructor(name, container) {
         super(name, container);
