@@ -140,20 +140,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
     }
 
     get selectedIndex() {
-
-        // let indices = [];
-
-        // let index = 0;
-        // let selected = null;
-        // this.ForEach((name, group) => {
-        //     group.ForEach((n, item) => {
-        //         if(this._selected.filter(i => i === item).length > 0) {
-        //             indices.push(index);
-        //         }
-        //         index ++;
-        //     });
-        // });
-
+        
         if(this._selected.length == 0) {
             return null;
         }

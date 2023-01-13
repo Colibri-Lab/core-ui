@@ -14,7 +14,7 @@ const eval_default_values = function (defaultAsString) {
     return defaultAsString; 
 };  
 
-const isIterable = (value) => {
+const isIterable = (value) => { 
     return Symbol.iterator in Object(value);
 };
 
