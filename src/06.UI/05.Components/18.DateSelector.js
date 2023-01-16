@@ -528,7 +528,7 @@ Colibri.UI.DatePicker = class extends Colibri.UI.Pane {
             }
         }
 
-        tfoot.append(Element.fromHtml('<td colspan="7" data-today="today" data-value="' + (today.getTime()) + '">Сегодня</td>'));
+        tfoot.append(Element.fromHtml('<td colspan="7" data-today="today" data-value="' + (today.getTime()) + '">#{ui-dateselector-today}</td>'));
     }
 
     _bind() {
