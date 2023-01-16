@@ -275,10 +275,10 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
     }
     set enabled(value) {
         if(value) {
-            this.AddClass('app-component-disabled');
+            this.RemoveClass('app-component-disabled');
         }
         else {
-            this.RemoveClass('app-component-disabled');
+            this.AddClass('app-component-disabled');
         }
         this._input.enabled = value;
     }
