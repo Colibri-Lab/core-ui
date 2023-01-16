@@ -210,6 +210,12 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         return this._input.readonly;
     }
     set readonly(value) {
+        if(value) {
+            this.AddClass('app-component-readonly');
+        }
+        else {
+            this.RemoveClass('app-component-readonly');
+        }
         this._input.readonly = value;
     }
 
@@ -268,6 +274,12 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         return this._input.enabled;
     }
     set enabled(value) {
+        if(value) {
+            this.AddClass('app-component-disabled');
+        }
+        else {
+            this.RemoveClass('app-component-disabled');
+        }
         this._input.enabled = value;
     }
 
