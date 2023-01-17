@@ -1,0 +1,23 @@
+
+
+.app-aslink-button-component {
+
+    background: transparent;
+    border: 0px;
+    border-radius: 0px;
+    height: auto;
+    padding: 0px;
+
+    color: #4CB5FF;
+    .app-component-textspan {
+        color: #4CB5FF;
+    }
+
+    &.-error {
+        color: #ED3545;
+        .app-component-textspan {
+            color: #ED3545;
+        }   
+    }
+
+}

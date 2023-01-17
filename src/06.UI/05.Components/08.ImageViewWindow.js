@@ -1,4 +1,4 @@
-Colibri.UI.Window.ImageView = class extends Colibri.UI.Window {
+Colibri.UI.ImageViewWindow = class extends Colibri.UI.Window {
 
     constructor(name, container, title) {
         super(name, container, '<div><div class="content-container"><div class="text-description-before"></div><img class="image-container" src="#" alt="#"></img><div class="text-description-after"></div></div><div class="buttons-container"><button class="app-component-image-view-window-close-button">Закрыть</button></div></div>', title);

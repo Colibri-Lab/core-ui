@@ -7,4 +7,3 @@ ui-uploadbutton-allow:
 ui-uploadbutton-max:
   ru: максимум %s
   en: "%s maximum"
-ui-uploadbut4ton-allow: {}

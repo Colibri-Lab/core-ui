@@ -253,46 +253,15 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     }
 
     AddButton(title, name) {
-        this._footer.style.display = '';
-        let newButton =new Colibri.UI.Window.Button(name, this._footer, title);
-        newButton._parent = this;
+        this._footer.Show();
+        let newButton =new Colibri.UI.Button(name, this._footer, title);
+        newButton.AddClass('app-component-window-button');
+        newButton.parent = this;
         newButton.AddHandler('ComponentDisposed', () => {
             if (this._footer.children.length === 0) {
-                this._footer.style.display = 'none';
+                this._footer.Hide();
             }
         });
-        return newButton
+        return newButton;
     }
-}
-
-Colibri.UI.Window.Button = class extends Colibri.UI.Button {
-
-    constructor(name, container, title, ) {
-        super(name, container);
-        this.AddClass('app-component-window-button');
-        this.value = title;
-        this._handlerEvents();
-    }
-
-    _handlerEvents() {
-        this.AddHandler('Clicked', () => {
-            if (this._callback) {
-                this._callback(this)
-            } else {
-                this.parent.Hide();
-                this.parent.Dispatch('WindowClosed', {});
-            }
-        });
-    }
-
-    Show(callback) {
-        super.Show();
-        this._callback = callback;
-    }
-
-    Hide() {
-        super.Hide();
-        this._callback = null;
-    }
-
 }

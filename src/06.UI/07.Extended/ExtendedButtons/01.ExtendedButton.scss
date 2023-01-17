@@ -1,0 +1,60 @@
+.app-extended-button-component {
+    
+    &.app-component-shown {
+        display: flex;
+    }
+
+    align-items: center;
+    justify-content: center;
+    
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 17px;
+
+    min-height: 32px;
+
+    .app-component-icon {
+        &.app-component-shown {
+            display: inline-flex;
+        }
+        &:empty {
+            display: none;
+        }
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        width: 14px;
+        height: 14px;
+    }
+
+    .app-component-textspan {
+        font-style: normal;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 17px;
+        color: #ffffff;
+    }
+
+    &.ui-disabled, &:disabled {
+        background: #C4C8D4;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        cursor: default;
+        .app-component-textspan {
+            color: #ffffff;
+        }
+
+    }
+        
+    &.ui-icon-right {
+        .app-component-icon {
+            order: 2;
+            margin-right: 0px;
+            margin-left: 10px;
+        }
+        .app-component-textspan {
+            order: 1
+        }
+    }
+
+}

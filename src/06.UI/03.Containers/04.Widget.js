@@ -38,9 +38,3 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
     }
 }
 
-Colibri.UI.Widget.CloseButton = class extends Colibri.UI.Button {
-    constructor(name, container) {
-        super(name, container);
-        this.AddClass('app-component-widget-close-button');
-    }
-}

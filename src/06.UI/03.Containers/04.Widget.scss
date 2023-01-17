@@ -3,7 +3,7 @@
     position: relative;
     contain: strict;
     
-    .app-component-widget-close-button {
+    [data-object-name="widget-close-button"] {
         padding: 0;
         margin: 0;
         border: unset;
@@ -15,6 +15,7 @@
         height: 24px;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M6 18L18 6' stroke='%23444855' stroke-width='1.85' stroke-linecap='round'/%3E%3Cpath d='M18 18L6 6' stroke='%23444855' stroke-width='1.85' stroke-linecap='round'/%3E%3C/svg%3E");
     }
+    
     .widget-container {
         width: 100%;
         flex: 1 0;
