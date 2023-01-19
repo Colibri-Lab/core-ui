@@ -50,6 +50,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                 if(condition.field) {
                     const type = condition?.type == 'disable' ? 'enabled' : 'shown';
                     const empty = condition?.empty || false;
+                    const inverse = condition?.inverse || false;
                     let fieldValue = eval('data?.' + condition.field.split('.').join('?.'));
                     fieldValue = fieldValue?.value ?? fieldValue;
                     let conditionResult = true;
@@ -58,6 +59,9 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                     }
                     else {
                         conditionResult = fieldValue === undefined || (fieldValue !== undefined && fieldValue === condition.value);
+                    }
+                    if(inverse) {
+                        conditionResult = !conditionResult;
                     }
                     fieldComponent[type] = conditionResult;
                     if(!conditionResult && empty) {
