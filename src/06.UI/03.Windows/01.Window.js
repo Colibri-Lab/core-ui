@@ -253,13 +253,15 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     }
 
     AddButton(title, name) {
-        this._footer.Show();
+        this._footer.hideElement();
+        this._footer.showElement();
         let newButton =new Colibri.UI.Button(name, this._footer, title);
         newButton.AddClass('app-component-window-button');
         newButton.parent = this;
+        newButton.shown = true;
         newButton.AddHandler('ComponentDisposed', () => {
             if (this._footer.children.length === 0) {
-                this._footer.Hide();
+                this._footer.hideElement();
             }
         });
         return newButton;
