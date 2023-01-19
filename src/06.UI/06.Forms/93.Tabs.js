@@ -141,6 +141,10 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         const formData = this.root.value;
 
         Object.forEach(this._fieldData.fields, (name, fieldData) => {
+            if(!fieldData || !this.contentContainer) {
+                return true;
+            }
+            
             const fieldComponent = this.contentContainer.Children(name);
             if(fieldComponent && fieldData.params && fieldData.params.condition) {
                 const condition = fieldData.params.condition;

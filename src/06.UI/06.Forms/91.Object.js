@@ -196,6 +196,9 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         this.ForEveryField((name, component) => {
             component.enabled = this._enabled; 
         });
+        if(value) {
+            this._hideAndShow();
+        }
     }
 
     

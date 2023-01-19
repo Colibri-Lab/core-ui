@@ -335,5 +335,23 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
+    get enabled() {
+        return super.enabled;
+    }
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
+    set enabled(value) {
+        super.enabled = value;
+        if(value) {
+            this._hideAndShow();
+        }
+    }
+
 
 } 
