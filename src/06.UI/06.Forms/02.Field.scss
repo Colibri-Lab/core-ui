@@ -20,7 +20,7 @@
         color: #5B6173;   
         font-weight: bold;
         display: block;     
-        height: 32px;
+        min-height: 32px;
         &:empty {
             display: none;
         }
