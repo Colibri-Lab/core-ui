@@ -272,7 +272,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
         while(p.length > 0) {
             first = p.shift();
-            if((data[first] !== undefined) !== undefined) {
+            if((data[first] ?? undefined) !== undefined) {
                 data = data[first];
                 if(data instanceof Colibri.Storages.Store) {
                     return data.Query(first + '.' + p.join('.'));
@@ -305,7 +305,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         let realpath = 'this._data';
         let data = this._data;
         for(let i=0; i<p.length; i++) {
-            if(data[p[i]] === undefined) {
+            if((data[p[i]] ?? undefined) === undefined) {
                 data[p[i]] = {};
             }
             realpath += '["' + p[i] + '"]';
