@@ -1175,7 +1175,27 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     set scrollTop(value) {
-        this._element.scrollTop = value;
+        if(this._animateScroll) {
+            this._element.animateScrollTop(value, 300);
+        }
+        else {
+            this._element.scrollTop = value;
+        }
+    }
+
+    /**
+     * Анимировать скрол
+     * @type {boolean}
+     */
+    get animateScroll() {
+        return this._animateScroll;
+    }
+    /**
+     * Анимировать скрол
+     * @type {boolean}
+     */
+    set animateScroll(value) {
+        this._animateScroll = value;
     }
 
     set handleClickedOut(value) {

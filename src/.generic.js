@@ -1236,6 +1236,24 @@ Date.from = function (from) {
     return dt;
 };
 
+Element.prototype.animateScrollTop = function(to, duration) {
+    let start = this.scrollTop,
+        change = to - start,
+        currentTime = 0,
+        increment = 20;
+        
+    const animateScroll = () => {        
+        currentTime += increment;
+        let val = Math.easeInOutQuad(currentTime, start, change, duration);
+        this.scrollTop = val;
+        if(currentTime < duration) {
+            setTimeout(animateScroll, increment);
+        }
+    };
+    animateScroll();
+};
+
+
 /**
  * Удостоверяется, что элемент виден в паренте
  * @param {Element} container
@@ -1522,6 +1540,7 @@ Element.prototype.parent = function () {
     return this.parentElement;
 };
 
+
 /**
  * Возвращает родительский элемент
  */
@@ -1791,5 +1810,14 @@ window.addEventListener('resize', (e) => {
 
 Function.isPromise = function (p) {
     return (typeof p === 'object' && typeof p.then === 'function');
+};
+
+Math.easeInOutQuad = function(t, b, c, d) {
+    t /= d/2;
+    if (t < 1) {
+        return c/2*t*t + b;
+    }
+    t--;
+    return -c/2 * (t*(t-2) - 1) + b;
 };
 
