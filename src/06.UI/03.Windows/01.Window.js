@@ -1,12 +1,17 @@
 Colibri.UI.Window = class extends Colibri.UI.Component {
 
     constructor(name, container, element, title, width, height) {
-        super(name, container, '<div><div class="app-component-window-container"><div class="app-component-window-title"><span></span><div class="close-button"></div></div><div class="app-component-window-content"></div><div class="app-component-window-footer"></div></div></div>');
+        super(name, container, '<div><div class="app-component-window-container"><div class="app-component-window-title"><span></span><div class="minimize-button"></div><div class="close-button"></div></div><div class="app-component-window-content"></div><div class="app-component-window-minimized-content"></div><div class="app-component-window-footer"></div></div></div>');
 
         this.AddClass('app-component-window');
 
         this._closable = true;
         this._closableOnShadow = true;
+        this._minimizable = false;
+        this._state = 'normal';
+        this._minimizedPosition = [20, 20];
+        this._minimizedSize = [200, 50];
+        this._minimizedGetContentMethod = () => { return null; };
 
         /* меняем размеры отрисованого окна если передали параметры */
         !!width && (this.width = width);
@@ -23,6 +28,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         }
 
         this._content = this._element.querySelector('.app-component-window-content');
+        this._minimizedContent = this._element.querySelector('.app-component-window-minimized-content');
 
         this._footer = this._element.querySelector('.app-component-window-footer');
         // this._footer.style.display = 'none';
@@ -31,12 +37,17 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
 
         let closeButtonContainer = this._element.querySelector('.close-button');
+        let minimizeButtonContainer = this._element.querySelector('.minimize-button');
 
         this.Children('closebutton', new Colibri.UI.Button('closebutton', closeButtonContainer));
         this.Children('closebutton').AddClass('s-close');
         this.Children('closebutton').shown = this._closable;
-
         this.Children('closebutton').AddHandler('Clicked', (event, args) => this.__CloseClicked(event, args));
+
+        this.Children('minimizebutton', new Colibri.UI.Button('minimizebutton', minimizeButtonContainer));
+        this.Children('minimizebutton').AddClass('s-minimize');
+        this.Children('minimizebutton').shown = this._minimizable;
+        this.Children('minimizebutton').AddHandler('Clicked', (event, args) => this.__MinimizeClicked(event, args));
 
         this.AddHandler('MouseUp', (event, args) => this.__MouseUp(event, args));
         this.AddHandler('MouseDown', (event, args) => this.__MouseDown(event, args));
@@ -45,6 +56,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         this.Dispatch('WindowContentRendered');
 
     }
+
 
     _movingHandler(e) {
         const windowElement = e.currentTarget.closest('.app-component-window');
@@ -89,15 +101,60 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
     _registerEvents() {
         super._registerEvents();
+        this.RegisterEvent('WindowMinimizing', false, 'Поднимается когда окно минимизируется');
         this.RegisterEvent('WindowClosed', false, 'Поднимается когда окно закрылось');
         this.RegisterEvent('WindowContentRendered', false, 'Когда содержание окна отрисовалось');
     }
 
     __CloseClicked(event, args) {
+        
+        if(this._minimizable === true && this._state === 'minimized') {
+            this.RemoveClass('-minimized');   
+            super.width = null;
+            super.height = null;
+            super.right = null;
+            super.bottom = null;
+            this._state = 'normal';
+        }
+
         if (this._closable === true) {
             this.shown = false;
             this.Dispatch('WindowClosed', {});
         }
+        
+    }
+
+    __getMinimizedContent() {
+        return Promise.resolve(null);
+    }
+    
+    __MinimizeClicked(event, args) {
+        
+        const content = this._minimizedGetContentMethod(this);
+        if(content) {
+            this._minimizedContent.html(content);
+        }
+
+        if(this._minimizable && this._state === 'normal') {
+
+            this.AddClass('-minimized');
+            super.width = this._minimizedSize[0];
+            super.height = this._minimizedSize[1];
+            super.right = this._minimizedPosition[0];
+            super.bottom = this._minimizedPosition[1];
+            this._state = 'minimized';
+
+
+        } else if(this._minimizable && this._state === 'minimized') {
+            this.RemoveClass('-minimized');   
+            super.width = null;
+            super.height = null;
+            super.right = null;
+            super.bottom = null;
+            this._state = 'normal';
+
+        }
+
     }
 
     __MouseUp(event, args) {
@@ -266,4 +323,77 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         });
         return newButton;
     }
+
+    /**
+     * Can minimize
+     * @type {boolean}
+     */
+    get minimizable() {
+        return this._minimizable;
+    }
+    /**
+     * Can minimize
+     * @type {boolean}
+     */
+    set minimizable(value) {
+        this._minimizable = value;
+        this._showMinimizable();
+    }
+    _showMinimizable() {
+        this.Children('minimizebutton').shown = this._minimizable;
+        if(!this._minimizable) {
+            this.RemoveClass('-minimized');   
+            super.width = null;
+            super.height = null;
+            super.right = null;
+            super.bottom = null;
+            this._state = 'normal';
+        }
+    }
+
+    /**
+     * Позиция (правый нижний угол) при минимизации
+     * @type {object<integer, integer>} 
+     */
+    get minimizedPosition() {
+        return this._minimizedPosition;
+    }
+    /**
+     * Позиция (правый нижний угол) при минимизации
+     * @type {object<integer, integer>} 
+     */
+    set minimizedPosition(value) {
+        this._minimizedPosition = value;
+    }
+
+    /**
+     * Размер при минимизации
+     * @type {object(integer, integer)}
+     */
+    get minimizedSize() {
+        return this._minimizedSize;
+    }
+    /**
+     * Размер при минимизации
+     * @type {object(integer, integer)}
+     */
+    set minimizedSize(value) {
+        this._minimizedSize = value;
+    }
+
+    /**
+     * Получение содержания минимизурованного окна
+     * @type {Function}
+     */
+    get minimizedGetContentMethod() {
+        return this._minimizedGetContentMethod;
+    }
+    /**
+     * Получение содержания минимизурованного окна
+     * @type {Function}
+     */
+    set minimizedGetContentMethod(value) {
+        this._minimizedGetContentMethod = value;
+    }
+
 }
