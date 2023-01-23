@@ -531,8 +531,8 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
                 });
             }
             content.value = this._itemData;
-        }
-        if(html) {
+        } 
+        else if(html) {
             this._element.html(html);
         }
 
