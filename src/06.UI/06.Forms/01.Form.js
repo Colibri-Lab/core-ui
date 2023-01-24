@@ -26,6 +26,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         this.RegisterEvent('KeyUp', false, 'Когда кнопка отжата');
         this.RegisterEvent('Click', false, 'Когда кликнули');
         this.RegisterEvent('FieldsRendered', false, 'Когда поля созданы');
+        this.RegisterEvent('ActiveFieldChanged', false, 'Когда активное поле изменилось');
     }
 
     _registerEventHandlers() {
@@ -353,5 +354,38 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Активное поле
+     * @type {Colibri.UI.Form.Field}
+     */
+    get activeField() {
+        return this._activeField;
+    }
+    /**
+     * Активное поле
+     * @type {Colibri.UI.Form.Field}
+     */
+    set activeField(value) {
+        if(
+            (this._activeField && 
+                !(this._activeField instanceof Colibri.UI.Forms.Object) &&
+                !(this._activeField instanceof Colibri.UI.Forms.Array) && 
+                !(this._activeField instanceof Colibri.UI.Forms.Tabs) && (
+                    value && 
+                    !(value instanceof Colibri.UI.Forms.Object) && 
+                    !(value instanceof Colibri.UI.Forms.Array) && 
+                    !(value instanceof Colibri.UI.Forms.Tabs)
+                )
+            ) || !this._activeField
+        ) {
+            
+            const changed = this._activeField !== value;
+            this._activeField = value;
+            if(changed) {
+                this.Dispatch('ActiveFieldChanged', {field: this._activeField});
+            }
+            
+        }
+    }
 
 } 

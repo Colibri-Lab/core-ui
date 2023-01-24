@@ -129,8 +129,14 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             return true;
         });
 
-        this.AddHandler('ReceiveFocus', (event, args) => this.AddClass('-focused'));
-        this.AddHandler('LoosedFocus', (event, args) => this.RemoveClass('-focused'));
+        this.AddHandler('ReceiveFocus', (event, args) => {
+            this.AddClass('-focused');
+            this.form.activeField = this;
+        });
+        this.AddHandler('LoosedFocus', (event, args) => {
+            this.RemoveClass('-focused');
+            this.form.activeField = null;
+        });
 
         if(this._fieldData?.hidden && this._fieldData?.hidden === true) {
             this.AddClass('app-component-field-hidden');
@@ -143,6 +149,10 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         if(this._fieldData?.break) {
             this._element.before(Element.create('div', {class: 'break'}, {}));
         }
+
+        this._content.Children(this._name + '-message').AddHandler('Clicked', (event, args) => {
+            this.Dispatch('MessageClicked', {domEvent: args.domEvent, field: this});
+        });
 
     }
 
@@ -190,6 +200,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this.RegisterEvent('KeyDown', false, 'Когда кнопка нажата')
         this.RegisterEvent('KeyUp', false, 'Когда кнопка отжата')
         this.RegisterEvent('FieldsRendered', false, 'Когда поля созданы');
+        this.RegisterEvent('MessageClicked', false, 'Когда ткнули в ошибку')
     }
 
     _applyRuntimes() {
@@ -234,6 +245,10 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this.message = '';
     }
 
+    get messageObject() {
+        return this._content.Children(this._name + '-message');
+    }
+
     get message() {
         const message = this._content.Children(this._name + '-message');
         if(!message) {
@@ -251,6 +266,10 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         message.value = value;
     }
 
+    get titleObject() {
+        return this._content.Children(this._name + '-title');
+    }
+
     get title() {
         return this.Children(this._name + '-title').value;
     }
@@ -262,6 +281,10 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         else {
             this.RemoveClass('-without-title');
         }
+    }
+
+    get noteObject() {
+        return this._content.Children(this._name + '-note');
     }
 
     get note() {
@@ -302,6 +325,10 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     get form() {
         const formElement = this._element.closest('.app-form-component');
         return formElement ? formElement.tag('component') : null;
+    }
+
+    get parentField() {
+        return this._parentField;
     }
 
 

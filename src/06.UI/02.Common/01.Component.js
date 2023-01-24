@@ -847,7 +847,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return this._element.html();
     }
     set value(value) {
-        this._element.html(value);
+       this._element.html(value);
     }
 
     /**
