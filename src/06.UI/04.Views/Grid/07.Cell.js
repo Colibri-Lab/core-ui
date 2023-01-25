@@ -274,6 +274,9 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
     _createViewer() {
         if(this._viewer && !this._viewerObject) {
             const viewer = eval(this._viewer);
+            if(!viewer) {
+                throw 'Can not find viewer component: ' + this._viewer;
+            }
             this._viewerObject = new viewer(this.name + '_viewer', this);
             this._viewerObject.AddHandler('Clicked', (event, args) => this.Dispatch('ViewerClicked', {value: event.sender.value}));
             this._viewerObject.shown = true;
