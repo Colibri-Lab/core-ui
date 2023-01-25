@@ -263,7 +263,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             return;
         }
         message.shown = !!value;
-        message.value = value;
+        message.value = typeof value === 'string' ? value : '';
     }
 
     get titleObject() {
