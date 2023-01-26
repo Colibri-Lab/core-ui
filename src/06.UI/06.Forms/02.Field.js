@@ -362,4 +362,8 @@ Colibri.UI.Forms.HiddenField = class extends Colibri.UI.Component {
         return {};
     }
 
+    ResetValidation() {
+        // Do nothing
+    }
+
 }

@@ -7,7 +7,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         const contentContainer = this.contentContainer;
 
         if(this._fieldData?.params?.initempty === undefined || this._fieldData?.params?.initempty === true) {
-            this.AddNew();
+            this._addNew();
         }
 
         this._createAddNewLink();
@@ -43,14 +43,8 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         this._link.shown = true;
         this._link.AddHandler('Clicked', (event, args) => {
 
-            if(this._link.ContainsClass('ui-disabled')) {
-                return;
-            }
-
-            const object = this.AddNew();
-            object.MoveUp();
-            this._link = this.contentContainer.Children('add-new');
-            this.Dispatch('Changed', {component: this});            
+            this.AddNew();
+            
         });
         return this._link;
     }
@@ -60,6 +54,17 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     }
 
     AddNew() {
+        if(this._link.ContainsClass('ui-disabled')) {
+            return;
+        }
+
+        const object = this._addNew();
+        object.MoveUp();
+        this._link = this.contentContainer.Children('add-new');
+        this.Dispatch('Changed', {component: this});
+    }
+
+    _addNew() {
         // const containerElement = this.contentContainer.container.querySelector('.array-component-container');
         let fieldData = Object.cloneRecursive(this._fieldData);
         delete fieldData.note;
@@ -74,7 +79,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
                  
                 Object.forEach(this.Fields(), (name, field) => {
                     if(field instanceof Colibri.UI.Forms.Field) {
-                        field.Dispatch('Changed');
+                        field.Dispatch('Changed', {});
                     }
                 });
                 this.Dispatch('Changed', {component: this});
@@ -105,7 +110,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
                 const f = eval(this._fieldData.params.title);
                 f && f(object, this);
             }
-            return this.Dispatch('Changed', Object.assign(args, {component: this}));
+            return this.Dispatch('Changed', Object.assign(args ?? {}, {component: this}));
         });
         this.contentContainer.Children(object.name, object);
         if(this._fieldData.params && this._fieldData.params.title !== null) {
@@ -182,12 +187,12 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
         this.contentContainer.Clear();
         value && value.forEach((v) => {
-            const object = this.AddNew();
+            const object = this._addNew();
             object.value = v;
         });
 
         if(Array.isArray(value) && value.length === 0 && this._fieldData?.params?.initempty) {
-            this.AddNew();            
+            this._addNew();            
         }
 
         this._createAddNewLink();
