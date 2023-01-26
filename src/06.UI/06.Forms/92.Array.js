@@ -62,6 +62,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         object.MoveUp();
         this._link = this.contentContainer.Children('add-new');
         this.Dispatch('Changed', {component: this});
+        return object;
     }
 
     _addNew() {
