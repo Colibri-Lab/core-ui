@@ -35,6 +35,28 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         return this._nodes;
     }
 
+    Search(term) {
+        if(!term) {
+            this.allNodes.forEach((node) => node.Show());    
+        }
+        else {
+            this.allNodes.forEach((node) => {
+                if(node.text.toLowerCase().indexOf(term.toLowerCase()) === -1) {
+                    node.Hide();
+                }
+                else {
+                    node.Show();
+                    let p = node.parentNode;
+                    while(p) {
+                        p.Show();
+                        p = p.parentNode;
+                    }
+                }
+            }); 
+        }
+        
+    }
+
     ExpandAll() {
         this.nodes.ForEach((nodeName, node) => {
             node.ExpandAll();
