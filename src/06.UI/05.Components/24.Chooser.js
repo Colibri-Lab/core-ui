@@ -68,7 +68,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
     ShowChooser() {
         if(this._chooser) {
             const component = this._chooser;
-            this._chooserObject = new component(this.name + '-chooser', document.body, this._selector?.params || {});
+            this._chooserObject = new component(this.name + '-chooser', document.body, this._selector?.params || {}, this._values);
             this._chooserObject.AddHandler('Choosed', (event, args) => {
                 this.value = args.value;
                 this.Dispatch('Changed', {});
@@ -93,7 +93,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
 
         this._arrow.addEventListener('click', (e) => {
             if(!this.readonly) {
-                this.ShowChooser();
+                this.__Filled(null, {search: false});
             }
             return false; 
         });
@@ -103,7 +103,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
 
             if(['Enter', 'NumpadEnter'].indexOf(args.domEvent.code) !== -1) {
                 if(!this.readonly) {
-                    this.ShowChooser();
+                    this.__Filled(null, {search: false});
                 }
                 args.domEvent.stopPropagation();
                 args.domEvent.preventDefault();
@@ -116,10 +116,27 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
 
     }
 
+    
+    async __BeforeFilled() {
+        return true;
+    }
+
+
     __Filled(event, args) {
-        let v = {};
-        v[this._valueField] = this._input.value;
-        this.value = v;
+        this._itemSelected = false;
+        this.__BeforeFilled().then((ret) => {
+            if(ret === false || this._itemSelected === true) {
+                return;
+            }
+            
+            this.ShowChooser();
+            this._renderValue(false);
+        });
+
+        args?.domEvent?.preventDefault();
+        args?.domEvent?.stopPropagation();
+
+        return false;
     }
 
     __Cleared(event, args) {
@@ -269,6 +286,16 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         if (this._input) {
             this._input.tabIndex = value;
         }
+    }
+
+    /**
+     * Список значений
+     */
+    get values() {
+        return this._values;
+    }
+    set values(value) {
+        this._values = value;
     }
 
 }

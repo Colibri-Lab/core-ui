@@ -42,6 +42,25 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
             this._content.Children(this._name + '-note').AddHandler('Clicked', (event, args) => this.__clickOnNote(event, args));
         }
 
+        if(this._fieldData?.selector?.ondemand) {
+            this._input.__BeforeFilled = () => {
+                return new Promise((resolve, reject) => {
+                    if (this._fieldData.lookup) {
+                        this.loading = true;
+                        this.AddClass('app-select-loading');
+                        this._setLookup(this._fieldData.lookup).then((response) => {
+                            this.values = response.result || response;
+                        }).finally(() => {
+                            this.loading = false;                        
+                            this.RemoveClass('app-select-loading');
+                            this._setEnabled();
+                            resolve(true);
+                        });
+                    }
+                });
+            };
+        }
+
     }
 
     __clickOnNote(event, args) {
@@ -112,6 +131,32 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
     }
 
     /**
+     * Значения селектора
+     * @param {array} value
+     * */
+    set values(value) {
+        let required = this._fieldData?.params?.required;
+        if(required === undefined) {
+            required = false;
+        }
+        if(!required) {
+            const o = {};
+            o[this._fieldData?.selector?.title] = '---';
+            o[this._fieldData?.selector?.value] = 0;
+            value = isIterable(value) ? [o, ...value] : [o];
+        }
+        this._input.values = value;
+    }
+
+    /**
+     * Значения селектора
+     * @return {array} value
+     * */
+    get values() {
+        return this._input.values;
+    }
+
+    /**
      * Включен/выключен
      */
     get enabled() {
@@ -124,6 +169,95 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
     _setEnabled() {
         if(!this.value && this._fieldData.default) {
             this.value = this._fieldData.default;
+        }
+    }
+
+    /**
+     * Установить новое значение свойству lookup
+     * Загрузить значения селектора альтернативным способом, указанным в lookup
+     * @param {(Object|function)} value
+     */
+    _setLookup(value) {
+        let lookupPromise;
+        this._lookup = value;
+
+        if (typeof this._lookup == 'function' || typeof this._lookup == 'string') {
+            if(typeof this._lookup == 'string') {
+                this._lookup = eval(this._lookup);
+            }
+
+            let dependsValue = this._getDependsValue();
+            let dependsField = this._lookup.depends ?? null;
+    
+            const lookupMethodRun = this._lookup(dependsValue, dependsField);
+            lookupPromise = lookupMethodRun instanceof Promise ? lookupMethodRun : new Promise((resolve, reject) => {
+                resolve({
+                    result: this._lookup()
+                });
+            });
+        }
+        else if (typeof this._lookup == 'object') {
+
+            if(this._lookup?.method) {
+                let lookupMethod = this._lookup.method;
+                if (typeof lookupMethod == 'string') {
+                    lookupMethod = eval(this._lookup.method);
+                }
+
+                if(typeof lookupMethod !== 'function') {
+                    lookupPromise = new Promise((resolve, reject) => { resolve({result: ''}); })
+                }
+                else {
+                    let dependsValue = this._getDependsValue();
+                    let dependsField = this._lookup.depends ?? null;   
+                    lookupPromise = lookupMethod(this._input._input.value, dependsValue, dependsField);
+                }
+            }
+            else if(this._lookup?.binding) {
+                let binding = this._lookup.binding;
+                if (typeof binding == 'string') {
+                    let dependsValue = this._getDependsValue('binding');
+                    lookupPromise = App.Store.AsyncQuery(binding, dependsValue);
+                }
+            }
+            else if(this._lookup?.controller) {
+                let controller = this._lookup.controller;
+                let module = eval(controller.module);
+                let dependsValue = this._getDependsValue('controller');
+                let dependsField = this._lookup.controller.depends ?? null;
+                lookupPromise = module.Call(controller.class, controller.method, {term: this._input._input.value, param: dependsValue, depends: dependsField, lookup: this._lookup});
+            }
+            else if(this._lookup?.storage) {
+                let controller = this._lookup?.storage?.controller;
+                let module = eval(controller?.module);
+                let dependsValue = this._getDependsValue('storage');
+                let dependsField = this._lookup?.storage?.depends ?? null;
+                lookupPromise = module.Call(controller.class, controller.method, {term: this._input._input.value, param: dependsValue, depends: dependsField, lookup: this._lookup});
+            }
+            else {
+                lookupPromise = new Promise((resolve, reject) => { resolve({result: ''}); })
+            }
+        }
+
+        // каждый метод должен возвращать промис
+        return lookupPromise;
+    }
+
+    _getDependsValue(type = null) {
+        if (this.root && this._fieldData?.lookup) {
+
+            if((type && !this._fieldData.lookup[type]['depends']) || (!type && !this._fieldData.lookup['depends'])) {
+                return;
+            }
+
+            let dependsField = type ? this._fieldData.lookup[type]['depends'] : this._fieldData.lookup['depends'];
+            if (dependsField) {
+                const rootValues = this.root?.value;
+                if(eval(`typeof rootValues?.${dependsField}`) !== 'undefined') {
+                    return eval(`rootValues.${dependsField}`);
+                }
+                return null;
+            }
         }
     }
 
