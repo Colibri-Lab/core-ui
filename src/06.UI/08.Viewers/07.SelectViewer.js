@@ -91,7 +91,7 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
             }
             else {
                 if(value instanceof Object) {
-                    super.value = value[this._field?.selector?.title ?? 'title'];
+                    super.value = value[this._field?.selector?.title ?? 'title'][Lang.Current] ?? value[this._field?.selector?.title ?? 'title'];
                 }
                 else if (this._field?.lookup) {
                     let selected = false;
@@ -102,7 +102,7 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                         if(_result?.length) {
                             for (let val of _result) {
                                 if (val[this._field?.selector?.value || 'value'] == value) {
-                                    super.value = val[this._field?.selector?.title || 'title'];
+                                    super.value = val[this._field?.selector?.title || 'title'][Lang.Current] ?? val[this._field?.selector?.title || 'title'];
                                     selected = true;
                                     break;
                                 }
@@ -111,14 +111,14 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                     }).finally(() => {
                         this.RemoveClass('app-viewer-loading')
                         if(!selected) {
-                            super.value = value[this._field?.selector?.title ?? 'title'];
+                            super.value = value[this._field?.selector?.title ?? 'title'][Lang.Current] ?? value[this._field?.selector?.title ?? 'title'];
                         }
                     });
                 }
                 else if(this._field.values) {
                     for(const v of this._field.values) {
                         if((v.value ?? v.title) == (value.value ?? value.title ?? value)) {
-                            super.value = v.title;
+                            super.value = v.title[Lang.Current] ?? v.title;
                         }
                     }
                 } 
