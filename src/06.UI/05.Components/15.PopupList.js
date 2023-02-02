@@ -66,14 +66,20 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
     }
 
     __renderItemContent(itemData) {
+        let html = '';
 
-        let html = itemData[this._titleField ?? 'title'][Lang.Current] ?? itemData[this._titleField ?? 'title'] ?? itemData;
-        if(this.__renderElement) {
-            html = this.__renderElement(itemData);
+        try {
+            html = itemData[this._titleField ?? 'title'][Lang.Current] ?? itemData[this._titleField ?? 'title'] ?? itemData;
+            if(this.__renderElement) {
+                html = this.__renderElement(itemData);
+            }
+    
+            if(this._multiple) {
+                html = '<div class="app-popup-list-item-content"><div>' + html + '</div>' + Colibri.UI.SelectCheckIcon + '</div>';
+            }
         }
+        catch(e) {
 
-        if(this._multiple) {
-            html = '<div class="app-popup-list-item-content"><div>' + html + '</div>' + Colibri.UI.SelectCheckIcon + '</div>';
         }
         
         return html;
