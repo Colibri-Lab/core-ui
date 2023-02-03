@@ -355,9 +355,9 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         return list;
     }
 
-    ListAddPage(path, pageItems) {
+    ListAddPage(path, page, pageItems) {
         let list = this.Query(path);
-        if(!Array.isArray(list)) {
+        if(!Array.isArray(list) || page === 1) {
             list = [];
         }
         list = list.concat(pageItems);

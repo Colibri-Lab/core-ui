@@ -376,6 +376,14 @@ Object.map = function (obj, func) {
     return newObject;
 };
 
+RegExp.prototype.all = function(str) {
+    let ret = [];
+    const matches = str.match(this);
+    for(let index = 1; index<matches.length; index++) {
+        ret.push(matches[index]);
+    }
+    return ret;
+}
 
 /* String prototype expansion */
 String.prototype.stripHtml = function () { return this.replace(/<[^>]+>/gim, "").replace(/<\/[^>]+>/gim, "").replace(/&nbsp;/gim, ""); }

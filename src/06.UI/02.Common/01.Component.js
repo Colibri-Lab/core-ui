@@ -1141,6 +1141,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     ReloadBinding() {
 
+        if(!this._storage) {
+            return;
+        }
+
         // this._binding = value;
         let pathsToLoad = this._binding;
         if(this._binding.indexOf(';') !== -1) {
@@ -1478,6 +1482,25 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     set dropable(value) {
         this._element.attr('dropable', value ? 'true' : null);
+    }
+
+    /**
+     * Router pattern
+     * @type {string}
+     */
+    get routePattern() {
+        return this._routePattern;
+    }
+    /**
+     * Router pattern
+     * @type {string}
+     */
+    set routePattern(value) {
+        this._routePattern = value;
+    }
+
+    __processChangeOnRouteSwitch(patternMatches) {
+        this.ReloadBinding();
     }
 
 }
