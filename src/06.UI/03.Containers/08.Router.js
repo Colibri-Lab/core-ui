@@ -28,24 +28,24 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
         this._current = value;
     }
 
+    _convertRouteTo
+
     __appRouteChanged(event, args) {
-
-        if(new RegExp(this._current).test(args.url)) {
-
+        if(args.url.substring(0, this._current.length) === this._current) {
             this.ForEach((name, component) => {
-                const reg = new RegExp(component.routePattern);
+                const pattern = this._current + component.routePattern.replace('#', '.+').replaceAll('?', '.*') + '$';
+                const reg = new RegExp(pattern);
                 if(reg.test(args.url)) {
                     if(!component.isConnected) {
                         component.ConnectTo(this);
-                        component.__processChangeOnRouteSwitch(reg.all(args.url));
                     }
+                    component.__processChangeOnRouteSwitch(reg.all(args.url));
                 } else {
                     if(component.isConnected) {
                         component.Disconnect();
                     }
                 }
             });
-    
         }
 
 
