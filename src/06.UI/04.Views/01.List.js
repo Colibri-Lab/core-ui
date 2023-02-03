@@ -1,7 +1,7 @@
 Colibri.UI.List = class extends Colibri.UI.Component {
 
-    constructor(name, container, multiple) {
-        super(name, container);
+    constructor(name, container, element, multiple) {
+        super(name, container, element);
         this.AddClass('app-component-list');
 
         this._selected = [];
@@ -448,6 +448,12 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
 
     set contextmenu(items) {
         this.parent.contextmenu = items;
+    }
+
+
+    Clear() {
+        super.Clear();
+        this.container.html('');
     }
 
 
