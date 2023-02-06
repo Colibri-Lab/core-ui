@@ -2,7 +2,7 @@
 Colibri.UI.PopupList = class extends Colibri.UI.List {
 
     constructor(name, container, multiple, __render, titleField = 'title', valueField = 'value', groupField = null, canSelectGroup = false) {
-        super(name, container, multiple);
+        super(name, container, null, multiple);
         this.AddClass('app-component-popup-list-component');
         
         this.__renderElement = __render;

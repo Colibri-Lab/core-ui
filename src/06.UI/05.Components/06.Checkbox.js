@@ -82,7 +82,7 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
         // if (this._readonly || !this._enabled) {
         //     return;
         // }
-
+        value = value === true || value === 'true';
         this._input.checked = value;
         if (value) {
             this.AddClass('-checked');
