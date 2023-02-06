@@ -498,18 +498,34 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         // do nothing
     }
 
+    /**
+     * Namespace of component
+     * Used in HTML templates to indicates module and component
+     */
     get namespace() {
         return this._element.attr('namespace') ?? this._element.closest('[namespace]')?.attr('namespace') ?? null;
     }
 
+    /**
+     * Namespace of component
+     * Used in HTML templates to indicates module and component
+     * @type {string} value
+     */
     set namespace(value) {
         this._element.attr('namespace', value);
     }
 
+    /**
+     * Indicates that the component has context menu icon and can use context menu generation events
+     */
     get hasContextMenu() {
         return this._hasContextMenu;
     }
 
+    /**
+     * Indicates that the component has context menu icon and can use context menu generation events
+     * @type {boolean} value
+     */
     set hasContextMenu(value) {
         this._hasContextMenu = value === 'true' || value === true || value === 1;
         if(this._hasContextMenu) {
@@ -536,6 +552,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return this._contextmenu;
     }
 
+    /**
+     * Context menu items
+     * @type {Array} items
+     */
     set contextmenu(items) {
         this._contextmenu = items;
     }
@@ -557,19 +577,23 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Компонент родитель
+     * Parent component
      * @type {Colibri.UI.Component}
      */
     get parent() {
         return this._parent;
     }
+    /**
+     * Parent component
+     * @type {Colibri.UI.Component}
+     */
     set parent(value) {
         this._parent = value;
     }
 
     /**
-     * Ширина компонента
-     * @type {number}
+     * Component with
+     * @type {Number}
      */
     get width() {
         const cssWidth = this._element.css('width');
@@ -584,6 +608,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             return bounds.outerWidth;
         }
     }
+    /**
+     * Component with
+     * @type {Number}
+     */
     set width(value) {
         if(value === null) {
             this._element.css('width', null);
@@ -601,8 +629,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Высота компонента
-     * @type {number}
+     * Component height
+     * @type {Number}
      */
     get height() {
         const cssHeight = this._element.css('height');
@@ -618,6 +646,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
 
     }
+    /**
+     * Component height
+     * @type {Number}
+     */
     set height(value) {
         if(value === null) {
             this._element.css('height', null);
@@ -635,13 +667,17 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Позиция элемента относительно левого края документа
-     * @type {number}
+     * Element left position
+     * @type {Number}
      */
     get left() {
         const bounds = this._element.bounds();
         return bounds.left;
     }
+    /**
+     * Element left position
+     * @type {Number}
+     */
     set left(value) {
         this._element.css('left', value + 'px');
     }

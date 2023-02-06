@@ -389,7 +389,8 @@ RegExp.prototype.all = function(str) {
 String.prototype.stripHtml = function () { return this.replace(/<[^>]+>/gim, "").replace(/<\/[^>]+>/gim, "").replace(/&nbsp;/gim, ""); }
 String.prototype.ltrim = function (c) { return this.replace(new RegExp('^' + (c != undefined ? c : '\\s') + '+'), ""); }
 String.prototype.rtrim = function (c) { return this.replace(new RegExp((c != undefined ? c : '\\s') + '+$'), ""); }
-String.prototype.trim = function (c) { return this.replace(new RegExp('^' + (c != undefined ? c : '\\s') + '*(.*?)' + (c != undefined ? c : '\\s') + '*$'), '$1'); }
+String.prototype.trimString = function (c) { return this.replace(new RegExp('^' + (c != undefined ? c : '\\s') + '*(.*?)' + (c != undefined ? c : '\\s') + '*$'), '$1'); }
+String.prototype.trim = function (c) { return this.trimString(c); }
 String.prototype.splitA = function (separator) {
     var retArr = new Array();
     var s = this;
