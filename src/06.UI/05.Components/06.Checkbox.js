@@ -69,12 +69,16 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
     }
 
     /**
-     * Чекбокс отмечен
+     * Indicates that checkbox is checked
      * @type {boolean}
      */
     get checked() {
         return this._input.checked;
     }
+    /**
+     * Indicates that checkbox is checked
+     * @type {boolean}
+     */
     set checked(value) {
         this._setChecked(value);
     }
@@ -92,7 +96,7 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
     }
 
     /**
-     * Элемент выключен
+     * Indicates that component is enabled
      * @type {boolean}
      */
     set enabled(value) {
@@ -100,49 +104,73 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
         this._input.disabled = !this._enabled;
         super.enabled = value;
     }
+    /**
+     * Indicates that component is enabled
+     * @type {boolean}
+     */
     get enabled() {
         return this._enabled;
     }
 
     /**
-     * Только для чтения
+     * Indicates that component is readonly
      * @type {boolean}
      */
     get readonly() {
         return this._readonly;
     }
+    /**
+     * Indicates that component is readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         this._readonly = (value === true || value === 'true');
         super.readonly = this._readonly;
     }
 
     /**
-     * Есть ли третье состояние у чекбокса
+     * Indicates that checkbox has thrid state
      * @type {boolean}
      */
     get hasThirdState() {
         return this._hasThirdState;
     }
+    /**
+     * Indicates that checkbox has thrid state
+     * @type {boolean}
+     */
     set hasThirdState(value) {
         this._hasThirdState = (value === true || value === 'true');
     }
 
     /**
-     * Третье состояние активно
+     * Sets the thrid state to checkbox
      * @type {boolean}
      */
     get thirdState() {
         return this._thirdState;
     }
+    /**
+     * Sets the thrid state to checkbox
+     * @type {boolean}
+     */
     set thirdState(value) {
         this._thirdState = (value === true || value === 'true');
         this._thirdState ? this.AddClass('-third-state') : this.RemoveClass('-third-state');
         this._setIcon();
     }
 
+    /**
+     * Component placeholder
+     * @type {string}
+     */
     get placeholder() {
         return this._placeholder?.value;
     }
+    /**
+     * Component placeholder
+     * @type {string}
+     */
     set placeholder(value) {
         this._setPlaceholder(value);
     }
@@ -159,8 +187,7 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Index in tab stop
      * @type {number}
      */
     get tabIndex() {
@@ -172,6 +199,10 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
         }
         
     }
+    /**
+     * Index in tab stop
+     * @type {number}
+     */
     set tabIndex(value) {
         if (this._placeholder) {
             this._placeholder.tabIndex = value === true ? Colibri.UI.tabIndex++ : value;
