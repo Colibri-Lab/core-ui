@@ -2,12 +2,14 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
     _skipLooseFocus;
     _itemSelected;
+
     /**
      * Конструктор
      * @param {string} name название компонента
      * @param {Element|string|Colibri.UI.Component} container 
      * @param {boolean} multiple мультивыбор 
      * @param {boolean} readonly только для чтения 
+     * @param {boolean} searchable can search in items 
      * @param {string[]|null} values значения 
      * @param {string|number|null} defaultValue значение по умолчанию 
      * @param {string} titleField название поля для отображения 
@@ -16,7 +18,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * @param {boolean} allowEmpty разрешено пустое значение
      * @param {boolean} clearIcon показать clearIcon
      */
-    constructor(name, container, multiple = false, readonly = true, values = [], defaultValue = null, titleField = 'title', valueField = 'value', groupField = null, __render = null, allowEmpty = true, clearIcon = false, canSelectGroup = false) {
+    constructor(name, container, multiple = false, readonly = true, searchable = true, values = [], defaultValue = null, titleField = 'title', valueField = 'value', groupField = null, __render = null, allowEmpty = true, clearIcon = false, canSelectGroup = false) {
         super(name, container, '<div />');
 
         this.AddClass('app-selector-component');
@@ -44,6 +46,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._element.append(this._arrow);
 
         this.readonly = readonly;
+        this.searchable = searchable;
         this.allowempty = allowEmpty;
         this.canSelectGroup = canSelectGroup;
 
@@ -154,7 +157,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                 return;
             }
             
-            this._values = this._search(this.readonly || !args.search ? '' : this._input.value);
+            this._values = this._search(this.searchable || !args.search ? '' : this._input.value);
             this._showPopup(this._values);
             
             // if(this.allowempty) {
@@ -175,7 +178,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     __Cleared(event, args) {
-        const values = this._search(this.readonly ? '' : this._input.value);
+        const values = this._search(this.searchable ? '' : this._input.value);
         this._setValue(null);
 
         if (this._popup) {
@@ -433,16 +436,39 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * Свойство только для чтения
      */
     get readonly() {
-        return !!this._input.readonly;
+        return !!this._input.enabled;
     }
     set readonly(value) {
         if(value === true || value === 'true') {
             this.AddClass('app-component-readonly');
-            this._input.readonly = true;
+            this._input.enabled = true;
         }
         else {
             this.RemoveClass('app-component-readonly');
+            this._input.enabled = false;
+        }
+    }
+
+    /**
+     * Can search in items
+     * @type {bool}
+     */
+    get searchable() {
+        return !!this._input.readonly;
+    }
+    /**
+     * Can search in items
+     * @type {bool}
+     */
+    set searchable(value) {
+        console.log(this.name, 'searchable', value);
+        if(value === true || value === 'true') {
+            this.AddClass('app-component-searchable');
             this._input.readonly = false;
+        }
+        else {
+            this.RemoveClass('app-component-searchable');
+            this._input.readonly = true;
         }
     }
 
@@ -453,10 +479,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         return this._placeholder;
     }
     set placeholder(value) {
-        if(value instanceof Object) {
-            value = value[Lang.Current];
-        }
-        this._placeholder = value;
+        this._placeholder = value ? value[Lang.Current] ?? value : '';
         this._input.placeholder = this._placeholder;
         this._renderValue(false);
     }

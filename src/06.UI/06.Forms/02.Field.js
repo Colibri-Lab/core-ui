@@ -263,7 +263,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             return;
         }
         message.shown = !!value;
-        message.value = typeof value === 'string' ? value : '';
+        message.value = value ? value[Lang.Current] ?? value : '';
     }
 
     get titleObject() {
@@ -274,7 +274,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         return this.Children(this._name + '-title').value;
     }
     set title(value) {
-        this.Children(this._name + '-title').value = value;
+        this.Children(this._name + '-title').value = value ? value[Lang.Current] ?? value : '';
         if(!value) {
             this.AddClass('-without-title');
         }
@@ -291,7 +291,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         return this._content.Children(this._name + '-note').value;
     }
     set note(value) {
-        this._content.Children(this._name + '-note').value = value;
+        this._content.Children(this._name + '-note').value = value ? value[Lang.Current] ?? value : '';
     }
 
     get contentContainer() {

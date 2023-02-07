@@ -67,7 +67,6 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     }
 
     Disconnect() {
-        console.log(this._ws);
         if(this._ws) {
             this._ws.close();
             this._ws = null;

@@ -93,7 +93,7 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
         return this._input.placeholder;
     }
     set placeholder(value) {
-        this._input.placeholder = value;//this._input._placeholder placeholder по умолчанию
+        this._input.placeholder = value ? value[Lang.Current] ?? value : '';
     }
 
     get placeholderinfo() {

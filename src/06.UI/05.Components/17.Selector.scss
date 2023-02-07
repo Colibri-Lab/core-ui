@@ -40,10 +40,15 @@
         position: relative;
     }
 
-    &.app-component-readonly {
+    input {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    &.app-component-searchable {
         input {
-            cursor: pointer;
-            user-select: none;
+            cursor: text;
+            user-select: all;
         }
     }
 

@@ -188,7 +188,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
     }
 
     set placeholder(value) {
-        this._input.attr('placeholder', value);
+        this._input.attr('placeholder', value ? value[Lang.Current] ?? value : '');
     }
 
     get value() {

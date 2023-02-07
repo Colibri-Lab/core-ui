@@ -12,7 +12,7 @@ Colibri.UI.Forms.Checkbox = class extends Colibri.UI.Forms.Field {
         this._label = new Colibri.UI.TextSpan(this._name + '-label', contentContainer);
         this._label.shown = true;
         this._label.AddClass('app-component-checkbox-label');
-        this._label.value = this._fieldData.placeholder;
+        this._label.value = this._fieldData.placeholder ? this._fieldData.placeholder[Lang.Current] ?? this._fieldData.placeholder : '';
 
         if(this._fieldData?.params?.readonly === undefined) {
             this.readonly = false;    

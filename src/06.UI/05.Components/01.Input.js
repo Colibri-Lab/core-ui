@@ -158,7 +158,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         }
     }
     set placeholder(value) {
-        this._input.attr('placeholder', value);
+        this._input.attr('placeholder', value ? value[Lang.Current] ?? value : '');
     }
 
     /**

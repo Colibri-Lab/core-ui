@@ -237,7 +237,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         return this._placeholder;
     }
     set placeholder(value) {
-        this._placeholder = value;
+        this._placeholder = value ? value[Lang.Current] ?? value : '';
         this._input.placeholder = this._placeholder;
         this._renderValue(false);
     }

@@ -98,15 +98,15 @@ Colibri.UI.Forms.Passport = class extends Colibri.UI.Forms.Field {
 
 	set placeholder(value) {
 		if(Array.isArray(value)) {
-			this._input1.attr('placeholder', value[0]);
-			this._input2.attr('placeholder', value[1]);
+			this._input1.attr('placeholder', value[0][Lang.Current] ?? value[0]);
+			this._input2.attr('placeholder', value[1][Lang.Current] ?? value[1]);
 		}
 		else if(value instanceof Object) {
-			this._input1.attr('placeholder', value.series);
-			this._input2.attr('placeholder', value.number);
+			this._input1.attr('placeholder', value.series[Lang.Current] ?? value.series);
+			this._input2.attr('placeholder', value.number[Lang.Current] ?? value.number);
 		}
 		else {
-			const place = value ? value.split(' | ') : ['', ''];
+			const place = value ? (value[Lang.Current] ?? value).split(' | ') : ['', ''];
 			this._input1.attr('placeholder', place[0]);
 			this._input2.attr('placeholder', place[1]);
 		}

@@ -172,7 +172,7 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
      * @type {string}
      */
     set placeholder(value) {
-        this._setPlaceholder(value);
+        this._setPlaceholder(value ? value[Lang.Current] ?? value : '');
     }
     
     _setPlaceholder(value) {

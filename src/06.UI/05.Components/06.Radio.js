@@ -134,7 +134,7 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
         return this._placeholder?.value;
     }
     set placeholder(value) {
-        this._setPlaceholder(value);
+        this._setPlaceholder(value ? value[Lang.Current] ?? value : '');
     }
     
     _setPlaceholder(value) {

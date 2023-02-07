@@ -61,7 +61,7 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
     }
 
     set placeholder(value) {
-        this._input1.placeholder = value;
+        this._input1.placeholder = value ? value[Lang.Current] ?? value : '';
     }
 
     get value() {

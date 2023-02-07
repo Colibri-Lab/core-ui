@@ -50,7 +50,7 @@ Colibri.UI.Forms.Bool = class extends Colibri.UI.Forms.Field {
         return this._label.html();
     }
     set title(value) {
-        this._label.html(value);
+        this._label.html(value ? value[Lang.Current] ?? value : '');
     }
 
     get readonly() {

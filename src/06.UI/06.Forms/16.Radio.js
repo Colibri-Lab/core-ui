@@ -11,7 +11,7 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
 
         const values = this._fieldData.values;
         Object.values(values).forEach((value) => {
-            contentContainer.container.append(Element.fromHtml('<label><input type="radio" name="' + this.name + '" id="' + ident + '" value="' + value.value + '" /><span>' + value.title + '</span></label>'))
+            contentContainer.container.append(Element.fromHtml('<label><input type="radio" name="' + this.name + '" id="' + ident + '" value="' + value.value + '" /><span>' + (value.title[Lang.Current] ?? value.title) + '</span></label>'))
         });
 
         contentContainer.container.querySelectorAll('input').forEach(input => input.addEventListener('click', e => {

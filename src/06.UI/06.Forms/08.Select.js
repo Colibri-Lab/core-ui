@@ -31,6 +31,12 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         else {
             this.readonly = this._fieldData?.params?.readonly;
         }
+        if(this._fieldData?.params?.searchable === undefined) {
+            this.searchable = false;    
+        }
+        else {
+            this.searchable = this._fieldData?.params?.searchable;
+        }
         if(this._fieldData?.params?.enabled === undefined) {
             this.enabled = true;
         }
@@ -214,13 +220,28 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
     }
 
     /**
+     * Can search in select items
+     * @type {bool}
+     */
+    get searchable() {
+        return this._input.searchable;
+    }
+    /**
+     * Can search in select items
+     * @type {bool}
+     */
+    set searchable(value) {
+        this._input.searchable = value;
+    }
+
+    /**
      * Замещающий текст
      */
     get placeholder() {
         return this._input.placeholder;
     }
     set placeholder(value) {
-        this._input.placeholder = value;//this._input._placeholder placeholder по умолчанию
+        this._input.placeholder = value ? value[Lang.Current] ?? value : '';//this._input._placeholder placeholder по умолчанию
     }
 
     get placeholderinfo() {
@@ -332,11 +353,13 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
     }
 
     _createSelector() {
+
         return new Colibri.UI.Selector(
             'input',
             this.contentContainer,
             this._fieldData.multiple ?? this._fieldData?.params?.multiple ?? false,
-            this._fieldData.readonly,
+            this._fieldData.params?.readonly ?? false,
+            this._fieldData.params?.searchable ?? false,
             this._fieldData.values,
             this._fieldData.default,
             this._fieldData.selector?.title ?? 'title',

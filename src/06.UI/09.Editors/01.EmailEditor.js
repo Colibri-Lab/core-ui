@@ -40,7 +40,7 @@ Colibri.UI.EmailEditor = class extends Colibri.UI.Editor {
     }
 
     set placeholder(value) {
-        this._element.attr('placeholder', value);
+        this._element.attr('placeholder', value ? value[Lang.Current] ?? value : '');
     }
 
     get value() {

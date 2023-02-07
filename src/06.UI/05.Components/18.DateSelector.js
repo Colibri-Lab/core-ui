@@ -163,7 +163,7 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
     }
 
     set placeholder(value) {
-        this._viewElement.attr('placeholder', value);
+        this._viewElement.attr('placeholder', value ? value[Lang.Current] ?? value : '');
     }
 
     get placeholder() {

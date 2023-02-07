@@ -85,7 +85,7 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
     }
 
     set placeholder(value) {
-        this._colorHex.attr('placeholder', value);
+        this._colorHex.attr('placeholder', value ? value[Lang.Current] ?? value : '');
     }
 
     get value() {
