@@ -1738,7 +1738,11 @@ function DownloadFile(data, filename, mime, isBase = true) {
     document.body.removeChild(a);
 };
 
-function DownloadUrl(url, filename, target = '_self') {
+function DownloadUrl(url, filename = null, target = '_self') {
+    if(!filename) {
+        const pi = url.pathinfo();
+        filename = pi.basename;
+    }
     var a = Element.create('a', { href: url, download: filename, target: target });
     document.body.append(a);
     a.click();
