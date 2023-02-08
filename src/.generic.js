@@ -1738,6 +1738,12 @@ function DownloadFile(data, filename, mime, isBase = true) {
     document.body.removeChild(a);
 };
 
+function DownloadUrl(url, filename, target = '_self') {
+    var a = Element.create('a', { href: url, download: filename, target: target });
+    document.body.append(a);
+    a.click();
+    document.body.removeChild(a);
+};
 
 function DownloadFileByPath(path, filename) {
     if (!DownloadOnDevice(path, filename)) {
