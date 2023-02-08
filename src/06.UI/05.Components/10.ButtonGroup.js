@@ -47,7 +47,7 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
             return this.Children(name);
         }
         const button = new Colibri.UI.Button(name, this);
-        button.value = title;
+        button.value = (title[Lang.Current] ?? title);
         button.shown = true;
         button.AddHandler('Clicked', (event, args) => {
             this.SelectButton(button);

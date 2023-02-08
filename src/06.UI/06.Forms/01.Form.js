@@ -276,6 +276,8 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         
         let hasGroups = false;
         Object.forEach(this._fields, (name, fieldData) => {
+            fieldData = Object.cloneRecursive(fieldData);
+            fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group;
             if(!fieldData.group || fieldData.group === 'window') {
                 this._renderField(name, fieldData, value, true);
             }
@@ -289,6 +291,8 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             groups = new Colibri.UI.ButtonGroup('groups', this);
             groups.shown = true;
             Object.forEach(this._fields,(name, fieldData) => {
+                fieldData = Object.cloneRecursive(fieldData);
+                fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group;
                 if(fieldData.group && fieldData.group !== 'window') {
                     groups.AddButton(fieldData.group, fieldData.group);
                 }
@@ -296,6 +300,8 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             groups.AddHandler('Changed', (event, args) => {
                 const groupName = args.button.name;
                 Object.forEach(this._fields, (name, fieldData) => {
+                    fieldData = Object.cloneRecursive(fieldData);
+                    fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group;
                     if(fieldData.group !== 'window') {
                         if(fieldData.group === groupName) {
                             this.Children(name).shown = true;
@@ -309,6 +315,8 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         }
         
         Object.forEach(this._fields, (name, fieldData) => {
+            fieldData = Object.cloneRecursive(fieldData);
+            fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group;
             if(fieldData.group && fieldData.group !== 'window') {
                 this._renderField(name, fieldData, value, false);
             }
