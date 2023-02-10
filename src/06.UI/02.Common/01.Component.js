@@ -1091,7 +1091,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             shadow.css({zIndex: zIndex});
             shadow.addEventListener('click', (e) => { this.Dispatch('ShadowClicked', {domEvent: e}) });
             shadow.addEventListener('contextmenu', (e) => { this.Dispatch('ShadowClicked', {domEvent: e}); e.stopPropagation(); e.preventDefault(); e.cancelBubble = true; return false; });
-            shadow.after(this._element);
+            this._element.after(shadow);
         }
         else {
             const shadow = this._element.next();
