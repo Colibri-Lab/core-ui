@@ -1487,10 +1487,10 @@ Element.prototype.prepend = function (child) {
  * @param {HTMLElement} element элемент
  */
 Element.prototype.after = function (element) {
-    if (element.nextElementSibling) {
-        element.parentElement.insertBefore(this, element.nextElementSibling);
+    if (this.nextElementSibling) {
+        this.parentElement.insertBefore(element, this.nextElementSibling);
     } else {
-        element.parentElement.appendChild(this);
+        this.parentElement.appendChild(element);
     }
     return this;
 };
@@ -1624,6 +1624,16 @@ Element.prototype.bounds = function (includeBorders = false, includeMargin = fal
 
     return position;
 
+};
+
+Element.prototype.offset = function() { return this.bounds(); };
+Element.prototype.position = function() {
+    const bounds = this.bounds();
+    return {left: bounds.left, top: bounds.top};
+};
+
+Element.prototype.index = function() {
+    return Array.prototype.indexOf.call(this.parentElement.childNodes, this);
 };
 
 /**
