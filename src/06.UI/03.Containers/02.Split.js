@@ -102,10 +102,10 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
 
     get container() {
         if(this.children == 0) {
-            return this._element.querySelector('.app-component-split-left');
+            return this._element.querySelector(':scope > .app-component-split-left');
         }
         else {
-            return this._element.querySelector('.app-component-split-right');
+            return this._element.querySelector(':scope > .app-component-split-right');
         }
     }
 
