@@ -1632,9 +1632,9 @@ Element.prototype.position = function() {
     return {left: bounds.left, top: bounds.top};
 };
 
-Element.prototype.index = function() {
-    return Array.prototype.indexOf.call(this.parentElement.childNodes, this);
-};
+// Element.prototype.index = function() {
+//     return Array.prototype.indexOf.call(this.parentElement.childNodes, this);
+// };
 
 /**
  * Устанавливает или возвращает содержание в виде HTML
