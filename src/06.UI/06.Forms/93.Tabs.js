@@ -6,7 +6,10 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         this._tabs = new Colibri.UI.Tabs('tabs', this.contentContainer);
         this._tabs.shown = true;
 
-        this._tabs.AddHandler('SelectionChanged', (event, args) => this.Dispatch('TabChanged', args));
+        this._tabs.AddHandler('SelectionChanged', (event, args) => {
+            console.log(args);
+            this.Dispatch('TabChanged', args);
+        });
 
         this._renderFields();
         this._hideAndShow();

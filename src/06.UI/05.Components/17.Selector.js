@@ -103,7 +103,14 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._input.AddHandler('Cleared', (event, args) => this.__Cleared(event, args));
         this._input.AddHandler('Clicked', (event, args) => this.__Clicked(event, args));
 
-        this._arrow.addEventListener('click', (e) => { this.Focus(); return false; });
+
+        this._arrow.addEventListener('click', (e) => { 
+            this.Focus();
+            if(this.enabled) {
+                this.__Filled(null, {search: false});
+            }
+            return false; 
+        });
 
         this._input.AddHandler('LoosedFocus', (event, args) => {
             if(!this._skipLooseFocus) {
@@ -120,20 +127,23 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                 if(args.domEvent.code === 'Escape') {
                     this._hidePopup();
                 }
-                // else if(args.domEvent.code === 'Space') {
-                //     this.Focus();
-                // }
+                else if(args.domEvent.code === 'Space') {
+                    if(this.enabled) {
+                        this.__Filled(null, {search: false});
+                    }
+                }
                 else if(args.domEvent.code === 'ArrowUp') {
                     if(!this._popup) {
                         this.Focus();
                     }
-                    this.__moveSelection(-1);
+                    try { this.__moveSelection(-1); } catch(e) {}
                 }
                 else if(args.domEvent.code === 'ArrowDown') {
                     if(!this._popup) {
                         this.Focus();
                     }
-                    this.__moveSelection(1);
+                    try { this.__moveSelection(1); } catch(e) {}
+                    
                 }
                 else if(args.domEvent.code === 'Enter') {
                     this._popup.Dispatch('Clicked', {domEvent: args.domEvent});
@@ -197,6 +207,9 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
     __Clicked(event, args) { 
         this.Focus();
+        if(this.enabled) {
+            this.__Filled(null, {search: false});
+        }    
         args.domEvent.stopPropagation();
         args.domEvent.preventDefault();
         return false;
@@ -421,10 +434,6 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      */
     Focus() {
         this._input.Focus();
-        if(this.enabled) {
-            this.__Filled(null, {search: false});
-            // this._showPopup(this._search());
-        }
     }
 
     HaveValues() {
