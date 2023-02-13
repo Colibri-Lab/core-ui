@@ -214,6 +214,12 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
             
             const fieldComponent = this.contentContainer.Children(name);
             if(fieldComponent && fieldData.params && fieldData.params.condition) {
+
+                if(fieldData?.params?.fieldgenerator) {
+                    const gen = eval(fieldData.params.fieldgenerator);
+                    gen(fieldData);
+                } 
+                
                 const condition = fieldData.params.condition;
                 if(condition.field) {        
                     const type = condition?.type == 'disable' ? 'enabled' : 'shown';            

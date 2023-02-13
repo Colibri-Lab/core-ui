@@ -149,6 +149,10 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
             }
             
             const fieldComponent = this.contentContainer.Children(name);
+            if(fieldData?.params?.fieldgenerator) {
+                const gen = eval(fieldData.params.fieldgenerator);
+                gen(fieldData);
+            } 
             if(fieldComponent && fieldData.params && fieldData.params.condition) {
                 const condition = fieldData.params.condition;
                 if(condition.field) {        
