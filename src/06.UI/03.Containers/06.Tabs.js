@@ -46,12 +46,8 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         });
 
         this.AddHandler('TabClicked', (event, args) => {
-            
-            const newIndex = args.tab.index;
-
+            const newIndex = args.tab.childIndex;
             this._selectTab(newIndex);
-
-
         });
     }
 
@@ -146,7 +142,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     }
 
     get selectedIndex() {
-        return this.header.querySelector('.tab-selected') ? this.header.querySelector('.tab-selected').index() : null;
+        return this.header.querySelector('.tab-selected') ? this.header.querySelector('.tab-selected').tag('component').childIndex : null;
     }
 
     set selectedIndex(value) {
