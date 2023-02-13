@@ -28,8 +28,6 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
         this._current = value;
     }
 
-    _convertRouteTo
-
     __appRouteChanged(event, args) {
         if(args.url.substring(0, this._current.length) === this._current) {
             this.ForEach((name, component) => {
