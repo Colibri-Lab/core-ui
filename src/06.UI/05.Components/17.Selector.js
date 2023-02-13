@@ -461,7 +461,6 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * @type {bool}
      */
     set searchable(value) {
-        console.log(this.name, 'searchable', value);
         if(value === true || value === 'true') {
             this.AddClass('app-component-searchable');
             this._input.readonly = false;
