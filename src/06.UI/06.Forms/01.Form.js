@@ -46,6 +46,12 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
         Object.forEach(this._fields, (name, fieldData) => {
             const fieldComponent = this.Children(name);
+
+            if(fieldData?.params?.fieldgenerator) {
+                const gen = eval(fieldData.params.fieldgenerator);
+                gen(fieldData);
+            } 
+
             if(fieldData.params && fieldData.params.condition) {
                 const condition = fieldData.params.condition;
                 if(condition.field) {
