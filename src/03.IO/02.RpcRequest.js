@@ -102,7 +102,7 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
             }).catch((data) => {
                 delete this._workingRequests[requestKeyword];
 
-                this.Dispatch('CallError', {error: data.result});
+                this.Dispatch('CallError', {error: data.result, status: data.status});
                 reject(data);
             });
         });
