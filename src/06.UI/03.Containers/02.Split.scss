@@ -17,7 +17,7 @@
 
     &.app-component-split-horizontal {
         flex-direction: row;
-        .app-component-split-handler {
+        > .app-component-split-handler {
             width: 10px;
             justify-self: stretch; 
             flex: 0 0 10px; 
@@ -28,7 +28,7 @@
     }
     &.app-component-split-vertical {
         flex-direction: column;
-        .app-component-split-handler {
+        > .app-component-split-handler {
             height: 10px;
             justify-self: stretch; 
             flex: 0 0 10px; 
@@ -38,14 +38,14 @@
         }    
     }
 
-    .app-component-split-left {
+    > .app-component-split-left {
         flex: 0 0 200px;
         >* {
             width: 100%;
             height: 100%;
         }
     }
-    .app-component-split-right {
+    > .app-component-split-right {
         flex: 1 1 100%;
         >* {
             width: 100%;
