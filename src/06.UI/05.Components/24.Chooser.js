@@ -174,6 +174,25 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         return this._multiple;
     }
 
+    /**
+     * Shows open button
+     * @type {bool}
+     */
+    get openButton() {
+        return this._openButton;
+    }
+    /**
+     * Shows open button
+     * @type {bool}
+     */
+    set openButton(value) {
+        this._openButton = value;
+        this._showOpenButton();
+    }
+    _showOpenButton() {
+        this._arrow.css('display', this._openButton ? 'block' : 'none');
+    }
+
 
     /**
      * Установить выбранное значение
@@ -212,7 +231,6 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         this._input.Focus();
     }
 
-
     /**
      * Свойство только для чтения
      */
@@ -240,21 +258,6 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         this._placeholder = value ? value[Lang.Current] ?? value : '';
         this._input.placeholder = this._placeholder;
         this._renderValue(false);
-    }
-
-    get placeholderinfo() {
-        return this._placeholderinfo;
-    }
-    set placeholderinfo(value) {
-        this._placeholderinfo = value;
-        this._renderValue(false);
-    }
-
-    get placeholderempty() {
-        return this._placeholderempty;
-    }
-    set placeholderempty(value) {
-        this._placeholderempty = value;
     }
 
     /**
