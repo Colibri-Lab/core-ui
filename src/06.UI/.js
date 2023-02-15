@@ -56,7 +56,6 @@ Colibri.UI = class {
                 var res = hex_md5(c); 
                 if(!document.querySelector('#res' + res)) { 
                     loading++;
-                    //document.body.append(Element.fromHtml('<link id="res' + res + '" rel="stylesheet" href="' + c + '" type="text/css" />')); 
                     const style = document.createElement('link');
                     style.id = 'res' + res;
                     style.type = 'text/css';
@@ -73,7 +72,6 @@ Colibri.UI = class {
                 var res = hex_md5(j); 
                 if(!document.querySelector('#res' + res)) { 
                     loading++;
-                    // document.body.append(Element.fromHtml('<script type="text/javascript" id="res' + res + '" src="' + j + '"></script>')); 
                     const script = document.createElement('script');
                     script.id = 'res' + res;
                     script.src = j;

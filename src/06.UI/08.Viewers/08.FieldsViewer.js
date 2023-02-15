@@ -37,7 +37,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
 
     set value(value) {
         this._value = value;
-        this._createFields();
+        this._updateFields();
     }
 
     get root() {
@@ -68,7 +68,9 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
 
         let isHidden = false;
         Object.forEach(fields, (name, field) => {
-            isHidden = field?.params?.fieldsviewer && field?.params?.fieldsviewer.hidden;
+            if(field?.params?.fieldsviewer && field?.params?.fieldsviewer.hidden === true) {
+                isHidden = true;
+            }
         });
 
         if(isHidden) {
@@ -185,6 +187,30 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
 
         });
 
+
+    }
+
+    _updateFields(fields = null, value = null, contentElement = null, showTitles = true) {
+        const root = this.root || this;
+        contentElement = contentElement || this;
+        fields = fields || this._fields;
+        value = value || this._value;
+
+        if(Object.countKeys(value) === 0 || Object.countKeys(fields) === 0) {
+            return;
+        }
+        
+        if(contentElement.children < 4) {
+            this._createFields(fields, value, contentElement, showTitles);
+        }
+        else {
+            Object.forEach(fields, (name, field) => {
+                const component = this.FindByName(name + '-viewer');
+                if(component) {
+                    component.value = value[name] ?? null;
+                }
+            });
+        }
 
     }
 
