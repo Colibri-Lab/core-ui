@@ -1,12 +1,19 @@
 Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
 
     constructor(name, container, element) {
-        super(name, container, Colibri.UI.Templates['Colibri.UI.Widget']);
+        super(name, container);
         this.AddClass('app-component-widget');
         // default
-        this.direction = Colibri.UI.FlexBox.Vertically;
+        
+        this._closeButton = new Colibri.UI.Button('widget-close-button', this);
+        this._header = Element.fromHtml('<div class="widget-header"></div>');
+        this._container = Element.fromHtml('<div class="widget-container"></div>');
+        this._footer = Element.fromHtml('<div class="widget-footer"></div>');
 
-        this.GenerateChildren(element);
+
+        this._element.append(this._header);
+        this._element.append(this._container);
+        this._element.append(this._footer);
 
         this._handlerEvents();
     }
@@ -18,15 +25,15 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
     }
 
     get header() {
-        return this._element.querySelector('.widget-header');
+        return this._header;
     }
 
     get container() {
-        return this._element.querySelector('.widget-container');
+        return this._container;
     }
 
     get footer() {
-        return this._element.querySelector('.widget-footer');
+        return this._footer;
     }
 
     get closable() {
