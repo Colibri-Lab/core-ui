@@ -30,4 +30,12 @@
 
     }
 
+    .app-component-link {
+        &.app-component-shown {
+            display: flex !important;
+        }
+        align-items: center;
+        gap: 5px;
+    }
+
 }

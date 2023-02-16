@@ -80,8 +80,8 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
             this._hidden.shown = false;
             this._hiddenLink1.shown = true;
             this._hiddenLink2.shown = false;
-            this._hiddenLink1.value = '<svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 9L9.5 13L15 9" stroke="#0074FF" stroke-width="1.7" stroke-linecap="round"/></svg>&nbsp;#{ui-viewers-fields-expand}';
-            this._hiddenLink2.value = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.25 9.5L7 4.5L0.75 9.5" stroke="#0074FF" stroke-width="1.5" stroke-linecap="round"/></svg>&nbsp;#{ui-viewers-fields-collapse}';
+            this._hiddenLink1.value = Colibri.UI.SortAscIcon + '&nbsp;#{ui-viewers-fields-expand}';
+            this._hiddenLink2.value = Colibri.UI.SortDescIcon + '&nbsp;#{ui-viewers-fields-collapse}';
 
             this._hiddenLink1.AddHandler('Clicked', (event, args) => this.__toggleHidden(event, args));
             this._hiddenLink2.AddHandler('Clicked', (event, args) => this.__toggleHidden(event, args));
