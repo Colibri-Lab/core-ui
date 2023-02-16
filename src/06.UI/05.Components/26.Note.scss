@@ -1,0 +1,40 @@
+.app-component-note {
+    &.app-component-shown {
+        display: flex;
+    }
+
+    width: 525px;
+    &.-large {    
+        width: 726px;
+    }
+    padding: 20px; 
+
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 18px;
+    
+    align-items: center;
+    border-radius: 10px;
+
+    &.-warning {
+        background: #FFFBEA;
+        color: #EA5A00;
+    }
+
+    &.-red {
+        background: #FFEFEA;
+        color: #C90000;
+    }
+
+    &.-violet {
+        background: #F5E9FF;
+        color: #770EC8;
+    }
+
+    &.-simple {
+        background: transparent;
+        color: #0B1F35;
+        padding: 0px; 
+    }
+}
