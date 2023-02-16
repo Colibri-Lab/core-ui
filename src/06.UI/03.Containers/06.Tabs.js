@@ -109,7 +109,6 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         container.shown = true;
         container.AddClass('tab-selected');
 
-        console.log(currentSelection, newIndex);
         if(currentSelection != newIndex) {
             this.Dispatch('SelectionChanged', {newIndex: newIndex, oldIndex: currentSelection, tab: button});
         }

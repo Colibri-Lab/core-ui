@@ -24,6 +24,13 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
             });
         });
 
+        this.handleVisibilityChange = true;
+        this.AddHandler('VisibilityChanged', (event, args) => {
+            if(args.state === true) {
+                this._generateChart();
+            }
+        });
+
         this.AddHandler('GoogleChartsLoaded', (event, args) => this.__thisGoogleChartsLoaded(event, args));
 
     }
