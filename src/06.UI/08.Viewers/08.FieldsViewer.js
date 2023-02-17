@@ -80,8 +80,8 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
             this._hidden.shown = false;
             this._hiddenLink1.shown = true;
             this._hiddenLink2.shown = false;
-            this._hiddenLink1.value = Colibri.UI.SortAscIcon + '&nbsp;#{ui-viewers-fields-expand}';
-            this._hiddenLink2.value = Colibri.UI.SortDescIcon + '&nbsp;#{ui-viewers-fields-collapse}';
+            this._hiddenLink1.value = Colibri.UI.SortDescIcon + '&nbsp;#{ui-viewers-fields-expand}';
+            this._hiddenLink2.value = Colibri.UI.SortAscIcon + '&nbsp;#{ui-viewers-fields-collapse}';
 
             this._hiddenLink1.AddHandler('Clicked', (event, args) => this.__toggleHidden(event, args));
             this._hiddenLink2.AddHandler('Clicked', (event, args) => this.__toggleHidden(event, args));
