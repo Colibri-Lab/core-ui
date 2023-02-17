@@ -64,7 +64,6 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
             title: this._title,
             legend: 'none'
         };
-        console.log(this._value);
         const data = google.visualization.arrayToDataTable(this._value);
         this._chart.draw(data, options);
     }
