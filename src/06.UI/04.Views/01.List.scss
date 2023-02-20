@@ -2,31 +2,9 @@
     width: 100%;
     border-bottom-left-radius: 3px;
     overflow: auto;
-    @include custom-scroll($scrollbar-size, $scrollbar-track-color, $scrollbar-thumb-color, $scrollbar-thumb-hover-color);
 
     padding-bottom: 10px;
     
-    &::-webkit-scrollbar {
-        width: 4px;
-        height: 4px;
-        border: 0px
-    }
-
-    &::-webkit-scrollbar-track {
-        background: #fff;
-        border: 0px
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background: #b5b5b5;
-        border: 0px
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-        background: #909090;
-        border: 0px
-    }
-
     .app-component-list-group {
 
         //transition: height 500ms ease-in-out;
