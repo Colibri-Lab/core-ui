@@ -220,7 +220,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      * @param {bool} value
      */
     set multiple(value) {
-        this._multiple = value;
+        this._multiple = value === 'true' || value === true;
     }
 
     /**
@@ -925,8 +925,9 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this.RegisterEvent('CheckChanged', false, 'Поднимается, когда изменяется выбор галочек');
 
         this.RegisterEvent('ScrolledToBottom', false, 'Поднимается, когда грид доскролили до конца');
-        this.RegisterEvent('VerticalAlignChanged', false, 'Изменилась вертикальная ориентация колонки')
 
+        this.RegisterEvent('ColumnVerticalAlignChanged', false, 'Изменилась вертикальная ориентация колонки')
+        this.RegisterEvent('ColumnHorizontalAlignChanged', false, 'Изменилась горизонтальная ориентация колонки')
         this.RegisterEvent('ColumnClicked', false, 'Поднимается, когда щелкнули по колонке в заголовке');
         this.RegisterEvent('ColumnStickyChange', false, 'Поднимается, когда колонка меняет липкость');
         this.RegisterEvent('ColumnDisposed', false, 'Поднимается, когда удаляют колонку');

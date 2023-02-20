@@ -26,7 +26,8 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         this._viewerObject = null;
         this._createViewer();
         this._createEditor();
-        this.align = this._parentColumn.align;
+        this.valign = this._parentColumn.valign;
+        this.halign = this._parentColumn.halign;
 
         this._handleEvents();
         if(this._parentColumn.editorAllways) {
@@ -229,11 +230,17 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         }
     }
 
-    get align() {
+    get valign() {
         return this._element.css('vertical-align');
     }
-    set align(value) {
+    set valign(value) {
         this._element.css('vertical-align', value || 'middle');
+    }
+    get halign() {
+        return this._element.css('text-align');
+    }
+    set halign(value) {
+        this._element.css('text-align', value || 'left');
     }
 
     get contextmenu() {

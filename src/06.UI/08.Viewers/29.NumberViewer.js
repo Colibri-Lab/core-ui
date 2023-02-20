@@ -22,6 +22,9 @@ Colibri.UI.NumberViewer = class extends Colibri.UI.Viewer {
             v = formatter.format(parseFloat(v));
             // v = parseFloat(v).toMoney(this.field?.params?.decimal ?? 2);
         }
+        else if(this.field?.params?.format === 'bytes') {
+            v = parseFloat(v).toSizeString(['bytes', 'Kb', 'Mb', 'Gb'], 1024);            
+        }
         else {
             if(this.field?.params?.decimal) {
                 v = parseFloat(v).toMoney(this.field?.params?.decimal ?? 2);

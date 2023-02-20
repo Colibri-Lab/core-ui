@@ -216,12 +216,20 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         this.grid.Dispatch('ColumnViewerChanged', {column: this});
     }
 
-    get align() {
-        return this._align;
+    get valign() {
+        return this._valign;
     }
-    set align(value) {
-        this._align = value;
+    set valign(value) {
+        this._valign = value;
         this.grid.Dispatch('ColumnVerticalAlignChanged', {column: this});
+    }
+
+    get halign() {
+        return this._halign;
+    }
+    set halign(value) {
+        this._halign = value;
+        this.grid.Dispatch('ColumnHorizontalAlignChanged', {column: this});
     }
 
     set editorAllways(value) {

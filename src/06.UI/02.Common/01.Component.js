@@ -568,6 +568,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return this._element;
     }
 
+    get mainElement() {
+        return this._element;
+    }
+
     /**
      * Конрейнер родителя
      * @type {Element}
@@ -1018,7 +1022,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @param {number} [index] индекс в массиве, куда вставить элемент
      * @returns {Colibri.UI.Component[]}
      */
-    Children(name, val = undefined, index = undefined, container = null) {
+    Children(name, val = undefined, index = undefined, container = null, childContainer = null) {
         
         if (name === undefined)
             return this._children;
@@ -1046,7 +1050,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             childIndex !== -1 && this._children.splice(childIndex, 1);
             if (index != undefined && index < this.children && index >= 0) {
                 this._children.splice(index, 0, val);
-                this._moveInDom(val.container, container || this.container, index);
+                this._moveInDom(childContainer || val.container, container || this.container, index);
             } else {
                 this._children.push(val);
             }
