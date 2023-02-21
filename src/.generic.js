@@ -1180,7 +1180,7 @@ Date.prototype.DiffInMonths = function (dateTo) {
         (12 * (dateTo.getFullYear() - this.getFullYear()))
 };
 Date.prototype.DiffInDays = function (dateTo) {
-    return this.Diff(dateTo) / 86400;
+    return Math.ceil(this.Diff(dateTo) / 86400);
 };
 Date.prototype.Age = function (removeNazad = false, returnFull = false) {
     let time = Math.abs((new Date()).getTime() / 1000 - this.getTime() / 1000); // to get the time since that moment

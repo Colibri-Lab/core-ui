@@ -182,6 +182,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                     viewer.value = value[name];
                     viewer.AddHandler('Changed', (event, args) => this.Dispatch('EditorChanged', {domEvent: args.domEvent, editor: viewer, field: field, name: name}));
                 }
+
     
             }
 
