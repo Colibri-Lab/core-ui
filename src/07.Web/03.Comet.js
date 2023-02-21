@@ -47,7 +47,6 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     _initConnection() {
         this._ws && this._ws.close();
-        console.log('wss://' + this._settings.host + ':' + this._settings.port + '/client/' + this._clientId);
         this._ws = new WebSocket('wss://' + this._settings.host + ':' + this._settings.port + '/client/' + this._clientId);
         this._ws.onopen = () => this.__onCometOpened();
         this._ws.onmessage = (message) => this.__onCometMessage(message);
