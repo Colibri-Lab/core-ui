@@ -10,6 +10,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     _ws = null;
     _connected = false;
     _user = null;
+    _clientId = null;
 
     /**
      * Создает обьект
@@ -17,6 +18,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     constructor(settings) {
         super();
         
+        this._clientId = this._generateDeviceId();
         this._settings = settings;
         this.RegisterEvent('MessageReceived', false, 'Когда получили новое сообщение');
         this.RegisterEvent('MessagesMarkedAsRead', false, 'Когда сообщения помечены как прочтенные');
@@ -34,8 +36,19 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    _generateDeviceId() {
+        let deviceId = App.Browser.Get('device-id');
+        if(!deviceId) {
+            deviceId = String.MD5(Date.Mc() + '');
+            App.Browser.Set('device-id', deviceId);
+        }
+        return deviceId;
+    }
+
     _initConnection() {
-        this._ws = new WebSocket('wss://' + this._settings.host + ':' + this._settings.port);
+        this._ws && this._ws.close();
+        console.log('wss://' + this._settings.host + ':' + this._settings.port + '/client/' + this._clientId);
+        this._ws = new WebSocket('wss://' + this._settings.host + ':' + this._settings.port + '/client/' + this._clientId);
         this._ws.onopen = () => this.__onCometOpened();
         this._ws.onmessage = (message) => this.__onCometMessage(message);
         this._ws.onerror = error => this.__onCometError(error);
