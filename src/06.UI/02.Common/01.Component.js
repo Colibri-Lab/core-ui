@@ -1081,7 +1081,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     set hasShadow(value) {
         if(value) {
 
-            if(!this._element.css('z-index')) {
+            if(typeof this._element.css('z-index') === 'string') {
                 this._element.css('z-index', Colibri.UI.zIndex() + 1);
             }
 
@@ -1092,9 +1092,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
             const zIndex = this._element.css('z-index') - 1;
             shadow = Element.create('div', {class: 'app-component-shadow-div'});
-            shadow.css({zIndex: zIndex});
-            shadow.addEventListener('click', (e) => { this.Dispatch('ShadowClicked', {domEvent: e}) });
-            shadow.addEventListener('contextmenu', (e) => { this.Dispatch('ShadowClicked', {domEvent: e}); e.stopPropagation(); e.preventDefault(); e.cancelBubble = true; return false; });
+            shadow.css('z-index', zIndex);
+            shadow.addEventListener('click', (e) => { this.Dispatch('ShadowClicked', {domEvent: e}); e.stopPropagation(); e.preventDefault(); return false; });
+            shadow.addEventListener('contextmenu', (e) => { this.Dispatch('ShadowClicked', {domEvent: e}); e.stopPropagation(); e.preventDefault(); return false; });
             this._element.after(shadow);
         }
         else {

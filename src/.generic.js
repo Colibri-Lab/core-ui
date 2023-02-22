@@ -1483,13 +1483,13 @@ Element.prototype.prepend = function (child) {
 };
 
 /**
- * Запихивает заданный элемент в прямо за текущим элементом
+ * Запихивает заданный элемент прямо за текущим элементом
  * @param {HTMLElement} element элемент
  */
 Element.prototype.after = function (element) {
-    if (this.nextElementSibling) {
+    if (this.nextElementSibling && this.parentElement) {
         this.parentElement.insertBefore(element, this.nextElementSibling);
-    } else {
+    } else if(this.parentElement) {
         this.parentElement.appendChild(element);
     }
     return this;
@@ -1692,7 +1692,7 @@ Element.prototype.clone = function (ns) {
 
 };
 
-Element.prototype.hideShowProcess = function (callback, timeout = 50) {
+Element.prototype.hideShowProcess = function (callback, timeout = 5) {
     this.css('visibility', 'hidden');
     document.body.css('overflow', 'hidden');
     Colibri.Common.Delay(timeout).then(() => {

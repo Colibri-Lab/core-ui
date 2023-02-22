@@ -13,23 +13,47 @@ Colibri.UI = class {
      */
     static tabIndex = 1;
 
+    static maxZIndex = 0;
+
+    static _getZIndex(elements = null) {
+        return (elements ?? [...document.querySelectorAll('body *')]).reduce((accumulator, current_value) => {
+            current_value = +getComputedStyle(current_value).zIndex;
+            if (current_value === current_value) {
+                return Math.max(accumulator, current_value) 
+            }
+            return accumulator;
+        }, 0);
+    }
+
+    static registerObserver() {
+
+        // fixing start max z-index 
+        Colibri.UI.maxZIndex = Colibri.UI._getZIndex();
+        Colibri.Common.StartTimer('z-index-timer', 10000, () => {
+            Colibri.UI.maxZIndex = Colibri.UI._getZIndex();
+            console.log(Colibri.UI.maxZIndex);
+        });
+
+        new MutationObserver((mutationList, observer) => {
+            let elements = [];
+            for(const mut of mutationList) {
+                elements.push(mut.target);
+            }
+            Colibri.UI.maxZIndex = Math.max(Colibri.UI.maxZIndex, Colibri.UI._getZIndex(elements));
+        }).observe(document.body, {
+            attributes: true, 
+            attributeFilter: ['style', 'class'], 
+            childList: true,
+            subtree: true
+        });
+    }
+
     /**
      * Возвращает самый высокий z-index на странице
      * @returns number
      */
-    static zIndex(selector = 'body *') {
-        return [...document.querySelectorAll(selector)].reduce((accumulator, current_value) => {
-            current_value = +getComputedStyle(current_value).zIndex;
-            if (current_value === current_value) {
-              return Math.max(accumulator, current_value) 
-            }
-            return accumulator;
-        }, 0);
-        // return Array.from(typeof selector === 'string' ? document.querySelectorAll(selector) : selector.querySelectorAll('*'))
-        //     .map(a => parseFloat(window.getComputedStyle(a).zIndex))
-        //     .filter(a => !isNaN(a))
-        //     .sort((a, b) => a - b)
-        //     .pop();
+    static zIndex() {
+        return Colibri.UI.maxZIndex; 
     }
 
     /**
@@ -92,3 +116,5 @@ Colibri.UI = class {
 
 
 }
+
+Colibri.UI.registerObserver();
