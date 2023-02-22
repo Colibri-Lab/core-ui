@@ -3,18 +3,16 @@
  */
 Colibri.UI = class {
 
-    /**
-     * Указывает изменяется ли в текущий момент размер какого либо обьекта
-     */
+    /** Resizing indicator */
     static Resizing = false;
 
-    /**
-     * Таб индекс элемента
-     */
+    /** Maximum tab index fo elements */
     static tabIndex = 1;
 
+    /** Maximum of z-index css property */
     static maxZIndex = 0;
 
+    /** Private max z-index calculator */
     static _getZIndex(elements = null) {
         return (elements ?? [...document.querySelectorAll('body *')]).reduce((accumulator, current_value) => {
             current_value = +getComputedStyle(current_value).zIndex;
@@ -25,15 +23,13 @@ Colibri.UI = class {
         }, 0);
     }
 
-    static registerObserver() {
-
+    /** Registers mutation observer for calculating current maximum of z-index */
+    static registerMutationObserver() {
         // fixing start max z-index 
         Colibri.UI.maxZIndex = Colibri.UI._getZIndex();
         Colibri.Common.StartTimer('z-index-timer', 10000, () => {
             Colibri.UI.maxZIndex = Colibri.UI._getZIndex();
-            console.log(Colibri.UI.maxZIndex);
         });
-
         new MutationObserver((mutationList, observer) => {
             let elements = [];
             for(const mut of mutationList) {
@@ -48,18 +44,12 @@ Colibri.UI = class {
         });
     }
 
-    /**
-     * Возвращает самый высокий z-index на странице
-     * @returns number
-     */
-    static zIndex() {
-        return Colibri.UI.maxZIndex; 
-    }
 
     /**
-     * Находит компонент по пути (имя/имя/имя/имя...) на странице
-     * @param {string} componentPath путь к компоненту, например: имя/имя/имя
-     * @returns Colibri.UI.Component компонент или наследники
+     * Search for the component by path in document or given parent
+     * @param {string} componentPath path for searching
+     * @param {Colibri.UI.Component} parent search component within given parent component
+     * @returns {Colibri.UI.Component}
      */
     static Find(componentPath, parent = null) {
         const path = componentPath.split('/');
@@ -71,6 +61,12 @@ Colibri.UI = class {
         return component.tag('component') || null;
     }
 
+    /**
+     * Loads css and javascripts and fires a promise
+     * @param {Array<string>} css string array of css files
+     * @param {Array<string>} js string array of js files 
+     * @returns Promise
+     */
     static Require(css, js) { 
         return new Promise((resolve, reject) => {
 
@@ -117,4 +113,4 @@ Colibri.UI = class {
 
 }
 
-Colibri.UI.registerObserver();
+Colibri.UI.registerMutationObserver();

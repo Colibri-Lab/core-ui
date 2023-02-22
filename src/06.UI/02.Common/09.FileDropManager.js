@@ -59,7 +59,7 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
         this._dropContainer.addEventListener('dragover', (e) => {
             console.log('dragging start');
             this._dropContainer.classList.add('-dragging');
-            this._dropHover.css({zIndex: Colibri.UI.zIndex() + 1});
+            this._dropHover.css({zIndex: Colibri.UI.maxZIndex + 1});
             e.stopPropagation();
             e.preventDefault();
             return false;

@@ -157,7 +157,7 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
             this._viewElement.classList.add('ui-hidden');
             this._hiddenElement.classList.remove('ui-hidden');
             this._hiddenElement.css('position', 'relative');
-            this._hiddenElement.css('z-index', Colibri.UI.zIndex() + 1);
+            this._hiddenElement.css('z-index', Colibri.UI.maxZIndex + 1);
         }
 
     }

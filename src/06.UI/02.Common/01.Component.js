@@ -872,7 +872,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     BringToFront() {
         const position = this._element.css('position');
         if(['relative', 'fixed', 'absolute'].indexOf(position) > -1) {
-            const maxZIndex = Colibri.UI.zIndex();
+            const maxZIndex = Colibri.UI.maxZIndex;
             if(this.styles.zIndex != maxZIndex) {
                 this._element.css('z-index', maxZIndex + 1);
             }
@@ -907,7 +907,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                     if(this._toolTip) {
                         const bounds = this._element.bounds();
                         const tip = this._element.querySelector(':scope > .tip');
-                        tip.css({left: bounds.left + 'px', top: (bounds.top + bounds.height + 10).toFixed(2) + 'px', zIndex: Colibri.UI.zIndex()});
+                        tip.css({left: bounds.left + 'px', top: (bounds.top + bounds.height + 10).toFixed(2) + 'px', zIndex: Colibri.UI.maxZIndex});
                     }
                 });
 
@@ -915,7 +915,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 this._element.append(tip);
             }
             const bounds = this._element.bounds();
-            tip.css({left: bounds.left + 'px', top: (bounds.top + bounds.height + 10) + 'px', zIndex: Colibri.UI.zIndex()});
+            tip.css({left: bounds.left + 'px', top: (bounds.top + bounds.height + 10) + 'px', zIndex: Colibri.UI.maxZIndex});
             tip.html(this._toolTip);
         }
         else {
@@ -1082,7 +1082,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         if(value) {
 
             if(typeof this._element.css('z-index') === 'string') {
-                this._element.css('z-index', Colibri.UI.zIndex() + 1);
+                this._element.css('z-index', Colibri.UI.maxZIndex + 1);
             }
 
             let shadow = this._element.next();
