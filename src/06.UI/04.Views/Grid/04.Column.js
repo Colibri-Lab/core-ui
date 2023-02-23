@@ -4,7 +4,7 @@
 Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
 
     constructor(name, container, element) {
-        super(name, container, '<td />');
+        super(name, container, Element.create('td'));
         this.AddClass('app-ui-column');
         this.AddClass('position-sticky-y');
         // this.shown = this.parent.shown;

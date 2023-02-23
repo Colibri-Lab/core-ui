@@ -4,7 +4,7 @@
 Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     constructor(name, container) {
-        super(name, container, '<tr />');
+        super(name, container, Element.create('tr'));
         this.AddClass('app-ui-row');
         this.shown = this.parent.shown;
 
@@ -87,7 +87,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     __addButtonContainerForRowSelection() {
 
-        this._checkboxContainer = new Colibri.UI.Component('button-container-for-row-selection', this, '<td />');
+        this._checkboxContainer = new Colibri.UI.Component('button-container-for-row-selection', this, Element.create('td'));
         this._checkboxContainer.AddClass('app-ui-row-cell');
         this._checkboxContainer.shown = this.grid.showCheckboxes;
         if (this.grid.showCheckboxes) {

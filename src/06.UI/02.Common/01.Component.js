@@ -987,20 +987,26 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return this.parent.Children(myIndex - 1);
     }
 
+    MoveChild(child, fromIndex, toIndex) {
+        
+        this._children.splice(fromIndex, 1);
+        this._children.splice(toIndex, 0, child);
+        this._moveInDom(child.container, this.container, toIndex);        
+
+    }
+
     MoveUp() {
         if(!this.prev) {
             return;
         }    
-        const index = this.childIndex;        
-        this.parent.Children(this.name, this, index - 1);
+        this.parent.MoveChild(this, this.childIndex, this.childIndex - 1);
     }
 
     MoveDown() {
         if(!this.next) {
             return;
         }    
-        const index = this.childIndex;        
-        this.parent.Children(this.name, this, index + 1);
+        this.parent.MoveChild(this, this.childIndex, this.childIndex + 1);
     }
 
     _childByName(name) {

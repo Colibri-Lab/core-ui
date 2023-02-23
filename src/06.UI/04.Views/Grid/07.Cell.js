@@ -4,7 +4,7 @@
 Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
 
     constructor(name, container) {
-        super(name, container, '<td />');
+        super(name, container, Element.create('td'));
 
         this.AddClass('app-ui-row-cell');
 

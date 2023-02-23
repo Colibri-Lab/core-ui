@@ -212,10 +212,11 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     }
 
     _setFilledMark() {
-        if(this instanceof Colibri.UI.Forms.Array || this instanceof Colibri.UI.Forms.ArrayGrid) {
-            this.contentContainer.ForEach((name, component) => {
-                component instanceof Colibri.UI.Forms.Field && component._setFilledMark()
-            });
+        if(this instanceof Colibri.UI.Forms.Array) {
+            this.itemsContainer.ForEach((name, component) => component instanceof Colibri.UI.Forms.Field && component._setFilledMark());
+        }
+        else if(this instanceof Colibri.UI.Forms.ArrayGrid) {
+            this.contentContainer.ForEach((name, component) => component instanceof Colibri.UI.Forms.Field && component._setFilledMark());
         }
         else if(this instanceof Colibri.UI.Forms.Object) {
             Object.forEach(this._fieldData?.fields, (name, fieldData) => this.contentContainer.Children(name) instanceof Colibri.UI.Forms.Field && this.contentContainer.Children(name)._setFilledMark());   
@@ -337,7 +338,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
 Colibri.UI.Forms.HiddenField = class extends Colibri.UI.Component {
     constructor(name, container, fieldData) {
-        super(name, container, '<input type="hidden" />');
+        super(name, container, Element.create('input', {type: 'hidden'}));
         this._fieldData = fieldData;
         this._validated = true;
     }

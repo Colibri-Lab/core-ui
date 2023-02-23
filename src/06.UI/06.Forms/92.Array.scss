@@ -33,6 +33,16 @@
             &.app-component-shown{
                 display: block;
             }
+
+            [data-object-name$="-items"] {                
+                max-height: 500px;
+                overflow-y: auto;
+                overflow-x: hidden;
+                @include custom-scroll($scrollbar-size, $scrollbar-track-color, $scrollbar-thumb-color, $scrollbar-thumb-hover-color);
+                > .app-component-object-field:hover {
+                    background: transparentize(#000000, .99);
+                }
+            }
         }
     }
 

@@ -4,7 +4,7 @@
 Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
 
     constructor(name, container) {
-        super(name, container, '<tr />');
+        super(name, container, Element.create('tr'));
     }
 
     _registerEvents() {

@@ -5,7 +5,7 @@
 Colibri.UI.Grid.Header = class extends Colibri.UI.Component {
 
     constructor(name, container) {
-        super(name, container, '<thead />');
+        super(name, container, Element.create('thead'));
 
         this._sticky = true;
         this._grid = this.parent.parent;

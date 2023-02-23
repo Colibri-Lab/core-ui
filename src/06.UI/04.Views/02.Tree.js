@@ -205,7 +205,7 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
 Colibri.UI.TreeNode = class extends Colibri.UI.Component {
 
     constructor(name, container) {
-        super(name, container, '<div><div><dd drop="before"></dd><em class="expander"></em><em class="icon none"></em><span></span><input type="text" /><dd drop="after"></dd></div></div>');
+        super(name, container, Element.fromHtml('<div><div><dd drop="before"></dd><em class="expander"></em><em class="icon none"></em><span></span><input type="text" /><dd drop="after"></dd></div></div>')[0]);
         this._nodes = new Colibri.UI.TreeNodes('nodes', this, container.tree);
 
         this._input = this._element.querySelector('input');
