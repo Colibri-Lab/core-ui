@@ -1,7 +1,7 @@
 Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
     
     constructor(name, container) {
-        super(name, container, '<div />');
+        super(name, container, Element.create('div'));
         this.AddClass('app-files-editor-component');
 
         this._value = null;

@@ -1,6 +1,6 @@
 Colibri.UI.FilesDragAndDrop = class extends Colibri.UI.Component {
     constructor(name, container, multiple = false) {
-        super(name, container, '<div />');
+        super(name, container, Element.create('div'));
         this.AddClass('app-component-files-drag-and-drop');
 
         // внутренний невидимый инпут для выбора файлов из проводника по клику

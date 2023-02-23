@@ -9,7 +9,7 @@
 Colibri.UI.Viewer = class extends Colibri.UI.Component {
 
     constructor(name, container, element, root) {
-        super(name, container, element || '<span />');
+        super(name, container, element || Element.create('span'));
         this.AddClass('app-viewer-component');
         this.root = root;
     }

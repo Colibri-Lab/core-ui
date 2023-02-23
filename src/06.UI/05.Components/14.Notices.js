@@ -1,7 +1,7 @@
 Colibri.UI.Notices = class extends Colibri.UI.Pane {
     
     constructor(name, container) {
-        super(name, container, '<div />');
+        super(name, container, Element.create('div'));
         this.AddClass('app-notices-component');
 
         this._list = new Colibri.UI.List('list', this);

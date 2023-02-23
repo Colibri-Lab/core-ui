@@ -4,7 +4,7 @@ Colibri.UI.Toolbar = class extends Colibri.UI.Component {
     static Horizontal = 'horizontal';
 
     constructor(name, container, element) {
-        super(name, container, element || '<div />');
+        super(name, container, element || Element.create('div'));
         this.AddClass('app-toolbar-container-component');
 
         this.AddHandler('Clicked', (event, args) => this.__clicked(event, args));

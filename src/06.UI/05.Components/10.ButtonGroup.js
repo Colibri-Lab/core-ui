@@ -1,7 +1,7 @@
 Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
 
     constructor(name, container, element) {
-        super(name, container, element || '<div />');
+        super(name, container, element || Element.create('div'));
         this.AddClass('app-buttongroup-component');
 
         this._selectedButton = null;

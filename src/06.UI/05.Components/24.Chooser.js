@@ -17,7 +17,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
      * @param {boolean} clearIcon показать clearIcon
      */
     constructor(name, container, multiple = false, readonly = true, placeholder = '', selector = null, defaultValue = null, allowEmpty = true, clearIcon = false) {
-        super(name, container, '<div />');
+        super(name, container, Element.create('div'));
 
         this.AddClass('app-chooser-component');
 

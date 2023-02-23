@@ -1,7 +1,7 @@
 Colibri.UI.FilesViewer = class extends Colibri.UI.Viewer {
     
-    constructor(name, container, element = '<div />', root = null) {
-        super(name, container, element || '<div />', root);
+    constructor(name, container, element = null, root = null) {
+        super(name, container, element || Element.create('div'), root);
         this.AddClass('app-files-viewer-component');
 
         this._value = null;

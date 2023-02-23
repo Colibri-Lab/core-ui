@@ -1,6 +1,6 @@
 Colibri.UI.MassActionsMenu = class extends Colibri.UI.Component {
     constructor(name, container) {
-        super(name, container, '<div />');
+        super(name, container, Element.create('div'));
         this.AddClass('app-mass-actions-menu-component');
 
         this._actions = [];

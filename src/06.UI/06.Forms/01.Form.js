@@ -2,7 +2,7 @@
 Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     constructor(name, container) {
-        super(name, container, '<form />');
+        super(name, container, Element.create('form'));
         this.AddClass('app-form-component');
         this._fields = {};
         this._download = null;

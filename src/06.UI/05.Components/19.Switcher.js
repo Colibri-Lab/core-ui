@@ -1,6 +1,6 @@
 Colibri.UI.Switcher = class extends Colibri.UI.Component {
     constructor(name, container, data) {
-        super(name, container, '<div />');
+        super(name, container, Element.create('div'));
 
         this.AddClass('app-component-switcher');
 

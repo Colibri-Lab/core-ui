@@ -1,7 +1,7 @@
 Colibri.UI.Color.Line = class extends Colibri.UI.Component {
 
     constructor(name, container) {
-        super(name, container, '<div />');
+        super(name, container, Element.create('div'));
         this.AddClass('app-color-line-component');
 
         this.RegisterEvent('Changed', false, 'Когда значение изменилось');

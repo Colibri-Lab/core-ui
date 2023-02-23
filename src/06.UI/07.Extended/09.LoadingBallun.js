@@ -2,7 +2,7 @@ Colibri.UI.LoadingBallun = class extends Colibri.UI.Component {
 
     constructor(name, container) {
         /* создаем компонент и передаем шаблон */
-        super(name, container, '<div />');
+        super(name, container, Element.create('div'));
         this.AddClass('colibri-ui-loadingballun');
 
         this._iconObject = new Colibri.UI.Icon(this.name + '-icon', this);

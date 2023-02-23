@@ -34,7 +34,7 @@
 Colibri.UI.Tabs = class extends Colibri.UI.Component {
 
     constructor(name, container, element) {
-        super(name, container, element || '<div />');
+        super(name, container, element || Element.create('div'));
         this.AddClass('app-tabs-container-component');
 
         this._element.append(Element.fromHtml('<div class="tabs-header-container"><div class="tabs-header"></div><div class="tabs-links"></div></div>'));

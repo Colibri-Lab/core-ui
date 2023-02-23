@@ -6,7 +6,7 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
     _orientation = Colibri.UI.Split.OrientationHorizontal;
 
     constructor(name, container, element, orientation) {
-        super(name, container, element || '<div />');
+        super(name, container, element || Element.create('div'));
 
         this.AddClass('app-component-split');
 

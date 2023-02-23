@@ -4,7 +4,7 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
     _selected = null;
 
     constructor(name, container) {
-        super(name, container, '<div />');
+        super(name, container, Element.create('div'));
 
         this._allNodes = new Set();
 
@@ -491,7 +491,7 @@ Colibri.UI.TreeNodes = class extends Colibri.UI.Component {
     _tree = null;
 
     constructor(name, container, tree) {
-        super(name, container, '<div />');
+        super(name, container, Element.create('div'));
         this._tree = tree;
 
         this.AddClass('nodes');

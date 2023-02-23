@@ -1,6 +1,6 @@
 Colibri.UI.Heading = class extends Colibri.UI.Component {
     constructor(name, container, level = 1) {
-        super(name, container, '<h' + level + ' />');
+        super(name, container, Element.create('h' + level));
         this.AddClass('app-component-heading');
     }
 

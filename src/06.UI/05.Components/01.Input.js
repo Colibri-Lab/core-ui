@@ -1,7 +1,7 @@
 Colibri.UI.Input = class extends Colibri.UI.Component {
 
     constructor(name, container, element) {
-        super(name, container, '<div class="app-ui-component" />');
+        super(name, container, Element.create('div', {class: 'app-ui-component'}));
 
         this.GenerateChildren(element, this._element);
 

@@ -1,6 +1,6 @@
 Colibri.UI.Link = class extends Colibri.UI.Component {
     constructor(name, container, value) {
-        super(name, container, '<a />');
+        super(name, container, Element.create('a'));
         this.AddClass('app-component-link');
         this.value = value;
     }

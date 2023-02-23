@@ -35,13 +35,13 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this._hasMassActionsMenu = false;
         this._massActionsMenuClass = Colibri.UI.MassActionsMenu;
 
-        this._gridContent = new Colibri.UI.Component('app-ui-grid-content', this, '<table />');
+        this._gridContent = new Colibri.UI.Component('app-ui-grid-content', this, Element.create('table'));
         this._gridContent.shown = true;
 
         this._header = this.AddHeader('header');
 
         this._rows = this.AddGroup('default', null);
-        this._norows = new Colibri.UI.Pane('app-ui-grid-norows', this, '<div />');
+        this._norows = new Colibri.UI.Pane('app-ui-grid-norows', this, Element.create('div'));
         this._norows.shown = true;
 
         this._footer = this.AddFooter('footer');

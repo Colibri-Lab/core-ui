@@ -12,7 +12,7 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
      * @param {Array} orientation coords on container to point to, and orientation around the container, example: rt, rb; rt - container coords, rb - orientation
      */
     constructor(name, container, orientation = [Colibri.UI.ToolTip.RT, Colibri.UI.ToolTip.RB], point = null) {
-        super(name, container, '<div />');
+        super(name, container, Element.create('div'));
 
         this.AddClass('app-tooltip-component');
 

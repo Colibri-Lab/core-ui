@@ -2,7 +2,7 @@
 Colibri.UI.DateSelector = class extends Colibri.UI.Component {
 
     constructor(name, container) {
-        super(name, container, '<div />');
+        super(name, container, Element.create('div'));
 
         this.AddClass('app-date-selector-component');
 

@@ -146,7 +146,7 @@ Colibri.UI.Select = class extends Colibri.UI.Input {
 Colibri.UI.Select.Dropdown = class extends Colibri.UI.Pane {
 
     constructor(name, container, resizable) {
-        super(name, container, '<div />', resizable);
+        super(name, container, Element.create('div'), resizable);
     }
 
     _registerEvents() {

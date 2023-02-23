@@ -1,7 +1,7 @@
 Colibri.UI.TextArea = class extends Colibri.UI.Component {
 
-    constructor(name, container, element) {
-        super(name, container, '<div class="app-ui-component" />');
+    constructor(name, container) {
+        super(name, container, Element.create('div', {class: 'app-ui-component'}));
 
         this.AddClass('app-textarea-component');
 

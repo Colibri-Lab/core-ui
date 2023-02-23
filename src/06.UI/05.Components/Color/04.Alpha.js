@@ -1,6 +1,6 @@
 Colibri.UI.Color.Alpha = class extends Colibri.UI.Component {
     constructor(name, container) {
-        super(name, container, '<div />');
+        super(name, container, Element.create('div'));
         this.AddClass('app-color-alpha-component');
 
         this.RegisterEvent('Changed', false, 'Когда значение изменилось');

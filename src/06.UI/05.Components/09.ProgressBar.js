@@ -1,7 +1,7 @@
 Colibri.UI.ProgressBar = class extends Colibri.UI.Component {
 
     constructor(name, container) {
-        super(name, container, '<div><div class="app-progress-bar-container-component"><div class="app-progress-bar-progress-component"></div></div></div>');
+        super(name, container, Element.fromHtml('<div><div class="app-progress-bar-container-component"><div class="app-progress-bar-progress-component"></div></div></div>')[0]);
         this.AddClass('app-progress-bar-component');
 
         // Интервал

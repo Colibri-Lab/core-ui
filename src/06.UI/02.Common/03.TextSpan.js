@@ -1,6 +1,6 @@
 Colibri.UI.TextSpan = class extends Colibri.UI.Component {
     constructor(name, container, value) {
-        super(name, container, '<span />');
+        super(name, container, Element.create('span'));
         this.AddClass('app-component-textspan');
         this.value = value;
     }

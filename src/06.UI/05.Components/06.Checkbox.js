@@ -1,7 +1,7 @@
 Colibri.UI.Checkbox = class extends Colibri.UI.Component {
 
     constructor(name, container) {
-        super(name, container, '<span />');
+        super(name, container, Element.create('span'));
         this.AddClass('app-component-checkbox');
 
         this._renderInput();

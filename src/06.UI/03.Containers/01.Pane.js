@@ -20,8 +20,8 @@ Colibri.UI.Pane = class extends Colibri.UI.Component {
      * @param {(string|HTMLElement)} element название тэга, либо содержание компонента (шаблон) в виде строки или обьекта 
      * @param {int} resizable способ изменения размера 
      */
-    constructor(name, container, element = '<div />', resizable= 'none') {
-        super(name, container, element || '<div />');
+    constructor(name, container, element, resizable= 'none') {
+        super(name, container, element || Element.create('div'));
 
         this.AddClass('app-component-pane');
 

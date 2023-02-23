@@ -6,7 +6,7 @@ Colibri.UI.Chart = class extends Colibri.UI.Component {
     _orientation = Colibri.UI.Split.OrientationHorizontal;
 
     constructor(name, container) {
-        super(name, container, '<div />');
+        super(name, container, Element.create('div'));
         this.AddClass('app-component-chart');
     }
 
@@ -27,7 +27,7 @@ Colibri.UI.Chart = class extends Colibri.UI.Component {
 
 Colibri.UI.Chart.Barchart = class extends Colibri.UI.Component {
     constructor(name, container) {
-        super(name, container, '<div />');
+        super(name, container, Element.create('div'));
 
         this.AddClass('app-component-barchart');
 

@@ -34,9 +34,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._binding = '';
 
         if (!element) {
-            element = '<div />';
+            element = Element.create('div');
         }
         if (typeof element === 'string') {
+            console.log(element); console.trace();
             // передана строка html, нужно спарсить и превратить в Element
             element = new DOMParser().parseFromString(element, "application/xhtml+xml").children[0];
         }
@@ -261,7 +262,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     GenerateChildren(element, parent) {
         if (!element) {
-            element = '<div />';
+            element = Element.create('div');
         }
 
         if (typeof element === 'string') {
