@@ -1692,7 +1692,7 @@ Element.prototype.clone = function (ns) {
 
 };
 
-Element.prototype.hideShowProcess = function (callback, timeout = 5) {
+Element.prototype.hideShowProcess = function (callback, timeout = 30) {
     this.css('visibility', 'hidden');
     document.body.css('overflow', 'hidden');
     Colibri.Common.Delay(timeout).then(() => {
