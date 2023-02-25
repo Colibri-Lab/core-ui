@@ -4,26 +4,36 @@ Colibri.UI.LoadingContainer = class extends Colibri.UI.Component {
         super(name, container, Colibri.UI.Templates['Colibri.UI.LoadingContainer']);
         this.AddClass('app-loading-container-component');
         
+        this._loadingcontainer = this.Children('icon-container');
+        this._progress = this.Children('progress');
     }
 
     set icon(value) {
-        this.Children('loadingicon').icon = value;
+        this._loadingcontainer.value = value;
     }
     get icon() {
-        return this.Children('loadingicon').icon;
+        return this._loadingcontainer.value;
     }
+
     set shownIcon(value) {
-        this.Children('loadingicon').shown = value === 'true' || value === true;
+        this._loadingcontainer.shown = value === 'true' || value === true;
     }
     get shownIcon() {
-        return this.Children('loadingicon').shown;
+        return this._loadingcontainer.shown;
     }
 
     set progress(value) {
-        this.Children('progress').progress = value;
+        this._progress.progress = value;
     }
     get progress() {
-        return this.Children('progress').progress;
+        return this._progress.progress;
+    }
+
+    set progressColor(value) {
+        this._progress.color = value;
+    }
+    get progressColor() {
+        return this._progress.color;
     }
 
     set opacity(value) {

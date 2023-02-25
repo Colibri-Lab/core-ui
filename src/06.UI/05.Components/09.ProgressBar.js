@@ -46,6 +46,21 @@ Colibri.UI.ProgressBar = class extends Colibri.UI.Component {
         this.Dispatch('ProgressChanged', {value: value});
     }
 
+    /**
+     * Color of progress bar
+     * @type {string}
+     */
+    get color() {
+        return this._progress.css('background');
+    }
+    /**
+     * Color of progress bar
+     * @type {string}
+     */
+    set color(value) {
+        this._progress.css('background', value);
+    }
+
     Start(timer, speed) {
         this._progressiveIterator = 100;
         if(this._intervalId != -1) {
