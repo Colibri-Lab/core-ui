@@ -136,18 +136,18 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     }
 
     Focus() {
-        if(this.contentContainer.Children('firstChild')) {
-            this.contentContainer.Children('firstChild').Focus();
+        if(this._itemsContainer.Children('firstChild')) {
+            this._itemsContainer.Children('firstChild').Focus();
         }
     }
 
     get readonly() {
-        const first = this.contentContainer.Children('firstChild');
-        return first.readonly;
+        const first = this._itemsContainer.Children('firstChild');
+        return first?.readonly ?? false;
     }
 
     set readonly(value) {
-        this.contentContainer.ForEach((name, component) => {
+        this._itemsContainer.ForEach((name, component) => {
             component.readonly = value; 
         });
         this._link && (this._link.enabled = !value);
@@ -159,7 +159,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
     set enabled(value) {
         this._enabled = value;
-        this.contentContainer.ForEach((name, component) => {
+        this._itemsContainer.ForEach((name, component) => {
             component.enabled = this._enabled; 
         });
         this._link && (this._link.enabled = this._enabled);
@@ -168,7 +168,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     get value() {
 
         let data = [];
-        this.contentContainer.ForEach((name, component) => {
+        this._itemsContainer.ForEach((name, component) => {
             if(component instanceof Colibri.UI.Forms.Object) {
                 data.push(component.value);
             }
@@ -223,7 +223,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
     get tabIndex() {
         const first = this._itemsContainer.Children('firstChild');
-        return first.tabIndex;
+        return first?.tabIndex ?? 0;
     }
 
     /**

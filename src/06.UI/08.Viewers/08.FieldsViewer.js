@@ -48,11 +48,15 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         this._root = value;
     }
 
+    get state() {
+        return this._hidden.shown;
+    }
+
     __toggleHidden(event, args) {
         this._hidden.shown = !this._hidden.shown;
         this._hiddenLink1.shown = !this._hiddenLink1.shown;
         this._hiddenLink2.shown = !this._hiddenLink2.shown;
-        this.Dispatch('FieldsToggled', {});
+        this.Dispatch('FieldsToggled', {state: this._hidden.shown});
     }
 
     _createFields(fields = null, value = null, contentElement = null, showTitles = true) {
