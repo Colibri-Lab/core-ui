@@ -41,7 +41,8 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         dateformat = null,
         numberformat = null,
         currency = null,
-        loadingIcon = null
+        loadingIcon = null,
+        csrfToken = null
     ) {
 
         if(this._initialized) {
@@ -67,7 +68,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         this._dateformat = dateformat;
         this._numberformat = numberformat;
         this._currency = currency;
-
+        this._csrfToken = csrfToken;
 
         Colibri.Common.WaitForBody().then(() => {
             this.InitializeModules();
@@ -95,7 +96,11 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         Colibri.Common.WaitForDocumentReady().then(() => { 
             this.Dispatch('DocumentReady');
 
-            Colibri.IO.Request.Post(this._remoteDomain + '/settings').then((response) => {
+            const headers = {};
+            if(this._csrfToken) {
+                headers['X-CSRF-TOKEN'] = this._csrfToken;
+            }
+            Colibri.IO.Request.Post(this._remoteDomain + '/settings', {}, headers).then((response) => {
                 if(response.status != 200) {
                     App.Notices.Add(new Colibri.UI.Notice('#{ui-messages-cannotgetsettings}'));
                 }
