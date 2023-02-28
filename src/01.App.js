@@ -95,7 +95,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         Colibri.Common.WaitForDocumentReady().then(() => { 
             this.Dispatch('DocumentReady');
 
-            Colibri.IO.Request.Post(this._remoteDomain + '/settings.json').then((response) => {
+            Colibri.IO.Request.Post(this._remoteDomain + '/settings').then((response) => {
                 if(response.status != 200) {
                     App.Notices.Add(new Colibri.UI.Notice('#{ui-messages-cannotgetsettings}'));
                 }

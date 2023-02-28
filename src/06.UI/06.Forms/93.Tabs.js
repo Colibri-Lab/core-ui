@@ -165,11 +165,15 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
                     }
                     fieldValue = fieldValue?.value ?? fieldValue;
                     let conditionResult = true;
-                    if(Array.isArray(condition.value)) {
-                        conditionResult = fieldValue === undefined || (fieldValue !== undefined && condition.value.indexOf(fieldValue) !== -1);
-                    }
-                    else {
-                        conditionResult = fieldValue === undefined || (fieldValue !== undefined && fieldValue === condition.value);
+                    if(condition?.value) {
+                        if(Array.isArray(condition.value)) {
+                            conditionResult = fieldValue === undefined || (fieldValue !== undefined && condition.value.indexOf(fieldValue) !== -1);
+                        }
+                        else {
+                            conditionResult = fieldValue === undefined || (fieldValue !== undefined && fieldValue === condition.value);
+                        }
+                    } else if(condition?.method) {
+                        conditionResult = eval(condition.method);
                     }
                     if(inverse) {
                         conditionResult = !conditionResult;
