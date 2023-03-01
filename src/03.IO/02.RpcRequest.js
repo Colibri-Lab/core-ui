@@ -7,12 +7,13 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
      * @param {string} moduleEntry - наименование модуля
      * @param {string} [type] - типе данных 
      */
-    constructor(moduleEntry, type, remoteDomain) {
+    constructor(moduleEntry, type, remoteDomain = null, urlResolver = null) {
         super();
 
         this._moduleEntry = moduleEntry;
         this._requestType = type || 'json';
         this._remoteDomain = remoteDomain || null;
+        this._urlResolver = urlResolver || null;
 
         this._workingRequests = {};
 
@@ -34,6 +35,21 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
     }
     set requestType(value) {
         this._requestType = value;
+    }
+
+    /**
+     * Url resolver function
+     * @type {Function}
+     */
+    get urlResolver() {
+        return this._urlResolver;
+    }
+    /**
+     * Url resolver function
+     * @type {Function}
+     */
+    set urlResolver(value) {
+        this._urlResolver = value;
     }
 
     /**
@@ -63,13 +79,24 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
         const requestMethod = params && params._requestMethod && params._requestMethod === 'get' ? 'Get' : 'Post'; 
         const requestType = params && params._requestType ? params._requestType : this._requestType;
         params && delete params._requestMethod;
-        headers.requester = document.domain;
+        headers.requester = location.hostname;
 
         return new Promise((resolve, reject) => {
-            let url = this._prepareStrings((this._moduleEntry ? '\\Modules\\' + this._moduleEntry : '') + '\\' +  controller + '\\' + method + '.' + requestType);
+            
+            let url = null;
+            
+            // if url resolver is not set
+            if(!this._urlResolver || typeof this._urlResolver !== 'function') {
+                url = this._prepareStrings((this._moduleEntry ? '\\Modules\\' + this._moduleEntry : '') + '\\' +  controller + '\\' + method + '.' + requestType);
+            } else {
+                url = this._urlResolver(this._moduleEntry, controller, method, requestType);
+            }
+
             if(this._remoteDomain) {
                 url = this._remoteDomain + url;
             }
+
+
             request.AddHeaders(headers);
             request[requestMethod](url, params, withCredentials, (progressEvent) => {
                 this.Dispatch('CallProgress', {event: progressEvent, request: requestKeyword});

@@ -6,8 +6,8 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
      * @param {string} entryName - наименование модуля
      * @param {string} [type] - тип данных
      */ 
-    constructor(entryName, type, remoteDomain) {
-        super(entryName, type, remoteDomain);
+    constructor(entryName, type, remoteDomain, urlResolver) {
+        super(entryName, type, remoteDomain, urlResolver);
 
         this._routes = {};
 
