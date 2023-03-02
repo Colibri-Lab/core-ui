@@ -89,7 +89,7 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
             if(!this._urlResolver || typeof this._urlResolver !== 'function') {
                 url = this._prepareStrings((this._moduleEntry ? '\\Modules\\' + this._moduleEntry : '') + '\\' +  controller + '\\' + method + '.' + requestType);
             } else {
-                url = this._urlResolver(this._moduleEntry, controller, method, requestType);
+                url = this._urlResolver(this._moduleEntry, controller, method, requestType, params, headers, withCredentials);
             }
 
             if(this._remoteDomain) {
