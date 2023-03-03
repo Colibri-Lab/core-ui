@@ -324,8 +324,8 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         super(name, container);
 
         this.AddClass('app-component-list-group');
-        this._element.append(Element.create('span', {}));
-        this._element.append(Element.create('div', {}));
+        this._span = this._element.append(Element.create('span', {}));
+        this._div = this._element.append(Element.create('div', {}));
 
         this._handlerEvents();
         
@@ -365,11 +365,11 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
     }
 
     get label() {
-        return this._element.querySelector('span').html();
+        return this._span.html();
     }
 
     set label(value) {
-        this._element.querySelector('span').html(value);
+        this._span.html(value);
     }
 
     get expandable() {
@@ -405,11 +405,11 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
     }
 
     set noItemsText(value) {
-        this._element.querySelector('div').attr('data-empty', value);
+        this._div.attr('data-empty', value);
     }
     
     get noItemsText() {
-        return this._element.querySelector('div').attr('data-empty');
+        return this._div.attr('data-empty');
     }
 
     get container() {

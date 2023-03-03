@@ -1,16 +1,7 @@
 .app-link-viewer-component {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    [data-object-name="span"] {
-        padding-left: 4px;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 14px;
-        line-height: 20px;
-        color: #0076E0;        
-        padding: 0px;
-        margin: 0px;
-        cursor: pointer;
+    color: #0076E0;
+    text-decoration: underline;
+    &:hover {
+        color: #ffae00;
     }
 }
