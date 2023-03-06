@@ -210,6 +210,29 @@
                     background-color: #DFEEFF;
                 }
             }
+
+            .app-ui-row-template {
+                > td {
+                    color: #435466;
+                    padding: 10px;
+                    border-bottom: 1px solid #EAEBF1;
+                    background-color: inherit;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                }
+            }
+            
+            .app-ui-row:hover + .app-ui-row-template, .app-ui-row-template:hover {
+                background: rgba(209, 215, 233, 0.15);
+            }
+            .app-ui-row.row-active + .app-ui-row-template {
+                background-color: #f2f4f9;
+            }
+
+            .app-ui-row.row-selected + .app-ui-row-template {
+                background-color: #DFEEFF;
+            }
+
         }
 
         .position-sticky-y {

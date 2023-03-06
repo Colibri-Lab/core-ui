@@ -1185,4 +1185,34 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         return ret;
     }
 
+    /**
+     * Row template component
+     * @type {string}
+     */
+    get rowTemplateComponent() {
+        return this._rowTemplateComponent;
+    }
+    /**
+     * Row template component
+     * @type {string}
+     */
+    set rowTemplateComponent(value) {
+        this._rowTemplateComponent = value;
+    }
+
+    /**
+     * Row template attributes
+     * @type {Object}
+     */
+    get rowTemplateAttrs() {
+        return this._rowTemplateAttrs;
+    }
+    /**
+     * Row template attributes
+     * @type {Object}
+     */
+    set rowTemplateAttrs(value) {
+        this._rowTemplateAttrs = value;
+    }
+
 }

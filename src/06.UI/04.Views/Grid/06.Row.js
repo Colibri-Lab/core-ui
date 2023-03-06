@@ -8,6 +8,8 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         this.AddClass('app-ui-row');
         this.shown = this.parent.shown;
 
+        this._templateElement = null;
+
         this.countCells = 0;
         this._tempCountCellsReportedChange = 0;
 
@@ -106,6 +108,22 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         });
 
     }
+
+    _renderTemplateRow() {
+        if(this.grid.rowTemplateComponent) { 
+            
+            this._templateElement = Element.create('tr', {class: 'app-ui-row-template'});
+            this._element.after(this._templateElement);
+            this._templateElement.append(Element.create('td', {colspan: this._element.children.length - (this._checkboxContainer ? 1 : 0)}))
+
+            const comp = eval(this.grid.rowTemplateComponent);
+            const templateObject = new comp(this.name + '-template', this._templateElement.querySelector('td'));
+            templateObject.parent = this;
+            templateObject.shown = true;
+            templateObject.value = this._data;
+
+        }
+    }
     
     set index(value) {
         this.parent.Children(this.name, this, value);   
@@ -131,6 +149,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
                 this.__newCell(this._data, column);
             }
         });
+        this._renderTemplateRow();
         this.Dispatch('RowUpdated', {row: this});
         return this;
     }

@@ -1,0 +1,16 @@
+.colibri-ui-jsonviewer {
+    
+
+    .app-fields-viewer-component {
+        .app-field-pane {
+            &.app-component-shown {
+                display: flex;
+            }
+            gap: 20px;
+            > .app-field-title {
+                width: 150px;
+            }
+        }
+    }
+
+}
