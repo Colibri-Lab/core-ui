@@ -97,7 +97,10 @@ Array.findObject = function (arr, field, value = null) {
             }
         }
         else if (field.indexOf('.') !== -1) {
-            const v = eval('o[\'' + field.replaceAll('.', '\'][\'') + '\']');
+            let v = null;
+            try {
+                v = eval('o[\'' + field.replaceAll('.', '\'][\'') + '\']');
+            } catch(e) {}
             if (v == value) {
                 return o;
             }
