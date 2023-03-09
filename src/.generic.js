@@ -1192,10 +1192,10 @@ Date.prototype.DiffInMonths = function (dateTo) {
 Date.prototype.DiffInDays = function (dateTo) {
     return Math.ceil(this.Diff(dateTo) / 86400);
 };
-Date.prototype.Age = function (removeNazad = false, returnFull = false) {
+Date.prototype.Age = function (removeNazad = false, returnFull = false, tokens = null) {
     let time = Math.abs((new Date()).getTime() / 1000 - this.getTime() / 1000); // to get the time since that moment
 
-    let tokens = [
+    tokens = tokens || [
         [31536000, ['год', 'года', 'лет']],
         [2592000, ['месяц', 'месяца', 'месяцев']],
         [604800, ['неделю', 'недели', 'недель']],
