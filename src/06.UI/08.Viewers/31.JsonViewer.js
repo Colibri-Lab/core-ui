@@ -59,3 +59,5 @@ Colibri.UI.JsonViewer = class extends Colibri.UI.Pane {
 
 
 }
+
+Colibri.UI.Viewer.Register('Colibri.UI.JsonViewer', '#{ui-viewers-json}');

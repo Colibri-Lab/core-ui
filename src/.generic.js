@@ -162,6 +162,13 @@ Array.prototype.equals = function (array) {
     return true;
 };
 
+Array.prototype.stanDeviate = function(){
+    const total = this.reduce((a, b) => parseFloat(a || 0) + parseFloat(b || 0));
+    const mean = total/this.length;
+    const diffSqredArr = this.map(v => Math.pow((parseFloat(v || 0)-parseFloat(mean || 0)),2));
+    return (Math.sqrt(diffSqredArr.reduce((f, n) => parseFloat(f || 0) + parseFloat(n || 0))/this.length));
+ };
+
 Array.prototype.intersect = function (arr) {
     return this.filter(value => arr.includes(value));
 };

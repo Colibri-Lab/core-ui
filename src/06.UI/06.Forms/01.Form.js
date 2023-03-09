@@ -30,7 +30,10 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     }
 
     _registerEventHandlers() {
-        this.AddHandler('Changed', (event, args) => this._hideAndShow());
+        this.AddHandler('Changed', (event, args) => {
+            this._hideAndShow();
+            this._calcRuntimeValues();
+        });
     }
 
     _setFilledMark() {
@@ -38,6 +41,36 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             const fieldComponent = this.Children(name);
             fieldComponent._setFilledMark && fieldComponent._setFilledMark();
         });
+    }
+
+    _calcRuntimeValues(rootValue = null) {
+        if(this._calculating) {
+            return;
+        }
+
+        this._calculating = true;
+        const parentValue = this.value;
+        const formValue = rootValue ?? this.value;
+        Object.forEach(this._fields, (name, fieldData) => {
+            const fieldComponent = this.Children(name);            
+            if(!fieldComponent) {
+                return true;
+            } 
+
+            if(fieldComponent instanceof Colibri.UI.Forms.Object || fieldComponent instanceof Colibri.UI.Forms.Array || fieldComponent instanceof Colibri.UI.Forms.Tabs) {
+                fieldComponent._calcRuntimeValues(formValue);
+            } else {
+                if(fieldData?.params?.valuegenerator) {
+                    const f = eval(fieldData?.params?.valuegenerator);
+                    const v = f(parentValue, formValue);
+                    if(v != fieldComponent.value) {
+                        fieldComponent.value = v;
+                        parentValue[name] = v;
+                    }
+                }
+            }
+        });
+        this._calculating = false;
     }
 
     _hideAndShow() {

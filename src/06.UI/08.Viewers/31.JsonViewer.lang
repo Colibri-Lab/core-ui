@@ -1,2 +1,4 @@
----
-...
+ui-viewers-document: {}
+ui-viewers-json:
+  ru: Json обьект
+  en: Json Object

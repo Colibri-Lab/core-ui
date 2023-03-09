@@ -201,6 +201,28 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    _calcRuntimeValues(rootValue = null) {
+        
+        const parentValue = this.value;
+        const formValue = rootValue ?? this.root?.value ?? {};
+        this.ForEveryField((name, fieldComponent) => {
+            
+            const fieldData = fieldComponent.field;
+            
+            if(fieldComponent instanceof Colibri.UI.Forms.Object || fieldComponent instanceof Colibri.UI.Forms.Array || fieldComponent instanceof Colibri.UI.Forms.Tabs) {
+                fieldComponent._calcRuntimeValues(formValue);
+            } else {
+                if(fieldData?.params?.valuegenerator) {
+                    const f = eval(fieldData?.params?.valuegenerator);
+                    const v = f(parentValue, formValue);
+                    if(v != fieldComponent.value) {
+                        fieldComponent.value = v;
+                        parentValue[name] = v;
+                    }
+                }
+            }
+        });
+    }
     
     _hideAndShow() {
 
