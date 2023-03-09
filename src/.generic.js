@@ -162,7 +162,10 @@ Array.prototype.equals = function (array) {
     return true;
 };
 
-Array.prototype.stanDeviate = function(){
+Array.prototype.stanDeviate = function() {
+    if(this.length === 0) {
+        return 0;
+    }
     const total = this.reduce((a, b) => parseFloat(a || 0) + parseFloat(b || 0));
     const mean = total/this.length;
     const diffSqredArr = this.map(v => Math.pow((parseFloat(v || 0)-parseFloat(mean || 0)),2));
