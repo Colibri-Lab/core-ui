@@ -915,9 +915,21 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 tip = Element.create('span', {class: 'tip'});
                 this._element.append(tip);
             }
-            const bounds = this._element.bounds();
-            tip.css({left: bounds.left + 'px', top: (bounds.top + bounds.height + 10) + 'px', zIndex: Colibri.UI.maxZIndex});
+
             tip.html(this._toolTip);
+
+            // ! доделать
+            const bounds = this._element.bounds();
+            const tipBounds = tip.bounds();
+            if(this._toolTipPosition === 'left bottom') {
+                tip.css({left: bounds.left + 'px', top: (bounds.top + bounds.height + 10) + 'px', zIndex: Colibri.UI.maxZIndex});
+            } else if(this._toolTipPosition === 'left top') {
+                tip.css({left: bounds.left + 'px', top: (bounds.top + tipBounds.height - 10) + 'px', zIndex: Colibri.UI.maxZIndex});
+            } else if(this._toolTipPosition === 'right bottom') {
+                
+            } else if(this._toolTipPosition === 'right top') {
+                
+            }
         }
         else {
             if(tip) {
