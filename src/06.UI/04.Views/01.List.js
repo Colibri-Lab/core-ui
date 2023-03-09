@@ -201,7 +201,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         let selected = null;
         this.ForEach((name, group) => {
             group.ForEach((n, item) => {
-                if(item.value == value) {
+                if((item.value['id'] ?? item.value) == (value['id'] ?? value)) {
                     selected = item;
                     return false;
                 }
