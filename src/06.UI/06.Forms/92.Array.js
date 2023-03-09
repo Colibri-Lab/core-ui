@@ -127,7 +127,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         if(value) {
             object.value = value;
         }
-        object.Focus();
+        // object.Focus();
         return object;
     }
 
