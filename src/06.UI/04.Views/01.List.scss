@@ -40,8 +40,8 @@
         }
 
         > span {
-            user-select: none;
             -webkit-user-select: none;
+            user-select: none;
             display: inline-block;
             font-weight: 600;
             font-size: 16px;
@@ -65,8 +65,8 @@
 
         .app-component-list-item:not(.disable-default) {
             cursor: pointer;
-            user-select: none;
             -webkit-user-select: none;
+            user-select: none;
 
 
             border-bottom: 1px solid #EAEAEA;
