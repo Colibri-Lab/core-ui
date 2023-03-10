@@ -49,8 +49,8 @@
     &.app-component-searchable {
         input {
             cursor: text;
-            user-select: all;
             -webkit-user-select: all;  
+            user-select: all;
         }
     }
 
