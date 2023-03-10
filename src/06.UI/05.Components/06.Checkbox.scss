@@ -1,5 +1,7 @@
 .app-component-checkbox {
     user-select: none;
+    -webkit-user-select: none;
+
     cursor: pointer;
     margin: 0;
 

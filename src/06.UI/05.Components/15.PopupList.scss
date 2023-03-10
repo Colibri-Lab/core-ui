@@ -21,6 +21,7 @@
         }
         > span {
             user-select: none;
+            -webkit-user-select: none;
             display: inline-block;
             width: 100%;
             font-weight: 600;
@@ -47,6 +48,7 @@
 
             &.-group {
                 user-select: none;
+                -webkit-user-select: none;
                 display: inline-block;
                 width: 100%;
                 font-weight: 600;

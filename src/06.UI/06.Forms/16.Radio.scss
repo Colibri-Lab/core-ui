@@ -20,6 +20,7 @@
                 display: block;
                 padding-bottom: 10px;
                 user-select: none;
+                -webkit-user-select: none;
 
                 &:before {
                     content: '';
