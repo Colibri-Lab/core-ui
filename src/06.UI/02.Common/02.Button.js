@@ -10,5 +10,4 @@ Colibri.UI.Button = class extends Colibri.UI.Component {
         this.AddClass('app-component-button');
     }
 
-
 }
