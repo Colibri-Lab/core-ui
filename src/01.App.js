@@ -29,6 +29,9 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     }
 
     RegisterEventHandlers() {
+        this.AddHandler('DocumentShown', (event, args) => {
+            Colibri.UI.UpdateMaxZIndex();
+        });
     }
 
     InitializeApplication(
@@ -149,8 +152,6 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                 this._actions.HandleDomReady();
                 this._router.HandleDomReady();
 
-
-
                 if(showLoader) {
                     Colibri.Common.Delay(1500).then(() => {
                         this.Loader.StopProgress();  
@@ -158,6 +159,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                     });   
                 }
                  
+                Colibri.UI.UpdateMaxZIndex();
                 this.Dispatch('ApplicationReady');
  
             }).catch(response => {

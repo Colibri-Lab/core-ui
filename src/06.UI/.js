@@ -44,6 +44,10 @@ Colibri.UI = class {
         });
     }
 
+    static UpdateMaxZIndex() {
+        Colibri.UI.maxZIndex = Colibri.UI._getZIndex();
+    }
+
 
     /**
      * Search for the component by path in document or given parent
