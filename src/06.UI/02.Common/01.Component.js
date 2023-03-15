@@ -218,6 +218,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                         this.fields = data;
                     }
                 }
+                else if(element.tagName.indexOf('json-') !== -1) {
+                    const propertyName = element.tagName.substr('json-'.length);
+                    let data = element.childNodes[0].textContent;
+                    try { eval('data = ' + data + ';'); } catch(e) { console.log(data); console.log(e); }
+                    if(data instanceof Object) {
+                        this[propertyName] = data;
+                    }
+                }
                 else if(element.tagName.indexOf('component-') !== -1) {
                     const tagName = element.tagName.substr('component-'.length);
                     if(parent instanceof Colibri.UI.Component) {

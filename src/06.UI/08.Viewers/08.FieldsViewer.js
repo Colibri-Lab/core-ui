@@ -141,13 +141,13 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
             if(field.desc !== false) {
                 const title = new Colibri.UI.TextSpan(name + '-title', pane);
                 title.AddClass('app-field-title');
-                title.value = field.desc;
+                title.value = field.desc[Lang.Current] ?? field.desc;
                 title.shown = showTitles;
                 if(field?.params?.fieldsviewer?.info) {
                     const icon = new Colibri.UI.Icon(name + '-icon', title);
                     icon.shown = true;
                     icon.iconSVG = field?.params?.fieldsviewer?.info?.icon;
-                    icon.toolTip = field?.params?.fieldsviewer?.info.text;
+                    icon.toolTip = field?.params?.fieldsviewer?.info.text[Lang.Current] ?? field?.params?.fieldsviewer?.info.text;
                 }
             }
 
@@ -183,7 +183,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                     viewer.shown = true;
                     viewer.download = this._download;
                     viewer.downloadlink = this._downloadlink;
-                    viewer.value = value[name];
+                    viewer.value = value[name][Lang.Current] ?? value[name];
                     viewer.AddHandler('Changed', (event, args) => this.Dispatch('EditorChanged', {domEvent: args.domEvent, editor: viewer, field: field, name: name}));
                 }
 

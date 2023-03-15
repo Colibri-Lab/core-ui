@@ -29,6 +29,12 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         this.draggable = this.grid.draggable;
         this.dropable = this.grid.dropable;
 
+        this.AddHandler('ComponentDisposed', (event, args) => {
+            if(this._templateElement) {
+                this._templateElement.remove();
+            }
+        })
+
     }
 
     _columnAddedHandler = (event, args) => {
@@ -111,13 +117,20 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     _renderTemplateRow() {
         if(this.grid.rowTemplateComponent) { 
+
+            if(this._templateElement) {
+                this._templateElement.remove();
+            }
             
             this._templateElement = Element.create('tr', {class: 'app-ui-row-template'});
             this._element.after(this._templateElement);
-            this._templateElement.append(Element.create('td', {colspan: this._element.children.length - (this._checkboxContainer ? 1 : 0)}))
+            this._templateElement.append(Element.create('td', {colspan: this._element.children.length - (this.grid.showCheckboxes ? 0 : 1)}))
 
             const comp = eval(this.grid.rowTemplateComponent);
             const templateObject = new comp(this.name + '-template', this._templateElement.querySelector('td'));
+            Object.forEach(this.grid.rowTemplateAttrs, (key, value) => {
+                templateObject[key] = value;
+            });
             templateObject.parent = this;
             templateObject.shown = true;
             templateObject.value = this._data;
