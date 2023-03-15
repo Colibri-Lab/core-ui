@@ -323,6 +323,14 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         this._currency = value;
     }
 
+    get CsrfToken()
+    {
+        return this._csrfToken;
+    }
+    set CsrfToken(value) {
+        this._csrfToken = value;
+    }
+
 }
 
 const App = new Colibri.App();
