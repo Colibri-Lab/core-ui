@@ -222,12 +222,19 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
      * @todo проверить правильно ли получаю tabIndex и исправить
      * @type {number}
      */
-     get tabIndex() {
+    get tabIndex() {
         return this._viewElement.attr('tabIndex');
     }
     set tabIndex(value) {
         this._viewElement.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
         this._hiddenElement.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
+    }
+
+    get hasIcon() {
+        return this._icon.shown;
+    }
+    set hasIcon(value) {
+        this._icon.shown = value;
     }
 
 }
