@@ -3,7 +3,7 @@ Colibri.UI.Forms.DateRange = class extends Colibri.UI.Forms.Field {
     RenderFieldContainer() {
         this.AddClass('app-component-date-field');
 
-        const contentContainer = this.contentContainer;
+        const contentContainer = this.contentContainer; 
 
         this._input1 = new Colibri.UI.DateSelector(this._name + '-input', contentContainer);
         this._input1.shown = true;
