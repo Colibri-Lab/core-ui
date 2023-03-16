@@ -132,7 +132,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
      * @param {string} url куда
      * @param {object} options параметры
      */
-    Navigate(url, options, processPatterns = true, setImmediately = false) {
+    Navigate(url, options = {}, processPatterns = true, setImmediately = false) {
         if(!processPatterns) {
             this._preventNextEvent = true;
         }
