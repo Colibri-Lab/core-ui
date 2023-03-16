@@ -456,6 +456,21 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         this.container.html('');
     }
 
+    set items(value) {
+        if(Array.isArray(value)) {
+            for(const item of value) {
+                this.AddItem(item);
+            }
+        }
+    }
+    get items() {
+        const items = [];
+        this.ForEach((name, val) => {
+            items.push(val.value);
+        });
+        return items;
+    }
+
 
 }
 
