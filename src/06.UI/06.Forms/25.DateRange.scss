@@ -1,0 +1,43 @@
+.app-component-daterange-field {
+
+    [data-object-name$="-container"] {
+        &.app-component-shown {
+            display: flex;
+        }
+        align-items: center;
+        justify-content: stretch;
+        flex-wrap: nowrap;
+
+        padding: 0px 8px 0px 5px;
+
+        background: #ffffff;
+        border: 1px solid #d9dce3;
+        border-radius: 3px;
+    
+        .app-date-selector-component {
+            flex: 0 0 calc(51% - 20px);
+
+            background: transparent;
+            border: 0px;
+            border-radius: 0px;
+
+            input[type=text],input[type=date] {
+                padding: 0px 5px;
+                line-height: 14px;
+            }
+
+            &:first-child {
+                flex: 0 0 calc(49% + 20px);
+                &:after {
+                    content: '-';
+                    display: block;
+                    margin: 0px 5px;
+                }
+            }
+
+        }
+            
+    }
+
+    
+}
