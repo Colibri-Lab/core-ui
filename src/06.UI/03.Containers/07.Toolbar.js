@@ -3,6 +3,10 @@ Colibri.UI.Toolbar = class extends Colibri.UI.Component {
     static Vertical = 'vertical';
     static Horizontal = 'horizontal';
 
+    static Right = 'right';
+    static Left = 'left';
+    static Center = 'center';
+
     constructor(name, container, element) {
         super(name, container, element || Element.create('div'));
         this.AddClass('app-toolbar-container-component');
@@ -32,6 +36,35 @@ Colibri.UI.Toolbar = class extends Colibri.UI.Component {
         else {
             return Colibri.UI.Toolbar.Horizontal;   
         }
+    }
+
+    /**
+     * Align the itens
+     * @type {String}
+     */
+    get align() {
+        if(this.HasClass('-right')) {
+            return Colibri.UI.Toolbar.Right;
+        } else if(this.HasClass('-left')) {
+            return Colibri.UI.Toolbar.Left;
+        } else {
+            return Colibri.UI.Toolbar.Center;   
+        }
+    }
+    /**
+     * Align the itens
+     * @type {String}
+     */
+    set align(value) {
+        this.RemoveClass('-left');
+        this.RemoveClass('-right');
+        this.RemoveClass('-center');
+        if(value == Colibri.UI.Toolbar.Left) {
+            this.AddClass('-left');
+        } else if(value == Colibri.UI.Toolbar.Right) {
+            this.AddClass('-right');
+            this.RemoveClass('-center');            
+        } 
     }
 
     __clicked(event, args) {

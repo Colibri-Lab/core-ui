@@ -2,5 +2,5 @@ ui-selector-nothingchoosed:
   ru: Ничего не выбрано
   en: Nothing selected
 ui-selector-choosed:
-  ru: Выбрано
+  ru: Выбрано %s1 %s2
   en: Selected %s1 items of %s2

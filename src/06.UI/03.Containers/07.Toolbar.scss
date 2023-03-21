@@ -16,9 +16,19 @@
 
     align-items: center;
     justify-content: flex-start;
+    gap: 5px;
 
     &.-vertical {
         flex-direction: column;
+    }
+    &.-left {
+        justify-content: flex-start;
+    }
+    &.-center {
+        justify-content: center;
+    }
+    &.-right {
+        justify-content: flex-end;
     }
 
     padding: 5px 0px;
@@ -28,6 +38,7 @@
         height: 28px;
         flex: 0 0 28px;
         margin: 5px 0px 5px 0px;
+        cursor: pointer;
     }
 
 }

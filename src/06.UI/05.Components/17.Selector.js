@@ -415,13 +415,20 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                 this._input.placeholder = this.placeholder ?? '';
             } else if(this._placeholderinfo) {
                 let info = this._placeholderinfo;
-                try {
-                    info = eval(this._placeholderinfo);
-                    info(this._value).then((text) => {
+                if(this._placeholderinfo instanceof Function) {
+                    info = this._placeholderinfo;
+                    info(this._value, this._values).then((text) => {
                         this._input.placeholder = text.stripHtml();
                     });
-                } catch(e) {
-                    this._input.placeholder = String.Pluralize(this._placeholderinfo, itemCount).stripHtml();
+                } else {
+                    try {
+                        info = eval(this._placeholderinfo);
+                        info(this._value, this._values).then((text) => {
+                            this._input.placeholder = text.stripHtml();
+                        });
+                    } catch(e) {
+                        this._input.placeholder = String.Pluralize(this._placeholderinfo, itemCount).stripHtml();
+                    }    
                 }
             } else {
                 this._input.placeholder = '#{ui-selector-choosed}'.replaceAll('%s1', itemCount).replaceAll('%s2', this?.parent?.parent?.title).stripHtml();
