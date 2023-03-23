@@ -109,9 +109,22 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
                 try {
                     if(requestType == 'json') {
                         data.result = JSON.parse(data.result);
-                    }
-                    else if(requestType == 'xml') {
+                    } else if(requestType == 'xml') {
                         data.result = new DOMParser().parseFromString(data.result, "text/xml");
+                    } else if(requestType == 'stream') {
+                        const disposition = data.headers['content-disposition'];
+                        let name = '';
+                        let ext = '';
+                        if(disposition) {
+                            name = disposition.split('filename=')[1].replaceAll('"', '');
+                            ext = name.split('.').pop();
+                        }
+                        data.result = {
+                            name: name,
+                            ext: ext,
+                            mimetype: Colibri.Common.MimeType.ext2type(ext),
+                            content: data.result
+                        };
                     }
                 }
                 catch(e) {
