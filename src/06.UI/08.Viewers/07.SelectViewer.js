@@ -12,6 +12,7 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                 if(typeof value == 'string') {
                     value = value.split(',');
                 }
+
                 if(Array.isArray(value)) {
                     let r = [];
                     
@@ -30,7 +31,7 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                             super.value = v1;
                             const icon1 = new Colibri.UI.Icon(this.name + '-hover', this);
                             icon1.shown = true;
-                            icon1.value = '<em>+' + r.length + '</em> ' + App.Modules.EcoloPlace.Icons.Size20x20.Info;
+                            icon1.value = '<em>+' + r.length + '</em> ' + App.Modules.MrEcolo.Icons.Size20x20.Info;
                             icon1.toolTip = v2;
                         }
                         else {
@@ -56,7 +57,7 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                                 super.value = v1;
                                 const icon1 = new Colibri.UI.Icon(this.name + '-hover', this);
                                 icon1.shown = true;
-                                icon1.value = '<em>' + r.length + '</em> ' + App.Modules.EcoloPlace.Icons.Size20x20.Info;
+                                icon1.value = '<em>' + r.length + '</em> ' + App.Modules.MrEcolo.Icons.Size20x20.Info;
                                 icon1.toolTip = v2;
                             }
                             else {
@@ -77,7 +78,7 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                             super.value = v1;
                             const icon1 = new Colibri.UI.Icon(this.name + '-hover', this);
                             icon1.shown = true;
-                            icon1.value = '<em>' + r.length + '</em> ' + App.Modules.EcoloPlace.Icons.Size20x20.Info;
+                            icon1.value = '<em>' + r.length + '</em> ' + App.Modules.MrEcolo.Icons.Size20x20.Info;
                             icon1.toolTip = v2;
                         }
                         else {

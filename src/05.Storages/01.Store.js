@@ -103,8 +103,8 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
             return this;
         }
 
-        let data = this._parsePathIfHasParam(path);
-        path = data[0];
+        // let data = this._parsePathIfHasParam(path);
+        // path = data[0];
 
         const childStoreData = this.GetChild(path);
         if(childStoreData) {
@@ -174,12 +174,21 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
             if(path.indexOf(keys[j]) === 0 || keys[j].indexOf(path) === 0) {
                 const pathHandlers = this._pathHandlers[keys[j]];
 
-                const data = this.Query(keys[j]);
+                let queryPath = keys[j];
+                let queryParam = null;
+
+                let queryData = this._parsePathIfHasParam(queryPath);
+                if(queryData[1]) {
+                    queryPath = queryData[0];
+                    queryParam = queryData[1];
+                }
+
+                const data = this.Query(queryPath, queryParam);
 
                 for(let i=0; i<pathHandlers.length; i++) {
 
                     const handlerObject = pathHandlers[i];
-                    if (handlerObject && handlerObject.handler.apply(handlerObject.respondent, [data, path]) === false) {
+                    if (handlerObject && handlerObject.handler.apply(handlerObject.respondent, [data, queryPath]) === false) {
                         return false;
                     }
         
@@ -212,13 +221,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
         const loader = this._pathLoaders[path];
         if(!loader) {
-            return this.Query(path + (param ? '.' + param : ''));
+            return this.Query(path + (param && param.indexOf('=') === -1 ? '.' + param : ''), param && param.indexOf('=') !== -1 ? param : null);
         }
 
         if(loader.loading) {
             //Уже загружается, ждем пока завершится
             await Colibri.Common.Wait(() => !loader.loading);
-            return this.Query(path + (param ? '.' + param : ''));
+            return this.Query(path + (param && param.indexOf('=') === -1 ? '.' + param : ''), param && param.indexOf('=') !== -1 ? param : null);
         }
 
         loader.loading = true;
@@ -249,7 +258,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
             param = data[1];
         }
 
-        const res = this.Query(path + (param ? '.' + param : ''));
+        const res = this.Query(path + (param && param.indexOf('=') === -1 ? '.' + param : ''), param && param.indexOf('=') !== -1 ? param : null);
         if(!reload && ((res instanceof Object && Object.countKeys(res) > 0) || (Array.isArray(res) && res.length > 0))) {
             return res;
         }
@@ -257,7 +266,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         return this.Reload(path, false, param);
     }
 
-    Query(path) {
+    Query(path, queryList = null) {
 
         let p = path.split('.');
         let first = p.shift();
@@ -275,7 +284,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
             if((data[first] ?? undefined) !== undefined) {
                 data = data[first];
                 if(data instanceof Colibri.Storages.Store) {
-                    return data.Query(first + '.' + p.join('.'));
+                    return data.Query(first + '.' + p.join('.'), queryList);
                 }
             }
             else {
@@ -283,6 +292,12 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
                 break;
             }
 
+        }
+
+        if(queryList) {
+            // queryList = field=value
+            const queryParts = queryList.split('=');
+            data = Array.findObject(data, queryParts[0], queryParts[1]);
         }
 
         return data;
@@ -381,6 +396,15 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         });
         this.Set(path, list);
         return list;
+    }
+
+    QueryList(path, field, value) {
+        let list = this.Query(path);
+        if(!Array.isArray(list)) {
+            list = [];
+        }
+
+        return Array.findObject(list, field, value);
     }
 
     _parsePathIfHasParam(path) {

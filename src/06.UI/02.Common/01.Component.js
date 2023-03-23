@@ -1171,7 +1171,17 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             this._storage = App.Store;
         } 
 
-        const handler = (data, path) => this.isConnected && this.__renderBoundedValues(data, path);
+        const handler = (data, path) => {
+            try {
+                if(this.isConnected) {
+                    this.__renderBoundedValues(data, path);
+                } else {
+                    Colibri.Common.Wait(() => this.isConnected, 0, 10).then(() => this.__renderBoundedValues(data, path));
+                }
+            } catch(e) {
+                App.Notices.Add(new Colibri.UI.Notice(e, Colibri.UI.Notice.Error));
+            }
+        };
 
         this._binding = value;
         let pathsToLoad = this._binding;
@@ -1198,6 +1208,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 this.__renderBoundedValues(data, value);
                 this._storage.AddPathHandler(value, [this, handler]);
             }).catch((response) => {
+                App.Notices.Add(new Colibri.UI.Notice(response, Colibri.UI.Notice.Error));
                 this.__renderBoundedValues(null, value);
                 this._storage.AddPathHandler(value, [this, handler]);
             });    
