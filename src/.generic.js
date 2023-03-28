@@ -162,6 +162,27 @@ Array.prototype.equals = function (array) {
     return true;
 };
 
+Array.prototype.multiSort = function(fields) {
+    this.sort((a, b) => {
+
+        for(const field of fields) {
+            if(a[field.name] == b[field.name]) {
+                continue;
+            }    
+            if(field.order === 'asc') {
+                return a[field.name] > b[field.name] ? 1 : -1;
+            } else {
+                return a[field.name] > b[field.name] ? -1 : 1;
+            }
+        }
+        
+    });
+    
+
+    return this;
+
+}
+
 Array.prototype.stanDeviate = function() {
     if(this.length === 0) {
         return 0;
