@@ -58,6 +58,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
 
     toPlain(object, prefix = '') {
         let ret = {};
+        object = Object.cloneRecursive(object);
         for(const name of Object.keys(object)) {
             const value = object[name];
             ret[prefix + name] = value;
