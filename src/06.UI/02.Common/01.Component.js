@@ -161,13 +161,15 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return null;
     }
 
-    CreateComponent(objectClass, element, parent) {
+    CreateComponent(objectClass, element, parent, root) {
         try {
 
             const name = element.getAttribute('name') || 'component-' + (new Date()).getTime(); 
 
             let component = new objectClass(name, parent);
-            component.parent = this;
+            if( !(parent instanceof Colibri.UI.Component) ) {
+                component.parent = this;
+            }
             this.Children(name, component);
             for (let j = 0; j < element.attributes.length; j++) {
                 const attr = element.attributes[j];
@@ -177,7 +179,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 }
 
                 if (attr.name.indexOf('On') === 0) {
-                    component.AddHandler(attr.name.substr(2), eval(attr.value));
+                    let context = null;
+                    eval('context = function(event, args) { (' + attr.value + ')(event, args) }');
+                    if(context) {
+                        component.AddHandler(attr.name.substr(2), context.bind(root ?? component));
+                    }
                 } else {
                     component[attr.name] = attr.value;
                 }
@@ -190,18 +196,20 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return null;
     }
 
-    ProcessChildren(children, parent, dontDispatch = false) {
-        
+    ProcessChildren(children, parent, dontDispatch = false, root = null) {
         if (!parent) {
             parent = this._element;
+        }
+        if(!root) {
+            root = this;
         }
 
         for (let i = 0; i < children.length; i++) {
             const element = children[i];
             const componentClass = this.CreateComponentClass(element, parent);
             if(componentClass) {
-                let component = this.CreateComponent(componentClass, element, parent);
-                component && component.ProcessChildren(element.childNodes, component.container);
+                let component = this.CreateComponent(componentClass, element, parent, root);
+                component && component.ProcessChildren(element.childNodes, component.container, false, root);
             }
             else if(element.tagName) {
                 if(element.tagName == 'params') {
@@ -229,16 +237,16 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 else if(element.tagName.indexOf('component-') !== -1) {
                     const tagName = element.tagName.substr('component-'.length);
                     if(parent instanceof Colibri.UI.Component) {
-                        this.ProcessChildren(element.childNodes, parent[tagName], true);
+                        this.ProcessChildren(element.childNodes, parent[tagName], true, root);
                     }
                     else {
-                        this.ProcessChildren(element.childNodes, this[tagName], true);
+                        this.ProcessChildren(element.childNodes, this[tagName], true, root);
                     }
                 }
                 else {
                     const e = element.clone(element.attr('xmlns') ? element.attr('xmlns') : parent.attr('xmlns'));
                     parent.append(e);
-                    this.ProcessChildren(element.childNodes, e, true);
+                    this.ProcessChildren(element.childNodes, e, true, root);
                 }
             } 
             else {

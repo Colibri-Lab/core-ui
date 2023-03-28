@@ -6,4 +6,5 @@ Colibri.UI.SuccessButton = class extends Colibri.UI.ExtendedButton {
         super(name, container);
         this.AddClass('app-success-button-component');
     }
+
 }
