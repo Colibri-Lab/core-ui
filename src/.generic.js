@@ -1255,6 +1255,11 @@ Date.prototype.Age = function (removeNazad = false, returnFull = false, tokens =
     }
 };
 Date.prototype.format = function (formatString) { return this.toString(formatString); }
+Date.prototype.intlFormat = function () { 
+    let dateformat = App.DateFormat || 'ru-RU';
+    const format = new Intl.DateTimeFormat(dateformat, {day: '2-digit', month: 'short', year: 'numeric'});
+    return format.format(this); 
+}
 Date.prototype.DayIndex = function () {
     var start = new Date(this.getFullYear(), 0, 0);
     var diff = this - start;
