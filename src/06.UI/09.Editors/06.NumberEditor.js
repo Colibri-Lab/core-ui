@@ -1,6 +1,6 @@
 Colibri.UI.NumberEditor = class extends Colibri.UI.Editor {
     constructor(name, container) {
-        super(name, container, '<input type="number" />');
+        super(name, container, Element.create('input', {type: 'number'}));
         this.AddClass('app-number-editor-component');
 
         this._element.addEventListener('focus', (e) => this.Focus());

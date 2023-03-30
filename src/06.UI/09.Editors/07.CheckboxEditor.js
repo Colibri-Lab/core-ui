@@ -1,10 +1,15 @@
-Colibri.UI.TextEditor = class extends Colibri.UI.Editor {
+Colibri.UI.CheckboxEditor = class extends Colibri.UI.Editor {
     constructor(name, container) {
-        super(name, container, Element.create('input'));
-        this.AddClass('app-text-editor-component');
+        super(name, container, Element.create('div'));
+        this.AddClass('app-checkbox-editor-component');
+        
+        this._input = new Colibri.UI.Checkbox(this.name + '-input', this);
+        this._input.shown = true;
         
         this._element.addEventListener('focus', (e) => this.Focus());
         this._element.addEventListener('blur', (e) => this.Blur());
+
+        this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', args));
 
     }
 
@@ -13,8 +18,7 @@ Colibri.UI.TextEditor = class extends Colibri.UI.Editor {
     }
 
     Focus() {
-        this._element.focus();
-        this._element.select();
+        this.focus();
         this.parent.parent.AddClass('-focused');
     } 
 
@@ -28,43 +32,38 @@ Colibri.UI.TextEditor = class extends Colibri.UI.Editor {
  
     set readonly(value) {
         this._fieldData.readonly = value === true || value === 'true';
-        if(value === true || value === 'true') {
-            this._element.attr('readonly', 'readonly');
-        }
-        else {
-            this._element.attr('readonly', null);
-        }
+        this._input.readonly = value === true || value === 'true';
     }
 
     get placeholder() {
-        return this._element.attr('placeholder');
+        return this._input.placeholder;
     }
 
     set placeholder(value) {
-        this._element.attr('placeholder', value ? value[Lang.Current] ?? value : '');
+        this._input.placeholder = value ? value[Lang.Current] ?? value : '';
     }
 
     get value() {
-        return this._element.value;
+        return this._input.checked;
     }
 
     set value(value) {
-        this._element.value = value;
+        this._input.checked = value;
         this.Validate();
     }
 
     get enabled() {
-        return this._element.attr('disabled') != 'disabled';
+        return this._input.enabled;
     }
 
     set enabled(value) {
         if(value) {
             this.RemoveClass('ui-disabled');
-            this._element.attr('disabled', null);
+            this._input.enabled = true;
         }
         else {
             this.AddClass('ui-disabled');
-            this._element.attr('disabled', 'disabled');
+            this._input.enabled = false;
         }
     }
 
