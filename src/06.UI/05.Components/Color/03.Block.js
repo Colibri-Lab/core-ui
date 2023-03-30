@@ -1,7 +1,7 @@
 Colibri.UI.Color.Block = class extends Colibri.UI.Component {
 
     constructor(name, container) {
-        super(name, container, '<div><div class="grad"></div></div>');
+        super(name, container, Element.fromHtml('<div><div class="grad"></div></div>')[0]);
         this.AddClass('app-color-block-component');
         
         this._pointer = new Colibri.UI.Pane(this.name + '_pointer', this);

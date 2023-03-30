@@ -21,12 +21,12 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         this._validated = false;
         this._errorMessage = '';
 
-        if(!Array.isArray(this._fieldData.params.allow)) {
+        if(this._fieldData?.params?.allow && !Array.isArray(this._fieldData?.params?.allow)) {
             this._fieldData.params.allow = this._fieldData.params.allow.split(',');
         }
 
-        this._allowedExtensions = this._fieldData.params.allow ?? null;
-        this._maxFileSize = this._fieldData.params.size ?? null;
+        this._allowedExtensions = this._fieldData?.params?.allow ?? null;
+        this._maxFileSize = this._fieldData?.params?.size ?? null;
 
         this._dropAreaEnabled = false;
         if (this._fieldData.params && this._fieldData.params.droparea) {
@@ -284,7 +284,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
             this._value = value;
             this._showFile();
         }
-        else if(value.guid) {
+        else if(value?.guid) {
             Colibri.IO.Request.Get('/file.stream', {storage: value.storage, field: value.field, guid: value.guid}).then((response) => {
                 if(response.status == 200) {
                     value.data = response.result;

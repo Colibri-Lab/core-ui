@@ -1,7 +1,7 @@
 Colibri.UI.Input.File = class extends Colibri.UI.Component {
 
     constructor(name, container) {
-        super(name, container, '<button type="button"><input type="file"></input><span class="app-component-input-type-file-text"></span></button>');
+        super(name, container, Element.fromHtml('<button type="button"><input type="file"></input><span class="app-component-input-type-file-text"></span></button>')[0]);
         this.AddClass('app-component-input-type-file');
         this._input = this._element.querySelector('input');
         this._inputFiles = [];
@@ -9,7 +9,7 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
 
         this._title = '';
 
-        this._element.querySelector('.app-component-input-type-file-text').html(this._title());
+        this._element.querySelector('.app-component-input-type-file-text').html(this.__title());
     }
 
     _registerEvents() {
@@ -32,7 +32,7 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
         });
     }
 
-    _title() {
+    __title() {
         return this.multiple ? '#{ui-files-choosefiles}' : '#{ui-files-choosefile}';
     }
 
@@ -46,7 +46,7 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
 
     set title(value) {
         this._title = value;
-        this._element.querySelector('.app-component-input-type-file-text').html(value || this._title());
+        this._element.querySelector('.app-component-input-type-file-text').html(value || this.__title());
     }
 
     get multiple() {
@@ -60,7 +60,7 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
             this._input.removeAttribute('multiple');
         }
         if(!this._title) {
-            this._element.querySelector('.app-component-input-type-file-text').html(this._title());
+            this._element.querySelector('.app-component-input-type-file-text').html(this.__title());
         }
     }
 

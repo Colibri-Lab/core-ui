@@ -6,7 +6,7 @@ Colibri.UI.Color.Line = class extends Colibri.UI.Component {
 
         this.RegisterEvent('Changed', false, 'Когда значение изменилось');
 
-        this._canvas = new Colibri.UI.Component(this.name + '_canvas', this, '<canvas />');
+        this._canvas = new Colibri.UI.Component(this.name + '_canvas', this, Element.create('canvas'));
         this._canvas.AddClass('app-color-line-canvas-component');
         this._canvas.shown = true;
 
