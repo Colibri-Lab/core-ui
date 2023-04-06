@@ -45,7 +45,7 @@ Colibri.UI.Viewer = class extends Colibri.UI.Component {
         if(this.field?.params?.post) {
             value = value + ' ' + this.field?.params?.post;
         }
-        super.value = value;
+        super.value = this._convertValue(value);
     }
 
     get value() {
@@ -58,6 +58,16 @@ Colibri.UI.Viewer = class extends Colibri.UI.Component {
 
     set root(value) {
         this._root = value;
+    }
+
+    _convertValue(value) {
+        
+        if(this.field?.params?.converter) {
+            const f = this.field.params?.converter;
+            value = f(value, this);
+        }
+
+        return value;
     }
 
     static _registered = [];

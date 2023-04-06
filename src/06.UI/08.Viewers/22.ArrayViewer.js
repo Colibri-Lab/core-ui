@@ -20,6 +20,7 @@ Colibri.UI.ArrayViewer = class extends Colibri.UI.Viewer {
     }
 
     set value(value) {
+        value = this._convertValue(value);
         this._value = value;
         this._showValue();
     }

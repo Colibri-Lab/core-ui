@@ -18,6 +18,7 @@ Colibri.UI.DateViewer = class extends Colibri.UI.Viewer {
         if(typeof value === 'string') {
             value = value.toDate();
         }
+
         this._value = value;
     
         super.value = this._value && this._format.format(this._value);

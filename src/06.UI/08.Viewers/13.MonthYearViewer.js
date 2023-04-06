@@ -6,6 +6,7 @@ Colibri.UI.MonthYearViewer = class extends Colibri.UI.Viewer {
     }
 
     set value(value) {
+        value = this._convertValue(value);
         if(typeof value == 'string') {
             value = (value + '-01').toDate();
         }

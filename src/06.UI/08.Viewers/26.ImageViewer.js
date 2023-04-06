@@ -13,6 +13,7 @@ Colibri.UI.ImageViewer = class extends Colibri.UI.Viewer {
     }
  
     set value(value) {
+        value = this._convertValue(value);
         this._colorBox.styles = {backgroundImage: value.indexOf('url') !== -1 ? value : 'url(' + value + ')'};
         this._view.value = value;
     }

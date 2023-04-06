@@ -13,6 +13,7 @@ Colibri.UI.ColorViewer = class extends Colibri.UI.Viewer {
     }
  
     set value(value) {
+        value = this._convertValue(value);
         this._colorBox.styles = {backgroundColor: value};
         this._view.value = value;
     }

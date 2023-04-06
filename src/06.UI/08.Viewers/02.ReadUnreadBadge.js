@@ -11,6 +11,8 @@ Colibri.UI.ReadUnreadBadge = class extends Colibri.UI.Viewer {
     }
 
     set value(value) {
+        value = this._convertValue(value);
+
         if(value) {
             this.AddClass('app-is-read-component');
         }

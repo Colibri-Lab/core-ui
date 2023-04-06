@@ -36,6 +36,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
     }
 
     set value(value) {
+        value = this._convertValue(value);
         this._value = value;
         this._updateFields();
     }

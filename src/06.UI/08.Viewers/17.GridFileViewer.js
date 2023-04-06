@@ -16,7 +16,8 @@ Colibri.UI.GridFileViewer = class extends Colibri.UI.Viewer {
     }
 
     set value(value) {
-        
+        value = this._convertValue(value);
+
         this._value = value;
         if(this._value && this._value.length > 0) {
             this.hasContextMenu = true;

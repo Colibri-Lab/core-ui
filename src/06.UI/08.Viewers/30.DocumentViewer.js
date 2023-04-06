@@ -47,6 +47,7 @@ Colibri.UI.DocumentViewer = class extends Colibri.UI.Viewer {
     }
 
     set value(value) {
+        value = this._convertValue(value);
 
         this._value = value;
         

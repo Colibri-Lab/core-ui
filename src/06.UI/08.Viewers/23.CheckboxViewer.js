@@ -11,7 +11,7 @@ Colibri.UI.CheckboxViewer = class extends Colibri.UI.Viewer {
 
     set value(value) {
         this._checkbox.readonly = false;
-        this._checkbox.checked = value;
+        this._checkbox.checked = this._convertValue(value);
         this._checkbox.readonly = true;
     }
 

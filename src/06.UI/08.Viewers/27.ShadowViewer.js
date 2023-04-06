@@ -13,6 +13,7 @@ Colibri.UI.ShadowViewer = class extends Colibri.UI.Viewer {
     }
  
     set value(value) {
+        value = this._convertValue(value);
         this._colorBox.styles = {boxShadow: value};
         this._view.value = value;
     }

@@ -45,12 +45,18 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
     _setCurrentUrl(url, options) {
 
+        const oldUrl = this._url;
+        const oldOptions = this._options;
+
         this._url = url;
         this._path = url.split('/').filter(v => v != '');
         this._options = options;
-        this._history.push({url: this._url, options: this._options});
 
-        this.Dispatch('RouteChanged', {url: url, options: options});
+        if(this._url !== oldUrl || JSON.stringify(this._options) !== JSON.stringify(oldOptions)) {
+            this._history.push({url: this._url, options: this._options});
+            this.Dispatch('RouteChanged', {url: url, options: options});
+        }
+
         if(this._preventNextEvent === true) {
             this._preventNextEvent = false;
             return;

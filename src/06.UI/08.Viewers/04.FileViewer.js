@@ -23,7 +23,7 @@ Colibri.UI.FileViewer = class extends Colibri.UI.Viewer {
          * }...]
          */
 
-        this._value = value;
+        this._value = this._convertValue(value);
         if(this._value && this._value.length > 0) {
             this._icon.shown = true;
         }

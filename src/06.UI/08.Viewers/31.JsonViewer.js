@@ -25,6 +25,7 @@ Colibri.UI.JsonViewer = class extends Colibri.UI.Pane {
         this._showValue();
     }
     _showValue() {
+        value = this._convertValue(value);
 
         if(Array.isArray(this._value)) {
             if(this._value.length > 0) {

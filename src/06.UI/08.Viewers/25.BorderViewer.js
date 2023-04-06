@@ -13,6 +13,7 @@ Colibri.UI.BorderViewer = class extends Colibri.UI.Viewer {
     }
  
     set value(value) {
+        value = this._convertValue(value);
         this._colorBox.styles = {border: value};
         this._view.value = value;
     }

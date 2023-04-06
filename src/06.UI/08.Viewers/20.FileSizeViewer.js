@@ -16,6 +16,7 @@ Colibri.UI.FileSizeViewer = class extends Colibri.UI.Viewer {
     }
 
     set value(value) {
+        value = this._convertValue(value);
         if(typeof value !== 'number') {
             value = value.toInt();
         }
