@@ -18,7 +18,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         /** @type {Colibri.UI.Component} */
         this._parent = null;
         /** @type {string} */
-        this._name = name;
+        this._name = name || this._newName();
         /** @type {Array} */
         this._children = [];
         /** @type {Object} */
@@ -51,7 +51,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         if (container instanceof Colibri.UI.Component) {
             this._parent = container;
-            container.Children(name, this);
+            container.Children(this._name, this);
         }
 
         this._registerEvents();
@@ -68,6 +68,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._hasContextMenu = false;
         
         this.Dispatch('ComponentRendered');
+    }
+
+    _newName() {
+        return 'component-' + Date.Mc()
     }
 
     _registerObserver() {
@@ -164,7 +168,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     CreateComponent(objectClass, element, parent, root) {
         try {
 
-            const name = element.getAttribute('name') || 'component-' + (new Date()).getTime(); 
+            const name = element.getAttribute('name') || this._newName(); 
 
             let component = new objectClass(name, parent);
             if( !(parent instanceof Colibri.UI.Component) ) {
