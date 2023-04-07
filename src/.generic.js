@@ -308,7 +308,7 @@ Object.toPlain = function (object, prefix) {
     return ret;
 };
 
-Object.cloneRecursive = function (object, callback = null) {
+Object.cloneRecursive = function (object, callback = null, excludeKeys = []) {
     if(typeof object == 'string') {
         object = JSON.parse(object);    
     }
@@ -316,13 +316,17 @@ Object.cloneRecursive = function (object, callback = null) {
     if(Array.isArray(object)) {
         let ret = [];
         for(const o of object) {
-            ret.push(Object.cloneRecursive(o));
+            ret.push(Object.cloneRecursive(o, callback, excludeKeys));
         }
         return ret;
     }
 
     let ret = {};
     Object.forEach(object, (prop, value) => {
+        if(excludeKeys.indexOf(prop) !== -1) {
+            return true;
+        }
+
         if (value instanceof Function) {
             ret[prop] = value;
         }
@@ -332,7 +336,7 @@ Object.cloneRecursive = function (object, callback = null) {
             });
         }
         else if (value instanceof Object && !(value instanceof File)) {
-            ret[prop] = Object.cloneRecursive(value, callback);
+            ret[prop] = Object.cloneRecursive(value, callback, excludeKeys);
         }
         else {
             ret[prop] = value;
