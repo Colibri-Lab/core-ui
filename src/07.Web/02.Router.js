@@ -188,6 +188,10 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
         this.Navigate(data.url, data.options);
     }
 
+    DispatchRouteChanged() {
+        this.Dispatch('RouteChanged', {url: this._url, options: this._options});
+    }
+
     get current() {
         return this._url;
     }

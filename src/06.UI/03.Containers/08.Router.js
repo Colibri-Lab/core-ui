@@ -9,7 +9,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
         this._patterns = {};
 
         this.AddHandler('ChildsProcessed', (event, args) => this.ForEach((name, component) => component.Disconnect()));
-        App.Router.AddHandler('RouteChanged', (event, args) => this.__appRouteChanged(event, args));
+        App.Router.AddHandler(['RouteChanged', 'RouteReady'], (event, args) => this.__appRouteChanged(event, args));
 
     }
 
