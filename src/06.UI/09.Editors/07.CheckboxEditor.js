@@ -48,7 +48,7 @@ Colibri.UI.CheckboxEditor = class extends Colibri.UI.Editor {
     }
 
     set value(value) {
-        this._input.checked = value;
+        this._input.checked = value === true || value === 1;
         this.Validate();
     }
 
