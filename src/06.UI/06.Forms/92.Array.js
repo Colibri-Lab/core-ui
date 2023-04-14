@@ -37,7 +37,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         }
 
         this._fieldData.desc = this._fieldData.desc ? this._fieldData.desc[Lang.Current] ?? this._fieldData.desc : '';
-        this._fieldData.params.addlink = this._fieldData.params.addlink ? this._fieldData.params.addlink[Lang.Current] ?? this._fieldData.params.addlink : '';
+        this._fieldData.params.addlink = this._fieldData?.params?.addlink ? this._fieldData.params.addlink[Lang.Current] ?? this._fieldData.params.addlink : '';
 
         this.contentContainer.Children('add-new') && this.contentContainer.Children('add-new').Dispose();
         this._link = new Colibri.UI.Link('add-new', this.contentContainer);
@@ -65,8 +65,8 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     _addNew(value = null) {
         // const containerElement = this.contentContainer.container.querySelector('.array-component-container');
         let fieldData = Object.cloneRecursive(this._fieldData);
-        delete fieldData.note;
-        delete fieldData.params.validate;
+        delete fieldData?.note;
+        delete fieldData?.params?.validate;
         fieldData = this.__updateObjectFields(fieldData);
         const object = new Colibri.UI.Forms.Object('object-' + Date.Now().getTime(), this._itemsContainer, fieldData, this, this.root);
         object.shown = true;
