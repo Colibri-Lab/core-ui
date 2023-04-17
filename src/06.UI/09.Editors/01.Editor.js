@@ -38,6 +38,9 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
 
     set field(value) {
         this._fieldData = value;
+        if(this._updateFieldData) {
+            this._updateFieldData();
+        }
     }
 
     get field() {

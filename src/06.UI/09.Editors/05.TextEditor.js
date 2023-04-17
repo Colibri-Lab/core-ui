@@ -6,6 +6,11 @@ Colibri.UI.TextEditor = class extends Colibri.UI.Editor {
         this._element.addEventListener('focus', (e) => this.Focus());
         this._element.addEventListener('blur', (e) => this.Blur());
 
+
+    }
+
+    _updateFieldData() {
+        this.placeholder = this._fieldData?.placeholder;
     }
 
     Validate() {

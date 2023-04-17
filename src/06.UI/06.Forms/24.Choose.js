@@ -37,7 +37,7 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
             this.enabled = this._fieldData.params.enabled;
         }
 
-        if(this._fieldData?.selector.openonnote) {
+        if(this._fieldData?.selector?.openonnote) {
             this.AddClass('-openonnote');
             this._content.Children(this._name + '-note').AddHandler('Clicked', (event, args) => this.__clickOnNote(event, args));
             this._input.openButton = false;
