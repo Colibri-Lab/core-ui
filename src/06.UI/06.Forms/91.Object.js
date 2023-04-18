@@ -125,7 +125,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
                     let def = field?.field?.default;
                     if(field?.field?.params?.generator) {
                         const gen = eval(component.field.params.generator);
-                        def = gen(value);
+                        def = gen(value, component, this);
                     }    
                     if(!this._value) {
                         field.value = def ?? null;    
@@ -139,7 +139,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
                 let def = component?.field?.default;
                 if(component?.field?.params?.generator) {
                     const gen = eval(component.field.params.generator);
-                    def = gen(value);
+                    def = gen(value, component, this);
                 }
                 if(!value) {
                     component.value = def ?? null;    
@@ -214,7 +214,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
             } else {
                 if(fieldData?.params?.valuegenerator) {
                     const f = eval(fieldData?.params?.valuegenerator);
-                    const v = f(parentValue, formValue);
+                    const v = f(parentValue, formValue, fieldComponent, this.root);
                     if(v != fieldComponent.value) {
                         fieldComponent.value = v;
                         parentValue[name] = v;
@@ -233,14 +233,15 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
             if(!fieldData || !this.contentContainer) {
                 return true;
             }
-            
+
             const fieldComponent = this.contentContainer.Children(name);
+            if(fieldData?.params?.fieldgenerator) {
+                const gen = eval(fieldData.params.fieldgenerator);
+                gen(fieldData, fieldComponent, this);
+            } 
+        
             if(fieldComponent && fieldData.params && fieldData.params.condition) {
 
-                if(fieldData?.params?.fieldgenerator) {
-                    const gen = eval(fieldData.params.fieldgenerator);
-                    gen(fieldData);
-                } 
                 
                 const condition = fieldData.params.condition;
                 if(condition.field) {        
@@ -253,7 +254,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
                     }
                     fieldValue = fieldValue?.value ?? fieldValue;
                     let conditionResult = true;
-                    if(condition?.value) {
+                    if((condition?.value ?? null) !== null) {
                         if(Array.isArray(condition.value)) {
                             conditionResult = fieldValue === undefined || (fieldValue !== undefined && condition.value.indexOf(fieldValue) !== -1);
                         }

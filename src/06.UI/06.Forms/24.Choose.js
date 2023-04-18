@@ -323,5 +323,9 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
             (this._fieldData.clearicon === undefined ? false : this._fieldData.clearicon)
         );
     }
+
+    get valueObject() {
+        return this._input.valueObject;
+    }
 }
 Colibri.UI.Forms.Field.RegisterFieldComponent('Choose', 'Colibri.UI.Forms.Choose', '#{ui-fields-choose}')

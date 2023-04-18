@@ -182,7 +182,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
 
     StartTabIndexRoutine() {
-        const firstInput = this._element.querySelector('input');
+        const firstInput = this._element.querySelector('input,textarea,select');
         if(firstInput) {
             firstInput.focus();
         }

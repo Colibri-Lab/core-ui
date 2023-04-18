@@ -9,6 +9,8 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
 
         this.AddClass('app-input-component');
 
+        this._fillTimeoutValue = 500;
+
         new Colibri.UI.Icon('icon', this);
         new Colibri.UI.Pane('loadingicon', this);
 
@@ -43,7 +45,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
 
             this._fillTimeout = setTimeout(() => {
                 this.Dispatch('Filled', { value: this.value });
-            }, 500);
+            }, this._fillTimeoutValue);
 
         });
 
@@ -98,7 +100,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         this.RegisterEvent('KeyUp', false, 'Поднимается, когда клавиша поднята');
         this.RegisterEvent('KeyDown', false, 'Поднимается, когда клавиша нажата');
         this.RegisterEvent('Changed', false, 'Поднимается, когда содержимое поля обновлено');
-        this.RegisterEvent('Filled', false, 'Поднимается, когда содержимое поля обновлено и не изменилось в течении 500 мс');
+        this.RegisterEvent('Filled', false, 'Поднимается, когда содержимое поля обновлено и не изменилось в течении fillTimeout мс');
         this.RegisterEvent('Cleared', false, 'Поднимается, когда содержимое поля очищено с помощью крестика');
     }
 
@@ -280,6 +282,21 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
             }
             this._popup.Show();    
         }
+    }
+
+    /**
+     * Fill timeout, default is 500
+     * @type {Number}
+     */
+    get fillTimeout() {
+        return this._fillTimeoutValue;
+    }
+    /**
+     * Fill timeout, default is 500
+     * @type {Number}
+     */
+    set fillTimeout(value) {
+        this._fillTimeoutValue = value;
     }
 
 }

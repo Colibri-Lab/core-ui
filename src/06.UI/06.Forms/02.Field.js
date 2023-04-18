@@ -104,7 +104,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
         if(this._fieldData?.params?.fieldgenerator) {
             const f = eval(this._fieldData?.params?.fieldgenerator);
-            f(this._fieldData);
+            f(this._fieldData, this, this.root);
         }
 
         this.RenderFieldContainer();
@@ -125,6 +125,20 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             if(this._parentField) {
                 this._parentField.Dispatch(event.name, Object.assign({component: event.sender}, args));
             }
+
+            if(this._fieldData?.params?.onchangehandler) {
+                let handler = null;
+                if(typeof this._fieldData?.params?.onchangehandler === 'string') {
+                    handler = eval(this._fieldData?.params?.onchangehandler);
+                } else if(typeof this._fieldData?.params?.onchangehandler === 'Function') {
+                    handler = this._fieldData?.params?.onchangehandler;
+                }
+                console.log(handler);
+                if(handler) {
+                    handler(event, args);
+                }
+            }
+
             args && args.domEvent && args.domEvent.stopPropagation();
             return true;
         });

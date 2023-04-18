@@ -62,7 +62,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             } else {
                 if(fieldData?.params?.valuegenerator) {
                     const f = eval(fieldData?.params?.valuegenerator);
-                    const v = f(parentValue, formValue);
+                    const v = f(parentValue, formValue, fieldComponent, this);
                     if(v != fieldComponent.value) {
                         fieldComponent.value = v;
                         parentValue[name] = v;
@@ -82,7 +82,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
             if(fieldData?.params?.fieldgenerator) {
                 const gen = eval(fieldData.params.fieldgenerator);
-                gen(fieldData);
+                gen(fieldData, fieldComponent, this);
             } 
 
             if(fieldData.params && fieldData.params.condition) {
@@ -94,7 +94,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                     let fieldValue = eval('data?.' + condition.field.split('.').join('?.'));
                     fieldValue = fieldValue?.value ?? fieldValue;
                     let conditionResult = true;
-                    if(condition?.value) {
+                    if((condition?.value ?? null) !== null) {
                         if(Array.isArray(condition.value)) {
                             conditionResult = fieldValue === undefined || (fieldValue !== undefined && condition.value.indexOf(fieldValue) !== -1);
                         }
@@ -172,7 +172,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                             let def = field?.field?.default;
                             if(field?.field?.params?.generator) {
                                 const gen = eval(component.field.params.generator);
-                                def = gen(value);
+                                def = gen(value, component, this);
                             }    
                             if(!this._value) {
                                 field.value = def ?? null;    
@@ -186,7 +186,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                         let def = component?.field?.default;
                         if(component?.field?.params?.generator) {
                             const gen = eval(component.field.params.generator);
-                            def = gen(value);
+                            def = gen(value, component, this);
                         }
                         if(!this._value) {
                             component.value = def ?? null;    
@@ -209,7 +209,6 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         this._hideAndShow();
         this.Dispatch('Validated');
         this._setFilledMark();
-
     }
 
     get value() {

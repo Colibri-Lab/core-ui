@@ -83,7 +83,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                 this.Loader.Show();
                 this.Loader.StartProgress(200, 1.5);
             }
-            this._loadingBox = new Colibri.UI.Loading('app-loading-box', document.body);
+            this._loadingBox = new Colibri.UI.Loading('app-loading-box', document.body, Element.create('div'), true);
             this._confirmDialog = new Colibri.UI.ConfirmDialog('confirm', document.body, 600);
             this._promptDialog = new Colibri.UI.PromptDialog('prompt', document.body, 600);
             this._alertDialog = new Colibri.UI.AlertDialog('alert', document.body, 600);

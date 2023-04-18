@@ -67,6 +67,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         let fieldData = Object.cloneRecursive(this._fieldData);
         delete fieldData?.note;
         delete fieldData?.params?.validate;
+        delete fieldData?.params?.fieldgenerator;
         fieldData = this.__updateObjectFields(fieldData);
         const object = new Colibri.UI.Forms.Object('object-' + Date.Now().getTime(), this._itemsContainer, fieldData, this, this.root);
         object.shown = true;

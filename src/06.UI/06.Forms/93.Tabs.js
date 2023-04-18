@@ -150,7 +150,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
             const fieldComponent = this.contentContainer.Children(name);
             if(fieldData?.params?.fieldgenerator) {
                 const gen = eval(fieldData.params.fieldgenerator);
-                gen(fieldData);
+                gen(fieldData, fieldComponent, this);
             } 
             if(fieldComponent && fieldData.params && fieldData.params.condition) {
                 const condition = fieldData.params.condition;
@@ -164,7 +164,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
                     }
                     fieldValue = fieldValue?.value ?? fieldValue;
                     let conditionResult = true;
-                    if(condition?.value) {
+                    if((condition?.value ?? null) !== null) {
                         if(Array.isArray(condition.value)) {
                             conditionResult = fieldValue === undefined || (fieldValue !== undefined && condition.value.indexOf(fieldValue) !== -1);
                         }
@@ -231,7 +231,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
             } else {
                 if(fieldData?.params?.valuegenerator) {
                     const f = eval(fieldData?.params?.valuegenerator);
-                    const v = f(parentValue, formValue);
+                    const v = f(parentValue, formValue, fieldComponent, this.root);
                     if(v != fieldComponent.value) {
                         fieldComponent.value = v;
                     }
