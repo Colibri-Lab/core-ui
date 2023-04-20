@@ -151,8 +151,8 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         });
 
         
-        if(value) {
-            const oneof = this.contentContainer.Children('_oneof');
+        if(value && this.contentContainer) {
+            const oneof = this.contentContainer?.Children('_oneof');
             if(oneof) {
                 const keys = Object.keys(value);
                 oneof.value = keys[0];
