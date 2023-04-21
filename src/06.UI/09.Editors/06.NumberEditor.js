@@ -5,8 +5,18 @@ Colibri.UI.NumberEditor = class extends Colibri.UI.Editor {
 
         this._element.addEventListener('focus', (e) => this.Focus());
         this._element.addEventListener('blur', (e) => this.Blur());
-        this._element.addEventListener('change', (e) => this._addFilledClass());
-        this._element.addEventListener('keydown', (e) => this._addFilledClass());
+        this._element.addEventListener('change', (e) => this.__elementChanged(e));
+        this._element.addEventListener('keydown', (e) => this.__elementChanged(e));
+
+
+    }
+
+    __elementChanged(e) {
+        if(this.value) {
+            this._setFilled();
+        } else {
+            this._unsetFilled();
+        }
 
     }
 
@@ -14,14 +24,6 @@ Colibri.UI.NumberEditor = class extends Colibri.UI.Editor {
         
     }
 
-    _addFilledClass() {
-        if(this.value) {
-            this.parent.parent.AddClass('-filled');
-        }
-        else {
-            this.parent.parent.RemoveClass('-filled');
-        }
-    }
 
     Focus() {
         this._element.focus();
@@ -62,7 +64,11 @@ Colibri.UI.NumberEditor = class extends Colibri.UI.Editor {
     set value(value) {
         this._element.value = value;
         this.Validate();
-        this._addFilledClass();
+        if(value) {
+            this._setFilled();
+        } else {
+            this._unsetFilled();
+        }
     }
 
     get enabled() {

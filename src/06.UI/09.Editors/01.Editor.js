@@ -16,7 +16,23 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
 
         this.AddHandler('Changed', (event, args) => this.Validate());
         this.AddHandler('KeyUp', (event, args) => this.Validate());
+        this.AddHandler('ReceiveFocus', (event, args) => this.__thisFocused(event, args));
+        this.AddHandler('LoosedFocus', (event, args) => this.__thisUnfocused(event, args));
 
+    }
+
+    __thisFocused(event, args) {
+        const fieldEditoPane = this._element.closest('.app-field-pane-editor');
+        if(fieldEditoPane && fieldEditoPane.tag('component')) {
+            fieldEditoPane.tag('component').AddClass('-focused');
+        }
+    }
+
+    __thisUnfocused(event, args) {
+        const fieldEditoPane = this._element.closest('.app-field-pane-editor');
+        if(fieldEditoPane && fieldEditoPane.tag('component')) {
+            fieldEditoPane.tag('component').RemoveClass('-focused');
+        }
     }
 
     _registerEvents() {
@@ -46,6 +62,21 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
     get field() {
         return this._fieldData;
     }
+    
+    _setFilled() {
+        const fieldEditoPane = this._element.closest('.app-field-pane-editor');
+        if(fieldEditoPane && fieldEditoPane.tag('component')) {
+            fieldEditoPane.tag('component').AddClass('-filled');
+        }
+    }
+
+    _unsetFilled() {
+        const fieldEditoPane = this._element.closest('.app-field-pane-editor');
+        if(fieldEditoPane && fieldEditoPane.tag('component')) {
+            fieldEditoPane.tag('component').RemoveClass('-filled');
+        }
+    }
+
 
 
 }

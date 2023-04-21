@@ -5,25 +5,15 @@ Colibri.UI.CheckboxEditor = class extends Colibri.UI.Editor {
         
         this._input = new Colibri.UI.Checkbox(this.name + '-input', this);
         this._input.shown = true;
-        
-        this._element.addEventListener('focus', (e) => this.Focus());
-        this._element.addEventListener('blur', (e) => this.Blur());
 
         this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', args));
+        this._input.AddHandler('LoosedFocus', (event, args) => this.Dispatch('LoosedFocus', args));
+        this._input.AddHandler('ReceiveFocus', (event, args) => this.Dispatch('ReceiveFocus', args));
 
     }
 
     Validate() {
         
-    }
-
-    Focus() {
-        this.focus();
-        this.parent.parent.AddClass('-focused');
-    } 
-
-    Blur() {
-        this.parent.parent.RemoveClass('-focused');
     }
 
     get readonly() {
@@ -50,6 +40,11 @@ Colibri.UI.CheckboxEditor = class extends Colibri.UI.Editor {
     set value(value) {
         this._input.checked = value === true || value === 1;
         this.Validate();
+        if(value) {
+            this._setFilled();
+        } else {
+            this._unsetFilled();
+        }
     }
 
     get enabled() {

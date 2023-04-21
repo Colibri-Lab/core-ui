@@ -117,6 +117,9 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
             pane.AddClass(`app-field-pane app-${shortComponentName}-pane`);
             if(field?.params?.className) {
                 pane.AddClass(field.params.className);
+            } 
+            if(field.params?.editor) {
+                pane.AddClass('app-field-pane-editor');
             }
             pane.shown = field.hidden === undefined || field.hidden === true;
 
@@ -186,11 +189,15 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                     }
                     viewer.field = field;
                     viewer.shown = true;
+                    viewer.enabled = field.params?.enabled ?? true;
                     viewer.download = this._download;
                     viewer.downloadlink = this._downloadlink;
                     if(field.attrs) {
-                        viewer.width = field.attrs?.width;
-                        viewer.height = field.attrs?.height;
+                        viewer.width = field.attrs?.width ?? null;
+                        viewer.height = field.attrs?.height ?? null;
+                    }
+                    if(field?.params?.className) {
+                        viewer.AddClass(field.params?.className);
                     }
                     try {
                         viewer.value = value[name][Lang.Current] ?? value[name] ?? field.default ?? '';

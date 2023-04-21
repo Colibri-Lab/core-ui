@@ -3,6 +3,18 @@ Colibri.UI.EmailEditor = class extends Colibri.UI.Editor {
         super(name, container, Element.create('input'));
         this.AddClass('app-email-editor-component');
 
+        this._element.addEventListener('change', (e) => this.__elementChanged(e));
+        this._element.addEventListener('keydown', (e) => this.__elementChanged(e));
+
+    }
+
+    __elementChanged(e) {
+        if(this.value) {
+            this._setFilled();
+        } else {
+            this._unsetFilled();
+        }
+
     }
 
     Validate() {
@@ -49,6 +61,11 @@ Colibri.UI.EmailEditor = class extends Colibri.UI.Editor {
 
     set value(value) {
         this._element.value = value;
+        if(value) {
+            this._setFilled();
+        } else {
+            this._unsetFilled();
+        }
         this.Validate();
     }
 

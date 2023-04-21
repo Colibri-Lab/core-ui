@@ -86,7 +86,7 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
      * @return {array} список файлов, прошедших проверку
      * @private
      */
-     _validate(filesList) {
+    _validate(filesList) {
         let error = false;
         let validatedList = filesList;
 
@@ -178,6 +178,13 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
             const item = {title: file.name, file: file};
             this._filesGroup.AddItem(item);
         });
+        
+        if(value && value.length > 0) {
+            this._setFilled();
+        } else {
+            this._unsetFilled();
+        }
+
     }
     
     

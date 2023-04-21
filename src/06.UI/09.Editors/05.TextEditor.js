@@ -5,7 +5,18 @@ Colibri.UI.TextEditor = class extends Colibri.UI.Editor {
         
         this._element.addEventListener('focus', (e) => this.Focus());
         this._element.addEventListener('blur', (e) => this.Blur());
+        this._element.addEventListener('change', (e) => this.__elementChanged(e));
+        this._element.addEventListener('keydown', (e) => this.__elementChanged(e));
 
+
+    }
+
+    __elementChanged(e) {
+        if(this.value) {
+            this._setFilled();
+        } else {
+            this._unsetFilled();
+        }
 
     }
 
@@ -56,6 +67,12 @@ Colibri.UI.TextEditor = class extends Colibri.UI.Editor {
     set value(value) {
         this._element.value = value;
         this.Validate();
+        if(value) {
+            this._setFilled();
+        } else {
+            this._unsetFilled();
+        }
+
     }
 
     get enabled() {
