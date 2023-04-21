@@ -180,7 +180,7 @@ Colibri.Common.MimeType = class {
         "xlc" :  "application/vnd.ms-excel",
         "xlm" :  "application/vnd.ms-excel",
         "xls" :  "application/vnd.ms-excel",
-        "xlsx" :  "application/vnd.ms-excel",
+        "xlsx" :  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "xlt" :  "application/vnd.ms-excel",
         "xlw" :  "application/vnd.ms-excel",
         "xof" :  "x-world/x-vrml",
