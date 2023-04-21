@@ -156,7 +156,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                 }
             }
 
-            if(value[name] !== undefined) {
+            if(this._showUnsetFields || value[name] !== undefined) {
 
                 const fieldContainer = new Colibri.UI.Pane(name + '-fields-pane', pane);
                 fieldContainer.AddClass('app-field-container');
@@ -188,10 +188,14 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                     viewer.shown = true;
                     viewer.download = this._download;
                     viewer.downloadlink = this._downloadlink;
+                    if(field.attrs) {
+                        viewer.width = field.attrs?.width;
+                        viewer.height = field.attrs?.height;
+                    }
                     try {
-                        viewer.value = value[name][Lang.Current] ?? value[name];
+                        viewer.value = value[name][Lang.Current] ?? value[name] ?? field.default ?? '';
                     } catch(e) {
-                        viewer.value = value[name];
+                        viewer.value = value[name] ?? field.default ?? '';
                     }
                     viewer.AddHandler('Changed', (event, args) => this.Dispatch('EditorChanged', {domEvent: args.domEvent, editor: viewer, field: field, name: name}));
                 }
@@ -210,7 +214,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         fields = fields || this._fields;
         value = value || this._value;
 
-        if(Object.countKeys(value) === 0 || Object.countKeys(fields) === 0) {
+        if((!this._showUnsetFields && Object.countKeys(value) === 0) || Object.countKeys(fields) === 0) {
             return;
         }
         

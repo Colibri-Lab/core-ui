@@ -28,7 +28,7 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
     _registerEvents() {
         super._registerEvents();
 
-        this.RegisterEvent('FileChoosen', false, 'Когда выбраны файлы');
+        this.RegisterEvent('Changed', false, 'Когда выбраны файлы');
 
     }
 
@@ -81,7 +81,7 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
                 success.push(file);
             }
         }
-        this.Dispatch('FileChoosen', {errors: errors, success: success});
+        this.Dispatch('Changed', {errors: errors, success: success});
     }
     
     _setAccept() {
