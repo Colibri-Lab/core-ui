@@ -13,6 +13,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
 
         this.RegisterEvent('FieldsToggled', false, 'Когда скрытое открыто или закрыто');
         this.RegisterEvent('EditorChanged', false, 'Когда редактор изменился');
+        this.RegisterEvent('ViewerClicked', false, 'Когда вьюер нажат');
     }
 
     set download(value) {
@@ -204,7 +205,11 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                     } catch(e) {
                         viewer.value = value[name] ?? field.default ?? '';
                     }
-                    viewer.AddHandler('Changed', (event, args) => this.Dispatch('EditorChanged', {domEvent: args.domEvent, editor: viewer, field: field, name: name}));
+                    if(field.params?.editor) {
+                        viewer.AddHandler('Changed', (event, args) => this.Dispatch('EditorChanged', {domEvent: args.domEvent, editor: viewer, field: field, name: name}));
+                    } else {
+                        viewer.AddHandler('Clicked', (event, args) => this.Dispatch('ViewerClicked', {domEvent: args.domEvent, viewer: viewer, field: field, name: name}));
+                    }
                 }
 
     
