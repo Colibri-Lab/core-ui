@@ -225,9 +225,13 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         }
         
         if (!this.multiple) {
-            this._input.value = this._value instanceof Object ? (this._value[this._titleField] ?? this._value[this._valueField] ?? '') : this._value;
+            const v = this._value instanceof Object ? (this._value[this._titleField] ?? this._value[this._valueField] ?? '') : this._value
+            this._input.value = v[Lang.Current] ?? v;
         } else {
-            const values = this._value.map((v) => v instanceof Object ? (v[this._titleField] ?? v[this._valueField] ?? '') : v);
+            const values = this._value.map((v) => {
+                v = v instanceof Object ? (v[this._titleField] ?? v[this._valueField] ?? '') : v;
+                return v[Lang.Current] ?? v;
+            });
             this._input.value = values.join(', ');
         }
     }
