@@ -344,12 +344,24 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
     }
 
     AddItem(itemData, id = null, selected = false) {
-        const name = (id || itemData.id || '_' + Number.unique());
-        const control = new Colibri.UI.List.Item(name, this);
+
+        const newKey = itemData.id ?? String.MD5(JSON.stringify(Object.sortPropertiesRecursive(itemData))); 
+        const foundItem = this.indexOf((item) => {
+            const itemKey = item.value.id || String.MD5(JSON.stringify(Object.sortPropertiesRecursive(item.value))); 
+            return itemKey === newKey;
+        });
+
+        let control;
+        if(foundItem !== -1) {
+            control = this.Children(foundItem);
+        } else {
+            const name = (id || itemData.id || '_' + Number.unique());
+            control = new Colibri.UI.List.Item(name, this);
+            control.shown = true;
+            control.selected = selected;
+            control.hasContextMenu = this.hasContextMenu;
+        }
         control.value = itemData;
-        control.shown = true;
-        control.selected = selected;
-        control.hasContextMenu = this.hasContextMenu;
 
         if(selected) {
             this.parent.SelectItem(control);
@@ -397,11 +409,13 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
     }
 
     get value() {
-        return this.label;
+        return this.Map((item) => item.value);
     }
 
     set value(value) {
-        this.label = value;
+        for(const item of value) {
+            this.AddItem(item);
+        }
     }
 
     set noItemsText(value) {
@@ -527,6 +541,12 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
     }
 
     set value(value) {
+
+        const oldKey = String.MD5(JSON.stringify(Object.sortPropertiesRecursive(this._itemData)));
+        const newKey = String.MD5(JSON.stringify(Object.sortPropertiesRecursive(value)));
+        if(oldKey === newKey) {
+            return;
+        }
 
         this._itemData = value;
         

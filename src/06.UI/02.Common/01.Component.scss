@@ -49,15 +49,17 @@
         text-align: left;
         font-weight: normal;
         color: #fff;
-        visibility: hidden;
-        box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
         opacity: 0;
+        display: none;
+        box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
         transition: opacity 0.3s, visiblity 0s;
     }
     &:hover {
         >.tip {
-            visibility: visible;
-            opacity: 1;
+            display: block;
+            animation-name: fadein;
+            animation-duration: .5s;
+            animation-fill-mode: forwards;
         }
     }
 

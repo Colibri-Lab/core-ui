@@ -26,9 +26,16 @@ Array.merge = function (a, ar) {
 };
 Array.part = function (a, e) {
     var r = [];
-    a.forEach((o) => {
-        if (eval(e))
-            r.push(o);
+    a.forEach((o, index) => {
+        if(e instanceof Function) {
+            if(e(o, index)) {
+                r.push(o);
+            }
+        } else {
+            if (eval(e)) {
+                r.push(o);
+            }
+        }
     });
     return r;
 };
@@ -226,6 +233,7 @@ Object.sortPropertiesRecursive = function(object) {
             for(const row of object[key]) {
                 rows.push(Object.sortPropertiesRecursive(row));
             }
+            v = rows;
         } else {
             v = object[key];
         }

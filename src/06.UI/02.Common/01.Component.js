@@ -325,6 +325,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.RegisterEvent('DragOver', false, 'Когда перетаскиваемый элемент находится над целевым объектом');
         this.RegisterEvent('DragLeave', false, 'Когда перетаскиваемый элемент покидает целевой объект');
         this.RegisterEvent('Drop', false, 'Когда перетаскиваемый элемент "упал" на целевой объект');
+        this.RegisterEvent('Drag', false, 'Когда происходит процесс перетаскивания');
         this.RegisterEvent('ContextMenu', false, 'Контекстное меню');
         this.RegisterEvent('Scrolled', false, 'Когда проскроллировали');
         this.RegisterEvent('VisibilityChanged', false, 'Когда изменилось состояние отображения');
@@ -448,6 +449,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         },
         Drop: {
             domEvent: 'drop',
+        },
+        Drag: {
+            domEvent: 'drag',
         },
         MouseDown: {
             domEvent: 'mousedown',
@@ -1110,7 +1114,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     indexOf(name) {
-        return Array.findIndex(this._children, (v) => v.name == name);
+        if(name instanceof Function) {
+            return Array.findIndex(this._children, name);
+        } else {
+            return Array.findIndex(this._children, (v) => v.name == name);
+        }
     }
 
     get hasShadow() {
@@ -1495,6 +1503,20 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             }
         }
         return this;
+    }
+
+    /**
+     * Крутит дочерние компоненты
+     * @param {Function} handler обработчик
+     */
+    Map(handler) {
+        const children = [...this._children];
+        let ret = [];
+        let index = 0;
+        for(const o of children) {
+            ret.push(handler.apply(this, [o.name, o, index++]));
+        }
+        return ret;
     }
 
     /**
