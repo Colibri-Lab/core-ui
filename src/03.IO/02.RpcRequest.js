@@ -14,6 +14,7 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
         this._requestType = type || 'json';
         this._remoteDomain = remoteDomain || null;
         this._urlResolver = urlResolver || null;
+        this._requestsCache = {};
 
         this._workingRequests = {};
 
@@ -64,6 +65,10 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
         return this._workingRequests;
     }
 
+    ClearCache() {
+        this._requestsCache = {};
+    }
+
     /**
      * 
      * @param {string} controller - наименование контролера 
@@ -78,7 +83,9 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
         
         const requestMethod = params && params._requestMethod && params._requestMethod === 'get' ? 'Get' : 'Post'; 
         const requestType = params && params._requestType ? params._requestType : this._requestType;
+        const requestCache = params && params._requestCache ? params._requestCache : false;
         params && delete params._requestMethod;
+        params && delete params._requestCache;
         headers.requester = location.hostname;
 
         return new Promise((resolve, reject) => {
@@ -96,6 +103,19 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
                 url = this._remoteDomain + url;
             }
 
+            const requestUnique = String.MD5(JSON.stringify(Object.sortPropertiesRecursive({url: url, params: params, headers: headers})));
+            if(requestCache && this._requestsCache['cache' + requestUnique]) {
+                Colibri.Common.Wait(() => this._requestsCache['cache' + requestUnique].working !== true).then(() => {
+                    const data = this._requestsCache['cache' + requestUnique];
+                    delete this._workingRequests[requestKeyword];
+                    this.Dispatch('CallCompleted', {result: data.result, request: requestKeyword});
+                    this.Dispatch('ResultsProcessed', {result: data.result});
+                    resolve(data);    
+                });
+                return;
+            } else {
+                this._requestsCache['cache' + requestUnique] = {working: true};
+            }
 
             request.AddHeaders(headers);
             request[requestMethod](url, params, withCredentials, (progressEvent) => {
@@ -136,6 +156,10 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
                 // data.result = Object.cloneRecursive(data.result, Object.convertToExtended);
 
                 this.Dispatch('ResultsProcessed', {result: data.result});
+
+                if(requestCache) {
+                    this._requestsCache['cache' + requestUnique] = Object.cloneRecursive(data);
+                }
 
                 resolve(data); 
 

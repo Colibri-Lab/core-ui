@@ -209,6 +209,31 @@ Object.convertToExtended = function(object) {
     return object;
 }
 
+Object.sortPropertiesRecursive = function(object) {
+    if(!(object instanceof Object)) {
+        return object;
+    }
+
+    const keys = Object.keys(object);
+    keys.sort();
+    const ret = {};
+    for(const key of keys) {
+        let v;
+        if(object[key] instanceof Object && !Array.isArray(object[key])) {
+            v = Object.sortPropertiesRecursive(object[key]);
+        } else if(Array.isArray(object[key])) {
+            let rows = [];
+            for(const row of object[key]) {
+                rows.push(Object.sortPropertiesRecursive(row));
+            }
+        } else {
+            v = object[key];
+        }
+        ret[key] = v;
+    }
+    return ret;
+}
+
 // Hide method from for-in loops
 Object.defineProperty(Array.prototype, "equals", { enumerable: false });
 

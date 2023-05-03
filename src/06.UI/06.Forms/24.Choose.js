@@ -226,14 +226,16 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
                 let module = eval(controller.module);
                 let dependsValue = this._getDependsValue('controller');
                 let dependsField = this._lookup.controller.depends ?? null;
-                lookupPromise = module.Call(controller.class, controller.method, {term: this._input._input.value, param: dependsValue, depends: dependsField, lookup: this._lookup});
+                let cacheResults = this._lookup.controller?.cache ?? false;
+                lookupPromise = module.Call(controller.class, controller.method, {term: this._input._input.value, param: dependsValue, depends: dependsField, lookup: this._lookup, _requestCache: cacheResults});
             }
             else if(this._lookup?.storage) {
                 let controller = this._lookup?.storage?.controller;
                 let module = eval(controller?.module);
                 let dependsValue = this._getDependsValue('storage');
                 let dependsField = this._lookup?.storage?.depends ?? null;
-                lookupPromise = module.Call(controller.class, controller.method, {term: this._input._input.value, param: dependsValue, depends: dependsField, lookup: this._lookup});
+                let cacheResults = this._lookup?.storage?.cache ?? false;
+                lookupPromise = module.Call(controller.class, controller.method, {term: this._input._input.value, param: dependsValue, depends: dependsField, lookup: this._lookup, _requestCache: cacheResults});
             }
             else {
                 lookupPromise = new Promise((resolve, reject) => { resolve({result: ''}); })
