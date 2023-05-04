@@ -1360,7 +1360,6 @@ Element.prototype.ensureInViewport = function (container, top = null) {
         container.scrollTop += (eBottom - cBottom);
     }
     if (top) {
-        console.log(top);
         container.scrollTop -= top;
     }
 };
