@@ -233,8 +233,12 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         loader.loading = true;
         try {
             let response = await loader.loader(param);
-            this.Set(path, response.result, nodispatch);
-            return param ? response.result[param] : response.result;    
+            if(response && response.result) {
+                this.Set(path, response.result, nodispatch);
+                return param ? response.result[param] : response.result;    
+            } else {
+                return null;
+            }
         }
         finally {
             loader.loading = false;
