@@ -57,24 +57,23 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
     _initManager() {
         
         this._dropContainer.addEventListener('dragover', (e) => {
-            console.log('dragging start');
-            this._dropContainer.classList.add('-dragging');
-            this._dropHover.css({zIndex: Colibri.UI.maxZIndex + 1});
+            if(!this._dropContainer.classList.contains('-dragging')) {
+                this._dropContainer.classList.add('-dragging');
+                this._dropHover.css({zIndex: Colibri.UI.maxZIndex + 1});
+            }
             e.stopPropagation();
             e.preventDefault();
             return false;
 
         });
-        this._dropContainer.addEventListener('dragleave', (e) => {
-            console.log('dragging end');
+        this._dropHover.addEventListener('dragleave', (e) => {
             this._dropContainer.classList.remove('-dragging');
             this._dropHover.css({zIndex: null});
             e.stopPropagation();
             e.preventDefault();
             return false;
         });
-        this._dropContainer.addEventListener('drop', (e) => {
-            console.log('dropped');
+        this._dropHover.addEventListener('drop', (e) => {
             this._dropContainer.classList.remove('-dragging');
             this._dropHover.css({zIndex: null});
 

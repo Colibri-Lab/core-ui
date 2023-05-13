@@ -331,6 +331,10 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         
     }
 
+    static CreateKey(itemData) {
+        return itemData.id ?? String.MD5(JSON.stringify(Object.sortPropertiesRecursive(itemData))); 
+    }
+
     _handlerEvents() {
 
         this.AddHandler('ContextMenuIconClicked', (event, args) => this.parent.Dispatch('ContextMenuIconClicked', Object.assign({item: args.item}, args)));
@@ -345,35 +349,42 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
 
     AddItem(itemData, id = null, selected = false) {
 
-        const newKey = itemData.id ?? String.MD5(JSON.stringify(Object.sortPropertiesRecursive(itemData))); 
-        const foundItem = this.indexOf((item) => {
-            const itemKey = item.value.id || String.MD5(JSON.stringify(Object.sortPropertiesRecursive(item.value))); 
-            return itemKey === newKey;
-        });
+        const newKey = Colibri.UI.List.Group.CreateKey(itemData); 
+        const foundItem = this.FindByKey(newKey);
 
         let control;
         if(foundItem !== -1) {
             control = this.Children(foundItem);
         } else {
             const name = (id || itemData.id || '_' + Number.unique());
-            control = new Colibri.UI.List.Item(name, this);
+            control = new Colibri.UI.List.Item('item-' + name, this);
             control.shown = true;
             control.selected = selected;
             control.hasContextMenu = this.hasContextMenu;
+            control.key = newKey;
+            
+            if(this.parent.tag && this.parent.tag.params && this.parent.tag.params.sort) {
+                const foundIndex = this.parent.tag.params.sort(control, this);
+                this.Children(name, control, foundIndex);
+            }
+
         }
+
         control.value = itemData;
 
         if(selected) {
             this.parent.SelectItem(control);
         }
 
-        if(this.parent.tag && this.parent.tag.params && this.parent.tag.params.sort) {
-            const foundIndex = this.parent.tag.params.sort(control, this);
-            this.Children(name, control, foundIndex);
-        }
-
         return control;
 
+    }
+
+    FindByKey(key) {
+        return this.indexOf((item) => {
+            const itemKey = Colibri.UI.List.Group.CreateKey(item.value); 
+            return itemKey === key;
+        });
     }
 
     get label() {
@@ -409,13 +420,34 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
     }
 
     get value() {
-        return this.Map((item) => item.value);
+        return this.Map((name, item, index) => item.value);
     }
 
     set value(value) {
+
+        const oldKeys = [];
+        const oldValues = this.value;
+        for(const item of oldValues) {
+            const key = Colibri.UI.List.Group.CreateKey(item);
+            oldKeys.push(key);
+        }
+
+        const newKeys = [];
         for(const item of value) {
+            newKeys.push(Colibri.UI.List.Group.CreateKey(item));
             this.AddItem(item);
         }
+
+        for(const key of oldKeys) {
+            if(newKeys.indexOf(key) === -1) {
+                const foundIndex = this.FindByKey(key);
+                if(foundIndex !== -1) {
+                    const item = this.Children(foundIndex);
+                    item.Dispose();
+                }
+            }
+        }
+
     }
 
     set noItemsText(value) {
@@ -470,19 +502,14 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         this.container.html('');
     }
 
+    /**
+     * @deprecated
+     */
     set items(value) {
-        if(Array.isArray(value)) {
-            for(const item of value) {
-                this.AddItem(item);
-            }
-        }
+        this.value = value;
     }
     get items() {
-        const items = [];
-        this.ForEach((name, val) => {
-            items.push(val.value);
-        });
-        return items;
+        return this.value;
     }
 
 
@@ -593,5 +620,19 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
         this.parent.contextmenu = items;
     }
 
+    /**
+     * Key value
+     * @type {string}
+     */
+    get key() {
+        return this._key;
+    }
+    /**
+     * Key value
+     * @type {string}
+     */
+    set key(value) {
+        this._key = value;
+    }
 
 }
