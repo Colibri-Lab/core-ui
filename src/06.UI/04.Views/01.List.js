@@ -425,6 +425,10 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
 
     set value(value) {
 
+        if(!(Symbol.iterator in Object(value))) {
+            return;
+        }
+
         const oldKeys = [];
         const oldValues = this.value;
         for(const item of oldValues) {
