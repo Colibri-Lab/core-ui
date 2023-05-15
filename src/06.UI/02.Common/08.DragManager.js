@@ -107,7 +107,7 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
             effectAllowed: 'all',
             dropEffect: 'move'
         };
-        this.Dispatch('DragDropOver', {dragged: this._current, droppedTo: dropTarget, droppedToElement: target, effects: overArgs});
+        this.Dispatch('DragDropOver', {dragged: this._current, droppedTo: dropTarget, droppedToElement: target, effects: overArgs, domEvent: args.domEvent});
 
         args.domEvent.dataTransfer.effectAllowed = overArgs.effectAllowed;
         args.domEvent.dataTransfer.dropEffect = overArgs.dropEffect;
@@ -132,7 +132,7 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
         dropTarget.RemoveClass('app-drop-target-component');
         event.sender.RemoveClass('app-drop-component');
 
-        this.Dispatch('DragDropLeave', {dragged: this._current, droppedTo: dropTarget, droppedToElement: target});
+        this.Dispatch('DragDropLeave', {dragged: this._current, droppedTo: dropTarget, droppedToElement: target, domEvent: args.domEvent});
 
         args.domEvent.preventDefault();
     }
@@ -154,7 +154,7 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
         const dropTarget = dropElement.tag('component');
         args.domEvent.preventDefault();
 
-        this.Dispatch('DragDropComplete', {dragged: this._current, droppedTo: dropTarget, droppedToElement: target});
+        this.Dispatch('DragDropComplete', {dragged: this._current, droppedTo: dropTarget, droppedToElement: target, domEvent: args.domEvent});
 
     }
    
