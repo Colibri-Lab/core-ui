@@ -347,7 +347,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         });
     }
 
-    AddItem(itemData, id = null, selected = false) {
+    AddItem(itemData, id = null, selected = false, index = null) {
 
         const newKey = Colibri.UI.List.Group.CreateKey(itemData); 
         const foundItem = this.FindByKey(newKey);
@@ -355,6 +355,10 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         let control;
         if(foundItem !== -1) {
             control = this.Children(foundItem);
+            control.value = itemData;
+            if(index) {
+                this.Children(control.name, control, index);
+            }
         } else {
             const name = (id || itemData.id || '_' + Number.unique());
             control = new Colibri.UI.List.Item('item-' + name, this);
@@ -362,15 +366,14 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
             control.selected = selected;
             control.hasContextMenu = this.hasContextMenu;
             control.key = newKey;
-            
+            control.value = itemData;
+
             if(this.parent.tag && this.parent.tag.params && this.parent.tag.params.sort) {
                 const foundIndex = this.parent.tag.params.sort(control, this);
                 this.Children(name, control, foundIndex);
             }
 
         }
-
-        control.value = itemData;
 
         if(selected) {
             this.parent.SelectItem(control);
@@ -437,9 +440,10 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         }
 
         const newKeys = [];
+        let index = 0;
         for(const item of value) {
             newKeys.push(Colibri.UI.List.Group.CreateKey(item));
-            this.AddItem(item);
+            this.AddItem(item, null, null, index++);
         }
 
         for(const key of oldKeys) {
