@@ -133,7 +133,6 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
                 } else if(typeof this._fieldData?.params?.onchangehandler === 'Function') {
                     handler = this._fieldData?.params?.onchangehandler;
                 }
-                console.log(handler);
                 if(handler) {
                     handler(event, args);
                 }
