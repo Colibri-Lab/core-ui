@@ -374,6 +374,20 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         return list;
     }
 
+    IntersectList(path, searchField, values) {
+        let list = this.Query(path);
+        if(!Array.isArray(list)) {
+            list = [];
+        }
+
+        for(const item of values) {
+            list = Array.replaceObject(list, searchField, item[searchField], item, true);
+        }
+
+        this.Set(path, list);
+
+    }
+
     ListAddPage(path, page, pageItems) {
         let list = this.Query(path);
         if(!Array.isArray(list) || page === 1) {
