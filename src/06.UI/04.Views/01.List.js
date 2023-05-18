@@ -443,7 +443,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         let index = 0;
         for(const item of value) {
             newKeys.push(Colibri.UI.List.Group.CreateKey(item));
-            this.AddItem(item, null, null, index++);
+            this.AddItem(item, null, item?.__selected, index++);
         }
 
         for(const key of oldKeys) {
