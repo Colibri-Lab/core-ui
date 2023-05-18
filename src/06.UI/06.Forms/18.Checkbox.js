@@ -26,6 +26,7 @@ Colibri.UI.Forms.Checkbox = class extends Colibri.UI.Forms.Field {
         else {
             this.enabled = this._fieldData.params.enabled;
         }
+        this.value = this._fieldData?.default ?? false;
 
         this._handleEvents();
     }

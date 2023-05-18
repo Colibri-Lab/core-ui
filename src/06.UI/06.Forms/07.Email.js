@@ -8,7 +8,7 @@ Colibri.UI.Forms.Email = class extends Colibri.UI.Forms.Field {
 
         this._validationText = '#{ui-email-validation-message}';
 
-        const params = {type: 'number', name: (this.form && this.form.shuffleFieldNames ? 'field-' + Date.Mc() : this._name + '-input')};
+        const params = {type: 'text', name: (this.form && this.form.shuffleFieldNames ? 'field-' + Date.Mc() : this._name + '-input')};
         if(this.form && this.form.shuffleFieldNames) {
             params.autocomplete = 'off';
         }
@@ -46,6 +46,8 @@ Colibri.UI.Forms.Email = class extends Colibri.UI.Forms.Field {
             this.enabled = this._fieldData.params.enabled;
         }
 
+        this.value = this._fieldData?.default ?? '';
+        
     }
 
     _setChanged(value) {
