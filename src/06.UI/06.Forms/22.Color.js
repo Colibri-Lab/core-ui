@@ -29,6 +29,9 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
         else {
             this.enabled = this._fieldData.params.enabled;
         }
+
+        this.placeholder = this._fieldData?.placeholder;
+
         this.value = this._fieldData?.default ?? '';
 
         this._button.AddHandler('Clicked', (event, args) => this.__buttonClicked(event, args));
@@ -45,7 +48,8 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
 
     _showPopup() {
         
-        this._colorPopup = new Colibri.UI.Color(this.name + '_color', this.contentContainer);
+        this._colorPopup = new Colibri.UI.Color(this.name + '_color', document.body);
+        this._colorPopup.parent = this.contentContainer;
         this._colorPopup.hasShadow = true;
         this._colorPopup.shown = true;
         this._colorPopup.BringToFront();
@@ -55,10 +59,14 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
             this.Dispatch('Changed', args);
         });
         this._colorPopup.AddHandler('ShadowClicked', (event, args) => {
+            console.log('disposing');
             this._colorPopup.Dispose();
         });
         this._colorPopup.value = this._input.value;
-
+        this._colorPopup.top = this._input.top + this._input.height;
+        this._colorPopup.left = this._input.left;
+        this._colorPopup.width = Math.max(this._input.width, 379);
+        
     }
 
     __buttonClicked(event, args) {
@@ -88,7 +96,7 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
     }
 
     set placeholder(value) {
-        this._input.placeholder = value ? value[Lang.Current] ?? value : '';
+        this._input.placeholder = value ? (value[Lang.Current] ?? value) : '';
     }
 
     get value() {

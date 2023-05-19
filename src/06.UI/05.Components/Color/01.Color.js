@@ -29,6 +29,16 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
         this._colorHex.addEventListener('change', (e) => {
             this.value = this._colorHex.value;
         });
+
+        this.handleVisibilityChange = true;
+        this.AddHandler('VisibilityChanged', (event, args) => {
+            const bounds = this.parent.container.bounds(true, true);
+            if(!args.state) {
+                this.top = null;
+                this.bottom = (window.innerHeight - bounds.top);
+            }
+        });
+
     }
 
     _updateUIComponents() {

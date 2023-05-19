@@ -1,5 +1,7 @@
 .app-color-component {
     
+    position: absolute;
+
     &.app-component-shown {
         display: grid;
     }
@@ -12,6 +14,7 @@
     grid-column-gap: 5px;
     grid-row-gap: 5px;
     padding: 5px;
+    background: #ffffff;
         
     > * {
         border: 1px solid #D9DCE3;
@@ -34,12 +37,13 @@
 
     input {
         background: transparent;
-        padding: 12px;
+        padding: 0px 12px;
         font-style: normal;
         font-weight: normal;
         font-size: 14px;
-        line-height: 20px;
+        line-height: 0;
         outline: none;
+        height: 30px;
     }
 
 }
