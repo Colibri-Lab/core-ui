@@ -107,7 +107,7 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
 
     _convertValue(value, direction = true) {
         if(this._fieldData?.params?.format === 'percent') {
-            value = direction ? value * 100 : value / 100;
+            value = direction ? value * (value <= 1 ? 100 : 1) : value / (value <= 1 ? 100 : 1);
         }
         return value;
     }
