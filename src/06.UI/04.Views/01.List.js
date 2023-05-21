@@ -585,7 +585,7 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
 
         this._itemData = value;
         
-        let html = this._itemData.title;
+        let html = this._itemData?.title ?? '';
         if(this.parent.parent.__renderItemContent) {
             html = this.parent.parent.__renderItemContent(this._itemData, this);
         }
