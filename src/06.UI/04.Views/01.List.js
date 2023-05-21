@@ -332,7 +332,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
     }
 
     static CreateKey(itemData) {
-        return itemData.id ?? String.MD5(JSON.stringify(Object.sortPropertiesRecursive(itemData))); 
+        return itemData?.id ?? String.MD5(JSON.stringify(Object.sortPropertiesRecursive(itemData))); 
     }
 
     _handlerEvents() {
@@ -360,7 +360,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
                 this.Children(control.name, control, index);
             }
         } else {
-            const name = (id || itemData.id || '_' + Number.unique());
+            const name = (id || itemData?.id || '_' + Number.unique());
             control = new Colibri.UI.List.Item('item-' + name, this);
             control.shown = true;
             control.selected = selected;

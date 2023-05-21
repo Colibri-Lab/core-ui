@@ -288,12 +288,24 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         return this.Children(this._name + '-title').value;
     }
     set title(value) {
-        this.Children(this._name + '-title').value = value ? value[Lang.Current] ?? value : '';
-        if(!value) {
-            this.AddClass('-without-title');
-        }
-        else {
-            this.RemoveClass('-without-title');
+        if(typeof value === 'function') {
+            value(this).then((v) => {
+                this.Children(this._name + '-title').value = v ? (v[Lang.Current] ?? v) : '';
+                if(!value) {
+                    this.AddClass('-without-title');
+                }
+                else {
+                    this.RemoveClass('-without-title');
+                }                    
+            });
+        } else {
+            this.Children(this._name + '-title').value = value ? (value[Lang.Current] ?? value) : '';
+            if(!value) {
+                this.AddClass('-without-title');
+            }
+            else {
+                this.RemoveClass('-without-title');
+            }    
         }
     }
 
