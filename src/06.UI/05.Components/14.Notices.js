@@ -23,6 +23,7 @@ Colibri.UI.Notices = class extends Colibri.UI.Pane {
         this.shown = true;
         this.BringToFront();
 
+        console.log(noticeData);
         const notice = this._group.AddItem(noticeData);
         
         const removeNotice = () => {
