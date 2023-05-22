@@ -549,7 +549,7 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
     set selected(value) {
         if (value) {
             this.AddClass('app-component-selected');
-            this._element.ensureInViewport(this.parent?.parent?.container ?? document.body);
+            // this._element.ensureInViewport(this.parent?.parent?.container ?? document.body);
         } else {
             this.RemoveClass('app-component-selected');
         }

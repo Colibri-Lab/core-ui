@@ -1321,6 +1321,7 @@ Date.from = function (from) {
     return dt;
 };
 
+
 Element.prototype.animateScrollTop = function(to, duration) {
     let start = this.scrollTop,
         change = to - start,
