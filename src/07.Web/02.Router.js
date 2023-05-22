@@ -43,7 +43,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('RouteChanged', false, 'При изменении раута');
     }
 
-    _setCurrentUrl(url, options) {
+    _setCurrentUrl(url, options, target = '_self') {
 
         const oldUrl = this._url;
         const oldOptions = this._options;
@@ -142,7 +142,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
      * @param {string} url куда
      * @param {object} options параметры
      */
-    Navigate(url, options = {}, processPatterns = true, setImmediately = false) {
+    Navigate(url, options = {}, processPatterns = true, setImmediately = false, target = '_self') {
         if(!processPatterns) {
             this._preventNextEvent = true;
         }
@@ -157,12 +157,22 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
         if(setImmediately) {
             if(this._type == Colibri.Web.Router.RouteOnHash) {
-                location.hash = '#' + u;
+                if(target === '_blank') {
+                    window.open('#' + u);
+                    return u;
+                } else {
+                    location.hash = '#' + u;
+                }
             }
             else if(this._type == Colibri.Web.Router.RouteOnHistory) {
-                history.pushState({}, "", u);
+                if(target === '_blank') {
+                    window.open(u);
+                    return u;
+                } else {
+                    history.pushState({}, "", u);
+                }
             }
-            this._setCurrentUrl(url, options);
+            this._setCurrentUrl(url, options, target);
         }
 
         if(isChanged) {
