@@ -1218,6 +1218,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 }
                 this._storage.AddPathHandler(pathsToLoad, [this, handler]);
             }).catch(response => {
+                console.log(response);
                 this.__renderBoundedValues(null, pathsToLoad);
                 this._storage.AddPathHandler(pathsToLoad, [this, handler]);
             });
@@ -1228,6 +1229,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 this.__renderBoundedValues(data, value);
                 this._storage.AddPathHandler(value, [this, handler]);
             }).catch((response) => {
+                console.log(response);
                 App.Notices.Add(new Colibri.UI.Notice(response, Colibri.UI.Notice.Error));
                 this.__renderBoundedValues(null, value);
                 this._storage.AddPathHandler(value, [this, handler]);
