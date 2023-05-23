@@ -66,6 +66,10 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
     }
 
     __clicked(event, args) {
+        this.ClickOnButton();
+    }
+    
+    ClickOnButton() {
         this._input.click();
     }
 
