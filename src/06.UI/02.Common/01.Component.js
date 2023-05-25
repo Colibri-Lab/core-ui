@@ -930,36 +930,83 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             if(!tip) {
                 this.AddHandler('MouseMove', (event, args) => {
                     if(this._toolTip) {
-                        const bounds = this._element.bounds();
-                        const tip = this._element.querySelector(':scope > .tip');
-                        tip.css({left: bounds.left + 'px', top: (bounds.top + bounds.height + 10).toFixed(2) + 'px', zIndex: Colibri.UI.maxZIndex});
+                        this._setToolTipPositionAndGap();
                     }
                 });
-
                 tip = Element.create('span', {class: 'tip'});
                 this._element.append(tip);
             }
-
             tip.html(this._toolTip);
-
-            // ! доделать
-            const bounds = this._element.bounds();
-            const tipBounds = tip.bounds();
-            if(this._toolTipPosition === 'left bottom') {
-                tip.css({left: bounds.left + 'px', top: (bounds.top + bounds.height + 10) + 'px', zIndex: Colibri.UI.maxZIndex});
-            } else if(this._toolTipPosition === 'left top') {
-                tip.css({left: bounds.left + 'px', top: (bounds.top + tipBounds.height - 10) + 'px', zIndex: Colibri.UI.maxZIndex});
-            } else if(this._toolTipPosition === 'right bottom') {
-                
-            } else if(this._toolTipPosition === 'right top') {
-                
-            }
         }
         else {
             if(tip) {
                 tip.remove();
             }
         }
+
+    }
+
+    _setToolTipPositionAndGap() {
+        const bounds = this._element.bounds();
+        const tip = this._element.querySelector(':scope > .tip');
+        const tipBounds = tip.bounds();
+        const windowBounds = document.body.bounds();
+        windowBounds.height = window.clientHeight;
+
+        tip.attr('class', 'tip');
+        tip.attr('css', null);
+
+        let left = 0;
+        let right = 0;
+        let top = 0;
+
+        let likeX = this._toolTipPosition.split(' ')[0];
+        let likeY = this._toolTipPosition.split(' ')[1];
+
+        if(likeX === 'left') {
+            // левый край
+            left = bounds.left;
+            if(left + tipBounds.width > windowBounds.width) {
+                likeX = 'right';
+                left = bounds.left + bounds.width - tipBounds.width;
+            }
+        } else  {
+            // правый край
+            left = bounds.left + bounds.width - tipBounds.width;
+            if(left - tipBounds.width < 0) {
+                likeX = 'left';
+                left = bounds.left;
+            }
+        }
+
+        if(likeY === 'bottom') {
+            // нижний край
+            top = (bounds.top + bounds.height);
+            if(top + tipBounds.height > windowBounds.height) {
+                likeY = 'top';
+                top = (bounds.top - tipBounds.height);
+            }
+        } else  {
+            // правый край
+            top = (bounds.top - tipBounds.height);
+            if(top - tipBounds.height < 0) {
+                likeY = 'bottom';
+                top = (bounds.top + bounds.height);
+            }
+        }
+
+        let css = {zIndex: Colibri.UI.maxZIndex};
+        if(left > 0) {
+            css.left = left + 'px';
+        } else if(right > 0) {
+            css.right = right + 'px';
+        }
+        css.top = top + 'px';
+        tip.classList.add('-' + likeX);
+        tip.classList.add('-' + likeY);
+        tip.css(css);
+
+        
 
     }
 

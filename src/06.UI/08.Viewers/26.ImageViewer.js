@@ -11,6 +11,19 @@ Colibri.UI.ImageViewer = class extends Colibri.UI.Viewer {
         this._view.shown = true;
 
     }
+
+    GetImageSize(value) {
+        return new Promise((resolve, reject) => {
+            value = value.indexOf('url') !== -1 ? value.replace(/url\((['"])?(.*?)\1\)/gi, '$2') : value;
+            var image = new Image();
+            image.src = value;
+            image.onload = function () {
+                var width = image.width,
+                height = image.height;
+                resolve({width: width, height: height});
+            };    
+        });
+    }
  
     set value(value) {
         value = this._convertValue(value);

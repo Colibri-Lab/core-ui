@@ -53,11 +53,11 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         return fieldData;
     }
 
-    AddNew() {
+    AddNew(value) {
         if(this._link.ContainsClass('ui-disabled')) {
             return;
         }
-        const object = this._addNew();
+        const object = this._addNew(value);
         this.Dispatch('Changed', {component: this});
         return object;
     }
