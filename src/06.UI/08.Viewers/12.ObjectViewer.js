@@ -11,7 +11,7 @@ Colibri.UI.ObjectViewer = class extends Colibri.UI.Viewer {
             if(value instanceof Object && value.value && value.title) {
                 value = value.title;
             }
-            ret.push(value);
+            ret.push(this._field.fields[name].desc + ': ' + value);
         });
         this._element.html(ret.join(' '));
     }
