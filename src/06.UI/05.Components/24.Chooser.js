@@ -38,6 +38,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         this._input =  new Colibri.UI.Input(this._name + '-input', this);
         this._input.shown = true;
         this._input.icon = null;
+        this._input.readonly = true;
         this._input.hasIcon = false;
         this._input.hasClearIcon = (clearIcon || !readonly);
         this._input.placeholder = this._placeholder;
@@ -68,12 +69,14 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
     ShowChooser() {
         if(this._chooser) {
             const component = this._chooser;
-            this._chooserObject = new component(this.name + '-chooser', document.body, this._selector?.params || {}, this._values);
-            this._chooserObject.AddHandler('Choosed', (event, args) => {
-                this.value = args.value;
-                this.valueObject = args.valueObject;
-                this.Dispatch('Changed', {});
-            });
+            if(!this._chooserObject) {
+                this._chooserObject = new component(this.name + '-chooser', document.body, this._selector?.params || {}, this._values);
+                this._chooserObject.AddHandler('Choosed', (event, args) => {
+                    this.value = args.value;
+                    this.valueObject = args.valueObject;
+                    this.Dispatch('Changed', {});
+                });
+            }
             this._chooserObject.Show();
         } 
         else {
@@ -247,16 +250,16 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
      * Свойство только для чтения
      */
     get readonly() {
-        return !!this._input.readonly;
+        return !!this._readonly;
     }
     set readonly(value) {
         if(value === true || value === 'true') {
             this.AddClass('app-component-readonly');
-            this._input.readonly = true;
+            this._readonly = true;
         }
         else {
             this.RemoveClass('app-component-readonly');
-            this._input.readonly = false;
+            this._readonly = false;
         }
     }
 

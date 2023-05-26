@@ -39,6 +39,45 @@
 				border: 1px solid transparent;
 				cursor: pointer;
 				position: relative;
+
+				>.node-tip {
+					display: none;
+				}
+
+				&:hover {
+					>.node-tip:not(:empty) {
+						display: block;
+						animation-name: fadein;
+						animation-duration: .5s;
+						animation-delay: .5s;
+						animation-fill-mode: forwards;
+						animation-timing-function: ease-out;
+
+						position: absolute;
+						z-index: 1;
+						font-size: 16px;
+						line-height: 20px;
+						text-transform: none;
+						padding: 5px;
+						padding: 8px 12px;
+						background: rgba(0,0,0,.7);
+						border-radius: 2px;
+						max-width: 400px;
+						font-size: 14px;
+						text-align: left;
+						font-weight: normal;
+						color: #fff;
+						opacity: 0;
+						box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
+						transition: opacity 0.3s, visiblity 0s;
+						white-space: normal;
+
+						left: 30px;
+						top: 100%;
+						
+					}
+				}	
+
 				>dd:first-of-type {
 					display: none;
 					position: absolute;

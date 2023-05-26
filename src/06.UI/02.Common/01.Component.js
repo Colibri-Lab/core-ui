@@ -915,6 +915,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
        this._element.html(value);
     }
 
+    _createTipObject() {
+        this._tipObject = Element.create('span', {class: 'tip'});
+        this._element.append(this._tipObject);
+    }
+
     /**
      * Подсказка
      * @type {number}
@@ -925,36 +930,35 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     set toolTip(value) {
         this._toolTip = value;
 
-        let tip = this._element.querySelector(':scope > .tip');
         if(this._toolTip) {
-            if(!tip) {
-                this.AddHandler('MouseMove', (event, args) => {
-                    if(this._toolTip) {
-                        this._setToolTipPositionAndGap();
-                    }
-                });
-                tip = Element.create('span', {class: 'tip'});
-                this._element.append(tip);
+            if(!this._tipObject) {
+                this._createTipObject();
             }
-            tip.html(this._toolTip);
+            this.AddHandler('MouseMove', (event, args) => {
+                if(this._toolTip) {
+                    this._setToolTipPositionAndGap();
+                }
+            });
+            this._tipObject.html(this._toolTip);
         }
         else {
-            if(tip) {
-                tip.remove();
+            if(this._tipObject) {
+                this._tipObject.remove();
+                this._tipObject = null;
             }
         }
 
     }
 
-    _setToolTipPositionAndGap() {
-        const bounds = this._element.bounds();
-        const tip = this._element.querySelector(':scope > .tip');
-        const tipBounds = tip.bounds();
+    _setToolTipPositionAndGap(elementObject = null) {
+        elementObject = elementObject || this._element;
+        const bounds = elementObject.bounds();
+        const tipBounds = this._tipObject.bounds();
         const windowBounds = document.body.bounds();
         windowBounds.height = window.clientHeight;
 
-        tip.attr('class', 'tip');
-        tip.attr('css', null);
+        this._tipObject.attr('class', 'tip');
+        this._tipObject.attr('css', null);
 
         let left = 0;
         let right = 0;
@@ -1002,9 +1006,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             css.right = right + 'px';
         }
         css.top = top + 'px';
-        tip.classList.add('-' + likeX);
-        tip.classList.add('-' + likeY);
-        tip.css(css);
+        this._tipObject.classList.add('-' + likeX);
+        this._tipObject.classList.add('-' + likeY);
+        this._tipObject.css(css);
 
         
 

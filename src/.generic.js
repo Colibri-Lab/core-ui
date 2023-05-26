@@ -1670,14 +1670,17 @@ Element.prototype.css = function (name, value) {
 /**
  * Возвращает местоположение и размеры элемента
  */
-Element.prototype.bounds = function (includeBorders = false, includeMargin = false) {
+Element.prototype.bounds = function (includeBorders = false, includeMargin = false, parent = null) {
 
     const rect = this.getBoundingClientRect();
     const win = this.ownerDocument.defaultView;
 
+    const offsetX = parent ? parent.scrollLet : win.pageXOffset;
+    const offsetY = parent ? parent.scrollTop : win.pageYOffset;
+
     let position = {
-        top: rect.top + win.pageYOffset,
-        left: rect.left + win.pageXOffset,
+        top: rect.top + offsetY,
+        left: rect.left + offsetX,
     };
 
     const style = getComputedStyle(this);

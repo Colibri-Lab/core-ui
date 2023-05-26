@@ -205,11 +205,13 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
 Colibri.UI.TreeNode = class extends Colibri.UI.Component {
 
     constructor(name, container) {
-        super(name, container, Element.fromHtml('<div><div><dd drop="before"></dd><em class="expander"></em><em class="icon none"></em><span></span><input type="text" /><dd drop="after"></dd></div></div>')[0]);
+        super(name, container, Element.fromHtml('<div><div><dd drop="before"></dd><em class="expander"></em><em class="icon none"></em><span></span><input type="text" /><dd drop="after"></dd><span class="node-tip"></span></div></div>')[0]);
         this._nodes = new Colibri.UI.TreeNodes('nodes', this, container.tree);
 
+        this._div = this._element.querySelector(':scope > div');
         this._input = this._element.querySelector('input');
         this._text = this._element.querySelector('div span');
+        this._tipSpan = this._element.querySelector(':scope > div > .node-tip');
 
         this._handleEvents();
 
@@ -315,6 +317,21 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         }
         catch(e) {}
 
+    }
+
+    /**
+     * Tooltip text
+     * @type {string}
+     */
+    get toolTip() {
+        return this._tipSpan.html();
+    }
+    /**
+     * Tooltip text
+     * @type {string}
+     */
+    set toolTip(value) {
+        this._tipSpan.html(value);
     }
 
     get expanded() {
