@@ -187,8 +187,9 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                 }
                 else {
                     const componentName = field.component.replaceAll('Colibri.UI.Forms.', '');
-                    const viewerComponentName = field.viewer || field.params.viewer || (field.params?.editor ? 'Colibri.UI.' + componentName + 'Editor' : 'Colibri.UI.' + componentName + 'Viewer');
+                    const viewerComponentName = field?.viewer || field.params?.viewer || (field.params?.editor ? 'Colibri.UI.' + componentName + 'Editor' : 'Colibri.UI.' + componentName + 'Viewer');
                     let viewer = null;
+                    let viewerAttrs = field.params?.viewerAttrs ?? {};
                     try {
                         viewer = eval('new '+ viewerComponentName + '(name + \'-viewer\', fieldContainer, null, root)');
                     }
@@ -200,6 +201,12 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                     viewer.enabled = field.params?.enabled ?? true;
                     viewer.download = this._download;
                     viewer.downloadlink = this._downloadlink;
+                    if(field.fields) {
+                        viewer.fields = field.fields;
+                    }
+                    Object.forEach(viewerAttrs, (attr, value) => {
+                        viewer[attr] = value;
+                    });
                     if(field.attrs) {
                         viewer.width = field.attrs?.width ?? null;
                         viewer.height = field.attrs?.height ?? null;
