@@ -149,7 +149,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                 try {
                     let tvalue = field.desc[Lang.Current] ?? field.desc;
                     if(typeof tvalue === 'function') {
-                        tvalue(field).then((value) => {
+                        tvalue(field, this).then((value) => {
                             title.value = value;
                         });
                     } else {
