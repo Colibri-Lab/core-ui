@@ -92,7 +92,9 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
             }
             else {
                 if(value instanceof Object) {
-                    super.value = value[this._field?.selector?.title ?? 'title'][Lang.Current] ?? value[this._field?.selector?.title ?? 'title'];
+                    try {
+                        super.value = value[this._field?.selector?.title ?? 'title'][Lang.Current] ?? value[this._field?.selector?.title ?? 'title'];
+                    } catch(e) {}
                 }
                 else if (this._field?.lookup) {
                     let selected = false;
@@ -112,7 +114,9 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                     }).finally(() => {
                         this.RemoveClass('app-viewer-loading')
                         if(!selected) {
-                            super.value = value[this._field?.selector?.title ?? 'title'][Lang.Current] ?? value[this._field?.selector?.title ?? 'title'];
+                            try {
+                                super.value = value[this._field?.selector?.title ?? 'title'][Lang.Current] ?? value[this._field?.selector?.title ?? 'title'];
+                            } catch(e) {}
                         }
                     });
                 }
