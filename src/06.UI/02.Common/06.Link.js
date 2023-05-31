@@ -26,5 +26,19 @@ Colibri.UI.Link = class extends Colibri.UI.Component {
         this._element.attr('target', value);
     }
        
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
+    get enabled() {
+        return this._element.attr('disabled') !== 'disabled';
+    }
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
+    set enabled(value) {
+        this._element.attr('disabled', value === true || value === 'true' ? null : 'disabled');
+    }
 
 }
