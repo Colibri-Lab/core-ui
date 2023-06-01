@@ -55,8 +55,6 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
             source.draggable = true;
             source.AddHandler('DragStart', this.__dragStartFromSourcesHandler);
             source.AddHandler('DragEnd', this.__dragEndFromSourcesHandler);
-            source.height = source.height;
-
         });
 
         this._destinations.forEach((dest) => {
