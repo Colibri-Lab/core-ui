@@ -26,7 +26,7 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
                 this._setChecked(!this._input.checked);
                 this.Dispatch('Changed', {value: this._input.checked});
             }
-
+            
             args.domEvent.stopPropagation();
             args.domEvent.preventDefault();
             return false;

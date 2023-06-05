@@ -322,4 +322,26 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
         }
     }
 
+    /**
+     * Shows the component
+     * @type {boolean}
+     */
+    get shown() {
+        return super.shown;
+    }
+    /**
+     * Shows the component
+     * @type {boolean}
+     */
+    set shown(value) {
+        super.shown = value;
+        if(this._input) {
+            this._input.shown = value;
+        }
+    }
+
+    Focus() {
+        this._input.Focus();
+    }
+
 }

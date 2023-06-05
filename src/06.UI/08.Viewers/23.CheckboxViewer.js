@@ -2,21 +2,24 @@ Colibri.UI.CheckboxViewer = class extends Colibri.UI.Viewer {
 
     constructor(name, container, element = null, root = null) {
         super(name, container, element || Element.create('span'), root);
-        this.AddClass('app-bool-viewer-component');
+        this.AddClass('app-checkbox-viewer-component');
 
-        this._checkbox = new Colibri.UI.Checkbox(this.name + '_check', this);
+        this._checkbox = new Colibri.UI.Icon(this.name + '_check', this);
+        this._checkbox.value = Colibri.UI.AltCheckMarkIcon;
         this._checkbox.shown = true;
-        this._checkbox.readonly = true;
+
     }
 
     set value(value) {
-        this._checkbox.readonly = false;
-        this._checkbox.checked = this._convertValue(value);
-        this._checkbox.readonly = true;
+        if(this._convertValue(value)) {
+            this._checkbox.AddClass('-checked');
+        } else {
+            this._checkbox.RemoveClass('-checked');
+        }
     }
 
     get value() {
-        return this._checkbox.checked ?? null;
+        return this._checkbox.ContainsClass('-checked');
     }
 
     get field() {

@@ -62,4 +62,8 @@ Colibri.UI.CheckboxEditor = class extends Colibri.UI.Editor {
         }
     }
 
+    Focus() {
+        this._input.Focus();
+    }
+
 }

@@ -1,7 +1,7 @@
-Colibri.UI.TextEditor = class extends Colibri.UI.Editor {
+Colibri.UI.TextAreaEditor = class extends Colibri.UI.Editor {
     constructor(name, container) {
-        super(name, container, Element.create('input'));
-        this.AddClass('app-text-editor-component');
+        super(name, container, Element.create('textarea'));
+        this.AddClass('app-textarea-editor-component');
         
         this._element.addEventListener('focus', (e) => this.Focus());
         this._element.addEventListener('blur', (e) => this.Blur());

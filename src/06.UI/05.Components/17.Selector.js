@@ -627,9 +627,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
             this._setValue(selected);
             this._renderValue(!this._multiple);
-            if(!this.readonly) {
-                this._input._input.focus();//возвращаем фокус на инпут
-            }
+            this.Focus();
             this.Dispatch('Changed', args);
             
             return false;
@@ -638,6 +636,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
         popup.AddHandler('ShadowClicked', () => {
             this._hidePopup();
+            this.Focus();
         });
     }
 
@@ -654,6 +653,22 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      */
     set canSelectGroup(value) {
         this._canSelectGroup = value;
+    }
+
+    /**
+     * Shows the component
+     * @type {boolean}
+     */
+    get shown() {
+        return super.shown;
+    }
+    /**
+     * Shows the component
+     * @type {boolean}
+     */
+    set shown(value) {
+        super.shown = value;
+        this._removePopup();
     }
 
 }

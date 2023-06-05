@@ -197,10 +197,10 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
     }
     set readonly(value) {
         if(value === true || value === 'true') {
-            this._input.attr('readonly', 'readonly');
+            this._input.attr('readonly', 'readonly').attr('tabindex', '-1');
         }
         else {
-            this._input.attr('readonly', null);
+            this._input.attr('readonly', null).attr('tabindex', null);
         }
         this.Dispatch('ReadonlyStateChanged');
     }

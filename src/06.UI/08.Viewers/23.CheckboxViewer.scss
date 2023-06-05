@@ -1,6 +1,40 @@
-.appapp-bool-viewer-component {
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 140%;
+.app-checkbox-viewer-component {
+    
+    -webkit-user-select: none;
+    user-select: none;
+
+    .app-component-icon {
+        width: 17px;
+        height: 17px;
+        border: 1px solid #D4D4D4;
+        background-color: transparent;
+        border-radius: 2px;
+
+        svg {
+            display: block;
+            height: 15px;
+            width: 13px;
+
+            path {
+                fill: transparent;
+            }
+        }
+            
+        &.-checked {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #2196f3;
+            border: 1px solid #2196f3;
+
+            svg {
+                path {
+                    fill: #ffffff;
+                }
+            }
+        }
+
+    }
+
+
 }
