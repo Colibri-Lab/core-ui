@@ -22,6 +22,11 @@ Colibri.UI.Viewer = class extends Colibri.UI.Component {
             const f = eval(this._field?.params?.fieldgenerator);
             f(this._field);
         }
+
+        if(this._field?.params?.copy) {
+            this.copy = this._field?.params?.copy;
+        }        
+
     }
 
     get viewedObject() {

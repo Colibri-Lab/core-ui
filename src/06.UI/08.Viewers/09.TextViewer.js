@@ -5,9 +5,14 @@ Colibri.UI.TextViewer = class extends Colibri.UI.Viewer {
         this.AddClass('app-text-viewer-component');
     }
 
+    get value() {
+        return super.value;
+    }
+
     set value(value) {
         super.value = !value ? '&mdash;' : value;
     }
+
 
 
 }

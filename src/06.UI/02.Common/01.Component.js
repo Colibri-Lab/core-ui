@@ -32,6 +32,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         this._storage = null;
         this._binding = '';
+        this._clickToCopyHandler = (e) => this.value.copyToClipboard() && App.Notices.Add(new Colibri.UI.Notice('#{ui-copy-info}', Colibri.UI.Notice.Success));
 
         if (!element) {
             element = Element.create('div');
@@ -1666,6 +1667,31 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     __processChangeOnRouteSwitch(patternMatches) {
         this.ReloadBinding();
+    }
+
+    /**
+     * Can copy content
+     * @type {Boolean}
+     */
+    get copy() {
+        return this._copy;
+    }
+    /**
+     * Can copy content
+     * @type {Boolean}
+     */
+    set copy(value) {
+        this._copy = value;
+        this._showCopy();
+    }
+    _showCopy() {
+        if(this._copy) {
+            this.AddClass('-cancopy');
+            this._element.addEventListener('mousedown', this._clickToCopyHandler);
+        } else {
+            this.RemoveClass('-cancopy');
+            this._element.removeEventListener('mousedown', this._clickToCopyHandler);
+        } 
     }
 
 }
