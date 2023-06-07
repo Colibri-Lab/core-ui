@@ -66,7 +66,7 @@ Colibri.UI.Forms.Checkbox = class extends Colibri.UI.Forms.Field {
     }
 
     set value(value) {
-        this._input.checked = !!value;
+        this._input.checked = value === 'true' || value === true || value === 1 || value === '1';
     }
 
     get enabled() {
