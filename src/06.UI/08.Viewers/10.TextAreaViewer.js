@@ -8,6 +8,10 @@ Colibri.UI.TextAreaViewer = class extends Colibri.UI.Viewer {
 
     }
 
+    get value() {
+        return super.value;
+    }
+    
     set value(value) {
         super.value = !value ? '&mdash;' : value.replaceAll(/\n/, '<br />');
     }

@@ -368,7 +368,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
             control.key = newKey;
             control.value = itemData;
 
-            if(this.parent.tag && this.parent.tag.params && this.parent.tag.params.sort) {
+            if(this.parent?.tag && this.parent?.tag?.params && this.parent?.tag?.params?.sort) {
                 const foundIndex = this.parent.tag.params.sort(control, this);
                 this.Children(name, control, foundIndex);
             }
@@ -586,13 +586,13 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
         this._itemData = value;
         
         let html = this._itemData?.title ?? '';
-        if(this.parent.parent.__renderItemContent) {
+        if(this.parent?.parent?.__renderItemContent) {
             html = this.parent.parent.__renderItemContent(this._itemData, this);
         }
-        else if(this._itemData.__render) {
+        else if(this._itemData?.__render) {
             html = this._itemData.__render.apply(this, [this._itemData, this]);
         }
-        else if(this.parent.parent.rendererComponent) {
+        else if(this.parent?.parent?.rendererComponent) {
             let content = this.Children(this.name + '_renderer');
             if(!content) {
                 const attrs = this.parent.parent.rendererAttrs;

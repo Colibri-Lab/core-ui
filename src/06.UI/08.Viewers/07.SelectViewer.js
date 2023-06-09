@@ -5,7 +5,12 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
         this.AddClass('app-select-viewer-component');
     }
 
+    get value() {
+        return this._value;
+    }
+
     set value(value) {
+        this._value = value;
         if(value !== null && value !== undefined && value !== '') {
             if((this._field?.multiple ?? this._field?.params?.multiple)) {
                 // надо обработать вариант с мультизначениями

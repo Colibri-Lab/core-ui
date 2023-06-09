@@ -1251,6 +1251,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                     Colibri.Common.Wait(() => this.isConnected, 0, 10).then(() => this.__renderBoundedValues(data, path));
                 }
             } catch(e) {
+                console.error(e);
                 App.Notices.Add(new Colibri.UI.Notice(e, Colibri.UI.Notice.Error));
             }
         };
