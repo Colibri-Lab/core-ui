@@ -4,22 +4,12 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
         this.AddClass('app-select-editor-component');
         
         
-        this._element.addEventListener('focus', (e) => this.Focus());
-        this._element.addEventListener('blur', (e) => this.Blur());
 
 
     }
 
     Validate() {
         
-    }
-
-    Focus() {
-        this.parent.parent.AddClass('-focused');
-    } 
-
-    Blur() {
-        this.parent.parent.RemoveClass('-focused');
     }
 
     get readonly() {
@@ -90,6 +80,10 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
         this._input = this._createSelector();
         this._input.shown = true;
         this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', args));
+        this._input.AddHandler('ReceiveFocus', (event, args) => {
+            this.parent.parent.AddClass('-focused');
+        });
+        this._input.AddHandler('LoosedFocus', (event, args) => this.parent.parent.RemoveClass('-focused'));
         this._initializeValues();
         if(this.field?.params?.readonly === undefined) {
             this.readonly = false;    
@@ -343,5 +337,6 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
     Focus() {
         this._input.Focus();
     }
+
 
 }

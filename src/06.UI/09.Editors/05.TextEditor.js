@@ -36,7 +36,6 @@ Colibri.UI.TextEditor = class extends Colibri.UI.Editor {
 
     Blur() {
         this.parent.parent.RemoveClass('-focused');
-        this.Dispatch('Changed', {value: this.value});
     }
 
     get readonly() {

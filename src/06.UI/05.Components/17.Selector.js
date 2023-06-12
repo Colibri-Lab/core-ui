@@ -102,6 +102,8 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._input.AddHandler('Filled', (event, args) => this.__Filled(event, Object.assign(args, {search: true})));
         this._input.AddHandler('Cleared', (event, args) => this.__Cleared(event, args));
         this._input.AddHandler('Clicked', (event, args) => this.__Clicked(event, args));
+        this._input.AddHandler('ReceiveFocus', (event, args) => this.Dispatch('ReceiveFocus', args));
+        this._input.AddHandler('LoosedFocus', (event, args) => this.Dispatch('LoosedFocus', args));
 
 
         this._arrow.addEventListener('click', (e) => { 
@@ -113,6 +115,11 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         });
 
         this._input.AddHandler('LoosedFocus', (event, args) => {
+            if(!this._skipLooseFocus) {
+                this._hidePopup();
+            }
+        });
+        this.AddHandler('LoosedFocus', (event, args) => {
             if(!this._skipLooseFocus) {
                 this._hidePopup();
             }
@@ -440,7 +447,12 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * Поставить фокус
      */
     Focus() {
-        this._input.Focus();
+        if(this._input?.readonly) {
+            this._element.focus();
+            this.Dispatch('ReceiveFocus', {});
+        } else {
+            this._input.Focus();
+        }
     }
 
     HaveValues() {
@@ -483,6 +495,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         }
         else {
             this.RemoveClass('app-component-searchable');
+            this.tabIndex = -1;
             this._input.readonly = true;
         }
     }
@@ -669,6 +682,21 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     set shown(value) {
         super.shown = value;
         this._removePopup();
+    }
+
+    /**
+     * Gets tab index
+     * @type {Number}
+     */
+    get tabIndex() {
+        return this._element.attr('tabIndex');
+    }
+    /**
+     * Sets tab index
+     * @type {Number}
+     */
+    set tabIndex(value) {
+        this._element.attr('tabIndex', value === 'true' || value === true ? Colibri.UI.tabIndex++ : value);
     }
 
 }
