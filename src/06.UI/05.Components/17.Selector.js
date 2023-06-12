@@ -684,20 +684,5 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._removePopup();
     }
 
-    /**
-     * Gets tab index
-     * @type {Number}
-     */
-    get tabIndex() {
-        return this._element.attr('tabIndex');
-    }
-    /**
-     * Sets tab index
-     * @type {Number}
-     */
-    set tabIndex(value) {
-        this._element.attr('tabIndex', value === 'true' || value === true ? Colibri.UI.tabIndex++ : value);
-    }
-
 }
 
