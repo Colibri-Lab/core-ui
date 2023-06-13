@@ -8,6 +8,11 @@
             width: 160px;
             padding: 0px 0px 0px 9px;
         }
+
+        [data-object-name$="-clear"] {
+            margin-left: 10px;
+            cursor: pointer;
+        }
     
     }
 }

@@ -24,6 +24,13 @@ Colibri.UI.Forms.DateTime = class extends Colibri.UI.Forms.Field {
         this._time.hasClearIcon = false;
         this._time.mask = '99:99:99';
 
+        this._icon = new Colibri.UI.Icon(this.name + '-clear', contentContainer);
+        this._icon.shown = true;
+        this._icon.value = Colibri.UI.ClearIcon;
+        this._icon.AddHandler('Clicked', (event, args) => {
+            this.value = null;
+        });
+
         if(this._fieldData?.params?.readonly === undefined) {
             this.readonly = false;    
         }

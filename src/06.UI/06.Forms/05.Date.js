@@ -17,6 +17,14 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
             args.domEvent.stopPropagation();
             return false;
         });
+        
+        this._icon = new Colibri.UI.Icon(this.name + '-clear', contentContainer);
+        this._icon.shown = true;
+        this._icon.value = Colibri.UI.ClearIcon;
+        this._icon.AddHandler('Clicked', (event, args) => {
+            this.value = null;
+        });
+
 
         this._input.AddHandler('PopupOpened', (event, args) => this.AddClass('-opened'));
         this._input.AddHandler('PopupClosed', (event, args) => this.RemoveClass('-opened'));

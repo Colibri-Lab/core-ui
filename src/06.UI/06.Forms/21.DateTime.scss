@@ -22,6 +22,11 @@
             width: 100px;
             margin-left: 10px;
         }
+        [data-object-name$="-clear"] {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
     
     }
 }
