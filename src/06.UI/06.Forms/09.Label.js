@@ -20,6 +20,10 @@ Colibri.UI.Forms.Label = class extends Colibri.UI.Forms.Field {
             this.enabled = this._fieldData.params.enabled;
         }
 
+        if(this._fieldData.params?.className) {
+            this.AddClass(this._fieldData.params?.className);
+        }
+
     }
 
 
