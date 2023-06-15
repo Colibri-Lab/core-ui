@@ -117,6 +117,23 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             Object.assign(this, this._fieldData.attrs);
         }
 
+        Object.forEach(this._fieldData?.params, (key, value) => {
+            if(key.indexOf('On') === 0) {
+
+                let handler = null;
+                if(typeof value === 'string') {
+                    handler = eval(value);
+                } else if(typeof value === 'Function' || typeof value === 'function') {
+                    handler = value;
+                }
+
+                if(handler) {
+                    this.AddHandler(key.replaceAll('On', ''), handler);
+                }
+            }
+        });
+
+
         this.AddHandler(['Changed', 'KeyUp', 'KeyDown'], (event, args) => {
             if(event.name == 'Changed') {
                 this._applyRuntimes();

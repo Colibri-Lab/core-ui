@@ -103,7 +103,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._input.AddHandler('Cleared', (event, args) => this.__Cleared(event, args));
         this._input.AddHandler('Clicked', (event, args) => this.__Clicked(event, args));
         this._input.AddHandler('ReceiveFocus', (event, args) => this.Dispatch('ReceiveFocus', args));
-        this._input.AddHandler('LoosedFocus', (event, args) => this.Dispatch('LoosedFocus', args));
+        this._input.AddHandler('LoosedFocus', (event, args) => !this._skipLooseFocus && this.Dispatch('LoosedFocus', args));
 
 
         this._arrow.addEventListener('click', (e) => { 

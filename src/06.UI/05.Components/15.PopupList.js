@@ -10,7 +10,7 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
         this._valueField = valueField;
         this._groupField = groupField;
         this._canSelectGroup = canSelectGroup;
-
+        this.tabIndex = null;
         this.AddHandler('ShadowClicked', (event, args) => {
             this.Hide();
         });

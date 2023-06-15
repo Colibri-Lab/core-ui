@@ -71,10 +71,19 @@
 
             border-bottom: 1px solid #EAEAEA;
         
-            &:hover, &.app-component-selected {
-                background: #D6EEFF;
-            }
-
         }
+    }
+
+    &.-focused.-can-select {
+        > .app-component-list-group {
+            >div {
+                > .app-component-list-item:not(.disable-default) {
+                    &:hover, &.app-component-selected {
+                        background: #D6EEFF;
+                    }
+                }
+            }
+        }
+        
     }
 }

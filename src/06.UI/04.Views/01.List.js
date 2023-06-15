@@ -4,6 +4,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         super(name, container, element);
         this.AddClass('app-component-list');
 
+        this._canSelect = true;
         this._selected = [];
 
         if (multiple === undefined) {
@@ -11,6 +12,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         }
         this._multiple = multiple;
 
+        this.tabIndex = -1;
         this._scrolling = -1;
         this._scrollY = -1;
         this._element.addEventListener('scroll', (event) => {
@@ -29,6 +31,9 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
             }
         });
+
+        this.AddHandler('ReceiveFocus', (event, args) => this.AddClass('-focused'));
+        this.AddHandler('LoosedFocus', (event, args) => this.RemoveClass('-focused'));
 
     }
 
@@ -104,6 +109,9 @@ Colibri.UI.List = class extends Colibri.UI.Component {
      * @param {Colibri.UI.List.Item} selected
      */
     SelectItem(selected) {
+        if(!this._canSelect) {
+            return;
+        }
         if(!this._multiple) {
             this.ClearSelection(false);
             selected = Array.isArray(selected) && selected.length ? selected.shift() : selected;
@@ -314,6 +322,26 @@ Colibri.UI.List = class extends Colibri.UI.Component {
             eval('value = ' + value + ';');
         }
         this._rendererAttrs = value;
+    }
+
+    /**
+     * Can select items
+     * @type {boolean}
+     */
+    get canSelect() {
+        return this._canSelect;
+    }
+    /**
+     * Can select items
+     * @type {boolean}
+     */
+    set canSelect(value) {
+        this._canSelect = value === true || value === 'true';
+        if(this._canSelect) {
+            this.AddClass('-can-select');
+        } else {
+            this.RemoveClass('-can-select');
+        }
     }
 
 }
