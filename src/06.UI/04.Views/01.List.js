@@ -5,6 +5,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         this.AddClass('app-component-list');
 
         this._canSelect = true;
+        this.AddClass('-can-select');
         this._selected = [];
 
         if (multiple === undefined) {
