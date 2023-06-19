@@ -10,15 +10,6 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
             this.Hide();
         });
 
-        this.handleVisibilityChange = true;
-        this.AddHandler('VisibilityChanged', (event, args) => {
-            const bounds = this.parent.container.bounds(true, true);
-            if(!args.state) {
-                this.top = null;
-                this.bottom = (window.innerHeight - bounds.top);
-            }
-        });
-
     }
 
     set shown(value) {
@@ -26,9 +17,8 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
         this.container.hideShowProcess(() => {
             if(this.parent) {
                 const bounds = this.parent.container.bounds();
-                this.top = bounds.top + bounds.outerHeight;
-                this.left = bounds.left;
-                this.width = bounds.outerWidth;    
+                this.left = bounds.outerWidth;
+                this.top = '0';
                 if(value) {
                     this.AddClass(this.parent.name + '-selector-popup');
                     this.BringToFront();
@@ -38,10 +28,6 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
                 }    
             }
             this.hasShadow = value;
-            this.Dispatch('VisibilityChanged', {state: true});
-            if(this._selected.length && this._selected[0] instanceof Colibri.UI.List.Item) {
-                this._selected[0].EnsureVisible(this);
-            }
         });
     }
 

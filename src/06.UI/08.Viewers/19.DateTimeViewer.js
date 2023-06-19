@@ -4,10 +4,9 @@ Colibri.UI.DateTimeViewer = class extends Colibri.UI.Viewer {
         super(name, container, element || Element.create('span'), root);
         this.AddClass('app-datetime-viewer-component');
 
-        this._date = new Colibri.UI.TextSpan('date', this);
-        this._time = new Colibri.UI.TextSpan('time', this);
-        this._date.shown = this._time.shown = true;
-
+        let dateformat = App.DateFormat || 'ru-RU';
+        this._format = new Intl.DateTimeFormat(dateformat, {day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'});
+        
         this._value = null;
 
     }
@@ -25,10 +24,11 @@ Colibri.UI.DateTimeViewer = class extends Colibri.UI.Viewer {
             value = value.toDateFromUnixTime();
         }
         this._value = value;
-        
-        if(this._value) {
-            this._date.value = this._value.toShortRUString();
-            this._time.value = this._value.toTimeString();
+    
+        try {
+            super.value = this._value && this._format.format(this._value);
+        } catch(e) {
+            super.value = '';
         }
 
     }

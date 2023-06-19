@@ -709,7 +709,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @type {Number}
      */
     set left(value) {
-        this._element.css('left', value + 'px');
+        this._element.css('left', value !== null ? value + 'px' : null);
     }
 
     /**
@@ -721,7 +721,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return bounds.left + bounds.outerWidth;
     }
     set right(value) {
-        this._element.css('right', value ? value + 'px' : null);
+        this._element.css('right', value !== null ? value + 'px' : null);
     }
 
     /**
@@ -733,7 +733,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return bounds.top;
     }
     set top(value) {
-        this._element.css('top', value ? value + 'px' : null);
+        this._element.css('top', value !== null ? value + 'px' : null);
     }
 
     /**
