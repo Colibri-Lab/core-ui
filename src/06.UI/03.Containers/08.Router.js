@@ -22,11 +22,28 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
     }
     /**
      * Route structure Object
-     * @type {Object}
+     * @type {Object|Function}
      */
     set structure(value) {
-        this._structure = this.toPlain(value instanceof Object ? value : eval(value), '/');
-        this._initStructure();
+        let struct = {};
+        if(value instanceof Object) {
+            struct = value;
+        } else if(typeof value === 'string') {
+            struct = eval(value);
+        } else if(typeof value === 'function') {
+            struct = value();
+        }
+
+        if(struct instanceof Promise) {
+            struct.then(structure => {
+                this._structure = this.toPlain(structure, '');
+                this._initStructure();        
+            });
+        } else {
+            this._structure = this.toPlain(struct, '/');
+            this._initStructure();    
+        }
+
     }
     _initStructure() {
         
@@ -35,22 +52,28 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
 
             let component = null;
             if(route?.component ?? null) {
-                const componentObject = route.component;
-                component = new componentObject(route?.name ?? ('component-' + Date.Mc()), this);
+                let componentObject = route.component;
+                if(typeof componentObject === 'string') {
+                    componentObject = eval(componentObject);
+                }
+                if(componentObject) {
+                    component = new componentObject(route?.name ?? ('component-' + Date.Mc()), this);
+                }
             } else {
                 component = new route('component-' + Date.Mc(), this);
             }
 
-            component.routePattern = pattern.substring(this.basePattern.length);
-
-            if(route?.attrs ?? null) {
-                Object.forEach(route?.attrs, (attrName, attrValue) => {
-                    component[attrName] = attrValue;
-                });
+            if(component) {
+                component.routePattern = pattern.substring(this.basePattern.length);
+                if(route?.attrs ?? null) {
+                    Object.forEach(route?.attrs, (attrName, attrValue) => {
+                        component[attrName] = attrValue;
+                    });
+                }
+    
+                component.Disconnect();
+                component.shown = true;    
             }
-
-            component.Disconnect();
-            component.shown = true;
         }
 
 

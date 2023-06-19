@@ -684,5 +684,35 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._removePopup();
     }
 
+    /**
+     * Title field name 
+     * @type {string}
+     */
+    get titleField() {
+        return this._titleField;
+    }
+    /**
+     * Title field name 
+     * @type {string}
+     */
+    set titleField(value) {
+        this._titleField = value;
+    }
+
+    /**
+     * Value field name
+     * @type {string}
+     */
+    get valueField() {
+        return this._valueField;
+    }
+    /**
+     * Value field name
+     * @type {string}
+     */
+    set valueField(value) {
+        this._valueField = value;
+    }
+
 }
 
