@@ -197,5 +197,13 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
 
     }
 
+    Clear() {
+        Object.forEach(this.buttons, (name, button) => {
+            button.Dispose();
+        });
+        Object.forEach(this.components, (name, component) => {
+            component.Dispose();
+        });
+    }
 
 }
