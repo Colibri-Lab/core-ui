@@ -189,7 +189,8 @@ Colibri.Common.MimeType = class {
         "z" :  "application/x-compress",
         "zip" :  "application/zip", 
         "swf" : "application/x-shockwave-flash",
-        "svg" : "image/svg+xml"
+        "svg" : "image/svg+xml",
+        "xml": "application/xml"
         
     }
 

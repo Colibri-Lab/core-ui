@@ -309,6 +309,21 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         return super.shown;
     }
 
+    /**
+     * Is window has title
+     * @type {Boolean}
+     */
+    get hasTitle() {
+        return this._titleContainer.css('display') === 'block';
+    }
+    /**
+     * Is window has title
+     * @type {Boolean}
+     */
+    set hasTitle(value) {
+        this._titleContainer.css('display', value ? 'block' : 'none');
+    }
+
     AddButton(title, name) {
         this._footer.hideElement();
         this._footer.showElement();
