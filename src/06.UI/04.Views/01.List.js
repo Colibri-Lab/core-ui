@@ -585,7 +585,7 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
     }
 
     __ItemSelected(event, args) {
-        this.parent.parent.Dispatch('ItemClicked', {item: this, domEvent: args.domEvent});
+        this.parent.parent.Dispatch('ItemClicked', Object.assign(args, {item: this, domEvent: args.domEvent}));
     }
 
     __ItemDblSelected(event, args) {

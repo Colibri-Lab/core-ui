@@ -130,6 +130,11 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     
     __MinimizeClicked(event, args) {
         
+        this.MinimizeToggle();
+
+    }
+
+    MinimizeToggle() {
         const content = this._minimizedGetContentMethod(this);
         if(content) {
             this._minimizedContent.html(content);
@@ -154,7 +159,6 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             this._state = 'normal';
 
         }
-
     }
 
     __MouseUp(event, args) {
