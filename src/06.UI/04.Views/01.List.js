@@ -110,7 +110,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
      * @param {Colibri.UI.List.Item} selected
      */
     SelectItem(selected) {
-        if(!this._canSelect) {
+        if(!this._canSelect || !selected) {
             return;
         }
         if(!this._multiple) {

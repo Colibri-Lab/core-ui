@@ -13,12 +13,12 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
         this._registerEvents();
         this._preventNextEvent = false;
 
-        this._handleHashChange = (e) => {
-            this._setCurrentUrl(App.Request.uri, App.Request.query);
-        };
-        this._handlePopState = (e) => {
-            this._setCurrentUrl(App.Request.uri, App.Request.query);
-        };
+        // this._handleHashChange = (e) => {
+        //     this._setCurrentUrl(App.Request.uri, App.Request.query);
+        // };
+        // this._handlePopState = (e) => {
+        //     this._setCurrentUrl(App.Request.uri, App.Request.query);
+        // };
         
         if(type == Colibri.Web.Router.RouteOnHash) {
             this._initRouterOnHash();
@@ -31,12 +31,18 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
     }
 
     HandleDomReady() {
-        if(this._type == Colibri.Web.Router.RouteOnHash) {
-            this._setCurrentUrl(App.Request.uri, App.Request.query);
-        }
-        else if(this._type == Colibri.Web.Router.RouteOnHistory) {
-            this._setCurrentUrl(App.Request.uri, App.Request.query);
-        }
+        this._url = App.Request.uri;
+        this._path = App.Request.uri.split('/').filter(v => v != '');
+        this._options = App.Request.query;
+        this._history.push({url: this._url, options: this._options});
+        this._setCurrentUrl(App.Request.uri, App.Request.query);
+        this.Dispatch('RouteChanged', {url: this._url, options: this._options});
+
+        // if(this._type == Colibri.Web.Router.RouteOnHash) {
+        // }
+        // else if(this._type == Colibri.Web.Router.RouteOnHistory) {
+        //     this._setCurrentUrl(App.Request.uri, App.Request.query);
+        // }
     }
 
     _registerEvents() {
@@ -54,7 +60,9 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
         if(this._url !== oldUrl || JSON.stringify(this._options) !== JSON.stringify(oldOptions)) {
             this._history.push({url: this._url, options: this._options});
-            this.Dispatch('RouteChanged', {url: url, options: options});
+            if(this._preventNextEvent === true) {
+                this.Dispatch('RouteChanged', {url: url, options: options});
+            }
         }
 
         if(this._preventNextEvent === true) {
@@ -142,11 +150,22 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
      * @param {string} url куда
      * @param {object} options параметры
      */
-    Navigate(url, options = {}, processPatterns = true, setImmediately = false, target = '_self') {
-        if(!processPatterns) {
-            this._preventNextEvent = true;
-        }
+    Navigate(url, options = {}, processPatterns = true, setImmediately = true, target = '_self') {
+
         const u = url + (Object.countKeys(options) > 0 ? '?' + String.fromObject(options, ['&', '=']) : '');
+        if(target === '_blank') {
+            window.open(this._type == Colibri.Web.Router.RouteOnHash ? '#' + u : u);
+            return u;
+        }
+
+        if(!setImmediately) {
+            this._url = url;
+            this._path = url.split('/').filter(v => v != '');
+            this._options = options;
+            this._history.push({url: this._url, options: this._options});
+            return;
+        }
+
         let isChanged = false;
         if(this._type == Colibri.Web.Router.RouteOnHash) {
             isChanged = location.hash != '#' + u;
@@ -155,28 +174,24 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
             isChanged = location.pathname != u;
         }
 
-        if(setImmediately) {
+        if(isChanged) {
             if(this._type == Colibri.Web.Router.RouteOnHash) {
-                if(target === '_blank') {
-                    window.open('#' + u);
-                    return u;
-                } else {
-                    location.hash = '#' + u;
-                }
+                window.hash = '#' + u;
+            } else if(this._type == Colibri.Web.Router.RouteOnHistory) {
+                history.pushState({url: this._url, options: this._options}, '', u);                
             }
-            else if(this._type == Colibri.Web.Router.RouteOnHistory) {
-                if(target === '_blank') {
-                    window.open(u);
-                    return u;
-                } else {
-                    history.pushState({}, "", u);
-                }
-            }
-            this._setCurrentUrl(url, options, target);
         }
 
         if(isChanged) {
+            this._url = url;
+            this._path = url.split('/').filter(v => v != '');
+            this._options = options;
+            this._history.push({url: this._url, options: this._options});
+        }
+
+        if(processPatterns && isChanged) {
             this._processRoutePatterns();
+            this.Dispatch('RouteChanged', {url: this._url, options: this._options});
         }
 
         return u;

@@ -212,6 +212,10 @@ Array.toObjectWithKeys = function (array, fieldKey, fieldValue) {
     return ret;
 };
 
+Array.sum = function(ar) {
+    return ar.reduce((partialSum, a) => partialSum + a, 0);
+}
+
 Object.convertToExtended = function(object) {
     return object;
 }
