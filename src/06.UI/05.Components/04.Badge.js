@@ -3,9 +3,6 @@ Colibri.UI.Badge = class extends Colibri.UI.Component {
     constructor(name, container) {
         super(name, container, Element.create('span'));
         this.AddClass('app-component-badge');
-        // default
-        this.backgroundColor = 'red';
-        this.textColor = 'white';
 
     }
 
