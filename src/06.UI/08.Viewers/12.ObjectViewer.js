@@ -11,7 +11,10 @@ Colibri.UI.ObjectViewer = class extends Colibri.UI.Viewer {
             if(value instanceof Object && value.value && value.title) {
                 value = value.title;
             }
-            ret.push(this._field.fields[name].desc + ': ' + value);
+            if(this._field.fields[name]) {
+                const desc = Lang ? Lang.Translate(this._field.fields[name].desc) : this._field.fields[name].desc;
+                ret.push(desc + ': ' + value);
+            }
         });
         this._element.html(ret.join(' '));
     }
