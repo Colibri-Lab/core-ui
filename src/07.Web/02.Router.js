@@ -40,6 +40,10 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
         
     }
 
+    CreateUri() {
+        return this._url + '?' + Object.toQueryString(this._options, ['&', '=']);
+    }
+
     HandleDomReady() {
         this._url = App.Request.uri;
         this._path = App.Request.uri.split('/').filter(v => v != '');
@@ -200,6 +204,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
             this._history.push({url: this._url, options: this._options});
         }
 
+        console.log(processPatterns, isChanged);
         if(processPatterns && isChanged) {
             this._processRoutePatterns();
             this.Dispatch('RouteChanged', {url: this._url, options: this._options});
