@@ -204,7 +204,6 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
             this._history.push({url: this._url, options: this._options});
         }
 
-        console.log(processPatterns, isChanged);
         if(processPatterns && isChanged) {
             this._processRoutePatterns();
             this.Dispatch('RouteChanged', {url: this._url, options: this._options});

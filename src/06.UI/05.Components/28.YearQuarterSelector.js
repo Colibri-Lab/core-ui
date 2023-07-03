@@ -18,9 +18,7 @@ Colibri.UI.YearQuarterSelector = class extends Colibri.UI.FlexBox {
             '#{ui-yearquarter-selector-3}',
             '#{ui-yearquarter-selector-4}',
         ];
-
-        console.log(this._quartersTexts);
-
+        
         this._yearSelector.shown = true;
         this._quarterSelector.shown = true;
 
