@@ -4,7 +4,14 @@
     overflow: auto;
 
     padding-bottom: 10px;
-    
+
+    position: relative;
+
+    .app-component-list-searchbox {
+        width: 100%;
+        
+    }    
+
     .app-component-list-group {
 
         //transition: height 500ms ease-in-out;
@@ -77,6 +84,7 @@
         
         }
     }
+
 
     &.-focused.-can-select {
         > .app-component-list-group {

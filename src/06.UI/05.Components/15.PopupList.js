@@ -4,7 +4,8 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
     constructor(name, container, multiple, __render, titleField = 'title', valueField = 'value', groupField = null, canSelectGroup = false) {
         super(name, container, null, multiple);
         this.AddClass('app-component-popup-list-component');
-        
+
+
         this.__renderElement = __render;
         this._titleField = titleField;
         this._valueField = valueField;
@@ -25,12 +26,10 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
         });
 
         this.AddHandler('KeyDown', (event, args) => {
-            console.log(event, args);
             return false;
         });
 
     }
-
 
     set shown(value) {
         super.shown = value;
@@ -82,7 +81,7 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
 
     FillItems(value, selectedValues = null) {
 
-        this.Clear();
+        this.ClearAllGroups();
         this.ClearSelection(false);
 
         const values = Object.values(value);

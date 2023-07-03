@@ -256,6 +256,14 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         this._multiple = value;
     }
 
+    ClearAllGroups() {
+        this.ForEach((name, component) => {
+            if(component instanceof Colibri.UI.List.Group) {
+                component.Dispose();
+            }
+        })
+    }
+
     ClearSelection(fireAnEvent = true) {
         this._selected.forEach((item) => {
             item.selected = false;
@@ -343,6 +351,172 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         } else {
             this.RemoveClass('-can-select');
         }
+    }
+
+    /**
+     * Has searchbox in top of list
+     * @type {Boolean}
+     */
+    get hasSearchBox() {
+        return this._searchBox !== null;
+    }
+    /**
+     * Has searchbox in top of list
+     * @type {Boolean}
+     */
+    set hasSearchBox(value) {
+        if(value) {
+            this._searchBox = new Colibri.UI.List.SearchBox(this.name + '-searchbox', this);
+            this._searchBox.shown = true;
+            this._searchBox.AddHandler('Changed', (event, args) => this.__searchBoxChanged(event, args));
+        } else if(this._searchBox) {
+            this._searchBox.Dispose();
+            this._searchBox = null;
+        }
+    }
+
+    __searchBoxChanged(event, args) {
+        const f = this._searchFilterCallback;
+        this.ForEach((name, component) => {
+            if(component instanceof Colibri.UI.List.Group) {
+                component.ForEach((n, item) => {
+                    if(this._searchFilterCallback) {
+                        item.shown = f(item, this._searchBox.value);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * Has search icon in search box
+     * @type {Boolean}
+     */
+    get searchBoxSearchIcon() {
+        if(!this._searchBox) {
+            return false;
+        }
+        return this._searchBox.hasIcon;
+    }
+    /**
+     * Has search icon in search box
+     * @type {Boolean}
+     */
+    set searchBoxSearchIcon(value) {
+        if(!this._searchBox) {
+            return;
+        }
+        this._searchBox.hasIcon = value;
+    }
+    
+    /**
+     * Searchbox placeholder
+     * @type {String}
+     */
+    get searchBoxPlaceholder() {
+        if(!this._searchBox) {
+            return; 
+        }
+        return this._searchBox.placeholder;
+    }
+    /**
+     * Searchbox placeholder
+     * @type {String}
+     */
+    set searchBoxPlaceholder(value) {
+        if(!this._searchBox) {
+            return;
+        }
+        this._searchBox.placeholder = value;
+    }
+
+    /**
+     * 
+     * @type {}
+     */
+    get searchFilterCallback() {
+        return this._searchFilterCallback;
+    }
+    /**
+     * 
+     * @type {}
+     */
+    set searchFilterCallback(value) {
+        this._searchFilterCallback = value;
+    }
+
+    FocusOnSearchBox() {
+        if(!this._searchBox) {
+            return;
+        }
+        this._searchBox.Focus();
+    }
+
+}
+
+Colibri.UI.List.SearchBox = class extends Colibri.UI.Pane {
+    constructor(name, container) {
+        super(name, container);
+        this.AddClass('app-component-list-searchbox');
+
+        this._input = new Colibri.UI.Input(this.name + '-input', this);
+        this._input.shown = true;
+        this._input.AddHandler(['Filled', 'Cleared'], (event, args) => this.Dispatch('Changed', args));
+
+    }
+
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('Changed', false, 'Когда изменился поиск');
+    }
+
+    /**
+     * 
+     * @type {}
+     */
+    get hasIcon() {
+        return this._input.hasIcon;
+    }
+    /**
+     * 
+     * @type {}
+     */
+    set hasIcon(value) {
+        this._input.hasIcon = value;
+    }
+
+    /**
+     * 
+     * @type {}
+     */
+    get placeholder() {
+        return this._input.placeholder;
+    }
+    /**
+     * 
+     * @type {}
+     */
+    set placeholder(value) {
+        this._input.placeholder = value;
+    }
+
+    Focus() {
+        this._input.Focus();
+    }
+
+    /**
+     * Value of searchbox
+     * @type {String}
+     */
+    get value() {
+        return this._input.value;
+    }
+    /**
+     * Value of searchbox
+     * @type {String}
+     */
+    set value(value) {
+        this._input.value = value;
     }
 
 }
@@ -615,13 +789,7 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
         this._itemData = value;
         
         let html = this._itemData?.title ?? '';
-        if(this.parent?.parent?.__renderItemContent) {
-            html = this.parent.parent.__renderItemContent(this._itemData, this);
-        }
-        else if(this._itemData?.__render) {
-            html = this._itemData.__render.apply(this, [this._itemData, this]);
-        }
-        else if(this.parent?.parent?.rendererComponent) {
+        if(this.parent?.parent?.rendererComponent) {
             let content = this.Children(this.name + '_renderer');
             if(!content) {
                 const attrs = this.parent.parent.rendererAttrs;
@@ -637,7 +805,12 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
             }
             content.value = this._itemData;
             html = null;
-        } 
+        } else if(this.parent?.parent?.__renderItemContent) {
+            html = this.parent.parent.__renderItemContent(this._itemData, this);
+        }
+        else if(this._itemData?.__render) {
+            html = this._itemData.__render.apply(this, [this._itemData, this]);
+        }
         
         if(html) {
             this._element.html(html);
