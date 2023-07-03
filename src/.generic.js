@@ -1663,7 +1663,11 @@ Element.prototype.css = function (name, value) {
         if (value === undefined) {
             return styleObject && styleObject[name] !== undefined ? styleObject[name] : getComputedStyle(this)[name];
         } else {
-            styleObject[name.toCamelCase()] = value;
+            if(value === null) {
+                delete styleObject[name.toCamelCase()];    
+            } else {
+                styleObject[name.toCamelCase()] = value;
+            }
             this.attr('style', Object.toStyles(styleObject, [';', ':']));
             return this;
         }

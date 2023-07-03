@@ -54,6 +54,17 @@
                     }
                 }
             }
+
+            &.app-notice-white-component {
+                position: relative;
+                opacity: 1;
+                margin-left: 0px;
+                background: white;
+                color: black;
+                &:hover, &.app-component-selected {
+                    background: white;
+                }
+            }
     
             &.app-notice-success-component {
                 position: relative;

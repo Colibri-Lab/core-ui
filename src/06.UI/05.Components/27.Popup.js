@@ -10,15 +10,26 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
             this.Hide();
         });
 
+        this.handleVisibilityChange = true;
+        this.AddHandler('VisibilityChanged', (event, args) => {
+            const bounds = this.parent.container.bounds(true, true);
+            if(!args.state) {
+                this.top = null;
+                this.bottom = bounds.outerHeight;
+            }
+        });
+
     }
+
 
     set shown(value) {
         super.shown = value;
         this.container.hideShowProcess(() => {
             if(this.parent) {
                 const bounds = this.parent.container.bounds();
-                this.left = bounds.outerWidth;
-                this.top = '0';
+                this.top = bounds.outerHeight;
+                this.bottom = null;
+                this.left = 0;
                 if(value) {
                     this.AddClass(this.parent.name + '-selector-popup');
                     this.BringToFront();
@@ -28,110 +39,13 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
                 }    
             }
             this.hasShadow = value;
+            this.Dispatch('VisibilityChanged', {state: true});
+            
         });
     }
 
     get shown() {
         return super.shown;
     }
-
-    __renderItemContent(itemData) {
-        let html = '';
-
-        try {
-            html = itemData[this._titleField ?? 'title'][Lang.Current] ?? itemData[this._titleField ?? 'title'] ?? itemData;
-            if(this.__renderElement) {
-                html = this.__renderElement(itemData);
-            }
     
-            if(this._multiple) {
-                html = '<div class="app-popup-list-item-content"><div>' + html + '</div>' + Colibri.UI.SelectCheckIcon + '</div>';
-            }
-        }
-        catch(e) {
-
-        }
-        
-        return html;
-    }
-
-    FillItems(value, selectedValues = null) {
-
-        this.Clear();
-        this.ClearSelection(false);
-
-        const values = Object.values(value);
-        if(this._groupField) {
-
-            
-
-            const selectedKeys = [];
-    
-            if(selectedValues !== undefined && selectedValues !== null && selectedValues !== '') {
-                if(!Array.isArray(selectedValues)) {
-                    selectedValues = [selectedValues];
-                }
-                selectedValues.forEach((val) => {
-                    selectedKeys.push(String(val[this._valueField] ?? val));
-                });
-            }
-
-            if(this._canSelectGroup) {
-                const group = this.AddGroup('group', '');
-                for(let val of values) {
-                    if(val[this._groupField] === true) {
-                        const item = group.AddItem(val, null);
-                        item.AddClass('-group');
-                    }
-                    group.AddItem(val, null);
-                }
-            }
-            else {
-                const groups = {};
-                for(let val of values) {
-                    if(!groups[String.MD5(val[this._groupField])]) {
-                        groups[String.MD5(val[this._groupField])] = this.AddGroup(String.MD5(val[this._groupField]), val[this._groupField]);
-                    }
-                    if(selectedKeys.includes(String(val[this._valueField] ?? val))) {
-                        groups[String.MD5(val[this._groupField])].AddItem(val, null, true);
-                    }
-                    else {
-                        groups[String.MD5(val[this._groupField])].AddItem(val, null);
-                    }
-                    
-                }
-            }
-    
-            
-
-        }
-        else {
-
-            const group = this.AddGroup('group', '');
-            const selectedKeys = [];
-    
-            if(selectedValues !== undefined && selectedValues !== null && selectedValues !== '') {
-                if(!Array.isArray(selectedValues)) {
-                    selectedValues = [selectedValues];
-                }
-                selectedValues.forEach((val) => {
-                    selectedKeys.push(String(val[this._valueField] ?? val));
-                });
-            }
-    
-            for(let val of values) {
-                if(selectedKeys.includes(String(val[this._valueField] ?? val))) {
-                    group.AddItem(val, null, true);
-                }
-                else { 
-                    group.AddItem(val, null);
-                }
-            }
-                
-        }
-
-    }
-
-
-
 }

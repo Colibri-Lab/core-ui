@@ -64,6 +64,7 @@ Colibri.UI.Notice = class {
     static Error = 'error';
     static Success = 'success';
     static Warning = 'warning';
+    static White = 'white';
 
     constructor(title, severity = Colibri.UI.Notice.Error, timeout = 3000) {
         this._title = title;
