@@ -74,4 +74,12 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
         return this._selectedButton ? this._selectedButton.childIndex : null;
     }
 
+    DisableAllButtons() {
+        this.ForEach((name, component) => component.enabled = false);
+    }
+
+    EnableButton(name) {
+        this.Children(name).enabled = true;
+    }
+
 }
