@@ -246,6 +246,10 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      */
     _showPopup(values) {
 
+        if(this.readonly || !this.enabled) {
+            return;
+        }
+
         if(!this._popup) {
             this._popup = this._createPopup(values);
             this._registerPopupEventHandlers(this._popup);
@@ -469,11 +473,11 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     set readonly(value) {
         if(value === true || value === 'true') {
             this.AddClass('app-component-readonly');
-            this._input.enabled = true;
+            this._input.enabled = false;
         }
         else {
             this.RemoveClass('app-component-readonly');
-            this._input.enabled = false;
+            this._input.enabled = true;
         }
     }
 
