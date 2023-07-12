@@ -2,5 +2,5 @@ ui-toggle-button-expand:
   ru: Развернуть
   en: Expand
 ui-toggle-button-collapse:
-  ru: Развернуть
-  en: Expand
+  ru: Свернуть
+  en: Collapse

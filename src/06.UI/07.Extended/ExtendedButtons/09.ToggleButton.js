@@ -7,7 +7,7 @@ Colibri.UI.ToggleButton = class extends Colibri.UI.ExtendedButton {
         this.AddClass('app-toggle-button-component');
 
         this.iconPosition = 'right';
-        this.icon = 'Colibri.UI.SelectArrowIcon';
+        this.icon = this.icon || 'Colibri.UI.SelectArrowIcon';
         
         this.state = 'expanded';
 
@@ -29,10 +29,11 @@ Colibri.UI.ToggleButton = class extends Colibri.UI.ExtendedButton {
         this._showState();
     }
     _showState() {
-
         if(this._state === 'expanded') {
+            this.AddClass('-expanded').RemoveClass('-collapsed');
             this.value = '#{ui-toggle-button-expand}';
         } else {
+            this.RemoveClass('-expanded').AddClass('-collapsed');
             this.value = '#{ui-toggle-button-collapse}';
         }
         
