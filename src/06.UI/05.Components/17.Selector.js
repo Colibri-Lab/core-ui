@@ -468,16 +468,17 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * Свойство только для чтения
      */
     get readonly() {
-        return !!this._input.enabled;
+        return this._readonly;
     }
     set readonly(value) {
-        if(value === true || value === 'true') {
+        this._readonly = value === true || value === 'true';
+        if(this._readonly) {
             this.AddClass('app-component-readonly');
-            this._input.enabled = false;
+            this._input.readonly = true;
         }
         else {
             this.RemoveClass('app-component-readonly');
-            this._input.enabled = true;
+            this._input.readonly = false;
         }
     }
 
@@ -486,14 +487,15 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * @type {bool}
      */
     get searchable() {
-        return !!this._input.readonly;
+        return this._searchabley;
     }
     /**
      * Can search in items
      * @type {bool}
      */
     set searchable(value) {
-        if(value === true || value === 'true') {
+        this._searchable = value === true || value === 'true';
+        if(this._searchable) {
             this.AddClass('app-component-searchable');
             this._input.readonly = false;
         }
