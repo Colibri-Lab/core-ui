@@ -845,4 +845,8 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
         this._key = value;
     }
 
+    get list() {
+        return this.parent.parent;
+    }
+
 }
