@@ -12,6 +12,20 @@ Colibri.UI.Link = class extends Colibri.UI.Component {
         this._element.attr('href', value);
     }
 
+    get navigate() {
+        return this._navigate;
+    }
+    set navigate(value) {
+        this._navigate = value;
+        this._element.attr('href', '#' + Date.Mc());
+        this.AddHandler('Clicked', (event, args) => {
+            App.Router.Navigate(this._navigate?.url ?? '/', this._navigate?.options ?? {});
+            args.domEvent.stopPropagation();
+            args.domEvent.preventDefault();
+            return false;
+        });
+    }
+
     get value() {
         return this._element.html();
     }

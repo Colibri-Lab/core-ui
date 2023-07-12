@@ -1,0 +1,17 @@
+.colibri-ui-table {
+    &.app-component-shown {
+        display: table;
+    }
+}
+
+.colibri-ui-tablerow {
+    &.app-component-shown {
+        display: table-row;
+    }
+}
+
+.colibri-ui-tablecell {
+    &.app-component-shown {
+        display: table-cell;
+    }
+}

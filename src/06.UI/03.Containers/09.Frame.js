@@ -2,7 +2,7 @@ Colibri.UI.Frame = class extends Colibri.UI.Component {
     
     constructor(name, container) {
         /* создаем компонент и передаем шаблон */
-        super(name, container, '<iframe />');
+        super(name, container, Element.create('iframe'));
         this.AddClass('colibri-ui-frame');
 
     }
