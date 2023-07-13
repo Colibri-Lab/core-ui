@@ -31,11 +31,15 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
 
     }
 
+    __popupBounds() {
+        return this.parent.container.bounds();
+    }
+
     set shown(value) {
         super.shown = value;
         this.container.hideShowProcess(() => {
             if(this.parent) {
-                const bounds = this.parent.container.bounds();
+                const bounds = this.__popupBounds();
                 this.top = bounds.top + bounds.outerHeight;
                 this.left = bounds.left;
                 this.width = bounds.outerWidth;    
