@@ -287,8 +287,14 @@ Colibri.UI.List = class extends Colibri.UI.Component {
     }
 
     set value(data) {
+
+        this.KeepInMind();
+
         const renderer = new Colibri.UI.List.JsonRenderer(this, data);
         renderer.Render();
+
+        this.Retreive();
+
     }
 
     __renderBoundedValues(data) {
@@ -631,6 +637,8 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
 
     set value(value) {
 
+        this.KeepInMind();
+
         if(!(Symbol.iterator in Object(value))) {
             return;
         }
@@ -658,6 +666,8 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
                 }
             }
         }
+
+        this.Retreive();
 
     }
 

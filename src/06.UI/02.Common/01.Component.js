@@ -1245,11 +1245,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         const handler = (data, path) => {
             try {
-                if(this.isConnected) {
-                    this.__renderBoundedValues(data, path);
-                } else {
-                    Colibri.Common.Wait(() => this.isConnected, 0, 10).then(() => this.__renderBoundedValues(data, path));
-                }
+                //if(this.isConnected) {
+                this.__renderBoundedValues(data, path);
+                // } else {
+                //     Colibri.Common.Wait(() => this.isConnected, 0, 10).then(() => this.__renderBoundedValues(data, path));
+                // }
             } catch(e) {
                 console.error(e);
                 App.Notices.Add(new Colibri.UI.Notice(e, Colibri.UI.Notice.Error));
@@ -1421,16 +1421,35 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
-    ConnectTo(container) {
+    ConnectTo(container, index = null) {
         this._container = container instanceof Colibri.UI.Component ? container.container : container;
-        this._container.append(this._element);        
+        if(index === null) {
+            this._container.append(this._element);        
+        } else {
+            this._element.insertAtIndex(this._container, index);
+        }
     }
 
     Disconnect() {
+        const parentContainer = this._container;
         this._element.remove();
         this._container = null;
+        return parentContainer;
     }
 
+    KeepInMind() {
+        if(this._container) {
+            this._hideData = {index: this.index, parent: this._container};
+            this.Disconnect();
+        }
+    }
+
+    Retreive() {
+        if(this._hideData && this._hideData.parent) {
+            this.ConnectTo(this._hideData.parent, this._hideData.index);
+            this._hideData = null;
+        }
+    }
 
     /**
      * Очищает дочерние компоненты

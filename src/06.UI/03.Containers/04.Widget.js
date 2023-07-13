@@ -8,7 +8,6 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
         this.GenerateChildren(element, this.container);
         
         this._header = this._element.querySelector('.widget-header');
-        this._container = this._element.querySelector('.widget-container');
         this._footer = this._element.querySelector('.widget-footer');
         this._closeButton = this._header.querySelector(':scope > button');
 

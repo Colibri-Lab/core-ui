@@ -1393,7 +1393,11 @@ Element.prototype.inInViewport = function (container) {
 };
 
 Element.prototype.index = function () {
-    return Array.prototype.indexOf.call(this.parentElement.children, this);
+    if(this.parentElement) {
+        return Array.prototype.indexOf.call(this.parentElement.children, this);
+    } else {
+        return null;
+    }
 };
 
 /**
@@ -1488,6 +1492,16 @@ Element.prototype.tag = function (name, value) {
         return this;
     }
 };
+
+Element.prototype.insertAtIndex = function(parent, index) {
+    const childOnIndex = parent.children[index];
+    if(childOnIndex) {
+        parent.insertBefore(this, childOnIndex);
+    } else {
+        parent.append(this);
+    }
+    return this;
+}
 
 /**
  * Запихивает элемент в конец списка дочерних элементов родителя
