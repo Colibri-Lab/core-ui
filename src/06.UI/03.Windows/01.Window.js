@@ -192,6 +192,10 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         }
     }
 
+    get element() {
+        return this._element;
+    }
+
     get container() {
         return this._content;
     }
