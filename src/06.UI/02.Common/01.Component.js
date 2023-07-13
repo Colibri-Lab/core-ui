@@ -1178,7 +1178,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     set hasShadow(value) {
-        if(value) {
+        if(value === true || value === 'true') {
 
             if(typeof this._element.css('z-index') === 'string') {
                 this._element.css('z-index', Colibri.UI.maxZIndex + 1);
@@ -1425,7 +1425,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._container = container instanceof Colibri.UI.Component ? container.container : container;
         if(index === null) {
             this._container.append(this._element);        
-        } else {
+        } else { 
             this._element.insertAtIndex(this._container, index);
         }
     }

@@ -200,6 +200,10 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         return this._footer;
     }
 
+    get header() {
+        return this._titleContainer.querySelector('span');
+    }
+
     get content() {
         return this._content.innerHTML;
     }

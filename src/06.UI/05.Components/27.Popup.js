@@ -23,6 +23,7 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
 
 
     set shown(value) {
+        value = value === true || value === 'true';
         super.shown = value;
         this.container.hideShowProcess(() => {
             if(this.parent) {
