@@ -10,13 +10,13 @@ Colibri.Common.HashActions = class {
     
     init() {
         window.addEventListener('hashchange', () => {
-            this._handleAction(location.hash.substr(1));
+            this._handleAction(location.hash.substring(1));
         });
     }
     
     HandleDomReady() {
         this.InitDOMHandlers();
-        this._handleAction(location.hash.substr(1));
+        this._handleAction(location.hash.substring(1));
     }
     
     InitDOMHandlers() {
@@ -44,7 +44,7 @@ Colibri.Common.HashActions = class {
         }
     }
     
-    RaiseAction(action, args) {
+    Raise(action, args) {
         try {
             if(this.handlers[action] === undefined)
                 return false;
@@ -72,7 +72,7 @@ Colibri.Common.HashActions = class {
                 :
             history.pushState("", document.title, window.location.pathname + window.location.search);
         
-        this.RaiseAction(queryString.action, queryString);
+        this.Raise(queryString.action, queryString);
         
     }
     

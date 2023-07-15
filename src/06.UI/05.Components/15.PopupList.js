@@ -88,6 +88,10 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
         this.ClearAllGroups();
         this.ClearSelection(false);
 
+        if(!(value instanceof Object)) {
+            return;
+        }
+
         const values = Object.values(value);
         if(this._groupField) {
 
