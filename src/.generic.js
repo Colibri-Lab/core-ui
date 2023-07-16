@@ -1249,6 +1249,14 @@ Date.prototype.toTimeString = function () {
 Date.prototype.timezoneoffset = (new Date()).getTimezoneOffset() / 60;
 Date.prototype.toLocalTime = function () { this.setTime(this.getTime() - this.timezoneoffset * 60 * 60 * 1000); return this; };
 Date.prototype.addMinute = function (min) { this.setTime(this.getTime() + min * 60 * 1000); return this; }
+Date.prototype.addHours = function (hours) { this.setTime(this.getTime() + hours * 60 * 60 * 1000); return this; }
+Date.prototype.addDays = function (days) { this.setTime(this.getTime() + days * 24 * 60 * 60 * 1000); return this; }
+Date.prototype.nextWorkingDay = function (addFactor = 1, holidays = []) {
+    while([0, 6].indexOf(this.getDay()) !== -1 || holidays.indexOf(this.toShortDateString()) !== -1) {
+        this.addDays(1 * addFactor);
+    } 
+    return this; 
+}
 Date.prototype.Diff = function (dt) { return parseInt((dt.getTime() - this.getTime()) / 1000); }
 Date.prototype.DiffInMonths = function (dateTo) {
     return dateTo.getMonth() - this.getMonth() +

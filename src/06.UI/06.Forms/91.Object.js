@@ -202,7 +202,6 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
     }
 
     _calcRuntimeValues(rootValue = null) {
-        
         const parentValue = this.value;
         const formValue = rootValue ?? this.root?.value ?? {};
         this.ForEveryField((name, fieldComponent) => {

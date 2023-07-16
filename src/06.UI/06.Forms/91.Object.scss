@@ -12,7 +12,7 @@
         font-size: 18px;
     }
 
-    [data-object-name$="-content"] > [data-object-name$="-container"] {
+    > [data-object-name$="-content"] > [data-object-name$="-container"] {
         width: 100%;
         &.app-component-shown {
             display: flex;

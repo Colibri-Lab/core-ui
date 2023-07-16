@@ -1,0 +1,12 @@
+ui-fields-keyvalueobject-add:
+  ru: Добавить
+  en: Add
+ui-fields-keyvalueobject:
+  ru: Обьект (ключ/значение)
+  en: Object (key/value)
+ui-fields-keyvalueobject-key:
+  ru: Ключ
+  en: Key
+ui-fields-keyvalueobject-value:
+  ru: Значение
+  en: Value

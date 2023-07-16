@@ -197,10 +197,10 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
     }
 
     Fields(name = null) {
-        if(!this.contentContainer) {
+        if(!this._tabs) {
             return [];
         }
-        return name ? this.contentContainer.Children(name) : this.contentContainer.Children();
+        return name ? this._tabs.components[name] : this._tabs.components;
     }
 
     ForEveryField(callback) {
@@ -225,9 +225,8 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
     _calcRuntimeValues(rootValue = null) {
         const parentValue = this.value;
         const formValue = rootValue ?? this.root?.value ?? {};
-
         Object.forEach(this._fieldData.fields, (name, fieldData) => {
-            const fieldComponent = this.Children(name);            
+            const fieldComponent = this.Fields(name);         
             if(fieldComponent instanceof Colibri.UI.Forms.Object || fieldComponent instanceof Colibri.UI.Forms.Array || fieldComponent instanceof Colibri.UI.Forms.Tabs) {
                 fieldComponent._calcRuntimeValues(formValue);
             } else {

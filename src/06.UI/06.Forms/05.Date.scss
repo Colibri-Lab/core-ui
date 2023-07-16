@@ -2,7 +2,12 @@
     
     [data-object-name$="-content"] > [data-object-name$="-container"] {
 
-        width: 160px;
+        &.app-component-shown {
+            display: flex;
+        }
+
+        width: 180px;
+        align-items: center;
 
         .app-date-selector-component {
             width: 160px;
