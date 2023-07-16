@@ -66,6 +66,24 @@ Colibri.UI = class {
     }
 
     /**
+     * Search for the component by path in document or given parent
+     * @param {string} componentPath path for searching
+     * @param {Colibri.UI.Component} parent search component within given parent component
+     * @returns {Colibri.UI.Component}
+     */
+    static FindAll(componentPath, parent = null) {
+        const path = componentPath.split('/');
+        const query = '[data-object-name="' + path.join('"] [data-object-name="') + '"]';
+        const components = (parent ? parent._element : document).querySelectorAll(query);
+        const ret = [];
+        for(const component of components) {            
+            ret.push(component.tag('component'));
+        }
+        return ret;
+    }
+
+
+    /**
      * Loads css and javascripts and fires a promise
      * @param {Array<string>} css string array of css files
      * @param {Array<string>} js string array of js files 

@@ -1492,6 +1492,15 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
+     * Находит компоненты по пути
+     * @param {string} path путь к компоненту в дереве
+     * @returns {Colibri.UI.Component}
+     */
+    FindAll(path) {
+        return Colibri.UI.FindAll(path, this);
+    }
+
+    /**
      * Находит компоненту по наименованию, поиск по дереву, наименование должно быть уникальным, иначе будет найдено первое
      * @param {string} path путь к компоненту в дереве
      * @returns {Colibri.UI.Component}

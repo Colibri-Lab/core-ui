@@ -110,7 +110,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         container.AddClass('tab-selected');
 
         if(currentSelection != newIndex) {
-            this.Dispatch('SelectionChanged', {newIndex: newIndex, oldIndex: currentSelection, tab: button});
+            this.Dispatch('SelectionChanged', {newIndex: newIndex, oldIndex: currentSelection, tab: button, container: container});
         }
 
     }
@@ -155,6 +155,11 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     set selectedTab(value) {
         const selectedTabIndex = this.header.querySelector('[data-object-name="' + value + '"]') ? this.header.querySelector('[data-object-name="' + value + '"]').index() : null;
         this.selectedIndex = selectedTabIndex;
+    }
+
+    get selectedContainer() {
+        const foundContainer = this.container.querySelector(':scope > .app-ui-component:nth-child(' + this.selectedIndex + ')');
+        return foundContainer.tag('component');
     }
 
     get tabsCount() {
