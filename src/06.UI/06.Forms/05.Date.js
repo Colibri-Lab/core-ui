@@ -83,6 +83,7 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
 
     set enabled(value) {
         this._input.enabled = value;
+        this._icon.shown = value;
     }
 
     /**

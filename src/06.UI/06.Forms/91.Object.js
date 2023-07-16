@@ -181,6 +181,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     set readonly(value) {
         this.contentContainer && this.contentContainer.ForEach((name, component) => {
+            const allreadyReadonly = component.readonly;
             if(!component.readonly) {
                 component.readonly = value; 
             }
@@ -194,7 +195,9 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
     set enabled(value) {
         this._enabled = value;
         this.ForEveryField((name, component) => {
-            component.enabled = this._enabled; 
+            if(component.enabled) {
+                component.enabled = this._enabled; 
+            }
         });
         if(value) {
             this._hideAndShow();
