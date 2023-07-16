@@ -472,7 +472,9 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
     set readonly(value) {
         this._readonly = value === true || value === 'true';
-        if(this._readonly) {
+        if(!this._searchable) {
+            this._input.readonly = true;
+        } else if(this._readonly) {
             this.AddClass('app-component-readonly');
             this._input.readonly = true;
         }
@@ -487,7 +489,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * @type {bool}
      */
     get searchable() {
-        return this._searchabley;
+        return this._searchable;
     }
     /**
      * Can search in items
