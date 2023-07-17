@@ -253,6 +253,25 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     }
 
     /**
+     * Ширина компонента
+     * @type {number}
+     */
+    get containerWidth() {
+        const bounds = this._element.querySelector('.app-component-window-container').bounds();
+        return bounds.outerWidth;
+    }
+
+    set containerWidth(value) {
+        if(value === null) {
+            this._element.querySelector('.app-component-window-container').css('width', null);    
+        }
+        else {
+            const style = this._element.querySelector('.app-component-window-container').css();
+            this._element.querySelector('.app-component-window-container').css('width', (value - (parseInt(style.paddingLeft) || 0) - (parseInt(style.paddingRight) || 0)) + 'px');
+        }
+    }
+
+    /**
      * Высота компонента
      * @type {number}
      */

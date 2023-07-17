@@ -9,8 +9,13 @@ Colibri.Common.HashActions = class {
     }
     
     init() {
-        window.addEventListener('hashchange', () => {
-            this._handleAction(location.hash.substring(1));
+        document.addEventListener('click', (e) => {
+            if(e.target?.href && e.target.href.indexOf('#action=') !== -1) {
+                this._handleAction(e.target.href.split('#')[1]);
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
         });
     }
     
@@ -20,10 +25,12 @@ Colibri.Common.HashActions = class {
     }
     
     InitDOMHandlers() {
-        document.querySelectorAll('[data-action]').forEach((element) => {
+        document.querySelectorAll('[data-action]').forEach((element) => { 
             element.addEventListener('click', (е) => {
                 let el = e.currentTarget;
                 location.hash = '#' + el.dataset.action;
+                е.stopPropagation();
+                e.preventDefault();
                 return false;
             });
         }); 

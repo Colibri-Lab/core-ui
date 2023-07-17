@@ -158,8 +158,8 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     }
 
     get selectedContainer() {
-        const foundContainer = this.container.querySelector(':scope > .app-ui-component:nth-child(' + this.selectedIndex + ')');
-        return foundContainer.tag('component');
+        const components = this.components;
+        return components[Object.keys(components)[this.selectedIndex]];
     }
 
     get tabsCount() {
