@@ -101,13 +101,11 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
             container = foundContainer?.tag('component');
         }
 
-        if(!container) {
-            return;
-        }
-        
         button.AddClass('tab-selected');
-        container.shown = true;
-        container.AddClass('tab-selected');
+        if(container) {        
+            container.shown = true;
+            container.AddClass('tab-selected');
+        }
 
         if(currentSelection != newIndex) {
             this.Dispatch('SelectionChanged', {newIndex: newIndex, oldIndex: currentSelection, tab: button, container: container});
@@ -171,7 +169,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         componentHeaderButton.contentContainer = componentContainer;
 
         this.Children(componentHeaderButton.name, componentHeaderButton);
-        this.Children(componentContainer.name, componentContainer);
+        componentContainer && this.Children(componentContainer.name, componentContainer);
 
         componentHeaderButton.AddHandler('Clicked', (event, args) => this.Dispatch('TabClicked', {domEvent: args.domEvent, tab: event.sender}));
         return componentContainer;

@@ -10,7 +10,9 @@ Colibri.UI.YearQuarterSelector = class extends Colibri.UI.FlexBox {
         this._yearSelector = new Colibri.UI.Selector(this.name + '-year', this);
         this._quarterSelector = new Colibri.UI.Selector(this.name + '-quarter', this);
         this._yearSelector.searchable = false;
+        this._yearSelector.readonly = false;
         this._quarterSelector.searchable = false;
+        this._quarterSelector.readonly = false;
 
         this._quartersTexts = [
             '#{ui-yearquarter-selector-1}',

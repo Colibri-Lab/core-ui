@@ -12,7 +12,6 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     }
 
     static Create(name, container, field, parent, root = null) {
-
         if(!field.component && !field.type) {
             return ;
         }
@@ -71,6 +70,11 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
         componentObject.shown = true;
         componentObject.tabIndex = true;
+        if(field.attrs) {
+            Object.forEach(field.attrs, (attrName, attrValue) => {
+                componentObject[attrName] = attrValue;
+            });
+        }
 
         return componentObject;
     }

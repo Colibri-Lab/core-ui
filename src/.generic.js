@@ -1332,7 +1332,25 @@ Date.from = function (from) {
     dt.setTime(parseInt(from));
     return dt;
 };
+Date.QuarterToPeriod = function(quarter, year, startOrEnd = 1) {
+    
+    let ret = '';
+    if(quarter == 1) {
+        ret = startOrEnd == 1 ? '01.01.' + year : '31.03.' + year;
+    }
+    else if(quarter == 2) {
+        ret = startOrEnd == 1 ? '01.01.' + year : '30.06.' + year;
+    }
+    else if(quarter == 3) {
+        ret = startOrEnd == 1 ? '01.01.' + year : '30.09.' + year;
+    }
+    else if(quarter == 4) {
+        ret = startOrEnd == 1 ? '01.01.' + year : '31.12.' + year;
+    }
 
+    return ret;
+
+}
 
 Element.prototype.animateScrollTop = function(to, duration) {
     let start = this.scrollTop,
