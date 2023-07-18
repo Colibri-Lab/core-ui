@@ -308,14 +308,14 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
     /**
      * Компонент отрисовщик
-     * @type {string|Colibri.UI.Component}
+     * @type {string|Colibri.UI.Component|Function}
      */
     get rendererComponent() {
         return this._rendererComponent;
     }
     /**
      * Компонент отрисовщик
-     * @type {string|Colibri.UI.Component}
+     * @type {string|Colibri.UI.Component|Function}
      */
     set rendererComponent(value) {
         this._rendererComponent = value;
@@ -803,7 +803,7 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
             let content = this.Children(this.name + '_renderer');
             if(!content) {
                 const attrs = this.parent.parent.rendererAttrs;
-                let comp = this.parent.parent.rendererComponent;
+                let comp = typeof(this.parent.parent.rendererComponent) === 'string' ? this.parent.parent.rendererComponent : this.parent.parent.rendererComponent(this._itemData, this);
                 if(!(comp instanceof Colibri.UI.Component)) {
                     comp = eval(comp);
                 }

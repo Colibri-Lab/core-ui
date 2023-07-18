@@ -28,6 +28,7 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
         this.container.hideShowProcess(() => {
             if(this.parent) {
                 const bounds = this.parent.container.bounds();
+                console.log(bounds);
                 this.top = bounds.outerHeight;
                 this.bottom = null;
                 this.left = 0;

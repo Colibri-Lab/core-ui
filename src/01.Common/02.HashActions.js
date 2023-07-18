@@ -51,18 +51,17 @@ Colibri.Common.HashActions = class {
         }
     }
     
-    Raise(action, args) {
+    Raise(action, args = {}) {
         try {
             if(this.handlers[action] === undefined)
                 return false;
-            
             var handlers = this.handlers[action];
-            handlers.forEach((handler) => {
+            for(const handler of handlers) {
                 if(!handler.apply(this, [action, args])) {
                     return false;
                 }
                 return true;
-            });
+            }
         }
         catch(e) { console.log('no action handler ' + action + ', exception: ' + e); }
         

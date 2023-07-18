@@ -10,19 +10,6 @@ Colibri.UI.SlideDown = class extends Colibri.UI.Pane {
             this.Hide();
         });
 
-        this.AddHandler('ChildsProcessed', (event, args) => this.__componentRendered(event, args));
-
-    }
-
-    __componentRendered(event, args) {
-        if(this._handler) {
-            Colibri.Common.Wait(() => Colibri.UI.Find(this._handler)).then(() => {
-                const component = Colibri.UI.Find(this._handler);
-                if(component) {
-                    component.AddHandler('Clicked', (event, args) => this.__handlerClicked(event, args));
-                }
-            });
-        }
     }
 
     __handlerClicked(event, args) {
@@ -48,7 +35,20 @@ Colibri.UI.SlideDown = class extends Colibri.UI.Pane {
      * @type {string}
      */
     set handler(value) {
+        if(!value && this._handler) {
+            this._handler.ClearHandlers();
+        }
         this._handler = value;
+        if(typeof this._handler === 'string') {
+            Colibri.Common.Wait(() => Colibri.UI.Find(this._handler)).then(() => {
+                this._handler = Colibri.UI.Find(this._handler);
+                if(this._handler) {
+                    this._handler.AddHandler('Clicked', (event, args) => this.__handlerClicked(event, args));
+                }
+            });
+        } else {
+            this._handler.AddHandler('Clicked', (event, args) => this.__handlerClicked(event, args));
+        }
     }
 
 
