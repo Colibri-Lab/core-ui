@@ -6,7 +6,7 @@ Colibri.UI.FontFamilySelector = class extends Colibri.UI.Selector {
             name, 
             container, 
             false, 
-            true, 
+            false, 
             false,
             Colibri.Common.Font.Create().lookup, 
             '', 

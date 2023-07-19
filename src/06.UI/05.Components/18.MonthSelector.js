@@ -2,7 +2,7 @@
 Colibri.UI.MonthSelector = class extends Colibri.UI.Selector {
 
     constructor(name, container) {
-        super(name, container, false, true, [
+        super(name, container, false, false, false, [
             {title: '#{ui-monthselector-yanuary}', value: '01'},
             {title: '#{ui-monthselector-february}', value: '02'},
             {title: '#{ui-monthselector-march}', value: '03'},
