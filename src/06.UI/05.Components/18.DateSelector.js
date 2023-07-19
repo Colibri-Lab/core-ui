@@ -180,7 +180,6 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
 
     set readonly(value) {
         this._viewElement.attr('readonly', value ? 'readonly' : null);
-        console.log(this.name, this._viewElement.attr('readonly'))
     }
 
     get readonly() {
