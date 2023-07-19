@@ -229,6 +229,15 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
     
             }
 
+            if(field.params.generatestyles) {
+                let f = field.params.generatestyles;
+                if(typeof(f) !== 'function') {
+                    pane.styles = f;
+                } else {
+                    pane.styles = f(field, pane);
+                }
+            }
+
         });
 
 
