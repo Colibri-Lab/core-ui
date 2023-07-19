@@ -25,6 +25,21 @@ Colibri.UI.TableRow = class extends Colibri.UI.Component {
         return new Colibri.UI.TableCell(name, this);
     }
 
+    AddHeaderCell(name) {
+        return new Colibri.UI.TableHeaderCell(name, this);
+    }
+
+}
+
+Colibri.UI.TableHeaderCell = class extends Colibri.UI.Component {
+    
+    constructor(name, container) {
+        /* создаем компонент и передаем шаблон */
+        super(name, container, Element.create('th'));
+        this.AddClass('colibri-ui-tableheadercell');
+        this.shown = true;
+    }
+
 }
 
 Colibri.UI.TableCell = class extends Colibri.UI.Component {
