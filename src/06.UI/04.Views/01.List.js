@@ -248,6 +248,14 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         }
     }
 
+    ShowSelection() {
+        
+        if(this._selected.length > 0) {
+            this._selected[0].EnsureVisible();
+        }
+
+    }
+
     get multiple() {
         return this._multiple;
     }
@@ -372,10 +380,12 @@ Colibri.UI.List = class extends Colibri.UI.Component {
      */
     set hasSearchBox(value) {
         if(value) {
+            this.AddClass('-has-search');
             this._searchBox = new Colibri.UI.List.SearchBox(this.name + '-searchbox', this);
             this._searchBox.shown = true;
             this._searchBox.AddHandler('Changed', (event, args) => this.__searchBoxChanged(event, args));
         } else if(this._searchBox) {
+            this.RemoveClass('-has-search');
             this._searchBox.Dispose();
             this._searchBox = null;
         }
