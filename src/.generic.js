@@ -1251,6 +1251,25 @@ Date.prototype.toLocalTime = function () { this.setTime(this.getTime() - this.ti
 Date.prototype.addMinute = function (min) { this.setTime(this.getTime() + min * 60 * 1000); return this; }
 Date.prototype.addHours = function (hours) { this.setTime(this.getTime() + hours * 60 * 60 * 1000); return this; }
 Date.prototype.addDays = function (days) { this.setTime(this.getTime() + days * 24 * 60 * 60 * 1000); return this; }
+Date.prototype.isWorkingDay = function(holidays) {
+    return !([0, 6].indexOf(this.getDay()) !== -1 || holidays.indexOf(this.toShortDateString()) !== -1);
+}
+Date.prototype.addWorkingDays = function (days, holidays) { 
+    let addFactor = days < 0 ? -1 : 1;
+
+    while(true) {
+
+        this.addDays(addFactor);
+        if(this.isWorkingDay(holidays)) {
+            days -= addFactor;
+        }
+        if(days === 0) {
+            break;
+        }
+    }
+
+    return this; 
+}
 Date.prototype.nextWorkingDay = function (addFactor = 1, holidays = []) {
     while([0, 6].indexOf(this.getDay()) !== -1 || holidays.indexOf(this.toShortDateString()) !== -1) {
         this.addDays(1 * addFactor);
@@ -1869,7 +1888,7 @@ function Base2File(data, filename, mime, isBase) {
 };
 
 function DownloadFile(data, filename, mime, isBase = true) {
-    var a = Element.create('a', { href: window.URL.createObjectURL(Base2File(data, filename, mime, isBase), { type: mime }), download: filename });
+    var a = Element.create('a', { href: window.URL.createObjectURL(Base2File(data, filename, mime, isBase), { type: mime }), download: filename});
     document.body.append(a);
     a.click();
     document.body.removeChild(a);
