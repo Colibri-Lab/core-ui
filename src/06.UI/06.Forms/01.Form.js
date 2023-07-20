@@ -147,7 +147,12 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         return this._fields;
     }
 
-    Fields() {
+    Fields(name = null) {
+
+        if(name) {
+            return this.Children(name);
+        }
+
         const ret = {};
         this.ForEach((name, component) => {
             if(component instanceof Colibri.UI.Forms.Field) {
