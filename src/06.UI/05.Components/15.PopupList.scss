@@ -84,7 +84,7 @@
     }
 
     
-    &.-focused.-can-select {
+    &.-can-select {
         > .app-component-list-group {
             >div {
                 > .app-component-list-item:not(.disable-default) {

@@ -124,6 +124,9 @@ Colibri.UI.YearQuarterSelector = class extends Colibri.UI.FlexBox {
                 }
             }
         }
+
+        years.sort((a, b) => a.value > b.value ? -1 : 1);
+
         this._yearSelector.values = years;
         this._quarterSelector.values = quarters;
         this._yearSelector.value = selectedYear;
