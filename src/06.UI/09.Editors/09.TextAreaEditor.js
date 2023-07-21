@@ -30,7 +30,7 @@ Colibri.UI.TextAreaEditor = class extends Colibri.UI.Editor {
 
     Focus() {
         this._element.focus();
-        this._element.select();
+        // this._element.select();
         this.parent.parent.AddClass('-focused');
     } 
 

@@ -72,7 +72,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
             }
             this._input.value = '';
             this._input.focus();
-            this._input.select();
+            // this._input.select();
             this.Children('clear').shown = false;
             this.loading = false;
             this.Dispatch('Cleared', args);

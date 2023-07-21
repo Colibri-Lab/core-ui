@@ -64,7 +64,7 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
 
     Focus() {
         this._input.focus();
-        this._input.select();
+        // this._input.select();
     }
 
     get readonly() {
