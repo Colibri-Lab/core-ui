@@ -49,7 +49,6 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
         
         for(const pattern of Object.keys(this._structure)) {
             const route = this._structure[pattern];
-
             let component = null;
             if(route?.component ?? null) {
                 let componentObject = route.component;
@@ -64,7 +63,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
             }
 
             if(component) {
-                component.routePattern = pattern.substring(this.basePattern.length);
+                component.routePattern = pattern.substring(this.basePattern.length); 
                 if(route?.attrs ?? null) {
                     Object.forEach(route?.attrs, (attrName, attrValue) => {
                         component[attrName] = attrValue;
@@ -81,7 +80,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
 
     toPlain(object, prefix = '') {
         let ret = {};
-        object = Object.cloneRecursive(object);
+        object = Object.cloneRecursive(object, null, ['parent']);
         for(const name of Object.keys(object)) {
             const value = object[name];
             ret[prefix + name] = value;

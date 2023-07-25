@@ -29,7 +29,7 @@ Colibri.UI.ExtendedButton = class extends Colibri.UI.Button {
     }
 
     set iconPosition(value) {
-        if(value) {
+        if(value === 'right' || value === 'true' || value === true) {
             this.AddClass('ui-icon-right');
         }
         else {

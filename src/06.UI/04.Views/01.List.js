@@ -52,7 +52,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
     AddGroup(name, title) {
         const group = new Colibri.UI.List.Group(name, this);
-        group.value = title;
+        group.label = title;
         group.shown = true;
         group.hasContextMenu = this.hasContextMenu;
         return group;
@@ -468,6 +468,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         this._searchBox.Focus();
     }
 
+
 }
 
 Colibri.UI.List.SearchBox = class extends Colibri.UI.Pane {
@@ -742,7 +743,6 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
     get items() {
         return this.value;
     }
-
 
 }
 
