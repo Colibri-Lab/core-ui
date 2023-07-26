@@ -169,13 +169,18 @@ Array.prototype.equals = function (array) {
     return true;
 };
 
-Array.prototype.multiSort = function(fields) {
+Array.prototype.multiSort = function(fields, handler = null) {
     this.sort((a, b) => {
 
         for(const field of fields) {
             if(a[field.name] == b[field.name]) {
                 continue;
             }    
+            
+            if(handler) {
+                return handler(field.name, field.order, a, b);
+            }
+
             if(field.order === 'asc') {
                 return a[field.name] > b[field.name] ? 1 : -1;
             } else {
@@ -184,10 +189,7 @@ Array.prototype.multiSort = function(fields) {
         }
         
     });
-    
-
     return this;
-
 }
 
 Array.prototype.stanDeviate = function() {
