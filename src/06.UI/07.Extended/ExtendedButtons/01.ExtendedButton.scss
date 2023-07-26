@@ -26,6 +26,11 @@
         margin-right: 10px;
         width: 14px;
         height: 14px;
+        svg {
+            path {
+                fill: inherit;
+            }
+        }
     }
 
     .app-component-textspan {
