@@ -43,7 +43,7 @@ Colibri.UI.SimpleFormValidator = class {
         field.RemoveClass('app-validate-error');
         for(const v of validate) {
             const message = v.message instanceof Function ? v.message(field, this) : v.message;
-            const method = eval(v.method);
+            const method = typeof v.method !== 'function' ? eval(v.method) : v.method;
             if(!method(field, this)) {
                 field.field.params && (field.field.params.validated = 'error');
                 field.message = message;
