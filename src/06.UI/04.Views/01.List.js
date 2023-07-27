@@ -296,6 +296,8 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
     set value(data) {
 
+        this.ClearSelection(false);
+
         this.KeepInMind();
 
         const renderer = new Colibri.UI.List.JsonRenderer(this, data);
@@ -647,6 +649,8 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
     }
 
     set value(value) {
+
+        this.parent.ClearSelection(false);
 
         this.KeepInMind();
 

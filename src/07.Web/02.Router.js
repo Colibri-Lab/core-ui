@@ -175,7 +175,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
         if(!setImmediately) {
             this._url = url;
-            this._path = url.split('/').filter(v => v != '');
+            this._path = (this._url ?? '/').split('/').filter(v => v != '');
             this._options = options;
             this._history.push({url: this._url, options: this._options});
             return;
@@ -199,7 +199,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
         if(isChanged) {
             this._url = url;
-            this._path = url.split('/').filter(v => v != '');
+            this._path = (this._url ?? '/').split('/').filter(v => v != '');
             this._options = options;
             this._history.push({url: this._url, options: this._options});
         }
