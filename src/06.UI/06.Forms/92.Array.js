@@ -28,6 +28,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
             this.enabled = this._fieldData.params.enabled;
         }
 
+        this.RegisterEvent('ObjectRemoved', false, 'Object in array removed');
 
     } 
 
@@ -82,13 +83,15 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
                     }
                 });
                 this.Dispatch('Changed', {component: this});
-
+                
                 if(this._fieldData.params && !!this._fieldData.params.maxadd) {
                     const count = Object.countKeys(this.Fields());
                     if(count < parseInt(this._fieldData.params.maxadd)) {
                         this._link.Show();
                     }
                 }
+
+                this.Dispatch('ObjectRemoved', {component: this});
 
             });
         }
