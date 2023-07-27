@@ -12,7 +12,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @param {string} element наименование тэга
      * @param {(Colibri.UI.Component|Element)} container - обьект в контейнере которого будет создан текущий компонент
      */
-    constructor(name, container, element) {
+    constructor(name, container, element, createEvents = {}) {
         super();
 
         /** @type {Colibri.UI.Component} */
@@ -34,6 +34,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._binding = '';
         this._clickToCopyHandler = (e) => this.value.copyToClipboard() && App.Notices.Add(new Colibri.UI.Notice('#{ui-copy-info}', Colibri.UI.Notice.Success));
 
+        Object.forEach(createEvents, (event, handler) => {
+            this.AddHandler(event, handler);
+        });
+
         if (!element) {
             element = Element.create('div');
         }
@@ -53,6 +57,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         if (container instanceof Colibri.UI.Component) {
             this._parent = container;
             container.Children(this._name, this);
+            container.Dispatch('ChildAdded', {component: this});
         }
 
         this._registerEvents();
@@ -313,6 +318,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.RegisterEvent('KeyPressed', false, 'Клавиша нажата и отпущена');
         this.RegisterEvent('Shown', false, 'Компонент отображен');
         this.RegisterEvent('ClickedOut', false, 'Клик вне элемента компонента');
+        this.RegisterEvent('ChildAdded', false, 'Когда дочерний элемент добавлен');
         this.RegisterEvent('ChildsProcessed', false, 'Когда дочерние элементы отрисованы');
         this.RegisterEvent('ContextMenuIconClicked', false, 'Когда кликнули на иконку контекстного меню');
         this.RegisterEvent('ContextMenuItemClicked', false, 'Когда кликнули на иконку контекстного меню');

@@ -5,6 +5,21 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
 
     constructor(name, container) {
         super(name, container, Element.create('tr'));
+        this.AddHandler('ChildAdded', (event, args) => this.__thisChildAdded(event, args));
+    }
+
+    __thisChildAdded(event, args) {
+        args.component.AddHandler('ColumnStickyChange', (event, args) => {
+            this.Dispatch('ColumnStickyChange', args);
+        });
+
+        args.component.AddHandler('ColumnClicked', (event, args) => {
+            this.Dispatch('ColumnClicked', args);
+        });
+
+        args.component.AddHandler('ColumnDisposed', (event, args) => {
+            this.Dispatch('ColumnDisposed', args);
+        });
     }
 
     _registerEvents() {
@@ -25,19 +40,7 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
         });
 
         this.Dispatch('ColumnAdded', {column: newColumn});
-
-        newColumn.AddHandler('ColumnStickyChange', (event, args) => {
-            this.Dispatch('ColumnStickyChange', args);
-        });
-
-        newColumn.AddHandler('ColumnClicked', (event, args) => {
-            this.Dispatch('ColumnClicked', args);
-        });
-
-        newColumn.AddHandler('ColumnDisposed', (event, args) => {
-            this.Dispatch('ColumnDisposed', args);
-        });
-
+        
         return newColumn;
     }
 
