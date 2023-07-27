@@ -11,14 +11,16 @@ Colibri.UI.Notices = class extends Colibri.UI.Pane {
 
     /**
      * Добавить сообщение
-     * @param {Notice} noticeData сообщение 
-     * @returns {Notice}
+     * @param {Colibri.UI.Notice} noticeData сообщение 
+     * @returns {Colibri.UI.Notice}
      */
     Add(noticeData) {
 
         if(!noticeData.title) {
             return;
         }
+
+        console.log(noticeData); 
 
         this.shown = true;
         this.BringToFront();
