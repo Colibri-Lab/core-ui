@@ -36,7 +36,7 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                             super.value = v1;
                             const icon1 = new Colibri.UI.Icon(this.name + '-hover', this);
                             icon1.shown = true;
-                            icon1.value = '<em>+' + r.length + '</em> ' + App.Modules.MrEcolo.Icons.Size20x20.Info;
+                            icon1.value = '<em>+' + r.length + '</em> ' + (this._field.params?.infoIcon ?? Colibri.UI.InfoIcon);
                             icon1.toolTip = v2;
                         }
                         else {
@@ -62,7 +62,7 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                                 super.value = v1;
                                 const icon1 = new Colibri.UI.Icon(this.name + '-hover', this);
                                 icon1.shown = true;
-                                icon1.value = '<em>' + r.length + '</em> ' + App.Modules.MrEcolo.Icons.Size20x20.Info;
+                                icon1.value = '<em>' + r.length + '</em> ' + (this._field.params?.infoIcon ?? Colibri.UI.InfoIcon);
                                 icon1.toolTip = v2;
                             }
                             else {
@@ -83,7 +83,7 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                             super.value = v1;
                             const icon1 = new Colibri.UI.Icon(this.name + '-hover', this);
                             icon1.shown = true;
-                            icon1.value = '<em>' + r.length + '</em> ' + App.Modules.MrEcolo.Icons.Size20x20.Info;
+                            icon1.value = '<em>' + r.length + '</em> ' + (this._field.params?.infoIcon ?? Colibri.UI.InfoIcon);
                             icon1.toolTip = v2;
                         }
                         else {
