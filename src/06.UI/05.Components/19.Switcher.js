@@ -82,11 +82,11 @@ Colibri.UI.Switcher = class extends Colibri.UI.Component {
     }
 
     get infinitySwitching() {
-        return this._infinitySwitching
+        return this._infinitySwitching;
     }
 
     set infinitySwitching(value) {
-        this._infinitySwitching = value;
+        this._infinitySwitching = value === 'true' || value === true;
         if (value) {
             this._prevButton.RemoveClass('disabled');
             this._nextButton.RemoveClass('disabled');
