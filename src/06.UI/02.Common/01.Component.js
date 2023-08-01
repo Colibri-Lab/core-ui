@@ -1526,9 +1526,15 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @returns {this}
      */
     AddClass(val) {
-        val && val.split(' ').forEach((cl) => {
-            this._element.classList.add(cl);
-        })
+        if(!val) {
+            return this;
+        }
+        if(!Array.isArray(val)) {
+            val = val.split(' ');
+        }
+        for(const v of val) {
+            this._element.classList.add(v);
+        }
         return this;
     }
 
@@ -1538,7 +1544,13 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @returns {this}
      */
     RemoveClass(val) {
-        this._element.classList.remove(val);
+        if(Array.isArray(val)) {
+            for(const v of val) {
+                this._element.classList.remove(v);
+            }
+        } else {
+            this._element.classList.remove(val);
+        }
         return this;
     }
 
