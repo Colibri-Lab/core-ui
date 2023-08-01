@@ -198,7 +198,6 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
      * @private
      */
     _renderInput() {
-        console.log('inside render input');
         if (!this._dropAreaEnabled) {
             this._input = new Colibri.UI.Input.File('input', this.contentContainer);
             this.AddClass('-input-file-enabled');

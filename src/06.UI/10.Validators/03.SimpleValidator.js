@@ -33,14 +33,15 @@ Colibri.UI.SimpleFormValidator = class {
             return;
         }
 
+        field.field.params && (field.field.params.validated = 'success');
+        field.message = '';
+        field.RemoveClass('app-validate-error');
+
         const validate = field.field?.params?.validate;
         if(!validate) {
             return;
         }
 
-        field.field.params && (field.field.params.validated = 'success');
-        field.message = '';
-        field.RemoveClass('app-validate-error');
         for(const v of validate) {
             const message = v.message instanceof Function ? v.message(field, this) : v.message;
             const method = typeof v.method !== 'function' ? eval(v.method) : v.method;
