@@ -81,6 +81,9 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         delete fieldData?.note;
         delete fieldData?.params?.validate;
         delete fieldData?.params?.fieldgenerator;
+        if(fieldData?.params){
+            fieldData.params.validate = [{message: '', method: () => true}];
+        }
         fieldData = this.__updateObjectFields(fieldData);
         const object = new Colibri.UI.Forms.Object('object-' + Date.Now().getTime(), this._itemsContainer, fieldData, this, this.root);
         object.shown = true;

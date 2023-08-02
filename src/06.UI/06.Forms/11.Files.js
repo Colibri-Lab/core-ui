@@ -117,10 +117,8 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
             }
             const deleteIcon = new Colibri.UI.TextSpan('delete', container);
 
-
             filename.AddClass('files-file-name');
-
-            if (itemData.file?.type.match('image.*')) {
+            if ((itemData.file?.type ?? itemData.file?.mimetype).match('image.*')) {
                 picture.shown = filename.shown = deleteIcon.shown = true;
                 picture.image = itemData.file;
                 picture.width = picture.height = 40;
@@ -398,13 +396,17 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         return ret;
     }
     _setValue(value) {
-        value.forEach && value.forEach((file) => {
-            const item = {title: file.name, file: file};
-            this._filesGroup.AddItem(item);
-            if (!this._files.shown) {
-                this._files.shown = true;
-            }
-        });
+        if(Array.isArray(value)) {
+            this._filesGroup.value = [];
+            for(const file of value) {
+                this._filesGroup.AddItem({title: file.name, file: file});
+            }            
+        } else {
+            this._filesGroup.AddItem({title: value.name, file: value});
+        }
+        
+        this._files.shown = this._filesGroup.value.length > 0;
+
     }
 
     /**
