@@ -65,8 +65,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
                     let validatedFiles = this._validate(args.files);
 
                     if (validatedFiles.length > 0) {
-                        this._files.shown = true;
-                        this._setValue(validatedFiles);
+                        this._addValue(validatedFiles);
                         this._clearInput();
 
                         if (this._fieldData.params && this._fieldData.params.more) {
@@ -87,7 +86,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
             this._input.AddHandler('InputFileChanged', (event, args) => {
                 this._files.shown = true;
                 this.lastValue = this.value;
-                this.value = this._input.Files();
+                this._addValue(this._input.Files());
 
                 if (this._fieldData.params && this._fieldData.params.more) {
                     this._input.title = this._fieldData.params.more;
@@ -407,6 +406,16 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         
         this._files.shown = this._filesGroup.value.length > 0;
 
+    }
+    _addValue(value) {
+        if(Array.isArray(value)) {
+            for(const file of value) {
+                this._filesGroup.AddItem({title: file.name, file: file});
+            }            
+        } else {
+            this._filesGroup.AddItem({title: value.name, file: value});
+        }
+        this._files.shown = true;
     }
 
     /**
