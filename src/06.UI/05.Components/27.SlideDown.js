@@ -12,13 +12,17 @@ Colibri.UI.SlideDown = class extends Colibri.UI.Pane {
 
     }
 
+    Toggle() {
+        this.__handlerClicked();    
+    }
+
     __handlerClicked(event, args) {
         if(this.shown) {
             this.shown = false;
-            event.sender.state = 'collapsed';
+            this.handler.state = 'collapsed';
         } else {
             this.shown = true;
-            event.sender.state = 'expanded';
+            this.handler.state = 'expanded';
         }
     }
 
