@@ -549,6 +549,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     /**
      * Indicates that the component has context menu icon and can use context menu generation events
+     * @type {boolean} value
      */
     get hasContextMenu() {
         return this._hasContextMenu;
@@ -580,10 +581,13 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
+    /**
+     * Context menu items
+     * @type {Array} items
+     */
     get contextmenu() {
         return this._contextmenu;
     }
-
     /**
      * Context menu items
      * @type {Array} items
@@ -600,6 +604,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return this._element;
     }
 
+    /**
+     * Контейнер
+     * @type {Element}
+     */
     get mainElement() {
         return this._element;
     }
@@ -720,36 +728,48 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     /**
      * Позиция элемента относительно левого края документа
-     * @type {number}
+     * @type {Number}
      */
     get right() {
         const bounds = this._element.bounds();
         return bounds.left + bounds.outerWidth;
     }
+    /**
+     * Позиция элемента относительно левого края документа
+     * @type {Number}
+     */
     set right(value) {
         this._element.css('right', value !== null ? value + 'px' : null);
     }
 
     /**
      * Позиция элемента относительно верхнего края документа
-     * @type {number}
+     * @type {Number}
      */
     get top() {
         const bounds = this._element.bounds();
         return bounds.top;
     }
+    /**
+     * Позиция элемента относительно верхнего края документа
+     * @type {Number}
+     */
     set top(value) {
         this._element.css('top', value !== null ? value + 'px' : null);
     }
 
     /**
      * Позиция элемента относительно верхнего края документа
-     * @type {number}
+     * @type {Number}
      */
     get bottom() {
         const bounds = this._element.bounds();
         return bounds.top + bounds.outerHeight;
     }
+    /**
+     * Позиция элемента относительно верхнего края документа
+     * @type {Number}
+     */
     set bottom(value) {
         this._element.css('bottom', value ? value + 'px' : null);
     }
@@ -761,6 +781,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     get styles() {
         return this._element.css();
     }
+    /**
+     * Стили обьекта
+     * @type {Object}
+     */
     set styles(value) {
         this._element.css(value);
     }
@@ -772,6 +796,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     get name() {
         return this._name;
     }
+    /**
+     * Наименование обьекта
+     * @type {string}
+     */
     set name(value) {
         this._name = value;
         this._element.data('objectName', this._name);
@@ -784,6 +812,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     get className() {
         return this._element.attr('class');
     }
+    /**
+     * Название класса
+     * @type {string}
+     */
     set className(value) {
         value.split(' ').forEach((v) => {
             this._element.classList.add(v);
@@ -797,6 +829,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     get elementID() {
         return this._element.attr('id');
     }
+    /**
+     * ID элемента
+     * @type {string}
+     */
     set elementID(value) {
         this._element.attr('id', value);
     }
@@ -808,6 +844,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     get html() {
         return this._element.html();
     }
+    /**
+     * HTML контент элемента
+     * @type {string}
+     */
     set html(value) {
         this._element.html(value);
     }
@@ -819,6 +859,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     get tag() {
         return this._tag;
     }
+    /**
+     * Таг
+     * @type {Object}
+     */
     set tag(value) {
         this._tag = value;
     }
@@ -830,6 +874,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     get data() {
         return this._element.data();
     }
+    /**
+     * Данные
+     * @type {Object}
+     */
     set data(value) {
         this._element.data(value);
     }
@@ -841,6 +889,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     get readonly() {
         return this._element.is(':scope[readonly]');
     }
+    /**
+     * Элемент только для чтения
+     * @type {boolean}
+     */
     set readonly(value) {
         value = value === true || value === 'true';
         this._element.attr('readonly', value ? 'readonly' : null);
@@ -849,12 +901,15 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     /**
      * Индекс основного элемента в парент-е
-     * ! Внимание - это не индекс компонента, У КОМПОНЕНТА НЕТ ИНДЕКСА, ЕСТЬ ТОЛЬКО ИМЯ
+     * @type {Number}
      */
     get index() {
         return this._element.index();
     }
-
+    /**
+     * Индекс основного элемента в парент-е
+     * @type {Number}
+     */
     get childIndex() {
         return this._parent ? this._parent.indexOf(this.name) : null;
     }
@@ -866,6 +921,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     get enabled() {
         return !this._element.is(':disabled') && !this._element.is('.ui-disabled');
     }
+    /**
+     * Элемент выключен
+     * @type {boolean}
+     */
     set enabled(val) {
 
         val = val === true || val === 'true';
@@ -891,6 +950,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     get shown() {
         return this._element.classList.contains('app-component-shown');
     }
+    /**
+     * Видимый или нет
+     * @type {boolean}
+     */
     set shown(value) {
         if (value === true || value === 'true') {
             this.AddClass('app-component-shown');
@@ -915,9 +978,17 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._element.css('z-index', null);
     }
 
+    /**
+     * Видимый или нет
+     * @type {String}
+     */
     get value() {
         return this._element.html();
     }
+    /**
+     * Видимый или нет
+     * @type {String}
+     */
     set value(value) {
        this._element.html(value);
     }
@@ -934,6 +1005,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     get toolTip() {
         return this._toolTip;
     }
+    /**
+     * Подсказка
+     * @type {number}
+     */
     set toolTip(value) {
         this._toolTip = value;
 
@@ -1021,9 +1096,17 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     }
 
+    /**
+     * Позиция подсказки
+     * @type {String}
+     */
     get toolTipPosition() {
         return this._toolTipPosition;
     }
+    /**
+     * Позиция подсказки
+     * @type {String}
+     */
     set toolTipPosition(value) {
         this._toolTipPosition = value;
         
@@ -1059,6 +1142,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     get tabIndex() {
         return this._element.attr('tabIndex');
     }
+    /**
+     * Индекс табуляции
+     * @todo проверить правильно ли получаю tabIndex и исправить
+     * @type {number}
+     */
     set tabIndex(value) {
         this._element.attr('tabIndex', value === 'true' || value === true ? Colibri.UI.tabIndex++ : value);
     }
@@ -1166,7 +1254,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         });
     }
 
-    /** @type {number} */
+    /** 
+     * @type {number} 
+     */
     get children() {
         return this.Children().length;
     }
@@ -1179,10 +1269,15 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
+    /**
+     * @type {Boolean}
+     */
     get hasShadow() {
         return this._shadow != null;
     }
-
+    /**
+     * @type {Boolean}
+     */
     set hasShadow(value) {
         if(value === true || value === 'true') {
 
@@ -1221,19 +1316,29 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
+    /**
+     * @type {Colibri.UI.Store}
+     */
     set store(value) {
         this._storage = value;
     }
-
+    /**
+     * @type {Colibri.UI.Store}
+     */
     get store() {
         return this._storage;
     }
 
+    /**
+     * @type {String}
+     */
     get binding() {
         return this._binding;
     }
 
-    /** data binding */    
+    /**
+     * @type {String}
+     */
     set binding(value) {
 
         if (value === this._binding) {
@@ -1329,14 +1434,22 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
 
+    /**
+     * @type {Boolean}
+     */
     get isConnected() {
         return this._element.isConnected;
     }
 
+    /**
+     * @type {Number}
+     */
     get scrollTop() {
         return this._element.scrollTop;
     }
-
+    /**
+     * @type {Number}
+     */
     set scrollTop(value) {
         if(this._animateScroll) {
             this._element.animateScrollTop(value, 300);
@@ -1361,6 +1474,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._animateScroll = value;
     }
 
+    /**
+     * @type {boolean}
+     */
     set handleClickedOut(value) {
         if(value) {
             this.__bindHtmlEvent('__ClickedOut', {
@@ -1374,7 +1490,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             });
         }
     }
-
+    /**
+     * @type {boolean}
+     */
     set handleResize(value) {
         if(value) {
             this.__bindHtmlEvent('__Resized', {
@@ -1390,6 +1508,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
+    /**
+     * @type {boolean}
+     */
     set handleSwipe(value) {
         if(value) {
             this.__touchStartedPos = null;
@@ -1681,18 +1802,30 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.shown = false;
     }
 
+    /**
+     * @type {boolean}
+     */
     get draggable() {
         return this._element.attr('draggable');
     }
 
+    /**
+     * @type {boolean}
+     */
     set draggable(value) {
         this._element.attr('draggable', value ? 'true' : null);
     }
 
+    /**
+     * @type {boolean}
+     */
     get dropable() {
         return this._element.attr('dropable');
     }
 
+    /**
+     * @type {boolean}
+     */
     set dropable(value) {
         this._element.attr('dropable', value ? 'true' : null);
     }

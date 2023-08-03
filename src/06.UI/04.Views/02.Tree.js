@@ -199,6 +199,21 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         }
     }
     
+    /**
+     * Expand node on click
+     * @type {Boolean}
+     */
+    get expandOnClick() {
+        return this._expandOnClick;
+    }
+    /**
+     * Expand node on click
+     * @type {Boolean}
+     */
+    set expandOnClick(value) {
+        this._expandOnClick = value === true || value === 'true';
+    }
+
 
 }
 
@@ -272,6 +287,9 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
             } else {
                 if(this._nodes.tree.Dispatch('NodeClicked', Object.assign({item: this}, args)) !== false) {
                     this._nodes.tree.Select(this);
+                }
+                if(this.tree.expandOnClick) {
+                    this.expanded = true;
                 }
             }
             args.domEvent.stopPropagation();
