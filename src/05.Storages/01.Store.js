@@ -14,6 +14,21 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         this.RegisterEventHandlers();
 
     }
+
+    /**
+     * Owner module object
+     * @type {Object}
+     */
+    get owner() {
+        return this._owner;
+    }
+    /**
+     * Owner module object
+     * @type {Object}
+     */
+    set owner(value) {
+        this._owner = value;
+    }
     
     Clear(path) {
         if(!path) {
@@ -29,6 +44,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
     RegisterEvents() {
         this.RegisterEvent('StoreUpdated', true, 'Когда хранилище обновилось');
         this.RegisterEvent('StoreChildUpdated', true, 'Когда обновилось дочернее хранилище');
+        this.RegisterEvent('StoreLoaderCrushed', true, 'Когда не смогли загрузить данные');
     }
 
     RegisterEventHandlers() {
@@ -39,9 +55,10 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         }
     }
 
-    AddChild(path, data) {
+    AddChild(path, data, owner) {
         let paths = path.split('.');
         const newStore = new Colibri.Storages.Store(paths[paths.length - 1], data, this);
+        newStore.owner = owner;
         this.Set(path, newStore);
         return newStore;
     }
