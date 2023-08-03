@@ -71,7 +71,14 @@ Colibri.UI.Notice = class {
     static Warning = 'warning';
     static White = 'white';
 
+    _exception = null;
+
     constructor(title, severity = Colibri.UI.Notice.Error, timeout = 3000) {
+        if(typeof title === 'object' && !!title.code && !!title.message) {
+            // error object
+            this._exception = title;
+            title = this._exception.message;
+        }
         this._title = title;
         this._severity = severity;
         this._timeout = timeout;
