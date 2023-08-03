@@ -564,9 +564,9 @@ String.prototype.words = function (l) {
             i = i + a[j].length + 1;
         }
 
-        return this.substr(0, i) + '...';
+        return this.substring(0, i) + '...';
     } else {
-        return this.substr(0, l) + '...';
+        return this.substring(0, l) + '...';
     }
 };
 String.prototype.replaceAll = function (from, to) {
@@ -605,7 +605,7 @@ String.prototype.fromTimeString = function () {
     return parseInt(parseInt(parts[2]) + parseInt(parts[1]) * 60 + parseInt(parts[0]) * 60 * 60);
 };
 String.prototype.capitalize = function () {
-    return this.substr(0, 1).toUpperCase() + this.substr(1);
+    return this.substring(0, 1).toUpperCase() + this.substring(1);
 };
 String.prototype.Transliterate = function () {
     let val = this;
@@ -1325,9 +1325,14 @@ Date.prototype.Age = function (removeNazad = false, returnFull = false, tokens =
     }
 };
 Date.prototype.format = function (formatString) { return this.toString(formatString); }
-Date.prototype.intlFormat = function () { 
+Date.prototype.intlFormat = function (withTime = false) { 
     let dateformat = App.DateFormat || 'ru-RU';
-    const format = new Intl.DateTimeFormat(dateformat, {day: '2-digit', month: 'short', year: 'numeric'});
+    const params = {day: '2-digit', month: 'short', year: 'numeric'};
+    if(withTime) {
+        params.hour = '2-digit';
+        params.minute = '2-digit';
+    }
+    const format = new Intl.DateTimeFormat(dateformat, params);
     return format.format(this); 
 }
 Date.prototype.DayIndex = function () {
