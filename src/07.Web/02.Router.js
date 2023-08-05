@@ -14,20 +14,24 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
         this._preventNextEvent = false;
 
         this._handleHashChange = (e) => {
-            this._url = App.Request.uri;
-            this._path = App.Request.uri.split('/').filter(v => v != '');
-            this._options = App.Request.query;
-            this._history.push({url: this._url, options: this._options});
-            this._processRoutePatterns();
-            this.Dispatch('RouteChanged', {url: this._url, options: this._options});
+            if(this._url !== App.Request.uri && this._options !== App.Request.query) {
+                this._url = App.Request.uri;
+                this._path = App.Request.uri.split('/').filter(v => v != '');
+                this._options = App.Request.query;
+                this._history.push({url: this._url, options: this._options});
+                this._processRoutePatterns();
+                this.Dispatch('RouteChanged', {url: this._url, options: this._options});
+            }
         };
         this._handlePopState = (e) => {
-            this._url = App.Request.uri;
-            this._path = App.Request.uri.split('/').filter(v => v != '');
-            this._options = App.Request.query;
-            this._history.push({url: this._url, options: this._options});
-            this._processRoutePatterns();
-            this.Dispatch('RouteChanged', {url: this._url, options: this._options});
+            if(this._url !== App.Request.uri && this._options !== App.Request.query) {
+                this._url = App.Request.uri;
+                this._path = App.Request.uri.split('/').filter(v => v != '');
+                this._options = App.Request.query;
+                this._history.push({url: this._url, options: this._options});
+                this._processRoutePatterns();
+                this.Dispatch('RouteChanged', {url: this._url, options: this._options});
+            }
         };
         
         if(type == Colibri.Web.Router.RouteOnHash) {

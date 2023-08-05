@@ -90,18 +90,34 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * Value container object
+     * @type {Colibri.UI.Component}
+     * @readonly
+     */
     get valueContainer() {
         return this._valueContainer;
     }
 
+    /**
+     * Column name
+     * @readonly
+     */
     get columnName() {
         return this.name.substr(this.parent.name.length + 1);
     }
 
+    /**
+     * Horizontal sticky
+     * @type {Boolean}
+     */
     get stickyHorizontally() {
         return this._stickyHorizontally;
     }
-
+    /**
+     * Horizontal sticky
+     * @type {Boolean}
+     */
     set stickyHorizontally(value) {
         if (value) {
             this.AddClass('position-sticky-x');
@@ -112,11 +128,18 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         this._stickyHorizontally = value;
         this.Dispatch('CellHorizontalStickyChanged', {cell: this});
     }
-
+    
+    /**
+     * Vertical sticky
+     * @type {Boolean}
+     */
     get stickyVertically() {
         return this._stickyVertically;
     }
-
+    /**
+     * Vertical sticky
+     * @type {Boolean}
+     */
     set stickyVertically(value) {
         if (value) {
             this.AddClass('position-sticky-y');
@@ -128,6 +151,10 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         this.Dispatch('CellVerticalStickyChanged', {cell: this});
     }
 
+    /**
+     * Is activated
+     * @type {Boolean}
+     */
     set activated(value) {
         if (value) {
             if (this.grid.selectionMode === Colibri.UI.Grid.EveryCell) {
@@ -141,10 +168,18 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         this._activated = value;
     }
 
+    /**
+     * Is activated
+     * @type {Boolean}
+     */
     get activated () {
         return this._activated;
     }
 
+    /**
+     * Is selected
+     * @type {Boolean}
+     */
     set selected(value) {
         if (value) {
             this.AddClass('cell-selected');
@@ -153,19 +188,33 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         }
         this._selected = value;
     }
-
+    /**
+     * Is selected
+     * @type {Boolean}
+     */
     get selected () {
         return this._selected;
     }
 
+    /**
+     * Grid
+     * @type {Colibri.UI.Grid}
+     */
     get grid() {
         return this.parent.parent.parent.parent;
     }
 
+    /**
+     * Parent column
+     * @type {Colibri.UI.Grid.Column}
+     */
     get parentColumn() {
         return this._parentColumn;
     }
-
+    /**
+     * Parent column
+     * @type {Colibri.UI.Grid.Column}
+     */
     set parentColumn(value) {
         this._parentColumn = value;
         if(this.parentColumn !== null) {
@@ -191,30 +240,57 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * Parent row
+     * @type {Colibri.UI.Grid.Row}
+     */
     get parentRow() {
         return this.parent;
     }
 
+    /**
+     * Editor component
+     * @type {Colibri.UI.Component}
+     */
     get editor() {
         return this._editor;
     }
+    /**
+     * Editor component
+     * @type {Colibri.UI.Component}
+     */
     set editor(value) {
         this._editor = value;
         this._createEditor();
     }
 
+    /**
+     * Viewer component
+     * @type {Colibri.UI.Component}
+     */
     get viewer() {
         return this._viewer;
     }
+    /**
+     * Viewer component
+     * @type {Colibri.UI.Component}
+     */
     set viewer(value) {
         this._viewer = value;
         this._createViewer();
     }
 
+    /**
+     * Value of cell
+     * @type {String}
+     */
     get value() {
         return this._value;
     } 
-
+    /**
+     * Value of cell
+     * @type {String}
+     */
     set value(value) {
         this._value = value;
         if(this._viewerObject) {
@@ -228,29 +304,57 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         if(this._editorObject) {
             this._editorObject.value = this._value;
         }
+
     }
 
+    /**
+     * Vertical align
+     * @type {bottom,middle,sub,super,text-bottom,text-top,top,auto}
+     */
     get valign() {
         return this._element.css('vertical-align');
     }
+    /**
+     * Vertical align
+     * @type {bottom,middle,sub,super,text-bottom,text-top,top,auto}
+     */
     set valign(value) {
         this._element.css('vertical-align', value || 'middle');
     }
+    /**
+     * Horizontal align
+     * @type {center,end,justify,left,right,start}
+     */
     get halign() {
         return this._element.css('text-align');
     }
+    /**
+     * Horizontal align
+     * @type {center,end,justify,left,right,start}
+     */
     set halign(value) {
         this._element.css('text-align', value || 'left');
     }
 
+    /**
+     * Context menu items
+     * @type {Array}
+     */
     get contextmenu() {
         return this.grid.contextmenu;
     }
-
+    /**
+     * Context menu items
+     * @type {Array}
+     */
     set contextmenu(items) {
         this.grid.contextmenu = items;
     }
 
+    /**
+     * Next cell
+     * @type {Colibri.UI.Grid.Cell}
+     */
     get nextCell() {
         if(this.next instanceof Colibri.UI.Grid.Cell) {
             return this.next;
@@ -258,6 +362,10 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         return null;
     }
 
+    /**
+     * Previous cell
+     * @type {Colibri.UI.Grid.Cell}
+     */
     get prevCell() {
         if(this.prev instanceof Colibri.UI.Grid.Cell && this.prev.name !== 'button-container-for-row-selection') {
             return this.prev;
@@ -389,5 +497,6 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         }
     }
 
+    
 
 }

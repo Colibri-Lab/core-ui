@@ -48,10 +48,17 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         this.Dispatch('ColumnDisposed', {column: this});
     }
 
+    /**
+     * Set and get the column sticky
+     * @type {Boolean}
+     */
     get sticky() {
         return this._sticky;
     }
-
+    /**
+     * Set and get the column sticky
+     * @type {Boolean}
+     */
     set sticky(value) {
         if (value) {
             this.AddClass('position-sticky-x');
@@ -66,10 +73,17 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Set and get the column resizable
+     * @type {Boolean}
+     */
     get resizable() {
         return this._resizable;
     }
-
+    /**
+     * Set and get the column resizable
+     * @type {Boolean}
+     */
     set resizable(value) {
         value = (value === 'true' || value === true);
         this._resizable = value;
@@ -81,10 +95,17 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Set and get the column sortable
+     * @type {Boolean}
+     */
     get sortable() {
         return this._sortable;
     }
-
+    /**
+     * Set and get the column sortable
+     * @type {Boolean}
+     */
     set sortable(value) {
         value = (value === 'true' || value === true);
         this._sortable = value;
@@ -96,9 +117,17 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Sort state
+     * @type {String}
+     */
     get sortState() {
         return this._sortState;
     }
+    /**
+     * Sort state
+     * @type {asc,desc}
+     */
     set sortState(value) {
         this._sortState = value;
         this._sortHandler && this._sortHandler.html(value ? this._sortIcons[value] : '');
@@ -196,57 +225,106 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         this._sortHandler && this._sortHandler.remove();
     }
 
+    /**
+     * Grid
+     * @type {Colibri.UI.Grid}
+     */
     get grid() {
         return this.parent;
     }
 
+    /**
+     * Editor component
+     * @type {Colibri.UI.Component}
+     */
     get editor() {
         return this._editor;
     }
+    /**
+     * Editor component
+     * @type {Colibri.UI.Component}
+     */
     set editor(value) {
         this._editor = value;
         this.grid.Dispatch('ColumnEditorChanged', {column: this});
     }
 
+    /**
+     * Viewer component
+     * @type {Colibri.UI.Component}
+     */
     get viewer() {
         return this._viewer;
     }
+    /**
+     * Viewer component
+     * @type {Colibri.UI.Component}
+     */
     set viewer(value) {
         this._viewer = value;
         this.grid.Dispatch('ColumnViewerChanged', {column: this});
     }
 
+    /**
+     * Column vertical align
+     * @type {bottom,middle,sub,super,text-bottom,text-top,top,auto}
+     */
     get valign() {
         return this._valign;
     }
+    /**
+     * Column vertical align
+     * @type {bottom,middle,sub,super,text-bottom,text-top,top,auto}
+     */
     set valign(value) {
         this._valign = value;
         this.grid.Dispatch('ColumnVerticalAlignChanged', {column: this});
     }
 
+    /**
+     * Column horizontal align
+     * @type {center,end,justify,left,right,start}
+     */
     get halign() {
         return this._halign;
     }
+    /**
+     * Column horizontal align
+     * @type {center,end,justify,left,right,start}
+     */
     set halign(value) {
         this._halign = value;
         this.grid.Dispatch('ColumnHorizontalAlignChanged', {column: this});
     }
 
+    /**
+     * Use editor allways
+     * @type {Boolean}
+     */
     set editorAllways(value) {
         this._editorAllways = value;
     }
-    
+    /**
+     * Use editor allways
+     * @type {Boolean}
+     */
     get editorAllways() {
         return this._editorAllways;
     }
 
+    /**
+     * Download controller
+     * @type {String}
+     */
     set download(value) {
         this._download = value;
     }
-
+    /**
+     * Download controller
+     * @type {String}
+     */
     get download() {
         return this._download;
     }
-
-
+    
 }

@@ -1369,9 +1369,16 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             try {
                 if(this.isConnected) {
                     this.__renderBoundedValues(data, path);
-                } else {
-                    Colibri.Common.Wait(() => this.isConnected, 0, 10).then(() => this.__renderBoundedValues(data, path));
                 }
+                //  else {
+                //     Colibri.Common.Wait(() => {
+                //         console.log('wating', this.name);
+                //         return this.isConnected;
+                //     }, 0, 100).then(() => {
+                //         console.log('found', this.name);
+                //         return this.__renderBoundedValues(data, path)
+                //     });
+                // }
             } catch(e) {
                 console.error(e);
                 App.Notices.Add(new Colibri.UI.Notice(e, Colibri.UI.Notice.Error));
@@ -1559,12 +1566,15 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
-    ConnectTo(container, index = null) {
+    ConnectTo(container, index = null, performBinding = false) {
         this._container = container instanceof Colibri.UI.Component ? container.container : container;
         if(index === null) {
             this._container.append(this._element);        
         } else { 
             this._element.insertAtIndex(this._container, index);
+        }
+        if(performBinding && this.binding) {
+            this.ReloadBinding();
         }
     }
 
