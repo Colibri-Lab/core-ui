@@ -92,14 +92,23 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
         this.RegisterEvent('SplitResizeStop', false, 'Когда закончили изменять размер');
     }
 
+    /**
+     * @type {String}
+     */
     get orientation() {
         return this._orientation;
     }
+    /**
+     * @type {String}
+     */
     set orientation(value) {
         this._orientation = value;
         this.AddClass('app-component-split-' + this._orientation);
     }
 
+    /**
+     * @type {Element}
+     */
     get container() {
         if(this.children == 0) {
             return this._element.querySelector(':scope > .app-component-split-left');
@@ -109,10 +118,15 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * @type {Boolean}
+     */
     get hasHandle() {
         return this._hasHandle;
     }
-
+    /**
+     * @type {Boolean}
+     */
     set hasHandle(value) {
         this._hasHandle = value;
         if (value === true || value === 'true') {
@@ -135,14 +149,22 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @type {Number}
+     */
     get rightWidth() {
         return parseInt(this._right.css('width'));
     }
-
+    /**
+     * @type {Number}
+     */
     get leftWidth() {
         return parseInt(this._left.css('width'));
     }
 
+    /**
+     * @type {Number}
+     */
     set leftWidth(value) {
         this._left.css('flex', '0 0 ' + value );
     }
