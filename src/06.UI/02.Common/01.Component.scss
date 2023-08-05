@@ -22,7 +22,7 @@
         }
     }
     &:focus,
-    &.app-ui-focus {
+    &.-focused {
         box-shadow: $focus-shadow;
     }
     &::-webkit-scrollbar-track {

@@ -1171,7 +1171,18 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     MoveChild(child, fromIndex, toIndex) {
         
+        // если то же место то ничего не делаем
+        if(fromIndex == toIndex) {
+            return;
+        }
+
         this._children.splice(fromIndex, 1);
+        // стало на один меньше
+        if(fromIndex < toIndex) {
+            // all is ok, can move
+            toIndex--;
+        } 
+
         this._children.splice(toIndex, 0, child);
         this._moveInDom(child.container, this.container, toIndex);        
 
@@ -1693,7 +1704,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             this._element.focus();
         else {
             this._element.focus();
-            this.AddClass('app-ui-focus');
+            this.AddClass('-focused');
         }
         return this;
     }
@@ -1707,7 +1718,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             this._element.blur();
         else {
             this._element.blur();
-            this.RemoveClass('app-ui-focus');
+            this.RemoveClass('-focused');
         }
         return this;
     }
