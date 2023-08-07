@@ -11,6 +11,13 @@ Colibri.UI.Image = class extends Colibri.UI.Component {
 
     set source(value) {
         this._element.css('background-image', value);
+        const img = new Image();
+        img.onload = (e) => {
+            this.width = img.width;
+            this.height = img.height;
+        }
+        img.src = value.replaceAll(/\w+\(/, '').replaceAll(')', '');
+
     }
 
     get repeat() {
@@ -21,6 +28,32 @@ Colibri.UI.Image = class extends Colibri.UI.Component {
         this._element.css('background-repeat', value);
     }
 
+    /**
+     * @type {contain,cover,revert}
+     */
+    get size() {
+        return this._element.css('background-size');
+    }
+    /**
+     * @type {contain,cover,revert}
+     */
+    set size(value) {
+        this._element.css('background-size', value);
+    }
+
+    /**
+     * @type {String}
+     */
+    get position() {
+        return this._element.css('background-position');
+    }
+    /**
+     * @type {String}
+     */
+    set position(value) {
+        this._element.css('background-position', value);
+    }
+    
     set image(value) {
         let reader = new FileReader();
         reader.onload = (e) => {
@@ -37,4 +70,5 @@ Colibri.UI.Image = class extends Colibri.UI.Component {
         const base64 = data[1].split(',')[1];
         return Base2File(base64, this._name, mime);
     }
+
 }

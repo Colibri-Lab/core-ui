@@ -39,6 +39,13 @@ Colibri.UI.Link = class extends Colibri.UI.Component {
     set target(value) {
         this._element.attr('target', value);
     }
+
+    get download() {
+        return this._element.attr('download');
+    }
+    set download(value) {
+        this._element.attr('download', value);
+    }
        
     /**
      * Enable/Disable
