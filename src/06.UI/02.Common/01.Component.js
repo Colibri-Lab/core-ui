@@ -1000,14 +1000,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     /**
      * Подсказка
-     * @type {number}
+     * @type {String}
      */
     get toolTip() {
         return this._toolTip;
     }
     /**
      * Подсказка
-     * @type {number}
+     * @type {String}
      */
     set toolTip(value) {
         this._toolTip = value;
