@@ -300,10 +300,15 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._renderValue();
     }
 
+    /**
+     * @type {Boolean}
+     */
     set multiple(value) {
         this._multiple = value === 'true' || value === true;
     }
-
+    /**
+     * @type {Boolean}
+     */
     get multiple() {
         return this._multiple;
     }
@@ -466,10 +471,15 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
     /**
      * Свойство только для чтения
+     * @type {Boolean}
      */
     get readonly() {
         return this._readonly;
     }
+    /**
+     * Свойство только для чтения
+     * @type {Boolean}
+     */
     set readonly(value) {
         this._readonly = value === true || value === 'true';
         if(!this._searchable) {
@@ -486,14 +496,14 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
     /**
      * Can search in items
-     * @type {bool}
+     * @type {Boolean}
      */
     get searchable() {
         return this._searchable;
     }
     /**
      * Can search in items
-     * @type {bool}
+     * @type {Boolean}
      */
     set searchable(value) {
         this._searchable = value === true || value === 'true';
@@ -510,10 +520,15 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
     /**
      * Текст для отображения вместо значения
+     * @type {String}
      */
     get placeholder() {
         return this._placeholder;
     }
+    /**
+     * Текст для отображения вместо значения
+     * @type {String}
+     */
     set placeholder(value) {
         this._placeholder = value ? value[Lang.Current] ?? value : '';
         this._input.placeholder = this._placeholder;
@@ -528,19 +543,30 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._renderValue(false);
     }
 
+    /**
+     * @type {Function}
+     */
     get placeholderempty() {
         return this._placeholderempty;
     }
+    /**
+     * @type {Function}
+     */
     set placeholderempty(value) {
         this._placeholderempty = value;
     }
 
     /**
      * Вкючено/выключено
+     * @type {Boolean}
      */
     get enabled() {
         return this._input.enabled;
     }
+    /**
+     * Вкючено/выключено
+     * @type {Boolean}
+     */
     set enabled(value) {
         if(value) {
             this.RemoveClass('app-component-disabled');
@@ -553,12 +579,18 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
     /**
      * Список значений
+     * @type {Array}
      */
     get values() {
         return this._values;
     }
+    /**
+     * Список значений
+     * @type {Array}
+     */
     set values(value) {
         this._values = value;
+        this._renderValue(false);
     }
 
     /**
@@ -587,18 +619,30 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         return startMatches.concat(matches);
     }
 
+    /**
+     * @type {Any}
+     */
+    get popupconfig() {
+        return this._popupconfig;
+    }
+    /**
+     * @type {Any}
+     */
     set popupconfig(value) {
         this._popupconfig = value;
     }
 
     /**
      * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
-     * @type {number}
+     * @type {Number}
      */
     get tabIndex() {
         return this._input && this._input.tabIndex;
     }
+    /**
+     * Индекс табуляции
+     * @type {Number}
+     */
     set tabIndex(value) {
         if (this._input) {
             this._input.tabIndex = value;
@@ -663,14 +707,14 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
     /**
      * Можно ли выбирать группу
-     * @type {boolean}
+     * @type {Boolean}
      */
     get canSelectGroup() {
         return this._canSelectGroup;
     }
     /**
      * Можно ли выбирать группу
-     * @type {boolean}
+     * @type {Boolean}
      */
     set canSelectGroup(value) {
         this._canSelectGroup = value;

@@ -120,10 +120,15 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         return this;
     }
 
-    /** @type {boolean} */
+    /** 
+     * @type {Boolean} 
+     */
     get loading() {
         return this.Children('loadingicon').shown;
     }
+    /** 
+     * @type {Boolean} 
+     */
     set loading(value) {
         //this.Children('icon').shown = !value;
         this.Children('loadingicon').shown = value;
@@ -134,23 +139,35 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         this.loadingicon.shown = false;
     }
 
-    /** @type {integer} */
+    /** 
+     * @type {Number} 
+     */
     get maxlength() {
         return this._input.attr('maxlength');
     }
+    /** 
+     * @type {Number} 
+     */
     set maxlength(value) {
         this._input.attr('maxlength', value);
     }
 
-    /** @type {string} */
+    /** 
+     * @type {String} 
+     */
     get type() {
         return this._input.attr('type');
     }
+    /** 
+     * @type {String} 
+     */
     set type(value) {
         this._input.attr('type', value);
     }
 
-    /** @type {string} */
+    /** 
+     * @type {String} 
+     */
     get placeholder() {
         try {
             return this._input.attr('placeholder');
@@ -159,12 +176,21 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
             return '';
         }
     }
+    /** 
+     * @type {String} 
+     */
     set placeholder(value) {
         this._input.attr('placeholder', value ? (value[Lang.Current] ?? value) : '');
     }
 
-    /**
-     * @type {string}
+    /** 
+     * @type {String} 
+     */
+    get icon() {
+        return this.Children('icon').html;
+    }
+    /** 
+     * @type {String} 
      */
     set icon(value) {
         if(value === null) {
@@ -177,10 +203,15 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         }
     }
 
-    /** @type {string} */
+    /** 
+     * @type {String} 
+     */
     get value() {
         return this._input.value;
     }
+    /** 
+     * @type {String} 
+     */
     set value(value) { 
         this._input.value = value;
         if(this._hasClearIcon && this.Children('clear')) {
@@ -188,13 +219,15 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         }
     }
 
-    /**
-     * Элемент только для чтения
-     * @type {boolean}
+    /** 
+     * @type {Boolean} 
      */
     get readonly() {
         return this._input.is(':scope[readonly]');
     }
+    /** 
+     * @type {Boolean} 
+     */
     set readonly(value) {
         if(value === true || value === 'true') {
             this._input.attr('readonly', 'readonly').attr('tabindex', '-1');
@@ -205,25 +238,38 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         this.Dispatch('ReadonlyStateChanged');
     }
 
+    /** 
+     * @type {Boolean} 
+     */
     set hasIcon(value) {
         this.Children('icon').shown = value;
     }
+    /** 
+     * @type {Boolean} 
+     */
     get hasIcon() {
         return this.Children('icon').shown;
     }
 
+    /** 
+     * @type {Boolean} 
+     */
     set hasClearIcon(value) {
         this._hasClearIcon = value;
         this.Children('clear').shown = value;
     }
+    /** 
+     * @type {Boolean} 
+     */
     get hasClearIcon() {
         return this._hasClearIcon;
     }
 
+    /** @type {Boolean} */
     get enabled() {
         return super.enabled;
     }
-
+    /** @type {Boolean} */
     set enabled(val) {
         super.enabled = val;
         this._input.attr('disabled', val === true || val === 'true' ? null : 'disabled');
@@ -231,16 +277,27 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
 
     /**
      * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
      * @type {number}
      */
     get tabIndex() {
         return this._input.attr('tabIndex');
     }
+    /**
+     * Индекс табуляции
+     * @type {number}
+     */
     set tabIndex(value) {
         this._input.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
     }
 
+    /** @type {string} */
+    get mask() {
+        if(this._masker) {
+            return this._masker.opts.pattern;
+        }
+        return null;
+    }
+    /** @type {string} */
     set mask(value) {
         this._masker = new Colibri.UI.Utilities.Mask([this._input]);
         this._masker.maskPattern(value);
