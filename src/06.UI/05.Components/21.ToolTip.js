@@ -1,18 +1,27 @@
 Colibri.UI.ToolTip = class extends Colibri.UI.Component {
 
     static LB = 'lb';
-    static RB = 'rb';
     static LT = 'lt';
+    static LM = 'lm';
+    static RB = 'rb';
     static RT = 'rt';
+    static RM = 'rm';
 
     /**
      * 
      * @param {string} name Coponent name
      * @param {*} container Component container|parenbt
-     * @param {Array} orientation coords on container to point to, and orientation around the container, example: rt, rb; rt - container coords, rb - orientation
+     * @param {Array} orientation coords on container to point to, and orientation around the container, example: rt, rb; 
+     *                rt - container coords, rb - orientation
      */
     constructor(name, container, orientation = [Colibri.UI.ToolTip.RT, Colibri.UI.ToolTip.RB], point = null) {
         super(name, container, Element.create('div'));
+
+        this._arrow = new Colibri.UI.TextSpan('arrow', this._element);
+        this._arrow.shown = true;
+
+        this._contentContainer = new Colibri.UI.Pane('content', this._element);
+        this._contentContainer.shown = true;
 
         this.AddClass('app-tooltip-component');
 
@@ -20,7 +29,17 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
         this._element.data('orientation', orientation);
         this._point = point;
 
+        this.AddHandler('ShadowClicked', (event, args) => this.__thisShadowClicked(event, args));
+
     }
+
+    __thisShadowClicked(event, args) {
+        this.shown = false;
+    }
+
+    get container() {
+        return this._contentContainer.container;
+    } 
 
     get orientation() {
         return this._orientation;
@@ -42,16 +61,22 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
         const parentBounds = parent.container.bounds(true, true);
         switch(ori) {
             default:
-            case Colibri.UI.ToolTip.RB: {
+            case Colibri.UI.ToolTip.RT: { // правый верхний угол контейнера
+                return {
+                    left: parentBounds.left + parentBounds.outerWidth, 
+                    top: parentBounds.top
+                };
+            }
+            case Colibri.UI.ToolTip.RB: { // правый нижний угол контейнера
                 return {
                     left: parentBounds.left + parentBounds.outerWidth, 
                     top: parentBounds.top + parentBounds.outerHeight
                 };
             }
-            case Colibri.UI.ToolTip.LB: {
+            case Colibri.UI.ToolTip.RM: { // правая середина контейнера
                 return {
-                    left: parentBounds.left, 
-                    top: parentBounds.top + parentBounds.outerHeight
+                    left: parentBounds.left + parentBounds.outerWidth, 
+                    top: parentBounds.top + (parentBounds.outerHeight / 2)
                 };
             }
             case Colibri.UI.ToolTip.LT: {
@@ -60,10 +85,16 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
                     top: parentBounds.top
                 };
             }
-            case Colibri.UI.ToolTip.RT: {
+            case Colibri.UI.ToolTip.LB: {
                 return {
-                    left: parentBounds.left + parentBounds.outerWidth, 
-                    top: parentBounds.top
+                    left: parentBounds.left, 
+                    top: parentBounds.top + parentBounds.outerHeight
+                };
+            }
+            case Colibri.UI.ToolTip.LM: {
+                return {
+                    left: parentBounds.left, 
+                    top: parentBounds.top + (parentBounds.outerHeight / 2)
                 };
             }
         }
@@ -71,32 +102,45 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
 
     _getOrientationPoint(pointOnParent) {
         const ori = this._orientation[1];
-        const thisBounds = this.container.bounds(true, true);
+        const thisBounds = this._element.bounds(true, true);
         const parentBounds = this.parent.container.bounds(true, true);
+        
         switch(ori) {
             default:
-            case Colibri.UI.ToolTip.RB: {
+            case Colibri.UI.ToolTip.RT: {
                 return {
-                    left: pointOnParent.left - parentBounds.left, 
-                    top: pointOnParent.top - parentBounds.top
+                    left: pointOnParent.left - thisBounds.outerWidth,
+                    top: pointOnParent.top
                 };
             }
-            case Colibri.UI.ToolTip.LB: {
+            case Colibri.UI.ToolTip.RB: { // правая нижняя точка попапа к точке в контейнере
                 return {
-                    left: pointOnParent.left - thisBounds.outerWidth - parentBounds.left, 
-                    top: pointOnParent.top - parentBounds.top
+                    left: pointOnParent.left - thisBounds.outerWidth, //  - parentBounds.left 
+                    top: pointOnParent.top - thisBounds.outerHeight // - parentBounds.top
+                };
+            }
+            case Colibri.UI.ToolTip.RM: {
+                return {
+                    left: pointOnParent.left - thisBounds.outerWidth,
+                    top: pointOnParent.top - (thisBounds.outerHeight / 2)
                 };
             }
             case Colibri.UI.ToolTip.LT: {
                 return {
-                    left: pointOnParent.left - thisBounds.outerWidth - parentBounds.left, 
-                    top: pointOnParent.top - thisBounds.outerHeight - parentBounds.top
+                    left: pointOnParent.left, 
+                    top: pointOnParent.top
                 };
             }
-            case Colibri.UI.ToolTip.RT: {
+            case Colibri.UI.ToolTip.LB: {
                 return {
-                    left: pointOnParent.left - parentBounds.left, 
-                    top: pointOnParent.top - thisBounds.outerHeight - parentBounds.top
+                    left: pointOnParent.left, 
+                    top: pointOnParent.top - thisBounds.outerHeight
+                };
+            }
+            case Colibri.UI.ToolTip.LM: {
+                return {
+                    left: pointOnParent.left, 
+                    top: pointOnParent.top - (thisBounds.outerHeight / 2)
                 };
             }
         }
@@ -111,7 +155,7 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
     }
 
     _checkPosition() {
-        const thisBounds = this.container.bounds(true, true);
+        const thisBounds = this._element.bounds(true, true);
 
         let orientation = [].concat(this._orientation);
         if(thisBounds.top + thisBounds.outerHeight > window.innerHeight) {
@@ -127,8 +171,7 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
             orientation[0] = orientation[0].replaceAll('r', 'l');
             orientation[1] = orientation[1].replaceAll('r', 'l');
         }
-
-        console.log(orientation, this._orientation)
+        
         if(this._orientation != orientation) {
             this._orientation = orientation;
             this._setPosition();
@@ -143,22 +186,37 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
         super.shown = value;
         this.BringToFront();
         if(value) {
-            this._element.css('visibility', 'hidden');
-            Colibri.Common.Delay(10).then(() => {
+            this._element.hideShowProcess(() => {
                 this._setPosition();
-                this._element.css('visibility', 'visible');
-            });    
+                this.hasShadow = true;
+            });
+        } else {
+            this.hasShadow = false;
         }
     }
 
-    Show(text, parent = null) {
+    Show(parent = null) {
         if(parent) {
             this.parent = parent;
         }
-        this.value = text;
         if(!this.shown) {
             this.shown = true;
         }
+    }
+
+    /**
+     * String content
+     * @type {String}
+     */
+    get value() {
+        return this._content.value;
+    }
+    /**
+     * String content
+     * @type {String}
+     */
+    set value(value) {
+        this._content.value = value;
     }
 
 }

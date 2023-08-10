@@ -148,10 +148,18 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         return newRow;
     }
 
+    /**
+     * @type {Boolean}
+     * @readonly
+     */
     get checkbox() {
         return this._checkbox;
     }
 
+    /**
+     * @type {Array}
+     * @readonly
+     */
     get selected() {
         let selectedRow = [];
         this.ForEach((nameRow, row) => {
@@ -162,6 +170,10 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         return selectedRow;
     }
 
+    /**
+     * @type {Boolean}
+     * @readonly
+     */
     get checked() {
         let checkedRows = [];
         this.ForEach((nameRow, row) => {
@@ -172,6 +184,10 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         return checkedRows;
     }
 
+    /**
+     * @type {Colibri.UI.Grid.Row}
+     * @readonly
+     */
     get activeRow() {
         let activeRow = null;
         this.ForEach((rowName, row) => {
@@ -182,10 +198,18 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         return activeRow;
     }
 
+    /**
+     * @type {Colibri.UI.Grid}
+     * @readonly
+     */
     get grid() {
         return this.parent.parent;
     }
 
+    /**
+     * @type {Colibri.UI.Grid.Rows}
+     * @readonly
+     */
     get prevGroup() {
         if(this.prev instanceof Colibri.UI.Grid.Rows) {
             return this.prev;
@@ -193,6 +217,10 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         return null;
     }
 
+    /**
+     * @type {Colibri.UI.Grid.Rows}
+     * @readonly
+     */
     get nextGroup() {
         if(this.next instanceof Colibri.UI.Grid.Rows) {
             return this.next;
@@ -200,44 +228,87 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         return null;
     }
 
+    /**
+     * @type {Number}
+     * @readonly
+     */
     get rowsCount() {
         return this.children - 1;
     }
 
-
+    /**
+     * @type {Colibri.UI.Grid.Row}
+     * @readonly
+     */
     get firstRow() {
         return this.Children('firstChild').next;
     }
 
+    /**
+     * @type {Colibri.UI.Grid.Row}
+     * @readonly
+     */
     get lastRow() {
         return this.Children('lastChild');
     }
 
+    /**
+     * @type {String}
+     */
     set title(value) {
         this._titleCellSpan.value = value;
         this._title.shown = !!value;
     }
-
+    /**
+     * @type {String}
+     */
     get title() {
         return this._titleCellSpan.value; 
     }
 
+    /**
+     * @type {Colibri.UI.Component}
+     */
     get titleCell() {
         return this._titleCell;
     }
 
+    /**
+     * @type {Number}
+     */
+    get columns() {
+        return this._titleCell.container.attr('colspan');
+    }
+    /**
+     * @type {Number}
+     */
     set columns(count) {
         this._titleCell.container.attr('colspan', count);
     }
 
+    /**
+     * @type {Boolean}
+     */
+    get showCheckBoxes() {
+        return this._title.Children('button-container-for-row-selection').shown;
+    }
+    /**
+     * @type {Boolean}
+     */ 
     set showCheckbox(value) {
         this._title.Children('button-container-for-row-selection').shown = value;
     }
 
+    /**
+     * @type {Boolean}
+     */
     get closed() {
         return this.ContainsClass('-closed');
     }
 
+    /**
+     * @type {Boolean}
+     */
     set closed(value) {
         if(value) {
             this.AddClass('-closed');
@@ -264,5 +335,35 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
             }
             return true;
         });
+    }
+
+    /**
+     * Show/Hide title updown icon
+     * @type {Boolean}
+     */
+    get titleIcon() {
+        return this._titleCellArrow.shown;
+    }
+    /**
+     * Show/Hide title updown icon
+     * @type {Boolean}
+     */
+    set titleIcon(value) {
+        this._titleCellArrow.shown = value;
+    }
+
+    /**
+     * Show/Hide rowscount
+     * @type {Boolean}
+     */
+    get showRowsCount() {
+        return this._titleCellCountSpan.shown;
+    }
+    /**
+     * Show/Hide rowscount
+     * @type {Boolean}
+     */
+    set showRowsCount(value) {
+        this._titleCellCountSpan.shown = value;
     }
 }

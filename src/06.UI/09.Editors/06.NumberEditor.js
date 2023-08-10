@@ -35,6 +35,18 @@ Colibri.UI.NumberEditor = class extends Colibri.UI.Editor {
         this.parent.parent.RemoveClass('-focused');
     }
 
+    _updateFieldData() {
+        if(this._fieldData?.placeholder) {
+            this._element.attr('placeholder', this._fieldData?.placeholder);
+        }
+        if(this._fieldData?.params?.readonly) {
+            this.readonly = this._fieldData?.params?.readonly;
+        }
+        if(this._fieldData?.params?.align) {
+            this._element.css('text-align', this._fieldData?.params?.align);
+        }
+    }
+
     get readonly() {
         return this._fieldData.readonly;
     }  
@@ -62,7 +74,7 @@ Colibri.UI.NumberEditor = class extends Colibri.UI.Editor {
     }
 
     set value(value) {
-        this._element.value = value;
+        this._element.value = value ?? '';
         this.Validate();
         if(value) {
             this._setFilled();

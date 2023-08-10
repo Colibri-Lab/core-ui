@@ -278,6 +278,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      */
     set valign(value) {
         this._valign = value;
+        this._element.css('vertical-align', value);
         this.grid.Dispatch('ColumnVerticalAlignChanged', {column: this});
     }
 
@@ -294,6 +295,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      */
     set halign(value) {
         this._halign = value;
+        this._element.css('text-align', value);
         this.grid.Dispatch('ColumnHorizontalAlignChanged', {column: this});
     }
 

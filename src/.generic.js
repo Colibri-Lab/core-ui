@@ -1248,11 +1248,22 @@ Date.prototype.toTimeString = function () {
     }
     return (this.getHours() + '').expand('0', 2) + ':' + (this.getMinutes() + '').expand('0', 2) + ':' + (this.getSeconds() + '').expand('0', 2);
 };
+Date.isLeapYear = function (year) {  return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)); };
+Date.daysInMonth = function (year, month) { return [31, (Date.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]; };
+
+Date.prototype.daysInMonth = function () {  return Date.daysInMonth(this.getFullYear(), this.getMonth()); };
 Date.prototype.timezoneoffset = (new Date()).getTimezoneOffset() / 60;
 Date.prototype.toLocalTime = function () { this.setTime(this.getTime() - this.timezoneoffset * 60 * 60 * 1000); return this; };
 Date.prototype.addMinute = function (min) { this.setTime(this.getTime() + min * 60 * 1000); return this; }
 Date.prototype.addHours = function (hours) { this.setTime(this.getTime() + hours * 60 * 60 * 1000); return this; }
 Date.prototype.addDays = function (days) { this.setTime(this.getTime() + days * 24 * 60 * 60 * 1000); return this; }
+Date.prototype.addYears = function (years) { this.setFullYear(this.getFullYear() + years); return this; }
+Date.prototype.addMonths = function (months) { 
+    let n = this.getDate();
+    this.setMonth(this.getMonth() + months);
+    this.setDate(Math.min(n, this.daysInMonth()));
+    return this;
+}
 Date.prototype.isWorkingDay = function(holidays) {
     return !([0, 6].indexOf(this.getDay()) !== -1 || holidays.indexOf(this.toShortDateString()) !== -1);
 }

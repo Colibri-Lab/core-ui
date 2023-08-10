@@ -44,6 +44,13 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
         return newColumn;
     }
 
+    Remove(name) {
+        const col = this.Children(name);
+        if(col) {
+            col.Dispose();
+        }
+    }
+
     get grid() {
         return this.parent.grid;
     }
