@@ -96,6 +96,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     _unregisterObserver() {
         if(this._observer) {
             this._observer.unobserve(this._element);
+            this._observer = null;
         }
     }
 
@@ -224,14 +225,19 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             else if(element.tagName) {
                 if(element.tagName == 'params') {
                     let data = element.childNodes[0].textContent;
-                    try { eval('data = ' + data + ';'); } catch(e) { console.log(data); console.log(e); }
+                    try { eval('data = ' + data + ';'); } catch(e) { 
+                        console.log(data); console.log(e); 
+                    }
                     if(data instanceof Object) {
                         this.tag.params = data;
                     }
                 }
                 else if(element.tagName == 'fields') {
                     let data = element.childNodes[0].textContent;
-                    try { eval('data = ' + data + ';'); } catch(e) { console.log(data); console.log(e); }
+                    try { eval('data = ' + data + ';'); } catch(e) {
+                        eval('data = ' + data + ';'); 
+                        console.log(data); console.log(e); 
+                    }
                     if(data instanceof Object) {
                         this.fields = data;
                     }
@@ -239,7 +245,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 else if(element.tagName.indexOf('json-') !== -1) {
                     const propertyName = element.tagName.substr('json-'.length);
                     let data = element.childNodes[0].textContent;
-                    try { eval('data = ' + data + ';'); } catch(e) { console.log(data); console.log(e); }
+                    try { eval('data = ' + data + ';'); } catch(e) { 
+                        console.log(data); console.log(e); 
+                    }
                     if(data instanceof Object) {
                         this[propertyName] = data;
                     }
@@ -1793,10 +1801,27 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
+    /**
+     * @type {Boolean}
+     * @readonly
+     */
     get visible() {
         return this._visible;
     }
 
+    get elementVisible() {
+        return this._element.computedCss('display') !== 'none' && this._element.computedCss('visibility') !== 'hidden';
+    }
+
+    /**
+     * @type {Boolean}
+     */
+    get handleVisibilityChange() {
+        return !!this._observer;
+    }
+    /**
+     * @type {Boolean}
+     */
     set handleVisibilityChange(value) {
         if(value) {
             this._registerObserver();

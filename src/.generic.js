@@ -1721,6 +1721,10 @@ Element.prototype.parent = function () {
     return null;
 }));
 
+Element.prototype.computedCss = function(name) {
+    return getComputedStyle(this)[name];
+}
+
 /**
  * Устанавливает или возвращает стили
  * @param {(string|Object)} [name] название стиля или обьект содержащий все стили
