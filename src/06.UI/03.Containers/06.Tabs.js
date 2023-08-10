@@ -113,10 +113,16 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @type {Element}
+     */
     get headerContainer() {
         return this._element.querySelector(':scope > .tabs-header-container');
     }
 
+    /**
+     * @type {Element}
+     */
     set headerContainer(value) {
         if(value) {
             this.RemoveClass('-header-hidden');
@@ -126,40 +132,72 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * @type {Element}
+     * @readonly
+     */
     get header() {
         return this._element.querySelector(':scope > .tabs-header-container > .tabs-header');
     }
 
+    /**
+     * @type {Element}
+     * @readonly
+     */
     get links() {
         return this._element.querySelector(':scope > .tabs-header-container > .tabs-links');
     }
 
+    /**
+     * @type {Element}
+     * @readonly
+     */
     get container() {
         return this._element.querySelector(':scope > .tabs-container');
     }
 
+    /**
+     * @type {Number}
+     */
     get selectedIndex() {
         return this.header.querySelector('.tab-selected') ? this.header.querySelector('.tab-selected').index() : null;
     }
 
+    /**
+     * @type {Number}
+     */
     set selectedIndex(value) {
         this._selectTab(value);
     }
 
+    /**
+     * @type {String}
+     */
     get selectedTab() {
         return this.header.querySelector('.tab-selected') ? this.header.querySelector('.tab-selected').dataset.objectName : null;
     }
 
+    /**
+     * @type {String}
+     */
     set selectedTab(value) {
         const selectedTabIndex = this.header.querySelector('[data-object-name="' + value + '"]') ? this.header.querySelector('[data-object-name="' + value + '"]').index() : null;
         this.selectedIndex = selectedTabIndex;
     }
 
+    /**
+     * @type {Colibri.UI.Component}
+     * @readonly
+     */
     get selectedContainer() {
         const components = this.components;
         return components[Object.keys(components)[this.selectedIndex]];
     }
 
+    /**
+     * @type {Number}
+     * @readonly
+     */
     get tabsCount() {
         return this._element.querySelectorAll(':scope > .tabs-header-container > .tabs-header > *').length;
     }
@@ -176,6 +214,10 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     }
 
 
+    /**
+     * @type {Array}
+     * @readonly
+     */
     get components() {
 
         let ret = {};
@@ -188,6 +230,10 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @type {Array}
+     * @readonly
+     */
     get buttons() {
 
         let ret = {};

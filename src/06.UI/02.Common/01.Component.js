@@ -310,6 +310,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     _registerEvents() {
         this.RegisterEvent('ComponentRendered', false, 'Поднимается, когда компонента готова и привязана к DOM-у');
         this.RegisterEvent('ComponentDisposed', false, 'Поднимается, когда компонента отвязана от DOM-а');
+        this.RegisterEvent('ComponentMoved', false, 'When component is moved in childs tree');
         this.RegisterEvent('ReadonlyStateChanged', false, 'Поднимается, когда изменяется свойство Readonly');
         this.RegisterEvent('EnabledStateChanged', false, 'Поднимается, когда изменяется свойство Enabled');
         this.RegisterEvent('Resized', false, 'Поднимается, когда изменение размера завершено');
@@ -1177,7 +1178,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return this.parent.Children(myIndex - 1);
     }
 
-    MoveChild(child, fromIndex, toIndex) {
+    MoveChild(child, fromIndex, toIndex, raiseEvent = false) {
         
         // если то же место то ничего не делаем
         if(fromIndex == toIndex) {
@@ -1193,7 +1194,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         this._children.splice(toIndex, 0, child);
         this._moveInDom(child.container, this.container, toIndex);        
-
+        if(raiseEvent) {
+            this.Dispatch('ComponentMoved', {fromIndex: fromIndex, toIndex: toIndex});
+        }
     }
 
     MoveUp() {
@@ -1201,6 +1204,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             return;
         }    
         this.parent.MoveChild(this, this.childIndex, this.childIndex - 1);
+        this.Dispatch('ComponentMoved', {direction: 'up'});
     }
 
     MoveDown() {
@@ -1208,6 +1212,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             return;
         }    
         this.parent.MoveChild(this, this.childIndex, this.childIndex + 1);
+        this.Dispatch('ComponentMoved', {direction: 'down'});
     }
 
     _childByName(name) {

@@ -31,7 +31,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
 
         this._handleEvents();
         if(this._parentColumn.editorAllways) {
-            this.EditValue();
+            this.EditValue(false);
         }
     }
 
@@ -436,7 +436,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         }
     }
 
-    EditValue() {
+    EditValue(setFocus = true) {
         if(this._editorObject) {
             Colibri.Common.Delay(50).then(() => {
                 this.AddClass('-editing');
@@ -445,7 +445,9 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
                 this._viewerObject && this._viewerObject.Hide();
                 this._editorObject.field = this._parentColumn.tag;
                 this._editorObject.Show();
-                this._editorObject.Focus();
+                if(setFocus) {
+                    this._editorObject.Focus();
+                }
                 this._editorObject.editedObject = this.parentRow.value; 
                 this._editorObject.value = this.value;   
             });

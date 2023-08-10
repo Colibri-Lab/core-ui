@@ -24,7 +24,9 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         this.columns = this.grid.header.columns.count;
 
         this._titleCell.AddHandler('Clicked', (event, args) => {
-            this.closed = !this.closed;
+            if(this._titleCellArrow.shown) {
+                this.closed = !this.closed;
+            }
         });
 
     }

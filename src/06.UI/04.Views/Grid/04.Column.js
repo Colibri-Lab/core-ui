@@ -30,6 +30,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         super._registerEvents();
         this.RegisterEvent('ColumnStickyChange', false, 'Поднимается, когда колонка меняет липкость');
         this.RegisterEvent('ColumnClicked', false, 'Поднимается, когда щелкнули по колонке в заголовке');
+        this.RegisterEvent('ColumnMoved', false, 'Поднимается, колонка сдвинута');
         this.RegisterEvent('ColumnDisposed', false, 'Поднимается, когда удалили колонку');
         this.RegisterEvent('ColumnPositionChange', false, 'Поднимается, когда колонка изменила положение липкости');
     }

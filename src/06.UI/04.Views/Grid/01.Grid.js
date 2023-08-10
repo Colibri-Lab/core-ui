@@ -999,6 +999,17 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
         this.AddHandler('KeyDown', this.__processKeydown);
 
+        this.header.columns.AddHandler('ColumnMoved', (event, args) => {
+            this.ForEveryRow((name, row) => {
+                const cell = row.Children(row.name + '-' + args.column.name);
+                if(args.direction === 'up') {
+                    cell.MoveUp();
+                } else if(args.direction === 'down') {
+                    cell.MoveDown();
+                }
+            });
+        });
+
         this.header.columns.AddHandler('ColumnAdded', (event, args) => {
             Object.forEach(this.groups, (name, rows) => {
                 rows.columns = this.header.columns.count;
@@ -1007,6 +1018,9 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         });
 
         this.header.AddHandler('ColumnDisposed', (event, args) => {
+            Object.forEach(this.groups, (name, rows) => {
+                rows.columns = this.header.columns.count;
+            });
             this.Dispatch('ColumnDisposed', args);
         });
 
