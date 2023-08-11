@@ -14,7 +14,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
         this._preventNextEvent = false;
 
         this._handleHashChange = (e) => {
-            if(this._url !== App.Request.uri && this._options !== App.Request.query) {
+            if(this._url !== App.Request.uri || this._options !== App.Request.query) {
                 this._url = App.Request.uri;
                 this._path = App.Request.uri.split('/').filter(v => v != '');
                 this._options = App.Request.query;
@@ -24,7 +24,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
             }
         };
         this._handlePopState = (e) => {
-            if(this._url !== App.Request.uri && this._options !== App.Request.query) {
+            if(this._url !== App.Request.uri || this._options !== App.Request.query) {
                 this._url = App.Request.uri;
                 this._path = App.Request.uri.split('/').filter(v => v != '');
                 this._options = App.Request.query;
