@@ -10,6 +10,7 @@ Colibri.UI.Table = class extends Colibri.UI.Component {
         return new Colibri.UI.TableRow(name, this);
     }
 
+
     /**
      * Cell padding
      * @type {Number}
@@ -74,6 +75,66 @@ Colibri.UI.TableHeaderCell = class extends Colibri.UI.Component {
         this.shown = true;
     }
 
+    /**
+     * Row spanning
+     * @type {Number}
+     */
+    get rowspan() {
+        return parseInt(this._element.attr('rowspan'));
+    }
+    /**
+     * Row spanning
+     * @type {Number}
+     */
+    set rowspan(value) {
+        this._element.attr('rowspan', value);
+    }
+    
+    /**
+     * Column spanning
+     * @type {Number}
+     */
+    get colspan() {
+        return parseInt(this._element.attr('colspan'));
+    }
+    /**
+     * Column spanning
+     * @type {Number}
+     */
+    set colspan(value) {
+        this._element.attr('colspan', value);
+    }
+
+    /**
+     * Text align
+     * @type {left,center,right,justify}
+     */
+    get align() {
+        return this._element.css('text-align');
+    }
+    /**
+     * Text align
+     * @type {left,center,right,justify}
+     */
+    set align(value) {
+        this._element.css('text-align', value);
+    }
+
+    /**
+     * Vertical align
+     * @type {top,middle,bottom}
+     */
+    get verticalAlign() {
+        return this._element.css('vertical-align');
+    }
+    /**
+     * Vertical align
+     * @type {top,middle,bottom}
+     */
+    set verticalAlign(value) {
+        this._element.css('vertical-align', value);
+    }
+
 }
 
 Colibri.UI.TableCell = class extends Colibri.UI.Component {
@@ -90,7 +151,7 @@ Colibri.UI.TableCell = class extends Colibri.UI.Component {
      * @type {Number}
      */
     get colspan() {
-        return this._element.attr('colspan');
+        return parseInt(this._element.attr('colspan'));
     }
     /**
      * Col span
@@ -105,7 +166,7 @@ Colibri.UI.TableCell = class extends Colibri.UI.Component {
      * @type {Number}
      */
     get rowspan() {
-        return this._element.attr('rowspan');
+        return parseInt(this._element.attr('rowspan'));
     }
     /**
      * Col span
@@ -113,6 +174,36 @@ Colibri.UI.TableCell = class extends Colibri.UI.Component {
      */
     set rowspan(value) {
         this._element.attr('rowspan', value);
+    }
+
+    /**
+     * Text align
+     * @type {left,center,right,justify}
+     */
+    get align() {
+        return this._element.css('text-align');
+    }
+    /**
+     * Text align
+     * @type {left,center,right,justify}
+     */
+    set align(value) {
+        this._element.css('text-align', value);
+    }
+
+    /**
+     * Vertical align
+     * @type {top,middle,bottom}
+     */
+    get verticalAlign() {
+        return this._element.css('vertical-align');
+    }
+    /**
+     * Vertical align
+     * @type {top,middle,bottom}
+     */
+    set verticalAlign(value) {
+        this._element.css('vertical-align', value);
     }
 
 }
