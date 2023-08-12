@@ -26,9 +26,12 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
 
         this.handleVisibilityChange = true;
         this.AddHandler('VisibilityChanged', (event, args) => {
-            if(args.state === true) {
-                this._generateChart();
-            }
+            this._generateChart();
+        });
+
+        this.AddHandler('Shown', (event, args) => {
+            console.log('shown event');
+            this._generateChart();
         });
 
         this.AddHandler('GoogleChartsLoaded', (event, args) => this.__thisGoogleChartsLoaded(event, args));
@@ -55,16 +58,23 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
         }
 
         // this._element.html('');
-
         if(!this._chart) {
-            this._chart = new google.visualization[this._type](document.getElementById(this.elementID));
+            this._chart = new google.visualization[this._type](this._element);
         }
         
-        const options = {
+        const options = Object.assign({
             title: this._title,
             legend: 'none'
-        };
-        const data = google.visualization.arrayToDataTable(this._value);
+        }, this._options);
+
+        let data;
+        if(this._drawDataHandle) {
+            data = this._drawDataHandle(this._value, this);
+        } else {
+            data = google.visualization.arrayToDataTable(this._value);
+        }
+
+
         this._chart.draw(data, options);
     }
 
@@ -117,6 +127,36 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
     set value(value) {
         this._value = value;
         this._generateChart();
+    }
+    
+    /**
+     * OPtions object
+     * @type {Object}
+     */
+    get options() {
+        return this._options;
+    }
+    /**
+     * OPtions object
+     * @type {Object}
+     */
+    set options(value) {
+        this._options = value;
+    }
+
+    /**
+     * Draw data handle
+     * @type {Function}
+     */
+    get drawDataHandle() {
+        return this._drawDataHandle;
+    }
+    /**
+     * Draw data handle
+     * @type {Function}
+     */
+    set drawDataHandle(value) {
+        this._drawDataHandle = value;
     }
 
 }

@@ -1602,6 +1602,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         if(this._container) {
             this._hideData = {index: this.index, parent: this._container};
             this.Disconnect();
+            this.Dispatch('Hidden', {});
+            this._sendEventToChilds('Hidden', {});
         }
     }
 
@@ -1609,7 +1611,16 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         if(this._hideData && this._hideData.parent) {
             this.ConnectTo(this._hideData.parent, this._hideData.index);
             this._hideData = null;
+            this.Dispatch('Shown', {});
+            this._sendEventToChilds('Shown', {});
         }
+    }
+
+    _sendEventToChilds(event, args = {}) {
+        this.ForEach((name, component) => {
+            component.Dispatch(event, args);
+            component._sendEventToChilds(event, args);
+        });
     }
 
     /**
@@ -1804,6 +1815,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         } else {
             this._element.scrollIntoView(false);
         }
+    }
+
+    ScrollTo(to = 0, duration = 200) {
+        console.log('ScrollToTop', to, duration);
+        this._element.animateScrollTop(to, duration);
     }
 
     /**

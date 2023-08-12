@@ -545,6 +545,14 @@ String.prototype.toDate = function () {
     let timeParts = parts[1] ? parts[1].split(':') : ['0', '0', '0'];
     return new Date((dateParts[0] + '').toInt(), (dateParts[1] + '').toInt() - 1, (dateParts[2] + '').toInt(), (timeParts[0] + '').toInt(), (timeParts[1] + '').toInt(), (timeParts[2] + '').toInt());
 };
+String.prototype.fromDDMMYYYY = function() {
+    let splitter = '-';
+    if(this.indexOf('.') !== -1) {
+        splitter = '.';
+    }
+    return (this.split(splitter)[2] + '-' + this.split(splitter)[1] + '-' + this.split(splitter)[0]).toDate();
+}
+
 String.prototype.toShortDate = function () {
     var parts = this.split(/\/|\.|\-/);
     return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parts[0]);
