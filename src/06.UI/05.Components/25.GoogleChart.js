@@ -30,7 +30,6 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
         });
 
         this.AddHandler('Shown', (event, args) => {
-            console.log('shown event');
             this._generateChart();
         });
 
@@ -76,6 +75,13 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
 
 
         this._chart.draw(data, options);
+        google.visualization.events.addListener(this._chart, 'ready', () => {
+            setTimeout(() => {
+                if(this._chartReadyHandler) {
+                    this._chartReadyHandler(this._chart);
+                }
+            }, 500);
+        });
     }
 
     _registerEvents() {
@@ -157,6 +163,21 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
      */
     set drawDataHandle(value) {
         this._drawDataHandle = value;
+    }
+
+    /**
+     * Chart ready handler
+     * @type {Function}
+     */
+    get chartReadyHandler() {
+        return this._chartReadyHandler;
+    }
+    /**
+     * Chart ready handler
+     * @type {Function}
+     */
+    set chartReadyHandler(value) {
+        this._chartReadyHandler = value;
     }
 
 }

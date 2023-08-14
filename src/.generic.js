@@ -355,7 +355,11 @@ Object.cloneRecursive = function (object, callback = null, excludeKeys = []) {
     if(Array.isArray(object)) {
         let ret = [];
         for(const o of object) {
-            ret.push(Object.cloneRecursive(o, callback, excludeKeys));
+            if(o instanceof Object) {
+                ret.push(Object.cloneRecursive(o, callback, excludeKeys));
+            } else {
+                ret.push(o);
+            }
         }
         return ret;
     }

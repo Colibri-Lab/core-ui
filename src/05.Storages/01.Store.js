@@ -1,6 +1,6 @@
 Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
-    constructor(name, data = {}, parent = null) {
+    constructor(name, data = {}, parent = null, permanent = false) {
         super('Store');
 
         this._name = name;
@@ -13,6 +13,75 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         this.RegisterEvents();
         this.RegisterEventHandlers();
 
+        this._permanent = permanent ?? false;
+        if(this._permanent) {
+            App.Db.AddHandler('DatabaseDoesNotExists', (event, args) => {
+                App.Db.CreateStore(this._name, '__domain');
+            });
+            App.Db.AddHandler('DatabaseOpened', (event, args) => {
+                this.RetreiveFromPermanentStore();
+            });
+            App.Db.Open();
+        }
+
+    }
+
+    KeepInPermanentStore() {
+        const __domain = location.hostname;
+        let savingData = this.ExportData();
+        savingData = Object.assign(savingData, {__domain: __domain});
+        App.Db.GetDataById(this._name, __domain).then(() => {
+            App.Db.UpdateData(this._name, savingData);
+        }).catch(() => {
+            App.Db.AddData(this._name, savingData);
+        }).finally(() => {
+            this.Dispatch('StoreKeeped', {});
+        });
+    }
+
+    RetreiveFromPermanentStore() {
+        if(App.Db.StoreExists(this._name)) {
+            this._data = App.Db.GetDataById(this._name, location.hostname);
+            Colibri.Common.StartTimer(this._name + '-store-dump', 15000, () => {
+                this.KeepInPermanentStore();
+            });
+            this.Dispatch('StoreRetreived', {});
+            this.Dispatch('StoreUpdated', {});
+        }
+    }
+    
+    ExportData(fullData = false) {
+
+        const newData = {};
+
+        Object.forEach(this._data, (name, value) => {
+            if(value instanceof Colibri.Storages.Store) {
+                if(fullData) {
+                    newData[name] = value.ExportData();
+                }
+            } else {
+                newData[name] = Object.cloneRecursive(value);
+            }
+        });
+
+        return newData;
+    }
+
+    /**
+     * @type {Boolean}
+     */
+    get permanent() {
+        return this._permanent;
+    }
+
+    /**
+     * @type {Boolean}
+     */
+    set permanent(value) {
+        this._permanent = value;
+        if(!this._permanent) {
+            Colibri.Common.StopTimer(this._name + '-store-dump');
+        }
     }
 
     /**
@@ -42,9 +111,11 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
     }
 
     RegisterEvents() {
-        this.RegisterEvent('StoreUpdated', true, 'Когда хранилище обновилось');
-        this.RegisterEvent('StoreChildUpdated', true, 'Когда обновилось дочернее хранилище');
-        this.RegisterEvent('StoreLoaderCrushed', true, 'Когда не смогли загрузить данные');
+        this.RegisterEvent('StoreUpdated', true, 'When store data is updated');
+        this.RegisterEvent('StoreChildUpdated', true, 'When child store is updated');
+        this.RegisterEvent('StoreLoaderCrushed', true, 'When store loader crushed');
+        this.RegisterEvent('StoreRetreived', true, 'When store is retreived from permanent');
+        this.RegisterEvent('StoreKeeped', true, 'When store is keeped to permanent');
     }
 
     RegisterEventHandlers() {
@@ -55,9 +126,9 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         }
     }
 
-    AddChild(path, data, owner) {
+    AddChild(path, data = {}, owner = null, permanent = false) {
         let paths = path.split('.');
-        const newStore = new Colibri.Storages.Store(paths[paths.length - 1], data, this);
+        const newStore = new Colibri.Storages.Store(paths[paths.length - 1], data, this, permanent);
         newStore.owner = owner;
         this.Set(path, newStore);
         return newStore;

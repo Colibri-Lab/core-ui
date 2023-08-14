@@ -36,6 +36,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     InitializeApplication(
         name = 'app',
+        version = 1,
         routerType = Colibri.Web.Router.RouteOnHash, 
         requestType = Colibri.IO.Request.RequestEncodeTypeEncrypted,
         initComet = false,
@@ -53,6 +54,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         }
 
         this._name = name;
+        this._version = version;
 
         Colibri.IO.Request.type = requestType;
         if(remoteDomain) {
@@ -68,6 +70,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         this._router = new Colibri.Web.Router(routerType);
         this._device = new Colibri.Devices.Device();
         this._browser = new Colibri.Common.BrowserStorage();
+        this._db = new Colibri.Web.IndexDB(this._name, this._version);
         this._dateformat = dateformat;
         this._numberformat = numberformat;
         this._currency = currency;
@@ -286,6 +289,10 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     get Browser() {
         return this._browser;
+    }
+
+    get Db() {
+        return this._db;
     }
 
     get ToolTip() {

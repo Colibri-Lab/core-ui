@@ -1818,7 +1818,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     ScrollTo(to = 0, duration = 200) {
-        console.log('ScrollToTop', to, duration);
         this._element.animateScrollTop(to, duration);
     }
 
