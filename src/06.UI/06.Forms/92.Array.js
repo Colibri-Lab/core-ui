@@ -138,7 +138,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         if(this._fieldData.params && !!this._fieldData.params.maxadd) {
             const count = Object.countKeys(this.Fields());
             if(count >= parseInt(this._fieldData.params.maxadd)) {
-                this._link.Hide();
+                this._link && this._link.Hide();
             }
         }
 
