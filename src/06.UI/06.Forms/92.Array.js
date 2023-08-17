@@ -43,7 +43,6 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
             const c = eval(linkData.component);
             this._link = new c('add-new', this.contentContainer);
             Object.forEach(linkData.attrs, (name, value) => {
-                console.log(name, value);
                 this._link[name] = value;
             });
 
