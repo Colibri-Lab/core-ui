@@ -30,9 +30,9 @@ Colibri.UI.BoolViewer = class extends Colibri.UI.Viewer {
             return;
         }
 
+        
+        let value = this._value[this._field.selector?.value || 'value'] ?? this._value;
         value = this._convertValue(value);
-
-        const value = this._value[this._field.selector?.value || 'value'] ?? this._value;
 
         const values = Object.values(this._field.values);
         const found = values.filter(o => o.value == value);
