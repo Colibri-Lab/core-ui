@@ -56,6 +56,9 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
         this._link.shown = true;
         this._link.AddHandler('Clicked', (event, args) => {
+            if(this.readonly || !this.enabled) {
+                return;
+            }
             this.AddNew();
         });
         if(this.readonly || !this.enabled) {
@@ -93,6 +96,10 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         object.enabled = this.enabled;
         if(this._fieldData.params && this._fieldData.params.removelink !== false && !this.readonly && this.enabled) {
             object.AddRemoveLink(() => {
+
+                if(this.readonly || !this.enabled) {
+                    return;
+                }
 
                 Object.forEach(this.Fields(), (name, field) => {
                     if(field instanceof Colibri.UI.Forms.Field) {
