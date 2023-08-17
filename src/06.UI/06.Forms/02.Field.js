@@ -191,11 +191,11 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     }
 
     AddRemoveLink(callback) {
-        const removeLink = new Colibri.UI.Icon(this._name + '-remove', this);
-        removeLink.AddClass('app-component-remove-field')
-        removeLink.shown = true;
-        removeLink.value = Colibri.UI.RemoveIcon;
-        removeLink.AddHandler('Clicked', (event, args) => {
+        this._removeLink = new Colibri.UI.Icon(this._name + '-remove', this);
+        this._removeLink.AddClass('app-component-remove-field')
+        this._removeLink.shown = true;
+        this._removeLink.value = Colibri.UI.RemoveIcon;
+        this._removeLink.AddHandler('Clicked', (event, args) => {
             if(!this.enabled) {
                 return;
             }
@@ -205,21 +205,21 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     }
 
     AddUpDownLink(upCallback, downCallback) {
-        const upLink = new Colibri.UI.Icon(this._name + '-up', this);
-        upLink.AddClass('app-component-up-field')
-        upLink.shown = true;
-        upLink.value = Colibri.UI.UpIcon;
-        upLink.AddHandler('Clicked', (event, args) => {
+        this._upLink = new Colibri.UI.Icon(this._name + '-up', this);
+        this._upLink.AddClass('app-component-up-field')
+        this._upLink.shown = true;
+        this._upLink.value = Colibri.UI.UpIcon;
+        this._upLink.AddHandler('Clicked', (event, args) => {
             if(!this.enabled) {
                 return;
             }
             upCallback && upCallback();
         });
-        const downLink = new Colibri.UI.Icon(this._name + '-down', this);
-        downLink.AddClass('app-component-down-field')
-        downLink.shown = true;
-        downLink.value = Colibri.UI.DownIcon;
-        downLink.AddHandler('Clicked', (event, args) => {
+        this._downLink = new Colibri.UI.Icon(this._name + '-down', this);
+        this._downLink.AddClass('app-component-down-field')
+        this._downLink.shown = true;
+        this._downLink.value = Colibri.UI.DownIcon;
+        this._downLink.AddHandler('Clicked', (event, args) => {
             if(!this.enabled) {
                 return;
             }

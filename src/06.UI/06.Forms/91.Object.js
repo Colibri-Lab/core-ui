@@ -186,6 +186,15 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
                 component.readonly = value; 
             }
         });
+        if(this._removeLink) {
+            this._removeLink.shown = !value;
+        }
+        if(this._upLink) {
+            this._upLink.shown = !value;
+        }
+        if(this._downLink) {
+            this._downLink.shown = !value;
+        }
     }
 
     get enabled() {
