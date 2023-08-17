@@ -83,7 +83,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
     }
 
     set readonly(value) {
-        this.contentContainer.ForEach((name, component) => {
+        Object.forEach(this._tabs.components, (name, component) => {
             component.readonly = value; 
         });
     }
