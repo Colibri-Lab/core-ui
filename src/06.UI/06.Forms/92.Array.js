@@ -58,6 +58,9 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         this._link.AddHandler('Clicked', (event, args) => {
             this.AddNew();
         });
+        if(this.readonly || !this.enabled) {
+            this._link.Hide();
+        }
         return this._link;
     }
 
@@ -88,9 +91,9 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         object.shown = true;
         object.title = '';
         object.enabled = this.enabled;
-        if(this._fieldData.params && this._fieldData.params.removelink !== false) {
+        if(this._fieldData.params && this._fieldData.params.removelink !== false && !this.readonly && this.enabled) {
             object.AddRemoveLink(() => {
-                 
+
                 Object.forEach(this.Fields(), (name, field) => {
                     if(field instanceof Colibri.UI.Forms.Field) {
                         field.Dispatch('Changed', {});
@@ -109,7 +112,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
             });
         }
-        if(this._fieldData.params && this._fieldData.params.updownlink !== false) {
+        if(this._fieldData.params && this._fieldData.params.updownlink !== false && !this.readonly && this.enabled) {
             object.AddUpDownLink(() => {
                 object.MoveUp();
                 object.Focus();
