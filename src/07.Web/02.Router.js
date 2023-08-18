@@ -199,11 +199,18 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
             } else if(this._type == Colibri.Web.Router.RouteOnHistory) {
                 history.pushState({url: this._url, options: this._options}, '', u);                
             }
-        
+        }
+
+        if(processPatterns && !isChanged) {
+            
             this._url = url;
             this._path = (this._url ?? '/').split('/').filter(v => v != '');
             this._options = options;
             this._history.push({url: this._url, options: this._options});
+
+            this._processRoutePatterns();
+            this.Dispatch('RouteChanged', {url: this._url, options: this._options});
+
         }
 
         return u;
