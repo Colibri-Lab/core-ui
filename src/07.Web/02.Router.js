@@ -14,6 +14,10 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
         this._preventNextEvent = false;
 
         this._handleHashChange = (e) => {
+            if(this._preventNextEvent) {
+                this._preventNextEvent = false;
+                return;
+            }
             if(this._url !== App.Request.uri || this._options !== App.Request.query) {
                 this._url = App.Request.uri;
                 this._path = App.Request.uri.split('/').filter(v => v != '');
@@ -24,7 +28,10 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
             }
         };
         this._handlePopState = (e) => {
-            console.trace();
+            if(this._preventNextEvent) {
+                this._preventNextEvent = false;
+                return;
+            }
             if(this._url !== App.Request.uri || this._options !== App.Request.query) {
                 this._url = App.Request.uri;
                 this._path = App.Request.uri.split('/').filter(v => v != '');
@@ -54,43 +61,12 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
         this._path = App.Request.uri.split('/').filter(v => v != '');
         this._options = App.Request.query;
         this._history.push({url: this._url, options: this._options});
-        // this._setCurrentUrl(App.Request.uri, App.Request.query);
         this._processRoutePatterns();
         this.Dispatch('RouteChanged', {url: this._url, options: this._options});
-
-        // if(this._type == Colibri.Web.Router.RouteOnHash) {
-        // }
-        // else if(this._type == Colibri.Web.Router.RouteOnHistory) {
-        //     this._setCurrentUrl(App.Request.uri, App.Request.query);
-        // }
     }
 
     _registerEvents() {
         this.RegisterEvent('RouteChanged', false, 'При изменении раута');
-    }
-
-    _setCurrentUrl(url, options, target = '_self') {
-
-        const oldUrl = this._url;
-        const oldOptions = this._options;
-
-        this._url = url;
-        this._path = url.split('/').filter(v => v != '');
-        this._options = options;
-
-        if(this._url !== oldUrl || JSON.stringify(this._options) !== JSON.stringify(oldOptions)) {
-            this._history.push({url: this._url, options: this._options});
-            if(this._preventNextEvent === true) {
-                this.Dispatch('RouteChanged', {url: url, options: options});
-            }
-        }
-
-        if(this._preventNextEvent === true) {
-            this._preventNextEvent = false;
-            return;
-        }
-        
-        this._processRoutePatterns();
     }
 
     ProcessPatterns() {
@@ -166,12 +142,44 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
         return url + (Object.countKeys(options) > 0 ? '?' + String.fromObject(options, ['&', '=']) : '');
     }
 
+    _isChanged(url, options) {
+        const u = url + (Object.countKeys(options) > 0 ? '?' + String.fromObject(options, ['&', '=']) : '');
+        let isChanged = false;
+        if(this._type == Colibri.Web.Router.RouteOnHash) {
+            isChanged = location.hash != '#' + u;
+        }
+        else if(this._type == Colibri.Web.Router.RouteOnHistory) {
+            isChanged = location.pathname + location.search != u;
+        }
+        return isChanged;
+    }
+
+    _setToAddressBar(url, options, replaceOnHistory = false, preventNextEvent = false) {
+        
+        this._preventNextEvent = preventNextEvent;
+
+        const u = url + (Object.countKeys(options) > 0 ? '?' + String.fromObject(options, ['&', '=']) : '');
+        if(this._type == Colibri.Web.Router.RouteOnHash) {
+            location.hash = '#' + u;
+        } else if(this._type == Colibri.Web.Router.RouteOnHistory) {
+            const state = {url: this._url, options: this._options};
+            if(replaceOnHistory) {
+                history.replaceState(state, '', u);
+            } else {
+                history.pushState(state, '', u);
+            }
+            dispatchEvent(new PopStateEvent('popstate', { state: state }));
+        }
+    }
+
     /**
      * Переадресация
      * @param {string} url куда
      * @param {object} options параметры
      */
-    Navigate(url, options = {}, replaceOnHistory = false, setOnHistory = true, target = '_self') {
+    Navigate(url, options = {}, replaceOnHistory = false, setOnHistory = false, target = '_self') {
+
+        const isChanged = this._isChanged(url, options);
 
         const u = url + (Object.countKeys(options) > 0 ? '?' + String.fromObject(options, ['&', '=']) : '');
         if(target === '_blank') {
@@ -179,34 +187,20 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
             return u;
         }
 
-        if(!setOnHistory) {
+        if(setOnHistory) {
             this._url = url;
             this._path = (this._url ?? '/').split('/').filter(v => v != '');
             this._options = options;
             this._history.push({url: this._url, options: this._options});
+            
+            this._setToAddressBar(url, options, replaceOnHistory, true);
+
             return;
         }
 
-        let isChanged = false;
-        if(this._type == Colibri.Web.Router.RouteOnHash) {
-            isChanged = location.hash != '#' + u;
-        }
-        else if(this._type == Colibri.Web.Router.RouteOnHistory) {
-            isChanged = location.pathname != u;
-        }
 
         if(isChanged) {
-            if(this._type == Colibri.Web.Router.RouteOnHash) {
-                location.hash = '#' + u;
-            } else if(this._type == Colibri.Web.Router.RouteOnHistory) {
-                const state = {url: this._url, options: this._options};
-                if(replaceOnHistory) {
-                    history.replaceState(state, '', u);
-                } else {
-                    history.pushState(state, '', u);
-                }
-                dispatchEvent(new PopStateEvent('popstate', { state: state }));
-            }
+            this._setToAddressBar(url, options, replaceOnHistory);
         } else {
             
             // this._url = url;
