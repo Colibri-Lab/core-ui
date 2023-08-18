@@ -24,6 +24,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
             }
         };
         this._handlePopState = (e) => {
+            console.trace();
             if(this._url !== App.Request.uri || this._options !== App.Request.query) {
                 this._url = App.Request.uri;
                 this._path = App.Request.uri.split('/').filter(v => v != '');
@@ -102,6 +103,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
     }
 
     _initRouterOnHistory() {
+        console.trace();
         window.removeEventListener('hashchange', this._handleHashChange);
         window.addEventListener('popstate', this._handlePopState);
     }
@@ -169,7 +171,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
      * @param {string} url куда
      * @param {object} options параметры
      */
-    Navigate(url, options = {}, processPatterns = true, setImmediately = true, target = '_self') {
+    Navigate(url, options = {}, replaceOnHistory = false, setOnHistory = true, target = '_self') {
 
         const u = url + (Object.countKeys(options) > 0 ? '?' + String.fromObject(options, ['&', '=']) : '');
         if(target === '_blank') {
@@ -177,7 +179,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
             return u;
         }
 
-        if(!setImmediately) {
+        if(!setOnHistory) {
             this._url = url;
             this._path = (this._url ?? '/').split('/').filter(v => v != '');
             this._options = options;
@@ -197,19 +199,23 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
             if(this._type == Colibri.Web.Router.RouteOnHash) {
                 location.hash = '#' + u;
             } else if(this._type == Colibri.Web.Router.RouteOnHistory) {
-                history.pushState({url: this._url, options: this._options}, '', u);                
+                const state = {url: this._url, options: this._options};
+                if(replaceOnHistory) {
+                    history.replaceState(state, '', u);
+                } else {
+                    history.pushState(state, '', u);
+                }
+                dispatchEvent(new PopStateEvent('popstate', { state: state }));
             }
-        }
-
-        if(processPatterns && !isChanged) {
+        } else {
             
-            this._url = url;
-            this._path = (this._url ?? '/').split('/').filter(v => v != '');
-            this._options = options;
-            this._history.push({url: this._url, options: this._options});
+            // this._url = url;
+            // this._path = (this._url ?? '/').split('/').filter(v => v != '');
+            // this._options = options;
+            // this._history.push({url: this._url, options: this._options});
 
-            this._processRoutePatterns();
-            this.Dispatch('RouteChanged', {url: this._url, options: this._options});
+            // this._processRoutePatterns();
+            // this.Dispatch('RouteChanged', {url: this._url, options: this._options});
 
         }
 
