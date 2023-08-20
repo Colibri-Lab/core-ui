@@ -36,5 +36,20 @@ Colibri.UI.ExtendedButton = class extends Colibri.UI.Button {
             this.RemoveClass('ui-icon-right');
         }
     }
+    
+    /**
+     * Tool tip string
+     * @type {String}
+     */
+    get toolTip() {
+        return this._span.toolTip;
+    }
+    /**
+     * Tool tip string
+     * @type {String}
+     */
+    set toolTip(value) {
+        this._span.toolTip = value;
+    }
 
 }

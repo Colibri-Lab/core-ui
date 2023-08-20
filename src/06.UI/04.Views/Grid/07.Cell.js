@@ -19,7 +19,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         this._parentColumn = null;
         this._value = null;
 
-        this._parentColumn = this.grid.header.columns.Children(this.columnName);
+        this._parentColumn = this.grid.header.FindColumn(this.columnName);
         this._editor = this._parentColumn.editor;
         this._viewer = this._parentColumn.viewer;
         this._editorObject = null;
@@ -374,7 +374,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
     }
 
     _generateViewFromParams(value) {
-        const column = this.grid.header.columns.Children(this.columnName);
+        const column = this.grid.header.FindColumn(this.columnName);
         if(column.tag.params && column.tag.params.render) {
             const ret = column.tag.params.render.apply(this, [this, this.parentRow]);
             if(ret) {

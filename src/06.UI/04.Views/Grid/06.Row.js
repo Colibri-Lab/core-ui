@@ -42,8 +42,12 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
     }
 
     Dispose() {
-        this.grid._rowSelectionCheckbox.delete(this._checkboxContainer);
-        this.header.columns.RemoveHandler('ColumnAdded', this._columnAddedHandler);
+        if(!this?.grid) {
+            return;
+        }
+        this?.grid?._rowSelectionCheckbox.delete(this._checkboxContainer);
+        Object.forEach(this.header.FindAllColumns(), 
+            (name, columns) => columns.RemoveHandler('ColumnAdded', this._columnAddedHandler));
         super.Dispose();
     }
 
@@ -144,12 +148,10 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     get value() {
         let ret = Object.assign({}, this._data);
-        this.header.columns.ForEach((columnName, column) => {
-            if (columnName !== 'button-container-for-row-selection') {
-                const cell = this.Children(this.name + '-' + column.name);
-                if(cell) {
-                    ret[column.name] = cell.value;
-                }
+        Object.forEach(this.header.FindAllColumns(), (columnName, column) => {
+            const cell = this.Children(this.name + '-' + column.name);
+            if(cell) {
+                ret[column.name] = cell.value;
             }
         });
         return ret;
@@ -157,10 +159,8 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     set value(value) {
         this._data = Object.assign({}, value);
-        this.header.columns.ForEach((columnName, column) => {
-            if (columnName !== 'button-container-for-row-selection') {
-                this.__newCell(this._data, column);
-            }
+        Object.forEach(this.header.FindAllColumns(), (columnName, column) => {
+            this.__newCell(this._data, column);
         });
         this._renderTemplateRow();
         this.Dispatch('RowUpdated', {row: this});
@@ -301,7 +301,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
     }
 
     get grid() {
-        return this.parent.parent.parent;
+        return this?.parent?.parent?.parent;
     }
 
     get header() {

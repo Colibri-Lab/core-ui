@@ -21,6 +21,18 @@
             }
         }
     }
+
+    &.-block {
+        &.app-component-shown {
+            display: block;
+        }
+    }
+    &.-inline-block {
+        &.app-component-shown {
+            display: inline-block;
+        }
+    }
+
     &:focus,
     &.-focused {
         box-shadow: $focus-shadow;
@@ -53,6 +65,7 @@
         display: none;
         box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
         transition: opacity 0.3s, visiblity 0s;
+        white-space: normal;
     }
     &:hover {
         >.tip {

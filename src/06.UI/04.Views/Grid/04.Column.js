@@ -330,4 +330,49 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         return this._download;
     }
     
+    /**
+     * Gets/Sets rows span of column (in header)
+     * @type {Number}
+     */
+    get rowspan() {
+        return this._element.attr('rowspan');
+    }
+    /**
+     * Gets/Sets rows span of column (in header)
+     * @type {Number}
+     */
+    set rowspan(value) {
+        this._element.attr('rowspan', value);
+    }
+
+    /**
+     * Gets/Sets column span of column (in header)
+     * @type {Number}
+     */
+    get colspan() {
+        return this._element.attr('colspan');
+    }
+    /**
+     * Gets/Sets column span of column (in header)
+     * @type {Number}
+     */
+    set colspan(value) {
+        this._element.attr('colspan', value);
+    }
+
+    /**
+     * Index of column, if header has multiple rows
+     * @type {Number}
+     */
+    get index() {
+        return this._index;
+    }
+    /**
+     * Index of column, if header has multiple rows
+     * @type {Number}
+     */
+    set index(value) {
+        this._index = value;
+    }
+
 }

@@ -68,6 +68,11 @@ Colibri.UI.Grid.Header = class extends Colibri.UI.Component {
         });
     }
 
+    /**
+     * Gets checkbox
+     * @type {Boolean}
+     * @readonly
+     */
     get checkbox() {
         return this._checkbox;
     }
@@ -84,6 +89,61 @@ Colibri.UI.Grid.Header = class extends Colibri.UI.Component {
         return this._sticky;
     }
 
+    FindColumn(colName) {
+        let found = null;
+        this.ForEach((name, columns) => {
+            if(columns.Children(colName)) {
+                found = columns.Children(colName);
+                return false;
+            }
+        });
+        return found;
+    }
+
+    FindAllColumns() {
+        let ret = {};
+        this.ForEach((name, columns) => {
+            columns.ForEach((n, col) => {
+                if(n != 'button-container-for-row-selection') {
+                    ret[n] = col;
+                }
+            });
+        });
+
+        // we need to reorder list
+        const hasIndexes = Array.sum(Object.values(ret).map(col => !!col.index ? 1 : 0)) > 0;
+        if(!hasIndexes) {
+            return ret;
+        } else {
+            let colArray = [];
+            for(const col of Object.values(ret)) {
+                if(!!col.index) {
+                    colArray[parseInt(col.index)] = col;
+                }
+            }
+            ret = {};
+            colArray.sort();
+            for(const col of colArray) {
+                if(col) {
+                    ret[col.name] = col;
+                }
+            }
+        }
+
+        return ret;
+    }
+
+    /**
+     * @type {Number}
+     * @readonly
+     */
+    get columnsCount() {
+        let count = 0;
+        this._columns.ForEach((name, column) => {
+            count += column.colspan ?? 1;
+        })
+        return count;
+    }
 
 
 }

@@ -21,7 +21,7 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         this._titleCellArrow.shown = true;
         this._titleCellArrow.value = Colibri.UI.DownArrowIcon;
         this.title = 'По умолчанию';
-        this.columns = this.grid.header.columns.count;
+        this.columns = this.grid.header.columnsCount;
 
         this._titleCell.AddHandler('Clicked', (event, args) => {
             if(this._titleCellArrow.shown) {

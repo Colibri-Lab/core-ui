@@ -43,7 +43,6 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
         };
         
         request.onsuccess = () => {
-            console.log('success');
             this._db = request.result;
             this.Dispatch('DatabaseOpened', {});
         };

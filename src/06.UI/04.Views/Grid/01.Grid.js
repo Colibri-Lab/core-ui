@@ -496,7 +496,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             this._norows.shown = false;
             this._gridContent.shown = true;
             Object.forEach(this.groups, (name, rows) => {
-                rows.columns = this.header.columns.count;
+                rows.columns = this.header.columnsCount;
             });
             this.__recalculateCellPositions();
             this.Dispatch('RowAdded', {row: args.row});
@@ -767,7 +767,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
             let tempWidth = 0;
             let tempWidthPrevStickyCell = 0;
-            this.header.columns.ForEach((nameColumn, column) => {
+            Object.forEach(this.header.FindAllColumns(), (nameColumn, column) => {
                 column._widthPrevStickyCell = tempWidthPrevStickyCell;
                 if (column.sticky) {
                     tempWidthPrevStickyCell += parseFloat(column._element.css('width'));
@@ -999,7 +999,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
         this.AddHandler('KeyDown', this.__processKeydown);
 
-        this.header.columns.AddHandler('ColumnMoved', (event, args) => {
+        Object.forEach(this.header.FindAllColumns(), (name, columns) => columns.AddHandler('ColumnMoved', (event, args) => {
             this.ForEveryRow((name, row) => {
                 const cell = row.Children(row.name + '-' + args.column.name);
                 if(args.direction === 'up') {
@@ -1008,18 +1008,19 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                     cell.MoveDown();
                 }
             });
-        });
+        })); 
 
-        this.header.columns.AddHandler('ColumnAdded', (event, args) => {
+
+        Object.forEach(this.header.FindAllColumns(), (name, columns) => columns.AddHandler('ColumnAdded', (event, args) => {
             Object.forEach(this.groups, (name, rows) => {
-                rows.columns = this.header.columns.count;
+                rows.columns = this.header.columnsCount;
             });
             this.__recalculateCellPositions();
-        });
+        }));
 
         this.header.AddHandler('ColumnDisposed', (event, args) => {
             Object.forEach(this.groups, (name, rows) => {
-                rows.columns = this.header.columns.count;
+                rows.columns = this.header.columnsCount;
             });
             this.Dispatch('ColumnDisposed', args);
         });
@@ -1051,7 +1052,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             const rowsName = this.rows.name;
             this.ForEveryRow((name, component) => {
                 if(component instanceof Colibri.UI.Grid.Cell) {
-                    component.editor = this.columns.Children(name).editor;
+                    component.editor = this.header.FindColumn(name).editor;
                 }
             });
         });
@@ -1060,7 +1061,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             const rowsName = this.rows.name;
             this.ForEveryRow((name, component) => {
                 if(component instanceof Colibri.UI.Grid.Cell) {
-                    component.viewer = this.columns.Children(name).viewer;
+                    component.viewer = this.header.FindColumn(name).viewer;
                 }
             });
         });
@@ -1069,7 +1070,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             const rowsName = this.rows.name;
             this.ForEveryRow((name, component) => {
                 if(component instanceof Colibri.UI.Grid.Cell) {
-                    component.align = this.columns.Children(name).align;
+                    component.align = this.header.FindColumn(name).align;
                 }
             });
         });

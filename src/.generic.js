@@ -205,6 +205,13 @@ Array.prototype.stanDeviate = function() {
 Array.prototype.intersect = function (arr) {
     return this.filter(value => arr.includes(value));
 };
+Array.prototype.toObjectAsTrue = function() {
+    let ret = {};
+    for(const v of this) {
+        ret[v] = true;
+    }
+    return ret;
+}
 
 Array.toObjectWithKeys = function (array, fieldKey, fieldValue) {
     let ret = {};
@@ -216,6 +223,16 @@ Array.toObjectWithKeys = function (array, fieldKey, fieldValue) {
 
 Array.sum = function(ar) {
     return ar.reduce((partialSum, a) => partialSum + a, 0);
+}
+
+Object.fromObjectAsTrue = function(object) {
+    let ret = [];
+    Object.forEach(object, (name, value) => {
+        if(value) {
+            ret.push(name);
+        }
+    });
+    return ret;
 }
 
 Object.convertToExtended = function(object) {
@@ -1303,11 +1320,45 @@ Date.prototype.nextWorkingDay = function (addFactor = 1, holidays = []) {
 }
 Date.prototype.Diff = function (dt) { return parseInt((dt.getTime() - this.getTime()) / 1000); }
 Date.prototype.DiffInMonths = function (dateTo) {
-    return dateTo.getMonth() - this.getMonth() +
+    return dateTo.getMonth() - this.getMonth() - 1 +
         (12 * (dateTo.getFullYear() - this.getFullYear()))
 };
 Date.prototype.DiffInDays = function (dateTo) {
     return Math.ceil(this.Diff(dateTo) / 86400);
+};
+Date.prototype.DiffFull = function(dateTo) {
+
+    // не считаем дату начала и считаем дату окончания полностью
+    let time1 = this.toShortDateString().toDate().addDays(1);
+    let time2 = dateTo.toShortDateString().toDate().addDays(1);
+
+    let y = time2.getFullYear() - time1.getFullYear() - 1;
+
+    time1.addYears(y);
+
+    let m = time1.DiffInMonths(time2);
+
+    time1.addMonths(m);
+
+    let d = time1.DiffInDays(time2);
+
+    return {days: d, months: m, years: y};
+
+}
+Date.prototype.DiffFullTokens = function(
+    dateTo,
+    splitter = ' ', 
+    tokens = [
+        ['год', 'года', 'лет'],
+        ['месяц', 'месяца', 'месяцев'],
+        ['день', 'дня', 'дней']
+    ]) 
+{
+    const diff = this.DiffFull(dateTo);
+    return (diff.years > 0 ? diff.years.formatSequence(tokens[0], true).replaceAll(' ', '&nbsp;') + splitter : '') +  
+        (diff.months > 0 ? diff.months.formatSequence(tokens[1], true).replaceAll(' ', '&nbsp;') + splitter : '') + 
+        (diff.days > 0 ? diff.days.formatSequence(tokens[2], true).replaceAll(' ', '&nbsp;') : ''); 
+
 };
 Date.prototype.Age = function (removeNazad = false, returnFull = false, tokens = null) {
     let time = Math.abs((new Date()).getTime() / 1000 - this.getTime() / 1000); // to get the time since that moment
