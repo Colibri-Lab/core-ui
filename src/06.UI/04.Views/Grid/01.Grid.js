@@ -54,6 +54,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     /**
      * Возвращает хедер
+     * @type {Colibri.UI.Grid.Header}
      */
     get header() {
         return this._header;
@@ -61,7 +62,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     /**
      * Возвращает подвал
-     * @returns Colibri.UI.Pane
+     * @type {Colibri.UI.Pane}
      */
     get footer() {
         return this._footer;
@@ -69,7 +70,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     /**
      * Возвращает группу строк по умолчамнию
-     * @returns Colibri.UI.Grid.Rows
+     * @type {Colibri.UI.Grid.Rows}
      */
     get rows() {
         return this._rows;
@@ -77,7 +78,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     /**
      * Возвращает массив групп строк
-     * @returns Colibri.UI.Grid.Rows[]
+     * @type {Colibri.UI.Grid.Rows[]}
      */
     get groups() {
         let ret = {};
@@ -91,7 +92,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     /**
      * Возвращает сыделенные строки/ячейки
-     * @returns Colibri.UI.Component[]
+     * @type {Colibri.UI.Component[]}
      */
     get selected() {
         let selected = [];
@@ -116,7 +117,10 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             return selected[0];
         }
     }
-
+    /**
+     * Возвращает сыделенные строки/ячейки
+     * @type {Colibri.UI.Component[]}
+     */
     set selected(value) {
 
         if(value === null) {
@@ -165,7 +169,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     /**
      * Возвращает список прочеканных строк  
-     * @returns Colibri.UI.Component[]
+     * @type {Colibri.UI.Component[]}
      */
     get checked() {
         let checked = [];
@@ -179,7 +183,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     /**
      * Отобразить чекболксы
-     * @returns bool
+     * @type {bool}
      */
     get showCheckboxes() {
         return this._showCheckboxes;
@@ -187,7 +191,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     /**
      * Отобразить чекбоксы  
-     * @param {bool} value
+     * @type {bool}
      */
     set showCheckboxes(value) {
         this._setShowCheckboxes(value);
@@ -209,7 +213,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     /**
      * Мультиселект
-     * @returns bool
+     * @type bool
      */
     get multiple() {
         return this._multiple;
@@ -217,7 +221,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     /**
      * Режим выделения
-     * @param {bool} value
+     * @type {bool}
      */
     set multiple(value) {
         this._multiple = value === 'true' || value === true;
@@ -225,7 +229,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     /**
      * Режим выделения
-     * @returns Colibri.UI.Grid.FullRow|Colibri.UI.Grid.EveryCell
+     * @type {fullrow,everycell}
      */
     get selectionMode() {
         return this._selectionMode;
@@ -233,7 +237,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     /**
      * Режим выделения
-     * @param {Colibri.UI.Grid.FullRow|Colibri.UI.Grid.EveryCell} value
+     * @type {fullrow,everycell}
      */
     set selectionMode(value) {
         this._selectionMode = value;
@@ -241,7 +245,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     /**
      * Режим циклического селекта
-     * @returns bool
+     * @type {bool}
      */
     get cycleSelection() {
         return this._cycleSelection;
@@ -249,7 +253,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     /**
      * Режим циклического селекта
-     * @param {bool} value
+     * @type {bool} value
      */
     set cycleSelection(value) {
         this._cycleSelection = value;
@@ -257,7 +261,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     /**
      * Активная ячейка
-     * @returns Colibri.UI.Cell
+     * @type {Colibri.UI.Cell}
      */
     get activeCell() {
         if(!this.activeGroup || !this.activeGroup.activeRow || !this.activeGroup.activeRow.activeCell) {
@@ -553,7 +557,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
                 if (activeRow === null) {
                     if (['ArrowDown', 'ArrowRight'].indexOf(e.code) !==  -1) {
-                        newActiveRow = firstGroup.firstRow;
+                        newActiveRow = activeGroup.firstRow;
                     } 
                     else if (['ArrowUp', 'ArrowLeft'].indexOf(e.code) !== -1) {
                         newActiveRow = lastGroup.lastRow;
@@ -871,10 +875,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      */
     ClearAll() {
         this.ClearAllRows(true);
-        this.header.columns.ForEach((name, column) => {
-            if(name != 'button-container-for-row-selection') {
-                column.Dispose();
-            }
+        Object.forEach(this.header.FindAllColumns(), (name, column) => {
+            column.Dispose();
         });
         this._gridContent.shown = false;
         this._norows.shown = true;
@@ -1187,7 +1189,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
         this.ClearAllRows();
         value.forEach((d) => {
-            this.rows.Add('data' + d.id, d);
+            this.rows.Add('data' + (d.id ?? Date.Mc()), d);
         });
 
     }

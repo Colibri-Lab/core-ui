@@ -1320,29 +1320,42 @@ Date.prototype.nextWorkingDay = function (addFactor = 1, holidays = []) {
 }
 Date.prototype.Diff = function (dt) { return parseInt((dt.getTime() - this.getTime()) / 1000); }
 Date.prototype.DiffInMonths = function (dateTo) {
-    return dateTo.getMonth() - this.getMonth() - 1 +
-        (12 * (dateTo.getFullYear() - this.getFullYear()))
+    let d = new Date();
+    d.setTime(this.getTime());
+    let i = 0;
+    while(d <= dateTo) {
+        d.setMonth(d.getMonth()+1);
+        i++;
+    }
+    return i - 1;
 };
 Date.prototype.DiffInDays = function (dateTo) {
     return Math.ceil(this.Diff(dateTo) / 86400);
 };
+Date.prototype.DiffInYears = function(dateTo) {
+    let d = new Date();
+    d.setTime(this.getTime());
+    let i = 0;
+    while(d <= dateTo) {
+        d.setMonth(d.getMonth()+12);
+        i++;
+    }
+    return i - 1;
+}
 Date.prototype.DiffFull = function(dateTo) {
 
     // не считаем дату начала и считаем дату окончания полностью
-    let time1 = this.toShortDateString().toDate().addDays(1);
-    let time2 = dateTo.toShortDateString().toDate().addDays(1);
+    let time1 = this.toShortDateString().toDate().addDays(1); // меньше
+    let time2 = dateTo.toShortDateString().toDate().addDays(1); // больше
 
-    let y = time2.getFullYear() - time1.getFullYear() - 1;
-
+    let y = time1.DiffInYears(time2);
     time1.addYears(y);
 
     let m = time1.DiffInMonths(time2);
-
     time1.addMonths(m);
 
     let d = time1.DiffInDays(time2);
-
-    return {days: d, months: m, years: y};
+    return {days: d > 0 ? d : 0, months: m > 0 ? m : 0, years: y > 0 ? y : 0};
 
 }
 Date.prototype.DiffFullTokens = function(

@@ -46,8 +46,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
             return;
         }
         this?.grid?._rowSelectionCheckbox.delete(this._checkboxContainer);
-        Object.forEach(this.header.FindAllColumns(), 
-            (name, columns) => columns.RemoveHandler('ColumnAdded', this._columnAddedHandler));
+        this.header.ForEach((name, columns) => columns.RemoveHandler('ColumnAdded', this._columnAddedHandler));
         super.Dispose();
     }
 
@@ -67,8 +66,8 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     _handleEvents() {
 
-        this.header.columns.AddHandler('ColumnAdded', this._columnAddedHandler);
-        
+        this.header.ForEach((name, columns) => columns.AddHandler('ColumnAdded', this._columnAddedHandler));
+
         this.AddHandler('RowStickyChange', (event, args) => {
             if(!this._checkboxContainer) {
                 return true;

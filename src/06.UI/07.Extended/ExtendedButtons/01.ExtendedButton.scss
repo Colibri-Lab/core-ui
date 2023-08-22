@@ -6,6 +6,7 @@
 
     align-items: center;
     justify-content: center;
+    gap: 10px;
     
     font-style: normal;
     font-weight: 600;
@@ -23,7 +24,6 @@
         }
         align-items: center;
         justify-content: center;
-        margin-right: 10px;
         width: 14px;
         height: 14px;
         svg {
@@ -39,6 +39,9 @@
         font-size: 14px;
         line-height: 17px;
         color: #ffffff;
+        &:empty {
+            display: none;
+        }
     }
 
     &.ui-disabled, &:disabled {
@@ -54,8 +57,6 @@
     &.ui-icon-right {
         .app-component-icon {
             order: 2;
-            margin-right: 0px;
-            margin-left: 10px;
         }
         .app-component-textspan {
             order: 1

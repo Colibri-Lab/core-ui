@@ -140,7 +140,9 @@ Colibri.UI.Grid.Header = class extends Colibri.UI.Component {
     get columnsCount() {
         let count = 0;
         this._columns.ForEach((name, column) => {
-            count += column.colspan ?? 1;
+            if(name != 'button-container-for-row-selection') {
+                count += parseInt(column.colspan ?? 1);
+            }
         })
         return count;
     }

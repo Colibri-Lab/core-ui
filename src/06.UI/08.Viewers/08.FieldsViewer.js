@@ -122,6 +122,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
             if(field.params?.editor) {
                 pane.AddClass('app-field-pane-editor');
             }
+
             pane.shown = field.hidden === undefined || field.hidden === true;
 
             field.name = name;
@@ -237,6 +238,20 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                     pane.styles = f(field, pane);
                 }
             }
+
+            
+            let hidden = field?.params?.hidden ?? false;
+            if(typeof hidden === 'function') {
+                let v = value[name] ?? field.default ?? '';
+                try {
+                    v = value[name][Lang.Current] ?? value[name] ?? field.default ?? '';
+                } catch(e) { }
+                hidden = hidden(v, field);
+            }
+            if(hidden) {
+                pane.shown = false;
+            }
+
 
         });
 

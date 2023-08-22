@@ -20,17 +20,17 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         this._value = null;
 
         this._parentColumn = this.grid.header.FindColumn(this.columnName);
-        this._editor = this._parentColumn.editor;
-        this._viewer = this._parentColumn.viewer;
+        this._editor = this._parentColumn?.editor;
+        this._viewer = this._parentColumn?.viewer;
         this._editorObject = null;
         this._viewerObject = null;
         this._createViewer();
         this._createEditor();
-        this.valign = this._parentColumn.valign;
-        this.halign = this._parentColumn.halign;
+        this.valign = this._parentColumn?.valign;
+        this.halign = this._parentColumn?.halign;
 
         this._handleEvents();
-        if(this._parentColumn.editorAllways) {
+        if(this._parentColumn?.editorAllways ?? false) {
             this.EditValue(false);
         }
     }
@@ -83,10 +83,6 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
             this.grid.Dispatch('CellValueChanged', {cell: this, row: this.parentRow, value: event.sender.value, oldValue: oldValue});
             this.grid.Dispatch('CellEditorChanged', {cell: this, field: this.columnName, data: this.parentRow.value});
         });
-
-
-
-
 
     }
 
@@ -201,7 +197,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
      * @type {Colibri.UI.Grid}
      */
     get grid() {
-        return this.parent.parent.parent.parent;
+        return this?.parent?.parent?.parent?.parent;
     }
 
     /**
