@@ -223,19 +223,15 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
     }
 
     _calcRuntimeValues(rootValue = null) {
-        const parentValue = this.value;
-        const formValue = rootValue ?? this.root?.value ?? {};
         Object.forEach(this._fieldData.fields, (name, fieldData) => {
             const fieldComponent = this.Fields(name);         
             if(fieldComponent instanceof Colibri.UI.Forms.Object || fieldComponent instanceof Colibri.UI.Forms.Array || fieldComponent instanceof Colibri.UI.Forms.Tabs) {
-                fieldComponent._calcRuntimeValues(formValue);
+                fieldComponent._calcRuntimeValues();
             } else {
                 if(fieldData?.params?.valuegenerator) {
                     const f = eval(fieldData?.params?.valuegenerator);
-                    const v = f(parentValue, formValue, fieldComponent, this.root);
-                    if(v != fieldComponent.value) {
-                        fieldComponent.value = v;
-                    }
+                    const v = f(this.value, this.root?.value, fieldComponent, this.root);
+                    fieldComponent.value = v;
                 }
             }
         });

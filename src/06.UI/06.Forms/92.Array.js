@@ -265,9 +265,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     }
 
     _calcRuntimeValues(rootValue = null) {
-        const parentValue = this.value;
         const formValue = rootValue ?? this.root?.value ?? {};
-
         this.itemsContainer.ForEach((name, rowObject) => {
             rowObject._calcRuntimeValues(formValue);
         });

@@ -212,6 +212,9 @@ Array.prototype.toObjectAsTrue = function() {
     }
     return ret;
 }
+Array.prototype.sum = function() {
+    return this.reduce((partialSum, a) => partialSum + a, 0);
+}
 
 Array.toObjectWithKeys = function (array, fieldKey, fieldValue) {
     let ret = {};
