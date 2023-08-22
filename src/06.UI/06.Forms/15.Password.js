@@ -6,6 +6,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
     RenderFieldContainer() {
 
         this.AddClass('app-component-password-field');
+        this._original = null;
 
         const contentContainer = this.contentContainer;
         const params = {type: 'password', name: (this.form && this.form.shuffleFieldNames ? 'field-' + Date.Mc() : this._name + '-input')};
@@ -17,9 +18,18 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         this.RegisterEvent('PasswordValidated', false, 'Когда сила пароля проверена');
         this.RegisterEvent('PasswordGenerated', false, 'Когда пароль сгенерирован');
 
-        this._input.addEventListener('change', (e) => this.Dispatch('Changed', {domEvent: e, component: this}));
+        this._input.addEventListener('change', (e) => {
+            if(this._original != this._input.value) {
+                this.Dispatch('Changed', {domEvent: e, component: this});
+            }
+            this._original = this._input.value;
+        });
         this._input.addEventListener('keyup', (e) => this.Dispatch('KeyUp', {domEvent: e}));
-        this._input.addEventListener('paste', (e) => Colibri.Common.Delay(100).then(() => this.Dispatch('Pasted', { domEvent: e })));
+        this._input.addEventListener('paste', (e) => Colibri.Common.Delay(100).then(() => {
+            this._input.emitHtmlEvents('change');
+            this._original = this._input.value;
+            this.Dispatch('Pasted', { domEvent: e });
+        }));
         this._input.addEventListener('keydown', (e) => this.Dispatch('KeyDown', {domEvent: e}));
         this._input.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', {domEvent: e}));
         this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', {domEvent: e}));
@@ -200,6 +210,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
     }
 
     set value(value) {
+        this._original = value;
         this._input.value = value ?? '';
     }
 
