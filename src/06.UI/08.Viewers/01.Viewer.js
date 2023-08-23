@@ -16,7 +16,11 @@ Colibri.UI.Viewer = class extends Colibri.UI.Component {
 
     _injectParams() {
         if(this._field?.params && this._field?.params?.className) {
-            this.AddClass(this._field?.params?.className);
+            let className = this._field?.params?.className;
+            if(typeof className === 'function') {
+                className = className(this, this.value);
+            }
+            this.AddClass(className);
         }
         if(this._field?.params?.fieldgenerator) {
             const f = eval(this._field?.params?.fieldgenerator);
