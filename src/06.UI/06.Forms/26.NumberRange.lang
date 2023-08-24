@@ -1,0 +1,9 @@
+ui-fields-numberrange:
+  ru: Число от/до
+  en: Number from/to
+ui-fields-numberrange-from:
+  ru: от
+  en: from
+ui-fields-numberrange-to:
+  ru: до
+  en: to

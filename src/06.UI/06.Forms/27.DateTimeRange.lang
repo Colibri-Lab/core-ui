@@ -1,0 +1,9 @@
+ui-fields-datetimerage:
+  ru: Поле дата и время (от/до)
+  en: Date and time (from/to)
+ui-fields-datetimerage-from:
+  ru: от
+  en: from
+ui-fields-datetimerage-to:
+  ru: до
+  en: to

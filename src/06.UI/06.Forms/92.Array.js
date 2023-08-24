@@ -115,6 +115,15 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
                     }
                 }
 
+                if(this._fieldData.params && this._fieldData.params?.showObjectCount) {
+                    if(typeof this._fieldData.params?.showObjectCount === 'function') {
+                        const f = this._fieldData.params?.showObjectCount;
+                        f(this.itemsContainer.children, this);    
+                    } else {
+                        this.title = this._fieldData.desc + ' (' + this.itemsContainer.children + ')';
+                    }
+                }
+
                 this.Dispatch('ObjectRemoved', {component: this});
 
             });
@@ -155,6 +164,16 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         if(value) {
             object.value = value;
         }
+
+        if(this._fieldData.params && this._fieldData.params?.showObjectCount) {
+            if(typeof this._fieldData.params?.showObjectCount === 'function') {
+                const f = this._fieldData.params?.showObjectCount;
+                f(this.itemsContainer.children, this);    
+            } else {
+                this.title = this._fieldData.desc + ' (' + this.itemsContainer.children + ')';
+            }
+        }
+
         // object.Focus();
         return object;
     }

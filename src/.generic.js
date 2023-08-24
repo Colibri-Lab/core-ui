@@ -307,7 +307,7 @@ Object.indexOf = function (o, name) {
     return keys.indexOf(name);
 };
 
-Object.countKeys = function (o) { return Object.keys(o).length; };
+Object.countKeys = function (o) { return o && o instanceof Object && !Array.isArray(o) ? Object.keys(o).length : 0; };
 
 Object.toQueryString = function (o, splittersArray) {
     let ret = [];

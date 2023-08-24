@@ -1,0 +1,38 @@
+.app-component-datetimerange-field {
+    
+    
+    [data-object-name$="-content"] > [data-object-name$="-container"] {
+
+        &.app-component-shown {
+            display: flex;
+        } 
+        align-items: center;
+        justify-content: flex-start;
+        width: 615px;
+        gap: 20px;
+
+        .app-date-selector-component {
+            width: 180px;
+            padding: 0px 0px 0px 9px;
+        }
+
+        [data-object-name$="-flex1"], [data-object-name$="-flex2"] {
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;                
+        }
+
+        [data-object-name$="-input1"],[data-object-name$="-input2"] {
+            width: 170px;
+        }
+        [data-object-name$="-time1"],[data-object-name$="-time2"] {
+            width: 100px;
+        }
+
+        [data-object-name$="-clear"] {
+            cursor: pointer;
+        }
+
+    
+    }
+}

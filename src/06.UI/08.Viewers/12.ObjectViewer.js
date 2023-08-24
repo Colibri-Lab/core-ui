@@ -7,16 +7,21 @@ Colibri.UI.ObjectViewer = class extends Colibri.UI.Viewer {
 
     _showValue() {
         let ret = [];
-        Object.forEach(this._value, (name, value) => {
-            if(value instanceof Object && value.value && value.title) {
-                value = value.title;
-            }
-            if(this._field.fields[name]) {
-                const desc = Lang ? Lang.Translate(this._field.fields[name].desc) : this._field.fields[name].desc;
-                ret.push(desc + ': ' + value);
-            }
-        });
-        this._element.html(ret.join(' '));
+        if(Object.countKeys(this._field.fields) > 0) {
+            Object.forEach(this._value, (name, value) => {
+                if(value instanceof Object && value.value && value.title) {
+                    value = value.title;
+                }
+    
+                if(this._field.fields[name]) {
+                    const desc = Lang ? Lang.Translate(this._field.fields[name].desc) : this._field.fields[name].desc;
+                    ret.push(desc + ': ' + value);
+                }
+            });
+            this._element.html(ret.join(' '));
+        } else {
+            this._element.html(JSON.stringify(this._value));
+        }
     }
 
     get value() {

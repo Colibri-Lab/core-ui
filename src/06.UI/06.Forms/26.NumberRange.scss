@@ -1,0 +1,27 @@
+.app-component-numberrange-field {
+    [data-object-name$="-content"] > [data-object-name$="-container"] {
+
+        &.app-component-shown {
+            display: flex;
+        }
+        flex-wrap: nowrap;
+        gap: 10px;
+
+        background: #FFFFFF;
+        border: 1px solid #D9DCE3;
+        border-radius: 3px;
+        overflow: hidden;
+    
+        input {
+            width: 100%;
+            background: transparent;
+            border: 0px;
+            padding: 5px 12px;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 20px;        
+            outline: none;
+        }
+    }
+}

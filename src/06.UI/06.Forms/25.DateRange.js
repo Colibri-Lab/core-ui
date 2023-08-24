@@ -69,7 +69,7 @@ Colibri.UI.Forms.DateRange = class extends Colibri.UI.Forms.Field {
      */
     set value(value) {
         if(!Array.isArray(value)) {
-            throw 'Value must be array';
+            value = [value ?? '', ''];
         }
 
         this._input1.value = value[0] !== undefined ? value[0] : null;

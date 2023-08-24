@@ -269,7 +269,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
             value = null;
         }
         if(Array.isArray(value)) {
-            value = value.map((v) => v[this._fieldData.selector?.value ?? 'value'] ?? v);
+            value = value.map((v) => v ? v[this._fieldData.selector?.value ?? 'value'] ?? v : null);
         }
         else if(value instanceof Object) {
             value = value[this._fieldData.selector?.value ?? 'value'] ?? value;
