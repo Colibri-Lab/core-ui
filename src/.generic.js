@@ -1440,6 +1440,16 @@ Date.prototype.copy = function () {
     dt.setTime(this.getTime());
     return dt;
 };
+Date.prototype.setAsStartOfYear = function() {
+    this.setDate(1);
+    this.setMonth(0);
+    return this;
+};
+Date.prototype.setAsEndOfYear = function() {
+    this.setMonth(11);
+    this.setDate(31);
+    return this;
+};
 Date.Now = function () { return new Date(); }
 Date.Ms = function () { return Date.Now().getTime(); }
 Date.Mc = function () { return (window.performance.getEntries()[0].duration + window.performance.now()) * 1e13; }
