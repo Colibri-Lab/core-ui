@@ -37,7 +37,7 @@ Colibri.UI.Forms.TextArea = class extends Colibri.UI.Forms.Field {
             this._original = this._input.value;
         });
         this._input.addEventListener('keyup', (e) => this.Dispatch('KeyUp', {domEvent: e}));
-        this._input.addEventListener('keydown', (e) => this._setChanged(true) && this.Dispatch('KeyDown', {domEvent: e}));
+        this._input.addEventListener('keydown', (e) => this.Dispatch('KeyDown', {domEvent: e}));
         this._input.addEventListener('click', (e) => {
             this.Focus();
             this.Dispatch('Clicked', {domEvent: e});
