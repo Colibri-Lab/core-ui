@@ -19,7 +19,8 @@ Colibri.UI.Forms.NumberRange = class extends Colibri.UI.Forms.Field {
         this._input1.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', {domEvent: e}));
         this._input1.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', {domEvent: e}));
         this._input1.addEventListener('change', (e) => {
-            if(this._original[0] != this._input1.value) {
+            const oldValue = this._original ? this._original[0] : null;
+            if(oldValue != this._input1.value) {
                 this.Dispatch('Changed', {domEvent: e, component: this});
             }
             this._original = [this._input1.value, this._input2.value];
@@ -44,7 +45,8 @@ Colibri.UI.Forms.NumberRange = class extends Colibri.UI.Forms.Field {
         this._input2.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', {domEvent: e}));
         this._input2.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', {domEvent: e}));
         this._input2.addEventListener('change', (e) => {
-            if(this._original[1] != this._input2.value) {
+            const oldValue = this._original ? this._original[1] : null;
+            if(oldValue != this._input2.value) {
                 this.Dispatch('Changed', {domEvent: e, component: this});
             }
             this._original = [this._input1.value, this._input2.value];
@@ -117,11 +119,15 @@ Colibri.UI.Forms.NumberRange = class extends Colibri.UI.Forms.Field {
     }
 
     get value() {
-        let value = this._input1.value;
+        let value1 = this._input1.value;
         if(this._fieldData?.params?.emptyAsNull && value === '') {
-            value = null;
+            value1 = null;
         }
-        return this._convertValue(value, false);
+        let value2 = this._input2.value;
+        if(this._fieldData?.params?.emptyAsNull && value === '') {
+            value2 = null;
+        }
+        return [this._convertValue(value1, false), this._convertValue(value2, false)];
     }
 
     set value(value) {
