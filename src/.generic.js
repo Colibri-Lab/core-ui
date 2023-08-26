@@ -1853,8 +1853,8 @@ Element.prototype.bounds = function (includeBorders = false, includeMargin = fal
     const rect = this.getBoundingClientRect();
     const win = this.ownerDocument.defaultView;
 
-    const offsetX = parent ? parent.scrollLet : win.pageXOffset;
-    const offsetY = parent ? parent.scrollTop : win.pageYOffset;
+    const offsetX = parent ? parent.scrollLet : win.scrollX;
+    const offsetY = parent ? parent.scrollTop : win.scrollY;
 
     let position = {
         top: rect.top + offsetY,
