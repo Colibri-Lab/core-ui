@@ -139,6 +139,10 @@ Array.replaceObject = function (arr, field, value, replace = null, insertIfNotEx
     return arr;
 };
 
+Array.prototype.avg = function() {
+    return this.reduce((a, b) => a + b, 0) / this.length;
+}
+
 // attach the .equals method to Array's prototype to call it on any array
 Array.prototype.equals = function (array) {
     // if the other array is a falsy value, return
