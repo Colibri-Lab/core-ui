@@ -1940,4 +1940,17 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         } 
     }
 
+    Closest(callback) {
+        let parent = this.container;
+        while(parent) {
+            const res = callback(parent, this.container);
+            console.log(res);
+            if(res === true) {
+                return parent;
+            }    
+            parent = parent.parent();
+        }
+        return null;
+    }
+
 }

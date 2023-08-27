@@ -317,6 +317,15 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         super._bindHtmlEvents();
     }
 
+    EnsureVisible() {
+        let parent = this.parentNode;
+        while(parent) {
+            this.parentNode.Expand();
+            parent = parent.parentNode;
+        }
+        super.EnsureVisible();
+    }
+
     Dispose() {
         
         try {
