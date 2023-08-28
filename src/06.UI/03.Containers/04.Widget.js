@@ -1,10 +1,15 @@
 Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
 
     constructor(name, container, element) {
-        super(name, container, Colibri.UI.Templates['Colibri.UI.Widget']);
+        super(name, container, Element.fromHtml('<div><div class="widget-header"><span></span><button class="-shown"></button></div><div class="widget-container"></div><div class="widget-footer"></div></div>')[0]);
         this.AddClass('app-component-widget');
         // default
 
+        this.namespace = typeof element === 'string' ? element : 'Colibri.UI.Widget';
+        if(typeof element === 'string') {
+            element = Colibri.UI.Templates[element];
+        }
+        
         this.GenerateChildren(element, this.container);
         
         this._header = this._element.querySelector('.widget-header');

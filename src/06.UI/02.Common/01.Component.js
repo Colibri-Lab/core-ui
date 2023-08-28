@@ -41,6 +41,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         if (!element) {
             element = Element.create('div');
         }
+        
+        if(typeof element === 'string') {
+            element = Colibri.UI.Templates[element];
+            console.log(element);
+        }
+
         if (typeof element === 'string') {
             console.log(element); console.trace();
             // передана строка html, нужно спарсить и превратить в Element
