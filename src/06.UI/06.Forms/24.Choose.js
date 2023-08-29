@@ -84,6 +84,11 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
         return this._input.readonly;
     }
     set readonly(value) {
+        if(value) {
+            this.AddClass('app-component-readonly');
+        } else {
+            this.RemoveClass('app-component-readonly');
+        }
         this._input.readonly = value;
     }
 

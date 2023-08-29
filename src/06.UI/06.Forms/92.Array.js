@@ -195,6 +195,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     }
 
     set readonly(value) {
+        super.readonly = true;
         this._itemsContainer.ForEach((name, component) => {
             component.readonly = value; 
         });

@@ -72,9 +72,11 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
     set readonly(value) {
         if(value === true || value === 'true') {
             this._input.attr('readonly', 'readonly');
+            this.AddClass('app-component-readonly');
         }
         else {
             this._input.attr('readonly', null);
+            this.RemoveClass('app-component-readonly');
         }
     }
 
