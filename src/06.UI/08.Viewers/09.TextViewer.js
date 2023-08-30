@@ -26,7 +26,8 @@ Colibri.UI.TextViewer = class extends Colibri.UI.Viewer {
     }
 
     set value(value) {
-        super.value = !value ? this._emptyMessage : value;
+        const emptyMessage = this.field?.params?.empty ?? this._emptyMessage ?? '';
+        super.value = !value ? emptyMessage : value;
     }
 
 
