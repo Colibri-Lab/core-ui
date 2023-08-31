@@ -102,7 +102,7 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
             this._input.value = '';
         }
         else {
-            this._input.value = this._convertValue(value, true);
+            this._input.value = this._convertValue(value, true) ?? '';
         }
     }
 
