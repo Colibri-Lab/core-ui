@@ -1,7 +1,7 @@
 Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
 
     constructor(name, container, element) {
-        super(name, container, Element.fromHtml('<div><div class="widget-header"><span></span><button class="-shown"></button></div><div class="widget-container"></div><div class="widget-footer"></div></div>')[0]);
+        super(name, container, Element.fromHtml('<div><div class="widget-header"></div><div class="widget-container"></div><div class="widget-footer"></div></div>')[0]);
         this.AddClass('app-component-widget');
         // default
 
@@ -14,15 +14,27 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
         
         this._header = this._element.querySelector('.widget-header');
         this._footer = this._element.querySelector('.widget-footer');
-        this._closeButton = this._header.querySelector(':scope > button');
 
+        this._headerTitle = new Colibri.UI.TextSpan('title', this._header);
+        this._headerCloseToggle = new Colibri.UI.Button('toggle-button', this._header);
+        this._headerCloseButton = new Colibri.UI.Button('close-button', this._header);
+
+        if(App.Browser.Get(this.name + '-minimized') == 1) {
+            this.AddClass('-minimized');
+        }
 
         this._handlerEvents();
     }
 
     _handlerEvents() {
-        this._closeButton.addEventListener('click', (e) => {
-            this.Hide();
+        this._headerCloseToggle.AddHandler('Clicked', (event, args) => {
+            if(this.ContainsClass('-minimized')) {
+                this.RemoveClass('-minimized');
+                App.Browser.Delete(this.name + '-minimized');
+            } else {
+                this.AddClass('-minimized');
+                App.Browser.Set(this.name + '-minimized', 1);
+            }
         });
     }
 
@@ -37,19 +49,6 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
     get footer() {
         return this._footer;
     }
-
-    get closable() {
-        return this._closeButton.classList.contains('-shown');
-    }
-
-    set closable(value) {
-        if(value === true || value === 'true') {
-            this._closeButton.classList.add('-shown');
-        } else {
-            this._closeButton.classList.remove('-shown');
-        }
-    }
-
 
     /**
      * Column spanning for widget
@@ -104,7 +103,50 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
         this._showTitle();
     }
     _showTitle() {
-        this.header.html(this._title);
+        this._headerTitle.value = this._title;
+        if(this._title) {
+            this._headerTitle.shown = true;
+        } else {
+            this._headerTitle.shown = false;
+        }
+    }
+
+    /**
+     * Is widget closable
+     * @type {Boolean}
+     */
+    get closable() {
+        return this._closable;
+    }
+    /**
+     * Is widget closable
+     * @type {Boolean}
+     */
+    set closable(value) {
+        this._closable = value === true || value === 'true';
+        this._showClosable();
+    }
+    _showClosable() {        
+        this._headerCloseButton.shown = this._closable;
+    }
+
+    /**
+     * Is widget can toggle
+     * @type {Boolean}
+     */
+    get togglable() {
+        return this._togglable;
+    }
+    /**
+     * Is widget can toggle
+     * @type {Boolean}
+     */
+    set togglable(value) {
+        this._togglable = value === true || value === 'true';
+        this._showTogglable();
+    }
+    _showTogglable() {
+        this._headerCloseToggle.shown = this._togglable;
     }
 
 }
