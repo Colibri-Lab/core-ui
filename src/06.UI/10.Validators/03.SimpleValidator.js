@@ -134,6 +134,16 @@ Colibri.UI.SimpleFormValidator = class {
 
     }
 
+    SetAsValid(field) {
+        const f = typeof field === 'string' ? this._form.FindField(field) : field;
+        if(!f) {
+            return;
+        }
+        f.field.params.validated = 'success';
+        f.message = '';
+        f.RemoveClass('app-validate-error');
+    }
+
     Invalidate(field, message) {
         if(field == 'form') {
             this._form.message = message;
@@ -143,7 +153,7 @@ Colibri.UI.SimpleFormValidator = class {
         if(!f) {
             return;
         }
-        f.field.params.validated = false;
+        f.field.params.validated = 'error';
         f.message = message;
         f.AddClass('app-validate-error');
     }
