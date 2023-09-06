@@ -6,9 +6,6 @@ Colibri.UI.AlertDialog = class extends Colibri.UI.Window {
 
         this._callback = null;
 
-        
-
-
     }
 
     /**
