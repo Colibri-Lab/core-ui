@@ -82,6 +82,23 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.Dispatch('ComponentRendered');
     }
 
+    _convertProperty(type, value) {
+        if(typeof value === 'function' && type != 'Function') {
+            return value(value, this);
+        } else if((value === 'true' || value === 'false') && type === 'Boolean') {
+            return value === 'true';
+        } else if(typeof value === 'string' && type === 'Number') {
+            return parseFloat(value);
+        } else if(typeof value === 'object' && type !== 'String') {
+            if(Lang !== undefined) {
+                return Lang.Translate(value);
+            } else {
+                return value['ru'] ?? value;
+            }
+        }
+        return value;
+    }
+
     _newName() {
         return 'component-' + Date.Mc()
     }

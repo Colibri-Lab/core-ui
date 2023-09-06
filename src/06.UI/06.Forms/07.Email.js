@@ -71,7 +71,8 @@ Colibri.UI.Forms.Email = class extends Colibri.UI.Forms.Field {
     }
 
     set readonly(value) {
-        if(value === true || value === 'true') {
+        value = this._convertProperty('Boolean', value);
+        if(value) {
             this._input.attr('readonly', 'readonly');
         }
         else {
@@ -84,6 +85,7 @@ Colibri.UI.Forms.Email = class extends Colibri.UI.Forms.Field {
     }
 
     set placeholder(value) {
+        value = this._convertProperty('String', value);
         this._input.attr('placeholder', value ? value[Lang.Current] ?? value : '');
     }
 
@@ -108,6 +110,7 @@ Colibri.UI.Forms.Email = class extends Colibri.UI.Forms.Field {
     }
 
     set validationText(value) {
+        value = this._convertProperty('String', value);
         this._validationText = value;
     }
 
@@ -117,6 +120,7 @@ Colibri.UI.Forms.Email = class extends Colibri.UI.Forms.Field {
     }
 
     set enabled(value) {
+        value = this._convertProperty('Boolean', value);
         if(value) {
             this.RemoveClass('app-component-disabled');
             this._input.attr('disabled', null);

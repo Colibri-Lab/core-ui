@@ -126,6 +126,8 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
                 this.Dispatch('ObjectRemoved', {component: this});
 
+                this._hideAndShow();
+
             });
         }
         if(this._fieldData.params && this._fieldData.params.updownlink !== false && !this.readonly && this.enabled) {
@@ -195,6 +197,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     }
 
     set readonly(value) {
+        value = this._convertProperty('Boolean', value);
         super.readonly = true;
         this._itemsContainer.ForEach((name, component) => {
             component.readonly = value; 
@@ -208,6 +211,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     }
 
     set enabled(value) {
+        value = this._convertProperty('Boolean', value);
         this._enabled = value;
         this._itemsContainer.ForEach((name, component) => {
             component.enabled = this._enabled; 
@@ -266,6 +270,10 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         return ret;
     }
 
+    ForEveryField(callback) {
+        this._itemsContainer.ForEach(callback);
+    }
+
     set tabIndex(value) {
         // do nothing
     }
@@ -290,7 +298,14 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
             rowObject._calcRuntimeValues(formValue);
         });
     }
-    
+
+    get itemsContainer() {
+        return this._itemsContainer;
+    }
+
+    _hideAndShow() {
+        this.ForEveryField((name, component) => component._hideAndShow());
+    }
 
 }
 Colibri.UI.Forms.Field.RegisterFieldComponent('Array', 'Colibri.UI.Forms.Array', '#{ui-fields-array}')

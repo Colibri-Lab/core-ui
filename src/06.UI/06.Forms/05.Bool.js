@@ -50,7 +50,8 @@ Colibri.UI.Forms.Bool = class extends Colibri.UI.Forms.Field {
         return this._label.html();
     }
     set title(value) {
-        this._label.html(value ? value[Lang.Current] ?? value : '');
+        value = this._convertProperty('String', value);
+        this._label.html(value);
     }
 
     get readonly() {
@@ -58,7 +59,8 @@ Colibri.UI.Forms.Bool = class extends Colibri.UI.Forms.Field {
     }
 
     set readonly(value) {
-        if(value === true || value === 'true') {
+        value = this._convertProperty('Boolean', value);
+        if(value) {
             this._input.attr('readonly', 'readonly');
         }
         else {
@@ -99,6 +101,7 @@ Colibri.UI.Forms.Bool = class extends Colibri.UI.Forms.Field {
     }
 
     set enabled(value) {
+        value = this._convertProperty('Boolean', value);
         if(value) {
             this.RemoveClass('app-component-disabled');
             this._input.attr('disabled', null);

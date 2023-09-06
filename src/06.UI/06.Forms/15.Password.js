@@ -185,7 +185,8 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
     }
 
     set readonly(value) {
-        if(value === true || value === 'true') {
+        value = this._convertProperty('Boolean', value);
+        if(value) {
             this._input.attr('readonly', 'readonly');
         }
         else {
@@ -198,7 +199,8 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
     }
 
     set placeholder(value) {
-        this._input.attr('placeholder', value ? value[Lang.Current] ?? value : '');
+        value = this._convertProperty('String', value);
+        this._input.attr('placeholder', value);
     }
 
     get value() {
@@ -220,6 +222,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
     }
 
     set enabled(value) {
+        value = this._convertProperty('Boolean', value);
         if(value) {
             this.RemoveClass('app-component-disabled');
             this._input.attr('disabled', null);
@@ -259,6 +262,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
     }
 
     set icon(value) {
+        value = this._convertProperty('String', value);
         this._icon = value;
         this._showIcon();
     }
@@ -291,7 +295,12 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         this.AddClass('-has-eye-icon');
     }
 
+    get eyeIcon() {
+        return this._eyeIcon;
+    }
+
     set eyeIcon(value) {
+        value = this._convertProperty('String', value);
         this._eyeIcon = value;
         this._createEyeIcon();
     }

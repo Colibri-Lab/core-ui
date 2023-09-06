@@ -53,6 +53,7 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
     }
 
     set readonly(value) {
+        value = this._convertProperty('Boolean', value);
         this._input.readonly = value;
     }
 
@@ -61,7 +62,8 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
     }
 
     set placeholder(value) {
-        this._input.placeholder = value ? value[Lang.Current] ?? value : '';
+        value = this._convertProperty('String', value);
+        this._input.placeholder = value;
     }
 
     get value() {
@@ -82,6 +84,7 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
     }
 
     set enabled(value) {
+        value = this._convertProperty('Boolean', value);
         this._input.enabled = value;
         this._icon.shown = value;
     }

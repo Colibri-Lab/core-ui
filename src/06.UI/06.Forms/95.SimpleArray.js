@@ -62,6 +62,7 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
     }
 
     set readonly(value) {
+        value = this._convertProperty('Boolean', value);
         this._grid.readonly = value;
     }
 
@@ -70,6 +71,7 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
     }
 
     set enabled(value) {
+        value = this._convertProperty('Boolean', value);
         this._enabled = value;
         this.contentContainer.ForEach((name, component) => {
             component.enabled = this._enabled; 

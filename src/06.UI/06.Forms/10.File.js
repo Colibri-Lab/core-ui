@@ -269,7 +269,8 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
      * @param {boolean|string} value
      */
     set dropAreaEnabled(value) {
-        this._dropAreaEnabled = (value === true || value === 'true');
+        value = this._convertProperty('Boolean', value);
+        this._dropAreaEnabled = value;
     }
 
     /**
@@ -298,7 +299,12 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
     }
 
     set download(value) {
+        value = this._convertProperty('String', value);
         this._download = value;
+    }
+
+    get download() {
+        return this._download;
     }
 
     /**
@@ -310,7 +316,9 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
     }
     set allowedExtensions(value) {
         this._allowedExtensions = value;
-        if (this._dropAreaEnabled) { this._input.extensionsLabel.value = this._extensionsToString(); }
+        if (this._dropAreaEnabled) { 
+            this._input.extensionsLabel.value = this._extensionsToString(); 
+        }
     }
 
     /**
@@ -321,6 +329,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         return this._maxFileSize;
     }
     set maxFileSize(value) {
+        value = this._convertProperty('Number', value);
         this._maxFileSize = value;
     }
 
@@ -332,6 +341,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         return this._maxCount;
     }
     set maxCount(value) {
+        value = this._convertProperty('Number', value);
         this._maxCount = value;
     }
 

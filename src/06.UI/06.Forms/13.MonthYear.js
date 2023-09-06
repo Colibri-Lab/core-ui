@@ -58,6 +58,7 @@ Colibri.UI.Forms.MonthYear = class extends Colibri.UI.Forms.Field {
     }
 
     set readonly(value) {
+        value = this._convertProperty('Boolean', value);
         this._month.readonly = value;
         this._year.readonly = value;
     }

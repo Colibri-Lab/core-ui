@@ -70,7 +70,8 @@ Colibri.UI.Forms.FileLabel = class extends Colibri.UI.Forms.Field {
     }
 
     set placeholder(value) {
-        this._placeholder.html(value ? value[Lang.Current] ?? value : '');
+        value = this._convertProperty('String', value);
+        this._placeholder.html(value);
     }
     
 

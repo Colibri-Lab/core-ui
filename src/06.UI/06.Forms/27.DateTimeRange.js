@@ -75,6 +75,7 @@ Colibri.UI.Forms.DateTimeRange = class extends Colibri.UI.Forms.Field {
     }
 
     set readonly(value) {
+        value = this._convertProperty('Boolean', value);
         this._input1.readonly = value;
         this._input2.readonly = value;
     }
@@ -84,7 +85,8 @@ Colibri.UI.Forms.DateTimeRange = class extends Colibri.UI.Forms.Field {
     }
 
     set placeholder(value) {
-        this._placeholder = value ? value[Lang.Current] ?? value : '';
+        value = this._convertProperty('String', value);
+        this._placeholder = value;
         this._input1.placeholder = this._placeholder + ' (#{ui-fields-datetimerage-from})';
         this._input2.placeholder = this._placeholder + ' (#{ui-fields-datetimerage-to})';
     }
@@ -123,6 +125,7 @@ Colibri.UI.Forms.DateTimeRange = class extends Colibri.UI.Forms.Field {
     }
 
     set enabled(value) {
+        value = this._convertProperty('Boolean', value);
         this._input1.enabled = value;
         this._input2.enabled = value;
     }

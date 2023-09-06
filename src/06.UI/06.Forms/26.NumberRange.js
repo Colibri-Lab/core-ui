@@ -98,7 +98,8 @@ Colibri.UI.Forms.NumberRange = class extends Colibri.UI.Forms.Field {
     }
 
     set readonly(value) {
-        if(value === true || value === 'true') {
+        value = this._convertProperty('Boolean', value);
+        if(value) {
             this._input1.attr('readonly', 'readonly');
             this._input2.attr('readonly', 'readonly');
         }
@@ -113,7 +114,8 @@ Colibri.UI.Forms.NumberRange = class extends Colibri.UI.Forms.Field {
     }
 
     set placeholder(value) {
-        this._placeholder = value ? value[Lang.Current] ?? value : '';
+        value = this._convertProperty('String', value);
+        this._placeholder = value;
         this._input1.attr('placeholder', this._placeholder + ' (#{ui-fields-numberrange-from})');
         this._input2.attr('placeholder', this._placeholder + ' (#{ui-fields-numberrange-to})');
     }
@@ -156,6 +158,7 @@ Colibri.UI.Forms.NumberRange = class extends Colibri.UI.Forms.Field {
     }
 
     set enabled(value) {
+        value = this._convertProperty('Boolean', value);
         if(value) {
             this.RemoveClass('app-component-disabled');
             this._input1.attr('disabled', null);

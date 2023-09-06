@@ -83,6 +83,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
     }
 
     set readonly(value) {
+        value = this._convertProperty('Boolean', value);
         Object.forEach(this._tabs.components, (name, component) => {
             component.readonly = value; 
         });
@@ -208,6 +209,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
     }
 
     set selectedIndex(value) {
+        value = this._convertProperty('Number', value);
         this._tabs.selectedIndex = value;
     }
     get selectedIndex() {

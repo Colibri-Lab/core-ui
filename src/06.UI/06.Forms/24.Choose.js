@@ -84,6 +84,7 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
         return this._input.readonly;
     }
     set readonly(value) {
+        value = this._convertProperty('Boolean', value);
         if(value) {
             this.AddClass('app-component-readonly');
         } else {
@@ -99,7 +100,8 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
         return this._input.placeholder;
     }
     set placeholder(value) {
-        this._input.placeholder = value ? value[Lang.Current] ?? value : '';
+        value = this._convertProperty('String', value);
+        this._input.placeholder = value;
     }
 
     get placeholderinfo() {
@@ -169,6 +171,7 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
         return this._input.enabled;
     }
     set enabled(value) {
+        value = this._convertProperty('Boolean', value);
         this._input.enabled = value;
     }
 

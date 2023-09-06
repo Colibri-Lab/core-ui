@@ -74,6 +74,7 @@ Colibri.UI.Forms.Passport = class extends Colibri.UI.Forms.Field {
 		return this.Children(this._name + '-title').value;
 	}
 	set title(value) {
+        value = this._convertProperty('String', value);
 		this.Children(this._name + '-title').value = value;
 	}
 
@@ -82,7 +83,8 @@ Colibri.UI.Forms.Passport = class extends Colibri.UI.Forms.Field {
 	}
 
 	set readonly(value) {
-		if (value === true || value === 'true') {
+        value = this._convertProperty('Boolean', value);
+		if (value) {
 			this._input1.attr('readonly', 'readonly');
 			this._input2.attr('readonly', 'readonly');
 		}
@@ -129,6 +131,7 @@ Colibri.UI.Forms.Passport = class extends Colibri.UI.Forms.Field {
 	}
 
 	set enabled(value) {
+        value = this._convertProperty('Boolean', value);
 		if (value) {
 			this.RemoveClass('app-component-disabled');
 			this._input1.attr('disabled', null);

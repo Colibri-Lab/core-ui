@@ -71,7 +71,8 @@ Colibri.UI.Forms.TextArea = class extends Colibri.UI.Forms.Field {
     }
 
     set readonly(value) {
-        if(value === true || value === 'true') {
+        value = this._convertProperty('Boolean', value);
+        if(value) {
             this._input.attr('readonly', 'readonly');
         }
         else {
@@ -84,7 +85,8 @@ Colibri.UI.Forms.TextArea = class extends Colibri.UI.Forms.Field {
     }
 
     set placeholder(value) {
-        this._input.attr('placeholder', value ? value[Lang.Current] ?? value : '');
+        value = this._convertProperty('String', value);
+        this._input.attr('placeholder', value);
     }
 
     get value() {
@@ -104,6 +106,7 @@ Colibri.UI.Forms.TextArea = class extends Colibri.UI.Forms.Field {
     }
 
     set maxlength(value) {
+        value = this._convertProperty('String', value);
         this._input.attr('maxlength', value);
     }
 
@@ -117,6 +120,7 @@ Colibri.UI.Forms.TextArea = class extends Colibri.UI.Forms.Field {
     }
 
     set enabled(value) {
+        value = this._convertProperty('Boolean', value);
         if(value) {
             this.RemoveClass('app-component-disabled');
             this._input.attr('disabled', null);

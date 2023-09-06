@@ -180,6 +180,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
     }
 
     set readonly(value) {
+        value = this._convertProperty('Boolean', value);
         this.contentContainer && this.contentContainer.ForEach((name, component) => {
             const allreadyReadonly = component.readonly;
             if(!component.readonly) {
@@ -202,6 +203,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
     }
 
     set enabled(value) {
+        value = this._convertProperty('Boolean', value);
         this._enabled = value;
         this.ForEveryField((name, component) => {
             if(component.enabled) {

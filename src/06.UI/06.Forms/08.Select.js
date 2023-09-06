@@ -122,7 +122,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
             let dependsValue = this._getDependsValue();
             let dependsField = this._lookup.depends ?? null;
     
-            const lookupMethodRun = this._lookup(dependsValue, dependsField);
+            const lookupMethodRun = this._lookup(this._input._input.value, dependsValue, dependsField, this);
             lookupPromise = lookupMethodRun instanceof Promise ? lookupMethodRun : new Promise((resolve, reject) => {
                 resolve({
                     result: this._lookup()
@@ -143,7 +143,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
                 else {
                     let dependsValue = this._getDependsValue();
                     let dependsField = this._lookup.depends ?? null;   
-                    lookupPromise = lookupMethod(this._input._input.value, dependsValue, dependsField);
+                    lookupPromise = lookupMethod(this._input._input.value, dependsValue, dependsField, this);
                 }
             }
             else if(this._lookup?.binding) {
@@ -183,6 +183,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
      * @param {array} value
      * */
     set values(value) {
+        value = this._convertProperty('Array', value);
         let required = this._fieldData?.params?.required;
         if(required === undefined) {
             required = false;
@@ -218,6 +219,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         return this._input.readonly;
     }
     set readonly(value) {
+        value = this._convertProperty('Boolean', value);
         this._input.readonly = value;
     }
 
@@ -233,6 +235,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
      * @type {bool}
      */
     set searchable(value) {
+        value = this._convertProperty('Boolean', value);
         this._input.searchable = value;
     }
 
@@ -243,7 +246,8 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         return this._input.placeholder;
     }
     set placeholder(value) {
-        this._input.placeholder = value ? value[Lang.Current] ?? value : '';//this._input._placeholder placeholder по умолчанию
+        value = this._convertProperty('String', value);
+        this._input.placeholder = value;
     }
 
     get placeholderinfo() {
@@ -291,6 +295,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         return this._input.enabled;
     }
     set enabled(value) {
+        value = this._convertProperty('Boolean', value);
         if(value) {
             this.RemoveClass('app-component-disabled');
         }

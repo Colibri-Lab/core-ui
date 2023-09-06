@@ -78,6 +78,7 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
     }
 
     set maxlength(value) {
+        value = this._convertProperty('Number', value);
         this._input.attr('maxlength', value);
     }
 
@@ -91,7 +92,8 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
     }
 
     set readonly(value) {
-        if(value === true || value === 'true') {
+        value = this._convertProperty('Boolean', value);
+        if(value) {
             this._input.attr('readonly', 'readonly');
         }
         else {
@@ -104,7 +106,8 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
     }
 
     set placeholder(value) {
-        this._input.attr('placeholder', value ? value[Lang.Current] ?? value : '');
+        value = this._convertProperty('String', value);
+        this._input.attr('placeholder', value);
         if(value) {
             this.AddClass('-has-placeholder');
         }
@@ -135,6 +138,7 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
     }
 
     set enabled(value) {
+        value = this._convertProperty('Boolean', value);
         if(value) {
             this.RemoveClass('app-component-disabled');
             this._input.attr('disabled', null);
@@ -157,6 +161,15 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
         this._input && this._input.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
     }
 
+    set icon(value) {
+        this._icon = value;
+        this._showIcon();
+    }
+    get icon() {
+        value = this._convertProperty('String', value);
+        return this._icon;
+    }
+
     _showIcon() {
         const contentContainer = this.contentContainer;
         if(!this._icon) {
@@ -172,14 +185,5 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
         this.AddClass('-has-icon');
 
     }
-
-    set icon(value) {
-        this._icon = value;
-        this._showIcon();
-    }
-    get icon() {
-        return this._icon;
-    }
-
 }
 Colibri.UI.Forms.Field.RegisterFieldComponent('Text', 'Colibri.UI.Forms.Text', '#{ui-fields-text}');

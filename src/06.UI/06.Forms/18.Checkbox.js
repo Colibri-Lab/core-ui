@@ -58,6 +58,7 @@ Colibri.UI.Forms.Checkbox = class extends Colibri.UI.Forms.Field {
     }
 
     set readonly(value) {
+        value = this._convertProperty('Boolean', value);
         this._input.readonly = value;
     }
 
@@ -74,6 +75,7 @@ Colibri.UI.Forms.Checkbox = class extends Colibri.UI.Forms.Field {
     }
 
     set enabled(value) {
+        value = this._convertProperty('Boolean', value);
         this._input.enabled = value;
     }
 
