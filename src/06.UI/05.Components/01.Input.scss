@@ -20,24 +20,24 @@
         outline: none;
         background: transparent;
         border: 0;
-        flex: 0 0 12px;
-        width: 12px;
-        height: 12px;
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
         padding: 0;
         svg {
             display: block;
-            width: 12px;
-            height: 12px;
+            width: 20px;
+            height: 20px;
         }
     }
 
     [data-object-name=loadingicon] {
         outline: none;
-        flex: 0 0 12px;
-        width: 12px;
-        height: 12px;
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
         animation: 2s linear 0s infinite normal rotateInfiniteAnimation;
-        margin-right: 13px;
+        margin-right: 0px;
 
         svg {
             display: block;

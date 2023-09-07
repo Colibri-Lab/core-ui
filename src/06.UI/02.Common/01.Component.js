@@ -1184,7 +1184,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     get next() {
-        const myIndex = this.parent.indexOf(this.name);
+        const myIndex = this.parent ? this.parent?.indexOf(this.name) : -1;
         if(myIndex === -1 || myIndex === this.parent.children - 1) {
             return null;
         }
@@ -1193,7 +1193,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     get prev() {
-        const myIndex = this.parent.indexOf(this.name);
+        const myIndex = this.parent ? this.parent.indexOf(this.name) : -1;
         if(myIndex === -1 || myIndex === 0) {
             return  null;
         }
