@@ -36,6 +36,11 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
                 App.Browser.Set(this.name + '-minimized', 1);
             }
         });
+        this._headerTitle.AddHandler('Clicked', (event, args) => {
+            if(this._toggleOnTitle) {
+                this._headerCloseToggle.Dispatch('Clicked');
+            }
+        });
     }
 
     get header() {
@@ -147,6 +152,21 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
     }
     _showTogglable() {
         this._headerCloseToggle.shown = this._togglable;
+    }
+
+    /**
+     * Toggle when click the title
+     * @type {Boolean}
+     */
+    get toggleOnTitle() {
+        return this._toggleOnTitle;
+    }
+    /**
+     * Toggle when click the title
+     * @type {Boolean}
+     */
+    set toggleOnTitle(value) {
+        this._toggleOnTitle = value;
     }
 
 }
