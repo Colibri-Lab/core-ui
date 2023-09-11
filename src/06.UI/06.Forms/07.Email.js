@@ -33,7 +33,7 @@ Colibri.UI.Forms.Email = class extends Colibri.UI.Forms.Field {
         this._input.addEventListener('paste', (e) => {
             Colibri.Common.Delay(100).then(() => {
                 this._input.emitHtmlEvents('change');
-                this._original = this._input.value;
+                this._original = this._input.value.trim();
                 this.Dispatch('Pasted', { domEvent: e });
             });
             e.stopPropagation();
@@ -97,12 +97,12 @@ Colibri.UI.Forms.Email = class extends Colibri.UI.Forms.Field {
         if(this._fieldData?.params?.eval) {
             value = eval(this._fieldData?.params?.eval);
         }        
-        return value;
+        return value.trim();
     }
 
     set value(value) {
-        this._original = value;
-        this._input.value = value ?? '';
+        this._original = (value ?? '').trim();
+        this._input.value = (value ?? '').trim();
     }
 
     get validationText() {
