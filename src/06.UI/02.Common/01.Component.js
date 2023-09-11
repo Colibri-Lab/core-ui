@@ -1459,31 +1459,31 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     ReloadBinding() {
 
-        if(!this._storage) {
-            return;
+        if(this._storage) {
+            // this._binding = value;
+            let pathsToLoad = this._binding;
+            if(this._binding.indexOf(';') !== -1) {
+                pathsToLoad = this._binding.split(';');
+                let promises = [];
+                for(const path of pathsToLoad) {
+                    promises.push(this._storage.AsyncQuery(path));
+                }
+                Promise.all(promises).then(responses => {
+                    for(let i=0; i<responses.length; i++) {
+                        this.__renderBoundedValues(responses[i], pathsToLoad[i]);
+                    }
+                });
+            }
+            else {
+                this._storage.AsyncQuery(this._binding).then((data) => {
+                    if(this.__renderBoundedValues) {
+                        this.__renderBoundedValues(data, this._binding);
+                    }
+                });
+            }
         }
 
-        // this._binding = value;
-        let pathsToLoad = this._binding;
-        if(this._binding.indexOf(';') !== -1) {
-            pathsToLoad = this._binding.split(';');
-            let promises = [];
-            for(const path of pathsToLoad) {
-                promises.push(this._storage.AsyncQuery(path));
-            }
-            Promise.all(promises).then(responses => {
-                for(let i=0; i<responses.length; i++) {
-                    this.__renderBoundedValues(responses[i], pathsToLoad[i]);
-                }
-            });
-        }
-        else {
-            this._storage.AsyncQuery(this._binding).then((data) => {
-                if(this.__renderBoundedValues) {
-                    this.__renderBoundedValues(data, this._binding);
-                }
-            });
-        }
+        this.ForEach((name, component) => component.ReloadBinding());
 
     }
 

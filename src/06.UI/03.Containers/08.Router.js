@@ -121,7 +121,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
                 const reg = new RegExp(pattern);
                 if(reg.test(args.url)) {
                     if(!component.isConnected) {
-                        component.ConnectTo(this);
+                        component.ConnectTo(this, null, true);
                     }
                     component.__processChangeOnRouteSwitch(reg.all(args.url));
                 } else {
