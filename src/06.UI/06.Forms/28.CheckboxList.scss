@@ -1,0 +1,17 @@
+.app-component-checkboxlist-field {
+    
+
+    [data-object-name$="-container"] {
+        &.app-component-shown {
+            display: flex;
+        }
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 10px;
+            
+        .app-component-checkbox {
+
+        }
+    }
+}

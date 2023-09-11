@@ -1459,7 +1459,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     ReloadBinding() {
 
-        if(this._storage) {
+        if(this._storage && this._binding) {
             // this._binding = value;
             let pathsToLoad = this._binding;
             if(this._binding.indexOf(';') !== -1) {
