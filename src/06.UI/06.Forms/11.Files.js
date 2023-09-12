@@ -401,6 +401,8 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
             for(const file of value) {
                 this._filesGroup.AddItem({title: file.name, file: file});
             }            
+        } else if( !value) {
+            this._filesGroup.value = [];
         } else {
             this._filesGroup.AddItem({title: value.name, file: value});
         }
