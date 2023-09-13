@@ -686,14 +686,35 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
 
     }
 
-    set noItemsText(value) {
-        this._div.attr('data-empty', value);
+    /**
+     * Sets and empty message
+     * @type {String}
+     */
+    get emptyMessage() {
+        return this._div.data('empty');
     }
-    
-    get noItemsText() {
-        return this._div.attr('data-empty');
+    /**
+     * Sets and empty message
+     * @type {String}
+     */
+    set emptyMessage(value) {
+        this._div.data('empty', value);
     }
 
+    set noItemsText(value) {
+        this.emptyMessage = value;
+    }
+    
+    /**
+     * @deprecated
+     */
+    get noItemsText() {
+        return this.emptyMessage;
+    }
+
+    /**
+     * @deprecated
+     */
     get container() {
         return this._element.querySelector('div');
     }
