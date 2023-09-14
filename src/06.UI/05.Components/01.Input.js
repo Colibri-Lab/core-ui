@@ -215,7 +215,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
     set value(value) { 
         this._input.value = value;
         if(this._hasClearIcon && this.Children('clear')) {
-            this.Children('clear').shown = (this._input.value.length > 0 ? (this._forcedClearIcon ?? false) : false);
+            this.Children('clear').shown = this._input.value.length > 0;
         }
     }
 
