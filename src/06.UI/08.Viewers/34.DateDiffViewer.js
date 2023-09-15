@@ -22,7 +22,6 @@ Colibri.UI.DateDiffViewer = class extends Colibri.UI.Viewer {
         try {
             super.value = value[0].toDate().DiffFullTokens(value[1].toDate());
         } catch(e) {
-            console.log(e);
             super.value = '';
         }
 

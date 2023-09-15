@@ -7,6 +7,11 @@ Colibri.UI.NumberViewer = class extends Colibri.UI.Viewer {
 
     set value(value) {
         value = this._convertValue(value);
+        const emptyMessage = this.field?.params?.empty ?? this._emptyMessage ?? '';
+        if((!value || !isFinite(value)) && !!emptyMessage) {
+            super.value = emptyMessage;
+            return;
+        }
 
         let v = !value || !isFinite(value) ? '0' : value;
         if(this.field?.params?.format === 'money') {
