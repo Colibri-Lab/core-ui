@@ -180,7 +180,9 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
             this._placeholder && this._placeholder.Dispose();
         }
         else {
-            this._placeholder = new Colibri.UI.TextSpan(this.name + '_placeholder', this);
+            if(!this._placeholder) {
+                this._placeholder = new Colibri.UI.TextSpan(this.name + '_placeholder', this);
+            }
             this._placeholder.shown = true;
             this._placeholder.value = value;
         }
