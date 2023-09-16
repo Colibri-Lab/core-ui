@@ -216,8 +216,20 @@ Array.prototype.toObjectAsTrue = function() {
     }
     return ret;
 }
-Array.prototype.sum = function() {
-    return this.reduce((partialSum, a) => partialSum + a, 0);
+Array.prototype.sum = function(field = null) {
+    if(!field) {
+        return this.reduce((partialSum, a) => partialSum + a, 0);
+    } else {
+        return this.map(typeof field == 'function' ? field : v => v[field]).reduce((partialSum, a) => partialSum + a, 0);
+    }
+}
+
+Array.prototype.avg = function(field = null) {
+    if(!field) {
+        return this.sum() / this.length;
+    } else {
+        return this.map(typeof field == 'function' ? field : v => v[field]).sum() / this.length;
+    }
 }
 
 Array.toObjectWithKeys = function (array, fieldKey, fieldValue) {
