@@ -22,7 +22,17 @@ Colibri.UI.Forms.Email = class extends Colibri.UI.Forms.Field {
             }
             this._original = this._input.value;
         });
-        this._input.addEventListener('keyup', (e) => this.Dispatch('KeyUp', {domEvent: e}));
+        this._input.addEventListener('keyup', (e) => {
+            this.Dispatch('KeyUp', {domEvent: e});
+            if( (this._fieldData?.params?.changeOnKeyPress ?? false) ) {
+                if(this._keyUpChangeTimer !== -1) {
+                    clearTimeout(this._keyUpChangeTimer);
+                }
+                this._keyUpChangeTimer = setTimeout(() => {
+                    this._input.emitHtmlEvents('change');
+                }, 500);
+            }
+        });
         this._input.addEventListener('keydown', (e) => this.Dispatch('KeyDown', {domEvent: e}));
         this._input.addEventListener('click', (e) => {
             this.Focus();
