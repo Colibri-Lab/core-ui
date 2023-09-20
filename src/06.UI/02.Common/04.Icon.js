@@ -18,8 +18,12 @@ Colibri.UI.Icon = class extends Colibri.UI.Component {
         if(this._element.querySelector('svg')) {
             this._element.querySelector('svg').remove();
         }
-        const iconc = eval(value);
-        this._element.append(Element.fromHtml(iconc));
+        try {
+            const iconc = eval(value);
+            this._element.append(Element.fromHtml(iconc));
+        } catch(e) {
+            console.log('Unknown icon: ' + value);
+        }
     }
 
     set fill(value) {
