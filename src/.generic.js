@@ -1290,11 +1290,11 @@ Date.prototype.toUnixTime = function () {
 Date.prototype.toShortDateString = function () {
     return this.getFullYear() + '-' + ((this.getMonth() + 1) + '').expand('0', 2) + '-' + (this.getDate() + '').expand('0', 2);
 };
-Date.prototype.toTimeString = function () {
+Date.prototype.toTimeString = function (hasSeconds = true) {
     if (this == 'Invalid Date') {
         return '00:00:00';
     }
-    return (this.getHours() + '').expand('0', 2) + ':' + (this.getMinutes() + '').expand('0', 2) + ':' + (this.getSeconds() + '').expand('0', 2);
+    return (this.getHours() + '').expand('0', 2) + ':' + (this.getMinutes() + '').expand('0', 2) + (hasSeconds ? ':' + (this.getSeconds() + '').expand('0', 2) : '');
 };
 Date.isLeapYear = function (year) {  return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)); };
 Date.daysInMonth = function (year, month) { return [31, (Date.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]; };
