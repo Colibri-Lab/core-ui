@@ -174,8 +174,8 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                 return;
             }
             
-            this._values = this._search(this.searchable || !args.search ? '' : this._input.value);
-            this._showPopup(this._values);
+            const values = this._search(!this.searchable || !args.search ? '' : this._input.value);
+            this._showPopup(values);
             
             // if(this.allowempty) {
             //     this.Dispatch('Changed', args);
@@ -195,7 +195,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     __Cleared(event, args) {
-        const values = this._search(this.searchable ? '' : this._input.value);
+        const values = this._search(!this.searchable ? '' : this._input.value);
         this._setValue(null);
 
         if (this._popup) {

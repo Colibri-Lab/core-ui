@@ -106,8 +106,12 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
     }
 
     _findParent() {
-        const iconParent = this.parent.Children(this.parent.name + '-contextmenu-icon-parent') ?? this.parent;
-        return this.parent.Children(this.parent.name + '-contextmenu-icon-parent') ? iconParent.Children('firstChild') : this.parent;
+        if(this.parent) {
+            const iconParent = this.parent.Children(this.parent.name + '-contextmenu-icon-parent') ?? this.parent;
+            return this.parent.Children(this.parent.name + '-contextmenu-icon-parent') ? iconParent.Children('firstChild') : this.parent;
+        } else {
+            return null;
+        }
     }
 
     _findPointOnParent() {

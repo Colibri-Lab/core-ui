@@ -51,8 +51,13 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
     }
 
     _findParent() {
-        const iconParent = this.parent.Children(this.parent.name + '-contextmenu-icon-parent') ?? this.parent;
-        return this.parent.Children(this.parent.name + '-contextmenu-icon-parent') ? iconParent.Children('firstChild') : this.parent;
+        return this.parent ?? null;
+        // if(this.parent) {
+        //     const iconParent = this.parent.Children(this.parent.name + '-contextmenu-icon-parent') ?? this.parent;
+        //     return this.parent.Children(this.parent.name + '-contextmenu-icon-parent') ? iconParent.Children('firstChild') : this.parent;
+        // } else {
+        //     return null;
+        // }
     }
 
     _findPointOnParent() {
@@ -209,14 +214,14 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
      * @type {String}
      */
     get value() {
-        return this._content.value;
+        return this._contentContainer.value;
     }
     /**
      * String content
      * @type {String}
      */
     set value(value) {
-        this._content.value = value;
+        this._contentContainer.value = value;
     }
 
 }

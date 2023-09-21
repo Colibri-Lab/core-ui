@@ -81,7 +81,10 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         if(this._fieldData?.params?.tip) {
             const tipData = this._fieldData?.params?.tip;
             if(!this._passwordTip) {
-                this._passwordTip = new Colibri.UI.ToolTip(this.name + '_tip', tipData.parent ? this.container.closest('[data-object-name="' + tipData.parent + '"]').tag('component').Children(tipData.parent + '-content') : this.Children(this.name + '-content'), tipData.orientation ? tipData.orientation : [Colibri.UI.ToolTip.RT, Colibri.UI.ToolTip.RB]);
+                this._passwordTip = new Colibri.UI.ToolTip(
+                    this.name + '_tip', document.body, 
+                    tipData.orientation ? tipData.orientation : [Colibri.UI.ToolTip.RB, Colibri.UI.ToolTip.LB
+                ]);
             }
 
             if(tipData.className) {
@@ -106,8 +109,12 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
                 '<a href="#">' + tipData.generate + '</a>';
             
             
-            this._passwordTip.Show(tipText);
-            this._passwordTip.container.querySelector('a').addEventListener('click', (e) => this._generatePassword(e));
+            this._passwordTip.value = tipText;
+            this._passwordTip.Show(this.contentContainer);
+            const a = this._passwordTip.container.querySelector('a');
+            if(a) {
+                a.addEventListener('click', (e) => this._generatePassword(e));
+            }
 
             if(cls != 'weak' && cls != 'bad') {
                 this._hidePasswordTip();

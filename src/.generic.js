@@ -284,6 +284,14 @@ Object.sortPropertiesRecursive = function(object) {
     return ret;
 }
 
+Object.createFromArray = function(array, keyField, valueField = null) {
+    const ret = {};
+    array.forEach((v) => {
+        ret[v[keyField]] = valueField ? v[valueField] : v;
+    });
+    return ret;
+}
+
 // Hide method from for-in loops
 Object.defineProperty(Array.prototype, "equals", { enumerable: false });
 

@@ -68,6 +68,25 @@
             bottom: 10px;
         }
     }
+    
+    &[data-orientation$=",lt"] {
+        margin-top: -10px;
+        [data-object-name="arrow"] {
+            top: 10px;
+        }
+    }
+    &[data-orientation$=",lm"] {
+        [data-object-name="arrow"] {
+            top: calc(50% - 9px);
+        }
+    }
+    &[data-orientation$=",lb"] {
+        margin-top: 10px;
+        [data-object-name="arrow"] {
+            top: unset;
+            bottom: 10px;
+        }
+    }
 
     p, ul, div {
         margin: 0px 0px 10px 0px;

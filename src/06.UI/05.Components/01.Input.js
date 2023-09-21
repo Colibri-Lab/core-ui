@@ -130,12 +130,16 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
      * @type {Boolean} 
      */
     set loading(value) {
-        this.Children('icon').shown = !value;
+        if(this.icon) {
+            this.Children('icon').shown = !value;
+        }
         this.Children('loadingicon').shown = value;
     }
 
     _hideLoading() {
-        this.icon.shown = true;
+        if(this.icon) {
+            this.icon.shown = true;
+        }
         this.loadingicon.shown = false;
     }
 
