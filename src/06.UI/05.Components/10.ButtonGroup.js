@@ -35,7 +35,7 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
         this._selectedButton.AddClass('-selected');
 
         if(!isSelected) {
-            this.Dispatch('Changed', {button: this._selectedButton});
+            this.Dispatch('Changed', {button: this._selectedButton, index: this.selectedIndex});
         }
 
     }

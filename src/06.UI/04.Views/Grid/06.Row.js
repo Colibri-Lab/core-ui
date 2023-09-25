@@ -209,6 +209,12 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
     }
 
     __newCell(value, column) {
+
+        const val = column.name.indexOf('.') === -1 ? value[column.name] : eval(`value.${column.name}`);
+        if(column.colspan && column.colspan > 1 && !val) {
+            return null;
+        }
+
         this.countCells = this.countCells + 1;
 
         let newCell = this.Children(this.name + '-' + column.name);
@@ -243,7 +249,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
             });
         }
 
-        newCell.value = column.name.indexOf('.') === -1 ? value[column.name] : eval(`value.${column.name}`);
+        newCell.value = val;
         
         if(this.hasContextMenu) {
             this._createContextMenuButton();

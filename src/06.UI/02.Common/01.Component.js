@@ -80,6 +80,20 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._hasContextMenu = false;
         
         this.Dispatch('ComponentRendered');
+
+        this.AddHandler('MouseEnter', (event, args) => {
+            if(this._toolTip) {
+                this._createTipObject();
+                this._tipObject.html(this._toolTip);
+                this._tipObject.showElement();
+            }
+        });
+        this.AddHandler('MouseLeave', (event, args) => {
+            if(this._tipObject) {
+                this._tipObject.html('');
+                this._tipObject.hideElement();
+            }
+        });
     }
 
     _convertProperty(type, value) {
@@ -342,6 +356,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.RegisterEvent('LoosedFocus', true, 'Утерян фокус');
         this.RegisterEvent('Clicked', false, 'Клик мышкой');
         this.RegisterEvent('DoubleClicked', false, 'Двойной клик');
+        this.RegisterEvent('MouseEnter', false, 'Мышь вошла в область');
+        this.RegisterEvent('MouseLeave', false, 'Кнопка мыши нажата (но не отпущена)');
         this.RegisterEvent('MouseDown', false, 'Кнопка мыши нажата (но не отпущена)');
         this.RegisterEvent('MouseUp', false, 'Кнопка мыши отпущена');
         this.RegisterEvent('MouseMove', false, 'Движение мышью');
@@ -451,6 +467,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         },
         MouseUp: {
             domEvent: 'mouseup',
+        },
+        MouseEnter: {
+            domEvent: 'mouseenter',
+        },
+        MouseLeave: {
+            domEvent: 'mouseleave',
         },
         KeyDown: {
             domEvent: 'keydown',
@@ -1026,8 +1048,13 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     _createTipObject() {
-        this._tipObject = Element.create('span', {class: 'tip'});
-        this._element.append(this._tipObject);
+        const tip = document.body.querySelector('.tip');
+        if(!tip) {
+            this._tipObject = Element.create('span', {class: 'tip'});
+            document.body.append(this._tipObject);
+        } else {
+            this._tipObject = tip;
+        }
     }
 
     /**
@@ -1053,7 +1080,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                     this._setToolTipPositionAndGap();
                 }
             });
-            this._tipObject.html(this._toolTip);
         }
         else {
             if(this._tipObject) {

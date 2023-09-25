@@ -200,6 +200,11 @@
                     &.input-checkbox-shown > .input-checkbox {
                         display: block;
                     }
+
+                    &.position-sticky-x {
+                        background: inherit;
+                    }
+
                 }
 
                 &.row-active {
@@ -243,6 +248,8 @@
         .position-sticky-x {
             position: sticky;
             z-index: 1;
+            background: inherit;
+
         }
 
         .position-sticky-y.position-sticky-x {

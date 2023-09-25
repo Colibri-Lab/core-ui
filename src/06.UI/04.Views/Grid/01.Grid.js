@@ -771,19 +771,20 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
             let tempWidth = 0;
             let tempWidthPrevStickyCell = 0;
+            let col = null;
             Object.forEach(this.header.FindAllColumns(), (nameColumn, column) => {
                 column._widthPrevStickyCell = tempWidthPrevStickyCell;
                 if (column.sticky) {
+                    col = column;
                     tempWidthPrevStickyCell += parseFloat(column._element.css('width'));
-                    if (!tempWidth) {
-                        tempWidth = parseFloat(column._element.css('width'));
-                    }
                     column.left = tempWidth;
                     column._positionLeft = tempWidth;
                     tempWidth += parseFloat(column._element.css('width'));
                     column.Dispatch('ColumnPositionChange', {column: column});
                 }
             });
+            col && col.AddClass('-last-sticky')
+            col && col.Dispatch('ColumnPositionChange', {column: col});
 
         }, 200);
 
@@ -1230,6 +1231,21 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      */
     set rowTemplateAttrs(value) {
         this._rowTemplateAttrs = value;
+    }
+
+    /**
+     * Column sort icons
+     * @type {Object|String}
+     */
+    get columnSortIcons() {
+        return this._columnSortIcons;
+    }
+    /**
+     * Column sort icons
+     * @type {Object|String}
+     */
+    set columnSortIcons(value) {
+        this._columnSortIcons = value;
     }
 
 }

@@ -231,6 +231,9 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
             this.parentColumn.AddHandler('ColumnPositionChange', (event, args) => {
                 if (this.stickyHorizontally) {
                     this.left = args.column._positionLeft;
+                    if(args.column.ContainsClass('-last-sticky')) {
+                        this.AddClass('-last-sticky');   
+                    }
                 }
             });
         }

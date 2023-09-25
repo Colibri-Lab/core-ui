@@ -1439,12 +1439,15 @@ Date.prototype.Age = function (removeNazad = false, returnFull = false, tokens =
     }
 };
 Date.prototype.format = function (formatString) { return this.toString(formatString); }
-Date.prototype.intlFormat = function (withTime = false) { 
+Date.prototype.intlFormat = function (withTime = false, withoutDay = false) { 
     let dateformat = App.DateFormat || 'ru-RU';
     const params = {day: '2-digit', month: 'short', year: 'numeric'};
     if(withTime) {
         params.hour = '2-digit';
         params.minute = '2-digit';
+    }
+    if(withoutDay) {
+        delete params.day;
     }
     const format = new Intl.DateTimeFormat(dateformat, params);
     return format.format(this); 
@@ -1627,6 +1630,16 @@ Element.fromHtml = function (html) {
     template.innerHTML = html;
     return template.content.childNodes;
 };
+
+Element.prototype.path = function() {
+    let path = [];
+    let p = this;
+    while(p.parent()) {
+        path.push(p.attr('data-object-name') ? p.attr('data-object-name') : p.nodeName.toLowerCase());
+        p = p.parent();
+    }
+    return path.join('/');
+}
 
 /**
  * Краткая запись для работы с dataset

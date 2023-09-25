@@ -47,35 +47,7 @@
     &::-webkit-scrollbar-thumb {
         background-color: $scrollbar-thumb-color;
     }
-    .tip {
-        position: fixed;
-        font-size: 16px;
-        line-height: 20px;
-        text-transform: none;
-        padding: 5px;
-        padding: 8px 12px;
-        background: rgba(0,0,0,.7);
-        border-radius: 2px;
-        max-width: 400px;
-        font-size: 14px;
-        text-align: left;
-        font-weight: normal;
-        color: #fff;
-        opacity: 0;
-        display: none;
-        box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
-        transition: opacity 0.3s, visiblity 0s;
-        white-space: normal;
-    }
-    &:hover {
-        >.tip {
-            display: block;
-            animation-name: fadein;
-            animation-duration: .5s;
-            animation-fill-mode: forwards;
-        }
-    }
-
+    
     .app-contextmenu-icon-component {
         width: 23px;
         align-items: center;

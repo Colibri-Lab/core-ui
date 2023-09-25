@@ -61,15 +61,15 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      * @type {Boolean}
      */
     set sticky(value) {
-        if (value) {
+        if (value === 'true' || value === true) {
             this.AddClass('position-sticky-x');
         } else {
             this.RemoveClass('position-sticky-x');
             this._element.style.left = '';
         }
 
-        if (this._sticky !== value) {
-            this._sticky = value;
+        if (this._sticky !== (value === 'true' || value === true)) {
+            this._sticky = (value === 'true' || value === true);
             this.Dispatch('ColumnStickyChange', {column: this});
         }
     }
@@ -131,7 +131,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      */
     set sortState(value) {
         this._sortState = value;
-        this._sortHandler && this._sortHandler.html(value ? this._sortIcons[value] : '');
+        this._sortHandler && this._sortHandler.html(value ? this.sortIcons[value] : '');
     }
 
     _bindResizeEvents() {
@@ -373,6 +373,27 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      */
     set index(value) {
         this._index = value;
+    }
+
+    /**
+     * Sorting icons
+     * @type {Object|String}
+     */
+    get sortIcons() {
+        if(this.grid.columnSortIcons) {
+            this._sortIcons = this.grid.columnSortIcons;
+        }
+        return this._sortIcons;
+    }
+    /**
+     * Sorting icons
+     * @type {Object|String}
+     */
+    set sortIcons(value) {
+        if(typeof value === 'string') {
+            value = eval(value);
+        }
+        this._sortIcons = value;
     }
 
 }

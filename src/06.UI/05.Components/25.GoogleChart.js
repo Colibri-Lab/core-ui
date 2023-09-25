@@ -91,14 +91,14 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
 
     /**
      * Google charts type
-     * @type {string}
+     * @type {PieChart,BarChart,ComboChart,ColumnChart,AreaChart,Scatter,GeoChart,Histogram,SteppedAreaChart,LineChart,BubbleChart,OrgChart,TreeMap,Table,Timeline,Gauge,CandlestickChart}
      */
     get type() {
         return this._type;
     }
     /**
      * Google charts type
-     * @type {string}
+     * @type {PieChart,BarChart,ComboChart,ColumnChart,AreaChart,Scatter,GeoChart,Histogram,SteppedAreaChart,LineChart,BubbleChart,OrgChart,TreeMap,Table,Timeline,Gauge,CandlestickChart}
      */
     set type(value) {
         this._type = value;
@@ -106,14 +106,14 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
 
     /**
      * Title of Chart
-     * @type {string}
+     * @type {String}
      */
     get title() {
         return this._title;
     }
     /**
      * Title of Chart
-     * @type {string}
+     * @type {String}
      */
     set title(value) {
         this._title = value;
