@@ -825,7 +825,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @type {Number}
      */
     set bottom(value) {
-        this._element.css('bottom', value ? value + 'px' : null);
+        this._element.css('bottom', value != null ? value + 'px' : null);
     }
 
     /**
@@ -2040,6 +2040,27 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     _setSpanning() {
         this._element.css('grid-row-start', this._rowspan ? 'span ' + this._rowspan : 'auto');
         this._element.css('grid-column-start', this._colspan ? 'span ' + this._colspan : 'auto');
+    }
+
+
+    get isComponentWentOutOfRight() {
+        const bounds = this.container.bounds();
+        return bounds.left + bounds.outerWidth > window.innerWidth;
+    }
+
+    get isComponentWentOutOfLeft() {
+        const bounds = this.container.bounds();
+        return bounds.left < 0;
+    }
+
+    get isComponentWentOutOfBottom() {
+        const bounds = this.container.bounds();
+        return bounds.top + bounds.outerHeight > window.innerHeight;
+    }
+
+    get isComponentWentOutOfTop() {
+        const bounds = this.container.bounds();
+        return bounds.top < 0;
     }
 
 }

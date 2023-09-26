@@ -13,10 +13,23 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
         this.handleVisibilityChange = true;
         this.AddHandler('VisibilityChanged', (event, args) => {
             if(this.parent && this._positionOnParent) {
-                const bounds = this.parent.container.bounds(true, true);
+                const bounds = this.container.bounds(true, true);
                 if(!args.state) {
-                    this.top = null;
-                    this.bottom = bounds.outerHeight;
+                    
+                    if(this.isComponentWentOutOfRight) {
+                        this.right = 0;
+                        this.left = null;
+                    } else if(this.isComponentWentOutOfLeft) {
+                        this.left = 0;
+                        this.right = null;
+                    } 
+                    if(this.isComponentWentOutOfBottom) {
+                        this.bottom = 0;
+                        this.top = null;
+                    } else if(this.isComponentWentOutOfTop) {
+                        this.bottom = null;
+                        this.top = 0;
+                    }
                 }
             }
         });
@@ -63,6 +76,7 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
             this.container.hideShowProcess(() => {
                 if(this.parent) {
                     const bounds = this.parent.container.bounds();
+                    const thisBounds = this.container.bounds();
                     if(this._float === 'right') {
                         this.top = 0;
                         this.height = '100%';
@@ -81,6 +95,20 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
                         } else {
                             this.left = this._connectToBody ? bounds.left : 0;
                         }    
+                        if(this.isComponentWentOutOfRight) {
+                            this.right = 0;
+                            this.left = null;
+                        } else if(this.isComponentWentOutOfLeft) {
+                            this.left = 0;
+                            this.right = null;
+                        } 
+                        if(this.isComponentWentOutOfBottom) {
+                            this.bottom = 0;
+                            this.top = null;
+                        } else if(this.isComponentWentOutOfTop) {
+                            this.bottom = null;
+                            this.top = 0;
+                        }
                     }
                     if(value) {
                         this.AddClass(this.parent.name + '-selector-popup');

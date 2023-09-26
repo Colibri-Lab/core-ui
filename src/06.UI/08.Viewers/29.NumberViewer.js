@@ -5,6 +5,10 @@ Colibri.UI.NumberViewer = class extends Colibri.UI.Viewer {
         this.AddClass('app-number-viewer-component');
     }
 
+    get value() {
+        return super.value;
+    }
+
     set value(value) {
         value = this._convertValue(value);
         const emptyMessage = this.field?.params?.empty ?? this._emptyMessage ?? '';

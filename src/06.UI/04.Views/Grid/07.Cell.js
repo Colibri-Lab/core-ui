@@ -396,7 +396,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
             this._viewerObject.shown = true;
             this._viewerObject.field = this.parentColumn.tag;
             this._viewerObject.download = this.parentColumn.download;
-            this._viewerObject.row = this.parentRow.value;
+            this._viewerObject.tag = {column: this.parentColumn, row: this.parentRow, cell: this};
 
             this._valueContainer.shown = false;
         }
@@ -412,7 +412,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
             this._editorObject = new editor(this.name + '_editor', this);
             this._editorObject.field = this.parentColumn.tag;
             this._editorObject.download = this.parentColumn.download;  
-            this._editorObject.row = this.parentRow.value;          
+            this._editorObject.tag = {column: this.parentColumn, row: this.parentRow, cell: this};
             this._editorObject.AddHandler('KeyDown', (event, args) => {
                 if(args.domEvent.keyCode == 13 && !this._editorObject.invalid) {
                     this.Dispatch('EditorChanged', {value: event.sender.value});
