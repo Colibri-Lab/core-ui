@@ -129,7 +129,6 @@ Colibri.UI.Grid.Header = class extends Colibri.UI.Component {
                 }
             }
         }
-
         return ret;
     }
 

@@ -109,6 +109,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             } else {
                 return value['ru'] ?? value;
             }
+        } else if(typeof value === 'string' && type === 'Object') {
+            eval('value = ' + value + ';');
         }
         return value;
     }
@@ -840,6 +842,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @type {Object}
      */
     set styles(value) {
+        value = this._convertProperty('Object', value)
         this._element.css(value);
     }
 
