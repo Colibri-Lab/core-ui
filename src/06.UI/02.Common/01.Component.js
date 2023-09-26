@@ -1358,22 +1358,20 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 this._element.css('z-index', Colibri.UI.maxZIndex + 1);
             }
 
-            let shadow = this._element.next();
-            if(shadow && shadow.classList.contains('app-component-shadow-div')) {
-                shadow.remove();
-            }
-
             const zIndex = this._element.css('z-index') - 1;
-            shadow = Element.create('div', {class: 'app-component-shadow-div'});
-            shadow.css('z-index', zIndex);
-            shadow.addEventListener('click', (e) => { this.Dispatch('ShadowClicked', {domEvent: e}); e.stopPropagation(); e.preventDefault(); return false; });
-            shadow.addEventListener('contextmenu', (e) => { this.Dispatch('ShadowClicked', {domEvent: e}); e.stopPropagation(); e.preventDefault(); return false; });
-            this._element.after(shadow);
+            if(!this._shadow) {
+                this._shadow = Element.create('div', {class: 'app-component-shadow-div'});
+            }
+            this._shadow.css('z-index', zIndex);
+            this._shadow.addEventListener('click', (e) => { this.Dispatch('ShadowClicked', {domEvent: e}); e.stopPropagation(); e.preventDefault(); return false; });
+            this._shadow.addEventListener('contextmenu', (e) => { this.Dispatch('ShadowClicked', {domEvent: e}); e.stopPropagation(); e.preventDefault(); return false; });
+            this._element.after(this._shadow);
+            
         }
         else {
-            const shadow = this._element.next();
-            if(shadow && shadow.classList.contains('app-component-shadow-div')) {
-                shadow.remove();
+            if(this._shadow) {
+                this._shadow.remove();
+                this._shadow = null;
             }
         }
     }
@@ -1630,6 +1628,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     ConnectTo(container, index = null, performBinding = false) {
         this._container = container instanceof Colibri.UI.Component ? container.container : container;
+        if(this._shadow) {
+            this._shadow.remove();
+            this._container.append(this._shadow);
+        }
         if(index === null) {
             this._container.append(this._element);        
         } else { 
@@ -2000,6 +2002,44 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             parent = parent.parent();
         }
         return null;
+    }
+
+    
+    /**
+     * Column spanning for widget
+     * @type {number}
+     */
+    get colspan() {
+        return this._colspan;
+    }
+    /**
+     * Column spanning for widget
+     * @type {number}
+     */
+    set colspan(value) {
+        this._colspan = value;
+        this._setSpanning();
+    }
+
+    /**
+     * Row spanning for widget
+     * @type {number}
+     */
+    get rowspan() {
+        return this._rowspan;
+    }
+    /**
+     * Row spanning for widget
+     * @type {number}
+     */
+    set rowspan(value) {
+        this._rowspan = value;
+        this._setSpanning();
+    }
+    
+    _setSpanning() {
+        this._element.css('grid-row-start', this._rowspan ? 'span ' + this._rowspan : 'auto');
+        this._element.css('grid-column-start', this._colspan ? 'span ' + this._colspan : 'auto');
     }
 
 }

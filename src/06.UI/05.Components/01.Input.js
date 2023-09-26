@@ -130,7 +130,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
      * @type {Boolean} 
      */
     set loading(value) {
-        if(this.icon) {
+        if(this.hasIcon) {
             this.Children('icon').shown = !value;
         }
         this.Children('loadingicon').shown = value;

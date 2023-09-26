@@ -26,6 +26,21 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
     }
 
     /**
+     * Float on parent
+     * @type {right,left}
+     */
+    get float() {
+        return this._float;
+    }
+    /**
+     * Float on parent
+     * @type {right,left}
+     */
+    set float(value) {
+        this._float = value;
+    }
+
+    /**
      * Position over parent
      * @type {Boolean}
      */
@@ -48,9 +63,25 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
             this.container.hideShowProcess(() => {
                 if(this.parent) {
                     const bounds = this.parent.container.bounds();
-                    this.top = bounds.outerHeight;
-                    this.bottom = null;
-                    this.left = 0;
+                    if(this._float === 'right') {
+                        this.top = 0;
+                        this.height = '100%';
+                        this.right = 0;
+                        this.bottom = null;
+                    } else if (this._float === 'left') {
+                        this.top = 0;
+                        this.height = '100%';
+                        this.left = 0;
+                        this.bottom = null;
+                    } else {
+                        this.top = this._connectToBody ? (bounds.top + bounds.outerHeight) : bounds.outerHeight;
+                        this.bottom = null;
+                        if(this._align === 'right') {
+                            this.right = this._connectToBody ? (window.innerWidth - (bounds.left + bounds.outerWidth)) : 0;
+                        } else {
+                            this.left = this._connectToBody ? bounds.left : 0;
+                        }    
+                    }
                     if(value) {
                         this.AddClass(this.parent.name + '-selector-popup');
                         this.BringToFront();
@@ -64,10 +95,44 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
                 
             });
         }
+
+        if(!super.shown && this._connectToBody) {
+            this.Disconnect();
+            this.ConnectTo(this.parent.container);
+            this.hasShadow = value;
+        }
     }
 
     get shown() {
         return super.shown;
+    }
+
+    /**
+     * Align popup to left or right of parent
+     * @type {left,right}
+     */
+    get align() {
+        return this._align;
+    }
+    /**
+     * Align popup to left or right of parent
+     * @type {left,right}
+     */
+    set align(value) {
+        this._align = value;
+    }
+
+    Show(parent, connectToBody = false) {
+        this._connectToBody = connectToBody;
+        if(parent) {
+            this.parent = parent;
+        }
+        if(this._connectToBody) {
+            this.Disconnect();
+            this.ConnectTo(document.body);
+            this.namespace = parent.namespace;
+        }
+        this.shown = true;
     }
     
 }

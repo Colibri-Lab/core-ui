@@ -55,42 +55,6 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
         return this._footer;
     }
 
-    /**
-     * Column spanning for widget
-     * @type {number}
-     */
-    get colspan() {
-        return this._colspan;
-    }
-    /**
-     * Column spanning for widget
-     * @type {number}
-     */
-    set colspan(value) {
-        this._colspan = value;
-        this._setSpanning();
-    }
-
-    /**
-     * Row spanning for widget
-     * @type {number}
-     */
-    get rowspan() {
-        return this._rowspan;
-    }
-    /**
-     * Row spanning for widget
-     * @type {number}
-     */
-    set rowspan(value) {
-        this._rowspan = value;
-        this._setSpanning();
-    }
-    
-    _setSpanning() {
-        this._element.css('grid-row-start', this._rowspan ? 'span ' + this._rowspan : 'auto');
-        this._element.css('grid-column-start', this._colspan ? 'span ' + this._colspan : 'auto');
-    }
     
     /**
      * Title of widget
