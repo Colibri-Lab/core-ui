@@ -1184,7 +1184,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     set value(value) {
 
-        if(!value || (!Array.isArray(value) && value instanceof Object)) {
+        if(!value || Object.isObject(value)) {
             value = Object.values(value);
         }
 

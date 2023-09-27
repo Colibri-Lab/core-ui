@@ -351,7 +351,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         }
 
         const res = this.Query(path + (param && param.indexOf('=') === -1 ? '.' + param : ''), param && param.indexOf('=') !== -1 ? param : null);
-        if(!reload && ((res instanceof Object && Object.countKeys(res) > 0) || (Array.isArray(res) && res.length > 0))) {
+        if(!reload && ((Object.isObject(res) && Object.countKeys(res) > 0) || (Array.isArray(res) && res.length > 0))) {
             return res;
         }
 

@@ -92,7 +92,7 @@ Colibri.UI.Rgb = class {
 
         var r, g, b;
 
-        if(h instanceof Object) {
+        if(Object.isObject(h)) {
             s = h.s;
             v = h.v;
             h = h.h;

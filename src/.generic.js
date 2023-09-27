@@ -254,6 +254,10 @@ Object.fromObjectAsTrue = function(object) {
     return ret;
 }
 
+Object.isObject = function(o) {
+    return o instanceof Object && !Array.isArray(o);
+}
+
 Object.convertToExtended = function(object) {
     return object;
 }

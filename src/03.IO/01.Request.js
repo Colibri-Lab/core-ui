@@ -118,7 +118,7 @@ Colibri.IO.Request = class extends Destructable {
                 }
             });
         }
-        else if(params instanceof Object) {
+        else if(Object.isObject(params)) {
             Object.forEach(params, (key, param) => {
                 if(param instanceof File) {
                     // если это файл тогда нужно пихнуть обязательнов в первый уровень

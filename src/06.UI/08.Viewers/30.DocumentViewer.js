@@ -52,7 +52,7 @@ Colibri.UI.DocumentViewer = class extends Colibri.UI.Viewer {
         this._value = value;
         
         
-        if(value instanceof Object) {
+        if(Object.isObject(value)) {
             // remote file
             this._downloadHandler(value.guid).then((data) => {
                 this._element.html('');

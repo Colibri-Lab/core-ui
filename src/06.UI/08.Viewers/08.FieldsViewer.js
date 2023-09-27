@@ -180,7 +180,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                 fieldContainer.shown = field.hidden === undefined || field.hidden === true;
 
                 if(field.component == 'Colibri.UI.Forms.Array') {
-                    if(value[name] instanceof Object) {
+                    if(Object.isObject(value[name])) {
                         value[name] = Object.values(value[name]);
                     }
                     value[name].forEach((v) => {

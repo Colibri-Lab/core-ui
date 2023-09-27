@@ -44,7 +44,7 @@ Colibri.UI.Forms.Passport = class extends Colibri.UI.Forms.Field {
 				this._masker2 = new Colibri.UI.Utilities.Mask([this._input2]);
 				this._masker2.maskPattern(mask[1]);	
 			}
-			else if(mask instanceof Object) {
+			else if(Object.isObject(mask)) {
 				this._masker1 = new Colibri.UI.Utilities.Mask([this._input1]);
 				this._masker1.maskPattern(mask.series);
 	
@@ -103,7 +103,7 @@ Colibri.UI.Forms.Passport = class extends Colibri.UI.Forms.Field {
 			this._input1.attr('placeholder', value[0][Lang.Current] ?? value[0]);
 			this._input2.attr('placeholder', value[1][Lang.Current] ?? value[1]);
 		}
-		else if(value instanceof Object) {
+		else if(Object.isObject(value)) {
 			this._input1.attr('placeholder', value.series[Lang.Current] ?? value.series);
 			this._input2.attr('placeholder', value.number[Lang.Current] ?? value.number);
 		}

@@ -33,7 +33,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
      */
     set structure(value) {
         let struct = {};
-        if(value instanceof Object) {
+        if(Object.isObject(value)) {
             struct = value;
         } else if(typeof value === 'string') {
             struct = eval(value);
@@ -117,7 +117,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
     __appRouteChanged(event, args) {
         if(args.url.substring(0, this._current.length) === this._current) {
             this.ForEach((name, component) => {
-                const pattern = this._current + component.routePattern.replace('#', '.+').replaceAll('?', '.*') + '$';
+                const pattern = this._current + (component.routePattern ?? '').replace('#', '.+').replaceAll('?', '.*') + '$';
                 const reg = new RegExp(pattern);
                 if(reg.test(args.url)) {
                     if(!component.isConnected) {

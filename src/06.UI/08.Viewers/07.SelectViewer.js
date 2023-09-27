@@ -23,7 +23,7 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                     
                     let isObject = false;
                     for(let vv of value) {
-                        if(vv instanceof Object) {
+                        if(Object.isObject(vv)) {
                             r.push(vv[this._field?.selector?.title ?? 'title']);
                             isObject = true;
                         }
@@ -96,7 +96,7 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                 }
             }
             else {
-                if(value instanceof Object) {
+                if(Object.isObject(value)) {
                     try {
                         super.value = value[this._field?.selector?.title ?? 'title'][Lang.Current] ?? value[this._field?.selector?.title ?? 'title'];
                     } catch(e) {}

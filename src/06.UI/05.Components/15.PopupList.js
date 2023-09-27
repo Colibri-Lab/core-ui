@@ -91,7 +91,7 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
         this.ClearAllGroups();
         this.ClearSelection(false);
 
-        if(!(value instanceof Object)) {
+        if(!Object.isObject(value)) {
             return;
         }
 

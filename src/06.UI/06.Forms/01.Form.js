@@ -248,7 +248,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     }
 
     _prepareOneOf(data, field) {
-        if(data instanceof Object) {
+        if(Object.isObject(data)) {
             Object.forEach(data, (n, v) => {
                 data[n] = this._prepareOneOf(v, this._fields[n]);
             });

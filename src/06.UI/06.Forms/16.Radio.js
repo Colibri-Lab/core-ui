@@ -51,7 +51,7 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
     _showValue() {
 
         let value = this._value;
-        if(this._fieldData?.selector?.value && this._value instanceof Object) {
+        if(this._fieldData?.selector?.value && Object.isObject(this._value)) {
             value = this._value[this._fieldData?.selector?.value];
         }
 

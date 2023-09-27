@@ -62,7 +62,7 @@ Colibri.UI.FilesViewer = class extends Colibri.UI.Viewer {
     }
 
     set value(value) {
-        this._value = this._convertValue(value instanceof Object ? Object.values(value) : value);
+        this._value = this._convertValue(Object.isObject(value) ? Object.values(value) : value);
         this._showValue();
     }
 

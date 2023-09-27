@@ -264,30 +264,35 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             else if(element.tagName) {
                 if(element.tagName == 'params') {
                     let data = element.childNodes[0].textContent;
-                    try { eval('data = ' + data + ';'); } catch(e) { 
+                    try { 
+                        eval('data = ' + data + ';'); 
+                    } catch(e) { 
                         console.log(data); console.log(e); 
                     }
-                    if(data instanceof Object) {
+                    if(Object.isObject(data)) {
                         this.tag.params = data;
                     }
                 }
                 else if(element.tagName == 'fields') {
                     let data = element.childNodes[0].textContent;
-                    try { eval('data = ' + data + ';'); } catch(e) {
+                    try { 
                         eval('data = ' + data + ';'); 
-                        console.log(data); console.log(e); 
+                    } catch(e) {
+                        console.log(data, this); console.log(e); 
                     }
-                    if(data instanceof Object) {
+                    if(Object.isObject(data)) {
                         this.fields = data;
                     }
                 }
                 else if(element.tagName.indexOf('json-') !== -1) {
                     const propertyName = element.tagName.substr('json-'.length);
                     let data = element.childNodes[0].textContent;
-                    try { eval('data = ' + data + ';'); } catch(e) { 
+                    try { 
+                        eval('data = ' + data + ';'); 
+                    } catch(e) { 
                         console.log(data); console.log(e); 
                     }
-                    if(data instanceof Object) {
+                    if(Object.isObject(data)) {
                         this[propertyName] = data;
                     }
                 }

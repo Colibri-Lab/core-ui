@@ -59,7 +59,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     _inprooveValues() {
         let v = [];
         for(let vv of this._values) {
-            if(!(vv instanceof Object)) {
+            if(!Object.isObject(vv)) {
                 vv = {value: vv, title: vv};
             }
             v.push(vv);
@@ -330,11 +330,11 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                 this._value = [];
                 this._value.push(this._lastValue = value.shift());
             } else {
-                value = value.map(v => v instanceof Object ? v : this._findValue(v));
+                value = value.map(v => Object.isObject(v) ? v : this._findValue(v));
                 this._lastValue = this._value = value;
             }
         }
-        else if(value instanceof Object) {
+        else if(Object.isObject(value)) {
             if (!this._multiple) {
                 this._value = [];
             }
@@ -378,7 +378,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         if(this._values) {
             const values = Object.values(this._values);
             for(let vv of values) {
-                if(!(vv instanceof Object)) {
+                if(!Object.isObject(vv)) {
                     vv = {value: vv, title: vv}
                 }
                 if (vv[this._valueField] == value) {
@@ -399,7 +399,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                 let v = '';
                 if(Array.isArray(this._value)) {
                     v = (this._value[0] !== '' && this._value[0] !== null && this._value[0] !== undefined ? (this._value[0][this._titleField] ?? this._value[0] ?? '') : '');
-                    if(v instanceof Object) {
+                    if(Object.isObject(v)) {
                         try { v = v[Lang.Current] } catch(e) { v = ''; };
                     }
                     else {
@@ -407,7 +407,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                     }
                 }
                 else {
-                    if(this._value instanceof Object) {
+                    if(Object.isObject(this._value)) {
                         try { v = this._value[Lang.Current] } catch(e) { v = ''; };
                     }
                     else {

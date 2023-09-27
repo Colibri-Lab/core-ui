@@ -119,7 +119,7 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
         else if(value instanceof Colibri.UI.Rgb) {
             this._value = value;
         }
-        else if(value instanceof Object) {
+        else if(Object.isObject(value)) {
             this._value = Colibri.UI.Rgb.Create().fromObject(value);
         }
         this._updateUIComponents();

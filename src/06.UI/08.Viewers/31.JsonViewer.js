@@ -35,7 +35,7 @@ Colibri.UI.JsonViewer = class extends Colibri.UI.Pane {
                     v.value = value[index];
                 }
             }
-        } else if(value instanceof Object) {
+        } else if(Object.isObject(value)) {
             const keys = Object.keys(value);
             if(keys.length > 0) {
                 const fieldsViewer = new Colibri.UI.FieldsViewer(this.name + 'viewer', this);
@@ -43,7 +43,7 @@ Colibri.UI.JsonViewer = class extends Colibri.UI.Pane {
                 for(const k of keys) {
                     fields[k] = {
                         desc: k,
-                        component: value[k] instanceof Object ? 'Json' : 'Text'
+                        component: Object.isObject(value[k]) ? 'Json' : 'Text'
                     };
                 }
                 fieldsViewer.shown = true;

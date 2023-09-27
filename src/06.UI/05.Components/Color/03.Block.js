@@ -64,7 +64,7 @@ Colibri.UI.Color.Block = class extends Colibri.UI.Component {
         if(value instanceof Colibri.UI.Rgb) {
             value = value.hex;
         }
-        else if(value instanceof Object) {
+        else if(Object.isObject(value)) {
             value = Colibri.UI.Rgb.Create().fromObject(value).hex;
         }
         else if(typeof value == 'number') {

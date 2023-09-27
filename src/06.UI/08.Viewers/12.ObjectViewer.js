@@ -9,7 +9,7 @@ Colibri.UI.ObjectViewer = class extends Colibri.UI.Viewer {
         let ret = [];
         if(Object.countKeys(this._field.fields) > 0) {
             Object.forEach(this._value, (name, value) => {
-                if(value instanceof Object && value.value && value.title) {
+                if(Object.isObject(value) && value.value && value.title) {
                     value = value.title;
                 }
     
