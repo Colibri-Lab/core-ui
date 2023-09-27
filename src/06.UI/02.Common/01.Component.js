@@ -292,7 +292,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                     } catch(e) { 
                         console.log(data); console.log(e); 
                     }
-                    if(Object.isObject(data)) {
+                    if(data) {
                         this[propertyName] = data;
                     }
                 }
