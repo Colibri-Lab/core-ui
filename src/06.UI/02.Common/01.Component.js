@@ -1106,6 +1106,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         windowBounds.height = window.clientHeight;
 
         this._tipObject.attr('class', 'tip');
+        this._tipObject.data('for', this.path);
         this._tipObject.attr('css', null);
 
         let left = 0;

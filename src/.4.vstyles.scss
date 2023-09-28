@@ -74,11 +74,3 @@
     transition: opacity 0.3s, visiblity 0s;
     white-space: normal;
 }
-&:hover {
-    >.tip {
-        display: block;
-        animation-name: fadein;
-        animation-duration: .5s;
-        animation-fill-mode: forwards;
-    }
-}
