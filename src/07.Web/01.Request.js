@@ -33,7 +33,7 @@ Colibri.Web.Request = class extends Destructable {
         if(h.indexOf('?') !== -1) {
             h = h.split('?')[1];
             if(h) {
-                return h.toObject(['&', '='])
+                return h.toObject(['&', '='], (v) => decodeURI(v));
             }
         }
         return {};
