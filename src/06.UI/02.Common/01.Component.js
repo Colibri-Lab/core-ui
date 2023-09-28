@@ -1645,7 +1645,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         } else { 
             this._element.insertAtIndex(this._container, index);
         }
-        if(performBinding && this.binding) {
+        if(performBinding) {
             this.ReloadBinding();
         }
     }
