@@ -1017,6 +1017,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @type {boolean}
      */
     set shown(value) {
+        value = this._convertProperty('Boolean', value)
         if (value === true || value === 'true') {
             this.AddClass('app-component-shown');
             this.Dispatch('Shown', {});
