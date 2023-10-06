@@ -2072,4 +2072,23 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return bounds.top < 0;
     }
 
+    /**
+     * Align content horizontaly
+     * @type {left,right,center,justify}
+     */
+    get halign() {
+        return this._halign;
+    }
+    /**
+     * Align content horizontaly
+     * @type {left,right,center,justify}
+     */
+    set halign(value) {
+        this._halign = value;
+        this._showHalign();
+    }
+    _showHalign() {
+        this._element.css('text-align', this._value);
+    }
+
 }

@@ -6,10 +6,11 @@ Colibri.UI.NumberViewer = class extends Colibri.UI.Viewer {
     }
 
     get value() {
-        return super.value;
+        return this._value;
     }
 
     set value(value) {
+        this._value = value;
         value = this._convertValue(value);
         const emptyMessage = this.field?.params?.empty ?? this._emptyMessage ?? '';
         if((!value || !isFinite(value)) && !!emptyMessage) {
@@ -42,12 +43,12 @@ Colibri.UI.NumberViewer = class extends Colibri.UI.Viewer {
             }
         }
 
-        if(this.field?.params?.pre) {
-            v = this.field?.params?.pre + v;
-        }
-        if(this.field?.params?.post) {
-            v = v + this.field?.params?.post;
-        }
+        // if(this.field?.params?.pre) {
+        //     v = this.field?.params?.pre + v;
+        // }
+        // if(this.field?.params?.post) {
+        //     v = v + this.field?.params?.post;
+        // }
 
         super.value = v;
     }
