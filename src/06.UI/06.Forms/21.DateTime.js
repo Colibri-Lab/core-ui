@@ -73,7 +73,7 @@ Colibri.UI.Forms.DateTime = class extends Colibri.UI.Forms.Field {
         let timeValue = this._time.value;
         
         value = (value?.toString() === 'Invalid Date' ? null : value.toShortDateString());
-        return value + ' ' + timeValue;
+        return value ? value + ' ' + timeValue : null;
     }
 
     set value(value) {
