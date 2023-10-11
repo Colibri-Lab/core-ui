@@ -1059,7 +1059,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     _createTipObject() {
         const tip = document.body.querySelector('.tip');
         if(!tip) {
-            this._tipObject = Element.create('span', {class: 'tip'});
+            this._tipObject = Element.create('span', {class: 'tip', namespace: this.namespace});
             document.body.append(this._tipObject);
         } else {
             this._tipObject = tip;
