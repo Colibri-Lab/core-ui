@@ -604,6 +604,17 @@ String.prototype.fromDDMMYYYY = function() {
     }
     return (this.split(splitter)[2] + '-' + this.split(splitter)[1] + '-' + this.split(splitter)[0]).toDate();
 }
+String.prototype.fromEuropeanDate = function() {
+    const euroDate = this;
+    const parts = euroDate.split(' ');
+    const date = parts[0];
+    const time = parts[1] ?? '00:00:00';
+
+    const dateParts = date.split('.');
+
+    return new Date(dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0] + ' ' + time);
+}
+
 
 String.prototype.toShortDate = function () {
     var parts = this.split(/\/|\.|\-/);
@@ -1508,6 +1519,7 @@ Date.QuarterToPeriod = function(quarter, year, startOrEnd = 1) {
     return ret;
 
 }
+
 
 Element.prototype.animateScrollTop = function(to, duration) {
     let start = this.scrollTop,
