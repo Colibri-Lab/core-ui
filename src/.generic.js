@@ -2034,6 +2034,29 @@ Element.prototype.emitHtmlEvents = function (eventType) {
     }
 };
 
+Element.prototype.isValueExceeded = function() {
+    const width = this.bounds().outerWidth;
+    if(!width) {
+        return false;
+    }
+    var s = Element.create('span');
+    s.css({
+        position : 'absolute',
+        left : -9999,
+        top : -9999,
+        // ensure that the span has same font properties as the element
+        'font-family' : this.css('font-family'),
+        'font-size' : this.css('font-size'),
+        'font-weight' : this.css('font-weight'),
+        'font-style' : this.css('font-style')
+    });
+    s.html(this.value);
+    document.body.append(s);
+    var result = s.bounds().outerWidth > width;
+    s.remove();
+    return result;    
+}
+
 DOMTokenList.prototype.clear = function () {
     for (let i = 0; i < this.length; i++) {
         this.remove(this.item(i));

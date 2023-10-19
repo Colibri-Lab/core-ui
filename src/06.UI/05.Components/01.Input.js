@@ -360,4 +360,12 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         this._fillTimeoutValue = value;
     }
 
+    /**
+     * Is value of input exceeded input width
+     * @type {Boolean}
+     */
+    get isValueExceeded() {
+        return this._input.isValueExceeded();
+    }
+
 }

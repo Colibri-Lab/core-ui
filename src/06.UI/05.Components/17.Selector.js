@@ -38,8 +38,9 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._input.shown = true;
         this._input.icon = null;
         this._input.hasIcon = false;
-        this._input.hasClearIcon = (clearIcon || !readonly);
+        this._input.hasClearIcon = clearIcon;
         this._input.placeholder = this._placeholder;
+        this._input.toolTip = '';
 
         this._arrow = Element.create('span', {class: 'arrow'});
         this._arrow.html(Colibri.UI.SelectArrowIcon);
@@ -450,6 +451,9 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                 this._input.placeholder = '#{ui-selector-choosed}'.replaceAll('%s1', itemCount).replaceAll('%s2', this?.parent?.parent?.title).stripHtml();
             }
         }
+        if(this._showToolTip) {
+            this._input.toolTip = this._input.isValueExceeded ? (this._input.value ?? this._input.placeholder) : '';
+        }
     }
 
     /**
@@ -764,6 +768,22 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      */
     set valueField(value) {
         this._valueField = value;
+    }
+
+    /**
+     * Tooltip string
+     * @type {String}
+     */
+    get showToolTip() {
+        return this._showToolTip;
+    }
+    /**
+     * Tooltip string
+     * @type {String}
+     */
+    set showToolTip(value) {
+        this._showToolTip = value === true || value === 'true';
+        this._renderValue();
     }
 
 }

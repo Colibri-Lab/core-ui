@@ -44,6 +44,10 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
             this.enabled = this._fieldData.params.enabled;
         }
 
+        if(this._fieldData?.params?.showToolTip) {
+            this._input.showToolTip = this._fieldData?.params?.showToolTip;
+        }
+
         if(this._fieldData?.selector?.ondemand) {
             this._input.__BeforeFilled = () => {
                 return new Promise((resolve, reject) => {
@@ -373,8 +377,8 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
             this._fieldData.selector?.value ?? 'value',
             this._fieldData.selector?.group ?? null,
             this._fieldData.selector?.__render ?? null,
-            (this._fieldData.allowempty === undefined ? true : this._fieldData.allowempty),
-            (this._fieldData.clearicon === undefined ? false : this._fieldData.clearicon)
+            ((this._fieldData.allowempty ?? this._fieldData?.params?.allowempty) === undefined ? true : (this._fieldData.allowempty ?? this._fieldData?.params?.allowempty)),
+            ((this._fieldData.clearicon ?? this._fieldData?.params?.clearicon) === undefined ? false : (this._fieldData.clearicon ?? this._fieldData?.params?.clearicon))
         );
     }
 }

@@ -237,6 +237,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
             });
             this._input.value = values.join(', ');
         }
+        this._input.toolTip = this._input.isValueExceeded ? this._input.value : '';
     }
 
     /**
