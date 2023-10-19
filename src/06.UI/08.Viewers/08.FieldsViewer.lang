@@ -1,7 +1,7 @@
 ui-viewers-fields:
   ru: Поля (JSON)
   en: Fields viewer
-ui-viewers-fields-: {}
+
 ui-viewers-fields-expand:
   ru: Развернуть
   en: Expand
