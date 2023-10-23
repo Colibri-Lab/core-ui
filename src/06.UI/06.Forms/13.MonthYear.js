@@ -38,7 +38,7 @@ Colibri.UI.Forms.MonthYear = class extends Colibri.UI.Forms.Field {
     }
 
     get value() {
-        return this._year.value.value + '-' + this._month.value.value;
+        return (this._year?.value?.value ?? '') + '-' + (this._month?.value?.value ?? '');
     }
 
     getValueTitle() {

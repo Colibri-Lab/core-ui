@@ -404,7 +404,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                         try { v = v[Lang.Current] } catch(e) { v = ''; };
                     }
                     else {
-                        v = v.stripHtml();
+                        v = (v + '').stripHtml();
                     }
                 }
                 else {
@@ -412,7 +412,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                         try { v = this._value[Lang.Current] } catch(e) { v = ''; };
                     }
                     else {
-                        v = this._value.stripHtml();
+                        v = (this._value + '').stripHtml();
                     }
                 }
                 this._input.value = v;
@@ -435,13 +435,13 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                 if(this._placeholderinfo instanceof Function) {
                     info = this._placeholderinfo;
                     info(this._value, this._values).then((text) => {
-                        this._input.placeholder = text.stripHtml();
+                        this._input.placeholder = (text + '').stripHtml();
                     });
                 } else {
                     try {
                         info = eval(this._placeholderinfo);
                         info(this._value, this._values).then((text) => {
-                            this._input.placeholder = text.stripHtml();
+                            this._input.placeholder = (text + '').stripHtml();
                         });
                     } catch(e) {
                         this._input.placeholder = String.Pluralize(this._placeholderinfo, itemCount).stripHtml();
