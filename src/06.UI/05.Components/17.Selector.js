@@ -170,12 +170,12 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
     __Filled(event, args) {
         this._itemSelected = false;
-        this.__BeforeFilled().then((ret) => {
-            if(ret === false || this._itemSelected === true) {
+        this.__BeforeFilled().then((searchAllreadyPerformed = false) => {
+            if(this._itemSelected === true) {
                 return;
             }
             
-            const values = this._search(!this.searchable || !args.search ? '' : this._input.value);
+            const values = this._search(!this.searchable || !args.search || searchAllreadyPerformed ? '' : this._input.value);
             this._showPopup(values);
             
             // if(this.allowempty) {

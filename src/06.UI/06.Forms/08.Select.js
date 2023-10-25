@@ -60,7 +60,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
                             this.loading = false;                        
                             this.RemoveClass('app-select-loading');
                             this._setEnabled();
-                            resolve(true);
+                            resolve(this._fieldData?.selector?.ondemand);
                         });
                     }
                 });
