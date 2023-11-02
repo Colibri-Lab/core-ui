@@ -1268,8 +1268,12 @@ Number.prototype.toTimeString = function (daySplitter) {
 
     return txt;
 };
-Number.prototype.toSizeString = function (postfixes, range, remove0s) {
+Number.prototype.toSizeString = function (postfixes, range, remove0s = false, approximate = false) {
     let number = this;
+    let isMinus = number < 0;
+    if(isMinus) {
+        number = Math.abs(number);
+    }
     let j = 0;
     for (j = 0; j < postfixes.length; j++) {
         if (number <= range)
@@ -1281,7 +1285,10 @@ Number.prototype.toSizeString = function (postfixes, range, remove0s) {
     if (remove0s) {
         number = number.replaceAll('.00', '');
     }
-    return number + " " + postfixes[j];
+    if(approximate) {
+        number = Math.round(number);
+    }
+    return (isMinus ? '-' : '') + number + " " + postfixes[j];
 };
 Number.prototype.percentOf = function (max) {
     return (this * 100) / max;

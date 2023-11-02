@@ -109,7 +109,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             } else {
                 return value['ru'] ?? value;
             }
-        } else if(typeof value === 'string' && type === 'Object') {
+        } else if(typeof value === 'string' && ['Object', 'Function', 'Array'].indexOf(type) !== -1) {
             eval('value = ' + value + ';');
         }
         return value;
