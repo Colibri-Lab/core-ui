@@ -2089,7 +2089,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._showHalign();
     }
     _showHalign() {
-        this._element.css('text-align', this._value);
+        this._element.css('text-align', this._halign);
     }
 
 }

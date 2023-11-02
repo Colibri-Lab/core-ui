@@ -107,31 +107,31 @@ Colibri.UI.TableHeaderCell = class extends Colibri.UI.Component {
 
     /**
      * Text align
-     * @type {left,center,right,justify}
+     * @type {start,end,left,right,center,justify,justify-all,match-parent,inherit,initial,revert,revert-layer,unset}
      */
     get align() {
-        return this._element.css('text-align');
+        return super.halign;
     }
     /**
      * Text align
-     * @type {left,center,right,justify}
+     * @type {start,end,left,right,center,justify,justify-all,match-parent,inherit,initial,revert,revert-layer,unset}
      */
     set align(value) {
-        this._element.css('text-align', value);
+        super.halign = value;
     }
 
     /**
      * Vertical align
-     * @type {top,middle,bottom}
+     * @type {baseline,sub,super,text-top,text-bottom,middle,top,bottom,inherit,initial,revert,revert-layer,unset}
      */
-    get verticalAlign() {
+    get valign() {
         return this._element.css('vertical-align');
     }
     /**
      * Vertical align
-     * @type {top,middle,bottom}
+     * @type {baseline,sub,super,text-top,text-bottom,middle,top,bottom,inherit,initial,revert,revert-layer,unset}
      */
-    set verticalAlign(value) {
+    set valign(value) {
         this._element.css('vertical-align', value);
     }
 
