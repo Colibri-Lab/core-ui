@@ -397,6 +397,9 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
             this._viewerObject.field = this.parentColumn.tag;
             this._viewerObject.download = this.parentColumn.download;
             this._viewerObject.tag = {column: this.parentColumn, row: this.parentRow, cell: this};
+            Object.forEach(this.parentColumn.tag.viewerAttrs, (name, value) => {
+                this._viewerObject[name] = value;
+            });
 
             this._valueContainer.shown = false;
         }
