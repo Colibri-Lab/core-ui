@@ -1268,7 +1268,7 @@ Number.prototype.toTimeString = function (daySplitter) {
 
     return txt;
 };
-Number.prototype.toSizeString = function (postfixes, range, remove0s = false, approximate = false) {
+Number.prototype.toSizeString = function (postfixes, range, remove0s = false, approximate = false, shownumber = true) {
     let number = this;
     let isMinus = number < 0;
     if(isMinus) {
@@ -1276,7 +1276,7 @@ Number.prototype.toSizeString = function (postfixes, range, remove0s = false, ap
     }
     let j = 0;
     for (j = 0; j < postfixes.length; j++) {
-        if (number <= range)
+        if (number < range)
             break;
         else
             number = number / range;
@@ -1288,7 +1288,7 @@ Number.prototype.toSizeString = function (postfixes, range, remove0s = false, ap
     if(approximate) {
         number = Math.round(number);
     }
-    return (isMinus ? '-' : '') + number + " " + postfixes[j];
+    return (shownumber ? (isMinus ? '-' : '') + number + ' ' : '') + postfixes[j];
 };
 Number.prototype.percentOf = function (max) {
     return (this * 100) / max;
