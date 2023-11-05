@@ -79,7 +79,6 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
     }
 
     _initRouterOnHistory() {
-        console.trace();
         window.removeEventListener('hashchange', this._handleHashChange);
         window.addEventListener('popstate', this._handlePopState);
     }
