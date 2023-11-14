@@ -484,16 +484,16 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         });
 
         rows.AddHandler('RowDisposed', (event, args) => {
-            this.__recalculateCellPositions();
+            this.RecalculateCellPositions();
             this.Dispatch('RowDisposed', args);
         });
 
         rows.AddHandler('StickyChanged', (event, args) => {
-            this.__recalculateCellPositions();
+            this.RecalculateCellPositions();
         });
 
         rows.AddHandler('GridCellsChanged', (event, args) => {
-            this.__recalculateCellPositions();
+            this.RecalculateCellPositions();
         });
 
         rows.AddHandler('RowAdded', (event, args) => {
@@ -502,12 +502,12 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             Object.forEach(this.groups, (name, rows) => {
                 rows.columns = this.header.columnsCount;
             });
-            this.__recalculateCellPositions();
+            this.RecalculateCellPositions();
             this.Dispatch('RowAdded', {row: args.row});
         });
 
         rows.AddHandler('RowUpdated', (event, args) => {
-            this.__recalculateCellPositions();
+            this.RecalculateCellPositions();
             this.Dispatch('RowUpdated', {row: args.row});
         });
 
@@ -749,7 +749,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     /**
      * Пересчитывает высоту строк
      */
-    __recalculateCellPositions() {
+    RecalculateCellPositions() {
 
         if (this._recalculateTimerCellPositions !== null) {
             clearTimeout(this._recalculateTimerCellPositions);
@@ -1018,7 +1018,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             Object.forEach(this.groups, (name, rows) => {
                 rows.columns = this.header.columnsCount;
             });
-            this.__recalculateCellPositions();
+            this.RecalculateCellPositions();
         }));
 
         this.header.AddHandler('ColumnDisposed', (event, args) => {
