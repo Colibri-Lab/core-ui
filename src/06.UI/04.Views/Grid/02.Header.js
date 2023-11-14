@@ -10,18 +10,8 @@ Colibri.UI.Grid.Header = class extends Colibri.UI.Component {
         this._sticky = true;
         this._grid = this.parent.parent;
 
-        this._columns = new Colibri.UI.Grid.Columns('app-ui-header-columns', this);
-        this._columns.AddClass('app-ui-header-columns');
-        this._columns.shown = true;
+        this._addDefaultColumns();
 
-        let columnSelectionButtons = this.columns.Add('button-container-for-row-selection', '');
-        columnSelectionButtons.shown = this.grid.showCheckboxes;
-
-        this._checkbox = new Colibri.UI.Checkbox('row-checkbox', columnSelectionButtons);
-        this._checkbox.hasThirdState = true;
-        this._checkbox.shown = true;
-
-        this._handleEvents();
     }
 
     _registerEvents() {
@@ -32,23 +22,23 @@ Colibri.UI.Grid.Header = class extends Colibri.UI.Component {
         this.RegisterEvent('ColumnDisposed', false, 'Поднимается, когда удалили колонку');
     }
 
-    _handleEvents() {
-        this._columns.AddHandler('ColumnAdded', (event, args) => {
-            this.Dispatch('ColumnAdded', args);
+    _handleEvents(columns, checkbox) {
+        columns.AddHandler('ColumnAdded', (event, args) => {
+            this.Dispatch('ColumnAdded', Object.assign(args, {columns: columns}));
         });
 
-        this._columns.AddHandler('ColumnStickyChange', (event, args) => {
-            this.Dispatch('ColumnStickyChange', args);
+        columns.AddHandler('ColumnStickyChange', (event, args) => {
+            this.Dispatch('ColumnStickyChange', Object.assign(args, {columns: columns}));
         });
 
-        this._columns.AddHandler('ColumnClicked', (event, args) => {
-            this.Dispatch('ColumnClicked', args);
+        columns.AddHandler('ColumnClicked', (event, args) => {
+            this.Dispatch('ColumnClicked', Object.assign(args, {columns: columns}));
         });
 
-        this._columns.AddHandler('ColumnDisposed', (event, args) => {
-            this.Dispatch('ColumnDisposed', args);
+        columns.AddHandler('ColumnDisposed', (event, args) => {
+            this.Dispatch('ColumnDisposed', Object.assign(args, {columns: columns}));
         });
-        this._checkbox.AddHandler('Changed', (event, args) => {
+        checkbox.AddHandler('Changed', (event, args) => {
             Object.forEach(this.grid.groups, (name, group) => {
                 group.ForEach((name, row) => {
                     if(row.shown) {
@@ -67,6 +57,34 @@ Colibri.UI.Grid.Header = class extends Colibri.UI.Component {
             this.grid.Dispatch('RowSelected');
         });
     }
+
+    AddColumns(name) {
+        const columns = new Colibri.UI.Grid.Columns(name, this);
+        columns.AddClass('app-ui-header-columns');
+        columns.shown = true;
+
+        let columnSelectionButtons = columns.Add('button-container-for-row-selection', '');
+        columnSelectionButtons.shown = this.grid.showCheckboxes;
+
+        const checkbox = new Colibri.UI.Checkbox('row-checkbox', columnSelectionButtons);
+        checkbox.hasThirdState = true;
+        checkbox.shown = true;
+
+        this._handleEvents(columns, checkbox);
+        return [columns, checkbox];
+    }
+
+    _addDefaultColumns() {
+        const newColumns = this.AddColumns('app-ui-header-columns');
+        this._columns = newColumns[0];
+        this._checkbox = newColumns[1];
+    }
+
+    Reset() {
+        this.Clear();
+        this._addDefaultColumns();
+    }
+
 
     /**
      * Gets checkbox
