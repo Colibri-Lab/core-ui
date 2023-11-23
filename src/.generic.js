@@ -1,4 +1,10 @@
 
+const nullhandler = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+};
+
 const json_object = function (v) {
     return JSON.parse(v || '{}');
 };

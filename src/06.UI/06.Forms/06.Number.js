@@ -14,6 +14,7 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
         }
         this._input = contentContainer.container.append(Element.create('input', params));
 
+        this._input.addEventListener('mousewheel', nullhandler);
         this._input.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', {domEvent: e}));
         this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', {domEvent: e}));
         this._input.addEventListener('change', (e) => {
