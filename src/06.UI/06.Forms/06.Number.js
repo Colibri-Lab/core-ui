@@ -34,7 +34,12 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
                 }, 500);
             }
         });
-        this._input.addEventListener('keydown', (e) => this.Dispatch('KeyDown', {domEvent: e}));
+        this._input.addEventListener('keydown', (e) => {
+            if(e.keyCode === 38 || e.keyCode === 40) {
+                return nullhandler(e);
+            }
+            return this.Dispatch('KeyDown', {domEvent: e});
+        });
         this._input.addEventListener('click', (e) => {
             this.Focus();
             this.Dispatch('Clicked', {domEvent: e})
