@@ -1131,8 +1131,9 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      */
     ShowMassActionsMenu(container) {
         if (this._massActionsMenuClass) {
-            if (!this._massActionsMenuObject) { 
-                let actionsMenu = new Colibri.UI.MassActionsMenu(this.name + '-mass-actions-menu', container || document.body);
+            if (!this._massActionsMenuObject) {
+                const cl = this._massActionsMenuClass; 
+                let actionsMenu = new cl(this.name + '-mass-actions-menu', container || document.body);
                 actionsMenu.parent = this;
     
                 this.AddHandler('RowSelected', (event, args) => {
