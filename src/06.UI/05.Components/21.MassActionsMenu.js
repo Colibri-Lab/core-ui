@@ -41,8 +41,23 @@ Colibri.UI.MassActionsMenu = class extends Colibri.UI.Component {
             let actionButton = new Colibri.UI.GrayButton(action.name, this._actionsContainer);
             actionButton.AddClass('app-mass-actions-menu-action-component');
             actionButton.value = action.title;
+            if(action.icon) {
+                actionButton.icon = action.icon;
+            }
+            if(action.contextmenu && action.contextmenu.length > 0) {
+                actionButton.contextmenu = action.contextmenu;
+            }
             actionButton.tag = action;
-            actionButton.AddHandler('Clicked', (event, args) => this.Dispatch('ActionClicked', Object.assign({menu: event.sender, menuData: event.sender.tag}, args)));
+            actionButton.AddHandler('ContextMenuItemClicked', (event, args) => {
+                this.Dispatch('ActionClicked', args);
+            });
+            actionButton.AddHandler('Clicked', (event, args) => {
+                if(event.sender.contextmenu.length > 0) {
+                    event.sender.ShowContextMenu([Colibri.UI.ContextMenu.LT, Colibri.UI.ContextMenu.RT], '', null);
+                } else {
+                    this.Dispatch('ActionClicked', Object.assign({menu: event.sender, menuData: event.sender.tag}, args));
+                }
+            });
             actionButton.shown = true
         });
     }
@@ -69,6 +84,11 @@ Colibri.UI.MassActionsMenu = class extends Colibri.UI.Component {
     set selectedItems(value) {
         this._selectedItems = value;
         this._selectedItemsCounter.value = '#{ui-massactions-choosed}'.replaceAll('%s', this._selectedItems.length);
+        if(this._selectedItems.length == 0) {
+            this.Hide();            
+        } else {
+            this.Show();
+        }
     }
 
     Dispose() {

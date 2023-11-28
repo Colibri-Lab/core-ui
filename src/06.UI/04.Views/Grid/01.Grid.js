@@ -427,6 +427,10 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             group.checkbox.checked = false;
         });
         this.header.checkbox.checked = false;
+        if(this._massActionsMenuObject) {
+            this._massActionsMenuObject.Dispose();
+            this._massActionsMenuObject = null;
+        }
         this.Dispatch('CheckChanged', {});
     }
 
@@ -1115,6 +1119,9 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         return this._massActionsMenuClass;
     }
     set massActionsMenuClass(value) {
+        if(value instanceof String) {
+            value = eval(value);
+        }
         this._massActionsMenuClass = value;
     }
 
@@ -1123,8 +1130,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      * @param container
      */
     ShowMassActionsMenu(container) {
-        let actionsMenuClass = eval(this._massActionsMenuClass);
-        if (actionsMenuClass) {
+        if (this._massActionsMenuClass) {
             if (!this._massActionsMenuObject) { 
                 let actionsMenu = new Colibri.UI.MassActionsMenu(this.name + '-mass-actions-menu', container || document.body);
                 actionsMenu.parent = this;
