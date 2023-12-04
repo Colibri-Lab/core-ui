@@ -1006,7 +1006,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
         this.AddHandler('KeyDown', this.__processKeydown);
 
-        Object.forEach(this.header.FindAllColumns(), (name, columns) => columns.AddHandler('ColumnMoved', (event, args) => {
+        this.header.ForEach((name, columns) => columns.AddHandler('ColumnMoved', (event, args) => {
             this.ForEveryRow((name, row) => {
                 const cell = row.Children(row.name + '-' + args.column.name);
                 if(args.direction === 'up') {
@@ -1018,7 +1018,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         })); 
 
 
-        Object.forEach(this.header.FindAllColumns(), (name, columns) => columns.AddHandler('ColumnAdded', (event, args) => {
+        this.header.ForEach((name, columns) => columns.AddHandler('ColumnAdded', (event, args) => {
             Object.forEach(this.groups, (name, rows) => {
                 rows.columns = this.header.columnsCount;
             });
