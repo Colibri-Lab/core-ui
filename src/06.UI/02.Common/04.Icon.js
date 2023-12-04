@@ -15,6 +15,10 @@ Colibri.UI.Icon = class extends Colibri.UI.Component {
     }
 
     set iconSVG(value) {
+        if(!value) {
+            return;
+        }
+        
         if(this._element.querySelector('svg')) {
             this._element.querySelector('svg').remove();
         }
