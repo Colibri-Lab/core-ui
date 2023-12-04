@@ -554,7 +554,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
     }
 
     static CreateKey(itemData) {
-        return itemData?.id ?? String.MD5(JSON.stringify(Object.sortPropertiesRecursive(itemData))); 
+        return itemData?.__id ?? itemData?.id ?? String.MD5(JSON.stringify(Object.sortPropertiesRecursive(itemData))); 
     }
 
     _handlerEvents() {
