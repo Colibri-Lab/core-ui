@@ -1406,8 +1406,14 @@ Date.prototype.DiffFull = function(dateTo) {
     let y = time1.DiffInYears(time2);
     time1.addYears(y);
 
+    time1 = time1.toShortDateString().toDate();
+    time2 = time2.toShortDateString().toDate();
+
     let m = time1.DiffInMonths(time2);
     time1.addMonths(m);
+
+    time1 = time1.toShortDateString().toDate();
+    time2 = time2.toShortDateString().toDate();
 
     let d = time1.DiffInDays(time2);
     return {days: d > 0 ? d : 0, months: m > 0 ? m : 0, years: y > 0 ? y : 0};
