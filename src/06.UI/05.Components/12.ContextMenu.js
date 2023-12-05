@@ -149,9 +149,9 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
 
     _getOrientationPoint(pointOnParent) {
         const ori = this._orientation[1];
-        const thisBounds = this.container.bounds(true, true);
+        const thisBounds = this._element.bounds(true, true);
         switch(ori) {
-            default:
+            default: 
             case Colibri.UI.ContextMenu.RB: {
                 return {
                     left: pointOnParent.left, 

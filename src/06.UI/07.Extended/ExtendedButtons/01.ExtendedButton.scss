@@ -15,7 +15,7 @@
 
     min-height: 32px;
 
-    .app-component-icon {
+    > .app-component-icon {
         &.app-component-shown {
             display: inline-flex;
         }
@@ -33,7 +33,7 @@
         }
     }
 
-    .app-component-textspan {
+    > .app-component-textspan {
         font-style: normal;
         font-weight: 600;
         font-size: 14px;
@@ -48,17 +48,17 @@
         background: #C4C8D4;
         border: 1px solid rgba(0, 0, 0, 0.05);
         cursor: default;
-        .app-component-textspan {
+        > .app-component-textspan {
             color: #ffffff;
         }
 
     }
         
     &.ui-icon-right {
-        .app-component-icon {
+        > .app-component-icon {
             order: 2;
         }
-        .app-component-textspan {
+        > .app-component-textspan {
             order: 1
         }
     }
