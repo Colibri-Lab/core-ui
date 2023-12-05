@@ -4,7 +4,7 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
     static LT = 'lt';
     static LM = 'lm';
     static RB = 'rb';
-    static RT = 'rt';
+    static RT = 'rt'; 
     static RM = 'rm';
 
     /**

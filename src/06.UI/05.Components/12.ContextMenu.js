@@ -3,7 +3,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
     static LB = 'lb';
     static RB = 'rb';
     static LT = 'lt';
-    static RT = 'rt';
+    static RT = 'rt'; 
 
     /**
      * 
