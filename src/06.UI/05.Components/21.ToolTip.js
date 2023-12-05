@@ -15,7 +15,7 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
      *                rt - container coords, rb - orientation
      */
     constructor(name, container, orientation = [Colibri.UI.ToolTip.RT, Colibri.UI.ToolTip.RB], point = null) {
-        super(name, container, Element.create('div'));
+        super(name, container, Element.create('div')); 
 
         this._arrow = new Colibri.UI.TextSpan('arrow', this._element);
         this._arrow.shown = true;
