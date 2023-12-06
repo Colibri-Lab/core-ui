@@ -1342,10 +1342,12 @@ Date.prototype.addMinute = function (min) { this.setTime(this.getTime() + min * 
 Date.prototype.addHours = function (hours) { this.setTime(this.getTime() + hours * 60 * 60 * 1000); return this; }
 Date.prototype.addDays = function (days) { this.setTime(this.getTime() + days * 24 * 60 * 60 * 1000); return this; }
 Date.prototype.addYears = function (years) { this.setFullYear(this.getFullYear() + years); return this; }
-Date.prototype.addMonths = function (months) { 
+Date.prototype.addMonths = function (months, setDay = true) { 
     let n = this.getDate();
     this.setMonth(this.getMonth() + months);
-    this.setDate(Math.min(n, this.daysInMonth()));
+    if(setDay) {
+        this.setDate(Math.min(n, this.daysInMonth()));
+    }
     return this;
 }
 Date.prototype.isWorkingDay = function(holidays) {
@@ -1373,6 +1375,7 @@ Date.prototype.nextWorkingDay = function (addFactor = 1, holidays = []) {
     } 
     return this; 
 }
+Date.prototype.Copy = function() { let d = new Date(); d.setTime(this.getTime()); return d; }
 Date.prototype.Diff = function (dt) { return parseInt((dt.getTime() - this.getTime()) / 1000); }
 Date.prototype.DiffInMonths = function (dateTo) {
     let d = new Date();
@@ -1406,14 +1409,8 @@ Date.prototype.DiffFull = function(dateTo) {
     let y = time1.DiffInYears(time2);
     time1.addYears(y);
 
-    time1 = time1.toShortDateString().toDate();
-    time2 = time2.toShortDateString().toDate();
-
     let m = time1.DiffInMonths(time2);
-    time1.addMonths(m);
-
-    time1 = time1.toShortDateString().toDate();
-    time2 = time2.toShortDateString().toDate();
+    time1.addMonths(m, false);
 
     let d = time1.DiffInDays(time2);
     return {days: d > 0 ? d : 0, months: m > 0 ? m : 0, years: y > 0 ? y : 0};
