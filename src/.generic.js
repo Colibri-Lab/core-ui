@@ -149,6 +149,14 @@ Array.prototype.avg = function() {
     return this.reduce((a, b) => a + b, 0) / this.length;
 }
 
+Array.prototype.part = function(l) {
+    let ret = [];
+    for(let i=0; i<l; i++) {
+        ret.push(this[i]);
+    }
+    return ret;
+}
+
 // attach the .equals method to Array's prototype to call it on any array
 Array.prototype.equals = function (array) {
     // if the other array is a falsy value, return
