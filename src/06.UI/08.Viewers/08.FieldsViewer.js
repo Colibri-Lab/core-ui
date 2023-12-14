@@ -226,7 +226,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                     try {
                         viewer.value = value[name][Lang.Current] ?? value[name] ?? field.default ?? '';
                     } catch(e) {
-                        viewer.value = value[name] ?? field.default ?? '';
+                        viewer.value = value ? (value[name] ?? field.default ?? '') : '';
                     }
                     if(field.params?.editor) {
                         viewer.AddHandler('Changed', (event, args) => this.Dispatch('EditorChanged', {domEvent: args.domEvent, editor: viewer, field: field, name: name}));

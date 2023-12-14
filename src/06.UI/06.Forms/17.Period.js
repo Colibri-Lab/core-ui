@@ -8,12 +8,12 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
 
         this._input1 = new Colibri.UI.DateSelector(this._name + '-input1', contentContainer);
         this._input1.shown = true;
-        this._input1.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args, {component: this})));
+        this._input1.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args ?? {}, {component: this})));
         this._input1.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
 
         this._input2 = new Colibri.UI.DateSelector(this._name + '-input2', contentContainer);
         this._input2.shown = true;
-        this._input2.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args, {component: this})));
+        this._input2.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args ?? {}, {component: this})));
         this._input2.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
 
         this._text = new Colibri.UI.TextSpan(this._name + '-text', contentContainer);
@@ -42,6 +42,10 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
             this.enabled = this._fieldData.params.enabled;
         }
 
+        if(this._fieldData?.params?.days !== undefined) {
+            this._text.shown = this._fieldData?.params?.days;
+        }
+
     }
 
     Focus() {
@@ -58,12 +62,20 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
     }
 
     get placeholder() {
-        return this._input.placeholder;
+        return this._input2.placeholder ? [this._input1.placeholder, this._input2.placeholder] : this._input1.placeholder;
     }
 
     set placeholder(value) {
-        value = this._convertProperty('String', value);
-        this._input1.placeholder = value;
+        if(Array.isArray(value)) {
+            value[0] = this._convertProperty('String', value[0]);
+            value[1] = this._convertProperty('String', value[1]);
+            this._input1.placeholder = value[0];
+            this._input2.placeholder = value[1];
+
+        } else {
+            value = this._convertProperty('String', value);
+            this._input1.placeholder = value;
+        }
     }
 
     get value() {
