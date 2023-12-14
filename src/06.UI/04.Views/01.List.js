@@ -790,10 +790,10 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
         this.AddHandler('Clicked', this.__ItemSelected);
         this.AddHandler('DoubleClicked', this.__ItemDblSelected);
         this.AddHandler('MouseDown', this.__ItemMouseDown);
-        this.AddHandler('MouseUp', (event, args) => this.parent.parent.Dispatch('ItemMouseUp', args));
+        this.AddHandler('MouseUp', (event, args) => this.list?.Dispatch('ItemMouseUp', args));
 
-        this.AddHandler('ContextMenuIconClicked', (event, args) => this.parent.Dispatch('ContextMenuIconClicked', Object.assign({item: this}, args)));
-        this.AddHandler('ContextMenuItemClicked', (event, args) => this.parent.Dispatch('ContextMenuItemClicked', Object.assign({item: this}, args)));
+        this.AddHandler('ContextMenuIconClicked', (event, args) => this.group.Dispatch('ContextMenuIconClicked', Object.assign({item: this}, args)));
+        this.AddHandler('ContextMenuItemClicked', (event, args) => this.group.Dispatch('ContextMenuItemClicked', Object.assign({item: this}, args)));
 
     }
 
@@ -806,24 +806,24 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
     set selected(value) {
         if (value) {
             this.AddClass('app-component-selected');
-            // this._element.ensureInViewport(this.parent?.parent?.container ?? document.body);
+            // this._element.ensureInViewport(this.list?.container ?? document.body);
         } else {
             this.RemoveClass('app-component-selected');
         }
     }
 
     __ItemSelected(event, args) {
-        this.parent.parent.Dispatch('ItemClicked', Object.assign(args, {item: this, domEvent: args.domEvent}));
+        this.list.Dispatch('ItemClicked', Object.assign(args, {item: this, domEvent: args.domEvent}));
     }
 
     __ItemDblSelected(event, args) {
-        this.parent.parent.Dispatch('ItemDoubleClicked', {item: this, domEvent: args.domEvent});
+        this.list.Dispatch('ItemDoubleClicked', {item: this, domEvent: args.domEvent});
     }
 
     __ItemMouseDown(event, args) {
-        if(this.parent?.parent) {
-            this.parent.parent.selected = this;
-            this.parent?.parent?.Dispatch('ItemMouseDown', {item: this, domEvent: args.domEvent});
+        if(this.list) {
+            this.list.selected = this;
+            this.list?.Dispatch('ItemMouseDown', {item: this, domEvent: args.domEvent});
         }
     }
 
