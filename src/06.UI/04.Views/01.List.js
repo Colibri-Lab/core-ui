@@ -52,7 +52,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
     AddGroup(name, title) {
         const group = new Colibri.UI.List.Group(name, this);
-        group.label = title;
+        group.label.value = title;
         group.shown = true;
         group.hasContextMenu = this.hasContextMenu;
         return group;
@@ -546,8 +546,14 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         super(name, container);
 
         this.AddClass('app-component-list-group');
-        this._span = this._element.append(Element.create('span', {}));
-        this._div = this._element.append(Element.create('div', {}));
+
+        this._span = new Colibri.UI.TextSpan('span', this);
+        this._div = new Colibri.UI.Pane('div', this);
+        this._span.shown = true;
+        this._div.shown = true;
+
+        // this._span = this._element.append(Element.create('span', {}));
+        // this._div = this._element.append(Element.create('div', {}));
 
         this._handlerEvents();
         
@@ -569,6 +575,10 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         });
     }
 
+    ForEach(handler) {
+        this._div.ForEach(handler);
+    }
+
     AddItem(itemData, id = null, selected = false, index = null) {
 
         const newKey = Colibri.UI.List.Group.CreateKey(itemData); 
@@ -576,14 +586,14 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
 
         let control;
         if(foundItem !== -1) {
-            control = this.Children(foundItem);
+            control = this._div.Children(foundItem);
             control.value = itemData;
             if(index) {
-                this.Children(control.name, control, index);
+                this._div.Children(control.name, control, index);
             }
         } else {
             const name = (id || itemData?.id || '_' + Number.unique());
-            control = new Colibri.UI.List.Item('item-' + name, this);
+            control = new Colibri.UI.List.Item('item-' + name, this._div);
             control.shown = true;
             control.selected = selected;
             control.hasContextMenu = this.hasContextMenu;
@@ -592,7 +602,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
 
             if(this.parent?.tag && this.parent?.tag?.params && this.parent?.tag?.params?.sort) {
                 const foundIndex = this.parent.tag.params.sort(control, this);
-                this.Children(name, control, foundIndex);
+                this._div.Children(name, control, foundIndex);
             }
 
         }
@@ -606,18 +616,18 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
     }
 
     FindByKey(key) {
-        return this.indexOf((item) => {
+        return this._div.indexOf((item) => {
             const itemKey = Colibri.UI.List.Group.CreateKey(item.value); 
             return itemKey === key;
         });
     }
 
     get label() {
-        return this._span.html();
+        return this._span;
     }
 
     set label(value) {
-        this._span.html(value);
+        this._span.value = value;
     }
 
     get expandable() {
@@ -645,7 +655,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
     }
 
     get value() {
-        return this.Map((name, item, index) => item.value);
+        return this._div.Map((name, item, index) => item.value);
     }
 
     set value(value) {
@@ -676,7 +686,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
             if(newKeys.indexOf(key) === -1) {
                 const foundIndex = this.FindByKey(key);
                 if(foundIndex !== -1) {
-                    const item = this.Children(foundIndex);
+                    const item = this._div.Children(foundIndex);
                     item.Dispose();
                 }
             }
@@ -691,16 +701,20 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
      * @type {String}
      */
     get emptyMessage() {
-        return this._div.data('empty');
+        return this._div.container.data('empty');
     }
     /**
      * Sets and empty message
      * @type {String}
      */
     set emptyMessage(value) {
-        this._div.data('empty', value);
+        this._div.container.data('empty', value);
     }
 
+    
+    /**
+     * @deprecated
+     */
     set noItemsText(value) {
         this.emptyMessage = value;
     }
@@ -710,13 +724,6 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
      */
     get noItemsText() {
         return this.emptyMessage;
-    }
-
-    /**
-     * @deprecated
-     */
-    get container() {
-        return this._element.querySelector('div');
     }
 
     Expand() {
@@ -755,8 +762,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
 
 
     Clear() {
-        super.Clear();
-        this.container.html('');
+        this._div.Clear();
     }
 
     /**
@@ -765,6 +771,9 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
     set items(value) {
         this.value = value;
     }
+    /**
+     * @deprecated
+     */
     get items() {
         return this.value;
     }
@@ -834,11 +843,11 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
         this._itemData = value;
         
         let html = this._itemData?.title ?? '';
-        if(this.parent?.parent?.rendererComponent) {
+        if(this.list?.rendererComponent) {
             let content = this.Children(this.name + '_renderer');
             if(!content) {
-                const attrs = this.parent.parent.rendererAttrs;
-                let comp = typeof(this.parent.parent.rendererComponent) === 'string' ? this.parent.parent.rendererComponent : this.parent.parent.rendererComponent(this._itemData, this);
+                const attrs = this.list.rendererAttrs;
+                let comp = typeof(this.list.rendererComponent) === 'string' ? this.list.rendererComponent : this.list.rendererComponent(this._itemData, this);
                 if(!(comp instanceof Colibri.UI.Component)) {
                     comp = eval(comp);
                 }
@@ -850,8 +859,8 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
             }
             content.value = this._itemData;
             html = null;
-        } else if(this.parent?.parent?.__renderItemContent) {
-            html = this.parent.parent.__renderItemContent(this._itemData, this);
+        } else if(this.list?.__renderItemContent) {
+            html = this.list.__renderItemContent(this._itemData, this);
         }
         else if(this._itemData?.__render) {
             html = this._itemData.__render.apply(this, [this._itemData, this]);
@@ -868,11 +877,11 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
     }
 
     get contextmenu() {
-        return this.parent.contextmenu;
+        return this.group.contextmenu;
     }
 
     set contextmenu(items) {
-        this.parent.contextmenu = items;
+        this.group.contextmenu = items;
     }
 
     /**
@@ -891,7 +900,11 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
     }
 
     get list() {
-        return this.parent.parent;
+        return this.group?.parent ?? null;
+    }
+
+    get group() {
+        return this.parent?.parent ?? null;
     }
 
 }

@@ -114,6 +114,9 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
             if (this._fieldData?.params?.canbesigned) {
                 sign = new Colibri.UI.TextSpan('sign', container);
             }
+            const size = new Colibri.UI.TextSpan('size', container);
+            size.shown = true;
+            size.value = itemData.file.size.toSizeString(['bytes', 'Kb', 'Mb', 'Gb'], 1024);
             const deleteIcon = new Colibri.UI.TextSpan('delete', container);
 
             filename.AddClass('files-file-name');

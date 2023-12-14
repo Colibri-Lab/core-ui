@@ -26,7 +26,7 @@ Colibri.UI.Icon = class extends Colibri.UI.Component {
             const iconc = eval(value);
             this._element.append(Element.fromHtml(iconc));
         } catch(e) {
-            console.log('Unknown icon: ' + value);
+            console.log('Unknown icon: ' + value); console.trace();
         }
     }
 

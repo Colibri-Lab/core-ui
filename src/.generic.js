@@ -930,6 +930,9 @@ String.prototype.removeXmlEntities = function () {
     s = s.replaceAll('&ndash;', '–');
     s = s.replaceAll('&mdash;', '—');
     s = s.replaceAll('&nbsp;', ' ');
+    s = s.replaceAll('&ldquo;', '“');
+    s = s.replaceAll('&rdquo;', '”');
+    s = s.replaceAll('&hellip;', '…');
     return s;
 };
 
