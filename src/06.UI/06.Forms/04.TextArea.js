@@ -27,6 +27,11 @@ Colibri.UI.Forms.TextArea = class extends Colibri.UI.Forms.Field {
         else {
             this.enabled = this._fieldData.params.enabled;
         }
+        if(this._fieldData?.params?.resize === undefined) {
+            this.resize = 'vertical';
+        } else {
+            this.resize = this._fieldData?.params?.resize;
+        }
 
         this._input.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', {domEvent: e}));
         this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', {domEvent: e}));
@@ -151,6 +156,21 @@ Colibri.UI.Forms.TextArea = class extends Colibri.UI.Forms.Field {
     }
     set tabIndex(value) {
         this._input && this._input.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
+    }
+
+    /**
+     * Can resize textarea
+     * @type {none,vertical,horizontal,both}
+     */
+    get resize() {
+        return this._input.css('resize');
+    }
+    /**
+     * Can resize textarea
+     * @type {none,vertical,horizontal,both}
+     */
+    set resize(value) {
+        this._input.css('resize', value);
     }
 
 }
