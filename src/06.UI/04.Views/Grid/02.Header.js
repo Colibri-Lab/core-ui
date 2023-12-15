@@ -70,6 +70,14 @@ Colibri.UI.Grid.Header = class extends Colibri.UI.Component {
         checkbox.hasThirdState = true;
         checkbox.shown = true;
 
+        checkbox.AddHandler('ContextMenuItemClicked', (event, args) => {
+            this.grid.Dispatch('RowsCheckboxContextMenuItemClicked', Object.assign(args, {rows: this, checkbox: this._checkbox})); 
+        });
+        checkbox.AddHandler('MouseDown', (event, args) => {
+            this.grid.Dispatch('RowsCheckboxClicked', {rows: this, checkbox: this._checkbox, domEvent: args.domEvent}); 
+        });
+
+
         this._handleEvents(columns, checkbox);
         return [columns, checkbox];
     }

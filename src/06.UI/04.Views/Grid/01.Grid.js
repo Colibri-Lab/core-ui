@@ -930,6 +930,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this.RegisterEvent('HighlightedItemChanged', false, 'Поднимается, когда меняется подствеченный элемент');
         this.RegisterEvent('SelectionChanged', false, 'Поднимается, когда выбирают элемент');
         this.RegisterEvent('CheckChanged', false, 'Поднимается, когда изменяется выбор галочек');
+        this.RegisterEvent('RowsCheckboxClicked', false, 'Rows checkbox clicked');
+        this.RegisterEvent('RowsCheckboxContextMenuItemClicked', false, 'Rows checkbox contextmenu clicked');
 
         this.RegisterEvent('ScrolledToBottom', false, 'Поднимается, когда грид доскролили до конца');
 
