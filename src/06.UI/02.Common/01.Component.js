@@ -379,7 +379,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.RegisterEvent('ContextMenuItemClicked', false, 'Когда кликнули на иконку контекстного меню');
         this.RegisterEvent('ShadowClicked', false, 'Когда кликнули на тень');
         this.RegisterEvent('Shown', false, 'Когда элемент компонента получил класс app-component-shown');
+        this.RegisterEvent('ConnectedTo', false, 'When component is connected to Dom successfuly, not when rendered!');
         this.RegisterEvent('Hidden', false, 'Когда с элемента компонта снят класс app-component-shown');   
+        this.RegisterEvent('Disconnected', false, 'When component disconnected from DOM, not when Disposed');   
         this.RegisterEvent('Pasted', false, 'Когда вставили в элемент');
         this.RegisterEvent('DragStart', false, 'Когда элемент начинают перетаскивать');
         this.RegisterEvent('DragEnd', false, 'Когда элемент перестают перетаскивать');
@@ -551,6 +553,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         __domHandlers[eventName] && this.__bindHtmlEvent(eventName, __domHandlers[eventName]);
 
         return super.AddHandler(eventName, handler, prepend, respondent);
+    }
+
+    TriggerEvent(eventName) {
+        const __domHandlers = Colibri.UI.Component.__domHandlers;
+        if(__domHandlers[eventName]) {
+            const domEventName = __domHandlers[eventName].domEvent;
+            this._element.emitHtmlEvents(domEventName);
+        }
     }
 
     __bindHtmlEvent(eventName, args) {
@@ -1650,12 +1660,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         if(performBinding) {
             this.ReloadBinding();
         }
+        this.Dispatch('ConnectedTo');
     }
 
     Disconnect() {
         const parentContainer = this._container;
         this._element.remove();
         this._container = null;
+        this.Dispatch('Disconnected');
         return parentContainer;
     }
 

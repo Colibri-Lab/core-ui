@@ -68,6 +68,11 @@
                 color: #C90000;
             }
 
+            &.ui-disabled {
+                border-bottom: 2px solid transparent;
+                color: #c0c0c0;
+            }
+
         }
 
     }
