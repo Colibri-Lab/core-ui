@@ -11,7 +11,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
      * @param {*} container Component container|parenbt
      * @param {Array} orientation coords on container to point to, and orientation around the container, example: rt, rb; rt - container coords, rb - orientation
      */
-    constructor(name, container, orientation = [Colibri.UI.ContextMenu.RT, Colibri.UI.ContextMenu.RB], point = null) {
+    constructor(name, container, orientation = [Colibri.UI.ContextMenu.RT, Colibri.UI.ContextMenu.RB], point = null, items = []) {
         super(name, container, Element.create('div'));
 
         this.AddClass('app-contextmenu-component');
@@ -28,6 +28,8 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
             this.Hide();
             this.Dispatch('Clicked', {menuData: null, menu: null});
         });
+
+        this.value = items;
     }
 
     get orientation() {
