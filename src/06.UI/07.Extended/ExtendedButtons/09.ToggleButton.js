@@ -31,10 +31,10 @@ Colibri.UI.ToggleButton = class extends Colibri.UI.ExtendedButton {
     _showState() {
         if(this._state === 'expanded') {
             this.AddClass('-expanded').RemoveClass('-collapsed');
-            this.value = '#{ui-toggle-button-expand}';
+            this.value = '#{ui-toggle-button-collapse}';
         } else {
             this.RemoveClass('-expanded').AddClass('-collapsed');
-            this.value = '#{ui-toggle-button-collapse}';
+            this.value = '#{ui-toggle-button-expand}';
         }
         
     }
