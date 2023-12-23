@@ -52,16 +52,26 @@ Colibri.UI.TableRow = class extends Colibri.UI.Component {
         this.shown = true;
     }
 
-    AddCell(name, className = null) {
+    AddCell(name, className = null, value = null) {
         const ret = new Colibri.UI.TableCell(name, this);
         if(className) {
             ret.AddClass(className);
         }
+        if(value) {
+            ret.value = value;
+        }
         return ret;
     }
 
-    AddHeaderCell(name) {
-        return new Colibri.UI.TableHeaderCell(name, this);
+    AddHeaderCell(name, className = null, value = null) {
+        const ret = new Colibri.UI.TableHeaderCell(name, this);
+        if(className) {
+            ret.AddClass(className);
+        }
+        if(value) {
+            ret.value = value;
+        }
+        return ret;
     }
 
 }

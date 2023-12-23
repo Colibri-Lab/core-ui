@@ -789,7 +789,7 @@ String.prototype.CyrToUrl = function (words) {
     return val.trim();
 
 };
-String.prototype.ellipsis = function (length) {
+String.prototype.ellipsis = function (length, hasTitle = false) {
     var str = this;
     if (!str) {
         return str;
@@ -803,7 +803,11 @@ String.prototype.ellipsis = function (length) {
 
 
     let cliplen = parseInt((length - 3) / 2);
-    return str.substr(0, cliplen) + '...' + str.substr(strlen - cliplen - 1, strlen);
+    let ret = str.substr(0, cliplen) + '...' + str.substr(strlen - cliplen - 1, strlen);
+    if(hasTitle) {
+        ret = '<span title="' + this + '">' + ret + '</span>';
+    }
+    return ret;
 };
 String.prototype.reverse = function () { return this.split("").reverse().join(""); }
 String.prototype.hexToString = function () {
