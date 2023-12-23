@@ -125,8 +125,20 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
     }
 
     _convertValue(value, direction = true) {
-        if(this._fieldData?.params?.format === 'percent') {
-            value = direction ? value * (value <= 1 ? 100 : 1) : value / (value <= 1 ? 100 : 1);
+        if(direction) {
+            if(this._fieldData?.params?.format === 'percent') {
+                if(value <= 1) {
+                    this._isShare = true; 
+                    value = value * 100;
+                } else {
+                    this._isShare = false; 
+                }
+                value = value * (value <= 1 ? 100 : 1);
+            }    
+        } else {
+            if(this._isShare && value !== '') {
+                value = value / 100;
+            }
         }
         return value;
     }
