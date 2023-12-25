@@ -22,19 +22,19 @@ Colibri.UI.Switcher = class extends Colibri.UI.Component {
         this._nextButton.value = Colibri.UI.RightArrowIcon;
         this._nextButton.shown = true;
 
-        this.items = d;
+        this.value = d;
         this.itemIndex = 0;
 
         this._prevButton.AddHandler('Clicked', () => {
             this.itemIndex--;
             this.Dispatch('ButtonClicked', {button: 'prevButton', itemIndex: this.itemIndex});
-            this.Dispatch('Changed', this.items[this._itemIndex]);
+            this.Dispatch('Changed', this.value[this._itemIndex]);
         });
 
         this._nextButton.AddHandler('Clicked', () => {
             this.itemIndex++;
             this.Dispatch('ButtonClicked', {button: 'nextButton', itemIndex: this.itemIndex});
-            this.Dispatch('Changed', this.items[this._itemIndex]);
+            this.Dispatch('Changed', this.value[this._itemIndex]);
         });
 
     }
@@ -50,7 +50,7 @@ Colibri.UI.Switcher = class extends Colibri.UI.Component {
      */
     get itemValue() {
         try {
-            return this.items[this._itemIndex].value;
+            return this.value[this._itemIndex].value;
         } catch(e) {
             return null;
         }
@@ -93,15 +93,13 @@ Colibri.UI.Switcher = class extends Colibri.UI.Component {
         if(!this._items) {
             return ;
         }
-
-        this._text.value = this.items[this._itemIndex].title;
-        if (this.infinitySwitching) {
-            this._prevButton.RemoveClass('disabled');
-            this._nextButton.RemoveClass('disabled');
-        } else {
+        this._prevButton.RemoveClass('disabled');
+        this._nextButton.RemoveClass('disabled');
+        this._text.value = this.value[this._itemIndex].title;
+        if (!this._infinitySwitching) {
             if (this._itemIndex === 0) {
                 this._prevButton.AddClass('disabled');
-            } else if (this._itemIndex === (this.items.length - 1)) {
+            } else if (this._itemIndex === (this._items.length - 1)) {
                 this._nextButton.AddClass('disabled');
             } else {
                 this._prevButton.RemoveClass('disabled');
@@ -111,14 +109,37 @@ Colibri.UI.Switcher = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @deprecated
+     */
     get items() {
-        return this._items;
+        return this.value;
     }
 
+    /**
+     * @deprecated
+     */
     set items(value) {
-        this._text.value = value[0].title;
+        this.value = value;
+    }
+
+    /**
+     * Value Array
+     * @type {Array}
+     */
+    get value() {
+        return this._items;
+    }
+    /**
+     * Value Array
+     * @type {Array}
+     */
+    set value(value) {
         this._items = value;
-        // this.Dispatch('Changed', this.items[0]);
+        this._showValue();
+    }
+    _showValue() {
+        this.itemIndex = 0;
     }
 
     /**
