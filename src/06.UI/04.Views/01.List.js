@@ -622,6 +622,10 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         });
     }
 
+    get children() {
+        return this._div.children;
+    }
+
     get label() {
         return this._span;
     }
