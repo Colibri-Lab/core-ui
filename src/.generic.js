@@ -1189,7 +1189,7 @@ Number.prototype.decPlaces = function () {
     }
     return n[1].length;
 };
-Number.prototype.toMoney = function (digits, force, space) {
+Number.prototype.toMoney = function (digits, force = true, space = ' ', useNulls = true) {
     var result = '';
     if (digits == undefined) {
         digits = 2;
@@ -1211,8 +1211,13 @@ Number.prototype.toMoney = function (digits, force, space) {
         result = (!(i == (count - 1) && len % 3 == 0) ? space : '') + price.substr(len - (i + 1) * 3, 3) + result;
     }
 
-    result = price.substr(0, len - count * 3) + result;
-    return result + (dec ? ',' + dec : (force ? ',' + '0'.repeat(digits) : ''));
+    result = price.substring(0, len - count * 3) + result;
+    let ret = result + (dec ? ',' + dec : (force ? ',' + '0'.repeat(digits) : ''));
+    if(!useNulls) {
+        ret = ret.replaceAll('.00', '');
+        ret = ret.replaceAll(',00', '');
+    }
+    return ret;
 };
 Number.prototype.intlFormat = function(type, decimal = 2, unit = null, currencyCode = null) {
     let v = this;
