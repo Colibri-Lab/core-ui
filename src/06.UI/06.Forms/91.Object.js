@@ -206,9 +206,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         value = this._convertProperty('Boolean', value);
         this._enabled = value;
         this.ForEveryField((name, component) => {
-            if(component.enabled) {
-                component.enabled = this._enabled; 
-            }
+            component.enabled = this._enabled; 
         });
         if(value) {
             this._hideAndShow();
