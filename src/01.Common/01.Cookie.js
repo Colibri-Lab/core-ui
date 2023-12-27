@@ -24,8 +24,8 @@ Colibri.Common.Cookie = class {
         return null;
     }
 
-    static Delete(c_name) {
-        document.cookie = c_name + '= ; expires = Thu, 01 Jan 1970 00:00:00 GMT'
+    static Delete(c_name, path, domain) {
+        document.cookie = c_name + '=;max-age=0;' + (path == null ? '; path=/' : '; path=' + path) + (domain ? '; domain=' + domain : '');
     }
     
 }
