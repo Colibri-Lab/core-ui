@@ -1528,6 +1528,16 @@ Date.prototype.setAsEndOfYear = function() {
     this.setDate(31);
     return this;
 };
+Date.prototype.getQuarter = function() {
+    return Math.floor((this.getMonth() + 3) / 3);
+}
+Date.prototype.toQuarterString = function(quarterName = 'квартал', numberOnly = false) {
+    let quarter = this.getQuarter();
+    if (numberOnly) {
+        return quarter;
+    }
+    return quarter + ' ' + quarterName + ' ' + this.getFullYear();
+}
 Date.Now = function () { return new Date(); }
 Date.Ms = function () { return Date.Now().getTime(); }
 Date.Mc = function () { return (window.performance.getEntries()[0].duration + window.performance.now()) * 1e13; }
