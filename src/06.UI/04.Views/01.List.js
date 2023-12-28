@@ -579,6 +579,10 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         this._div.ForEach(handler);
     }
 
+    Items() {
+        return this._div.Children();
+    }
+
     AddItem(itemData, id = null, selected = false, index = null) {
 
         const newKey = Colibri.UI.List.Group.CreateKey(itemData); 
