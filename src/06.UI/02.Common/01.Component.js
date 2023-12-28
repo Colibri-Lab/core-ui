@@ -1712,6 +1712,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.hasShadow = false;
         this.Clear();
 
+        if(this._tipObject) {
+            this._tipObject.remove();
+        }
+
         if (this.parent) {
             this.parent.Children(this.name, null);
             this.parent = null;
