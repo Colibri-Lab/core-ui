@@ -3,7 +3,7 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
 
     constructor(name, container, element) {
         super(name, container, element);
-        this.AddClass('app-component-popup-component');
+        this.AddClass('app-popup-component');
         
         this.tabIndex = null;
         this.AddHandler('ShadowClicked', (event, args) => {
@@ -78,14 +78,14 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
                     const bounds = this.parent.container.bounds();
                     const thisBounds = this.container.bounds();
                     if(this._float === 'right') {
-                        this.top = 0;
-                        this.height = '100%';
-                        this.right = 0;
+                        this.top = bounds.top;
+                        // this.height = '100%';
+                        this.right = bounds.left - thisBounds.outerWidth;
                         this.bottom = null;
                     } else if (this._float === 'left') {
-                        this.top = 0;
-                        this.height = '100%';
-                        this.left = 0;
+                        this.top = bounds.top;
+                        // this.height = '100%';
+                        this.left = bounds.left + bounds.outerWidth;
                         this.bottom = null;
                     } else {
                         this.top = this._connectToBody ? (bounds.top + bounds.outerHeight) : bounds.outerHeight;
@@ -159,6 +159,7 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
             this.Disconnect();
             this.ConnectTo(document.body);
             this.namespace = parent.namespace;
+            this.container.data('for', parent.path);
         }
         this.shown = true;
     }
