@@ -153,9 +153,24 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
             }
             else if(this._lookup?.binding) {
                 let binding = this._lookup.binding;
+                let dependsField = '';
+                if(typeof binding == 'object') {
+                    dependsField = binding.depends;
+                    binding = binding.query;
+                }
                 if (typeof binding == 'string') {
                     let dependsValue = this._getDependsValue('binding');
-                    lookupPromise = App.Store.AsyncQuery(binding, dependsValue);
+                    lookupPromise = new Promise((resolve, reject) => {
+                        App.Store.AsyncQuery(binding).then((results) => {
+                            let ret = [];
+                            for(const result of results) {
+                                if(result[dependsField] == dependsValue) {
+                                    ret.push(result);
+                                }
+                            }
+                            resolve(ret);
+                        });
+                    });
                 }
             }
             else if(this._lookup?.controller) {
