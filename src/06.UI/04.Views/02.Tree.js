@@ -214,6 +214,14 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         this._expandOnClick = value === true || value === 'true';
     }
 
+    /**
+     * Value Array
+     * @type {Array}
+     */
+    set value(value) {
+        this.nodes.value = value;
+    }
+
 
 }
 
@@ -608,6 +616,30 @@ Colibri.UI.TreeNodes = class extends Colibri.UI.Component {
             node.Collapse();
         })
     }
+
+    /**
+     * Value Array
+     * @type {Array}
+     */
+    set value(value) {
+     
+        if(!Array.isArray(value)) {
+            value = Object.values(value);
+        }
+
+        this.Clear();
+
+        for(const vnode of value) {
+            const node = this.Add('node' + vnode.id);
+            node.text = this.tree.__renderText ? this.tree.__renderText(vnode) : vnode?.name ?? vnode?.title ?? 'Node ' + vnode.id;
+            node.tag = vnode;
+            if(vnode.children) {
+                node.nodes.value = vnode.children;
+            }
+        }
+        
+    }
+
 }
 
 
