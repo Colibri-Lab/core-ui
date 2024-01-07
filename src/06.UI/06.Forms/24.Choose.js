@@ -292,7 +292,7 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
                         this.value = this._lastValue;
                         this._lastValue = null;
                     } else {
-                        this._input._renderValue(false);
+                        this._input._renderValue();
                     }
                     this.RemoveClass('app-select-loading');
                     this._setEnabled();

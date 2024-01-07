@@ -53,6 +53,11 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         this._setValue(this._default);
         this._renderValue();
 
+        this.handleVisibilityChange = true;
+        this.AddHandler('VisibilityChanged', (event, args) => {
+            this._input.toolTip = this._input.isValueExceeded ? this._input.value : '';
+        });
+
         this._handleEvents();
     }
 
@@ -221,23 +226,42 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
      * Отобразить значения
      */
     _renderValue() {
-        // this._value = [string] | [{title, value}] | null
-        if(!this._value) {
-            this._input.value = '';
-            return;
+
+        const set = () => {
+            // this._value = [string] | [{title, value}] | null
+            if(!this._value) {
+                this._input.value = '';
+                return;
+            }
+            
+            if (!this.multiple) {
+                if(!Object.isObject(this._value)) {
+                    this._value = Array.findObject(this.values, this._valueField, this._value);
+                }
+                const v = Object.isObject(this._value) ? (this._value[this._titleField] ?? this._value[this._valueField] ?? '') : this._value
+                this._input.value = v[Lang.Current] ?? v;
+            } else {
+                const values = this._value.map((v) => {
+                    if(!Object.isObject(v)) {
+                        v = Array.findObject(this.values, this._valueField, v);
+                    }    
+                    v = Object.isObject(v) ? (v[this._titleField] ?? v[this._valueField] ?? '') : v;
+                    return v[Lang.Current] ?? v;
+                });
+                this._input.value = values.join(', ');
+            }
+            this._input.toolTip = this._input.isValueExceeded ? this._input.value : '';
         }
         
-        if (!this.multiple) {
-            const v = Object.isObject(this._value) ? (this._value[this._titleField] ?? this._value[this._valueField] ?? '') : this._value
-            this._input.value = v[Lang.Current] ?? v;
+        if(!this.values) {
+            Colibri.Common.Wait(Array.isArray(this.values)).then(() => {
+                set();
+            })
         } else {
-            const values = this._value.map((v) => {
-                v = Object.isObject(v) ? (v[this._titleField] ?? v[this._valueField] ?? '') : v;
-                return v[Lang.Current] ?? v;
-            });
-            this._input.value = values.join(', ');
+            set();
         }
-        this._input.toolTip = this._input.isValueExceeded ? this._input.value : '';
+
+        
     }
 
     /**
@@ -315,6 +339,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
     }
     set values(value) {
         this._values = value;
+        this._renderValue();
     }
 
 }
