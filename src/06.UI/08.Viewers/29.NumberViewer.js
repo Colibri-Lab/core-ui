@@ -38,6 +38,9 @@ Colibri.UI.NumberViewer = class extends Colibri.UI.Viewer {
             if(this.field?.params?.decimal) {
                 v = parseFloat(v).toMoney(this.field?.params?.decimal ?? 2);
             }
+            
+            // v = new Intl.NumberFormat(App.NumberFormat).format(v);
+
             if(this.field?.params?.unit) {
                 v = v + ' ' + (Array.isArray(this.field?.params?.unit) ? parseFloat(v).formatSequence(this.field?.params?.unit, false) : this.field?.params?.unit);
             }
