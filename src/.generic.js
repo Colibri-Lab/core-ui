@@ -540,10 +540,10 @@ RegExp.prototype.all = function(str) {
 
 /* String prototype expansion */
 String.prototype.unformatCurrent = function() {
-    return this === '' ? '' : new Intl.NumberFormat(App.NumberFormat).unformat(this);
+    return (this + '') === '' ? '' : new Intl.NumberFormat(App.NumberFormat).unformat(this);
 }
 String.prototype.formatCurrent = function() {
-    return this === '' || isNaN(this) ? '' : new Intl.NumberFormat(App.NumberFormat).format(this);
+    return (this + '') === '' || isNaN(this) ? '' : new Intl.NumberFormat(App.NumberFormat).format(this);
 }
 String.prototype.stripHtml = function () { return this.replace(/<[^>]+>/gim, "").replace(/<\/[^>]+>/gim, "").replace(/&nbsp;/gim, ""); }
 String.prototype.ltrim = function (c) { return this.replace(new RegExp('^' + (c != undefined ? c : '\\s') + '+'), ""); }
@@ -1166,7 +1166,7 @@ String.prototype.bin2hex = function () {
 
 /* number prototype expansion */
 Number.prototype.formatCurrent = function() {
-    return this === '' || isNaN(this) ? '' : new Intl.NumberFormat(App.NumberFormat).format(this);
+    return isNaN(this) ? '' : new Intl.NumberFormat(App.NumberFormat).format(this);
 }
 Number.prototype.toDateFromUnixTime = function () {
     let d = new Date();
