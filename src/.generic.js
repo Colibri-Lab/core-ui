@@ -25,6 +25,16 @@ const isIterable = (value) => {
 };
 
 
+Intl.NumberFormat.prototype.unformat = function(stringNumber) {
+    const thousandSeparator = this.format(11111).replace(/\p{Number}/gu, '');
+    const decimalSeparator = this.format(1.1).replace(/\p{Number}/gu, '');
+
+    return parseFloat(stringNumber
+        .replace(new RegExp('\\' + thousandSeparator, 'g'), '')
+        .replace(new RegExp('\\' + decimalSeparator), '.')
+    );
+}
+
 Array.unique = function (a) { return a.filter((v, i, ab) => { return a.indexOf(v) === i; }); }
 Array.merge = function (a, ar) {
     ar.forEach((o) => a.push(o));
@@ -529,6 +539,12 @@ RegExp.prototype.all = function(str) {
 }
 
 /* String prototype expansion */
+String.prototype.unformatCurrent = function() {
+    return this === '' ? '' : new Intl.NumberFormat(App.NumberFormat).unformat(this);
+}
+String.prototype.formatCurrent = function() {
+    return this === '' || isNaN(this) ? '' : new Intl.NumberFormat(App.NumberFormat).format(this);
+}
 String.prototype.stripHtml = function () { return this.replace(/<[^>]+>/gim, "").replace(/<\/[^>]+>/gim, "").replace(/&nbsp;/gim, ""); }
 String.prototype.ltrim = function (c) { return this.replace(new RegExp('^' + (c != undefined ? c : '\\s') + '+'), ""); }
 String.prototype.rtrim = function (c) { return this.replace(new RegExp((c != undefined ? c : '\\s') + '+$'), ""); }
@@ -1149,6 +1165,9 @@ String.prototype.bin2hex = function () {
 };
 
 /* number prototype expansion */
+Number.prototype.formatCurrent = function() {
+    return this === '' || isNaN(this) ? '' : new Intl.NumberFormat(App.NumberFormat).format(this);
+}
 Number.prototype.toDateFromUnixTime = function () {
     let d = new Date();
     d.setTime(this * 1000);
@@ -2228,4 +2247,3 @@ Math.easeInOutQuad = function(t, b, c, d) {
     t--;
     return -c/2 * (t*(t-2) - 1) + b;
 };
-
