@@ -39,7 +39,12 @@
                                 font-weight: normal;
                                 font-size: 14px;
                                 color: #0076E0;
+                                text-overflow: ellipsis;
+                                white-space: nowrap;
+                                width: 65%;
+                                overflow: hidden;
                             }
+                            
                             [data-object-name="delete"] {
                                 margin-left: 10px;
                             }
