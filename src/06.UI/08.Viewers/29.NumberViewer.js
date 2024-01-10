@@ -35,14 +35,19 @@ Colibri.UI.NumberViewer = class extends Colibri.UI.Viewer {
             v = parseFloat(v).toSizeString(['bytes', 'Kb', 'Mb', 'Gb'], 1024);            
         }
         else {
-            if(this.field?.params?.decimal) {
+            
+            if(this.field?.params?.decimal && !this.field?.params?.forceformat) {
                 v = parseFloat(v).toMoney(this.field?.params?.decimal ?? 2);
             }
-        
+
             if(this.field?.params?.unit) {
                 v = v + ' ' + (Array.isArray(this.field?.params?.unit) ? parseFloat(v).formatSequence(this.field?.params?.unit, false) : this.field?.params?.unit);
-            } else {
-                v = new Intl.NumberFormat(App.NumberFormat).format(v);
+            } else if(this.field?.params?.forceformat) {
+                const options = {};
+                if(this.field?.params?.decimal) {
+                    options.maximumFractionDigits = this.field?.params?.decimal;
+                }
+                v = new Intl.NumberFormat(App.NumberFormat, options).format(v);
             }
         }
 
