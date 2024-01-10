@@ -890,7 +890,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     set className(value) {
         value.split(' ').forEach((v) => {
-            this._element.classList.add(v);
+            if(v) {
+                this._element.classList.add(v);
+            }
         });
     }
 
