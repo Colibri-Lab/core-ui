@@ -84,6 +84,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.AddHandler('MouseEnter', (event, args) => {
             if(this._toolTip) {
                 this._createTipObject();
+                this._setToolTipPositionAndGap();
                 this._tipObject.html(this._toolTip);
                 this._tipObject.showElement();
             }
@@ -1112,6 +1113,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     _setToolTipPositionAndGap(elementObject = null) {
+
         elementObject = elementObject || this._element;
         const bounds = elementObject.bounds();
         const tipBounds = this._tipObject.bounds();
@@ -1171,9 +1173,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._tipObject.classList.add('-' + likeX);
         this._tipObject.classList.add('-' + likeY);
         this._tipObject.css(css);
-
         
-
     }
 
     /**
