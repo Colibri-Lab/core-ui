@@ -953,6 +953,7 @@ String.prototype.removeXmlEntities = function () {
     s = s.replaceAll('&ldquo;', '“');
     s = s.replaceAll('&rdquo;', '”');
     s = s.replaceAll('&hellip;', '…');
+    s = s.replaceAll('&harr;', '⇔');
     return s;
 };
 
