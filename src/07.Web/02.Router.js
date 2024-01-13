@@ -41,7 +41,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
                 this.Dispatch('RouteChanged', {url: this._url, options: this._options});
             }
         };
-        
+
         if(type == Colibri.Web.Router.RouteOnHash) {
             this._initRouterOnHash();
         }
@@ -154,7 +154,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
     }
 
     _setToAddressBar(url, options, replaceOnHistory = false, preventNextEvent = false) {
-        
+
         this._preventNextEvent = preventNextEvent;
 
         const u = url + (Object.countKeys(options) > 0 ? '?' + String.fromObject(options, ['&', '=']) : '');

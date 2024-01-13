@@ -9,7 +9,7 @@ Colibri.Web.Request = class extends Destructable {
      * приоритет на location.hash
      */
     get uri() {
-        let h = location.hash ? location.hash.substring(1) : location.pathname;
+        let h = App.Router.type === Colibri.Web.Router.RouteOnHash ? location.hash.substring(1) : location.pathname;
         if(h.indexOf('?') !== -1) {
             h = h.split('?')[0];
         }
