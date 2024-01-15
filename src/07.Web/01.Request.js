@@ -50,4 +50,12 @@ Colibri.Web.Request = class extends Destructable {
         return h;
     }
 
+    get rootPath() {
+        return location.pathname;
+    }
+
+    set rootPath(value = '/') {
+        history.pushState({url: value}, '', value);
+    }
+
 }
