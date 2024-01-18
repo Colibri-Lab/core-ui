@@ -1178,14 +1178,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     /**
      * Позиция подсказки
-     * @type {String}
+     * @type {left bottom,right bottom,left top,right top}
      */
     get toolTipPosition() {
         return this._toolTipPosition;
     }
     /**
      * Позиция подсказки
-     * @type {String}
+     * @type {left bottom,right bottom,left top,right top}
      */
     set toolTipPosition(value) {
         this._toolTipPosition = value;
