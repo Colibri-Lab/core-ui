@@ -268,6 +268,22 @@ Array.sum = function(ar) {
     return ar.reduce((partialSum, a) => partialSum + a, 0);
 }
 
+Array.organizeObjectKeys = function(objects, keysArray) {
+    let ret = [];
+    for(const obj of objects) {
+        ret.push(Object.organizeKeys(obj, keysArray));
+    }
+    return ret;
+}
+
+Object.organizeKeys = function(obj, keysArray) {
+    let ret = {};
+    for(const key of keysArray) {
+        ret[key] = obj[key];
+    }
+    return ret;
+}
+
 Object.fromObjectAsTrue = function(object) {
     let ret = [];
     Object.forEach(object, (name, value) => {
