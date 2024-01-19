@@ -104,6 +104,10 @@ Array.enumerateRev = function (start, end, callback) {
 };
 
 Array.toObject = function (a) {
+    if(Object.isObject(a)) {
+        return a;
+    }
+    
     let ret = {};
     a.forEach((v, i) => {
         ret[i] = v;
