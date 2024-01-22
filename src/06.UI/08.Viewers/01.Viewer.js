@@ -51,6 +51,9 @@ Colibri.UI.Viewer = class extends Colibri.UI.Component {
     }
 
     set value(value) {
+        if(this.field?.params?.pre) {
+            value = this.field?.params?.pre + ' ' + value;
+        }
         if(this.field?.params?.post) {
             value = value + ' ' + this.field?.params?.post;
         }

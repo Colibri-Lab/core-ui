@@ -330,8 +330,8 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
             this._fieldData.placeholder,
             this._fieldData.selector,
             this._fieldData.default,
-            (this._fieldData.allowempty === undefined ? true : this._fieldData.allowempty),
-            (this._fieldData.clearicon === undefined ? false : this._fieldData.clearicon)
+            ((this._fieldData?.params?.allowempty ?? this._fieldData?.allowempty) === undefined ? true : (this._fieldData?.params?.allowempty ?? this._fieldData?.allowempty)),
+            ((this._fieldData?.params?.clearicon ?? this._fieldData?.clearicon) === undefined ? false : (this._fieldData?.params?.clearicon ?? this._fieldData?.clearicon))
         );
     }
 

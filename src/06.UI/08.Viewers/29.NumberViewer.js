@@ -51,13 +51,6 @@ Colibri.UI.NumberViewer = class extends Colibri.UI.Viewer {
             }
         }
 
-        if(this.field?.params?.pre) {
-            v = this.field?.params?.pre + v;
-        }
-        if(this.field?.params?.post) {
-            v = v + this.field?.params?.post;
-        }
-
         super.value = v;
     }
 
