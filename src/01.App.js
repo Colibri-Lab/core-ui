@@ -19,6 +19,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     } 
 
     RegisterEvents() { 
+        this.RegisterEvent('Event', false, 'When any event dispatched');
         this.RegisterEvent('DocumentReady', false, 'Когда DOM готов');
         this.RegisterEvent('DocumentChanged', false, 'Когда DOM изменился'); 
         this.RegisterEvent('ApplicationReady', false, 'Приложение загружено');

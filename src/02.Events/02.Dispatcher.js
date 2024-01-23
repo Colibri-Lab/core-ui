@@ -117,6 +117,10 @@ Colibri.Events.Dispatcher = class extends Destructable {
             event.sender = this;
         }
 
+        if(App && event.name !== 'Event') {
+            App.Dispatch('Event', {event: event, args: args});
+        }
+
         const eventHandlers = this.__handlers[event.name];
         if (eventHandlers) {
 
