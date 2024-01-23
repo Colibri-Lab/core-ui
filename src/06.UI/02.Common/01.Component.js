@@ -1438,7 +1438,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             return;
         }
 
-        if(typeof value !== 'string') {
+        if (value instanceof Colibri.UI.Component) {
+            this.__renderBoundedValues(value.value);
+            value.AddHandler(['Changed', 'KeyUp'], (event, args) => this.__renderBoundedValues(value.value));
+            return;
+
+        } else if(typeof value !== 'string') {
             this.__renderBoundedValues(value);
             return;
         }

@@ -19,7 +19,9 @@
         line-height: 140%;
         color: #5B6173;   
         font-weight: bold;
-        display: block;     
+        &.app-component-shown {
+            display: block;
+        }
         min-height: 32px;
         &:empty {
             display: none;

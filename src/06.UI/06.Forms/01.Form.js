@@ -296,6 +296,10 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     _renderField(name, fieldData, value, shown = true) {
         const root = this.root || this;
         const component = Colibri.UI.Forms.Field.Create(name, this, fieldData, null, root);
+        if(!component) {
+            console.trace();
+            throw new Error('component ' + name + ' not found');
+        }
         component.shown = shown;
         component.AddHandler('Validated', (event, args) => this.Dispatch('Validated', args));
         component.AddHandler('Changed', (event, args) => {

@@ -88,7 +88,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
         this.AddClass('app-component-field');
 
-        new Colibri.UI.TextSpan(this._name + '-title', this);
+        this._title = new Colibri.UI.TextSpan(this._name + '-title', this);
         this._content = new Colibri.UI.Pane(this._name + '-content', this);
         new Colibri.UI.Pane(this._name + '-container', this._content);
         new Colibri.UI.TextSpan(this._name + '-note', this._content);
@@ -96,7 +96,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
         this._validated = true;
 
-        this.Children(this._name + '-title').shown = true;
+        this._title.shown = true;
         this._content.shown = true;
         this._content.Children(this._name + '-container').shown = true;
         this._content.Children(this._name + '-note').shown = true;
@@ -237,6 +237,13 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this.RegisterEvent('MessageClicked', false, 'Когда ткнули в ошибку')
     }
 
+    /**
+     * Обработка binding
+     */
+    __renderBoundedValues(data, path) {
+        this.value = data;
+    }
+
     _applyRuntimes() {
         let runtime = this._fieldData?.params?.runtime;
         if(runtime) {
@@ -306,12 +313,12 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     }
 
     get title() {
-        return this.Children(this._name + '-title').value;
+        return this._title.value;
     }
     set title(value) {
         if(typeof value === 'function') {
             value(this).then((v) => {
-                this.Children(this._name + '-title').value = v ? (v[Lang.Current] ?? v) : '';
+                this._title.value = v ? (v[Lang.Current] ?? v) : '';
                 if(!value) {
                     this.AddClass('-without-title');
                 }
@@ -320,7 +327,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
                 }                    
             });
         } else {
-            this.Children(this._name + '-title').value = value ? (value[Lang.Current] ?? value) : '';
+            this._title.value = value ? (value[Lang.Current] ?? value) : '';
             if(!value) {
                 this.AddClass('-without-title');
             }
@@ -351,6 +358,10 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
     get field() {
         return this._fieldData;
+    }
+
+    set field(value) {
+        this._fieldData = value;
     }
 
     set inputWidth(value) {
