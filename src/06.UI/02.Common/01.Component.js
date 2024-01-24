@@ -468,6 +468,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     }
 
+    static __nullHandler = (event, args) => {};
+
     static __domHandlers = {
         Clicked: {
             domEvent: 'click',
@@ -550,6 +552,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     __domHandlersAttached = {};
 
     AddHandler(eventName, handler, prepend = false, respondent = this) {
+        handler = handler || Colibri.UI.Component.__nullHandler;
         const __domHandlers = Colibri.UI.Component.__domHandlers;
         __domHandlers[eventName] && this.__bindHtmlEvent(eventName, __domHandlers[eventName]);
 
@@ -2024,15 +2027,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         } 
     }
 
-    Closest(callback) {
-        let parent = this.container;
+    Closest(callback, useContainers = false) {
+        let parent = useContainers ? this.container : this;
         while(parent) {
-            const res = callback(parent, this.container);
-            console.log(res);
+            const res = callback(parent, useContainers ? this.container : this);
             if(res === true) {
                 return parent;
             }    
-            parent = parent.parent();
+            parent = useContainers ? parent.parent() : parent.parent;
         }
         return null;
     }
