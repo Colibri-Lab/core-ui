@@ -798,7 +798,13 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @type {Number}
      */
     set left(value) {
-        this._element.css('left', value !== null ? value + 'px' : null);
+        if(value === null) {
+            this._element.css('left', null);
+        } else if(typeof value == 'string' && (value.indexOf('%') !== -1 || value.indexOf('px') !== -1 || value.includes('calc'))) {
+            this._element.css('left', value);
+        } else {
+            this._element.css('left', value + 'px');
+        }
     }
 
     /**
@@ -814,7 +820,13 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @type {Number}
      */
     set right(value) {
-        this._element.css('right', value !== null ? value + 'px' : null);
+        if(value === null) {
+            this._element.css('right', null);
+        } else if(typeof value == 'string' && (value.indexOf('%') !== -1 || value.indexOf('px') !== -1 || value.includes('calc'))) {
+            this._element.css('right', value);
+        } else {
+            this._element.css('right', value + 'px');
+        }
     }
 
     /**
@@ -830,7 +842,13 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @type {Number}
      */
     set top(value) {
-        this._element.css('top', value !== null ? value + 'px' : null);
+        if(value === null) {
+            this._element.css('top', null);
+        } else if(typeof value == 'string' && (value.indexOf('%') !== -1 || value.indexOf('px') !== -1 || value.includes('calc'))) {
+            this._element.css('top', value);
+        } else {
+            this._element.css('top', value + 'px');
+        }
     }
 
     /**
@@ -846,7 +864,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @type {Number}
      */
     set bottom(value) {
-        this._element.css('bottom', value != null ? value + 'px' : null);
+        if(value === null) {
+            this._element.css('bottom', null);
+        } else if(typeof value == 'string' && (value.indexOf('%') !== -1 || value.indexOf('px') !== -1 || value.includes('calc'))) {
+            this._element.css('bottom', value);
+        } else {
+            this._element.css('bottom', value + 'px');
+        }
+
     }
 
     /**
@@ -1441,6 +1466,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             return;
         }
 
+        this._binding = value;
         if (value instanceof Colibri.UI.Component) {
             this.__renderBoundedValues(value.value);
             value.AddHandler(['Changed', 'KeyUp'], (event, args) => this.__renderBoundedValues(value.value));
@@ -1475,7 +1501,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             }
         };
 
-        this._binding = value;
+        
         let pathsToLoad = this._binding;
         if(this._binding.indexOf(';') !== -1) {
             pathsToLoad = this._binding.split(';');
@@ -1512,8 +1538,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     ReloadBinding() {
-
+        if (this._binding && this._binding instanceof Colibri.UI.Component) {
+            this.__renderBoundedValues(this._binding.value);
+            return;
+        }  
         if(this._storage && this._binding) {
+            
             // this._binding = value;
             let pathsToLoad = this._binding;
             if(this._binding.indexOf(';') !== -1) {

@@ -36,6 +36,7 @@ Colibri.UI.Drag = class {
             const elementBounds = this._element.bounds();
             let newLeft = (e.clientX - containerBounds.left - elementBounds.outerWidth / 2);
             let newTop = (e.clientY - containerBounds.top - elementBounds.outerHeight / 2);
+            
             if(newLeft < -1 * elementBounds.outerWidth / 2) { newLeft = -1 * elementBounds.outerWidth / 2; }
             if(newLeft > containerBounds.outerWidth - elementBounds.outerWidth / 2) { newLeft = containerBounds.outerWidth - elementBounds.outerWidth / 2; }
 

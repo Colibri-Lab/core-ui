@@ -24,8 +24,9 @@ Colibri.UI.NumberViewer = class extends Colibri.UI.Viewer {
             v = formatter.format(parseFloat(v));
         }
         else if(this.field?.params?.format === 'percent') {
+            const isShare = this.field?.params?.isShare ?? false;
             const formatter = new Intl.NumberFormat(App.NumberFormat, {style: 'percent', maximumFractionDigits: this.field?.params?.decimal ?? 2, minimumFractionDigits: this.field?.params?.decimal ?? 2});
-            if(v > 1) {
+            if(!isShare) {
                 v = v / 100;
             }
             v = formatter.format(parseFloat(v));

@@ -1252,7 +1252,7 @@ Number.prototype.toMoney = function (digits, force = true, space = ' ', useNulls
     }
 
     result = price.substring(0, len - count * 3) + result;
-    let ret = result + (dec ? ',' + dec : (force ? ',' + '0'.repeat(digits) : ''));
+    let ret = result + (dec ? ',' + dec : (force ? ',' + '0'.repeat(digits) : '')).trim('.').trim(',');
     if(!useNulls) {
         ret = ret.replaceAll('.00', '');
         ret = ret.replaceAll(',00', '');
@@ -1364,6 +1364,9 @@ Number.prototype.isInt = function () {
 };
 Number.prototype.isFloat = function () {
     return Number.isFloat(this);
+};
+Number.prototype.isNumeric = function () {
+    return true;
 };
 Number.random = function (min, max) {
     return Math.floor(min + Math.random() * (max + 1));

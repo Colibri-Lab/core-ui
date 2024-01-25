@@ -125,21 +125,25 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
     }
 
     _convertValue(value, direction = true) {
+        this._isShare = this._fieldData?.params?.isShare ?? false;
         if(direction) {
             if(this._fieldData?.params?.format === 'percent') {
-                if(value <= 1) {
-                    this._isShare = true; 
-                    value = value * 100;
-                } else {
-                    this._isShare = false; 
-                }
-                value = value * (value <= 1 ? 100 : 1);
-            }    
+                value = value * (this._isShare ? 100 : 1);
+            }
+             
         } else {
             if(this._isShare && value !== '') {
                 value = value / 100;
             }
         }
+        
+        if(value !== '' && value !== null && this._fieldData?.params?.decimal) {
+            try {
+                value = (value * 1.0).toFixed(this._fieldData?.params?.decimal);
+            } catch(e) {
+                // console.log(e, value)
+            }
+        } 
         return value;
     }
 
