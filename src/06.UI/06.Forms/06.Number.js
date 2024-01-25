@@ -137,7 +137,7 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
             }
         }
         
-        if(value !== '' && value !== null && this._fieldData?.params?.decimal) {
+        if(value !== '' && value !== null && this._fieldData?.params?.decimal !== undefined) {
             try {
                 value = (value * 1.0).toFixed(this._fieldData?.params?.decimal);
             } catch(e) {
