@@ -10,9 +10,7 @@
     cursor: pointer;
 
     .toggle {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
+        position: relative;
         background: #ADB2C2;
         border-radius: 45px;
         margin-right: 6px;
@@ -20,6 +18,11 @@
         height: 12px;
         padding: 2px;
         .box {
+            margin-top: 2px;
+            transition: all .2s;
+            left: 2px;
+            top: 0;
+            position: absolute;
             background: #FFFFFF;
             border-radius: 50%;
             width: 8px;
@@ -38,7 +41,9 @@
         .toggle {
             background: #0095FF;
             border-radius: 45px;
-            justify-content: flex-end;
+            .box {
+                left: calc(100% - 10px);
+            }
         }
     }
 
