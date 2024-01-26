@@ -618,6 +618,30 @@ Colibri.UI.TreeNodes = class extends Colibri.UI.Component {
     }
 
     /**
+     * Has visible nodes
+     * @type {Boolean}
+     * @readonly
+     */
+    get hasVisibleNodes() {
+        return this.visibleNodesCount > 0
+    } 
+
+    /**
+     * Visible nodes count
+     * @type {Number}
+     * @readonly
+     */
+    get visibleNodesCount() {
+        let visibleNodes = 0;
+        this.ForEach((name, node) => {
+            if(node.shown) {
+                visibleNodes++;
+            }
+        });
+        return visibleNodes;
+    }
+
+    /**
      * Value Array
      * @type {Array}
      */

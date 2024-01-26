@@ -18,7 +18,7 @@ Colibri.UI.Forms.Email = class extends Colibri.UI.Forms.Field {
         this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', {domEvent: e}));
         this._input.addEventListener('change', (e) => {
             if(this._original != this._input.value) {
-                this.Dispatch('Changed', {domEvent: e, component: this});
+                this.Dispatch('Changed', {domEvent: e, component: this, original: this._original});
             }
             this._original = this._input.value;
         });
