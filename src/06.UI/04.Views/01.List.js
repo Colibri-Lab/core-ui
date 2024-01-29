@@ -852,20 +852,25 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
         
         let html = this._itemData?.title ?? '';
         if(this.list?.rendererComponent) {
-            let content = this.Children(this.name + '_renderer');
+            const attrs = this.list?.rendererAttrs ?? {};
+            let content = this.Children(this._itemData?.name ?? this.name + '_renderer');
             if(!content) {
-                const attrs = this.list.rendererAttrs;
                 let comp = typeof(this.list.rendererComponent) === 'string' ? this.list.rendererComponent : this.list.rendererComponent(this._itemData, this);
                 if(!(comp instanceof Colibri.UI.Component)) {
                     comp = eval(comp);
                 }
-                content = new comp(this.name + '_renderer', this);
+                content = new comp(this._itemData?.name ?? this.name + '_renderer', this);
                 content.shown = true;
+                delete attrs.name;
                 Object.forEach(attrs, (key, value) => {
                     content[key] = value;
                 });
             }
-            content.value = this._itemData;
+            if(attrs?.render) {
+                content[attrs?.render] = this._itemData;
+            } else {
+                content.value = this._itemData;
+            }
             html = null;
         } else if(this.list?.__renderItemContent) {
             html = this.list.__renderItemContent(this._itemData, this);
