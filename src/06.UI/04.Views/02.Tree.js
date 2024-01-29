@@ -35,7 +35,7 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         return this._nodes;
     }
 
-    Search(term) {
+    Search(term, asAjar = false) {
         if(!term) {
             this.allNodes.forEach((node) => node.Show());    
         }
@@ -45,11 +45,15 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
                     node.Hide();
                 }
                 else {
-                    node.Show();
                     let p = node.parentNode;
                     while(p) {
                         p.Show();
                         p = p.parentNode;
+                    }
+                    if(asAjar) {
+                        node.ShowAll();
+                    } else {
+                        node.Show();
                     }
                 }
             }); 
@@ -221,6 +225,7 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
     set value(value) {
         this.nodes.value = value;
     }
+
 
 
 }
@@ -485,6 +490,22 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
     Edit() {
         this.tree.selected = this;
         this.__nodeEditableStart(null, null);
+    }
+
+    ShowAll() {
+        this.Show();
+        const childs = this.Children();
+        for(const child of childs) {
+            child.ShowAll();
+        }        
+    }
+
+    HideAll() {
+        this.Hide();
+        const childs = this.Children();
+        for(const child of childs) {
+            child.HideAll();
+        }        
     }
 
     get tree() {
