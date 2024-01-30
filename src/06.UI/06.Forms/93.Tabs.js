@@ -84,6 +84,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
+        super.readonly = value;
         Object.forEach(this._tabs.components, (name, component) => {
             component.readonly = value; 
         });
