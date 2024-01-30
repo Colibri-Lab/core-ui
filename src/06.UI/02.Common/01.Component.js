@@ -1745,6 +1745,13 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         });
     }
 
+    HideToolTip() {
+        const tip = document.body.querySelector('.tip');
+        if(tip) {
+            tip.hideElement();
+        }
+    }
+
     /**
      * Удаляет компоненту
      */
