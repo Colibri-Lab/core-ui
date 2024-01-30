@@ -5,12 +5,19 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
         this.AddClass('app-buttongroup-component');
 
         this._selectedButton = null;
+
+        this.AddHandler('Clicked', (event, args) => this.__thisClicked(event, args));
         
-        this.AddHandler('ChildsProcessed', (event, args) => {
-            this.ForEach((name, button) => {
-                button.AddHandler('Clicked', (event, args) => this.SelectButton(button));
-            });
-        });
+        // this.AddHandler('ChildsProcessed', (event, args) => {
+        //     this.ForEach((name, button) => {
+        //         button.AddHandler('Clicked', (event, args) => this.SelectButton(button));
+        //     });
+        // });
+    }
+
+    __thisClicked(event, args) {
+        const button = args.domEvent.target.tag('component').Closest(component => component.parent instanceof Colibri.UI.ButtonGroup);
+        this.SelectButton(button);
     }
 
     _registerEvents() {
@@ -48,9 +55,9 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
         const button = new Colibri.UI.Button(name, this);
         button.value = (title[Lang.Current] ?? title);
         button.shown = true;
-        button.AddHandler('Clicked', (event, args) => {
-            this.SelectButton(button);
-        });
+        // button.AddHandler('Clicked', (event, args) => {
+        //     this.SelectButton(button);
+        // });
         return button;
     }
 
