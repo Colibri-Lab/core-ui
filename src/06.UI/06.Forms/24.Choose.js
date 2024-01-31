@@ -122,7 +122,7 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
      * Выбранное значение
      */
     get value() {
-        let value = this._input.value;
+        let value = this._input.value ?? null;
         if(this._fieldData?.params?.emptyAsNull && !value) {
             value = null;
         }
@@ -131,6 +131,9 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
         }
         else if(Object.isObject(value)) {
             value = value[this._fieldData.selector?.value ?? 'value'] ?? value;
+        }
+        if(value === undefined) {
+            value = null;
         }
         return value;
     }
