@@ -557,6 +557,9 @@ RegExp.prototype.all = function(str) {
     }
     return ret;
 }
+RegExp.quote = function(string) {
+    return string.replace(/[.,*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 /* String prototype expansion */
 String.prototype.unformatCurrent = function() {
@@ -568,7 +571,9 @@ String.prototype.formatCurrent = function() {
 String.prototype.stripHtml = function () { return this.replace(/<[^>]+>/gim, "").replace(/<\/[^>]+>/gim, "").replace(/&nbsp;/gim, ""); }
 String.prototype.ltrim = function (c) { return this.replace(new RegExp('^' + (c != undefined ? c : '\\s') + '+'), ""); }
 String.prototype.rtrim = function (c) { return this.replace(new RegExp((c != undefined ? c : '\\s') + '+$'), ""); }
-String.prototype.trimString = function (c) { return this.replace(new RegExp('^' + (c != undefined ? c : '\\s') + '*(.*?)' + (c != undefined ? c : '\\s') + '*$'), '$1'); }
+String.prototype.trimString = function (c) { 
+    return this.replace(new RegExp('^' + (c != undefined ? RegExp.quote(c) : '\\s') + '*(.*?)' + (c != undefined ? RegExp.quote(c) : '\\s') + '*$'), '$1'); 
+}
 String.prototype.trim = function (c) { return this.trimString(c); }
 String.prototype.splitA = function (separator) {
     var retArr = new Array();
@@ -590,6 +595,9 @@ String.prototype.splitA = function (separator) {
 };
 String.prototype.toInt = function () {
     return this / 1;
+};
+String.prototype.toFloat = function () {
+    return this / 1.0;
 };
 String.prototype.isFinite = function () { return isFinite(this); }
 String.prototype.isNumeric = function () { return this.isFinite((this * 1.0)); }
@@ -1248,11 +1256,11 @@ Number.prototype.toMoney = function (digits, force = true, space = ' ', useNulls
     let count = Math.floor(len / 3);
 
     for (let i = 0; i < count; i++) {
-        result = (!(i == (count - 1) && len % 3 == 0) ? space : '') + price.substr(len - (i + 1) * 3, 3) + result;
+        result = (!(i == (count - 1) && len % 3 == 0) ? space : '') + price.substring(len - (i + 1) * 3, 3) + result;
     }
 
     result = price.substring(0, len - count * 3) + result;
-    let ret = result + (dec ? ',' + dec : (force ? ',' + '0'.repeat(digits) : '')).trim('.').trim(',');
+    let ret = (result + (dec ? ',' + dec : (force ? ',' + '0'.repeat(digits) : ''))).trim('.').trim(',');
     if(!useNulls) {
         ret = ret.replaceAll('.00', '');
         ret = ret.replaceAll(',00', '');
