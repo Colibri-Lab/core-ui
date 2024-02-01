@@ -558,7 +558,10 @@ RegExp.prototype.all = function(str) {
     return ret;
 }
 RegExp.quote = function(string) {
-    return string.replace(/[.,*+?^${}()|[\]\\]/g, "\\$&");
+    if(typeof string === 'string') {
+        return string.replace(/[.,*+?^${}()|[\]\\]/g, "\\$&");
+    }
+    return string;
 }
 
 /* String prototype expansion */

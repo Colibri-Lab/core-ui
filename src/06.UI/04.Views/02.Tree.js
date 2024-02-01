@@ -21,6 +21,7 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         this.RegisterEvent('SelectionChanged', false, 'Поднимается, когда ментяется выбранный элемент');
         this.RegisterEvent('NodeEditCompleted', false, 'Поднимается, когда заканчивается редактирование узла');
         this.RegisterEvent('NodeClicked', false, 'Поднимается, когда ткнули в узел');
+        this.RegisterEvent('CheckChanged', false, 'When node checkbox is changed');
     }
 
     _handleEvents() {
@@ -96,7 +97,32 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
      * @param {Colibri.UI.TreeNode} node
      */
     set selected(node) {
+        if(typeof node === 'string') {
+            node = this.FindNode(node);
+        }
         this.Select(node);
+    }
+
+    /**
+     * Array of checks
+     * @type {Array}
+     */
+    get checked() {
+        return Array.from(this.allNodes).filter(v => v.checked == true);
+    }
+    /**
+     * Array of checks
+     * @type {Array}
+     */
+    set checked(value) {
+     
+        for(const v of value) {
+            if(typeof v === 'string') {
+                v = this.FindNode(v);
+            }
+            v.checked = true;
+        }
+        
     }
 
     /**
@@ -226,6 +252,49 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         this.nodes.value = value;
     }
 
+    /**
+     * Value Array
+     * @type {Array}
+     */
+    get value() {
+        return this.nodes.value;
+    }
+
+    /**
+     * Multiple selection
+     * @type {Boolean}
+     */
+    get multiple() {
+        return this._multiple;
+    }
+    /**
+     * Multiple selection
+     * @type {Boolean}
+     */
+    set multiple(value) {
+        value = this._convertProperty('Boolean', value);
+        this._multiple = value;
+        this._showMultiple();
+    }
+    _showMultiple() {
+        Array.from(this.allNodes).map(node => node.multiple = this._multiple);
+    }
+
+
+    /**
+     * Remove hidden nodes
+     * @type {Boolean}
+     */
+    get removeHiddenNodes() {
+        return this._removeHiddenNodes;
+    }
+    /**
+     * Remove hidden nodes
+     * @type {Boolean}
+     */
+    set removeHiddenNodes(value) {
+        this._removeHiddenNodes = value;
+    }
 
 
 }
@@ -233,13 +302,14 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
 Colibri.UI.TreeNode = class extends Colibri.UI.Component {
 
     constructor(name, container) {
-        super(name, container, Element.fromHtml('<div><div><dd drop="before"></dd><em class="expander"></em><em class="icon none"></em><span></span><input type="text" /><dd drop="after"></dd><span class="node-tip"></span></div></div>')[0]);
+        super(name, container, Element.fromHtml('<div><div><dd drop="before"></dd><em class="expander"></em><em class="check"></em><em class="icon none"></em><span></span><input type="text" /><dd drop="after"></dd><span class="node-tip"></span></div></div>')[0]);
         this._nodes = new Colibri.UI.TreeNodes('nodes', this, container.tree);
 
         this._div = this._element.querySelector(':scope > div');
         this._input = this._element.querySelector('input');
         this._text = this._element.querySelector('div span');
         this._tipSpan = this._element.querySelector(':scope > div > .node-tip');
+        this._check = this._element.querySelector(':scope > div > .check');
 
         this._handleEvents();
 
@@ -289,8 +359,13 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
 
     _registerEvents() {
         super._registerEvents();
-        this.RegisterEvent('Expanded', false, 'Поднимается, когда ветка дерева раскрывается');
-        this.RegisterEvent('Collapsed', false, 'Поднимается, когда ветка дерева закрывается');
+        this.RegisterEvent('Expanded', false, 'When node is expanded');
+        this.RegisterEvent('Collapsed', false, 'When node is collapsed');
+        this.RegisterEvent('CheckChanged', false, 'When multiple check changed');
+    }
+
+    __checkChanged(event, args) {
+        this.tree.Dispatch('CheckChanged', args);
     }
 
     _handleEvents() {
@@ -381,10 +456,14 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
     set expanded(value) {
         if(value) {
             this._element.classList.add('expanded');
+            if(this.tree.removeHiddenNodes) {
+                this.nodes.Retreive();
+            } 
             this.Dispatch('Expanded', {node: this._element});
         }
         else {
             this._element.classList.remove('expanded');
+            this.nodes.KeepInMind();
             this.Dispatch('Collapsed', {node: this._element});
         }
     }
@@ -520,7 +599,6 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         this._editable = value;
     }
 
-
     __nodeEditableStart(event, args) {
         if(!this._editable) {
             return true;
@@ -554,6 +632,55 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         }
         this._input.addEventListener('keydown', keydownHandler);
         this._input.addEventListener('blur', blurHandler);
+    }
+
+    /**
+     * Multiple
+     * @type {Boolean}
+     */
+    get multiple() {
+        return this._multiple;
+    }
+    /**
+     * Multiple
+     * @type {Boolean}
+     */
+    set multiple(value) {
+        value = this._convertProperty('Boolean', value);
+        this._multiple = value;
+        if(this._multiple) {
+            this._check.showElement();   
+            if(!this._checkBox) {
+                this._checkBox = new Colibri.UI.Checkbox('checkbox', this._check);
+                this._checkBox.parent = this;
+                this._checkBox.shown = true;
+                this._checkBox.AddHandler('Changed', (event, args) => this.__checkChanged(event, args));
+            }
+        } else {
+            this._check.hideElement();
+            if(this._checkBox) {
+                this._checkBox.Dispose();
+                this._checkBox = null;
+            }
+        }
+    }
+
+    /**
+     * Checked
+     * @type {Boolean}
+     */
+    get checked() {
+        return this._checkBox ? this._checkBox.checked : false;
+    }
+    /**
+     * Checked
+     * @type {Boolean}
+     */
+    set checked(value) {
+        value = this._convertProperty('Boolean', value);
+        if(this._checkBox) {
+            this._checkBox.checked = value;
+        }
     }
 
 }
@@ -591,6 +718,11 @@ Colibri.UI.TreeNodes = class extends Colibri.UI.Component {
         if(index != node.childIndex) {
             this.Children(name, node, index);
         }
+
+        if(this._tree.multiple) {
+            node.multiple = this._tree.multiple;
+        }
+
         return node;
     }
 
