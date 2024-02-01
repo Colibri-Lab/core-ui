@@ -364,6 +364,9 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
     }
 
     __checkChanged(event, args) {
+        if(!this.isLeaf && this._checkBox.checked) {
+            this.nodes.ForEach((name, node) => node.checked = this._checkBox.checked);
+        }
         this.tree.Dispatch('CheckChanged', args);
     }
 
@@ -487,8 +490,14 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
 
     set isLeaf(value) {
         if (value) {
+            if(this._multiple && this._checkBox) {
+                this._checkBox.hasThirdState = false;
+            }
             this._element.classList.add('is-leaf');
         } else {
+            if(this._multiple && this._checkBox) {
+                this._checkBox.hasThirdState = true;
+            }
             this._element.classList.remove('is-leaf');
         }
     }
@@ -655,6 +664,9 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
                 this._checkBox = new Colibri.UI.Checkbox('checkbox', this._check);
                 this._checkBox.parent = this;
                 this._checkBox.shown = true;
+                if(!this.isLeaf) {
+                    this._checkBox.hasThirdState = true;
+                }
                 this._checkBox.AddHandler('Changed', (event, args) => this.__checkChanged(event, args));
             }
         } else {
@@ -682,7 +694,13 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         if(this._checkBox) {
             this._checkBox.checked = value;
         }
+
+        if(!this.isLeaf && value) {
+            this.nodes.ForEach((name, node) => node.checked = value);
+        }
     }
+
+
 
 }
 
