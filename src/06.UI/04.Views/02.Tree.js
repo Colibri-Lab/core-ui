@@ -98,7 +98,7 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
      */
     set selected(node) {
         if(typeof node === 'string') {
-            node = this.FindNode(node);
+            node = this.FindByPath(node);
         }
         this.Select(node);
     }
@@ -115,10 +115,9 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
      * @type {Array}
      */
     set checked(value) {
-     
-        for(const v of value) {
+        for(let v of value) {
             if(typeof v === 'string') {
-                v = this.FindNode(v);
+                v = this.FindByPath(v);
             }
             v.checked = true;
         }
@@ -463,7 +462,9 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         }
         else {
             this._element.classList.remove('expanded');
-            this.nodes.KeepInMind();
+            if(this.tree.removeHiddenNodes) {
+                this.nodes.KeepInMind();
+            }
             this.Dispatch('Collapsed', {node: this._element});
         }
     }
