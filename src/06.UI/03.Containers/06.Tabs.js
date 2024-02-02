@@ -54,7 +54,8 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('TabClicked', false, 'Когда кликнули на вкладку');
-        this.RegisterEvent('SelectionChanged', false, 'Когда выбранная вкладка изменилась');
+        this.RegisterEvent('SelectionChanged', false, 'Deprecated event, must handle Changed');
+        this.RegisterEvent('Changed', false, 'Когда выбранная вкладка изменилась');
     }
 
     _processEvents() {
@@ -108,7 +109,11 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         }
 
         if(currentSelection != newIndex) {
+            
+            this.Dispatch('Changed', {newIndex: newIndex, oldIndex: currentSelection, tab: button, container: container});
+            // @deprecation warning !!
             this.Dispatch('SelectionChanged', {newIndex: newIndex, oldIndex: currentSelection, tab: button, container: container});
+            
         }
 
     }
