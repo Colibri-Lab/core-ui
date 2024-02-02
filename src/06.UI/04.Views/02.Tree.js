@@ -295,6 +295,26 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         this._removeHiddenNodes = value;
     }
 
+    // sets thrid or full state of parent checks
+    _performCheckState(node) {
+        
+        this._allNodes.forEach((n, index) => {
+
+            if(n.nodes.children > 0) {
+                if(n.nodes.allNodesChecked) {
+                    n.checkBox.checked = true;
+                    n.checkBox.thirdState = false;
+                } else if(n.nodes.allNodesUnChecked)  {
+                    n.checkBox.checked = false;
+                    n.checkBox.thirdState = false;
+                } else {
+                    n.checkBox.checked = true;
+                    n.checkBox.thirdState = true;
+                }
+            } 
+        });
+
+    }
 
 }
 
@@ -363,12 +383,6 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         this.RegisterEvent('CheckChanged', false, 'When multiple check changed');
     }
 
-    __checkChanged(event, args) {
-        if(!this.isLeaf && this._checkBox.checked) {
-            this.nodes.ForEach((name, node) => node.checked = this._checkBox.checked);
-        }
-        this.tree.Dispatch('CheckChanged', args);
-    }
 
     _handleEvents() {
         this.AddHandler('Clicked', (sender, args) => {
@@ -664,9 +678,6 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
                 this._checkBox = new Colibri.UI.Checkbox('checkbox', this._check);
                 this._checkBox.parent = this;
                 this._checkBox.shown = true;
-                if(!this.isLeaf) {
-                    this._checkBox.hasThirdState = true;
-                }
                 this._checkBox.AddHandler('Changed', (event, args) => this.__checkChanged(event, args));
             }
         } else {
@@ -693,13 +704,28 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         value = this._convertProperty('Boolean', value);
         if(this._checkBox) {
             this._checkBox.checked = value;
-        }
-
-        if(!this.isLeaf && value) {
-            this.nodes.ForEach((name, node) => node.checked = value);
+            if(!this.isLeaf) {
+                this.nodes.ForEach((name, node) => {
+                    node.checkBox.checked = this._checkBox.checked;
+                });
+            }
+            this.tree._performCheckState(this);
         }
     }
 
+    get checkBox() {
+        return this._checkBox;
+    }
+
+    __checkChanged(event, args) {
+        if(!this.isLeaf) {
+            this.nodes.ForEach((name, node) => {
+                node.checkBox.checked = this._checkBox.checked;
+            });
+        }
+        this.tree._performCheckState(this);
+        this.tree.Dispatch('CheckChanged', args);
+    }
 
 
 }
@@ -834,6 +860,31 @@ Colibri.UI.TreeNodes = class extends Colibri.UI.Component {
             }
         }
         
+    }
+
+    get allNodesChecked() {
+
+        let checked = 0;
+        this.ForEach((name, node) => {
+            if(node.checked) {
+                checked++;
+            }
+        });
+
+        return checked === this.children;
+
+    }
+    get allNodesUnChecked() {
+
+        let checked = 0;
+        this.ForEach((name, node) => {
+            if(node.checked) {
+                checked++;
+            }
+        });
+
+        return checked === 0;
+
     }
 
 }

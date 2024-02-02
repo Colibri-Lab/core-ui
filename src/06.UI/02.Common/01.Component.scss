@@ -37,16 +37,13 @@
     &.-focused {
         box-shadow: $focus-shadow;
     }
-    &::-webkit-scrollbar-track {
-        background-color: $scrollbar-track-color;
-    }
-    &::-webkit-scrollbar {
-        width: $scrollbar-size;
-        height: $scrollbar-size;
-    }
-    &::-webkit-scrollbar-thumb {
-        background-color: $scrollbar-thumb-color;
-    }
+   
+    @include custom-scroll(
+        $scrollbar-size,
+        $scrollbar-track-color,
+        $scrollbar-thumb-color,
+        $scrollbar-thumb-hover-color
+    );
     
     .app-contextmenu-icon-component {
         width: 23px;

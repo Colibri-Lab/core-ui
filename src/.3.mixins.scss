@@ -43,6 +43,7 @@
     &::-webkit-scrollbar-thumb {
         background: $stc;
         border: 0px;
+        outline: none;
     }
 
     /* Handle on hover */
@@ -51,12 +52,24 @@
         border: 0px;
     }
 
-    scrollbar-color: $sthc $bc;
-    scrollbar-width: thin;
+    // scrollbar-color: $sthc $bc;
+    // scrollbar-width: thin;
 
-    -ms-scrollbar-track-color: $bc;
-    -ms-scrollbar-face-color: $sthc;
+    // -ms-scrollbar-track-color: $bc;
+    // -ms-scrollbar-face-color: $sthc;
     
+    // &::-webkit-scrollbar-track {
+    //     background-color: $scrollbar-track-color;
+    // }
+    // &::-webkit-scrollbar {
+    //     width: $scrollbar-size;
+    //     height: $scrollbar-size;
+    // }
+    // &::-webkit-scrollbar-thumb {
+    //     background-color: $scrollbar-thumb-color;
+    // }
+
+
 }
 
 @keyframes rotateInfiniteAnimation { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
