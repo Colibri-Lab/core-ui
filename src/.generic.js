@@ -1259,7 +1259,7 @@ Number.prototype.toMoney = function (digits, force = true, space = ' ', useNulls
     let count = Math.floor(len / 3);
 
     for (let i = 0; i < count; i++) {
-        result = (!(i == (count - 1) && len % 3 == 0) ? space : '') + price.substring(len - (i + 1) * 3, 3) + result;
+        result = (!(i == (count - 1) && len % 3 == 0) ? space : '') + price.substring(len - (i + 1) * 3, len - (i + 1) * 3 + 3) + result;
     }
 
     result = price.substring(0, len - count * 3) + result;
