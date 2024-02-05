@@ -154,7 +154,7 @@ Colibri.IO.Request = class extends Destructable {
 
     _getResponseHeaders(xhr) {
         let responseHeaders = xhr.getAllResponseHeaders();
-        let arr = responseHeaders.trim().split(/[\r\n]+/);
+        let arr = responseHeaders.trimString().split(/[\r\n]+/);
         let headerMap = {};
         arr.forEach(function (line) {
             let parts = line.split(': ');
