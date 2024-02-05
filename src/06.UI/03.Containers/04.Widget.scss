@@ -45,9 +45,41 @@
         }
         [data-object-name="toggle-button"] {
             margin-left: auto;
-            transform: rotate(180deg);
-            transition: transform .2s;
-            background-image: url("data:image/svg+xml,%3Csvg width='16' height='11' viewBox='0 0 16 11' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7.99963 10.5002L-0.000366211 2.50021L1.8663 0.633545L7.99963 6.76688L14.133 0.633545L15.9996 2.50021L7.99963 10.5002Z' fill='%231C1B1F'/%3E%3C/svg%3E%0A");
+            &:not(.-custom) {
+                transition: transform .2s;
+                transform: rotate(180deg);
+                background-image: url("data:image/svg+xml,%3Csvg width='16' height='11' viewBox='0 0 16 11' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7.99963 10.5002L-0.000366211 2.50021L1.8663 0.633545L7.99963 6.76688L14.133 0.633545L15.9996 2.50021L7.99963 10.5002Z' fill='%231C1B1F'/%3E%3C/svg%3E%0A");
+            }
+        }
+        [data-object-name="toggle-button"].-custom {
+            width: auto;
+            &.app-component-shown {
+                display: flex;
+            }
+            align-items: center;
+            justify-content: flex-end;
+            [data-object-name="icon"] {
+                transition: transform .2s;
+                transform: rotate(180deg);
+                width: 24px;
+                height: 24px;
+            }
+            .app-component-textspan {
+                font-size: 14px;
+                font-weight: 400;
+                text-decoration: none;
+                color: #1f2237;
+                &[data-object-name="text1"] {
+                    &.app-component-shown {
+                        display: inline;
+                    }
+                }
+                &[data-object-name="text2"] {
+                    &.app-component-shown {
+                        display: none;
+                    }
+                }
+            }
         }
     }
     .widget-container {
@@ -57,8 +89,23 @@
 
     &.-minimized {
         .widget-header {
-            [data-object-name="toggle-button"] {
+            [data-object-name="toggle-button"]:not(.-custom) {
                 transform: rotate(0deg);
+            }
+            [data-object-name="toggle-button"].-custom {
+                [data-object-name="icon"] {
+                    transform: rotate(0deg);
+                }
+                [data-object-name="text1"] {
+                    &.app-component-shown {
+                        display: none;
+                    }
+                }
+                [data-object-name="text2"] {
+                    &.app-component-shown {
+                        display: inline;
+                    }
+                }
             }
             border-bottom: 0px !important;
             padding-bottom: 0px !important;

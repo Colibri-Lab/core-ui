@@ -133,5 +133,63 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
         this._toggleOnTitle = value;
     }
 
+    /**
+     * Icon for toggle
+     * @type {String}
+     */
+    get toggleIcon() {
+        return this._toggleIcon.iconSVG;
+    }
+    /**
+     * Icon for toggle
+     * @type {String}
+     */
+    set toggleIcon(value) {
+        if(value) {
+            this._headerCloseToggle.AddClass('-custom');
+        } else {
+            this._headerCloseToggle.RemoveClass('-custom');
+        }
+        this._toggleIcon = this._headerCloseToggle.Children('icon');
+        if(!this._toggleIcon) {
+            this._toggleIcon = new Colibri.UI.Icon('icon', this._headerCloseToggle);
+            this._toggleIcon.shown = true;
+        }
+        this._toggleIcon.iconSVG = value;
+    }
+
+    /**
+     * Toggle string
+     * @type {Array}
+     */
+    get toggleText() {
+        return this._toggleText;
+    }
+    /**
+     * Toggle string
+     * @type {Array}
+     */
+    set toggleText(value) {
+        value = this._convertProperty('Array', value);
+        if(value) {
+            this._headerCloseToggle.AddClass('-custom');
+        } else {
+            this._headerCloseToggle.RemoveClass('-custom');
+        }
+        this._toggleText1 = this._headerCloseToggle.Children('text1');
+        this._toggleText2 = this._headerCloseToggle.Children('text2');
+        if(!this._toggleText1) {
+            this._toggleText1 = new Colibri.UI.TextSpan('text1', this._headerCloseToggle);
+            this._toggleText1.shown = true;
+        }
+        if(!this._toggleText2) {
+            this._toggleText2 = new Colibri.UI.TextSpan('text2', this._headerCloseToggle);
+            this._toggleText2.shown = true;
+        }
+        this._toggleText1.value = value[0];
+        this._toggleText2.value = value[1];
+    }
+
+    
 }
 
