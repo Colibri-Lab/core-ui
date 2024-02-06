@@ -579,8 +579,8 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         this._div.ForEach(handler);
     }
 
-    Items() {
-        return this._div.Children();
+    Items(name = null) {
+        return this._div.Children(name);
     }
 
     AddItem(itemData, id = null, selected = false, index = null) {

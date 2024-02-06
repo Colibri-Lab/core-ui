@@ -389,6 +389,9 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         return this._parentField;
     }
 
+    get original() {
+        return this._original;
+    }
 
 
 }
