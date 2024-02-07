@@ -1336,7 +1336,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     Children(name, val = undefined, index = undefined, container = null, childContainer = null) {
         
-        if (name === undefined)
+        if (name === undefined || name === null)
             return this._children;
         if (name === 'firstChild') {
             return this._children[0] ?? null;
