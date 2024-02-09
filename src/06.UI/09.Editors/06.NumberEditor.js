@@ -70,10 +70,19 @@ Colibri.UI.NumberEditor = class extends Colibri.UI.Editor {
     }
 
     get value() {
-        return this._element.value;
+        let v = this._element.value; 
+        if(this._fieldData?.params?.isShare) {
+            v = v / 100;
+        }
+        return v;
     }
 
     set value(value) {
+
+        if(this._fieldData?.params?.isShare) {
+            value = value * 100;
+        }
+
         this._element.value = value ?? '';
         this.Validate();
         if(value) {
