@@ -18,7 +18,7 @@ Colibri.UI.NumberViewer = class extends Colibri.UI.Viewer {
             return;
         }
 
-        let v = !value || !isFinite(value) ? '0' : value;
+        let v = !value || !isFinite(value) ? '0' : value; 
         if(this.field?.params?.format === 'money') {
             const formatter = new Intl.NumberFormat(App.NumberFormat, {style: 'currency', currency: this._field?.params?.currency ?? App.Currency?.code ?? '', maximumFractionDigits: this.field?.params?.decimal ?? 2});
             v = formatter.format(parseFloat(v));
