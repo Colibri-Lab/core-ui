@@ -76,7 +76,7 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
      * @param {Object} params - параметры которые нужно передать
      * @param {Object} headers - заголовки 
      */
-    Call(controller, method, params = null, headers= {}, withCredentials= true, requestKeyword = Date.Mc()) {
+    Call(controller, method, params = null, headers = {}, withCredentials = true, requestKeyword = Date.Mc()) {
 
         const request = new Colibri.IO.Request();
         this._workingRequests[requestKeyword] = request;
@@ -84,6 +84,7 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
         const requestMethod = params && params._requestMethod && params._requestMethod === 'get' ? 'Get' : 'Post'; 
         const requestType = params && params._requestType ? params._requestType : this._requestType;
         const requestCache = params && params._requestCache ? params._requestCache : false;
+        const uploadProgress = params && params._uploadProgress ? params._uploadProgress : false;
         params && delete params._requestMethod;
         params && delete params._requestCache;
         headers.requester = location.hostname;
@@ -119,6 +120,9 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
 
             request.AddHeaders(headers);
             request[requestMethod](url, params, withCredentials, (progressEvent) => {
+                if(uploadProgress) {
+                    uploadProgress(progressEvent, requestKeyword);
+                }
                 this.Dispatch('CallProgress', {event: progressEvent, request: requestKeyword});
             }).then((data) => {
                 

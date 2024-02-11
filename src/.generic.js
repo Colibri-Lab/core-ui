@@ -224,6 +224,14 @@ Array.prototype.multiSort = function(fields, handler = null) {
     return this;
 }
 
+Array.prototype.concatAll = function() {
+    let ret = [];
+    for(const item of this) {
+        ret = [...ret, ...item];
+    }
+    return ret;
+}
+
 Array.prototype.stanDeviate = function() {
     if(this.length === 0) {
         return 0;

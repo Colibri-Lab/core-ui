@@ -1058,13 +1058,16 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @type {boolean}
      */
     set shown(value) {
-        value = this._convertProperty('Boolean', value)
-        if (value === true || value === 'true') {
-            this.AddClass('app-component-shown');
-            this.Dispatch('Shown', {});
-        } else {
-            this.RemoveClass('app-component-shown');
-            this.Dispatch('Hidden', {});
+        const isChanged = value != this.shown;
+        value = this._convertProperty('Boolean', value);
+        if(isChanged) {
+            if (value === true || value === 'true') {
+                this.AddClass('app-component-shown');
+                this.Dispatch('Shown', {});
+            } else {
+                this.RemoveClass('app-component-shown');
+                this.Dispatch('Hidden', {});
+            }
         }
     }
 
