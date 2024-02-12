@@ -230,10 +230,10 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     }
 
     set message(value) {
-        this._error.value = value;
+        this._error && (this._error.value = value);
     }
     get message() {
-        return this._error.value;
+        return this._error?.value ?? '';
     }
 
     set shuffleFieldNames(value) {
