@@ -3,6 +3,8 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
     RenderFieldContainer() {
         this.AddClass('app-component-object-field');
 
+        this._enabled = true;
+
         this._renderFields();
         this._hideAndShow();
 
@@ -203,12 +205,14 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
-        this._enabled = value;
-        this.ForEveryField((name, component) => {
-            component.enabled = this._enabled; 
-        });
-        if(value) {
-            this._hideAndShow();
+        if(this._enabled != value) {
+            this._enabled = value;
+            this.ForEveryField((name, component) => {
+                component.enabled = this._enabled; 
+            });
+            if(value) {
+                this._hideAndShow();
+            }
         }
     }
 

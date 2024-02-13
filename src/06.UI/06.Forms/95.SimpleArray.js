@@ -3,6 +3,7 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
     RenderFieldContainer() {
 
         this.AddClass('app-component-simplearray-field');
+        this._enabled = true;
 
         const contentContainer = this.contentContainer;
 
@@ -72,11 +73,13 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
 
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
-        this._enabled = value;
-        this.contentContainer.ForEach((name, component) => {
-            component.enabled = this._enabled; 
-        });
-        this._link && (this._link.enabled = this._enabled);
+        if(this._enabled != value) {
+            this._enabled = value;
+            this.contentContainer.ForEach((name, component) => {
+                component.enabled = this._enabled; 
+            });
+            this._link && (this._link.enabled = this._enabled);
+        }
     }
 
     get value() {
