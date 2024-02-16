@@ -30,6 +30,15 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
                 return true;
             }
 
+            if(!!this.maxlength && this.type != 'text') {
+                if( (this.value + '').length > this.maxlength ) {
+                    this.value = (this.value + '').substring(0, this.maxlength);
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }
+
             if(this.readonly) {
                 this.Children('clear').shown = false;
             } else if(this._hasClearIcon) {

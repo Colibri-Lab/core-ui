@@ -214,4 +214,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         return null;
     }
 
+    get clientId() {
+        return this._clientId;
+    }
+
 }
