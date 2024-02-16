@@ -10,13 +10,18 @@ Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
         this._list = new Colibri.UI.List('list', contentContainer);
         this._group = this._list.AddGroup('group', '');
         this._list.shown = true;
-        this._list.__renderItemContent = (itemData) => {
-            return this._fieldData.selector && this._fieldData.selector.title ? itemData[this._fieldData.selector.title] : itemData.title;
-        };
         
         this._list.AddHandler('SelectionChanged', (event, args) => this.Dispatch('Changed', Object.assign(args, {component: this})));
         this._list.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
         this._list.AddHandler('KeyDown', (event, args) => this.Dispatch('KeyDown', args));
+
+        if(this._fieldData?.params?.rendererComponent) {
+            this._list.rendererComponent = this._fieldData.params?.rendererComponent;
+        } else {
+            this._list.__renderItemContent = (itemData) => {
+                return this._fieldData.selector && this._fieldData.selector.title ? itemData[this._fieldData.selector.title] : itemData.title;
+            };
+        }
 
         this.ReloadValues();
 
@@ -32,6 +37,7 @@ Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
         else {
             this.enabled = this._fieldData.params.enabled;
         }
+
 
     } 
 
