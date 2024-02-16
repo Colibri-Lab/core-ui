@@ -65,7 +65,11 @@ Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
     }
 
     set value(value) {
-        this._list.selectedValue = value;
+        if(!Object.isObject(value)) {
+            this._list.selectedValue = Array.findObject(this._fieldData.values, 'value', value);
+        } else {
+            this._list.selectedValue = value;
+        }
     }
 
     /**
