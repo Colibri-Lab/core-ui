@@ -155,6 +155,20 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return this._sms;
     }
 
+    get Dialogs() {
+        if(!this._dialogs) {
+            this._dialogs = new Colibri.Devices.Dialogs(this);
+        }
+        return this._dialogs;
+    }
+
+    get Notifications() {
+        if(!this._notifications) {
+            this._notifications = new Colibri.Devices.LocalNotifications(this);
+        }
+        return this._notifications;
+    }
+
     get Info() {
         
         if(!window.hasOwnProperty("cordova")){

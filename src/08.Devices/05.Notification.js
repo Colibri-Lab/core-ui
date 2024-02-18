@@ -62,3 +62,31 @@ Colibri.Devices.Notification = class extends Destructable {
     }
 
 }
+
+
+Colibri.Devices.LocalNotifications = class extends Destructable {
+    
+    _device = null;
+    _plugin = null;
+    _permited = false;
+
+    constructor(device) {
+        super();
+        this._device = device;
+        this._plugin = this._device.Plugin('plugins.notification');
+    }
+
+    Schedule(title, message, trigger, isForeground = true, isLaunch = true, priority = 2) {
+        // trigger = { in: 1, unit: 'second' }, { in: 15, unit: 'minutes' }
+        debugger;
+        this._plugin.local.schedule({
+            title: title,
+            text: message,
+            trigger: trigger,
+            foreground: isForeground,
+            launch: isLaunch,
+            priority: priority,
+        });
+    }
+
+}
