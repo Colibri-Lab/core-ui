@@ -1302,7 +1302,7 @@ Number.prototype.intlFormat = function(type, decimal = 2, unit = null, currencyC
     }
     return v;
 };
-Number.prototype.toTimeString = function (daySplitter) {
+Number.prototype.toTimeString = function (daySplitter, trim00 = true) {
     let days = 0;
     let hours = 0;
     let mins = 0;
@@ -1330,12 +1330,14 @@ Number.prototype.toTimeString = function (daySplitter) {
     let txt = [];
     days > 0 && txt.push((days + '').expand("0", 2));
     hours > 0 && txt.push((hours + '').expand("0", 2));
-    mins > 0 && txt.push((mins + '').expand("0", 2));
-    secs > 0 && txt.push((secs + '').expand("0", 2));
+    txt.push((mins + '').expand("0", 2));
+    txt.push((secs + '').expand("0", 2));
     txt = txt.join(':');
 
-    txt = txt.ltrim("0");
-    txt = txt.ltrim(":");
+    if(trim00) {
+        txt = txt.ltrim("0");
+        txt = txt.ltrim(":");
+    }
     txt = txt.rtrim(":");
 
     if (daySplitter && Array.isArray(daySplitter)) {
