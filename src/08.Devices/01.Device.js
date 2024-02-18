@@ -148,6 +148,13 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return this._camera;
     }
 
+    get Sms() {
+        if(!this._sms) {
+            this._sms = new Colibri.Devices.Sms(this);
+        }
+        return this._sms;
+    }
+
     get Info() {
         
         if(!window.hasOwnProperty("cordova")){
