@@ -5,20 +5,7 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
         this.AddClass('app-component-radio-field');
 
         this._validated = false;
-        const contentContainer = this.contentContainer;
         
-        const ident = Date.Mc();
-
-        const values = this._fieldData.values;
-        Object.values(values).forEach((value) => {
-            contentContainer.container.append(Element.fromHtml('<label><input type="radio" name="' + this.name + '" id="' + ident + '" value="' + value.value + '" /><span>' + (value.title[Lang.Current] ?? value.title) + '</span></label>'))
-        });
-
-        contentContainer.container.querySelectorAll('input').forEach(input => input.addEventListener('click', e => {
-            this._value = e.target.value;
-            this.Dispatch('Changed', {domEvent: e, component: this});
-        }));
-
         if(this._fieldData?.params?.readonly === undefined) {
             this.readonly = false;    
         }
@@ -32,7 +19,10 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
             this.enabled = this._fieldData.params.enabled;
         }
 
+        this._loadValues();
+
     }
+
 
     Focus() {
         this._element.querySelector('input').focus();   
@@ -59,6 +49,61 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
         if(input) {
             input.attr('checked', 'checked');
         }
+
+    }
+
+    /**
+     * Array of values
+     * @type {Array}
+     */
+    get values() {
+        return this._fieldData.values;
+    }
+    /**
+     * Array of values
+     * @type {Array}
+     */
+    set values(value) {
+        value = this._convertProperty('Array', value);
+        this._fieldData.values = value;
+        this._loadValues();
+    }
+    
+    _loadValues() {
+        const contentContainer = this.contentContainer;
+        const ident = Date.Mc();
+
+        let promise = null;
+        let values = this._fieldData.values;
+        if(values instanceof Function) {
+            promise = values(this._fieldData, this);
+        } else {
+            promise = Promise.resolve(values);
+        }
+
+        promise.then((values) => {
+
+            contentContainer.container.html('');
+            let selectedValue = null;
+            Object.values(values).forEach((value) => {
+                if(value?.__selected) {
+                    selectedValue = value.value;
+                }
+                contentContainer.container.append(Element.fromHtml('<label><input type="radio" name="' + this.name + '" id="' + ident + '" value="' + value.value + '"' + (value?.__selected ? ' checked="checked"' : '') + ' /><span>' + (value.title[Lang.Current] ?? value.title) + '</span></label>'))
+            });
+    
+            contentContainer.container.querySelectorAll('input').forEach(input => input.addEventListener('click', e => {
+                this._value = e.target.value;
+                this.Dispatch('Changed', {domEvent: e, component: this});
+            }));
+
+            if(selectedValue) {
+                this._value = selectedValue;
+            }
+    
+        })
+
+
 
     }
 

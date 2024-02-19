@@ -48,17 +48,18 @@ Colibri.Devices.Sms = class extends Destructable {
     }
 
     Send(number, message, intent = 'INTENT') {
-        console.log("number=" + number + ", message= " + message);
-        sms.send(number, message, {
-            replaceLineBreaks: true, // true to replace \n by a new line, false by default
-            android: {
-                intent: intent
-                //intent: '' // send SMS without opening any other app, require : android.permission.SEND_SMS and android.permission.READ_PHONE_STATE
-            }
-        }, () => {
-            alert('Message sent successfully');
-        }, () => {
-            alert('Message Failed:' + e);
+        return new Promise((resolve, reject) => {
+            this._plugin.send(number, message, {
+                replaceLineBreaks: true, // true to replace \n by a new line, false by default
+                android: {
+                    intent: intent
+                    //intent: '' // send SMS without opening any other app, require : android.permission.SEND_SMS and android.permission.READ_PHONE_STATE
+                }
+            }, () => {
+                resolve();
+            }, () => {
+                reject();
+            });    
         });
     }
 

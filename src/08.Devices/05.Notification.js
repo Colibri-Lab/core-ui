@@ -76,17 +76,55 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
         this._plugin = this._device.Plugin('plugins.notification');
     }
 
-    Schedule(title, message, trigger, isForeground = true, isLaunch = true, priority = 2) {
-        // trigger = { in: 1, unit: 'second' }, { in: 15, unit: 'minutes' }
-        debugger;
-        this._plugin.local.schedule({
-            title: title,
-            text: message,
-            trigger: trigger,
-            foreground: isForeground,
-            launch: isLaunch,
-            priority: priority,
+    HasPermnission() {
+        return new Promise((resolve, reject) => {
+            this._device.local.hasPermission((granted) => {
+                this._granted = granted;
+                if(granted) {
+                    resolve();
+                } else {
+                    reject();
+                }
+            });
         });
+    }
+
+    RequestPermission() {
+        return new Promise((resolve, reject) => {
+            if(this._granted) {
+                resolve();
+            } else {
+                this.HasPermnission().catch(() => {
+                    this._device.local.requestPermission(function (granted) {
+                        this._granted = granted;
+                        if(granted) {
+                            resolve();
+                        } else {
+                            reject();
+                        }
+                    });    
+                });
+            }
+        });
+    }
+
+    Schedule(title, message, buttonKey, buttonText, trigger, isForeground = true, isLaunch = true, priority = 2) {
+        // trigger = { in: 1, unit: 'second' }, { in: 15, unit: 'minutes' }
+        this.RequestPermission().then(() => {
+            this._plugin.local.schedule({
+                title: title,
+                text: message,
+                trigger: trigger,
+                foreground: isForeground,
+                launch: isLaunch,
+                priority: priority,
+                actions: [{ id: buttonKey, title: buttonText }]
+            });    
+        })
+    }
+
+    On(event, callback, scope) {
+        this._device.local.un(event, callback, scope);
     }
 
 }
