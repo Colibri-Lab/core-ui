@@ -38,4 +38,22 @@ Colibri.UI.PaneGrid = class extends Colibri.UI.Component {
         this._element.css('grid-template-columns', value);
     }
 
+    /**
+     * Gap of grid
+     * @type {String}
+     */
+    get gap() {
+        return this._element.css('gap');
+    }
+    /**
+     * Gap of grid
+     * @type {String}
+     */
+    set gap(value) {
+        this._element.css('gap', value);
+    }
+    _showGap() {
+        
+    }
+
 }

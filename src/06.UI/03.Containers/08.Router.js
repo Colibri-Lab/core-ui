@@ -117,13 +117,19 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
     __appRouteChanged(event, args) {
         if(args.url.substring(0, this._current.length) === this._current) {
             this.ForEach((name, component) => {
-                const pattern = this._current + (component.routePattern ?? '').replace('#', '.+').replaceAll('?', '.*') + '$';
-                const reg = new RegExp(pattern);
-                if(reg.test(args.url)) {
+                let isPattern = component.routePattern === args.url;
+                let match = args.url;
+                if(component.routeIsRegExp) {
+                    const pattern = this._current + (component.routePattern ?? '').replace('#', '.+').replaceAll('?', '.*') + '$';
+                    const reg = new RegExp(pattern);
+                    isPattern = reg.test(args.url);
+                    match = reg.all(args.url);
+                }
+                if(isPattern) {
                     if(!component.isConnected) {
                         component.ConnectTo(this, null, true);
                     }
-                    component.__processChangeOnRouteSwitch(reg.all(args.url));
+                    component.__processChangeOnRouteSwitch(match);
                 } else {
                     if(component.isConnected) {
                         component.Disconnect();

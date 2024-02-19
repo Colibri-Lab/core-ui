@@ -560,8 +560,10 @@ Object.map = function (obj, func) {
 RegExp.prototype.all = function(str) {
     let ret = [];
     const matches = str.match(this);
-    for(let index = 1; index<matches.length; index++) {
-        ret.push(matches[index]);
+    if(matches) {
+        for(let index = 1; index<matches.length; index++) {
+            ret.push(matches[index]);
+        }
     }
     return ret;
 }

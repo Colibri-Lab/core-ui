@@ -30,6 +30,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._toolTip = '';
         this._toolTipPosition = 'left bottom';
 
+        this._routeIsRegExp = true;
+
         this._storage = null;
         this._binding = '';
         this._clickToCopyHandler = (e) => this.value.copyToClipboard() && App.Notices.Add(new Colibri.UI.Notice('#{ui-copy-info}', Colibri.UI.Notice.Success));
@@ -2036,6 +2038,22 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     set routePattern(value) {
         this._routePattern = value;
+    }
+
+    /**
+     * Is Regexp pattern
+     * @type {Boolean}
+     */
+    get routeIsRegExp() {
+        return this._routeIsRegExp;
+    }
+    /**
+     * Is Regexp pattern
+     * @type {Boolean}
+     */
+    set routeIsRegExp(value) {
+        value = this._convertProperty('Boolean', value);
+        this._routeIsRegExp = value;
     }
 
     __processChangeOnRouteSwitch(patternMatches) {
