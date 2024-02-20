@@ -8,7 +8,7 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
     constructor(name, container) {
         super(name, container);
         this.AddClass('app-success-button-component');
-        this.AddClass('app-upload-button-component');
+        this.AddClass('app-upload-button-component'); 
 
         this._allowSize = 900000000;
         this._allowTypes = '*';
@@ -21,6 +21,9 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
         this._input.addEventListener('change', (event) => {
             this._checkChoosedFiles(this._input.files);
             this._input.value = '';
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
         });
 
     }

@@ -2175,4 +2175,19 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._element.css('text-align', this._halign);
     }
 
+    /**
+     * Key for sending metrix
+     * @type {String}
+     */
+    get metrixKey() {
+        return this._metrixKey;
+    }
+    /**
+     * Key for sending metrix
+     * @type {String}
+     */
+    set metrixKey(value) {
+        this._metrixKey = value;
+    }
+
 }
