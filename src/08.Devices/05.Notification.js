@@ -78,7 +78,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
 
     HasPermnission() {
         return new Promise((resolve, reject) => {
-            this._device.local.hasPermission((granted) => {
+            this._plugin.local.hasPermission((granted) => {
                 this._granted = granted;
                 if(granted) {
                     resolve();
@@ -95,7 +95,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
                 resolve();
             } else {
                 this.HasPermnission().catch(() => {
-                    this._device.local.requestPermission(function (granted) {
+                    this._plugin.local.requestPermission(function (granted) {
                         this._granted = granted;
                         if(granted) {
                             resolve();
@@ -120,7 +120,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
                 priority: priority,
                 actions: [{ id: buttonKey, title: buttonText }]
             });    
-        })
+        });
     }
 
     On(event, callback, scope) {
