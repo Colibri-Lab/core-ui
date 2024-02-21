@@ -76,16 +76,20 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
         this._plugin = this._device.Plugin('plugins.notification');
     }
 
-    HasPermnission() {
+    HasPermission() {
         return new Promise((resolve, reject) => {
-            this._plugin.local.hasPermission((granted) => {
-                this._granted = granted;
-                if(granted) {
-                    resolve();
-                } else {
-                    reject();
-                }
-            });
+            if(this._granted) {
+                resolve();
+            } else {
+                this._plugin.local.hasPermission((granted) => {
+                    this._granted = granted;
+                    if(granted) {
+                        resolve();
+                    } else {
+                        reject();
+                    }
+                });
+            }
         });
     }
 
@@ -94,7 +98,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
             if(this._granted) {
                 resolve();
             } else {
-                this.HasPermnission().catch(() => {
+                this.HasPermission().catch(() => {
                     this._plugin.local.requestPermission(function (granted) {
                         this._granted = granted;
                         if(granted) {
@@ -103,28 +107,46 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
                             reject();
                         }
                     });    
-                });
+                }).then(() => resolve());
             }
         });
     }
 
-    Schedule(title, message, buttonKey, buttonText, trigger, isForeground = true, isLaunch = true, priority = 2) {
+    Schedule(event, title, message, actions = null, trigger = null, isForeground = true, isLaunch = true, priority = 2, id = null) {
         // trigger = { in: 1, unit: 'second' }, { in: 15, unit: 'minutes' }
         this.RequestPermission().then(() => {
-            this._plugin.local.schedule({
+            const params = {
                 title: title,
                 text: message,
-                trigger: trigger,
                 foreground: isForeground,
                 launch: isLaunch,
                 priority: priority,
-                actions: [{ id: buttonKey, title: buttonText }]
-            });    
+            }
+            if(id) {
+                params.id = id;
+            }
+            if(trigger) {
+                params.trigger = trigger;
+            }
+            if(actions && actions.length > 0) {
+                params.actions = actions;
+            }
+            params.event = event;
+            this._plugin.local.schedule(params);    
+        });
+    }
+
+    Cancel(id) {
+        this.RequestPermission().then(() => {
+            this._plugin.local.cancel(id);    
         });
     }
 
     On(event, callback, scope) {
-        this._device.local.un(event, callback, scope);
+        this._device.local.on(event, callback, scope);
+    }
+    Off(event, callback, scope) {
+        this._device.local.on(event, callback, scope);
     }
 
 }
