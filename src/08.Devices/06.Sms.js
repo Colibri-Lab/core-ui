@@ -3,43 +3,44 @@ Colibri.Devices.Sms = class extends Destructable {
     
     _device = null;
     _plugin = null;
-    _permited = false;
+    _permitedSend = false;
 
     constructor(device) {
         super();
         this._device = device;
-        this._plugin = this._device.Plugin('sms');
-        this.CheckPermission();
+        this._pluginSend = this._device.Plugin('sms');
+        // this._pluginRead = this._device.Plugin('SMSRetriever');
+        this.CheckPermissionForSend();
     }
 
-    CheckPermission() {
+    CheckPermissionForSend() {
         return new Promise((resolve, reject) => {
-            this._plugin.hasPermission((hasPermission) => {
-                this._permited = hasPermission;
-                if(this._permited) {
+            this._pluginSend.hasPermission((hasPermission) => {
+                this._permitedSend = hasPermission;
+                if(this._permitedSend) {
                     resolve();
                 } else {
                     reject({error: 'Not set'});
                 }
             }, (e) => { 
-                this._permited = false; 
+                this._permitedSend = false; 
                 reject({error: e});
             });    
         });
     }
 
-    RequestPermission() {
+    RequestPermissionForSend() {
         return new Promise((resolve, reject) => {
-            this.CheckPermission().then(() => {
-                this._permited = true;
+            this.CheckPermissionForSend().then(() => {
+                this._permitedSend = true;
                 resolve();
             }).catch((response) => {
                 if(response.error === 'Not set') {
-                    this._plugin.requestPermission(() => {
-                        this._permited = true;
+                    this._pluginSend.requestPermission(() => {
+                        this._permitedSend = true;
                         resolve();
                     }, (error) => {
-                        this._permited = false;
+                        this._permitedSend = false;
                         reject({error: error});
                     });
                 }
@@ -49,17 +50,66 @@ Colibri.Devices.Sms = class extends Destructable {
 
     Send(number, message, intent = 'INTENT') {
         return new Promise((resolve, reject) => {
-            this._plugin.send(number, message, {
-                replaceLineBreaks: true, // true to replace \n by a new line, false by default
-                android: {
-                    intent: intent
-                    //intent: '' // send SMS without opening any other app, require : android.permission.SEND_SMS and android.permission.READ_PHONE_STATE
+            this.RequestPermissionForSend().then(() => {
+                this._pluginSend.send(number, message, {
+                    replaceLineBreaks: true, // true to replace \n by a new line, false by default
+                    android: {
+                        intent: intent
+                        //intent: '' // send SMS without opening any other app, require : android.permission.SEND_SMS and android.permission.READ_PHONE_STATE
+                    }
+                }, () => {
+                    resolve();
+                }, () => {
+                    reject();
+                });        
+            }).catch(e => {
+                // do nothing
+            });
+        });
+    }
+
+    _smsReceiverCallback(message) {
+        this._arriveCallback(message);
+    }
+
+    RegisterArriveListener(listener) {
+        this._arriveCallback = listener;
+    }
+
+    StartWatch() {
+        document.addEventListener('onSMSArrive', this._smsReceiverCallback);
+        return new Promise((resolve, reject) => {
+            this._pluginRead.startWatch((strSuccess) => {
+                if(strSuccess === 'SMS_WATCHING_STARTED' || strSuccess === 'SMS_WATCHING_ALREADY_STARTED') {
+                    resolve();
+                } else {
+                    reject(strSuccess);
                 }
-            }, () => {
-                resolve();
-            }, () => {
-                reject();
+            }, (strError) => {
+                reject(strError);
             });    
+        });
+    }
+
+    StopWatch() {
+        return new Promise((resolve, reject) => {
+            this._pluginRead.stopWatch((strSuccess) => {
+                resolve();
+            }, (strError) => {
+                reject(strError);
+            });
+        });
+    }
+
+    GetHash() {
+        return new Promise((resolve, reject) => {
+            this._pluginRead.getHashString((strHash) => {
+                alert(strHash)
+                resolve(strHash);
+            }, (error) => {
+                alert(error);
+                reject(error);
+            });
         });
     }
 

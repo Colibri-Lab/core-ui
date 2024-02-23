@@ -82,7 +82,6 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
         }
 
         promise.then((values) => {
-
             contentContainer.container.html('');
             let selectedValue = null;
             Object.values(values).forEach((value) => {
@@ -100,8 +99,10 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
             if(selectedValue) {
                 this._value = selectedValue;
             }
-    
-        })
+            
+            this._showValue();
+
+        });
 
 
 
