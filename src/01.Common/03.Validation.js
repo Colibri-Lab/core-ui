@@ -41,8 +41,8 @@ Colibri.Common.Validation = class {
         } else {
             var checkDigit = function (inn, coefficients) {
                 var n = 0;
-                for (var i in coefficients) {
-                    n += coefficients[i] * inn[i];
+                for (let i = 0; i<coefficients.length; i++) {
+                    n += coefficients[i] * parseInt(inn[i]);
                 }
                 return parseInt(n % 11 % 10);
             };
