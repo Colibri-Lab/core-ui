@@ -107,7 +107,6 @@ Colibri.Devices.Sms = class extends Destructable {
                 alert(strHash)
                 resolve(strHash);
             }, (error) => {
-                alert(error);
                 reject(error);
             });
         });
