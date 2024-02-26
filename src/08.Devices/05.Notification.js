@@ -63,6 +63,26 @@ Colibri.Devices.Notification = class extends Destructable {
 
 }
 
+Colibri.Devices.LocalNotificationsEmulator = class extends Destructable {
+    hasPermission(success, fail) {
+        success(true);
+    }
+    requestPermission(success, fail) {
+        success(true);
+    }
+    schedule(params) {
+        //
+    }
+    cancel(id) {
+        // 
+    }
+    on(event, callback, scope) {
+        // 
+    }
+    un(event, callback, scope) {
+        // 
+    }
+}
 
 Colibri.Devices.LocalNotifications = class extends Destructable {
     
@@ -73,7 +93,11 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
     constructor(device) {
         super();
         this._device = device;
-        this._plugin = this._device.Plugin('plugins.notification');
+        if(this._device.isWeb) {
+            this._plugin = {local: new Colibri.Devices.LocalNotificationsEmulator()};
+        } else {
+            this._plugin = this._device.Plugin('plugins.notification');
+        }
     }
 
     HasPermission() {
@@ -146,7 +170,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
         this._device.local.on(event, callback, scope);
     }
     Off(event, callback, scope) {
-        this._device.local.on(event, callback, scope);
+        this._device.local.un(event, callback, scope);
     }
 
 }
