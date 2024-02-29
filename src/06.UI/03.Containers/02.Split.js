@@ -99,7 +99,7 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
         return this._orientation;
     }
     /**
-     * @type {String}
+     * @type {vertical,horizontal}
      */
     set orientation(value) {
         this._orientation = value;

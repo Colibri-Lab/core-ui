@@ -368,4 +368,44 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
     set showRowsCount(value) {
         this._titleCellCountSpan.shown = value;
     }
+
+    SortById(callback) {
+        
+        let list = [];
+        this.ForEveryRow((name, row) => {
+            list.push(row.value.id);
+        });
+
+        list = list.sort((a, b) => callback(a, b));
+        let index = 0;
+        for(const id of list) {
+            const row = this.Children('data' + id);
+            this.Children(row.name, row, index);
+            index++;
+        }
+        
+
+    }
+
+    Update(value) {
+        
+        const existing = [];
+        for(const item of value) {
+            const exists = this.Children('data' + item.id);
+            if(exists) {
+                exists.value = item;
+            } else {
+                this.Add('data' + item.id, item);
+            }
+            existing.push(item.id);
+        }
+
+        this.ForEach((name, row) => {
+            if(existing.indexOf(row.value.id) === -1) {
+                row.Dispose();
+            }
+        });
+
+    }
+
 }
