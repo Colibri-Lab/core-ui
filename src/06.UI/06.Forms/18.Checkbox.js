@@ -60,6 +60,11 @@ Colibri.UI.Forms.Checkbox = class extends Colibri.UI.Forms.Field {
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
         this._input.readonly = value;
+        if(value) {
+            this.AddClass('app-component-readonly');
+        } else {
+            this.RemoveClass('app-component-readonly');
+        }
     }
 
     get value() {
