@@ -239,7 +239,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
                     this._value = Array.findObject(this.values, this._valueField, this._value);
                 }
                 const v = Object.isObject(this._value) ? (this._value[this._titleField] ?? this._value[this._valueField] ?? '') : this._value
-                this._input.value = v[Lang.Current] ?? v;
+                this._input.value = v ? v[Lang.Current] : v;
             } else {
                 const values = this._value.map((v) => {
                     if(!Object.isObject(v)) {
