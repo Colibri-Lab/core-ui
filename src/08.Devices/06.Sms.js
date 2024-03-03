@@ -56,6 +56,7 @@ Colibri.Devices.Sms = class extends Destructable {
     Send(number, message, intent = 'INTENT') {
         return new Promise((resolve, reject) => {
             this.RequestPermissionForSend().then(() => {
+                console.log(number, message);
                 this._pluginSend.send(number, message, {
                     replaceLineBreaks: true, // true to replace \n by a new line, false by default
                     android: {
