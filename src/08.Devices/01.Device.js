@@ -39,11 +39,20 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         }
         else {
             this._platform = cordova.platformId;
-            this._themeDetectionPlugin = this.Plugin('AutoTheme');
-            if(this._themeDetectionPlugin) {
-                this._themeDetectionPlugin.getTheme((isdark) => {
-                    this._theme = isdark ? Colibri.Devices.Device.Dark : Colibri.Devices.Device.Light;
-                });
+            if(this.isIOs) {
+                this._themeDetectionPlugin = this.Plugin('ThemeDetection');
+                this._themeDetectionPlugin.isDarkModeEnabled((result) => {
+                    this._theme = result.value ? Colibri.Devices.Device.Dark : Colibri.Devices.Device.Light;
+                }, () => {
+                    this._theme = Colibri.Devices.Device.Light;
+                })
+            } else {
+                this._themeDetectionPlugin = this.Plugin('AutoTheme');
+                if(this._themeDetectionPlugin) {
+                    this._themeDetectionPlugin.getTheme((isdark) => {
+                        this._theme = isdark ? Colibri.Devices.Device.Dark : Colibri.Devices.Device.Light;
+                    });
+                }
             }
             this._pushNotifications = this.Plugin('pushNotification');
             if(this._pushNotifications) {
