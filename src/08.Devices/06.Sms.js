@@ -15,17 +15,22 @@ Colibri.Devices.Sms = class extends Destructable {
 
     CheckPermissionForSend() {
         return new Promise((resolve, reject) => {
-            this._pluginSend.hasPermission((hasPermission) => {
-                this._permitedSend = hasPermission;
-                if(this._permitedSend) {
-                    resolve();
-                } else {
-                    reject({error: 'Not set'});
-                }
-            }, (e) => { 
-                this._permitedSend = false; 
-                reject({error: e});
-            });    
+            if(this._device.isIOs) {
+                this._permitedSend = true;
+                resolve();
+            } else {
+                this._pluginSend.hasPermission((hasPermission) => {
+                    this._permitedSend = hasPermission;
+                    if(this._permitedSend) {
+                        resolve();
+                    } else {
+                        reject({error: 'Not set'});
+                    }
+                }, (e) => { 
+                    this._permitedSend = false; 
+                    reject({error: e});
+                });
+            }
         });
     }
 
