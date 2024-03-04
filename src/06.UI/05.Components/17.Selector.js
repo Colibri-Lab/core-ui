@@ -489,12 +489,15 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         if(!this._searchable) {
             this._input.readonly = true;
         } else if(this._readonly) {
-            this.AddClass('app-component-readonly');
             this._input.readonly = true;
         }
         else {
-            this.RemoveClass('app-component-readonly');
             this._input.readonly = false;
+        }
+        if(this._readonly) {
+            this.AddClass('app-component-readonly');
+        } else {
+            this.RemoveClass('app-component-readonly');
         }
     }
 
