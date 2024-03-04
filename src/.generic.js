@@ -875,6 +875,12 @@ String.prototype.hexToString = function () {
     return string;
 };
 
+String.prototype.replaceLastPart = function(splitter, newPart) {
+    let parts = this.split(splitter);
+    parts.splice(-1);
+    return parts.join(splitter) + splitter + newPart;
+}
+
 String.fromObject = function (object, delimiters, callback) {
     let ret = [];
     Object.forEach(object, function (name, value) {
