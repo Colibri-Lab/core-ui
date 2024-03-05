@@ -1445,13 +1445,16 @@ Date.prototype.addMonths = function (months, setDay = true) {
 Date.prototype.isWorkingDay = function(holidays) {
     return !([0, 6].indexOf(this.getDay()) !== -1 || holidays.indexOf(this.toShortDateString()) !== -1);
 }
-Date.prototype.addWorkingDays = function (days, holidays) { 
+Date.prototype.isHoliday = function(holidays) {
+    return !(holidays.indexOf(this.toShortDateString()) !== -1);
+}
+Date.prototype.addWorkingDays = function (days, holidays, holidaysOnly = false) { 
     let addFactor = days < 0 ? -1 : 1;
 
     while(true) {
 
         this.addDays(addFactor);
-        if(this.isWorkingDay(holidays)) {
+        if(holidaysOnly ? this.isHoliday(holidays) : this.isWorkingDay(holidays)) {
             days -= addFactor;
         }
         if(days === 0) {
@@ -1461,8 +1464,8 @@ Date.prototype.addWorkingDays = function (days, holidays) {
 
     return this; 
 }
-Date.prototype.nextWorkingDay = function (addFactor = 1, holidays = []) {
-    while([0, 6].indexOf(this.getDay()) !== -1 || holidays.indexOf(this.toShortDateString()) !== -1) {
+Date.prototype.nextWorkingDay = function (addFactor = 1, holidays = [], holidaysOnly = false) {
+    while(!(holidaysOnly ? this.isHoliday(holidays) : this.isWorkingDay(holidays))) {
         this.addDays(1 * addFactor);
     } 
     return this; 
