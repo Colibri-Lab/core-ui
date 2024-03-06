@@ -142,8 +142,11 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
     AddActions(groupName, actions) {
         this._plugin.local.addActions(groupName, actions);
     }
+    RemoveActions(groupName) {
+        this._plugin.local.removeActions(groupName);
+    }
 
-    Schedule(event, title, message, actions = null, trigger = null, isForeground = true, isLaunch = true, priority = 2, id = null) {
+    Schedule(title, message, actions = null, trigger = null, isForeground = true, isLaunch = true, priority = 2, id = null, progressBar = null, sound = true) {
         // trigger = { in: 1, unit: 'second' }, { in: 15, unit: 'minutes' }
         this.RequestPermission().then(() => {
             const params = {
@@ -152,6 +155,8 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
                 foreground: isForeground,
                 launch: isLaunch,
                 priority: priority,
+                sticky: true,
+                sound: sound
             }
             if(id) {
                 params.id = id;
@@ -162,10 +167,12 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
             if(actions && actions.length > 0) {
                 params.actions = actions;
             }
-            if(event) {
-                params.event = event;
+            if(progressBar) {
+                params.progressBar = progressBar;
             }
-            this._plugin.local.schedule(params);    
+            
+            this._plugin.local.schedule(params);
+
         });
     }
 
