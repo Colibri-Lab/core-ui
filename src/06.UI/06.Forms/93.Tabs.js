@@ -53,7 +53,9 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
             const component = Colibri.UI.Forms.Field.Create(name, this._tabs.container, field, this, this.root);
             component.message = false;
             component.shown = true;
-            component.AddHandler('Changed', (event, args) => this.Dispatch('Changed', {component: this}))
+            component.AddHandler('Changed', (event, args) => {
+                this.Dispatch('Changed', {component: this});
+            });
 
             const tabButton = new Colibri.UI.Button(component.name + '-button', this._tabs.header);
             tabButton.value = tabTitle;

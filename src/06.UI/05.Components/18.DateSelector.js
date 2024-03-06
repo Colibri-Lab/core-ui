@@ -187,6 +187,7 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
     }
 
     set value(value) {
+        const oldValue = this._hiddenElement.value;
         if(!value) {
             this._hiddenElement.value = '';
         } else if(typeof value == 'string') {
@@ -197,7 +198,9 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
             this._hiddenElement.value = value && value?.date ? value?.date?.toDate()?.toShortDateString() : '';
         }
         this._showValue();
-        this.Dispatch('Changed');
+        if(oldValue != this._hiddenElement.value) {
+            this.Dispatch('Changed');
+        }
     }
 
     get value() {
