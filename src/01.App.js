@@ -50,135 +50,140 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         csrfToken = null
     ) {
 
-        if(this._initialized) {
-            return;
-        }
+        return new Promise((resolve, reject) => {
 
-        this._name = name;
-        this._version = version;
-
-        Colibri.IO.Request.type = requestType;
-        if(remoteDomain) {
-            this._remoteDomain = remoteDomain;
-        }
-        else {
-            this._remoteDomain = '';
-        }
-
-        this._actions = new Colibri.Common.HashActions(); 
-        this._store = new Colibri.Storages.Store('app', {});
-        this._request = new Colibri.Web.Request();
-        this._router = new Colibri.Web.Router(routerType);
-        this._device = new Colibri.Devices.Device();
-        this._browser = new Colibri.Common.BrowserStorage();
-        this._db = new Colibri.Web.IndexDB(this._name, this._version);
-        this._dateformat = dateformat;
-        this._numberformat = numberformat;
-        this._currency = currency;
-        this._csrfToken = csrfToken;
-
-        Colibri.Common.WaitForBody().then(() => {
-            this.InitializeModules();
-            if(showLoader) {
-                if(loadingIcon) {
-                    this.Loader.icon = loadingIcon
-                    this.Loader.showIcon = true;
-                }
-                this.Loader.Show();
-                this.Loader.StartProgress(200, 1.5);
+            if(this._initialized) {
+                resolve();
+                return;
             }
-            this._loadingBox = new Colibri.UI.Loading('app-loading-box', document.body, Element.create('div'), true);
-            this._confirmDialog = new Colibri.UI.ConfirmDialog('confirm', document.body, 600);
-            this._promptDialog = new Colibri.UI.PromptDialog('prompt', document.body, 600);
-            this._alertDialog = new Colibri.UI.AlertDialog('alert', document.body, 600);
-            this._customToolTip = new Colibri.UI.ToolTip('tooltip', document.body);
-            this._loadingBallun = new Colibri.UI.LoadingBallun('ballun', document.body);
-
-
-        });
+    
+            this._name = name;
+            this._version = version;
+    
+            Colibri.IO.Request.type = requestType;
+            if(remoteDomain) {
+                this._remoteDomain = remoteDomain;
+            }
+            else {
+                this._remoteDomain = '';
+            }
+    
+            this._actions = new Colibri.Common.HashActions(); 
+            this._store = new Colibri.Storages.Store('app', {});
+            this._request = new Colibri.Web.Request();
+            this._router = new Colibri.Web.Router(routerType);
+            this._device = new Colibri.Devices.Device();
+            this._browser = new Colibri.Common.BrowserStorage();
+            this._db = new Colibri.Web.IndexDB(this._name, this._version);
+            this._dateformat = dateformat;
+            this._numberformat = numberformat;
+            this._currency = currency;
+            this._csrfToken = csrfToken;
+    
+            Colibri.Common.WaitForBody().then(() => {
+                this.InitializeModules();
+                if(showLoader) {
+                    if(loadingIcon) {
+                        this.Loader.icon = loadingIcon
+                        this.Loader.showIcon = true;
+                    }
+                    this.Loader.Show();
+                    this.Loader.StartProgress(200, 1.5);
+                }
+                this._loadingBox = new Colibri.UI.Loading('app-loading-box', document.body, Element.create('div'), true);
+                this._confirmDialog = new Colibri.UI.ConfirmDialog('confirm', document.body, 600);
+                this._promptDialog = new Colibri.UI.PromptDialog('prompt', document.body, 600);
+                this._alertDialog = new Colibri.UI.AlertDialog('alert', document.body, 600);
+                this._customToolTip = new Colibri.UI.ToolTip('tooltip', document.body);
+                this._loadingBallun = new Colibri.UI.LoadingBallun('ballun', document.body);
+            });
+                
             
-        
-        // Делаем всякое после того, как DOM загрузился окончательно
-
-        Colibri.Common.WaitForDocumentReady().then(() => { 
-            this.Dispatch('DocumentReady');
-
-            const headers = {};
-            if(this._csrfToken) {
-                headers['X-CSRF-TOKEN'] = this._csrfToken;
-            }
-            Colibri.IO.Request.Post(this._remoteDomain + '/settings', {}, headers).then((response) => {
-                if(response.status != 200) {
-                    App.Notices.Add(new Colibri.UI.Notice('#{ui-messages-cannotgetsettings}'));
+            // Делаем всякое после того, как DOM загрузился окончательно
+            Colibri.Common.WaitForDocumentReady().then(() => { 
+                this.Dispatch('DocumentReady');
+    
+                const headers = {};
+                if(this._csrfToken) {
+                    headers['X-CSRF-TOKEN'] = this._csrfToken;
                 }
-                else {
-                    const settings = (typeof response.result === 'string' ? JSON.parse(response.result) : response.result);
-                    this._store.Set('app.settings', settings);
-
-                    if(initComet && settings.comet && settings.comet.host) {
-                        this._comet = new Colibri.Web.Comet(settings.comet);
-                        this._comet.AddHandler(['MessageReceived', 'MessagesMarkedAsRead', 'MessageRemoved'], (event, args) => {
-                            if(!document.hasFocus()) {
-                                this.StartFlashTitle();
-                            }
-                            else {
+                Colibri.IO.Request.Post(this._remoteDomain + '/settings', {}, headers).then((response) => {
+                    if(response.status != 200) {
+                        App.Notices.Add(new Colibri.UI.Notice('#{ui-messages-cannotgetsettings}'));
+                    }
+                    else {
+                        const settings = (typeof response.result === 'string' ? JSON.parse(response.result) : response.result);
+                        this._store.Set('app.settings', settings);
+    
+                        if(initComet && settings.comet && settings.comet.host) {
+                            this._comet = new Colibri.Web.Comet(settings.comet);
+                            this._comet.AddHandler(['MessageReceived', 'MessagesMarkedAsRead', 'MessageRemoved'], (event, args) => {
+                                if(!document.hasFocus()) {
+                                    this.StartFlashTitle();
+                                }
+                                else {
+                                    this.StopFlashTitle();
+                                }
+                            });
+                        } 
+                        document.addEventListener('visibilitychange', (e) => {
+                            
+                            if(initComet && settings.comet && settings.comet.host) {
                                 this.StopFlashTitle();
                             }
+    
+                            if(document.hidden) {
+                                this.Dispatch('DocumentHidden', {});
+                            }
+                            else {
+                                this.Dispatch('DocumentShown', {});
+                            }
                         });
-                    } 
-                    document.addEventListener('visibilitychange', (e) => {
-                        
-                        if(initComet && settings.comet && settings.comet.host) {
-                            this.StopFlashTitle();
-                        }
-
-                        if(document.hidden) {
-                            this.Dispatch('DocumentHidden', {});
-                        }
+    
+                        if(settings?.screen?.theme === 'follow-device') {
+                            this._device.AddHandler('ThemeChanged', (event, args) => {
+                                this.SetTheme(args.current);
+                            });
+                            this.SetTheme(this._device.Theme);
+                        }    
                         else {
-                            this.Dispatch('DocumentShown', {});
+                            this.SetTheme(settings?.screen?.theme ?? 'light');
                         }
-                    });
-
-                    if(settings?.screen?.theme === 'follow-device') {
-                        this._device.AddHandler('ThemeChanged', (event, args) => {
-                            this.SetTheme(args.current);
-                        });
-                        this.SetTheme(this._device.Theme);
-                    }    
-                    else {
-                        this.SetTheme(settings?.screen?.theme ?? 'light');
+    
                     }
-
-                }
-
-                // запускаем обработку экшенов в документе
-                this._actions.HandleDomReady();
-                this._router.HandleDomReady();
-
-                if(showLoader) {
-                    Colibri.Common.Delay(1500).then(() => {
-                        this.Loader.StopProgress();  
-                        this.Loader.Hide();
-                    });   
-                }
-                 
-                Colibri.UI.UpdateMaxZIndex();
-                this.Dispatch('ApplicationReady');
- 
-            }).catch(response => {
-                console.log(response);
-                App.Notices.Add(new Colibri.UI.Notice('Невозможно получить настройки!'));
+    
+                    // запускаем обработку экшенов в документе
+                    this._actions.HandleDomReady();
+                    this._router.HandleDomReady();
+    
+                    if(showLoader) {
+                        Colibri.Common.Delay(1500).then(() => {
+                            this.Loader.StopProgress();  
+                            this.Loader.Hide();
+                        });   
+                    }
+                     
+                    Colibri.UI.UpdateMaxZIndex();
+                    this.Dispatch('ApplicationReady');
+                    resolve();
+     
+                }).catch(response => {
+                    console.log(response);
+                    App.Notices.Add(new Colibri.UI.Notice('Невозможно получить настройки!'));
+                    reject();
+                });
+    
+    
+                this._notices = new Colibri.UI.Notices('notices', document.body);
+    
+                
+                
             });
-
-
-            this._notices = new Colibri.UI.Notices('notices', document.body);
-
-            
-            
+    
+            this._initialized = true;
         });
 
-        this._initialized = true;
+
 
     }
 

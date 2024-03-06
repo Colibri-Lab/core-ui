@@ -30,6 +30,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     _registerEvents() {
         this.RegisterEvent('OrientationChanged', false, 'Когда ориентация была изменена');
         this.RegisterEvent('ThemeChanged', false, 'Когда тема изменена');
+        this.RegisterEvent('NotificationTapped', false, 'When push notification is tapped');
     }
 
     _detect() {
@@ -60,9 +61,11 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
                     console.log(token);
                 }, e => console.log(e));
                 this._pushNotifications.tapped((payload) => {
-                    console.log(payload);
+                    this.Dispatch('NotificationTapped', {payload: payload})
                 }, e => console.log(e));
-            }       
+            }    
+
+            this._localNotifications = new Colibri.Devices.LocalNotifications(this);
         }
 
     }
@@ -86,6 +89,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             };
         }
         
+        
     }
 
     get platform() {
@@ -106,6 +110,58 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     get isWeb() {
         return this._platform === Colibri.Devices.Device.Web;
+    }
+
+    get backgroundMode() {
+        return this._backgroundMode;
+    }
+
+    set backgroundMode(value) {
+        if(!cordova?.plugins?.backgroundMode) {
+            throw 'Please enable \'cordova-plugin-background-mode\' plugin';
+        }
+
+        this._backgroundMode = value;
+        cordova.plugins.backgroundMode.setEnabled(value);
+        if(value) {
+            cordova.plugins.backgroundMode.setDefaults({ silent: true });
+            // cordova.plugins.backgroundMode.overrideBackButton();
+            cordova.plugins.backgroundMode.on('activate', function () {
+                cordova.plugins.backgroundMode.disableWebViewOptimizations();
+            });
+        }
+    
+    }
+
+    WakeUp() {
+        if(!cordova?.plugins?.backgroundMode) {
+            throw 'Please enable \'cordova-plugin-background-mode\' plugin';
+        }
+        cordova.plugins.backgroundMode.wakeUp();
+    }
+
+    Unlock() {
+        if(!cordova?.plugins?.backgroundMode) {
+            throw 'Please enable \'cordova-plugin-background-mode\' plugin';
+        }
+        cordova.plugins.backgroundMode.unlock();
+    }
+
+    SafeArea() {
+        return new Promise((resolve, reject) => {
+            if(this.isIOs) {
+                if(!window?.plugins?.safearea) {
+                    reject('Can not fund \'cordova-plugin-safearea\' plugin');
+                }
+                window.plugins.safearea.get((result) => {
+                    resolve(result);
+                }, (e) => {
+                    reject(e);
+                });
+            } else {
+                resolve({top: 0, bottom: 0});
+            }
+        });
     }
 
     Plugin(query) {
@@ -172,10 +228,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     }
 
     get Notifications() {
-        if(!this._notifications) {
-            this._notifications = new Colibri.Devices.LocalNotifications(this);
-        }
-        return this._notifications;
+        return this._localNotifications;
     }
 
     get Info() {

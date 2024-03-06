@@ -557,6 +557,7 @@ Object.map = function (obj, func) {
     return newObject;
 };
 
+
 RegExp.prototype.all = function(str) {
     let ret = [];
     const matches = str.match(this);
