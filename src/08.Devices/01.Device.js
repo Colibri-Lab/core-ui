@@ -254,4 +254,11 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return this._theme;
     }
 
+    get GeoLocation() {
+        if(!this._geoLocation) {
+            this._geoLocation = new Colibri.Devices.GeoLocation(this);
+        }
+        return this._geoLocation;
+    }
+
 }

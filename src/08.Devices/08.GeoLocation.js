@@ -1,5 +1,5 @@
 
-Colibri.Devices.Dialogs = class extends Destructable {
+Colibri.Devices.GeoLocation = class extends Destructable {
 
     _device = null;
     _plugin = null;
@@ -8,7 +8,6 @@ Colibri.Devices.Dialogs = class extends Destructable {
     constructor(device) {
         super();
         this._device = device;
-        this._plugin = this._device.Plugin('geolocation');
     }
 
     Detect(options = { maximumAge: 3000, timeout: 5000, enableHighAccuracy: true }) {
@@ -17,7 +16,15 @@ Colibri.Devices.Dialogs = class extends Destructable {
                 resolve(position);
             }, (error) => {
                 reject(error);
-            });    
+            }, options);    
+        });
+    }
+
+    Watch(callback, options = { maximumAge: 3000, timeout: 5000, enableHighAccuracy: true }) {
+        return new Promise((resolve, reject) => {
+            navigator.geolocation.watchPosition(callback, (error) => {
+                reject(error);
+            }, options);
         });
     }
 
