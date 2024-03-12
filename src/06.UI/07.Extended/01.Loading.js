@@ -19,4 +19,23 @@ Colibri.UI.Loading = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * Loading icon
+     * @type {String}
+     */
+    get icon() {
+        return this._icon;
+    }
+    /**
+     * Loading icon
+     * @type {String}
+     */
+    set icon(value) {
+        this._icon = value;
+        this._showicon();
+    }
+    _showicon() {
+        this._element.html(eval(this._icon));
+    }
+
 }
