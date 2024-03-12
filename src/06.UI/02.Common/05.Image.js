@@ -10,13 +10,17 @@ Colibri.UI.Image = class extends Colibri.UI.Component {
     }
 
     set source(value) {
+        
         this._element.css('background-image', value);
-        const img = new Image();
-        img.onload = (e) => {
-            this.width = img.width;
-            this.height = img.height;
-        }
-        img.src = value.replaceAll(/\w+\(/, '').replaceAll(')', '');
+        value = value.replaceAll(/\w+\(/, '').replaceAll(')', '');
+        if(value.indexOf('data:') === -1) {
+            const img = new Image();
+            img.onload = (e) => {
+                this.width = img.width;
+                this.height = img.height;
+            }
+            img.src = value;
+        } 
 
     }
 
