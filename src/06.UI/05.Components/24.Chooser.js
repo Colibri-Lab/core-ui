@@ -75,7 +75,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         if(this._chooser) {
             const component = this._chooser;
             if(!this._chooserObject) {
-                this._chooserObject = new component(this.name + '-chooser', document.body, this._selector?.params || {}, this._values);
+                this._chooserObject = new component(this.name + '-chooser', document.body, this._selector?.params || {}, this._values, this._selector.title, this._selector.value);
                 this._chooserObject.AddHandler('Choosed', (event, args) => {
                     this.value = args.value;
                     this.valueObject = args.valueObject;
@@ -239,14 +239,14 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
                     this._value = Array.findObject(this.values, this._valueField, this._value);
                 }
                 const v = Object.isObject(this._value) ? (this._value[this._titleField] ?? this._value[this._valueField] ?? '') : this._value
-                this._input.value = v ? v[Lang.Current] : v;
+                this._input.value = Lang ? Lang.Translate(v) : v;
             } else {
                 const values = this._value.map((v) => {
                     if(!Object.isObject(v)) {
                         v = Array.findObject(this.values, this._valueField, v);
                     }    
                     v = Object.isObject(v) ? (v[this._titleField] ?? v[this._valueField] ?? '') : v;
-                    return v[Lang.Current] ?? v;
+                    return Lang ? Lang.Translate(v) : v;
                 });
                 this._input.value = values.join(', ');
             }
@@ -295,7 +295,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         return this._placeholder;
     }
     set placeholder(value) {
-        this._placeholder = value ? value[Lang.Current] ?? value : '';
+        this._placeholder = Lang ? Lang.Translate(value) : value;
         this._input.placeholder = this._placeholder;
         this._renderValue(false);
     }
