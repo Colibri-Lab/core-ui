@@ -26,12 +26,18 @@ Colibri.UI.Switcher = class extends Colibri.UI.Component {
         this.itemIndex = 0;
 
         this._prevButton.AddHandler('Clicked', () => {
+            if(this._prevButton.ContainsClass('disabled')) {
+                return false;
+            }
             this.itemIndex--;
             this.Dispatch('ButtonClicked', {button: 'prevButton', itemIndex: this.itemIndex});
             this.Dispatch('Changed', this.value[this._itemIndex]);
         });
 
         this._nextButton.AddHandler('Clicked', () => {
+            if(this._nextButton.ContainsClass('disabled')) {
+                return false;
+            }
             this.itemIndex++;
             this.Dispatch('ButtonClicked', {button: 'nextButton', itemIndex: this.itemIndex});
             this.Dispatch('Changed', this.value[this._itemIndex]);
