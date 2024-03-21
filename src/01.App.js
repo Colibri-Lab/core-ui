@@ -153,8 +153,8 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                     }
     
                     // запускаем обработку экшенов в документе
-                    this._actions.HandleDomReady();
                     this._router.HandleDomReady();
+                    this._actions.HandleDomReady();
     
                     if(showLoader) {
                         Colibri.Common.Delay(1500).then(() => {

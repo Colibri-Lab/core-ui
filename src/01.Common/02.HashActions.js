@@ -9,14 +9,12 @@ Colibri.Common.HashActions = class {
     }
     
     init() {
-        document.addEventListener('click', (e) => {
-            if(e.target?.href && e.target.href.indexOf('#action=') !== -1) {
-                this._handleAction(e.target.href.split('#')[1]);
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            }
-        });
+        this.__clickEvent = (e) => {
+            this._handleAction(e.target.data('action').substring(1));
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        };
     }
     
     HandleDomReady() {
@@ -24,16 +22,23 @@ Colibri.Common.HashActions = class {
         this._handleAction(location.hash.substring(1));
     }
     
+    
     InitDOMHandlers() {
-        document.querySelectorAll('[data-action]').forEach((element) => { 
-            element.addEventListener('click', (е) => {
-                let el = e.currentTarget;
-                location.hash = '#' + el.dataset.action;
-                е.stopPropagation();
-                e.preventDefault();
-                return false;
+
+        Colibri.Common.StartTimer('actions-timer', 500, () => {
+
+            document.querySelectorAll('a[href*="#action"]').forEach((a) => {
+                a.data('action', a.attr('href'))
+                a.attr('href', 'javascript:void(0)');
             });
-        }); 
+
+            document.querySelectorAll('[data-action]').forEach((element) => { 
+                element.removeEventListener('mousedown', this.__clickEvent);
+                element.addEventListener('mousedown', this.__clickEvent);
+            }); 
+    
+        });
+        
     }
     
     AddHandler(action, handler) {
