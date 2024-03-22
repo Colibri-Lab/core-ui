@@ -171,6 +171,10 @@ Array.prototype.part = function(l) {
     return ret;
 }
 
+Array.prototype.last = function(n) {
+    return this.splice(this.length - n, this.length);
+}
+
 // attach the .equals method to Array's prototype to call it on any array
 Array.prototype.equals = function (array) {
     // if the other array is a falsy value, return
