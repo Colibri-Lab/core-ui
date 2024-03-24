@@ -83,6 +83,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             if(fieldData.params && fieldData.params.condition) {
                 const condition = fieldData.params.condition;
                 if(condition.field) {
+
                     const type = condition?.type == 'disable' ? 'enabled' : 'shown';
                     const empty = condition?.empty || false;
                     const inverse = condition?.inverse || false;

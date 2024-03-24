@@ -249,9 +249,8 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         
             if(fieldComponent && fieldData.params && fieldData.params.condition) {
 
-                
                 const condition = fieldData.params.condition;
-                if(condition.field) {        
+                if(condition.field) {     
                     const type = condition?.type == 'disable' ? 'enabled' : 'shown';            
                     const empty = condition?.empty || false;
                     const inverse = condition?.inverse || false;
@@ -270,6 +269,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
                         }
                     } else if(condition?.method) {
                         conditionResult = eval(condition.method);
+                        console.log(condition.method, data, conditionResult);
                     }
                     if(inverse) {
                         conditionResult = !conditionResult;

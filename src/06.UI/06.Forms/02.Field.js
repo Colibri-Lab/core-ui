@@ -179,6 +179,9 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         if(this._fieldData?.params?.className) {
             this.AddClass(this._fieldData?.params?.className);
         }
+        if(this._fieldData?.attrs?.class) {
+            this.AddClass(this._fieldData?.attrs?.class);
+        }
 
         if(this._fieldData?.break) {
             this._element.before(Element.create('div', {class: 'break'}, {}));
