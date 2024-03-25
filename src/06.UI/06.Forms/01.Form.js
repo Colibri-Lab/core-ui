@@ -98,7 +98,11 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                             conditionResult = fieldValue === undefined || (fieldValue !== undefined && fieldValue === condition.value);
                         }
                     } else if(condition?.method) {
-                        conditionResult = eval(condition.method);
+                        if(typeof condition.method === 'string') {
+                            conditionResult = eval(condition.method);
+                        } else {
+                            conditionResult = condition.method(fieldValue, data, type, empty, inverse, fieldData);
+                        }
                     }
 
                     if(inverse) {
