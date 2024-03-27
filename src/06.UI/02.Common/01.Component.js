@@ -587,7 +587,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             respondent,
             handler
         };
-
         respondent.addEventListener(domEvent, handler);
     }
 

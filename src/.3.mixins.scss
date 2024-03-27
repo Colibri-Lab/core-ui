@@ -1,27 +1,33 @@
 
-@mixin custom-placeholder($color, $fontFamily, $size) {
+@mixin custom-placeholder($color, $fontFamily: '', $size: '') {
     &::-webkit-input-placeholder { /* Edge */
         color: $color;
-        @if ($fontFamily) {
+        @if ($fontFamily != '') {
             font-family: $fontFamily;
         }
-        font-size: $size;
+        @if ($size != '') {
+            font-size: $size;
+        }
     } 
     
     &:-ms-input-placeholder { /* Internet Explorer 10-11 */
         color: $color;
-        @if ($fontFamily) {
+        @if ($fontFamily != '') {
             font-family: $fontFamily;
         }
-        font-size: $size;
+        @if ($size != '') {
+            font-size: $size;
+        }
     }
     
     &::placeholder {
         color: $color;
-        @if ($fontFamily) {
+        @if ($fontFamily != '') {
             font-family: $fontFamily;
         }
-        font-size: $size;
+        @if ($size != '') {
+            font-size: $size;
+        }
     }
 }
 
