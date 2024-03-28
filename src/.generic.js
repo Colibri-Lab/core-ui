@@ -836,7 +836,7 @@ String.prototype.CyrToUrl = function (words) {
     if (words == undefined) words = 3;
 
     let val = this.Transliterate()
-        .trim()
+        .trimString()
         .replaceArray([" ", "|", ".", ",", "(", ")", "[", "]", "!", "@", ":", ";", "*", "#", "$", "%", "^"], "-")
         .replaceArray(["'", "?", '"', '…', '&quot;', "\\", "/", '«', '»', /[0-9]/i], "")
         .replaceAll('--', '-')
@@ -845,10 +845,10 @@ String.prototype.CyrToUrl = function (words) {
     val = val.split('-');
     let v = [];
     val.forEach(function (vv) {
-        v.push(vv.trim());
+        v.push(vv.trimString());
     });
     val = v.splice(0, words).join('-');
-    return val.trim();
+    return val.trimString();
 
 };
 String.prototype.ellipsis = function (length, hasTitle = false) {
@@ -922,7 +922,7 @@ String.prototype.replaceDateMonthName = function (months) {
 };
 String.prototype.toCamelCase = function (splitter, firstIsCapital) {
     splitter = splitter || '-';
-    if (this.trim().indexOf('--') === 0) { return this; }
+    if (this.trimString().indexOf('--') === 0) { return this; }
 
     let parts = this.split(splitter);
     let ret = [];
@@ -933,7 +933,7 @@ String.prototype.toCamelCase = function (splitter, firstIsCapital) {
 };
 String.prototype.fromCamelCase = function (splitter) {
     splitter = splitter || '-';
-    if (this.trim().indexOf('--') === 0) { return this; }
+    if (this.trimString().indexOf('--') === 0) { return this; }
 
     return this.replaceAll(new RegExp('([A-Z])'), (v) => { return splitter + v.toLowerCase(); }).rtrim('-').ltrim('-');
 
@@ -957,7 +957,7 @@ String.prototype.isDate = function () {
 };
 String.prototype.makeFio = function () {
     const parts = this.split(' ');
-    return (parts[0].capitalize() + ' ' + (parts.length > 1 ? (parts[1].substring(0, 1) + '. ' + (parts.length > 2 ? parts[2].substring(0, 1) + '.' : '')) : '')).trim();
+    return (parts[0].capitalize() + ' ' + (parts.length > 1 ? (parts[1].substring(0, 1) + '. ' + (parts.length > 2 ? parts[2].substring(0, 1) + '.' : '')) : '')).trimString();
 };
 String.prototype.extractExt = function () {
     const parts = this.split('.');
@@ -1284,7 +1284,7 @@ Number.prototype.toMoney = function (digits, force = true, space = ' ', useNulls
     }
 
     result = price.substring(0, len - count * 3) + result;
-    let ret = (result + (dec ? ',' + dec : (force ? ',' + '0'.repeat(digits) : ''))).trim('.').trim(',');
+    let ret = (result + (dec ? ',' + dec : (force ? ',' + '0'.repeat(digits) : ''))).trimString('.').trimString(',');
     if(!useNulls) {
         ret = ret.replaceAll('.00', '');
         ret = ret.replaceAll(',00', '');
@@ -1768,7 +1768,7 @@ Element.create = function (name, attr, data = null, ns = null) {
  */
 Element.fromHtml = function (html) {
     var template = document.createElement('template');
-    html = html.trim();
+    html = html.trimString();
     template.innerHTML = html;
     return template.content.childNodes;
 };
