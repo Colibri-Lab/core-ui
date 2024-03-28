@@ -8,7 +8,7 @@ Colibri.UI = class {
 
     /** Maximum tab index fo elements */
     static tabIndex = 1;
-
+ 
     /** Maximum of z-index css property */
     static maxZIndex = 0;
 
