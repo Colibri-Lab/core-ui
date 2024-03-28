@@ -2176,7 +2176,7 @@ Element.prototype.isValueExceeded = function() {
         'font-weight' : this.css('font-weight'),
         'font-style' : this.css('font-style')
     });
-    s.html(this.value);
+    s.html(this.value || this.html());
     document.body.append(s);
     var result = s.bounds().outerWidth > width;
     s.remove();

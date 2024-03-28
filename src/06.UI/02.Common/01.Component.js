@@ -2189,4 +2189,13 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._metrixKey = value;
     }
 
+    /**
+     * Is value of input exceeded input width
+     * @type {Boolean}
+     */
+    get isValueExceeded() {
+        return this._element.isValueExceeded();
+    }
+
+
 }
