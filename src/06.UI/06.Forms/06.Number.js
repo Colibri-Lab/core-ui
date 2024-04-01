@@ -18,6 +18,12 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
         this._input.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', {domEvent: e}));
         this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', {domEvent: e}));
         this._input.addEventListener('change', (e) => {
+            if(this._input.value > this.max) {
+                this._input.value = this.max;
+            }
+            if(this._input.value < this.min) {
+                this._input.value = this.min;
+            }
             if(this._original != this._input.value) {
                 this.Dispatch('Changed', {domEvent: e, component: this, original: this._original});
             }
@@ -67,6 +73,13 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
         }
         else {
             this.enabled = this._fieldData.params.enabled;
+        }
+
+        if(this._fieldData?.params?.max !== undefined) {
+            this.max = this._fieldData?.params?.max;
+        }
+        if(this._fieldData?.params?.min !== undefined) {
+            this.min = this._fieldData?.params?.min;
         }
 
     }
@@ -175,6 +188,37 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
     set tabIndex(value) {
         this._input && this._input.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
     }
+
+    /**
+     * Maximum allowed value
+     * @type {Number}
+     */
+    get max() {
+        return this._input.attr('max');
+    }
+    /**
+     * Maximum allowed value
+     * @type {Number}
+     */
+    set max(value) {
+        this._input.attr('max', value);
+    }
+
+    /**
+     * Minimum allowed value
+     * @type {Number}
+     */
+    get min() {
+        return this._input.attr('min');
+    }
+    /**
+     * Minimum allowed value
+     * @type {Number}
+     */
+    set min(value) {
+        this._input.attr('min', value);
+    }
+
 
 }
 Colibri.UI.Forms.Field.RegisterFieldComponent('Number', 'Colibri.UI.Forms.Number', '#{ui-fields-number}')

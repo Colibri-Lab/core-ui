@@ -54,6 +54,13 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
         }
     }
 
+    Column(name) {
+        if(name === 'firstChild') {
+            return this.Children(1);
+        } 
+        return this.Children(name);
+    }
+
     get grid() {
         return this.parent.grid;
     }

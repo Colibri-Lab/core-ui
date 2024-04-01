@@ -342,7 +342,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     ResetSort() {
         this._sortColumn = null;
-        this._sortOrder = Colibri.UI.Grid.SortAsc;
+        this._sortOrder = null;
     }
 
     /**
