@@ -174,9 +174,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         else {
             namespace = parent?.closest('[namespace]')?.attr('namespace') ?? '';
         }
-        namespace = namespace.split('.');
         
         if(namespace) {
+            namespace = namespace.split('.');
             while(namespace.length > 0) {
                 try {
                     objectClass = eval(namespace.join('.') + '.' + comp);
