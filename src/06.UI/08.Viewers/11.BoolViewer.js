@@ -37,6 +37,15 @@ Colibri.UI.BoolViewer = class extends Colibri.UI.Viewer {
         const values = Object.values(this._field.values);
         const found = values.filter(o => o.value == value);
 
+        if(this._field?.params?.colors) {
+            this.RemoveClass(this._field.params.colors.map(v => v!=''));
+            if(value) {
+                this.AddClass(this._field.params.colors[0]);
+            } else {
+                this.AddClass(this._field.params.colors[1]);
+            }
+        }
+
         this._element.html(found.length == 1 ? found[0].title : value);
     }
 
