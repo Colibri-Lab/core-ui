@@ -18,10 +18,10 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
         this._input.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', {domEvent: e}));
         this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', {domEvent: e}));
         this._input.addEventListener('change', (e) => {
-            if(this._input.value > this.max) {
+            if(this.max !== null && this._input.value > this.max) {
                 this._input.value = this.max;
             }
-            if(this._input.value < this.min) {
+            if(this.min !== null && this._input.value < this.min) {
                 this._input.value = this.min;
             }
             if(this._original != this._input.value) {
