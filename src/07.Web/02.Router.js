@@ -279,7 +279,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
     GetSafeParamsAsString() {
         let ret = [];
-        for(const param of this._safeParams) {
+        for(const param of this.safeParams) {
             if(this.options[param]) {
                 ret.push(param + '=' + this.options[param]);
             }
