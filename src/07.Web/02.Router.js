@@ -157,7 +157,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
         this._preventNextEvent = preventNextEvent;
 
-        const u = url + (Object.countKeys(options) > 0 ? '?' + String.fromObject(options, ['&', '=']) : '');
+        const u = url + (Object.countKeys(options) > 0 ? '?' + String.fromObject(options, ['&', '=']) : '') + this.GetSafeParamsAsString();
         if(this._type == Colibri.Web.Router.RouteOnHash) {
             location.hash = '#' + u;
         } else if(this._type == Colibri.Web.Router.RouteOnHistory) {
@@ -260,6 +260,31 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
             this._initRouterOnHistory();
         }
         this.HandleDomReady();
+    }
+
+    /**
+     * Array of query params to save in query string
+     * @type {Array}
+     */
+    get safeParams() {
+        return this._safeParams ?? [];
+    }
+    /**
+     * Array of query params to save in query string
+     * @type {Array}
+     */
+    set safeParams(value) {
+        this._safeParams = value;
+    }
+
+    GetSafeParamsAsString() {
+        let ret = [];
+        for(const param of this._safeParams) {
+            if(this.options[param]) {
+                ret.push(param + '=' + this.options[param]);
+            }
+        }
+        return ret.join('&');
     }
 
 }
