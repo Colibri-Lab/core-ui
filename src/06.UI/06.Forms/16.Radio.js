@@ -25,7 +25,11 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
 
 
     Focus() {
-        this._element.querySelector('input').focus();   
+        if(this._element.querySelector('input')) {
+            this._element.querySelector('input').focus();
+        } else {
+            this._focusOnFirst = true;
+        }
     }
 
     get value() {
@@ -101,6 +105,10 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
             }
             
             this._showValue();
+
+            if(this._focusOnFirst) {
+                this.Focus();
+            }
 
         });
 

@@ -234,6 +234,14 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    get appVersion() {
+        return this._appVersion;
+    }
+
+    set appVersion(value) {
+        this._appVersion = value;
+    }
+
     get name() {
         return this._name;
     }
