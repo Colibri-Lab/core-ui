@@ -42,6 +42,9 @@ Colibri.UI.ToggleBox = class extends Colibri.UI.Component {
     }
 
     Toggle() {
+        if(!this.enabled) {
+            return;
+        }
         this._input.checked = !this._input.checked;
         this._showState(); 
         this.Dispatch('Changed', {state: this._input.checked});
