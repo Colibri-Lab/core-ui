@@ -961,7 +961,7 @@ String.prototype.makeFio = function () {
 };
 String.prototype.extractExt = function () {
     const parts = this.split('.');
-    return parts[parts.length - 1];
+    return parts[parts.length - 1].toLowerCase();
 };
 String.prototype.pathinfo = function () {
     try {
