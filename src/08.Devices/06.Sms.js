@@ -9,7 +9,11 @@ Colibri.Devices.Sms = class extends Destructable {
         super();
         this._device = device;
         this._pluginSend = this._device.Plugin('sms');
-        // this._pluginRead = this._device.Plugin('SMSRetriever');
+        if(this._device.isAndroid) {
+            this._pluginRead = this._device.Plugin('SMSReceive');
+        } else {
+            this._pluginRead = null;    
+        }
         this.CheckPermissionForSend();
     }
 
@@ -56,7 +60,6 @@ Colibri.Devices.Sms = class extends Destructable {
     Send(number, message, intent = 'INTENT') {
         return new Promise((resolve, reject) => {
             this.RequestPermissionForSend().then(() => {
-                console.log(number, message);
                 this._pluginSend.send(number, message, {
                     replaceLineBreaks: true, // true to replace \n by a new line, false by default
                     android: {
@@ -79,25 +82,32 @@ Colibri.Devices.Sms = class extends Destructable {
     }
 
     RegisterArriveListener(listener) {
-        this._arriveCallback = listener;
+        document.addEventListener('onSMSArrive', (e) => {
+            listener(e);
+        });
     }
 
-    StartWatch() {
-        document.addEventListener('onSMSArrive', this._smsReceiverCallback);
+    Watch() {
+        if(!this._pluginRead) {
+            return;
+        }
         return new Promise((resolve, reject) => {
             this._pluginRead.startWatch((strSuccess) => {
-                if(strSuccess === 'SMS_WATCHING_STARTED' || strSuccess === 'SMS_WATCHING_ALREADY_STARTED') {
-                    resolve();
-                } else {
-                    reject(strSuccess);
-                }
+                // if(strSuccess === 'SMS_WATCHING_STARTED' || strSuccess === 'SMS_WATCHING_ALREADY_STARTED') {
+                // } else {
+                //     reject(strSuccess);
+                // }
+                resolve(strSuccess);
             }, (strError) => {
                 reject(strError);
             });    
         });
     }
 
-    StopWatch() {
+    Stop() {
+        if(!this._pluginRead) {
+            return;
+        }
         return new Promise((resolve, reject) => {
             this._pluginRead.stopWatch((strSuccess) => {
                 resolve();
@@ -106,17 +116,5 @@ Colibri.Devices.Sms = class extends Destructable {
             });
         });
     }
-
-    GetHash() {
-        return new Promise((resolve, reject) => {
-            this._pluginRead.getHashString((strHash) => {
-                alert(strHash)
-                resolve(strHash);
-            }, (error) => {
-                reject(error);
-            });
-        });
-    }
-
 
 }
