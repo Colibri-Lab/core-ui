@@ -52,7 +52,7 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
         if(typeof value === 'string') {
             value = value.split(',');
         }
-        this._allowTypes = value;
+        this._allowTypes = value.map(v => v.toLowerCase());
         this._setAccept();
     }
 
