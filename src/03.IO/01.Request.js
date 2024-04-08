@@ -1,7 +1,7 @@
 /**
- * Определение обьекта для запроса
+ * Defines the object for making requests.
+ * If the XMLHttpRequest object doesn't have the sendAsBinary method, it adds it.
  */
-
 if (!XMLHttpRequest.prototype.sendAsBinary) {
     XMLHttpRequest.prototype.sendAsBinary = function (sData) {
         var nBytes = sData.length, ui8Data = new Uint8Array(nBytes);
@@ -13,19 +13,33 @@ if (!XMLHttpRequest.prototype.sendAsBinary) {
 }
 
 /**
- * Класс запросов
- * 
+ * Represents the request class for handling HTTP requests.
  * @author Vahan P. Grigoran
- * 
  */
 Colibri.IO.Request = class extends Destructable {
 
+    /**
+     * Represents the type of request encoding as simple.
+     * @type {string}
+     */
     static RequestEncodeTypeSimple = 'simple';
+
+    /**
+     * Represents the type of request encoding as encrypted.
+     * @type {string}
+     */
     static RequestEncodeTypeEncrypted = 'encrypted';
 
+    /**
+     * Represents the default request type.
+     * @type {string}
+     */
     static type = 'simple';
 
-    /** @constructor */
+    /**
+     * Constructor for the Colibri.IO.Request class.
+     * @param {string} [base] - The base URL for the request.
+     */
     constructor(base) { 
         super();
         this._base = base ? base : '';
@@ -33,10 +47,10 @@ Colibri.IO.Request = class extends Destructable {
     }
 
     /**
-     * Добавляет параметры к URL
-     * @param {string} url Ссылка 
-     * @param {object} params Параметры
-     * @return {string}
+     * Appends parameters to a URL.
+     * @param {string} url The URL.
+     * @param {object} params The parameters.
+     * @returns {string} The modified URL.
      */
     _paramsAddToUrl(url, params) {
         let urlWithParams = this._base + url;
@@ -46,9 +60,11 @@ Colibri.IO.Request = class extends Destructable {
     }
 
     /**
-     * Создает FormData из обьекта
-     * @param {object} params 
-     * @return {FormData}
+     * Creates a FormData object from an object.
+     * @param {object} params The object containing the data.
+     * @param {string} [keyBefore=''] The key before the current key.
+     * @param {FormData} [fd=null] The FormData object to append to (optional, default is null).
+     * @returns {FormData} The FormData object containing the data.
      */
     _createFormData(params, keyBefore = '', fd = null) {
         let mainThread = false;
@@ -99,9 +115,9 @@ Colibri.IO.Request = class extends Destructable {
     }
 
     /**
-     * Ищет файлы в обьекте и заменяет на file(md5)
-     * @param {object} params обьект параметров
-     * @param {object} files файлы, результат
+     * Finds files in an object and replaces them with 'file(md5)'.
+     * @param {object} params The object containing parameters.
+     * @param {object} files The resulting files object.
      */
     _findFiles(params, files) {
 
@@ -135,8 +151,9 @@ Colibri.IO.Request = class extends Destructable {
     }
 
     /**
-     * Кодирует данные в json и енкодит
-     * @param {object} params данные формы
+     * Encodes data into JSON and encodes it.
+     * @param {object} params The form data.
+     * @returns {FormData} The encoded data.
      */
     _encryptData(params) {
         // ищем файлы и впихиваем в FormData как файлы
@@ -152,6 +169,11 @@ Colibri.IO.Request = class extends Destructable {
         return fd;
     }
 
+    /**
+     * Retrieves the response headers from the XMLHttpRequest object.
+     * @param {XMLHttpRequest} xhr The XMLHttpRequest object.
+     * @returns {object} The response headers.
+     */
     _getResponseHeaders(xhr) {
         let responseHeaders = xhr.getAllResponseHeaders();
         let arr = responseHeaders.trimString().split(/[\r\n]+/);
@@ -170,10 +192,10 @@ Colibri.IO.Request = class extends Destructable {
     }
 
     /**
-     * Добавляет хедер
-     * @param {string} name свойство
-     * @param {string} value значение
-     * @return {Colibri.IO.Request}
+     * Adds a single header to the request headers.
+     * @param {string} name The name of the header.
+     * @param {string} value The value of the header.
+     * @returns {Colibri.IO.Request} The modified request object.
      */
     AddHeader(name, value) {
         this._headers[name] = value;
@@ -181,9 +203,9 @@ Colibri.IO.Request = class extends Destructable {
     }
 
     /**
-     * Добавляет хедеры
-     * @param {object} headers хедеры
-     * @return {Colibri.IO.Request}
+     * Adds multiple headers to the request headers.
+     * @param {object} headers The headers to add.
+     * @returns {Colibri.IO.Request} The modified request object.
      */
     AddHeaders(headers) {
         this._headers = Object.assign({}, this._headers, headers);
@@ -191,12 +213,12 @@ Colibri.IO.Request = class extends Destructable {
     }
 
     /**
-     * Выполняет GET запрос
-     * @param {string} url URL
-     * @param {object} params Параметры
-     * @param {boolean} withCredentials Использовать куки
-     * @param {function} onprogressCallback
-     * @return {Promise}
+     * Executes a GET request.
+     * @param {string} url The URL to send the request to.
+     * @param {object} params The parameters to include in the request URL.
+     * @param {boolean} [withCredentials=true] Indicates whether to include cookies in the request.
+     * @param {function} [onprogressCallback=undefined] A callback function to handle progress events.
+     * @returns {Promise} A promise that resolves with the response data or rejects with an error.
      */
     Get(url, params, withCredentials = true, onprogressCallback = undefined) {
         
@@ -243,12 +265,12 @@ Colibri.IO.Request = class extends Destructable {
     }
 
     /**
-     * Выполняет POST запрос
-     * @param {string} url URL
-     * @param {object} params Параметры
-     * @param {boolean} withCredentials
-     * @param {function} onprogressCallback
-     * @return {Promise}
+     * Executes a POST request.
+     * @param {string} url The URL to send the request to.
+     * @param {object} params The parameters to include in the request body.
+     * @param {boolean} [withCredentials=true] Indicates whether to include cookies in the request.
+     * @param {function} [onprogressCallback=undefined] A callback function to handle progress events.
+     * @returns {Promise} A promise that resolves with the response data or rejects with an error.
      */
     Post(url, params, withCredentials = true, onprogressCallback = undefined) {
         
@@ -302,6 +324,9 @@ Colibri.IO.Request = class extends Destructable {
         
     }
 
+    /**
+     * Aborts the current XMLHttpRequest request.
+     */
     Abort() {
         if(this._currentRequest) {
             this._currentRequest.abort();
@@ -310,13 +335,13 @@ Colibri.IO.Request = class extends Destructable {
 }
 
 /**
- * Статическое выполнение POST запроса
- * @param {string} url URL
- * @param {object} params Параметры
- * @param {object} headers Хедеры
- * @param {boolean} withCredentials
- * @param {function} onprogressCallback
- * @return {Promise}
+ * Static method to execute a POST request.
+ * @param {string} url - The URL for the request.
+ * @param {object} params - The parameters for the request.
+ * @param {object} headers - The headers for the request.
+ * @param {boolean} withCredentials - Whether to use credentials.
+ * @param {function} onprogressCallback - Callback function for progress.
+ * @returns {Promise} - A Promise representing the result of the request.
  */
 Colibri.IO.Request.Post = (url, params, headers, withCredentials, onprogressCallback) => {
     const request = new Colibri.IO.Request();
@@ -324,13 +349,13 @@ Colibri.IO.Request.Post = (url, params, headers, withCredentials, onprogressCall
 }
 
 /**
- * Статическое выполнение GET запроса
- * @param {string} url URL
- * @param {object} params Параметры
- * @param {object} headers Хедеры
- * @param {boolean} withCredentials
- * @param {function} onprogressCallback
- * @return {Promise}
+ * Static method to execute a GET request.
+ * @param {string} url - The URL for the request.
+ * @param {object} params - The parameters for the request.
+ * @param {object} headers - The headers for the request.
+ * @param {boolean} withCredentials - Whether to use credentials.
+ * @param {function} onprogressCallback - Callback function for progress.
+ * @returns {Promise} - A Promise representing the result of the request.
  */
 Colibri.IO.Request.Get = (url, params, headers, withCredentials, onprogressCallback) => {
     const request = new Colibri.IO.Request();

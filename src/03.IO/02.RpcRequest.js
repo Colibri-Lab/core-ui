@@ -1,11 +1,15 @@
-
-
+/**
+ * Represents a remote procedure call (RPC) request.
+ * @extends Colibri.Events.Dispatcher
+ */
 Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
 
-    /** 
-     * @constructor
-     * @param {string} moduleEntry - наименование модуля
-     * @param {string} [type] - типе данных 
+    /**
+     * Creates an instance of RpcRequest.
+     * @param {string} moduleEntry - The name of the module.
+     * @param {string} [type] - The type of data.
+     * @param {string|null} [remoteDomain=null] - The remote domain.
+     * @param {Function|null} [urlResolver=null] - The URL resolver function.
      */
     constructor(moduleEntry, type, remoteDomain = null, urlResolver = null) {
         super();
@@ -24,16 +28,32 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('ResultsProcessed', false, 'Обработка результатов завершена');
     }
 
+    /**
+     * Gets or sets the remote domain for RPC requests.
+     * @type {string|null}
+     */
     get remoteDomain() {
         return this._remoteDomain;
     }
+    /**
+     * Gets or sets the remote domain for RPC requests.
+     * @type {string|null}
+     */
     set remoteDomain(value) {
         this._remoteDomain = value;
     }
 
+    /**
+     * Gets or sets the request type for RPC requests.
+     * @type {string}
+     */
     get requestType() {
         return this._requestType;
     }
+    /**
+     * Gets or sets the request type for RPC requests.
+     * @type {string}
+     */
     set requestType(value) {
         this._requestType = value;
     }
@@ -54,27 +74,39 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
     }
 
     /**
-     * Преобразует строку
-     * @param {string} string строка для преобразования 
+     * Prepares a string for use.
+     * @param {string} string - The string to prepare.
+     * @returns {string} The prepared string.
+     * @private
      */
     _prepareStrings(string) {
         return string.split('\\').map((v) => v.fromCamelCase()).join('/');
     }
 
+    /**
+     * Gets the requests being processed.
+     * @returns {Object} The working requests.
+     */
     Requests() {
         return this._workingRequests;
     }
 
+    /**
+     * Clears the request cache.
+     */
     ClearCache() {
         this._requestsCache = {};
     }
 
     /**
-     * 
-     * @param {string} controller - наименование контролера 
-     * @param {string} method - метод, который нужно выполнить
-     * @param {Object} params - параметры которые нужно передать
-     * @param {Object} headers - заголовки 
+     * Makes a remote procedure call.
+     * @param {string} controller - The controller name.
+     * @param {string} method - The method to execute.
+     * @param {Object} [params=null] - The parameters to pass.
+     * @param {Object} [headers={}] - The headers.
+     * @param {boolean} [withCredentials=true] - Whether to include credentials.
+     * @param {string} [requestKeyword=Date.Mc()] - The request keyword.
+     * @returns {Promise} The result of the RPC call.
      */
     Call(controller, method, params = null, headers = {}, withCredentials = true, requestKeyword = Date.Mc()) {
 

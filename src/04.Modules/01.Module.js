@@ -1,11 +1,16 @@
-
+/**
+ * Represents a module class in the Colibri framework.
+ * This class extends Colibri.IO.RpcRequest and provides functionality for managing modules.
+ */
 Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
 
-    /** 
-     * @constructor 
-     * @param {string} entryName - наименование модуля
-     * @param {string} [type] - тип данных
-     */ 
+    /**
+     * Constructs an instance of the Colibri.Modules.Module class.
+     * @param {string} entryName - The name of the module.
+     * @param {string} [type] - The type of data.
+     * @param {string} remoteDomain - The remote domain for the module.
+     * @param {string} urlResolver - The URL resolver for the module.
+     */
     constructor(entryName, type, remoteDomain, urlResolver) {
         super(entryName, type, remoteDomain, urlResolver);
 
@@ -17,7 +22,8 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
     }
 
     /**
-     * Инициализация модуля, запускается автоматически
+     * Initializes the module.
+     * This method is automatically called during module construction.
      */
     InitializeModule() {
 
@@ -30,19 +36,26 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
     }
 
     /**
-     * Метод для регистрации событий, запускается автоматически
+     * Registers events for the module.
+     * This method is automatically called during module construction.
      */
     RegisterEvents() {
         // Тут регистрируем все события (свои события)
     }
 
     /**
-     * Метод для регистрации обработчиков событий
+     * Registers event handlers for the module.
+     * This method is automatically called during module construction.
      */
     RegisterEventHandlers() {
         // Тут регистрируем обарботчики событий
     }
 
+    /**
+     * Handles routing for the module.
+     * @param {string} pattern - The routing pattern.
+     * @param {string|Function} event - The event associated with the routing pattern.
+     */
     HandleRoute(pattern, event) {
         pattern = ('/' + this._moduleEntry.fromCamelCase('-') + '/' + pattern).replaceAll('//', '/');
         let handler = event;
@@ -52,27 +65,58 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
         App.Router.AddRoutePattern(pattern, handler);
     }
 
+    /**
+     * Navigates to a specified URL within the module.
+     * @param {string} url - The URL to navigate to.
+     * @param {Object} options - Additional navigation options.
+     */
     RouteTo(url, options = {}) {
         url = ('/' + this._moduleEntry.fromCamelCase('-') + '/' + url).replaceAll('//', '/');
         App.Router.Navigate(url, options);
     }
 
+    /**
+     * Setter for enabling/disabling the use of authorization cookies.
+     * @param {boolean} value - Whether to use authorization cookies.
+     */
     set useAuthorizationCookie(value) {
         this._useAuthorizationCookie = value;
     }
 
+    /**
+     * Getter for checking if authorization cookies are enabled.
+     * @returns {boolean} - Whether authorization cookies are used.
+     */
     get useAuthorizationCookie() {
         return this._useAuthorizationCookie;
     }
 
+    /**
+     * Getter for retrieving the name of the authorization cookie.
+     * @returns {string} - The name of the authorization cookie.
+     */
     get authorizationCookieName() {
         return this._authorizationCookieName;
     }
 
+    /**
+     * Setter for defining the name of the authorization cookie.
+     * @param {string} value - The name of the authorization cookie.
+     */
     set authorizationCookieName(value) {
         this._authorizationCookieName = value;
     }
 
+    /**
+     * Makes an RPC (Remote Procedure Call) to the specified controller and method.
+     * @param {string} controller - The name of the controller to call.
+     * @param {string} method - The name of the method to call.
+     * @param {Object|null} params - Parameters to pass to the method.
+     * @param {Object} headers - Additional headers for the RPC request.
+     * @param {boolean} withCredentials - Whether to include credentials in the request.
+     * @param {string} requestKeyword - The request keyword.
+     * @returns {Promise} - A promise representing the result of the RPC call.
+     */
     Call(controller, method, params = null, headers= {}, withCredentials= true, requestKeyword = Date.Mc()) {
         if(!this._useAuthorizationCookie) {
             headers = Object.assign(headers, {

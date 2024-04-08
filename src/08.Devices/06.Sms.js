@@ -1,10 +1,34 @@
-
+/**
+ * Represents a utility for handling SMS operations.
+ * @class
+ * @extends Destructable
+ */
 Colibri.Devices.Sms = class extends Destructable {
     
+    /**
+     * Instance variable representing the device.
+     * @type {Colibri.UI.Device}
+     * @private
+     */
     _device = null;
+    /**
+     * Instance variable representing the notification plugin.
+     * @type {object}
+     * @private
+     */
     _plugin = null;
+    /**
+     * Instance variable representing the SMS plugin for receiving messages.
+     * @type {null}
+     * @private
+     */
     _permitedSend = false;
 
+    /**
+     * Flag indicating whether permission to send SMS is granted.
+     * @type {boolean}
+     * @private
+     */
     constructor(device) {
         super();
         this._device = device;
@@ -17,6 +41,10 @@ Colibri.Devices.Sms = class extends Destructable {
         this.CheckPermissionForSend();
     }
 
+    /**
+     * Checks permission to send SMS.
+     * @returns {Promise} - Promise resolving when permission is checked.
+     */
     CheckPermissionForSend() {
         return new Promise((resolve, reject) => {
             if(this._device.isIOs) {
@@ -38,6 +66,10 @@ Colibri.Devices.Sms = class extends Destructable {
         });
     }
 
+    /**
+     * Requests permission to send SMS.
+     * @returns {Promise} - Promise resolving when permission is requested.
+     */
     RequestPermissionForSend() {
         return new Promise((resolve, reject) => {
             this.CheckPermissionForSend().then(() => {
@@ -57,6 +89,13 @@ Colibri.Devices.Sms = class extends Destructable {
         });
     }
 
+    /**
+     * Sends an SMS message.
+     * @param {string} number - The recipient's phone number.
+     * @param {string} message - The message content.
+     * @param {string} intent - The intent for sending the message.
+     * @returns {Promise} - Promise resolving when message is sent.
+     */
     Send(number, message, intent = 'INTENT') {
         return new Promise((resolve, reject) => {
             this.RequestPermissionForSend().then(() => {
@@ -77,26 +116,34 @@ Colibri.Devices.Sms = class extends Destructable {
         });
     }
 
+    /**
+     * Callback function for SMS arrival.
+     * @param {*} message - The incoming SMS message.
+     */
     _smsReceiverCallback(message) {
         this._arriveCallback(message);
     }
 
+    /**
+     * Registers an event listener for incoming SMS messages.
+     * @param {function} listener - The listener function.
+     */
     RegisterArriveListener(listener) {
         document.addEventListener('onSMSArrive', (e) => {
             listener(e);
         });
     }
 
+    /**
+     * Starts watching for incoming SMS messages.
+     * @returns {Promise} - Promise resolving when watching is started.
+     */
     Watch() {
         if(!this._pluginRead) {
             return;
         }
         return new Promise((resolve, reject) => {
             this._pluginRead.startWatch((strSuccess) => {
-                // if(strSuccess === 'SMS_WATCHING_STARTED' || strSuccess === 'SMS_WATCHING_ALREADY_STARTED') {
-                // } else {
-                //     reject(strSuccess);
-                // }
                 resolve(strSuccess);
             }, (strError) => {
                 reject(strError);
@@ -104,6 +151,10 @@ Colibri.Devices.Sms = class extends Destructable {
         });
     }
 
+    /**
+     * Stops watching for incoming SMS messages.
+     * @returns {Promise} - Promise resolving when watching is stopped.
+     */
     Stop() {
         if(!this._pluginRead) {
             return;

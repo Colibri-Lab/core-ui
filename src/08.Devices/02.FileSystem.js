@@ -1,21 +1,87 @@
+/**
+ * Represents a file system utility for managing directories and files.
+ * @extends Colibri.Events.Dispatcher
+ */
 Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
     
+    /**
+     * Error code for 'Not Found'.
+     * @type {number}
+     */
     static NotFound = 1;	
+    /**
+     * Error code for 'Security Error'.
+     * @type {number}
+     */
     static SecurityError = 2;
+    /**
+     * Error code for 'Abort'.
+     * @type {number}
+     */
     static Abort = 3;
+    /**
+     * Error code for 'Not Reachable'.
+     * @type {number}
+     */
     static NotReachable = 4;	
+    /**
+     * Error code for 'Encoding'.
+     * @type {number}
+     */
     static Encoding = 5;
+    /**
+     * Error code for 'No Modification Allowed'.
+     * @type {number}
+     */
     static NoModificationAllowed = 6;	
+    /**
+     * Error code for 'Invalid State'.
+     * @type {number}
+     */
     static InvalidState = 7;
+    /**
+     * Error code for 'Syntax Error'.
+     * @type {number}
+     */
     static SyntaxError = 8;
+    /**
+     * Error code for 'Invalid Modification'.
+     * @type {number}
+     */
     static InvalidModification = 9;	
+    /**
+     * Error code for 'Quota Exceeded'.
+     * @type {number}
+     */
     static QuotaExeeded = 10;
+    /**
+     * Error code for 'Type Mismatch'.
+     * @type {number}
+     */
     static TypeMismatch = 11;	
+    /**
+     * Error code for 'Path Exists'.
+     * @type {number}
+     */
     static PathExists = 12;
 
+    /**
+     * Instance variable representing the device.
+     * @type {Colibri.UI.Device}
+     * @private
+     */
     _device = null;
+    /**
+     * Instance variable representing the plugin.
+     * @type {object}
+     * @private
+     */
     _plugin = null;
 
+    /**
+     * Creates an instance of FileSystem.
+     * @param {*} device - The device object.
+     */
     constructor(device) {
         super();
         this._device = device;
@@ -23,100 +89,99 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
     }
 
     /**
-     * Каталог только для чтения, в котором установлено 
-     * приложение. (iOS, Android, BlackBerry 10, OSX, windows)
+     * Represents the application directory.
+     * @type {*}
      */
     get AppDirectory() {
         return this._plugin.applicationDirectory;
     }
 
     /**
-     *  Корневой каталог песочницы приложения; в iOS и 
-     * Windows это расположение доступно только для чтения 
-     * (но определенные подкаталоги [например, на iOS или в Windows] 
-     * читаются и записываются). Все данные, содержащиеся внутри, 
-     * являются частными для (iOS, Android, BlackBerry 10, OSX/Documents/localState)
+     * Represents the application storage directory.
+     * @type {*}
      */
     get AppStorageDirectory() {
         return this._plugin.applicationStorageDirectory    
     }
 
     /**
-     * Постоянное и приватное хранение данных в песочнице приложения с 
-     * использованием встроенной памяти (на Android, если вам нужно использовать 
-     * внешнюю память, используйте). В iOS этот каталог не синхронизируется с iCloud 
-     * (используйте). (iOS, Android, BlackBerry 10, окна.externalDataDirectory.syncedDataDirectory)
+     * Represents the data directory.
+     * @type {*}
      */
     get DataDirectory() {
         return this._plugin.dataDirectory;
     }
 
     /**
-     * Каталог для кэшированных файлов данных или любых файлов, 
-     * которые ваше приложение может легко воссоздать. ОС может удалить 
-     * эти файлы, когда на устройстве заканчивается хранилище, тем не менее, 
-     * приложения не должны полагаться на ОС для удаления файлов здесь. 
-     * (iOS, Android, BlackBerry 10, OSX, windows)
+     * Represents the cache directory.
+     * @type {*}
      */
     get CacheDirectory() {
         return this._plugin.cacheDirectory;
     }
 
     /**
-     * Прикладное пространство на внешнем накопителе. (Андроид)
+     * Represents the external application storage directory (Android).
+     * @type {*}
      */
     get ExternalAppStorageDirectory() {
         return this._device.externalApplicationStorageDirectory;
     }
 
     /**
-     * Куда поместить файлы данных приложения на внешнее хранилище. (Андроид)
+     * Represents the external data directory (Android).
+     * @type {*}
      */
     get ExternalDataDirectory() {
         return this._device.externalDataDirectory;
     } 
     
     /**
-     * Внешний накопитель (SD-карта) root. (Андроид, BlackBerry 10)
+     * Represents the external root directory (SD-card) (Android, BlackBerry 10).
+     * @type {*}
      */
     get ЕxternalRootDirectory() {
         return this._plugin.externalRootDirectory;
     }
 
     /**
-     * Временный каталог, который ОС может очистить по желанию. 
-     * Не полагайтесь на ОС для очистки этого каталога; ваше 
-     * приложение всегда должно удалять файлы, если это 
-     * применимо. (iOS, OSX, windows)
+     * Represents the temporary directory.
+     * @type {*}
      */
     get TempDirectory() {
         return this._plugin.tempDirectory;
     }
 
     /**
-     * Содержит файлы, специфичные для приложения, которые 
-     * должны быть синхронизированы (например, с iCloud). (iOS, окна)
+     * Represents the synced data directory.
+     * @type {*}
      */
     get SyncedDataDirectory() {
         return this._plugin.syncedDataDirectory;
     }
 
     /**
-     * Файлы, закрытые для приложения, но значимые для другого 
-     * приложения (например, файлы Office). Обратите внимание, 
-     * что для OSX это каталог пользователя. (iOS, OSX~/Documents)
+     * Represents the documents directory.
+     * @type {*}
      */
     get DocumentsDirectory() {
         return this._plugin.documentsDirectory;
     }
 
     /**
-     * Файлы глобально доступны для всех приложений (BlackBerry 10)
+     * Represents the shared directory (BlackBerry 10).
+     * @type {*}
      */
     get SharedDirectory() {
        return this._plugin.sharedDirectory;
     }
 
+    /**
+     * Generates a Blob object.
+     * @param {*} name - The name of the file.
+     * @param {*} content - The content of the file.
+     * @returns {*} - Blob object.
+     */
     Blob(name, content) {
         if(content instanceof Blob) {
             return content;
@@ -125,6 +190,13 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
         return new Blob([content], { type: mimetype });
     }
 
+    /**
+     * Converts a base64 string to a Blob object.
+     * @param {string} b64Data - The base64 data.
+     * @param {string} contentType - The content type.
+     * @param {number} sliceSize - The slice size.
+     * @returns {*} - Blob object.
+     */
     B64ToBlob(b64Data, contentType, sliceSize = 512) {
         
         contentType = contentType || '';
@@ -150,6 +222,12 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
     
     }
 
+    /**
+     * Gets the file system.
+     * @param {*} type - The type of the file system.
+     * @param {number} quota - The quota for the file system.
+     * @returns {Promise} - Promise resolving to the file system root.
+     */
     Get(type = LocalFileSystem.PERSISTENT, quota = 0) {
         return new Promise((resolve, reject) => {
             window.requestFileSystem(type, quota, (fs) => {
@@ -158,6 +236,11 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Resolves a local file system URL.
+     * @param {string} path - The file system path.
+     * @returns {Promise} - Promise resolving to the file system entry.
+     */
     Local(path) {
         return new Promise((resolve, reject) => {
             window.resolveLocalFileSystemURL(path, (entry) => {
@@ -166,7 +249,13 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
         });
     }
 
-
+    /**
+     * Creates a file.
+     * @param {*} fsOrDir - The file system or directory.
+     * @param {string} fileName - The name of the file.
+     * @param {*} options - Options for file creation.
+     * @returns {Promise} - Promise resolving to the file entry.
+     */
     File(fsOrDir, fileName, options) {
         options = Object.assign({ create: true, exclusive: false }, options);
         return new Promise((resolve, reject) => {
@@ -176,6 +265,13 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Creates a directory.
+     * @param {*} fsOrDir - The file system or directory.
+     * @param {string} dirName - The name of the directory.
+     * @param {*} options - Options for directory creation.
+     * @returns {Promise} - Promise resolving to the directory entry.
+     */
     Directory(fsOrDir, dirName, options) {
         return new Promise((resolve, reject) => {
             dirName = dirName.split('/');
@@ -191,6 +287,13 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Writes content to a file.
+     * @param {*} fileEntry - The file entry.
+     * @param {*} content - The content to write.
+     * @param {boolean} isAppend - Indicates whether to append to the file.
+     * @returns {Promise} - Promise resolving to the file entry.
+     */
     Write(fileEntry, content, isAppend) {
         return new Promise((resolve, reject) => {
             fileEntry.createWriter((fileWriter) => {
@@ -214,6 +317,11 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Reads content from a file.
+     * @param {*} fileEntry - The file entry.
+     * @returns {Promise} - Promise resolving to the file content.
+     */
     Read(fileEntry) {
         return new Promise((resolve, reject) => {
             fileEntry.file((file) => {
@@ -230,6 +338,17 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Requests a file.
+     * @param {*} type - The type of the file system.
+     * @param {number} quota - The quota for the file system.
+     * @param {string} path - The file path.
+     * @param {string} fileName - The file name.
+     * @param {*} content - The content of the file.
+     * @param {boolean} isAppend - Indicates whether to append to the file.
+     * @param {*} options - Options for file request.
+     * @returns {Promise} - Promise resolving to the file entry.
+     */
     RequestFile(type = LocalFileSystem.PERSISTENT, quota = 0, path, fileName, content, isAppend, options = {}) {
         return new Promise((resolve, reject) => {
             this.Get(type, quota)
@@ -241,6 +360,13 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Creates a directory.
+     * @param {string} rootPath - The root path.
+     * @param {string} path - The directory path.
+     * @param {*} options - Options for directory creation.
+     * @returns {Promise} - Promise resolving to the directory entry.
+     */
     CreateDirectory(rootPath, path, options = {}) {
         return new Promise((resolve, reject) => {
             this.Local(rootPath)
@@ -250,6 +376,16 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Creates a file.
+     * @param {string} rootPath - The root path.
+     * @param {string} path - The file path.
+     * @param {string} fileName - The file name.
+     * @param {*} content - The content of the file.
+     * @param {boolean} isAppend - Indicates whether to append to the file.
+     * @param {*} options - Options for file creation.
+     * @returns {Promise} - Promise resolving to the file entry.
+     */
     CreateFile(rootPath, path, fileName, content, isAppend, options = {}) {
         return new Promise((resolve, reject) => {
             this.Local(rootPath)
@@ -261,6 +397,13 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Reads content from a file.
+     * @param {string} rootPath - The root path.
+     * @param {string} path - The file path.
+     * @param {string} fileName - The file name.
+     * @returns {Promise} - Promise resolving to the file content.
+     */
     ReadFile(rootPath, path, fileName) {
         return new Promise((resolve, reject) => {
             this.Local(rootPath)
@@ -272,6 +415,12 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Reads entries from a directory.
+     * @param {string} rootPath - The root path.
+     * @param {string} path - The directory path.
+     * @returns {Promise} - Promise resolving to the directory entries.
+     */
     ReadDirectory(rootPath, path) {
         return new Promise((resolve, reject) => {
             this.Local(rootPath)

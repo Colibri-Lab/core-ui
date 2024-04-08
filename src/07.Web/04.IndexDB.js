@@ -1,3 +1,6 @@
+/**
+ * Manages IndexedDB operations.
+ */
 Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
     
     _db = null;
@@ -5,6 +8,11 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
     _name = null;
     _version = null;
 
+    /**
+     * Creates an IndexedDB manager.
+     * @param {string} name - The name of the IndexedDB.
+     * @param {number} version - The version of the IndexedDB.
+     */
     constructor(name, version) {
         super();
 
@@ -24,6 +32,9 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
 
     }
     
+    /**
+     * Opens the IndexedDB.
+     */
     Open() {
         const request = window.indexedDB.open(this._name, this._version);
         request.onupgradeneeded = (event) => {
@@ -48,10 +59,23 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
         };
     }
 
+    /**
+     * Checks if a store exists in the database.
+     * @param {string} name - The name of the store.
+     * @returns {boolean} - True if the store exists, false otherwise.
+     */
     StoreExists(name) {
         return this._db.objectStoreNames.contains(name);
     }
 
+    /**
+     * Creates a new store in the database.
+     * @param {string} name - The name of the store.
+     * @param {string} keyPath - The key path for the store.
+     * @param {boolean} autoIncrement - Whether the store should auto increment keys.
+     * @param {array} indices - Array of index objects to create for the store.
+     * @returns {object} - The newly created store.
+     */
     CreateStore(name, keyPath = 'id', autoIncrement = false, indices = []) {
         const store = this._db.createObjectStore(name, {keyPath: keyPath, autoIncrement: autoIncrement});
         for(const index of indices) {
@@ -60,16 +84,35 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
         return store;
     }
 
+    /**
+     * Creates a new index for a store in the database.
+     * @param {string} name - The name of the store.
+     * @param {string} indexName - The name of the index.
+     * @param {string} key - The key for the index.
+     * @param {boolean} unique - Whether the index should be unique.
+     * @param {boolean} multiEntry - Whether the index should allow multiple entries for a key.
+     * @returns {object} - The newly created index.
+     */
     CreateIndex(name, indexName, key, unique = false, multiEntry = false) {
         const store = this._db.objectStore(name);
         const options = {unique: unique, multiEntry: multiEntry};
         return store.createIndex(indexName, key, options);
     }
 
+    /**
+     * Deletes a store from the database.
+     * @param {string} name - The name of the store to delete.
+     */
     DeleteStore(name) {
         return this._db.deleteObjectStore(name);
     }
 
+    /**
+     * Adds data to a specified store in the database.
+     * @param {string} storeName - The name of the store.
+     * @param {object} dataObject - The data object to add.
+     * @returns {Promise} - A promise that resolves with the result of the operation.
+     */
     AddData(storeName, dataObject) {
         return new Promise((resolve, reject) => {
             let transaction = this._db.transaction(storeName, "readwrite"); 
@@ -90,6 +133,12 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Updates data in a specified store in the database.
+     * @param {string} storeName - The name of the store.
+     * @param {object} dataObject - The data object to update.
+     * @returns {Promise} - A promise that resolves with the result of the operation.
+     */
     UpdateData(storeName, dataObject) {
         return new Promise((resolve, reject) => {
             let transaction = this._db.transaction(storeName, "readwrite"); 
@@ -110,6 +159,12 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Retrieves data from a specified store in the database by its ID.
+     * @param {string} storeName - The name of the store.
+     * @param {*} dataId - The ID of the data to retrieve.
+     * @returns {Promise} - A promise that resolves with the retrieved data.
+     */
     GetDataById(storeName, dataId) {
         return new Promise((resolve, reject) => {
             const transaction = this._db.transaction(storeName, "readwrite"); 
@@ -124,6 +179,13 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Retrieves data from a specified store within a specified range of keys.
+     * @param {string} storeName - The name of the store to retrieve data from.
+     * @param {*} [idFrom=null] - The lower bound of the key range. If null, starts from the first key.
+     * @param {*} [idTo=null] - The upper bound of the key range. If null, ends at the last key.
+     * @returns {Promise} A Promise that resolves with the retrieved data or rejects with an error.
+     */
     GetDataByRange(storeName, idFrom = null, idTo = null) {
         return new Promise((resolve, reject) => {
             const transaction = this._db.transaction(storeName, "readwrite"); 
@@ -157,6 +219,13 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Retrieves keys from a specified store within a specified range of keys.
+     * @param {string} storeName - The name of the store to retrieve keys from.
+     * @param {*} [idFrom=null] - The lower bound of the key range. If null, starts from the first key.
+     * @param {*} [idTo=null] - The upper bound of the key range. If null, ends at the last key.
+     * @returns {Promise} A Promise that resolves with the retrieved keys or rejects with an error.
+     */
     GetKeysByRange(storeName, idFrom = null, idTo = null) {
         return new Promise((resolve, reject) => {
             const transaction = this._db.transaction(storeName, "readwrite"); 
@@ -190,6 +259,13 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Retrieves data from a specified store using an index and a specified key.
+     * @param {string} storeName - The name of the store to retrieve data from.
+     * @param {string} indexName - The name of the index to use for retrieval.
+     * @param {*} key - The key to use for data retrieval.
+     * @returns {Promise} A Promise that resolves with the retrieved data or rejects with an error.
+     */
     GetDataByIndex(storeName, indexName, key) {
         return new Promise((resolve, reject) => {
             const transaction = this._db.transaction(storeName, "readwrite"); 
@@ -211,6 +287,14 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Retrieves data from a specified store using an index and a specified range of keys.
+     * @param {string} storeName - The name of the store to retrieve data from.
+     * @param {string} indexName - The name of the index to use for retrieval.
+     * @param {*} [keyFrom=null] - The lower bound of the key range. If null, starts from the first key.
+     * @param {*} [keyTo=null] - The upper bound of the key range. If null, ends at the last key.
+     * @returns {Promise} A Promise that resolves with the retrieved data or rejects with an error.
+     */
     GetDataByIndexRange(storeName, indexName, keyFrom = null, keyTo = null) {
         return new Promise((resolve, reject) => {
             const transaction = this._db.transaction(storeName, "readwrite"); 
@@ -245,6 +329,13 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Retrieves the key of a data entry in a specified store using an index and a specified key.
+     * @param {string} storeName - The name of the store to retrieve data from.
+     * @param {string} indexName - The name of the index to use for retrieval.
+     * @param {*} key - The key to use for data retrieval.
+     * @returns {Promise} A Promise that resolves with the retrieved key or rejects with an error.
+     */
     GetId(storeName, indexName, key) {
         return new Promise((resolve, reject) => {
             const transaction = this._db.transaction(storeName, "readwrite"); 
@@ -266,6 +357,12 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Deletes a data entry in a specified store by its ID.
+     * @param {string} storeName - The name of the store to delete data from.
+     * @param {*} id - The ID of the data entry to delete.
+     * @returns {Promise} A Promise that resolves when the deletion is successful or rejects with an error.
+     */
     DeleteById(storeName, id) {
         return new Promise((resolve, reject) => {
             const transaction = this._db.transaction(storeName, "readwrite"); 
@@ -286,6 +383,13 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Deletes data entries in a specified store using an index and a specified key.
+     * @param {string} storeName - The name of the store to delete data from.
+     * @param {string} indexName - The name of the index to use for deletion.
+     * @param {*} key - The key to use for data deletion.
+     * @returns {Promise} A Promise that resolves when the deletion is successful or rejects with an error.
+     */
     DeleteByIndex(storeName, indexName, key) {
         return new Promise((resolve, reject) => {
             const transaction = this._db.transaction(storeName, "readwrite"); 

@@ -1,4 +1,7 @@
 /**
+ * 
+ * Represents a notification object.
+ * 
  * IOs payload
  *  { 
  *      aps: {
@@ -23,12 +26,30 @@
  *  }
  * 
  * 
+ * @class
+ * @extends Destructable
  */
 Colibri.Devices.Notification = class extends Destructable {
 
+    /**
+     * Instance variable representing the device.
+     * @type {Colibri.UI.Device}
+     * @private
+     */
     _device = null;
+
+    /**
+     * Instance variable representing the payload.
+     * @type {null}
+     * @private
+     */
     _payload = null;
 
+    /**
+     * Creates an instance of Notification.
+     * @param {*} device - The device object.
+     * @param {*} payload - The notification payload.
+     */
     constructor(device, payload) {
         super();
         
@@ -36,6 +57,10 @@ Colibri.Devices.Notification = class extends Destructable {
         this._payload = payload;
     }
 
+    /**
+     * Gets the title of the notification.
+     * @returns {string} - The title.
+     */
     get title() {
         if(this._device.isAndroid) {
             return this._payload.data.title;
@@ -44,6 +69,10 @@ Colibri.Devices.Notification = class extends Destructable {
             return this._payload.data.title;
         }
     }
+    /**
+     * Gets the subtitle of the notification.
+     * @returns {string} - The subtitle.
+     */
     get subtitle() {
         if(this._device.isAndroid) {
             return this._payload.data.body;
@@ -52,6 +81,10 @@ Colibri.Devices.Notification = class extends Destructable {
             
         }
     }
+    /**
+     * Gets the payload of the notification.
+     * @returns {string} - The payload.
+     */
     get payload() {
         if(this._device.isAndroid) {
             return this._payload.data.payload;
@@ -63,33 +96,92 @@ Colibri.Devices.Notification = class extends Destructable {
 
 }
 
+/**
+ * Represents an emulator for local notifications.
+ * @class
+ * @extends Destructable
+ */
 Colibri.Devices.LocalNotificationsEmulator = class extends Destructable {
+    /**
+     * Checks if the emulator has permission.
+     * @param {function} success - Success callback.
+     * @param {function} fail - Fail callback.
+     */
     hasPermission(success, fail) {
         success(true);
     }
+    /**
+     * Requests permission for the emulator.
+     * @param {function} success - Success callback.
+     * @param {function} fail - Fail callback.
+     */
     requestPermission(success, fail) {
         success(true);
     }
+    /**
+     * Schedules a notification with given parameters.
+     * @param {*} params - Parameters for scheduling the notification.
+     */
     schedule(params) {
         //
     }
+    /**
+     * Cancels a scheduled notification with given id.
+     * @param {number} id - The id of the notification to cancel.
+     */
     cancel(id) {
         // 
     }
+    /**
+     * Registers an event listener.
+     * @param {string} event - The event to listen for.
+     * @param {function} callback - The callback function.
+     * @param {*} scope - The scope of the callback.
+     */
     on(event, callback, scope) {
         // 
     }
+     /**
+     * Unregisters an event listener.
+     * @param {string} event - The event to stop listening for.
+     * @param {function} callback - The callback function.
+     * @param {*} scope - The scope of the callback.
+     */
     un(event, callback, scope) {
         // 
     }
 }
 
+/**
+ * Represents a utility for handling local notifications.
+ * @class
+ * @extends Destructable
+ */
 Colibri.Devices.LocalNotifications = class extends Destructable {
     
+    /**
+     * Instance variable representing the device.
+     * @type {Colibri.UI.Device}
+     * @private
+     */
     _device = null;
+    /**
+     * Instance variable representing the plugin.
+     * @type {object}
+     * @private
+     */
     _plugin = null;
+    /**
+     * Flag indicating whether permission is granted.
+     * @type {boolean}
+     * @private
+     */
     _permited = false;
 
+    /**
+     * Creates an instance of LocalNotifications.
+     * @param {*} device - The device object.
+     */
     constructor(device) {
         super();
         this._device = device;
@@ -103,6 +195,10 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
 
     }
 
+    /**
+     * Checks if permission is granted.
+     * @returns {Promise} - Promise resolving when permission is granted.
+     */
     HasPermission() {
         return new Promise((resolve, reject) => {
             if(this._granted) {
@@ -120,6 +216,10 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
         });
     }
 
+    /**
+     * Requests permission for notifications.
+     * @returns {Promise} - Promise resolving when permission is granted.
+     */
     RequestPermission() {
         return new Promise((resolve, reject) => {
             if(this._granted) {
@@ -139,13 +239,35 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
         });
     }
 
+    /**
+     * Adds actions to a notification group.
+     * @param {string} groupName - The name of the notification group.
+     * @param {*} actions - Actions to add.
+     */
     AddActions(groupName, actions) {
         this._plugin.local.addActions(groupName, actions);
     }
+    /**
+     * Removes actions from a notification group.
+     * @param {string} groupName - The name of the notification group.
+     */
     RemoveActions(groupName) {
         this._plugin.local.removeActions(groupName);
     }
 
+    /**
+     * Schedules a notification with given parameters.
+     * @param {string} title - The title of the notification.
+     * @param {string} message - The message of the notification.
+     * @param {*} actions - Actions to attach to the notification.
+     * @param {*} trigger - Trigger for the notification.
+     * @param {boolean} isForeground - Flag indicating whether the notification should appear in foreground.
+     * @param {boolean} isLaunch - Flag indicating whether the notification should launch the app.
+     * @param {number} priority - Priority of the notification.
+     * @param {number} id - The id of the notification.
+     * @param {*} progressBar - Progress bar configuration.
+     * @param {boolean} sound - Flag indicating whether to include sound with the notification.
+     */
     Schedule(title, message, actions = null, trigger = null, isForeground = true, isLaunch = true, priority = 2, id = null, progressBar = null, sound = true) {
         // trigger = { in: 1, unit: 'second' }, { in: 15, unit: 'minutes' }
         this.RequestPermission().then(() => {
@@ -176,15 +298,32 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
         });
     }
 
+    /**
+     * Cancels a scheduled notification with given id.
+     * @param {number} id - The id of the notification to cancel.
+     */
     Cancel(id) {
         this.RequestPermission().then(() => {
             this._plugin.local.cancel(id);    
         });
     }
 
+    /**
+     * Registers an event listener.
+     * @param {string} event - The event to listen for.
+     * @param {function} callback - The callback function.
+     * @param {*} scope - The scope of the callback.
+     */
     On(event, callback, scope) {
         this._plugin.local.on(event, callback, scope);
     }
+
+    /**
+     * Unregisters an event listener.
+     * @param {string} event - The event to stop listening for.
+     * @param {function} callback - The callback function.
+     * @param {*} scope - The scope of the callback.
+     */
     Off(event, callback, scope) {
         this._plugin.local.un(event, callback, scope);
     }

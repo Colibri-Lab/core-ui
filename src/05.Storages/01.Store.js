@@ -1,5 +1,16 @@
+/**
+ * Represents a storage class that extends Colibri.Events.Dispatcher.
+ * Manages storage of data and provides methods for querying and updating data.
+ */
 Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
+    /**
+     * Creates an instance of Colibri.Storages.Store.
+     * @param {string} name - The name of the store.
+     * @param {Object} [data={}] - The initial data for the store.
+     * @param {Object} [parent=null] - The parent store, if any.
+     * @param {boolean} [permanent=false] - Indicates whether the store data should be kept permanently.
+     */
     constructor(name, data = {}, parent = null, permanent = false) {
         super('Store');
 
@@ -26,6 +37,9 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Saves the store data in the permanent storage.
+     */
     KeepInPermanentStore() {
         const __domain = location.hostname;
         let savingData = this.ExportData();
@@ -39,6 +53,9 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Retrieves store data from the permanent storage.
+     */
     RetreiveFromPermanentStore() {
         if(App.Db.StoreExists(this._name)) {
             this._data = App.Db.GetDataById(this._name, location.hostname);
@@ -50,6 +67,11 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         }
     }
     
+    /**
+     * Exports store data.
+     * @param {boolean} [fullData=false] - Indicates whether to export full data recursively.
+     * @returns {Object} The exported data.
+     */
     ExportData(fullData = false) {
 
         const newData = {};
@@ -68,14 +90,16 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
     }
 
     /**
-     * @type {Boolean}
+     * Indicates whether the store is permanent.
+     * @type {boolean}
      */
     get permanent() {
         return this._permanent;
     }
 
     /**
-     * @type {Boolean}
+     * Sets the permanence of the store.
+     * @type {boolean}
      */
     set permanent(value) {
         this._permanent = value;
@@ -85,20 +109,24 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
     }
 
     /**
-     * Owner module object
+     * Gets the owner module object.
      * @type {Object}
      */
     get owner() {
         return this._owner;
     }
     /**
-     * Owner module object
+     * Sets the owner module object.
      * @type {Object}
      */
     set owner(value) {
         this._owner = value;
     }
     
+    /**
+     * Clears data at the specified path or the entire store if no path is provided.
+     * @param {string} [path] - The path to clear.
+     */
     Clear(path) {
         if(!path) {
             this._data = {};
@@ -106,10 +134,17 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         this.Set(path, null);
     }
     
+    /**
+     * Gets the name of the store.
+     * @returns {string} The name of the store.
+     */
     get name() {
         return this._name;
     }
 
+    /**
+     * Registers events for the store.
+     */
     RegisterEvents() {
         this.RegisterEvent('StoreUpdated', true, 'When store data is updated');
         this.RegisterEvent('StoreChildUpdated', true, 'When child store is updated');
@@ -118,6 +153,9 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('StoreKeeped', true, 'When store is keeped to permanent');
     }
 
+    /**
+     * Registers event handlers for the store.
+     */
     RegisterEventHandlers() {
         if(this._parent) {
             this.AddHandler('StoreUpdated', (event, args) => {
@@ -126,6 +164,14 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Adds a child store.
+     * @param {string} path - The path to the child store.
+     * @param {object} [data={}] - The data for the child store.
+     * @param {object} [owner=null] - The owner module object.
+     * @param {boolean} [permanent=false] - Indicates whether the child store is permanent.
+     * @returns {Colibri.Storages.Store} The newly added child store.
+     */
     AddChild(path, data = {}, owner = null, permanent = false) {
         let paths = path.split('.');
         const newStore = new Colibri.Storages.Store(paths[paths.length - 1], data, this, permanent);
@@ -134,6 +180,11 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         return newStore;
     }
 
+    /**
+     * Retrieves the child store at the specified path.
+     * @param {string} path - The path to the child store.
+     * @returns {object} The child store object along with its path.
+     */
     GetChild(path) {
         let p = path.split('.');
         let first = p.shift();
@@ -166,6 +217,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         return null;
     }
 
+    /**
+     * Adds a path loader.
+     * @param {string} path - The path to add the loader.
+     * @param {function|string} loader - The loader function or string indicating the method.
+     * @param {object} [params={}] - Additional parameters for the loader.
+     * @returns {Colibri.Storages.Store} The store object.
+     */
     AddPathLoader(path, loader, params = {}) {
         if(this._pathLoaders[path]) {
             throw new Error('Path loader is Registered')
@@ -182,6 +240,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         return this;
     }
 
+    /**
+     * Adds a path handler for the specified path.
+     * @param {string|string[]} path - The path or an array of paths for which the handler is registered.
+     * @param {Function|Array} handler - The handler function or an array containing the respondent and handler function.
+     * @param {boolean} prepend - Indicates whether the handler should be added at the beginning (true) or end (false) of the handlers list.
+     * @returns {Colibri.Storages.Store} The store instance.
+     */
     AddPathHandler(path, handler, prepend) {
 
         if(Array.isArray(path)) {
@@ -239,6 +304,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         return this;
     }
 
+    /**
+     * Removes a path handler for the specified path.
+     * @param {string} path - The path for which the handler should be removed.
+     * @param {Object} respondent - The respondent object associated with the handler.
+     * @param {Function} handler - The handler function to be removed.
+     * @returns {Colibri.Storages.Store} The store instance.
+     */
     RemovePathHandler(path, respondent, handler) {
         for (let i = 0; i < this._pathHandlers[path].length; i++) {
             const h = this._pathHandlers[path][i];
@@ -250,6 +322,11 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         return this;
     }
 
+    /**
+     * Dispatches events along the specified path.
+     * @param {string} path - The path along which events should be dispatched.
+     * @returns {boolean} True if all event handlers were executed successfully, otherwise false.
+     */
     DispatchPath(path) {
 
         const childStoreData = this.GetChild(path);
@@ -289,6 +366,11 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Checks if the loader associated with the specified path has been executed.
+     * @param {string} path - The path for which to check if the loader has been executed.
+     * @returns {boolean} True if the loader has been executed or if the path doesn't have a loader, otherwise false.
+     */
     IsLoaderExecuted(path) {
         
         const childStore = this.GetChild(path);
@@ -300,6 +382,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Reloads the data associated with the specified path, optionally dispatching events after reloading.
+     * @param {string} path - The path to reload data for.
+     * @param {boolean} [nodispatch=true] - Whether to dispatch events after reloading (default: true).
+     * @param {string|int|null} [param=null] - Additional parameter for the reload operation (default: null).
+     * @returns {Promise} A promise that resolves when the reload operation is complete.
+     */
     async Reload(path, nodispatch = true, param = null) {
         
         const childStore = this.GetChild(path);
@@ -337,10 +426,11 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
     }
 
     /**
-     * Получает данные из хранилища в ассинхронном режиме, используются PathLoader-ы
-     * @param {string} path путь к обьекту
-     * @param {string|int|null} param доп путь
-     * @returns {object}
+     * Asynchronously retrieves data from the storage using PathLoaders.
+     * @param {string} path - The path to the object.
+     * @param {string|int|null} [param=null] - Additional path.
+     * @param {boolean} [reload=false] - Whether to force reload the data (default: false).
+     * @returns {Promise<object>} A promise that resolves with the retrieved data.
      */
     async AsyncQuery(path, param = null, reload = false) {
 
@@ -358,6 +448,12 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         return this.Reload(path, false, param);
     }
 
+    /**
+     * Retrieves data from the storage based on the provided path and optional query parameters.
+     * @param {string} path - The path to the object.
+     * @param {string|null} [queryList=null] - Optional query parameters in the format "field=value".
+     * @returns {object} The retrieved data.
+     */
     Query(path, queryList = null) {
 
         let p = path.split('.');
@@ -396,6 +492,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Sets data at the specified path in the storage.
+     * @param {string} path - The path where the data will be set.
+     * @param {any} d - The data to be set.
+     * @param {boolean} [nodispatch=false] - Whether to dispatch events after setting the data.
+     * @returns {object} The updated storage object.
+     */
     Set(path, d, nodispatch = false) {
 
         let p = path.split('.');
@@ -437,6 +540,18 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Updates a list in the storage based on search criteria and sorting options.
+     * @param {string} path - The path of the list in the storage.
+     * @param {string} searchField - The field used for searching within the list.
+     * @param {any} [searchValue=null] - The value to search for within the list.
+     * @param {any} [newData=null] - The new data to replace the existing data that matches the search criteria.
+     * @param {string} [sortField=null] - The field used for sorting the list.
+     * @param {string} [sortOrder='asc'] - The order in which the list should be sorted ('asc' for ascending or 'desc' for descending).
+     * @param {boolean} [insertIfNotExists=true] - Whether to insert the new data if no matching entry is found in the list.
+     * @param {string} [incrementIfInserted=''] - The path where the length of the list should be incremented if a new entry is inserted.
+     * @returns {array} The updated list.
+     */
     UpdateList(path, searchField, searchValue = null, newData = null, sortField = null, sortOrder = 'asc', insertIfNotExists = true, incrementIfInserted = '') {
         let list = this.Query(path);
         if(!Array.isArray(list)) {
@@ -462,6 +577,12 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         return list;
     }
 
+    /**
+     * Updates the list in the storage by intersecting it with the provided values based on the specified search field.
+     * @param {string} path - The path of the list in the storage.
+     * @param {string} searchField - The field used for searching within the list.
+     * @param {Array} values - The array of values to intersect with the list.
+     */
     IntersectList(path, searchField, values) {
         let list = this.Query(path);
         if(!Array.isArray(list)) {
@@ -476,6 +597,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Adds a page of items to the list in the storage.
+     * @param {string} path - The path of the list in the storage.
+     * @param {number} page - The page number.
+     * @param {Array} pageItems - The items to add to the list.
+     * @returns {Array} The updated list after adding the page items.
+     */
     ListAddPage(path, page, pageItems) {
         let list = this.Query(path);
         if(!Array.isArray(list) || page === 1) {
@@ -486,6 +614,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         return list;
     }
 
+    /**
+     * Sorts the list in the storage based on the specified field and sort order.
+     * @param {string} path - The path of the list in the storage.
+     * @param {string} sortField - The field used for sorting the list.
+     * @param {string} [sortOrder='asc'] - The order in which the list should be sorted ('asc' for ascending or 'desc' for descending).
+     * @returns {Array} The sorted list.
+     */
     SortList(path, sortField, sortOrder = 'asc') {
         let list = this.Query(path);
         if(!Array.isArray(list)) {
@@ -504,6 +639,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         return list;
     }
 
+    /**
+     * Queries the list in the storage based on the specified field and value.
+     * @param {string} path - The path of the list in the storage.
+     * @param {string} field - The field used for querying the list.
+     * @param {any} value - The value to search for within the list.
+     * @returns {any} The queried data from the list.
+     */
     QueryList(path, field, value) {
         let list = this.Query(path);
         if(!Array.isArray(list)) {
@@ -513,6 +655,12 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         return Array.findObject(list, field, value);
     }
 
+    /**
+     * Parses the path if it contains a parameter enclosed in parentheses.
+     * @param {string} path - The path to parse.
+     * @returns {[string, string|null]} An array containing the parsed path and the parameter, or null if no parameter is found.
+     * @private
+     */
     _parsePathIfHasParam(path) {
         if(path.indexOf('(') === -1) {
             return [path, null];

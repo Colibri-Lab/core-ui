@@ -1,19 +1,60 @@
+/**
+ * Represents a device in the Colibri framework, providing functionalities related to the device's platform, theme, and plugins.
+ * @extends Colibri.Events.Dispatcher
+ */
 Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
-    static Web = 'web';
-    static IOs = 'ios';
-    static Android = 'android';
-    static Windows = 'electron';
+    /**
+     * Represents the platform types.
+     * @readonly
+     * @enum {string}
+     */
+    static Platform = {
+        Web: 'web',
+        IOs: 'ios',
+        Android: 'android',
+        Windows: 'electron'
+    };
 
-    static Light = 'light';
-    static Dark = 'dark';
+    /**
+     * Represents the theme types.
+     * @readonly
+     * @enum {string}
+     */
+    static Theme = {
+        Light: 'light',
+        Dark: 'dark'
+    };
 
+    /**
+     * Represents the platform type of the device.
+     * @private
+     */
     _platform = '';
+    /**
+     * Represents the file system of the device.
+     * @private
+     */
     _fileSystem = null;
+    /**
+     * Represents the theme of the device.
+     * @private
+     */
     _theme = 'light';
+    /**
+     * Represents the theme detection plugin.
+     * @private
+     */
     _themeDetectionPlugin = null;
+    /**
+     * Represents the push notifications plugin.
+     * @private
+     */
     _pushNotifications = null;
     
+    /**
+     * Creates an instance of Device.
+     */
     constructor() {
         super();
         this._detect();        
@@ -27,12 +68,20 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Registers events for the device.
+     * @private
+     */
     _registerEvents() {
         this.RegisterEvent('OrientationChanged', false, 'Когда ориентация была изменена');
         this.RegisterEvent('ThemeChanged', false, 'Когда тема изменена');
         this.RegisterEvent('NotificationTapped', false, 'When push notification is tapped');
     }
 
+    /**
+     * Detects the platform and initializes theme detection and push notifications.
+     * @private
+     */
     _detect() {
         if(!window.hasOwnProperty("cordova")){
             this._platform = 'web';
@@ -70,6 +119,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Binds events related to the device.
+     * @private
+     */
     _bindDeviceEvents() {
         window.addEventListener("orientationchange", () => {
             const old = this._currentOrientation;
@@ -92,30 +145,59 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         
     }
 
+    /**
+     * Gets the platform type of the device.
+     * @returns {string} The platform type.
+     */
     get platform() {
         return this._platform;
     }
 
+    /**
+     * Checks if the device platform is Android.
+     * @returns {boolean} True if the device platform is Android, otherwise false.
+     */
     get isAndroid() {
         return this._platform === Colibri.Devices.Device.Android;
     }
 
+    /**
+     * Checks if the device platform is iOS.
+     * @returns {boolean} True if the device platform is iOS, otherwise false.
+     */
     get isIOs() {
         return this._platform === Colibri.Devices.Device.IOs;
     }
 
+    /**
+     * Checks if the device platform is Windows.
+     * @returns {boolean} True if the device platform is Windows, otherwise false.
+     */
     get isWindows() {
         return this._platform === Colibri.Devices.Device.Windows;
     }
 
+    /**
+     * Checks if the device platform is Web.
+     * @returns {boolean} True if the device platform is Web, otherwise false.
+     */
     get isWeb() {
         return this._platform === Colibri.Devices.Device.Web;
     }
 
+    /**
+     * Gets the background mode of the device.
+     * @return {boolean} value - The value to set for background mode.
+     */
     get backgroundMode() {
         return this._backgroundMode;
     }
 
+    /**
+     * Sets the background mode of the device.
+     * @param {boolean} value - The value to set for background mode.
+     * @throws {string} Throws an error if the 'cordova-plugin-background-mode' plugin is not enabled.
+     */
     set backgroundMode(value) {
         if(!cordova?.plugins?.backgroundMode) {
             throw 'Please enable \'cordova-plugin-background-mode\' plugin';
@@ -133,6 +215,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     
     }
 
+    /**
+     * Wakes up the device.
+     * @throws {string} Throws an error if the 'cordova-plugin-background-mode' plugin is not enabled.
+     */
     WakeUp() {
         if(!cordova?.plugins?.backgroundMode) {
             throw 'Please enable \'cordova-plugin-background-mode\' plugin';
@@ -140,6 +226,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         cordova.plugins.backgroundMode.wakeUp();
     }
 
+    /**
+     * Unlocks the device.
+     * @throws {string} Throws an error if the 'cordova-plugin-background-mode' plugin is not enabled.
+     */
     Unlock() {
         if(!cordova?.plugins?.backgroundMode) {
             throw 'Please enable \'cordova-plugin-background-mode\' plugin';
@@ -147,6 +237,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         cordova.plugins.backgroundMode.unlock();
     }
 
+    /**
+     * Retrieves the safe area of the device.
+     * @returns {Promise<{top: number, bottom: number}>} A promise that resolves with the safe area object containing top and bottom values.
+     */
     SafeArea() {
         return new Promise((resolve, reject) => {
             if(this.isIOs) {
@@ -164,6 +258,11 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Retrieves a plugin based on the provided query.
+     * @param {string} query - The query string to retrieve the plugin.
+     * @returns {*} The plugin object if found, otherwise undefined.
+     */
     Plugin(query) {
         let plugin = eval('cordova.' + query);
         if(!plugin) {
@@ -181,6 +280,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return plugin;
     } 
 
+    /**
+     * Locks the device orientation to a specified type.
+     * @param {string|null} [type=null] - The orientation type to lock. Defaults to the current orientation type.
+     */
     LockOrientation(type = null) {
         try {
             screen.orientation.lock(type || this._currentOrientation.type);
@@ -190,6 +293,9 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Unlocks the device orientation.
+     */
     UnlockOrientation() {
         try {
             screen.orientation.unlock();
@@ -199,6 +305,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Retrieves the file system of the device.
+     * @returns {Colibri.Devices.FileSystem} The file system instance.
+     */
     get FileSystem() {
         if(!this._fileSystem) {
             this._fileSystem = new Colibri.Devices.FileSystem(this);
@@ -206,6 +316,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return this._fileSystem;
     }
 
+    /**
+     * Retrieves the camera instance.
+     * @returns {Colibri.Devices.Camera} The camera instance.
+     */
     get Camera() {
         if(!this._camera) {
             this._camera = new Colibri.Devices.Camera(this);
@@ -213,6 +327,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return this._camera;
     }
 
+    /**
+     * Retrieves the SMS instance.
+     * @returns {Colibri.Devices.Sms} The SMS instance.
+     */
     get Sms() {
         if(!this._sms) {
             this._sms = new Colibri.Devices.Sms(this);
@@ -220,6 +338,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return this._sms;
     }
 
+    /**
+     * Retrieves the dialogs instance.
+     * @returns {Colibri.Devices.Dialogs} The dialogs instance.
+     */
     get Dialogs() {
         if(!this._dialogs) {
             this._dialogs = new Colibri.Devices.Dialogs(this);
@@ -227,10 +349,18 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return this._dialogs;
     }
 
+    /**
+     * Retrieves the local notifications instance.
+     * @returns {Colibri.Devices.LocalNotifications} The local notifications instance.
+     */
     get Notifications() {
         return this._localNotifications;
     }
 
+    /**
+     * Retrieves device information.
+     * @returns {Object} The device information.
+     */
     get Info() {
         
         if(!window.hasOwnProperty("cordova")){
@@ -250,10 +380,18 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Retrieves the current theme.
+     * @returns {string} The current theme.
+     */
     get Theme() {
         return this._theme;
     }
 
+    /**
+     * Retrieves the geolocation instance.
+     * @returns {Colibri.Devices.GeoLocation} The geolocation instance.
+     */
     get GeoLocation() {
         if(!this._geoLocation) {
             this._geoLocation = new Colibri.Devices.GeoLocation(this);

@@ -1,10 +1,11 @@
 /**
- * Основной класс приложения
- * ! нужно исправить инициализацию модулей, они должны родиться после приложения!
+ * The main application class.
  */
 Colibri.App = class extends Colibri.Events.Dispatcher { 
     
-    /** @constructor */ 
+    /** 
+     * Constructs a new instance of the Colibri.App class.
+     */
     constructor() {
         super('App'); 
 
@@ -18,6 +19,9 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
   
     } 
 
+    /**
+     * Registers application events.
+     */
     RegisterEvents() { 
         this.RegisterEvent('Event', false, 'When any event dispatched');
         this.RegisterEvent('DocumentReady', false, 'Когда DOM готов');
@@ -29,12 +33,31 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('DocumentHidden', false, 'Документ скрыт');
     }
 
+    /**
+     * Registers event handlers.
+     */
     RegisterEventHandlers() {
         this.AddHandler('DocumentShown', (event, args) => {
             Colibri.UI.UpdateMaxZIndex();
         });
     }
 
+    /**
+     * Initializes the application with the specified configuration.
+     * @param {string} [name='app'] - The name of the application.
+     * @param {number} [version=1] - The version of the application.
+     * @param {string} [routerType=Colibri.Web.Router.RouteOnHash] - The type of router to use.
+     * @param {string} [requestType=Colibri.IO.Request.RequestEncodeTypeEncrypted] - The type of request encoding to use.
+     * @param {boolean} [initComet=false] - Whether to initialize Comet.
+     * @param {boolean} [showLoader=true] - Whether to show the loader.
+     * @param {string} [remoteDomain=null] - The remote domain for requests.
+     * @param {string} [dateformat=null] - The date format.
+     * @param {string} [numberformat=null] - The number format.
+     * @param {string} [currency=null] - The currency format.
+     * @param {string} [loadingIcon=null] - The loading icon.
+     * @param {string} [csrfToken=null] - The CSRF token.
+     * @returns {Promise} A promise that resolves when the application is initialized.
+     */
     InitializeApplication(
         name = 'app',
         version = 1,
@@ -187,12 +210,19 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Sets the theme for the application.
+     * @param {string} theme - The theme to set.
+     */
     SetTheme(theme) {
         document.body.classList.remove('prefer-dark');
         document.body.classList.remove('prefer-light');
         document.body.classList.add('prefer-' + theme);
     }
 
+    /**
+     * Initializes the modules.
+     */
     InitializeModules() {
         Object.keys(App.Modules).forEach((module) => {
             try {
@@ -202,6 +232,9 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         })
     }
 
+    /**
+     * Starts flashing the title of the document by appending "(*)" every second.
+     */
     StartFlashTitle() {
         this.StopFlashTitle();
 
@@ -211,6 +244,9 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         }, 1000);
     }
 
+    /**
+     * Stops flashing the title of the document and restores the original title.
+     */
     StopFlashTitle() {
         if(this._flashInterval) {
             if(this._title) {
@@ -222,7 +258,14 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     }
 
     /**
-     * Отправляет событие в CRM
+     * Sends an event to CRM.
+     * @param {string} module - The module name.
+     * @param {string} form - The form name.
+     * @param {string} cat1 - The category 1.
+     * @param {string} cat2 - The category 2.
+     * @param {number} duration - The duration.
+     * @param {string} iddoc - The document ID.
+     * @param {number} amountdoc - The document amount.
      */
     SendEventToCRM(module, form, cat1, cat2, duration, iddoc, amountdoc) {
         try {
@@ -234,42 +277,82 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Gets the version of the application.
+     * @returns {number} The version of the application.
+     */
     get appVersion() {
         return this._appVersion;
     }
 
+    /**
+     * Sets the version of the application.
+     * @param {number} value - The version of the application.
+     */
     set appVersion(value) {
         this._appVersion = value;
     }
 
+    /**
+     * Gets the name of the application.
+     * @returns {string} The name of the application.
+     */
     get name() {
         return this._name;
     }
 
+    /**
+     * Gets the actions associated with the application.
+     * @returns {Colibri.Common.HashActions} The actions associated with the application.
+     */
     get Actions() {
         return this._actions;
     } 
 
+    /**
+     * Gets the storage associated with the application.
+     * @returns {Colibri.Storages.Store} The storage associated with the application.
+     */
     get Storage() {
         return this._storage;
     }
     
+    /**
+     * Gets the store associated with the application.
+     * @returns {Colibri.Storages.Store} The store associated with the application.
+     */
     get Store() {
         return this._store;
     }
 
+    /**
+     * Gets the request associated with the application.
+     * @returns {Colibri.Web.Request} The request associated with the application.
+     */
     get Request() {
         return this._request;
     }
 
+    /**
+     * Gets the router associated with the application.
+     * @returns {Colibri.Web.Router} The router associated with the application.
+     */
     get Router() {
         return this._router;
     }
 
+    /**
+     * Gets the notices associated with the application.
+     * @returns {Colibri.UI.Notices} The notices associated with the application.
+     */
     get Notices() {
         return this._notices;
     }
 
+    /**
+     * Gets the loader associated with the application.
+     * @returns {Colibri.UI.LoadingContainer} The loader associated with the application.
+     */
     get Loader() {
         if(!this._loader) {
             this._loader = new Colibri.UI.LoadingContainer('app-loader', document.body);
@@ -277,81 +360,164 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         return this._loader;
     }
 
+    /**
+     * Gets the confirm dialog associated with the application.
+     * @returns {Colibri.UI.ConfirmDialog} The confirm dialog associated with the application.
+     */
     get Confirm() {
         return this._confirmDialog;
     }
 
+    /**
+     * Gets the prompt dialog associated with the application.
+     * @returns {Colibri.UI.PromptDialog} The prompt dialog associated with the application.
+     */
     get Prompt() {
         return this._promptDialog;
     }
     
+    /**
+     * Gets the alert dialog associated with the application.
+     * @returns {Colibri.UI.AlertDialog} The alert dialog associated with the application.
+     */
     get Alert() {
         return this._alertDialog;
     }
 
+    /**
+     * Gets the loading box associated with the application.
+     * @returns {Colibri.UI.Loading} The loading box associated with the application.
+     */
     get Loading() {
         return this._loadingBox;
     }
     
+    /**
+     * Gets the loading ballun associated with the application.
+     * @returns {Colibri.UI.LoadingBallun} The loading ballun associated with the application.
+     */
     get LoadingBallun() {
         return this._loadingBallun;
     }
 
+    /**
+     * Gets the comet associated with the application.
+     * @returns {Colibri.Web.Comet} The comet associated with the application.
+     */
     get Comet() {
         return this._comet;
     }
 
+    /**
+     * Gets the browser storage associated with the application.
+     * @returns {Colibri.Common.BrowserStorage} The browser storage associated with the application.
+     */
     get Browser() {
         return this._browser;
     }
 
+    /**
+     * Gets the database associated with the application.
+     * @returns {Colibri.Web.IndexDB} The database associated with the application.
+     */
     get Db() {
         return this._db;
     }
 
+    /**
+     * Gets the tooltip associated with the application.
+     * @returns {Colibri.UI.ToolTip} The tooltip associated with the application.
+     */
     get ToolTip() {
         return this._customToolTip;
     }
 
+    /**
+     * Gets the device associated with the application.
+     * @returns {Colibri.Devices.Device} The device associated with the application.
+     */
     get Device() {
         return this._device;
     }
 
+    /**
+     * Gets the remote domain associated with the application.
+     * @returns {string} The remote domain associated with the application.
+     */
     get RemoteDomain() {
         return this._remoteDomain;
     }
     
+    /**
+     * Indicates whether the application is initialized.
+     * @returns {boolean} `true` if the application is initialized; otherwise, `false`.
+     */
     get Initialized() {
         return this._initialized;
     }
 
+    /**
+     * Gets the date format used by the application.
+     * @returns {string|null} The date format used by the application, or `null` if not set.
+     */
     get DateFormat() {
         return this._dateformat;
     }
+    /**
+     * Sets the date format used by the application.
+     * @param {string} value - The date format to set.
+     */
     set DateFormat(value) {
         this._dateformat = value;
     }
+    /**
+     * Gets the number format used by the application.
+     * @returns {string|null} The number format used by the application, or `null` if not set.
+     */
     get NumberFormat() {
         return this._numberformat;
     }
+    /**
+     * Sets the number format used by the application.
+     * @param {string} value - The number format to set.
+     */
     set NumberFormat(value) {
         this._numberformat = value;
     }
+    /**
+     * Gets the currency used by the application.
+     * @returns {string|null} The currency used by the application, or `null` if not set.
+     */
     get Currency() {
         return this._currency;
     }
+    /**
+     * Sets the currency used by the application.
+     * @param {string} value - The currency to set.
+     */
     set Currency(value) {
         this._currency = value;
     }
 
+    /**
+     * Gets the CSRF token used by the application.
+     * @returns {string|null} The CSRF token used by the application, or `null` if not set.
+     */
     get CsrfToken()
     {
         return this._csrfToken;
     }
+    /**
+     * Sets the CSRF token used by the application.
+     * @param {string} value - The CSRF token to set.
+     */
     set CsrfToken(value) {
         this._csrfToken = value;
     }
 
 }
 
+/**
+ * Created App object
+ */
 const App = new Colibri.App();

@@ -1,3 +1,6 @@
+/**
+ * Handles the connection to the Comet server and message communication.
+ */
 Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     _url = '';
@@ -13,7 +16,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     _clientId = null;
 
     /**
-     * Создает обьект
+     * Creates a new Comet object.
+     * @param {object} settings - Settings for the Comet connection.
      */
     constructor(settings) {
         super();
@@ -29,6 +33,9 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         
     }
 
+    /**
+     * Destructor to close WebSocket connection when the object is destroyed.
+     */
     destructor() {
         super.destructor();
         if(this._ws) {
@@ -36,6 +43,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Generates a unique device ID for the Comet connection.
+     * @returns {string} - The generated device ID.
+     */
     _generateDeviceId() {
         let deviceId = App.Browser.Get('device-id');
         if(!deviceId) {
@@ -45,6 +56,9 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         return deviceId;
     }
 
+    /**
+     * Initializes the WebSocket connection.
+     */
     _initConnection() {
         this._ws && this._ws.close();
         this._ws = new WebSocket('wss://' + this._settings.host + ':' + this._settings.port + '/client/' + this._clientId);
@@ -54,10 +68,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     }
     
     /**
-     * 
-     * @param {number} organizationId ID организации
-     * @param {Colibri.Storages.Store} store хрналище
-     * @param {string} storeMessages куда выбрасывать сообщения
+     * Initializes the Comet object with user data and storage settings.
+     * @param {object} userData - Data of the user.
+     * @param {Colibri.Storages.Store} store - Storage object.
+     * @param {string} storeMessages - Key where messages will be stored.
      */
     Init(userData, store, storeMessages) {
 
@@ -78,6 +92,9 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Disconnects from the Comet server.
+     */
     Disconnect() {
         if(this._ws) {
             this._ws.close();
@@ -85,11 +102,18 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Handles the WebSocket connection open event.
+     */
     __onCometOpened() {
         this._connected = true;
         this.Command(this._user, 'register', {name: this._userName});
     }
 
+    /**
+     * Handles incoming messages from the Comet server.
+     * @param {object} message - The received message object.
+     */
     __onCometMessage(message) {
         message = JSON.parse(message.data);
         if(message.action == 'connection-success') {
@@ -116,6 +140,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Handles WebSocket connection errors.
+     * @param {object} error - The error object.
+     */
     __onCometError(error) {
         
         console.log('#{ui-comet-connection-error}');
@@ -126,8 +154,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
 
     /**
-     * Берет из локального хранилища
-     * @returns []
+     * Retrieves stored messages from local storage.
+     * @returns {array} - Array of stored messages.
      */
     _getStoredMessages() {
         let messages = this._storage.getItem('comet.messages');
@@ -139,15 +167,15 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     }
 
     /**
-     * Сохраняет в локальное хранилище
-     * @param {[]} messages сообщения
+     * Saves messages to local storage.
+     * @param {array} messages - Array of messages to be stored.
      */
     _setStoredMessages(messages) {
         this._storage.setItem('comet.messages', JSON.stringify(messages));
     }
 
     /**
-     * Сохраняет сообщения в хранилище приложения
+     * Saves messages to the application store.
      */
     _saveToStore() {
         let messages = this._getStoredMessages();
@@ -157,7 +185,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     }
 
     /**
-     * Очистить сообщения
+     * Clears stored messages.
      */
     ClearMessages() {
         this._setStoredMessages([]);
@@ -165,7 +193,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     }
 
     /**
-     * Пометить все сообщения как прочитанные
+     * Marks all messages as read.
      */
     MarkAsRead() {
         let messages = this._getStoredMessages();
@@ -175,6 +203,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this.Dispatch('MessagesMarkedAsRead', {});
     }
 
+    /**
+     * Removes a message from storage.
+     * @param {object} message - The message to be removed.
+     */
     RemoveMessage(message) {
         let messages = this._getStoredMessages();
         messages = messages.filter(m => m.id != message.id);
@@ -183,6 +215,12 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this.Dispatch('MessageRemoved', {});
     }
 
+    /**
+     * Sends a command to the Comet server.
+     * @param {string} userGuid - The GUID of the user.
+     * @param {string} action - The action to be performed.
+     * @param {object} message - The message data.
+     */
     Command(userGuid, action, message = null) {
         try {
             if(this._ws.readyState === 1) {
@@ -197,6 +235,13 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Sends a message to a specific user.
+     * @param {string} userGuid - The GUID of the recipient user.
+     * @param {string} action - The action to be performed.
+     * @param {string} message - The message content.
+     * @returns {string|null} - The ID of the sent message.
+     */
     SendTo(userGuid, action, message = null) {
         try {
             const id = Date.Mc();
@@ -214,6 +259,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         return null;
     }
 
+    /**
+     * Gets the client ID for the Comet connection.
+     * @returns {string} - The client ID.
+     */
     get clientId() {
         return this._clientId;
     }
