@@ -1,5 +1,6 @@
 /**
  * Represents a device in the Colibri framework, providing functionalities related to the device's platform, theme, and plugins.
+ * @class
  * @extends Colibri.Events.Dispatcher
  */
 Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {

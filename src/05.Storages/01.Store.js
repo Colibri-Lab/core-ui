@@ -1,6 +1,8 @@
 /**
  * Represents a storage class that extends Colibri.Events.Dispatcher.
  * Manages storage of data and provides methods for querying and updating data.
+ * @class 
+ * @extends Colibri.Events.Dispatcher
  */
 Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 

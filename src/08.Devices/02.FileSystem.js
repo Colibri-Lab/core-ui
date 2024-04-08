@@ -1,5 +1,6 @@
 /**
  * Represents a file system utility for managing directories and files.
+ * @class
  * @extends Colibri.Events.Dispatcher
  */
 Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {

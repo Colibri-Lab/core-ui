@@ -1,5 +1,6 @@
 /**
  * Represents a media utility for handling audio playback and recording.
+ * @class
  * @extends Colibri.Events.Dispatcher
  */
 

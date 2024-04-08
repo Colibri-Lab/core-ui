@@ -1,5 +1,6 @@
 /**
  * Represents a cookie utility for managing cookies in the browser.
+ * @class
  */
 Colibri.Common.Cookie = class {
     

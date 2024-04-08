@@ -1,11 +1,15 @@
 /**
  * Represents a module class in the Colibri framework.
  * This class extends Colibri.IO.RpcRequest and provides functionality for managing modules.
+ * @class 
+ * @namespace Colibri.Modules
+ * @extends Colibri.IO.RpcRequest
  */
 Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
 
     /**
      * Constructs an instance of the Colibri.Modules.Module class.
+     * @public 
      * @param {string} entryName - The name of the module.
      * @param {string} [type] - The type of data.
      * @param {string} remoteDomain - The remote domain for the module.
@@ -24,6 +28,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
     /**
      * Initializes the module.
      * This method is automatically called during module construction.
+     * @public 
      */
     InitializeModule() {
 
@@ -38,6 +43,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
     /**
      * Registers events for the module.
      * This method is automatically called during module construction.
+     * @public 
      */
     RegisterEvents() {
         // Тут регистрируем все события (свои события)
@@ -46,6 +52,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
     /**
      * Registers event handlers for the module.
      * This method is automatically called during module construction.
+     * @public 
      */
     RegisterEventHandlers() {
         // Тут регистрируем обарботчики событий
@@ -55,6 +62,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
      * Handles routing for the module.
      * @param {string} pattern - The routing pattern.
      * @param {string|Function} event - The event associated with the routing pattern.
+     * @public 
      */
     HandleRoute(pattern, event) {
         pattern = ('/' + this._moduleEntry.fromCamelCase('-') + '/' + pattern).replaceAll('//', '/');
@@ -69,6 +77,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
      * Navigates to a specified URL within the module.
      * @param {string} url - The URL to navigate to.
      * @param {Object} options - Additional navigation options.
+     * @public 
      */
     RouteTo(url, options = {}) {
         url = ('/' + this._moduleEntry.fromCamelCase('-') + '/' + url).replaceAll('//', '/');
@@ -78,6 +87,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
     /**
      * Setter for enabling/disabling the use of authorization cookies.
      * @param {boolean} value - Whether to use authorization cookies.
+     * @public 
      */
     set useAuthorizationCookie(value) {
         this._useAuthorizationCookie = value;
@@ -86,6 +96,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
     /**
      * Getter for checking if authorization cookies are enabled.
      * @returns {boolean} - Whether authorization cookies are used.
+     * @public 
      */
     get useAuthorizationCookie() {
         return this._useAuthorizationCookie;
@@ -94,6 +105,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
     /**
      * Getter for retrieving the name of the authorization cookie.
      * @returns {string} - The name of the authorization cookie.
+     * @public 
      */
     get authorizationCookieName() {
         return this._authorizationCookieName;
@@ -102,6 +114,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
     /**
      * Setter for defining the name of the authorization cookie.
      * @param {string} value - The name of the authorization cookie.
+     * @public 
      */
     set authorizationCookieName(value) {
         this._authorizationCookieName = value;
@@ -116,6 +129,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
      * @param {boolean} withCredentials - Whether to include credentials in the request.
      * @param {string} requestKeyword - The request keyword.
      * @returns {Promise} - A promise representing the result of the RPC call.
+     * @public 
      */
     Call(controller, method, params = null, headers= {}, withCredentials= true, requestKeyword = Date.Mc()) {
         if(!this._useAuthorizationCookie) {

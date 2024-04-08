@@ -1,5 +1,6 @@
 /**
  * Class representing Base64 encoding and decoding utility functions.
+ * @class
  */
 Colibri.Common.Base64 = class {
 

@@ -1,5 +1,6 @@
 /**
  * Represents a camera utility for capturing pictures.
+ * @class
  * @extends Colibri.Events.Dispatcher
  */
 Colibri.Devices.Camera = class extends Colibri.Events.Dispatcher {

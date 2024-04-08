@@ -1,5 +1,6 @@
 /**
  * Represents a utility for handling hash actions in the browser.
+ * @class
  */
 Colibri.Common.HashActions = class {
     

@@ -1,5 +1,6 @@
 /**
  * Represents a utility for validation of various identification numbers in Russia.
+ * @class
  */
 Colibri.Common.Validation = class {
 

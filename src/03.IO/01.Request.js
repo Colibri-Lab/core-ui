@@ -14,7 +14,8 @@ if (!XMLHttpRequest.prototype.sendAsBinary) {
 
 /**
  * Represents the request class for handling HTTP requests.
- * @author Vahan P. Grigoran
+ * @class 
+ * @extends Destructable
  */
 Colibri.IO.Request = class extends Destructable {
 

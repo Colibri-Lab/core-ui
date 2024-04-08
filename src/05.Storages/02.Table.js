@@ -1,3 +1,7 @@
+/**
+ * @class 
+ * @extends Colibri.Events.Dispatcher
+ */
 Colibri.Storages.Models.Table = class extends Colibri.Events.Dispatcher {
  
     constructor(controller, params) {

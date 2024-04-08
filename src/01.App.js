@@ -1,5 +1,6 @@
 /**
  * The main application class.
+ * @class
  */
 Colibri.App = class extends Colibri.Events.Dispatcher { 
     

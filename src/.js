@@ -1,5 +1,6 @@
 /**
  * Colibri class serves as a namespace for related functionality.
+ * @namespace Colibri
  */
 const Colibri = class {
  
@@ -7,6 +8,7 @@ const Colibri = class {
 
 /**
  * Destructable class provides a base class for objects that need cleanup upon destruction.
+ * @class
  */
 const Destructable = class {
 
