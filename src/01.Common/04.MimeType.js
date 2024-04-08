@@ -1,5 +1,12 @@
+/**
+ * Represents a utility class for handling MIME types.
+ */
 Colibri.Common.MimeType = class {
     
+    /**
+     * A map of file extensions to MIME types.
+     * @type {Object<string, string>}
+     */
     static types = {
         "acx" :  "application/internet-property-stream",
         "ai" :  "application/postscript",
@@ -194,10 +201,20 @@ Colibri.Common.MimeType = class {
         
     }
 
+    /**
+     * Returns the MIME type associated with the given file extension.
+     * @param {string} ext - The file extension.
+     * @returns {string|undefined} The MIME type, or undefined if not found.
+     */
     static ext2type(ext) {
         return Colibri.Common.MimeType.types[ext];
     }
 
+    /**
+     * Returns the file extension associated with the given MIME type.
+     * @param {string} type - The MIME type.
+     * @returns {string|false} The file extension, or false if not found.
+     */
     static type2ext(type) {
         var ret = false;
         Object.keys(Colibri.Common.MimeType.types).forEach(key => {
@@ -207,6 +224,11 @@ Colibri.Common.MimeType = class {
         return ret;
     }
 
+    /**
+     * Returns the file extension associated with the given base64 encoded data.
+     * @param {string} base - The base64 encoded data.
+     * @returns {string|false} The file extension, or false if not found.
+     */
     static base2type(base) {
         var ret = false;
         var type = base.split('data:')[1];
@@ -218,15 +240,60 @@ Colibri.Common.MimeType = class {
         return ret;
     }
 
+    /**
+     * Check if a file with the given extension is an image.
+     * @param {string} ext - The file extension.
+     * @returns {boolean} True if the file is an image, otherwise false.
+     */
     static isImage(ext) { return ["gif", "jpeg", "jpg", "png", "bmp", "dib", "svg"].indexOf(ext.toLowerCase()) != -1; }
+    /**
+     * Check if a file with the given extension is an audio file.
+     * @param {string} ext - The file extension.
+     * @returns {boolean} True if the file is an audio file, otherwise false.
+     */
     static isAudio(ext) { return ["mid", "mp3", "au"].indexOf(ext.toLowerCase()) != -1; }
+    /**
+     * Check if a file with the given extension is a video file.
+     * @param {string} ext - The file extension.
+     * @returns {boolean} True if the file is a video file, otherwise false.
+     */
     static isVideo(ext) { return ["wmv", "mpg", "mp4"].indexOf(ext.toLowerCase()) != -1; }
+    /**
+     * Check if a file with the given extension is a Flash file.
+     * @param {string} ext - The file extension.
+     * @returns {boolean} True if the file is a Flash file, otherwise false.
+     */
     static isFlash(ext) { return ["swf"].indexOf(ext.toLowerCase()) != -1; }
+    /**
+     * Check if a file with the given extension is editable.
+     * @param {string} ext - The file extension.
+     * @returns {boolean} True if the file is editable, otherwise false.
+     */
     static isEditable(ext) { return ["txt", "js", "css", "scss", "less", "layout", "php", "htm", "html", "service", "xml", "xsl"].indexOf(ext.toLowerCase()) != -1; }
+    /**
+     * Check if a file with the given extension is viewable.
+     * @param {string} ext - The file extension.
+     * @returns {boolean} True if the file is viewable, otherwise false.
+     */
     static isBrowserCapable(ext) { return ["jpg", "png", "gif", "swf", "html", "htm", "txt", "css", "js", "pdf", "wmv", "mpg", "mp4", "mid", "mp3", "au"].indexOf(ext.toLowerCase()) != -1; }
+    /**
+     * Get the icon class for a file with the given extension.
+     * @param {string} ext - The file extension.
+     * @returns {string} The icon class.
+     */
     static isViewable(ext) { return isImage(ext) || isFlash(ext); }
+    /**
+     * Get the CodeMirror mode associated with a given file extension.
+     * @param {string} ext - The file extension.
+     * @returns {string} The CodeMirror mode.
+     */
     static icon(ext) { return 'icon-file-' + ext; }
     
+    /**
+     * Get the CodeMirror mode associated with a given file extension.
+     * @param {string} ext - The file extension.
+     * @returns {string} The CodeMirror mode.
+     */
     static ext2mode(ext) {
         
         if(ext == 'js') return 'javascript';
@@ -241,6 +308,12 @@ Colibri.Common.MimeType = class {
         
     }
 
+    /**
+     * Get the CodeMirror requirements for a given file extension.
+     * @param {string} ext - The file extension.
+     * @param {string} [path='/res/codemirror'] - The base path for resources.
+     * @returns {Object<string, string[]>} The CodeMirror requirements.
+     */
     static extrequirements(ext, path = '/res/codemirror') {
         
         if(ext == 'js') return {

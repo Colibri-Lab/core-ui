@@ -1,31 +1,47 @@
+/**
+ * Class representing scrolling utility functions.
+ */
 Colibri.Common.Scrolling = class {
 
-
+    /**
+     * Creates an instance of Colibri.Common.Scrolling.
+     * @param {HTMLElement} element - The HTML element to apply scrolling behavior.
+     */
     constructor(element) {
         
         this._element = element;
 
         this.supportsPassive = false;
-        // try {
-        //   window.addEventListener('test', null, Object.defineProperty({}, 'passive', { get: function () { this.supportsPassive = true; }  }));
-        // } catch(e) {
-        //     console.log('supportsPassive', e)
-        // }
-        // console.log('supportsPassive', this.supportsPassive);
-        
         this.wheelOpt = this.supportsPassive ? { passive: false } : false;
         this.wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
     
     }
 
+    /**
+     * Creates an instance of Colibri.Common.Scrolling.
+     * @param {HTMLElement} element - The HTML element to apply scrolling behavior.
+     * @returns {Colibri.Common.Scrolling} A new instance of Colibri.Common.Scrolling.
+     * @static
+     */
     Create(element) {
         return new Colibri.Common.Scrolling(element);
     }
 
+    /**
+     * Prevents default behavior for the event.
+     * @param {Event} e - The event object.
+     * @private
+     */
     __preventDefault(e) {
         try { e.preventDefault(); } catch(e) {}
     }
 
+    /**
+     * Prevents default behavior for scroll keys.
+     * @param {KeyboardEvent} e - The keyboard event object.
+     * @returns {boolean} True if default behavior is prevented, otherwise false.
+     * @private
+     */
     __preventDefaultForScrollKeys(e) {
         const keys = [37,38,39,40];
         if (keys.indexOf(e.keyCode) !== -1) {
@@ -35,7 +51,9 @@ Colibri.Common.Scrolling = class {
         return true;
     }
     
-
+    /**
+     * Disables scrolling behavior on the element.
+     */
     Disable() {
         this._element.addEventListener('DOMMouseScroll', this.__preventDefault, false); // older FF
         this._element.addEventListener(this.wheelEvent, this.__preventDefault, this.wheelOpt); // modern desktop
@@ -43,6 +61,9 @@ Colibri.Common.Scrolling = class {
         this._element.addEventListener('keydown', this.__preventDefaultForScrollKeys, false);
     }
 
+    /**
+     * Enables scrolling behavior on the element.
+     */
     Enable() {
         this._element.removeEventListener('DOMMouseScroll', this.__preventDefault, false);
         this._element.removeEventListener(this.wheelEvent, this.__preventDefault, this.wheelOpt); 

@@ -1,9 +1,20 @@
+/**
+ * Class representing Base64 encoding and decoding utility functions.
+ */
 Colibri.Common.Base64 = class {
 
-    // private property
+    /**
+     * Private property containing the Base64 key string.
+     * @type {string}
+     * @private
+     */
     static _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 
-    // public method for encoding
+    /**
+     * Encode a string using Base64 encoding.
+     * @param {string} _input - The input string to encode.
+     * @returns {string} The Base64 encoded string.
+     */
     static encode(_input) {
         var output = "";
         var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
@@ -35,7 +46,11 @@ Colibri.Common.Base64 = class {
         return output;
     }
 
-    // public method for decoding
+    /**
+     * Decode a Base64 encoded string.
+     * @param {string} _input - The Base64 encoded string to decode.
+     * @returns {string} The decoded string.
+     */
     static decode(_input) {
         var output = "";
         var chr1, chr2, chr3;
@@ -70,7 +85,12 @@ Colibri.Common.Base64 = class {
         return output;
     }
 
-    // private method for UTF-8 encoding
+    /**
+     * Private method for UTF-8 encoding.
+     * @param {string} string - The input string to encode.
+     * @returns {string} The UTF-8 encoded string.
+     * @private
+     */
     static _utf8_encode(string) {
         string = string.replace(/\r\n/g,"\n");
         var utftext = "";
@@ -95,7 +115,12 @@ Colibri.Common.Base64 = class {
         return utftext;
     }
 
-    // private method for UTF-8 decoding
+    /**
+     * Private method for UTF-8 decoding.
+     * @param {string} utftext - The UTF-8 encoded string to decode.
+     * @returns {string} The decoded string.
+     * @private
+     */
     static _utf8_decode(utftext) {
         var string = "";
         var i = 0;

@@ -1,5 +1,14 @@
+/**
+ * Represents a utility for validation of various identification numbers in Russia.
+ */
 Colibri.Common.Validation = class {
 
+    /**
+     * Validates the BIC (Bank Identification Code).
+     * @param {string|number} bik - The БИК to validate.
+     * @param {Object} error - An object to store error information.
+     * @returns {boolean} - Indicates whether the БИК is valid.
+     */
     static ValidateBik(bik, error) {
         var result = false;
         if (typeof bik === 'number') {
@@ -22,6 +31,12 @@ Colibri.Common.Validation = class {
         return result;
     }
     
+    /**
+     * Validates the ИНН (Taxpayer Identification Number).
+     * @param {string|number} inn - The ИНН to validate.
+     * @param {Object} error - An object to store error information.
+     * @returns {boolean} - Indicates whether the ИНН is valid.
+     */
     static ValidateInn(inn, error) {
         var result = false;
         if (typeof inn === 'number') {
@@ -69,6 +84,12 @@ Colibri.Common.Validation = class {
         return result;
     }
     
+    /**
+     * Validates the КПП (Tax Registration Reason Code).
+     * @param {string|number} kpp - The КПП to validate.
+     * @param {Object} error - An object to store error information.
+     * @returns {boolean} - Indicates whether the КПП is valid.
+     */
     static ValidateKpp(kpp, error) {
         var result = false;
         if (typeof kpp === 'number') {
@@ -91,6 +112,13 @@ Colibri.Common.Validation = class {
         return result;
     }
     
+    /**
+     * Validates the КС (Correspondent Account Number).
+     * @param {string|number} ks - The КС to validate.
+     * @param {string|number} bik - The БИК (Bank Identifier Code) associated with the КС.
+     * @param {Object} error - An object to store error information.
+     * @returns {boolean} - Indicates whether the КС is valid.
+     */
     static ValidateKs(ks, bik, error) {
         var result = false;
         if (validateBik(bik, error)) {
@@ -126,6 +154,12 @@ Colibri.Common.Validation = class {
         return result;
     }
     
+    /**
+     * Validates the OGRN (Primary State Registration Number).
+     * @param {string|number} ogrn - The OGRN to validate.
+     * @param {Object} error - An object to store error information.
+     * @returns {boolean} - Indicates whether the OGRN is valid.
+     */
     static ValidateOgrn(ogrn, error) {
         var result = false;
         if (typeof ogrn === 'number') {
@@ -154,6 +188,12 @@ Colibri.Common.Validation = class {
         return result;
     }
     
+    /**
+     * Validates the OGRNIP (Primary State Registration Number of Individual Entrepreneur).
+     * @param {string|number} ogrnip - The OGRNIP to validate.
+     * @param {Object} error - An object to store error information.
+     * @returns {boolean} - Indicates whether the OGRNIP is valid.
+     */
     static ValidateOgrnip(ogrnip, error) {
         var result = false;
         if (typeof ogrnip === 'number') {
@@ -182,6 +222,13 @@ Colibri.Common.Validation = class {
         return result;
     }
     
+    /**
+     * Validates the Russian bank account number (RS).
+     * @param {string|number} rs - The Russian bank account number to validate.
+     * @param {string|number} bik - The Russian bank identification code (BIK).
+     * @param {Object} error - An object to store error information.
+     * @returns {boolean} - Indicates whether the RS is valid.
+     */
     static ValidateRs(rs, bik, error) {
         var result = false;
         if (validateBik(bik, error)) {
@@ -217,6 +264,12 @@ Colibri.Common.Validation = class {
         return result;
     }
     
+    /**
+     * Validates the Russian individual insurance account number (SNILS).
+     * @param {string|number} snils - The Russian individual insurance account number to validate.
+     * @param {Object} error - An object to store error information.
+     * @returns {boolean} - Indicates whether the SNILS is valid.
+     */
     static ValidateSnils(snils, error) {
         var result = false;
         if (typeof snils === 'number') {

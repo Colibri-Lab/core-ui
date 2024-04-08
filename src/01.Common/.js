@@ -1,3 +1,6 @@
+/**
+ * Represents common utility functions.
+ */
 Colibri.Common = class {
 
     /** @constructor */
@@ -7,16 +10,23 @@ Colibri.Common = class {
 
     
     /**
-     * Ожидание
-     * @param {number} timeout время ожидания в милисекундах 
-     * @return {Promise} 
+     * Delays execution for a specified time.
+     * @param {number} timeout - The time to wait in milliseconds.
+     * @return {Promise} - A promise that resolves after the specified time.
      */
     static Delay(timeout) {
         return new Promise((resolve, reject) => setTimeout(() => resolve(), timeout));
     }
 
+    /** @type {Object.<string, number>} */
     static _timers = {};
 
+    /**
+     * Starts a timer with the specified name.
+     * @param {string} name - The name of the timer.
+     * @param {number} timeout - The interval of the timer in milliseconds.
+     * @param {Function} tickFunction - The function to execute on each tick of the timer.
+     */
     static StartTimer(name, timeout, tickFunction) {
         if(Colibri.Common._timers[name]) {
             clearTimeout(Colibri.Common._timers[name]);
@@ -24,18 +34,21 @@ Colibri.Common = class {
         Colibri.Common._timers[name] = setInterval(tickFunction, timeout);
     }
 
+    /**
+     * Stops the timer with the specified name.
+     * @param {string} name - The name of the timer to stop.
+     */
     static StopTimer(name) {
         clearInterval(Colibri.Common._timers[name]);
         delete Colibri.Common._timers[name];
     }
 
     /**
-     *
-     * @param {Function} action метод проверки
-     * @param maxTimeout
-     * @param interval
-     * @returns {Promise}
-     * @constructor
+     * Waits for a condition to be true.
+     * @param {Function} action - The function to check the condition.
+     * @param {number} [maxTimeout=0] - The maximum time to wait in milliseconds.
+     * @param {number} [interval=100] - The interval to check the condition in milliseconds.
+     * @returns {Promise} - A promise that resolves when the condition is true or the timeout occurs.
      */
     static Wait(action, maxTimeout = 0, interval = 100) {
         let waiting = 0;
@@ -66,24 +79,26 @@ Colibri.Common = class {
     }
 
     /**
-     * Ожидает появления документа
-     * @return {Promise}
+     * Waits for the document to be ready.
+     * @return {Promise} - A promise that resolves when the document is ready.
      */
     static WaitForDocumentReady() {
         return Colibri.Common.Wait(() => document.readyState === 'complete');
     }
 
     /**
-     * Ожидает появления документа
-     * @return {Promise}
+     * Waits for the body element to be available.
+     * @return {Promise} - A promise that resolves when the body element exists.
      */
     static WaitForBody() {
         return Colibri.Common.Wait(() => document.body != null);
     }
 
     /**
-     * Загружает скрипт по URL
-     * @param {string} url ссылка на скрипт
+     * Loads a script from a URL.
+     * @param {string} url - The URL of the script.
+     * @param {string} [id=null] - The ID to assign to the script element.
+     * @returns {Promise} - A promise that resolves with the ID of the loaded script.
      */
     static LoadScript(url, id = null) {
 
@@ -111,8 +126,10 @@ Colibri.Common = class {
     }
 
     /**
-     * Загружает стили по URL
-     * @param {string} url ссылка на стили
+     * Loads styles from a URL.
+     * @param {string} url - The URL of the styles.
+     * @param {string} [id=null] - The ID to assign to the link element.
+     * @returns {Promise} - A promise that resolves with the ID of the loaded styles.
      */
      static LoadStyles(url, id = null) {
 
@@ -140,6 +157,12 @@ Colibri.Common = class {
 
     }
 
+    /**
+     * Executes a callback function for each item in an array with a delay between each execution.
+     * @param {Array} array - The array of items.
+     * @param {number} timeout - The delay between executions in milliseconds.
+     * @param {Function} callback - The callback function to execute for each item.
+     */
     static Tick(array, timeout, callback) {
         array.forEach((v, i) => {
             Colibri.Common.Delay(i * timeout).then(() => {

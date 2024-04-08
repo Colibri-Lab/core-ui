@@ -1,6 +1,11 @@
+/**
+ * Represents a dispatcher for events.
+ */
 Colibri.Events.Dispatcher = class extends Destructable {
 
-    /** @constructor */
+    /**
+     * Creates a new instance of Colibri.Events.Dispatcher.
+     */
     constructor() {
         super();
         /** @type {Object.<string, Array<Object.<handler: Function, respondent: Object>>>} - список обработчиков */
@@ -14,19 +19,21 @@ Colibri.Events.Dispatcher = class extends Destructable {
     }
 
     /**
-     * Регистрация события
-     * @param {string} eventName событие
-     * @param {boolean} bubbles поднимается вверх по дереву
+     * Registers an event.
+     * @param {string} eventName - The name of the event.
+     * @param {boolean} bubbles - Indicates whether the event bubbles up the component tree.
+     * @param {string} description - Description of the event.
      */
     RegisterEvent(eventName, bubbles, description) {
         this.__events[eventName] = { name: eventName, bubbles: bubbles, description: description };
     }
 
     /**
-     * Добавляет обработчик события
-     * @param {string|array} eventName Событие
-     * @param {Function} handler Метод
-     * @param {boolean} prepend Вставить в начало
+     * Adds an event handler.
+     * @param {string|array} eventName - The event or array of events to add the handler to.
+     * @param {Function} handler - The handler method.
+     * @param {boolean} [prepend=false] - Whether to insert the handler at the beginning.
+     * @param {Object} [respondent=this] - The object that responds to the event.
      * @returns {Colibri.Events.Dispatcher}
      */
     AddHandler(eventName, handler, prepend = false, respondent = this) {
@@ -56,9 +63,9 @@ Colibri.Events.Dispatcher = class extends Destructable {
     }
 
     /**
-     * Удалить обработчик события
-     * @param {string} eventName Событие
-     * @param {Function} handler Обработчик
+     * Removes an event handler.
+     * @param {string} eventName - The event to remove the handler from.
+     * @param {Function} handler - The handler to remove.
      * @returns {Colibri.Events.Dispatcher}
      */
     RemoveHandler(eventName, handler) {
@@ -79,10 +86,10 @@ Colibri.Events.Dispatcher = class extends Destructable {
     }
 
     /**
-     *
-     * @param {string} eventName Событие
-     * @param {Function} handler Обработчик
-     * @returns {boolean}
+     * Checks if an event handler exists.
+     * @param {string} eventName - The event to check for the handler.
+     * @param {Function} handler - The handler to check for.
+     * @returns {boolean} - True if the handler exists, false otherwise.
      */
     HandlerExists(eventName, handler) {
         const handlerObject = { handler: handler, respondent: this },
@@ -97,9 +104,9 @@ Colibri.Events.Dispatcher = class extends Destructable {
     }
 
     /**
-     * Поднять событие
-     * @param {(Colibri.Events.Event|string)} event событие
-     * @param {object} args аргументы
+     * Dispatches an event.
+     * @param {(Colibri.Events.Event|string)} event - The event object or its name.
+     * @param {object} args - Arguments for the event.
      * @returns {Colibri.Events.Dispatcher}
      */
     Dispatch(event, args = null) {
@@ -139,10 +146,16 @@ Colibri.Events.Dispatcher = class extends Destructable {
         return true;
     }
 
+    /**
+     * Clears all event handlers.
+     */
     ClearHandlers() {
         this.__handlers = {};
     }
 
+    /**
+     * Disposes of the dispatcher.
+     */
     Dispose() {
         this.__events = {};
         this.__handlers = {};

@@ -1,4 +1,6 @@
-
+/**
+ * Represents a utility for handling hash actions in the browser.
+ */
 Colibri.Common.HashActions = class {
     
     
@@ -17,12 +19,17 @@ Colibri.Common.HashActions = class {
         };
     }
     
+    /**
+     * Handles the DOM ready event.
+     */
     HandleDomReady() {
         this.InitDOMHandlers();
         this._handleAction(location.hash.substring(1));
     }
     
-    
+    /**
+     * Initializes DOM event handlers.
+     */
     InitDOMHandlers() {
 
         Colibri.Common.StartTimer('actions-timer', 500, () => {
@@ -41,12 +48,22 @@ Colibri.Common.HashActions = class {
         
     }
     
+    /**
+     * Adds a handler for a hash action.
+     * @param {string} action - The hash action.
+     * @param {Function} handler - The handler function.
+     */
     AddHandler(action, handler) {
         if(this.handlers[action] === undefined)
             this.handlers[action] = [];
         this.handlers[action].push(handler);
     }
 
+    /**
+     * Removes a handler for a hash action.
+     * @param {string} action - The hash action.
+     * @param {Function} handler - The handler function.
+     */
     RemoveHandler(action, handler) {
         if(this.handlers[action] === undefined)
             this.handlers[action] = [];
@@ -56,6 +73,12 @@ Colibri.Common.HashActions = class {
         }
     }
     
+    /**
+     * Raises a hash action.
+     * @param {string} action - The hash action.
+     * @param {Object} [args={}] - Additional arguments.
+     * @returns {boolean} - Indicates if the action was raised successfully.
+     */
     Raise(action, args = {}) {
         try {
             if(this.handlers[action] === undefined)
@@ -72,6 +95,11 @@ Colibri.Common.HashActions = class {
         
     }
     
+    /**
+     * Handles a hash action.
+     * @param {string} actionString - The hash action string.
+     * @private
+     */
     _handleAction(actionString) {
         
         var queryString = actionString.toObject('&=');
