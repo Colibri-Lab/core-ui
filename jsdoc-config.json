@@ -1,0 +1,34 @@
+{
+	"tags": {
+		"allowUnknownTags": true,
+        "dictionaries": ["jsdoc","closure"]
+	},
+	"source": {
+		"include": [
+			"./src"
+		]
+	},
+	"plugins": [
+        "plugins/markdown",
+        "plugins/summarize"
+    ],
+	"templates": {
+		"cleverLinks": false,
+		"monospaceLinks": false,
+		"default": {
+			"outputSourceFiles": true
+		}
+	},
+	"opts": {
+		"encoding": "utf8",
+		"destination": "./docs/",
+		"recurse": true
+	},
+	"markdown.hardwrap": true,
+	"markdown": {
+		"hardwrap": true
+	},
+	"metadata": {
+		"title": "Colibri UI Class List"
+	}
+}

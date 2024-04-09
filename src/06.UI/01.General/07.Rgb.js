@@ -1,10 +1,33 @@
+/**
+ * RGB color representation
+ * @class
+ */
 Colibri.UI.Rgb = class {
 
+    /**
+     * @private
+     */
     _r = 0;
+    /**
+     * @private
+     */
     _g = 0;
+    /**
+     * @private
+     */
     _b = 0;
+    /**
+     * @private
+     */
     _a = 1;
 
+    /**
+     * @constructor
+     * @param {Number} r Red color (0, 256)
+     * @param {Number} g Green color (0, 256) 
+     * @param {Number} b Blue color (0, 256)
+     * @param {Number} a Opaque (0, 1)
+     */
     constructor(r = 0, g = 0, b = 0, a = 255) {
         this._r = r;
         this._g = g;
@@ -12,10 +35,24 @@ Colibri.UI.Rgb = class {
         this._a = a;
     }
     
+    /**
+     * Creates RGB color representation
+     * @static 
+     * @param {Number} r Red color (0, 256)
+     * @param {Number} g Green color (0, 256) 
+     * @param {Number} b Blue color (0, 256)
+     * @param {Number} a Opaque (0, 1)
+     * @returns {Colibri.UI.Rgb}
+     */
     static Create(r = 0, g = 0, b = 0, a = 255) {
         return new Colibri.UI.Rgb(r, g, b, a);
     }
 
+    /**
+     * Creates RGB color from object
+     * @param {object} obj Object that contains {r,g,b,a} properties 
+     * @returns {Colibri.UI.Rgb}
+     */
     fromObject(obj) {
         this._r = obj.r;
         this._g = obj.g;
@@ -24,6 +61,11 @@ Colibri.UI.Rgb = class {
         return this;
     }
 
+    /**
+     * Creates RGB color from hex color
+     * @param {string} hex HEX color presentation 
+     * @returns {Colibri.UI.Rgb}
+     */
     fromHex(hex) {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]*?)$/i.exec(hex);
         if(!result) {
@@ -44,9 +86,10 @@ Colibri.UI.Rgb = class {
      * Assumes h, s, and l are contained in the set [0, 1] and
      * returns r, g, and b in the set [0, 255].
      *
-     * @param   Number  h       The hue
-     * @param   Number  s       The saturation
-     * @param   Number  l       The lightness
+     * @param   {Number}  h       The hue
+     * @param   {Number}  s       The saturation
+     * @param   {Number}  l       The lightness
+     * @returns {Colibri.UI.Rgb}
      */
     fromHSL(h,s,l) {
         var r, g, b;
@@ -83,10 +126,10 @@ Colibri.UI.Rgb = class {
      * Assumes h, s, and v are contained in the set [0, 1] and
      * returns r, g, and b in the set [0, 255].
      *
-     * @param   Number  h       The hue
-     * @param   Number  s       The saturation
-     * @param   Number  v       The value
-     * @return  Array           The RGB representation
+     * @param   {Number}  h       The hue
+     * @param   {Number}  s       The saturation
+     * @param   {Number}  v       The value
+     * @return  {Colibri.UI.Rgb}           The RGB representation
      */
     fromHSV(h, s, v) {
 
@@ -119,11 +162,25 @@ Colibri.UI.Rgb = class {
         return this;
     }
 
+    /**
+     * Converts an HSV color value to RGB. Conversion formula
+     * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
+     * Assumes h, s, and v are contained in the set [0, 1] and
+     * returns r, g, and b in the set [0, 255].
+     *
+     * @param   {Number}  h       The hue
+     * @param   {Number}  s       The saturation
+     * @param   {Number}  v       The value
+     * @return  {Colibri.UI.Rgb}           The RGB representation
+     */
     fromHue(hue) {
         this.fromHSV(hue, 1, 1);
         return this;
     }
 
+    /**
+     * @private
+     */
     _toHex() {
         try {
             let alpha = this._a.toString(16).expand('0', 2);
@@ -134,10 +191,16 @@ Colibri.UI.Rgb = class {
         }
     }
 
+    /**
+     * @private
+     */
     _getHue() {
         return this._getHSV().h;
     }
 
+    /**
+     * @private
+     */
     _getHSL() {
         const r = this._r / 255, g = this._g / 255, b = this._b / 255;
 
@@ -162,6 +225,9 @@ Colibri.UI.Rgb = class {
         return { h: h, s: s, l: l };
     }
 
+    /**
+     * @private
+     */
     _getHSV() {
         let r = this._r / 255, g = this._g / 255, b = this._b / 255;
 
@@ -186,32 +252,66 @@ Colibri.UI.Rgb = class {
         return { h: h, s: s, v: v };
     }
 
+    /**
+     * Returns Red component of current color
+     * @readonly
+     */
     get red() {
         return this._r;
     }
+    /**
+     * Returns Green component of corrent color
+     * @readonly
+     */
     get green() {
         return this._g;
     }
+    /**
+     * Returns Blue component of corrent color
+     * @readonly
+     */
     get blue() {
         return this._g;
     }
+    /**
+     * Returns Alpha channel of color
+     */
     get alpha() {
         return this._a;
     }
+    /**
+     * Sets Alpha channel of color
+     */
+    set alpha(value) {
+        this._a = value;
+    }
+    /**
+     * Returns Hue
+     * @readonly
+     */
     get hue() {
         return this._getHue();
     }
+    /**
+     * Returns Hex representation of color
+     * @readonly
+     */
     get hex() {
         return this._toHex();
     }
+    /**
+     * Returns HSL representation of color
+     * @readonly
+     */
     get hsl() {
         return this._getHSL();
     }
+    /**
+     * Returns HSV representation of color
+     * @readonly
+     */
     get hsv() {
         return this._getHSV();
     }    
 
-    set alpha(value) {
-        this._a = value;
-    }
 }

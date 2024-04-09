@@ -7,10 +7,107 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 {
 
     /**
+     * Null handler, prevents handling event
+     * @static
+     * @param {string|Colibri.UI.Event} event event to handle
+     * @param {*} args arguments for event 
+     */
+    static __nullHandler = (event, args) => {};
+
+    /**
+     * Dom events map to Colibri events
+     * @static
+     */
+    static __domHandlers = {
+        Clicked: {
+            domEvent: 'click',
+        },
+        DoubleClicked: {
+            domEvent: 'dblclick',
+        },
+        MouseUp: {
+            domEvent: 'mouseup',
+        },
+        MouseEnter: {
+            domEvent: 'mouseenter',
+        },
+        MouseLeave: {
+            domEvent: 'mouseleave',
+        },
+        KeyDown: {
+            domEvent: 'keydown',
+        },
+        KeyUp: {
+            domEvent: 'keyup',
+        },
+        KeyPressed: {
+            domEvent: 'keypress',
+        },
+        ReceiveFocus: {
+            domEvent: 'focus',
+        },
+        LoosedFocus: {
+            domEvent: 'blur',
+        },
+        Pasted: {
+            domEvent: 'paste',
+            delay: 100,
+        },
+        DragStart: {
+            domEvent: 'dragstart'
+        },
+        DragEnd: {
+            domEvent: 'dragend'
+        },
+        DragEnter: {
+            domEvent: 'dragenter',
+        },
+        DragOver: {
+            domEvent: 'dragover',
+        },
+        DragLeave: {
+            domEvent: 'dragleave',
+        },
+        Drop: {
+            domEvent: 'drop',
+        },
+        Drag: {
+            domEvent: 'drag',
+        },
+        MouseDown: {
+            domEvent: 'mousedown',
+        },
+        ContextMenu: {
+            domEvent: 'contextmenu'
+        },
+        MouseMove: {
+            domEvent: 'mousemove'
+        },
+        Scrolled: {
+            domEvent: 'scroll'
+        },
+        TouchStarted: {
+            domEvent: 'touchstart'
+        },
+        TouchEnded: {
+            domEvent: 'touchend'
+        },
+        TouchMoved: {
+            domEvent: 'touchmove'
+        }
+    };
+
+    /**
+     * Maped handlers
+     * @private
+     */
+    __domHandlersAttached = {};
+
+    /**
      * @constructor
-     * @param {string} name - наименование обьекта
-     * @param {string} element наименование тэга
-     * @param {(Colibri.UI.Component|Element)} container - обьект в контейнере которого будет создан текущий компонент
+     * @param {string} name - name of component
+     * @param {string} element element to create component on
+     * @param {Colibri.UI.Component|Element} container container object
      */
     constructor(name, container, element, createEvents = {}) {
         super();
@@ -28,12 +125,18 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         /** @type {string} */
         this._toolTip = '';
+        /** @type {string} */
         this._toolTipPosition = 'left bottom';
 
+        /** @type {boolean} */
         this._routeIsRegExp = true;
 
+        /** @type {Colibri.UI.Store} */
         this._storage = null;
+
+        /** @type {string} */
         this._binding = '';
+        
         this._clickToCopyHandler = (e) => this.value.copyToClipboard() && App.Notices.Add(new Colibri.UI.Notice('#{ui-copy-info}', Colibri.UI.Notice.Success));
 
         Object.forEach(createEvents, (event, handler) => {
@@ -99,6 +202,13 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         });
     }
 
+    /**
+     * Converts property to its correct type, if the value is function then runs a function
+     * @private
+     * @param {string} type type of property to convert 
+     * @param {*} value value of property 
+     * @returns 
+     */
     _convertProperty(type, value) {
         if(typeof value === 'function' && type != 'Function') {
             return value(value, this);
@@ -118,10 +228,18 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return value;
     }
 
+    /**
+     * @private
+     * @returns {string}
+     */
     _newName() {
         return 'component-' + Date.Mc()
     }
 
+    /**
+     * Registers an observer for detect visibility
+     * @private
+     */
     _registerObserver() {
         this._observer = new window.IntersectionObserver(([entry]) => {
             if(this._visible != entry.isIntersecting) {
@@ -135,6 +253,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._observer.observe(this._element);
     }
 
+    /**
+     * Unregisters an observer
+     * @private
+     */
     _unregisterObserver() {
         if(this._observer) {
             this._observer.unobserve(this._element);
@@ -142,6 +264,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
+    /**
+     * Creates a new component class
+     * @param {Element|string} element Element to create component for
+     * @param {Element|Colibri.UI.Component} parent Parent element or component
+     * @returns {string}
+     */
     CreateComponentClass(element, parent) {
         let comp = null;
         try {
@@ -214,6 +342,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return null;
     }
 
+    /**
+     * Creates a new component
+     * @param {Element|string} element Element to create component for
+     * @param {Element|Colibri.UI.Component} parent Parent element or component
+     * @returns {Colibri.UI.Component}
+     */
     CreateComponent(objectClass, element, parent, root) {
         try {
 
@@ -249,6 +383,13 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return null;
     }
 
+    /**
+     * Processes children elements and creates a components
+     * @param {Array<Element>} children children to generate
+     * @param {Element|null} parent parent component
+     * @param {boolean} dontDispatch do not dispatch ChildsProcessed event
+     * @param {Colibri.UI.Component} root Root component
+     */
     ProcessChildren(children, parent, dontDispatch = false, root = null) {
         if (!parent) {
             parent = this._element;
@@ -341,6 +482,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     }
 
+    /**
+     * Generates children
+     * @param {Element|string} element Element to process children for
+     * @param {Element|Colibri.UI.Component} parent parent component or parent element
+     */
     GenerateChildren(element, parent) {
         if (!element) {
             element = Element.create('div');
@@ -354,6 +500,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.ProcessChildren(element.childNodes, parent, false, this);
     }
 
+    /**
+     * @private
+     */
     _registerEvents() {
         this.RegisterEvent('ComponentRendered', false, 'Поднимается, когда компонента готова и привязана к DOM-у');
         this.RegisterEvent('ComponentDisposed', false, 'Поднимается, когда компонента отвязана от DOM-а');
@@ -405,11 +554,19 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.RegisterEvent('TouchMoved', false, 'Когда вазюкают пальцем по экрану');
     }
 
-    
+    /**
+     * Gets context menu icon component
+     * @readonly
+     * @returns {Colibri.UI.Component}
+     */
     get contextMenuIcon() {
         return this.Children(this._name + '-contextmenu-icon-parent');
     }
 
+    /**
+     * @private
+     * @returns {Colibri.UI.Component}
+     */
     _getContextMenuIcon() {
         if(this.Children(this._name + '-contextmenu-icon-parent')) {
             return this.Children(this._name + '-contextmenu-icon-parent/' + this._name + '-contextmenu-icon');
@@ -417,6 +574,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return null;
     }
 
+    /**
+     * @private
+     * @returns {Colibri.UI.Component}
+     */
     _createContextMenuButton() {
         if(!this._hasContextMenu || this.Children(this._name + '-contextmenu-icon-parent')) {
             return;
@@ -434,6 +595,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         contextMenuIcon.AddHandler('Clicked', (event, args) => this.Dispatch('ContextMenuIconClicked', args));
     }
 
+    /**
+     * @private
+     */
     _removeContextMenuButton() {
         if(this._hasContextMenu && this.Children(this._name + '-contextmenu-icon-parent')) {
             this.Children(this._name + '-contextmenu-icon-parent').Dispose();
@@ -441,6 +605,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
+    /**
+     * Shows context menu in given orientation and point
+     * @param {Array<string>} orientation Orientation
+     * @param {string} className class name for context menu
+     * @param {{top, left}} point point to show contextmenu on
+     */
     ShowContextMenu(orientation = [Colibri.UI.ContextMenu.RT, Colibri.UI.ContextMenu.RB], className = '', point = null) {
 
 
@@ -470,89 +640,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     }
 
-    static __nullHandler = (event, args) => {};
-
-    static __domHandlers = {
-        Clicked: {
-            domEvent: 'click',
-        },
-        DoubleClicked: {
-            domEvent: 'dblclick',
-        },
-        MouseUp: {
-            domEvent: 'mouseup',
-        },
-        MouseEnter: {
-            domEvent: 'mouseenter',
-        },
-        MouseLeave: {
-            domEvent: 'mouseleave',
-        },
-        KeyDown: {
-            domEvent: 'keydown',
-        },
-        KeyUp: {
-            domEvent: 'keyup',
-        },
-        KeyPressed: {
-            domEvent: 'keypress',
-        },
-        ReceiveFocus: {
-            domEvent: 'focus',
-        },
-        LoosedFocus: {
-            domEvent: 'blur',
-        },
-        Pasted: {
-            domEvent: 'paste',
-            delay: 100,
-        },
-        DragStart: {
-            domEvent: 'dragstart'
-        },
-        DragEnd: {
-            domEvent: 'dragend'
-        },
-        DragEnter: {
-            domEvent: 'dragenter',
-        },
-        DragOver: {
-            domEvent: 'dragover',
-        },
-        DragLeave: {
-            domEvent: 'dragleave',
-        },
-        Drop: {
-            domEvent: 'drop',
-        },
-        Drag: {
-            domEvent: 'drag',
-        },
-        MouseDown: {
-            domEvent: 'mousedown',
-        },
-        ContextMenu: {
-            domEvent: 'contextmenu'
-        },
-        MouseMove: {
-            domEvent: 'mousemove'
-        },
-        Scrolled: {
-            domEvent: 'scroll'
-        },
-        TouchStarted: {
-            domEvent: 'touchstart'
-        },
-        TouchEnded: {
-            domEvent: 'touchend'
-        },
-        TouchMoved: {
-            domEvent: 'touchmove'
-        }
-    };
-
-    __domHandlersAttached = {};
-
+    /**
+     * Adds a event handler
+     * @param {string} eventName name of event to attach
+     * @param {Function} handler handler to attach
+     * @param {boolean} prepend prepend to array of handlers
+     * @param {Colibri.UI.Dispatcher} respondent respondet object
+     * @returns {Colibri.Events.Dispatcher}
+     */
     AddHandler(eventName, handler, prepend = false, respondent = this) {
         handler = handler || Colibri.UI.Component.__nullHandler;
         const __domHandlers = Colibri.UI.Component.__domHandlers;
@@ -561,6 +656,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return super.AddHandler(eventName, handler, prepend, respondent);
     }
 
+    /**
+     * Triggers an event to current component
+     * @param {string} eventName event name
+     */
     TriggerEvent(eventName) {
         const __domHandlers = Colibri.UI.Component.__domHandlers;
         if(__domHandlers[eventName]) {
@@ -569,6 +668,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
+    /**
+     * Binds html event to attached component event
+     * @private
+     * @param {string} eventName event name
+     * @param {*} args event arguments
+     */
     __bindHtmlEvent(eventName, args) {
         let {domEvent, respondent, delay, handler} = args;
         handler = handler ? handler : (e => this.Dispatch(eventName, {domEvent: e}));
@@ -590,10 +695,17 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         respondent.addEventListener(domEvent, handler);
     }
 
+    /**
+     * @protected
+     */
     _bindHtmlEvents() {
         
     }
 
+    /**
+     * Removes all attachments for html events
+     * @private
+     */
     __removeHtmlEvents() {
         for(let {domEvent, respondent, handler} of Object.values(this.__domHandlersAttached)) {
             (respondent !== this._element)  && respondent.removeEventListener(domEvent, handler);
@@ -602,6 +714,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.__domHandlersAttached = {};
     }
 
+    /**
+     * Registers event handlers
+     * @protected
+     */
     _registerEventHandlers() {
         // do nothing
     }
@@ -609,6 +725,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     /**
      * Namespace of component
      * Used in HTML templates to indicates module and component
+     * @type {string}
      */
     get namespace() {
         return this._element.attr('namespace') ?? this._element.closest('[namespace]')?.attr('namespace') ?? null;
@@ -673,7 +790,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Контейнер
+     * Container element
      * @type {Element}
      */
     get container() {
@@ -681,7 +798,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Контейнер
+     * Main element of component
      * @type {Element}
      */
     get mainElement() {
@@ -689,7 +806,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Конрейнер родителя
+     * Parent container of component
      * @type {Element}
      */
     get parentContainer() {
@@ -809,7 +926,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Позиция элемента относительно левого края документа
+     * Right position of component element
      * @type {Number}
      */
     get right() {
@@ -817,7 +934,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return bounds.left + bounds.outerWidth;
     }
     /**
-     * Позиция элемента относительно левого края документа
+     * Right position of component element
      * @type {Number}
      */
     set right(value) {
@@ -831,7 +948,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Позиция элемента относительно верхнего края документа
+     * Top position of component element
      * @type {Number}
      */
     get top() {
@@ -839,7 +956,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return bounds.top;
     }
     /**
-     * Позиция элемента относительно верхнего края документа
+     * Top position of component element
      * @type {Number}
      */
     set top(value) {
@@ -853,7 +970,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Позиция элемента относительно верхнего края документа
+     * Bottom position of component element
      * @type {Number}
      */
     get bottom() {
@@ -861,7 +978,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return bounds.top + bounds.outerHeight;
     }
     /**
-     * Позиция элемента относительно верхнего края документа
+     * Bottom position of component element
      * @type {Number}
      */
     set bottom(value) {
@@ -876,14 +993,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Стили обьекта
+     * Style of component element
      * @type {Object}
      */
     get styles() {
         return this._element.css();
     }
     /**
-     * Стили обьекта
+     * Style of component element
      * @type {Object}
      */
     set styles(value) {
@@ -892,14 +1009,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Наименование обьекта
+     * Name of object
      * @type {string}
      */
     get name() {
         return this._name;
     }
     /**
-     * Наименование обьекта
+     * Name of object
      * @type {string}
      */
     set name(value) {
@@ -908,14 +1025,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Название класса
+     * Class name of component element
      * @type {string}
      */
     get className() {
         return this._element.attr('class');
     }
     /**
-     * Название класса
+     * Class name of component element
      * @type {string}
      */
     set className(value) {
@@ -927,14 +1044,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * ID элемента
+     * Element ID
      * @type {string}
      */
     get elementID() {
         return this._element.attr('id');
     }
     /**
-     * ID элемента
+     * Element ID
      * @type {string}
      */
     set elementID(value) {
@@ -942,14 +1059,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * HTML контент элемента
+     * HTML content of component element
      * @type {string}
      */
     get html() {
         return this._element.html();
     }
     /**
-     * HTML контент элемента
+     * HTML content of component element
      * @type {string}
      */
     set html(value) {
@@ -957,14 +1074,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Таг
+     * Tag of component
      * @type {Object}
      */
     get tag() {
         return this._tag;
     }
     /**
-     * Таг
+     * Tag of component
      * @type {Object}
      */
     set tag(value) {
@@ -972,14 +1089,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Данные
+     * Data of component (data- attributes in element)
      * @type {Object}
      */
     get data() {
         return this._element.data();
     }
     /**
-     * Данные
+     * Data of component (data- attributes in element)
      * @type {Object}
      */
     set data(value) {
@@ -987,14 +1104,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Элемент только для чтения
+     * Is component readonly
      * @type {boolean}
      */
     get readonly() {
         return this._element.is(':scope[readonly]');
     }
     /**
-     * Элемент только для чтения
+     * Is component readonly
      * @type {boolean}
      */
     set readonly(value) {
@@ -1004,29 +1121,31 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Индекс основного элемента в парент-е
+     * Index of component in its parent 
      * @type {Number}
+     * @readonly
      */
     get index() {
         return this._element.index();
     }
     /**
-     * Индекс основного элемента в парент-е
+     * Index of component element in its parent element
      * @type {Number}
+     * @readonly
      */
     get childIndex() {
         return this._parent ? this._parent.indexOf(this.name) : null;
     }
 
     /**
-     * Элемент выключен
+     * Is component enabled
      * @type {boolean}
      */
     get enabled() {
         return !this._element.is(':disabled') && !this._element.is('.ui-disabled');
     }
     /**
-     * Элемент выключен
+     * Is component enabled
      * @type {boolean}
      */
     set enabled(val) {
@@ -1048,14 +1167,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Видимый или нет
+     * Is component shown
      * @type {boolean}
      */
     get shown() {
         return this._element.classList.contains('app-component-shown');
     }
     /**
-     * Видимый или нет
+     * Is component shown
      * @type {boolean}
      */
     set shown(value) {
@@ -1072,6 +1191,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
+    /**
+     * Brings coponent to top of z-index
+     */
     BringToFront() {
         const position = this._element.css('position');
         if(['relative', 'fixed', 'absolute'].indexOf(position) > -1) {
@@ -1082,25 +1204,31 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
+    /**
+     * Sends componpent to bottom of z-index
+     */
     SendToBack() {
         this._element.css('z-index', null);
     }
 
     /**
-     * Видимый или нет
+     * Component value
      * @type {String}
      */
     get value() {
         return this._element.html();
     }
     /**
-     * Видимый или нет
+     * Component value
      * @type {String}
      */
     set value(value) {
        this._element.html(value);
     }
 
+    /**
+     * @private
+     */
     _createTipObject() {
         const tip = document.body.querySelector('.tip');
         if(!tip) {
@@ -1112,14 +1240,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Подсказка
+     * Component toolTip
      * @type {String}
      */
     get toolTip() {
         return this._toolTip;
     }
     /**
-     * Подсказка
+     * Component toolTip
      * @type {String}
      */
     set toolTip(value) {
@@ -1144,6 +1272,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     }
 
+    /**
+     * @private
+     * @param {Element} elementObject element object to position tooltip
+     */
     _setToolTipPositionAndGap(elementObject = null) {
 
         elementObject = elementObject || this._element;
@@ -1209,14 +1341,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Позиция подсказки
+     * Position of tooltip
      * @type {left bottom,right bottom,left top,right top}
      */
     get toolTipPosition() {
         return this._toolTipPosition;
     }
     /**
-     * Позиция подсказки
+     * Position of tooltip
      * @type {left bottom,right bottom,left top,right top}
      */
     set toolTipPosition(value) {
@@ -1225,16 +1357,17 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Путь к компоненту в дереве
+     * Component path in Component dom
      * @type {string}
+     * @readonly
      */
     get path() {
         return (this.parent instanceof Colibri.UI.Component ? this.parent.path : '') + '/' + this.name;
     }
 
     /**
-     * Может ли компонента получить фокус
-     * @todo Исправить
+     * Can component get focus
+     * @readonly
      * @type {boolean}
      */
     get canFocus() {
@@ -1247,22 +1380,25 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Tab index
      * @type {number}
      */
     get tabIndex() {
         return this._element.attr('tabIndex');
     }
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Tab index
      * @type {number}
      */
     set tabIndex(value) {
         this._element.attr('tabIndex', value === 'true' || value === true ? Colibri.UI.tabIndex++ : value);
     }
 
+    /**
+     * Returns next component in Component DOM
+     * @readonly
+     * @type {Colibri.UI.Component}
+     */
     get next() {
         const myIndex = this.parent ? this.parent?.indexOf(this.name) : -1;
         if(myIndex === -1 || myIndex === this.parent.children - 1) {
@@ -1272,6 +1408,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return this.parent.Children(myIndex + 1);
     }
 
+    /**
+     * Returns previous component in Component DOM
+     * @readonly
+     * @type {Colibri.UI.Component}
+     */
     get prev() {
         const myIndex = this.parent ? this.parent.indexOf(this.name) : -1;
         if(myIndex === -1 || myIndex === 0) {
@@ -1281,6 +1422,13 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return this.parent.Children(myIndex - 1);
     }
 
+    /**
+     * 
+     * @param {Colibri.UI.Component} child child to move 
+     * @param {number} fromIndex current index of child 
+     * @param {number} toIndex new index of child 
+     * @param {boolean} raiseEvent rais ComponentMoved event
+     */
     MoveChild(child, fromIndex, toIndex, raiseEvent = false) {
         
         // если то же место то ничего не делаем
@@ -1302,6 +1450,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
+    /**
+     * Move current component up in its parent childs
+     */
     MoveUp() {
         if(!this.prev) {
             return;
@@ -1310,6 +1461,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.Dispatch('ComponentMoved', {direction: 'up'});
     }
 
+    /**
+     * Move current component down in its parent childs
+     */
     MoveDown() {
         if(!this.next) {
             return;
@@ -1318,6 +1472,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.Dispatch('ComponentMoved', {direction: 'down'});
     }
 
+    /**
+     * Returns component by its name
+     * @param {string} name name of component
+     * @returns {Colibri.UI.Component}
+     * @private
+     */
     _childByName(name) {
         const filtered = this._children.filter(c => c.name == name);
         if(filtered.length > 0) {
@@ -1326,17 +1486,24 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return null;
     }
 
+    /**
+     * Move element in DOM
+     * @private
+     * @param {Element} insertedElement element to move
+     * @param {Element} parentElement parent element
+     * @param {number} index move to this index
+     */
     _moveInDom(insertedElement, parentElement, index) {
         insertedElement.remove();
         parentElement.insertBefore(insertedElement, parentElement.children[index]);
     }
 
     /**
-     * Добавляет или возвращает компоненту по названию
-     * @param {string} name наименование обьекта
-     * @param {Colibri.UI.Component} val дочерний обьект
-     * @param {number} [index] индекс в массиве, куда вставить элемент
-     * @returns {Colibri.UI.Component[]}
+     * Adds or returns the component from child list    
+     * @param {string} name name of component
+     * @param {Colibri.UI.Component} val component to add 
+     * @param {number} [index] index in childs to add component to
+     * @returns {Colibri.UI.Component[]|Colibri.UI.Component}
      */
     Children(name, val = undefined, index = undefined, container = null, childContainer = null) {
         
@@ -1374,6 +1541,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return val;
     }
 
+    /**
+     * Sort child components
+     * @param {Function} callback callback for sorting
+     */
     Sort(callback) {
         this._children.sort(callback);
         this._children.forEach((child, index) => {
@@ -1388,6 +1559,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return this.Children().length;
     }
 
+    /**
+     * Returns index of child component in Component DOM
+     * @param {string} name name of child component
+     * @returns {Colibri.UI.Component}
+     */
     indexOf(name) {
         if(name instanceof Function) {
             return Array.findIndex(this._children, name);
@@ -1397,12 +1573,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
+     * Is conponent has shadow
      * @type {Boolean}
      */
     get hasShadow() {
         return this._shadow != null;
     }
     /**
+     * Is conponent has shadow
      * @type {Boolean}
      */
     set hasShadow(value) {
@@ -1430,6 +1608,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
+    /**
+     * Renders bounded data
+     * @protected
+     * @param {*} data data in store to bind
+     */
     __renderBoundedValues(data) {
         try {
             if(typeof data == 'string') {
@@ -1442,12 +1625,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
+     * Store to bind to component
      * @type {Colibri.UI.Store}
      */
     set store(value) {
         this._storage = value;
     }
     /**
+     * Store to bind to component
      * @type {Colibri.UI.Store}
      */
     get store() {
@@ -1455,6 +1640,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
+     * Path in store to bind to component
      * @type {String}
      */
     get binding() {
@@ -1462,6 +1648,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
+     * Path in store to bind to component
      * @type {String}
      */
     set binding(value) {
@@ -1541,6 +1728,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         
     }
 
+    /**
+     * Reloads binding
+     */
     ReloadBinding() {
         if (this._binding && this._binding instanceof Colibri.UI.Component) {
             this.__renderBoundedValues(this._binding.value);
@@ -1577,6 +1767,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
 
     /**
+     * Is component connected to DOM
+     * @readonly
      * @type {Boolean}
      */
     get isConnected() {
@@ -1584,12 +1776,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
+     * Top of the scroll
      * @type {Number}
      */
     get scrollTop() {
         return this._element.scrollTop;
     }
     /**
+     * Top of the scroll
      * @type {Number}
      */
     set scrollTop(value) {
@@ -1602,14 +1796,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Анимировать скрол
+     * Is scrolling must be animated
      * @type {boolean}
      */
     get animateScroll() {
         return this._animateScroll;
     }
     /**
-     * Анимировать скрол
+     * Is scrolling must be animated
      * @type {boolean}
      */
     set animateScroll(value) {
@@ -1617,9 +1811,18 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
+     * Is component must handle clicked out event
+     * @type {boolean}
+     */
+    get handleClickedOut() {
+        return this._handleClickedOut;
+    }
+    /**
+     * Is component must handle clicked out event
      * @type {boolean}
      */
     set handleClickedOut(value) {
+        this._handleClickedOut = value;
         if(value) {
             this.__bindHtmlEvent('__ClickedOut', {
                 domEvent: 'click',
@@ -1632,10 +1835,20 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             });
         }
     }
+
     /**
+     * Is component must handle resize event
+     * @type {boolean}
+     */
+    get handleResize() {
+        return this._handleResize;
+    }
+    /**
+     * Is component must handle resize event
      * @type {boolean}
      */
     set handleResize(value) {
+        this._handleResize = value;
         if(value) {
             this.__bindHtmlEvent('__Resized', {
                 domEvent: 'resized',
@@ -1651,9 +1864,18 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
+     * Is component must handle swipe
+     * @type {boolean}
+     */
+    get handleSwipe() {
+        return this._handleSwipe;
+    }
+    /**
+     * Is component must handle swipe
      * @type {boolean}
      */
     set handleSwipe(value) {
+        this._handleSwipe = value;
         if(value) {
             this.__touchStartedPos = null;
             this.AddHandler('TouchStarted', (event, args) => {
@@ -1690,6 +1912,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
+    /**
+     * Connect component to DOM
+     * @param {Element} container container to connect
+     * @param {number} index index to connect child in
+     * @param {boolean} performBinding perform reload binding after connection
+     */
     ConnectTo(container, index = null, performBinding = false) {
         this._container = container instanceof Colibri.UI.Component ? container.container : container;
         if(this._shadow) {
@@ -1707,6 +1935,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.Dispatch('ConnectedTo');
     }
 
+    /**
+     * Disconnects component from DOM
+     */
     Disconnect() {
         const parentContainer = this._container;
         this._element.remove();
@@ -1715,6 +1946,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return parentContainer;
     }
 
+    /**
+     * Keeps component in memory but removes from DOM
+     */
     KeepInMind() {
         if(this._container) {
             this._hideData = {index: this.index, parent: this._container};
@@ -1724,6 +1958,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
+    /**
+     * Retreives component from memory to DOM in its older position
+     */
     Retreive() {
         if(this._hideData && this._hideData.parent) {
             this.ConnectTo(this._hideData.parent, this._hideData.index);
@@ -1741,7 +1978,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Очищает дочерние компоненты
+     * Clears a children of component
      */
     Clear() {
         this.ForReverseEach((name, control) => {
@@ -1749,6 +1986,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         });
     }
 
+    /**
+     * Hides a tooltip object forcely
+     */
     HideToolTip() {
         const tip = document.body.querySelector('.tip');
         if(tip) {
@@ -1757,7 +1997,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Удаляет компоненту
+     * Disposes a component object and removes it from DOM
      */
     Dispose() {
         this.hasShadow = false;
@@ -1783,8 +2023,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Находит компоненту по пути
-     * @param {string} path путь к компоненту в дереве
+     * Finds component by path
+     * @param {string} path path to component in Component DOM
      * @returns {Colibri.UI.Component}
      */
     Find(path) {
@@ -1792,8 +2032,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Находит компоненты по пути
-     * @param {string} path путь к компоненту в дереве
+     * Finds all components by path
+     * @param {string} path path to components
      * @returns {Colibri.UI.Component}
      */
     FindAll(path) {
@@ -1801,7 +2041,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Находит компоненту по наименованию, поиск по дереву, наименование должно быть уникальным, иначе будет найдено первое
+     * Finds a first occurance of component by name
      * @param {string} path путь к компоненту в дереве
      * @returns {Colibri.UI.Component}
      */
@@ -1815,8 +2055,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Добавляет класс в список classList
-     * @param {string} val название класса
+     * Adds class name to classList of element
+     * @param {string} val class name
      * @returns {this}
      */
     AddClass(val) {
@@ -1833,8 +2073,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Удаляет класс из списка classList
-     * @param {string} val название класса
+     * Removes class names from classList of element
+     * @param {string|Array<string>} val class name or array of class names
      * @returns {this}
      */
     RemoveClass(val) {
@@ -1849,8 +2089,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Проверяет есть ли класс у компонента
-     * @param {string} val название класса
+     * Checkes when component element contains a class name
+     * @param {string} val name of class
      * @returns {this}
      */
     ContainsClass(val) {
@@ -1858,7 +2098,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Ставит фокус на компоменту
+     * Puts a focus to the component
      * @returns {Colibri.UI.Component}
      */
     Focus() {
@@ -1872,7 +2112,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Убирает фокус с компоменты
+     * Blurs a focus from component
      * @returns {Colibri.UI.Component}
      */
     Blur() {
@@ -1886,8 +2126,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Крутит дочерние компоненты
-     * @param {Function} handler обработчик
+     * Cycles a component childs and runs a handler
+     * @param {Function} handler handler
      */
     ForEach(handler) {
         const children = [...this._children];
@@ -1901,8 +2141,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Крутит дочерние компоненты
-     * @param {Function} handler обработчик
+     * Maps a component childs and runs a handler, returns an array of component childs
+     * @param {Function} handler handler
+     * @returns {Array<Colibri.UI.Component>}
      */
     Map(handler) {
         const children = [...this._children];
@@ -1915,7 +2156,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Крутит дочерние компоненты в обратном порядке
+     * Cycles a component childs in reverse order and runs a handler
      * @param {Function} handler обработчик
      */
     ForReverseEach(handler) {
@@ -1929,8 +2170,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Передвигает компоненту в видимую область родительского котейнера
-     * @param {(Colibri.UI.Component|HTMLElement)} [parent] родительский контейнер
+     * Ensures that the component is visible in parent porsion
+     * @param {(Colibri.UI.Component|HTMLElement)} [parent] parent component
      * @returns {void}
      */
     EnsureVisible(parent, top = null) {
@@ -1945,11 +2186,17 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
+    /**
+     * Scrolls a parent component
+     * @param {number} to position to scroll
+     * @param {number} duration animation duration
+     */
     ScrollTo(to = 0, duration = 200) {
         this._element.animateScrollTop(to, duration);
     }
 
     /**
+     * Is component visible
      * @type {Boolean}
      * @readonly
      */
@@ -1957,17 +2204,23 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return this._visible;
     }
 
+    /**
+     * Is component element visible
+     * @readonly
+     */
     get elementVisible() {
         return this._element.computedCss('display') !== 'none' && this._element.computedCss('visibility') !== 'hidden';
     }
 
     /**
+     * Is component must handle visibility change
      * @type {Boolean}
      */
     get handleVisibilityChange() {
         return !!this._observer;
     }
     /**
+     * Is component must handle visibility change
      * @type {Boolean}
      */
     set handleVisibilityChange(value) {
@@ -1980,23 +2233,29 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
-     * Проверяет содержит ли компонента нужный элемент
+     * Checks the component contains and element
      * @param {HTMLElement} element элемент
      */
     ContainsElement(element) {
         return this._element.contains(element);
     }
 
-
+    /**
+     * Show component
+     */
     Show() {
         this.shown = true;
     }
 
+    /**
+     * Hide component
+     */
     Hide() {
         this.shown = false;
     }
 
     /**
+     * Is component draggable
      * @type {boolean}
      */
     get draggable() {
@@ -2004,6 +2263,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
+     * Is component draggable
      * @type {boolean}
      */
     set draggable(value) {
@@ -2011,6 +2271,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
+     * Is component handles drop event
      * @type {boolean}
      */
     get dropable() {
@@ -2018,6 +2279,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
+     * Is component handles drop event
      * @type {boolean}
      */
     set dropable(value) {
@@ -2055,6 +2317,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._routeIsRegExp = value;
     }
 
+    /**
+     * Processes a match of router
+     * @param {RegExpMatchArray} patternMatches array of matches
+     */
     __processChangeOnRouteSwitch(patternMatches) {
         this.ReloadBinding();
     }
@@ -2074,6 +2340,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._copy = value;
         this._showCopy();
     }
+    /**
+     * @protected
+     */
     _showCopy() {
         if(this._copy) {
             this.AddClass('-cancopy');
@@ -2084,6 +2353,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         } 
     }
 
+    /**
+     * Searches in parent Component DOM or html DOM 
+     * @param {Function} callback callback for search
+     * @param {boolean} useContainers use containers in search method
+     * @returns {Colibri.UI.Component|Element|null}
+     */
     Closest(callback, useContainers = false) {
         let parent = useContainers ? this.container : this;
         while(parent) {
@@ -2129,27 +2404,45 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._setSpanning();
     }
     
+    /**
+     * @private
+     */
     _setSpanning() {
         this._element.css('grid-row-start', this._rowspan ? 'span ' + this._rowspan : 'auto');
         this._element.css('grid-column-start', this._colspan ? 'span ' + this._colspan : 'auto');
     }
 
-
+    /**
+     * Is component went out of right corner of window
+     * @readonly
+     */
     get isComponentWentOutOfRight() {
         const bounds = this.container.bounds();
         return bounds.left + bounds.outerWidth > window.innerWidth;
     }
 
+    /**
+     * Is component went out of left corner of window
+     * @readonly
+     */
     get isComponentWentOutOfLeft() {
         const bounds = this.container.bounds();
         return bounds.left < 0;
     }
 
+    /**
+     * Is component went out of bottom corner of window
+     * @readonly
+     */
     get isComponentWentOutOfBottom() {
         const bounds = this.container.bounds();
         return bounds.top + bounds.outerHeight > window.innerHeight;
     }
 
+    /**
+     * Is component went out of top corner of window
+     * @readonly
+     */
     get isComponentWentOutOfTop() {
         const bounds = this.container.bounds();
         return bounds.top < 0;
@@ -2170,6 +2463,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._halign = value;
         this._showHalign();
     }
+    /**
+     * @protected
+     */
     _showHalign() {
         this._element.css('text-align', this._halign);
     }
