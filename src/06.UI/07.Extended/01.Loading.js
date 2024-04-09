@@ -5,8 +5,15 @@
  */
 Colibri.UI.Loading = class extends Colibri.UI.Pane {
 
-    constructor(name, container, children, sendToFront = true) {
-        super(name, container, children || Element.create('div'));
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     * @param {*} element element to generate in
+     * @param {boolean} sendToFront send the component to front
+     */
+    constructor(name, container, element, sendToFront = true) {
+        super(name, container, element || Element.create('div'));
         this.AddClass('app-loading-component');
         
         this._element.html(Colibri.UI.LoadingIcon);

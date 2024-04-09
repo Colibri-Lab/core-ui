@@ -56,6 +56,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     
     /**
      * Creates an instance of Device.
+     * @constructor
      */
     constructor() {
         super();

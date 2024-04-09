@@ -12,12 +12,21 @@ Colibri.Devices.Sms = class extends Destructable {
      * @private
      */
     _device = null;
+    
     /**
      * Instance variable representing the notification plugin.
      * @type {object}
      * @private
      */
-    _plugin = null;
+    _pluginSend = null;
+
+    /**
+     * Instance variable representing the notification read plugin.
+     * @type {object}
+     * @private
+     */
+    _pluginRead = null;
+
     /**
      * Instance variable representing the SMS plugin for receiving messages.
      * @type {null}
@@ -26,9 +35,8 @@ Colibri.Devices.Sms = class extends Destructable {
     _permitedSend = false;
 
     /**
-     * Flag indicating whether permission to send SMS is granted.
-     * @type {boolean}
-     * @private
+     * @constructor
+     * @param {Colibri.Devices.Device} device
      */
     constructor(device) {
         super();

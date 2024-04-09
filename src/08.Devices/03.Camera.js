@@ -32,6 +32,7 @@ Colibri.Devices.Camera = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets a picture from the camera.
+     * @constructor
      * @param {*} options - Options for getting the picture.
      * @returns {Promise} - Promise resolving to the picture URI.
      */

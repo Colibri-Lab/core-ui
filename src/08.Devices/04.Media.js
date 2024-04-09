@@ -49,6 +49,7 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
 
     /**
      * Creates an instance of Media.
+     * @constructor
      * @param {string} src - The source of the media.
      */
     constructor(src) {

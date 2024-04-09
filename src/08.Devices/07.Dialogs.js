@@ -27,7 +27,8 @@ Colibri.Devices.Dialogs = class extends Destructable {
 
     /**
      * Creates an instance of Dialogs.
-     * @param {*} device - The device object.
+     * @constructor
+     * @param {Colibri.Devices.Device} device - The device object.
      */
     constructor(device) {
         super();

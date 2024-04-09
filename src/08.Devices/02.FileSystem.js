@@ -82,6 +82,7 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
 
     /**
      * Creates an instance of FileSystem.
+     * @constructor
      * @param {*} device - The device object.
      */
     constructor(device) {

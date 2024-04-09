@@ -13,22 +13,11 @@ Colibri.Devices.GeoLocation = class extends Destructable {
      * @private
      */
     _device = null;
-    /**
-     * Instance variable representing the geolocation plugin.
-     * @type {object}
-     * @private
-     */
-    _plugin = null;
-    /**
-     * Flag indicating whether permission is granted.
-     * @type {boolean}
-     * @private
-     */
-    _permited = false;
 
     /**
      * Creates an instance of GeoLocation.
-     * @param {*} device - The device object.
+     * @constructor
+     * @param {Colibri.Devices.Device} device - The device object.
      */
     constructor(device) {
         super();

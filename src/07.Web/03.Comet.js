@@ -19,7 +19,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     _clientId = null;
 
     /**
-     * Creates a new Comet object.
+     * @constructor
      * @param {object} settings - Settings for the Comet connection.
      */
     constructor(settings) {

@@ -48,6 +48,7 @@ Colibri.Devices.Notification = class extends Destructable {
 
     /**
      * Creates an instance of Notification.
+     * @constructor
      * @param {*} device - The device object.
      * @param {*} payload - The notification payload.
      */

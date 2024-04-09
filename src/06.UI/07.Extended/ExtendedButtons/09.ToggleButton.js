@@ -5,6 +5,11 @@
  * @memberof Colibri.UI
  */
 Colibri.UI.ToggleButton = class extends Colibri.UI.ExtendedButton {
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     */
     constructor(name, container) {
         super(name, container);
         this.AddClass('app-toggle-button-component');

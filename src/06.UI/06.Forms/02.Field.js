@@ -84,6 +84,14 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         return componentObject;
     }
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     * @param {object} fieldData fields object
+     * @param {Colibri.UI.Forms.Field} parent parent component
+     * @param {Colibri.UI.Forms.Form|Colibri.UI.Forms.Field} root component
+     */
     constructor(name, container, fieldData, parent, root) {
         super(name, container, Element.create('div'));
 

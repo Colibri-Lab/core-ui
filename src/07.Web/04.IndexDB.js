@@ -12,7 +12,7 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
     _version = null;
 
     /**
-     * Creates an IndexedDB manager.
+     * @constructor
      * @param {string} name - The name of the IndexedDB.
      * @param {number} version - The version of the IndexedDB.
      */

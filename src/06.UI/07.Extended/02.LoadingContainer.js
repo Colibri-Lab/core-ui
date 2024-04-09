@@ -5,6 +5,11 @@
  */
 Colibri.UI.LoadingContainer = class extends Colibri.UI.Component {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     */
     constructor(name, container) {
         super(name, container, Colibri.UI.Templates['Colibri.UI.LoadingContainer']);
         this.AddClass('app-loading-container-component');

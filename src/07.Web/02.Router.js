@@ -7,7 +7,7 @@
 Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
     /**
-     * Creates an instance of Router.
+     * @constructor
      * @param {string} type - The type of router ('hash' or 'history').
      */
     constructor(type) {
