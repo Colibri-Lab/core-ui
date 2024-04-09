@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.Button = class extends Colibri.UI.Component {
 
     /** 

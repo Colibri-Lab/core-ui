@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.Switcher = class extends Colibri.UI.Component {
     constructor(name, container, data) {
         super(name, container, Element.create('div'));

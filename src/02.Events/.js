@@ -1,6 +1,6 @@
 /**
  * Represents a module for handling events.
- * @namespace Colibri.Events
+ * @namespace
  */
 Colibri.Events = class {
     

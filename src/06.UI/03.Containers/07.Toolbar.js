@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.Toolbar = class extends Colibri.UI.Component {
 
     static Vertical = 'vertical';

@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI.Forms
+ */
 Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
     static Components = {};

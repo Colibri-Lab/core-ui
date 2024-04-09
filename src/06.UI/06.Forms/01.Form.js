@@ -1,4 +1,8 @@
-
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI.Forms
+ */
 Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     constructor(name, container) {

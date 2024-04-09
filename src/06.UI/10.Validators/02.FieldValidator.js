@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.Events.Dispatcher
+ * @memberof Colibri.UI
+ */
 Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
 
     _field = null;

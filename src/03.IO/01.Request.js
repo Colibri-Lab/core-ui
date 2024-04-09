@@ -3,6 +3,10 @@
  * If the XMLHttpRequest object doesn't have the sendAsBinary method, it adds it.
  */
 if (!XMLHttpRequest.prototype.sendAsBinary) {
+    /**
+     * Sends data as binary data 
+     * @param {string} sData data to send
+     */
     XMLHttpRequest.prototype.sendAsBinary = function (sData) {
         var nBytes = sData.length, ui8Data = new Uint8Array(nBytes);
         for (var nIdx = 0; nIdx < nBytes; nIdx++) {
@@ -16,6 +20,7 @@ if (!XMLHttpRequest.prototype.sendAsBinary) {
  * Represents the request class for handling HTTP requests.
  * @class 
  * @extends Destructable
+ * @memberof Colibri.IO
  */
 Colibri.IO.Request = class extends Destructable {
 

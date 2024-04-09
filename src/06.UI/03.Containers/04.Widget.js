@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
 
     constructor(name, container, element) {

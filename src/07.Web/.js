@@ -1,6 +1,6 @@
 /**
  * Represents the Colibri web utility.
- * @namespace Colibri.Web
+ * @namespace
  */
 Colibri.Web = class {
     

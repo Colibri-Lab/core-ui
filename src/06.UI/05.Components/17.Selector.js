@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.Selector = class extends Colibri.UI.Component {
 
     _skipLooseFocus;

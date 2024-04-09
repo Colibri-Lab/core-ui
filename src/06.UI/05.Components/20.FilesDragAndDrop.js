@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.FilesDragAndDrop = class extends Colibri.UI.Component {
     constructor(name, container, multiple = false) {
         super(name, container, Element.create('div'));

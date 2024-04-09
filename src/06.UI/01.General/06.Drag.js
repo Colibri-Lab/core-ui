@@ -1,6 +1,7 @@
 /**
  * @classdesc Drag process worker
  * @class
+ * @memberof Colibri.UI
  */
 Colibri.UI.Drag = class {
 

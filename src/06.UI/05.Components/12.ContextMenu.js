@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
 
     static LB = 'lb';

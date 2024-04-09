@@ -1,5 +1,8 @@
 /**
- * Button viewed as link
+ * Toggle button
+ * @class
+ * @extends Colibri.UI.ExtendedButton
+ * @memberof Colibri.UI
  */
 Colibri.UI.ToggleButton = class extends Colibri.UI.ExtendedButton {
     constructor(name, container) {

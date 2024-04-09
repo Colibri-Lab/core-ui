@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Destructable
+ * @memberof Colibri.UI.Utilities
+ */
 Colibri.UI.Utilities.Mask = class extends Destructable {
 
     static DIGIT = "9";

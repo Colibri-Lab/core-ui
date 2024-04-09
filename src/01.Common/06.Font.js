@@ -1,6 +1,7 @@
 /**
  * Class representing font utility functions.
  * @class
+ * @memberof Colibri.Common
  */
 Colibri.Common.Font = class {
 

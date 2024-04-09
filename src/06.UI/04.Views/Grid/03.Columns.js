@@ -1,5 +1,8 @@
 /**
- * Класс списка колонок
+ * Grid header coluumns component
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI.Grid
  */
 Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
 

@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.ListItem = class extends Colibri.UI.Component {
 
     constructor(name, container) {

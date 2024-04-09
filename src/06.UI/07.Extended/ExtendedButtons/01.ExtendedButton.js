@@ -1,5 +1,8 @@
 /**
  * Extended buttons base class
+ * @class
+ * @extends Colibri.UI.Button
+ * @memberof Colibri.UI
  */
 Colibri.UI.ExtendedButton = class extends Colibri.UI.Button {
 

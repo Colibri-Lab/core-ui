@@ -1,7 +1,8 @@
-
-
 /**
  * Button with upload support
+ * @class
+ * @extends Colibri.UI.ExtendedButton
+ * @memberof Colibri.UI
  */
 Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
     

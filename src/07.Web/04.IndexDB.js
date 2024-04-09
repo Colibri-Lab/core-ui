@@ -2,6 +2,7 @@
  * Manages IndexedDB operations.
  * @class 
  * @extends Colibri.Events.Dispatcher
+ * @memberof Colibri.Web
  */
 Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
     

@@ -1,6 +1,7 @@
 /**
  * Base renderer class
  * @class
+ * @memberof Colibri.UI
  */
 Colibri.UI.Renderer = class extends Destructable {
 

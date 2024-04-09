@@ -1,3 +1,7 @@
+/**
+ * @class
+ * @extends Colibri.UI.Editor
+ */
 Colibri.UI.EmailEditor = class extends Colibri.UI.Editor {
     constructor(name, container) {
         super(name, container, Element.create('input'));

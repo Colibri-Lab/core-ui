@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
 
     constructor(name, container, element, title, width, height) {

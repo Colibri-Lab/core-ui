@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Pane
+ * @memberof Colibri.UI
+ */
 Colibri.UI.Loading = class extends Colibri.UI.Pane {
 
     constructor(name, container, children, sendToFront = true) {

@@ -1,4 +1,8 @@
-
+/**
+ * @class
+ * @extends Colibri.UI.FlexBox
+ * @memberof Colibri.UI
+ */
 Colibri.UI.YearMonthSelector = class extends Colibri.UI.FlexBox {
 
     constructor(name, container, values = null) {

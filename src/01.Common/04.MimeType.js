@@ -1,6 +1,7 @@
 /**
  * Represents a utility class for handling MIME types.
  * @class
+ * @memberof Colibri.Common
  */
 Colibri.Common.MimeType = class {
     

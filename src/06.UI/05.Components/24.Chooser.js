@@ -1,3 +1,9 @@
+/**
+ * @class
+ * @namespace
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.Chooser = class extends Colibri.UI.Component {
 
     _skipLooseFocus;
@@ -344,6 +350,11 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
 
 }
 
+/**
+ * @class
+ * @extends Colibri.UI.Window
+ * @memberof Colibri.UI.Chooser
+ */
 Colibri.UI.Chooser.ChooseWindow = class extends Colibri.UI.Window {
 
     constructor(name, container, element, title, width, height) {

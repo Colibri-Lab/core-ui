@@ -1,4 +1,8 @@
-
+/**
+ * @class
+ * @extends Colibri.UI.Renderer
+ * @memberof Colibri.UI.List
+ */
 Colibri.UI.List.JsonRenderer = class extends Colibri.UI.Renderer {
 
     Render() {

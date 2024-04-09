@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.Input.File = class extends Colibri.UI.Component {
 
     constructor(name, container) {

@@ -1,6 +1,9 @@
 
 /**
- * Класс заголовка таблицы
+ * Grid header component
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI.Grid
  */
 Colibri.UI.Grid.Header = class extends Colibri.UI.Component {
 

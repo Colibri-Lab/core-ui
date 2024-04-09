@@ -2,6 +2,7 @@
  * Represents an event.
  * @class
  * @extends Destructable
+ * @memberof Colibri.Events
  */
 Colibri.Events.Event = class extends Destructable {
 

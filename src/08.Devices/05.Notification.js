@@ -28,6 +28,7 @@
  * 
  * @class
  * @extends Destructable
+ * @memberof Colibri.Devices
  */
 Colibri.Devices.Notification = class extends Destructable {
 

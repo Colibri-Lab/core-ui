@@ -1,18 +1,34 @@
 /**
- * ОБьект UI
+ * @namespace
+ * @class
  */
 Colibri.UI = class {
 
-    /** Resizing indicator */
+    /** 
+     * Resizing indicator
+     * @type {boolean} 
+     * @static
+     */
     static Resizing = false;
 
-    /** Maximum tab index fo elements */
+    /** 
+     * Maximum tab index fo elements
+     * @type {string} 
+     * @static
+     */
     static tabIndex = 1;
  
-    /** Maximum of z-index css property */
+    /** 
+     * Maximum of z-index css property
+     * @type {string} 
+     * @static
+     */
     static maxZIndex = 0;
 
-    /** Private max z-index calculator */
+    /** 
+     * Private max z-index calculator 
+     * @static
+     */
     static _getZIndex(elements = null) {
         return (elements ?? [...document.querySelectorAll('body *')]).reduce((accumulator, current_value) => {
             current_value = +getComputedStyle(current_value).zIndex;
@@ -23,7 +39,10 @@ Colibri.UI = class {
         }, 0);
     }
 
-    /** Registers mutation observer for calculating current maximum of z-index */
+    /** 
+     * Registers mutation observer for calculating current maximum of z-index
+     * @static 
+     */
     static registerMutationObserver() {
         // fixing start max z-index 
         Colibri.UI.maxZIndex = Colibri.UI._getZIndex();
@@ -44,6 +63,10 @@ Colibri.UI = class {
         });
     }
 
+    /**
+     * Updates max z-index in static property
+     * @static
+     */
     static UpdateMaxZIndex() {
         Colibri.UI.maxZIndex = Colibri.UI._getZIndex();
     }
@@ -54,6 +77,7 @@ Colibri.UI = class {
      * @param {string} componentPath path for searching
      * @param {Colibri.UI.Component} parent search component within given parent component
      * @returns {Colibri.UI.Component}
+     * @static
      */
     static Find(componentPath, parent = null) {
         const path = componentPath.split('/');
@@ -70,6 +94,7 @@ Colibri.UI = class {
      * @param {string} componentPath path for searching
      * @param {Colibri.UI.Component} parent search component within given parent component
      * @returns {Colibri.UI.Component}
+     * @static
      */
     static FindAll(componentPath, parent = null) {
         const path = componentPath.split('/');
@@ -88,6 +113,7 @@ Colibri.UI = class {
      * @param {Array<string>} css string array of css files
      * @param {Array<string>} js string array of js files 
      * @returns Promise
+     * @static
      */
     static Require(css, js) { 
         return new Promise((resolve, reject) => {

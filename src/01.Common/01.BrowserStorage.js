@@ -1,6 +1,7 @@
 /**
  * Represents a browser storage utility.
  * @class
+ * @memberof Colibri.Common
  */
 Colibri.Common.BrowserStorage = class {
     /** @constructor */

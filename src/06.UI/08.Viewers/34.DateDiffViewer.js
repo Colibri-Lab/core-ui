@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @memberof Colibri.UI
+ * @extends Colibri.UI.Viewer
+ */
 Colibri.UI.DateDiffViewer = class extends Colibri.UI.Viewer {
     
     constructor(name, container) {

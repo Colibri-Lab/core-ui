@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.TextSpan = class extends Colibri.UI.Component {
     constructor(name, container, value) {
         super(name, container, Element.create('span'));

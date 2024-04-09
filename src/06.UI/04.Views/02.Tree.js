@@ -1,3 +1,9 @@
+/**
+ * @class
+ * @namespace
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.Tree = class extends Colibri.UI.Component {
 
     /** @type {Colibri.UI.TreeNode|null} */

@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Forms.Field
+ * @memberof Colibri.UI.Forms
+ */
 Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
     RenderFieldContainer() {

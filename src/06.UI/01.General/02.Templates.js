@@ -1,6 +1,7 @@
 /**
  * Templates for UI development
  * @class
+ * @memberof Colibri.UI
  */
 Colibri.UI.Templates = class {
     /**

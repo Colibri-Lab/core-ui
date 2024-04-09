@@ -1,5 +1,8 @@
 /**
  * Outlined button
+ * @class
+ * @extends Colibri.UI.ExtendedButton
+ * @memberof Colibri.UI
  */
 Colibri.UI.OutlineBlueButton = class extends Colibri.UI.ExtendedButton {
     constructor(name, container) {

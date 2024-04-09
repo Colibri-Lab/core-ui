@@ -1,7 +1,8 @@
 /**
  * Класс компонента по умолчанию
  * @class
- * @extends Colibri.Dispatcher
+ * @extends Colibri.Events.Dispatcher
+ * @memberof Colibri.UI
  */
 Colibri.UI.Component = class extends Colibri.Events.Dispatcher 
 {

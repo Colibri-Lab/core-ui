@@ -1,1 +1,4 @@
+/**
+ * @namespace
+ */
 Colibri.UI.Utilities = {}

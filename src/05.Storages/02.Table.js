@@ -1,6 +1,7 @@
 /**
  * @class 
  * @extends Colibri.Events.Dispatcher
+ * @memberof Colibri.Storages
  */
 Colibri.Storages.Models.Table = class extends Colibri.Events.Dispatcher {
  

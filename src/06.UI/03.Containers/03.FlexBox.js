@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.FlexBox = class extends Colibri.UI.Component {
 
     static Horizontal = 'row';

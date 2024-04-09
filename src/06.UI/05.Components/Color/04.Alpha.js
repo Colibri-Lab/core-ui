@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.Color.Alpha = class extends Colibri.UI.Component {
     constructor(name, container) {
         super(name, container, Element.create('div'));

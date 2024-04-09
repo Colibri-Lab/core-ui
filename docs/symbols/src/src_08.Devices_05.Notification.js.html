@@ -35,304 +35,305 @@
 <span class='line'> 28</span>  * 
 <span class='line'> 29</span>  * @class
 <span class='line'> 30</span>  * @extends Destructable
-<span class='line'> 31</span>  */</span><span class="WHIT">
-<span class='line'> 32</span> </span><span class="NAME">Colibri.Devices.Notification</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">class</span><span class="WHIT"> </span><span class="NAME">extends</span><span class="WHIT"> </span><span class="NAME">Destructable</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 33</span> 
-<span class='line'> 34</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'> 35</span>      * Instance variable representing the device.
-<span class='line'> 36</span>      * @type {Colibri.UI.Device}
-<span class='line'> 37</span>      * @private
-<span class='line'> 38</span>      */</span><span class="WHIT">
-<span class='line'> 39</span> </span><span class="WHIT">    </span><span class="NAME">_device</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 40</span> 
-<span class='line'> 41</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'> 42</span>      * Instance variable representing the payload.
-<span class='line'> 43</span>      * @type {null}
-<span class='line'> 44</span>      * @private
-<span class='line'> 45</span>      */</span><span class="WHIT">
-<span class='line'> 46</span> </span><span class="WHIT">    </span><span class="NAME">_payload</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 47</span> 
-<span class='line'> 48</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'> 49</span>      * Creates an instance of Notification.
-<span class='line'> 50</span>      * @param {*} device - The device object.
-<span class='line'> 51</span>      * @param {*} payload - The notification payload.
-<span class='line'> 52</span>      */</span><span class="WHIT">
-<span class='line'> 53</span> </span><span class="WHIT">    </span><span class="NAME">constructor</span><span class="PUNC">(</span><span class="NAME">device</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">payload</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 54</span> </span><span class="WHIT">        </span><span class="NAME">super</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 55</span> </span><span class="WHIT">        
-<span class='line'> 56</span>         </span><span class="NAME">this._device</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">device</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 57</span> </span><span class="WHIT">        </span><span class="NAME">this._payload</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">payload</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 58</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 59</span> 
-<span class='line'> 60</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'> 61</span>      * Gets the title of the notification.
-<span class='line'> 62</span>      * @returns {string} - The title.
-<span class='line'> 63</span>      */</span><span class="WHIT">
-<span class='line'> 64</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">title</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 65</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._device.isAndroid</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 66</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._payload.data.title</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 67</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 68</span> </span><span class="WHIT">        </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._device.isIOs</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 69</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._payload.data.title</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 70</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 71</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 72</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'> 73</span>      * Gets the subtitle of the notification.
-<span class='line'> 74</span>      * @returns {string} - The subtitle.
-<span class='line'> 75</span>      */</span><span class="WHIT">
-<span class='line'> 76</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">subtitle</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 77</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._device.isAndroid</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 78</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._payload.data.body</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 79</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 80</span> </span><span class="WHIT">        </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._device.isIOs</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 81</span> </span><span class="WHIT">            
-<span class='line'> 82</span>         </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 83</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 84</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'> 85</span>      * Gets the payload of the notification.
-<span class='line'> 86</span>      * @returns {string} - The payload.
-<span class='line'> 87</span>      */</span><span class="WHIT">
-<span class='line'> 88</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">payload</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 89</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._device.isAndroid</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 90</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._payload.data.payload</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 91</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 92</span> </span><span class="WHIT">        </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._device.isIOs</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 93</span> </span><span class="WHIT">            
-<span class='line'> 94</span>         </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 95</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 96</span> 
-<span class='line'> 97</span> </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 98</span> 
-<span class='line'> 99</span> </span><span class="COMM">/**
-<span class='line'>100</span>  * Represents an emulator for local notifications.
-<span class='line'>101</span>  * @class
-<span class='line'>102</span>  * @extends Destructable
-<span class='line'>103</span>  */</span><span class="WHIT">
-<span class='line'>104</span> </span><span class="NAME">Colibri.Devices.LocalNotificationsEmulator</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">class</span><span class="WHIT"> </span><span class="NAME">extends</span><span class="WHIT"> </span><span class="NAME">Destructable</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>105</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>106</span>      * Checks if the emulator has permission.
-<span class='line'>107</span>      * @param {function} success - Success callback.
-<span class='line'>108</span>      * @param {function} fail - Fail callback.
-<span class='line'>109</span>      */</span><span class="WHIT">
-<span class='line'>110</span> </span><span class="WHIT">    </span><span class="NAME">hasPermission</span><span class="PUNC">(</span><span class="NAME">success</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">fail</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>111</span> </span><span class="WHIT">        </span><span class="NAME">success</span><span class="PUNC">(</span><span class="KEYW">true</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>112</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>113</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>114</span>      * Requests permission for the emulator.
-<span class='line'>115</span>      * @param {function} success - Success callback.
-<span class='line'>116</span>      * @param {function} fail - Fail callback.
-<span class='line'>117</span>      */</span><span class="WHIT">
-<span class='line'>118</span> </span><span class="WHIT">    </span><span class="NAME">requestPermission</span><span class="PUNC">(</span><span class="NAME">success</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">fail</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>119</span> </span><span class="WHIT">        </span><span class="NAME">success</span><span class="PUNC">(</span><span class="KEYW">true</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>120</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>121</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>122</span>      * Schedules a notification with given parameters.
-<span class='line'>123</span>      * @param {*} params - Parameters for scheduling the notification.
-<span class='line'>124</span>      */</span><span class="WHIT">
-<span class='line'>125</span> </span><span class="WHIT">    </span><span class="NAME">schedule</span><span class="PUNC">(</span><span class="NAME">params</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>126</span> </span><span class="WHIT">        </span><span class="COMM">//</span><span class="WHIT">
-<span class='line'>127</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>128</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>129</span>      * Cancels a scheduled notification with given id.
-<span class='line'>130</span>      * @param {number} id - The id of the notification to cancel.
-<span class='line'>131</span>      */</span><span class="WHIT">
-<span class='line'>132</span> </span><span class="WHIT">    </span><span class="NAME">cancel</span><span class="PUNC">(</span><span class="NAME">id</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>133</span> </span><span class="WHIT">        </span><span class="COMM">// </span><span class="WHIT">
-<span class='line'>134</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>135</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>136</span>      * Registers an event listener.
-<span class='line'>137</span>      * @param {string} event - The event to listen for.
-<span class='line'>138</span>      * @param {function} callback - The callback function.
-<span class='line'>139</span>      * @param {*} scope - The scope of the callback.
-<span class='line'>140</span>      */</span><span class="WHIT">
-<span class='line'>141</span> </span><span class="WHIT">    </span><span class="NAME">on</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">scope</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>142</span> </span><span class="WHIT">        </span><span class="COMM">// </span><span class="WHIT">
-<span class='line'>143</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>144</span> </span><span class="WHIT">     </span><span class="COMM">/**
-<span class='line'>145</span>      * Unregisters an event listener.
-<span class='line'>146</span>      * @param {string} event - The event to stop listening for.
-<span class='line'>147</span>      * @param {function} callback - The callback function.
-<span class='line'>148</span>      * @param {*} scope - The scope of the callback.
-<span class='line'>149</span>      */</span><span class="WHIT">
-<span class='line'>150</span> </span><span class="WHIT">    </span><span class="NAME">un</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">scope</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>151</span> </span><span class="WHIT">        </span><span class="COMM">// </span><span class="WHIT">
-<span class='line'>152</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>153</span> </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>154</span> 
-<span class='line'>155</span> </span><span class="COMM">/**
-<span class='line'>156</span>  * Represents a utility for handling local notifications.
-<span class='line'>157</span>  * @class
-<span class='line'>158</span>  * @extends Destructable
-<span class='line'>159</span>  */</span><span class="WHIT">
-<span class='line'>160</span> </span><span class="NAME">Colibri.Devices.LocalNotifications</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">class</span><span class="WHIT"> </span><span class="NAME">extends</span><span class="WHIT"> </span><span class="NAME">Destructable</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>161</span> </span><span class="WHIT">    
-<span class='line'>162</span>     </span><span class="COMM">/**
-<span class='line'>163</span>      * Instance variable representing the device.
-<span class='line'>164</span>      * @type {Colibri.UI.Device}
-<span class='line'>165</span>      * @private
-<span class='line'>166</span>      */</span><span class="WHIT">
-<span class='line'>167</span> </span><span class="WHIT">    </span><span class="NAME">_device</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>168</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>169</span>      * Instance variable representing the plugin.
-<span class='line'>170</span>      * @type {object}
-<span class='line'>171</span>      * @private
-<span class='line'>172</span>      */</span><span class="WHIT">
-<span class='line'>173</span> </span><span class="WHIT">    </span><span class="NAME">_plugin</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>174</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>175</span>      * Flag indicating whether permission is granted.
-<span class='line'>176</span>      * @type {boolean}
-<span class='line'>177</span>      * @private
-<span class='line'>178</span>      */</span><span class="WHIT">
-<span class='line'>179</span> </span><span class="WHIT">    </span><span class="NAME">_permited</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>180</span> 
-<span class='line'>181</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>182</span>      * Creates an instance of LocalNotifications.
-<span class='line'>183</span>      * @param {*} device - The device object.
-<span class='line'>184</span>      */</span><span class="WHIT">
-<span class='line'>185</span> </span><span class="WHIT">    </span><span class="NAME">constructor</span><span class="PUNC">(</span><span class="NAME">device</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>186</span> </span><span class="WHIT">        </span><span class="NAME">super</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>187</span> </span><span class="WHIT">        </span><span class="NAME">this._device</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">device</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>188</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._device.isWeb</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>189</span> </span><span class="WHIT">            </span><span class="NAME">this._plugin</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">local</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Colibri.Devices.LocalNotificationsEmulator</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>190</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>191</span> </span><span class="WHIT">            </span><span class="NAME">this._plugin</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._device.Plugin</span><span class="PUNC">(</span><span class="STRN">'plugins.notification'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>192</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>193</span> </span><span class="WHIT">        </span><span class="NAME">this._plugin.local.setDummyNotifications</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>194</span> </span><span class="WHIT">        </span><span class="NAME">this._plugin.local.fireQueuedEvents</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>195</span> 
-<span class='line'>196</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>197</span> 
-<span class='line'>198</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>199</span>      * Checks if permission is granted.
-<span class='line'>200</span>      * @returns {Promise} - Promise resolving when permission is granted.
-<span class='line'>201</span>      */</span><span class="WHIT">
-<span class='line'>202</span> </span><span class="WHIT">    </span><span class="NAME">HasPermission</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>203</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Promise</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">resolve</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">reject</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>204</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._granted</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>205</span> </span><span class="WHIT">                </span><span class="NAME">resolve</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>206</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>207</span> </span><span class="WHIT">                </span><span class="NAME">this._plugin.local.hasPermission</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">granted</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>208</span> </span><span class="WHIT">                    </span><span class="NAME">this._granted</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">granted</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>209</span> </span><span class="WHIT">                    </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">granted</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>210</span> </span><span class="WHIT">                        </span><span class="NAME">resolve</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>211</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>212</span> </span><span class="WHIT">                        </span><span class="NAME">reject</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>213</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>214</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>215</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>216</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>217</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>218</span> 
-<span class='line'>219</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>220</span>      * Requests permission for notifications.
-<span class='line'>221</span>      * @returns {Promise} - Promise resolving when permission is granted.
-<span class='line'>222</span>      */</span><span class="WHIT">
-<span class='line'>223</span> </span><span class="WHIT">    </span><span class="NAME">RequestPermission</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>224</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Promise</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">resolve</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">reject</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>225</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._granted</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>226</span> </span><span class="WHIT">                </span><span class="NAME">resolve</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>227</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>228</span> </span><span class="WHIT">                </span><span class="NAME">this.HasPermission</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="KEYW">catch</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>229</span> </span><span class="WHIT">                    </span><span class="NAME">this._plugin.local.requestPermission</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">granted</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>230</span> </span><span class="WHIT">                        </span><span class="NAME">this._granted</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">granted</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>231</span> </span><span class="WHIT">                        </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">granted</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>232</span> </span><span class="WHIT">                            </span><span class="NAME">resolve</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>233</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>234</span> </span><span class="WHIT">                            </span><span class="NAME">reject</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>235</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>236</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">    
-<span class='line'>237</span>                 </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">then</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">resolve</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>238</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>239</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>240</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>241</span> 
-<span class='line'>242</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>243</span>      * Adds actions to a notification group.
-<span class='line'>244</span>      * @param {string} groupName - The name of the notification group.
-<span class='line'>245</span>      * @param {*} actions - Actions to add.
-<span class='line'>246</span>      */</span><span class="WHIT">
-<span class='line'>247</span> </span><span class="WHIT">    </span><span class="NAME">AddActions</span><span class="PUNC">(</span><span class="NAME">groupName</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">actions</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>248</span> </span><span class="WHIT">        </span><span class="NAME">this._plugin.local.addActions</span><span class="PUNC">(</span><span class="NAME">groupName</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">actions</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>249</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>250</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>251</span>      * Removes actions from a notification group.
-<span class='line'>252</span>      * @param {string} groupName - The name of the notification group.
-<span class='line'>253</span>      */</span><span class="WHIT">
-<span class='line'>254</span> </span><span class="WHIT">    </span><span class="NAME">RemoveActions</span><span class="PUNC">(</span><span class="NAME">groupName</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>255</span> </span><span class="WHIT">        </span><span class="NAME">this._plugin.local.removeActions</span><span class="PUNC">(</span><span class="NAME">groupName</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>256</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>257</span> 
-<span class='line'>258</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>259</span>      * Schedules a notification with given parameters.
-<span class='line'>260</span>      * @param {string} title - The title of the notification.
-<span class='line'>261</span>      * @param {string} message - The message of the notification.
-<span class='line'>262</span>      * @param {*} actions - Actions to attach to the notification.
-<span class='line'>263</span>      * @param {*} trigger - Trigger for the notification.
-<span class='line'>264</span>      * @param {boolean} isForeground - Flag indicating whether the notification should appear in foreground.
-<span class='line'>265</span>      * @param {boolean} isLaunch - Flag indicating whether the notification should launch the app.
-<span class='line'>266</span>      * @param {number} priority - Priority of the notification.
-<span class='line'>267</span>      * @param {number} id - The id of the notification.
-<span class='line'>268</span>      * @param {*} progressBar - Progress bar configuration.
-<span class='line'>269</span>      * @param {boolean} sound - Flag indicating whether to include sound with the notification.
-<span class='line'>270</span>      */</span><span class="WHIT">
-<span class='line'>271</span> </span><span class="WHIT">    </span><span class="NAME">Schedule</span><span class="PUNC">(</span><span class="NAME">title</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">message</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">actions</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">trigger</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">isForeground</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">isLaunch</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">priority</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">2</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">id</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">progressBar</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">sound</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>272</span> </span><span class="WHIT">        </span><span class="COMM">// trigger = { in: 1, unit: 'second' }, { in: 15, unit: 'minutes' }</span><span class="WHIT">
-<span class='line'>273</span> </span><span class="WHIT">        </span><span class="NAME">this.RequestPermission</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">then</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>274</span> </span><span class="WHIT">            </span><span class="KEYW">const</span><span class="WHIT"> </span><span class="NAME">params</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>275</span> </span><span class="WHIT">                </span><span class="NAME">title</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">title</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>276</span> </span><span class="WHIT">                </span><span class="NAME">text</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">message</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>277</span> </span><span class="WHIT">                </span><span class="NAME">foreground</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">isForeground</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>278</span> </span><span class="WHIT">                </span><span class="NAME">launch</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">isLaunch</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>279</span> </span><span class="WHIT">                </span><span class="NAME">priority</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">priority</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>280</span> </span><span class="WHIT">                </span><span class="NAME">sticky</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>281</span> </span><span class="WHIT">                </span><span class="NAME">sound</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">sound</span><span class="WHIT">
-<span class='line'>282</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>283</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">id</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>284</span> </span><span class="WHIT">                </span><span class="NAME">params.id</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">id</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>285</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>286</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">trigger</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>287</span> </span><span class="WHIT">                </span><span class="NAME">params.trigger</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">trigger</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>288</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>289</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">actions</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">actions.length</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>290</span> </span><span class="WHIT">                </span><span class="NAME">params.actions</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">actions</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>291</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>292</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">progressBar</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>293</span> </span><span class="WHIT">                </span><span class="NAME">params.progressBar</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">progressBar</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>294</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>295</span> </span><span class="WHIT">            
-<span class='line'>296</span>             </span><span class="NAME">this._plugin.local.schedule</span><span class="PUNC">(</span><span class="NAME">params</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>297</span> 
-<span class='line'>298</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>299</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>300</span> 
-<span class='line'>301</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>302</span>      * Cancels a scheduled notification with given id.
-<span class='line'>303</span>      * @param {number} id - The id of the notification to cancel.
-<span class='line'>304</span>      */</span><span class="WHIT">
-<span class='line'>305</span> </span><span class="WHIT">    </span><span class="NAME">Cancel</span><span class="PUNC">(</span><span class="NAME">id</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>306</span> </span><span class="WHIT">        </span><span class="NAME">this.RequestPermission</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">then</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>307</span> </span><span class="WHIT">            </span><span class="NAME">this._plugin.local.cancel</span><span class="PUNC">(</span><span class="NAME">id</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">    
-<span class='line'>308</span>         </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>309</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>310</span> 
-<span class='line'>311</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>312</span>      * Registers an event listener.
-<span class='line'>313</span>      * @param {string} event - The event to listen for.
-<span class='line'>314</span>      * @param {function} callback - The callback function.
-<span class='line'>315</span>      * @param {*} scope - The scope of the callback.
-<span class='line'>316</span>      */</span><span class="WHIT">
-<span class='line'>317</span> </span><span class="WHIT">    </span><span class="NAME">On</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">scope</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>318</span> </span><span class="WHIT">        </span><span class="NAME">this._plugin.local.on</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">scope</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>319</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>320</span> 
-<span class='line'>321</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>322</span>      * Unregisters an event listener.
-<span class='line'>323</span>      * @param {string} event - The event to stop listening for.
-<span class='line'>324</span>      * @param {function} callback - The callback function.
-<span class='line'>325</span>      * @param {*} scope - The scope of the callback.
-<span class='line'>326</span>      */</span><span class="WHIT">
-<span class='line'>327</span> </span><span class="WHIT">    </span><span class="NAME">Off</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">scope</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>328</span> </span><span class="WHIT">        </span><span class="NAME">this._plugin.local.un</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">scope</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>329</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>330</span> 
-<span class='line'>331</span> </span><span class="PUNC">}</span></pre></body></html>
+<span class='line'> 31</span>  * @memberof Colibri.Devices
+<span class='line'> 32</span>  */</span><span class="WHIT">
+<span class='line'> 33</span> </span><span class="NAME">Colibri.Devices.Notification</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">class</span><span class="WHIT"> </span><span class="NAME">extends</span><span class="WHIT"> </span><span class="NAME">Destructable</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 34</span> 
+<span class='line'> 35</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 36</span>      * Instance variable representing the device.
+<span class='line'> 37</span>      * @type {Colibri.UI.Device}
+<span class='line'> 38</span>      * @private
+<span class='line'> 39</span>      */</span><span class="WHIT">
+<span class='line'> 40</span> </span><span class="WHIT">    </span><span class="NAME">_device</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 41</span> 
+<span class='line'> 42</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 43</span>      * Instance variable representing the payload.
+<span class='line'> 44</span>      * @type {null}
+<span class='line'> 45</span>      * @private
+<span class='line'> 46</span>      */</span><span class="WHIT">
+<span class='line'> 47</span> </span><span class="WHIT">    </span><span class="NAME">_payload</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 48</span> 
+<span class='line'> 49</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 50</span>      * Creates an instance of Notification.
+<span class='line'> 51</span>      * @param {*} device - The device object.
+<span class='line'> 52</span>      * @param {*} payload - The notification payload.
+<span class='line'> 53</span>      */</span><span class="WHIT">
+<span class='line'> 54</span> </span><span class="WHIT">    </span><span class="NAME">constructor</span><span class="PUNC">(</span><span class="NAME">device</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">payload</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 55</span> </span><span class="WHIT">        </span><span class="NAME">super</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 56</span> </span><span class="WHIT">        
+<span class='line'> 57</span>         </span><span class="NAME">this._device</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">device</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 58</span> </span><span class="WHIT">        </span><span class="NAME">this._payload</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">payload</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 59</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 60</span> 
+<span class='line'> 61</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 62</span>      * Gets the title of the notification.
+<span class='line'> 63</span>      * @returns {string} - The title.
+<span class='line'> 64</span>      */</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">title</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._device.isAndroid</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 67</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._payload.data.title</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 68</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 69</span> </span><span class="WHIT">        </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._device.isIOs</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 70</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._payload.data.title</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 71</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 72</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 73</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 74</span>      * Gets the subtitle of the notification.
+<span class='line'> 75</span>      * @returns {string} - The subtitle.
+<span class='line'> 76</span>      */</span><span class="WHIT">
+<span class='line'> 77</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">subtitle</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 78</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._device.isAndroid</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 79</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._payload.data.body</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 80</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 81</span> </span><span class="WHIT">        </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._device.isIOs</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 82</span> </span><span class="WHIT">            
+<span class='line'> 83</span>         </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 84</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 85</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 86</span>      * Gets the payload of the notification.
+<span class='line'> 87</span>      * @returns {string} - The payload.
+<span class='line'> 88</span>      */</span><span class="WHIT">
+<span class='line'> 89</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">payload</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 90</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._device.isAndroid</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 91</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._payload.data.payload</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 92</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 93</span> </span><span class="WHIT">        </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._device.isIOs</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 94</span> </span><span class="WHIT">            
+<span class='line'> 95</span>         </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 96</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 97</span> 
+<span class='line'> 98</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 99</span> 
+<span class='line'>100</span> </span><span class="COMM">/**
+<span class='line'>101</span>  * Represents an emulator for local notifications.
+<span class='line'>102</span>  * @class
+<span class='line'>103</span>  * @extends Destructable
+<span class='line'>104</span>  */</span><span class="WHIT">
+<span class='line'>105</span> </span><span class="NAME">Colibri.Devices.LocalNotificationsEmulator</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">class</span><span class="WHIT"> </span><span class="NAME">extends</span><span class="WHIT"> </span><span class="NAME">Destructable</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>106</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>107</span>      * Checks if the emulator has permission.
+<span class='line'>108</span>      * @param {function} success - Success callback.
+<span class='line'>109</span>      * @param {function} fail - Fail callback.
+<span class='line'>110</span>      */</span><span class="WHIT">
+<span class='line'>111</span> </span><span class="WHIT">    </span><span class="NAME">hasPermission</span><span class="PUNC">(</span><span class="NAME">success</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">fail</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>112</span> </span><span class="WHIT">        </span><span class="NAME">success</span><span class="PUNC">(</span><span class="KEYW">true</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>113</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>114</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>115</span>      * Requests permission for the emulator.
+<span class='line'>116</span>      * @param {function} success - Success callback.
+<span class='line'>117</span>      * @param {function} fail - Fail callback.
+<span class='line'>118</span>      */</span><span class="WHIT">
+<span class='line'>119</span> </span><span class="WHIT">    </span><span class="NAME">requestPermission</span><span class="PUNC">(</span><span class="NAME">success</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">fail</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>120</span> </span><span class="WHIT">        </span><span class="NAME">success</span><span class="PUNC">(</span><span class="KEYW">true</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>121</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>122</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>123</span>      * Schedules a notification with given parameters.
+<span class='line'>124</span>      * @param {*} params - Parameters for scheduling the notification.
+<span class='line'>125</span>      */</span><span class="WHIT">
+<span class='line'>126</span> </span><span class="WHIT">    </span><span class="NAME">schedule</span><span class="PUNC">(</span><span class="NAME">params</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>127</span> </span><span class="WHIT">        </span><span class="COMM">//</span><span class="WHIT">
+<span class='line'>128</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>129</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>130</span>      * Cancels a scheduled notification with given id.
+<span class='line'>131</span>      * @param {number} id - The id of the notification to cancel.
+<span class='line'>132</span>      */</span><span class="WHIT">
+<span class='line'>133</span> </span><span class="WHIT">    </span><span class="NAME">cancel</span><span class="PUNC">(</span><span class="NAME">id</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>134</span> </span><span class="WHIT">        </span><span class="COMM">// </span><span class="WHIT">
+<span class='line'>135</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>136</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>137</span>      * Registers an event listener.
+<span class='line'>138</span>      * @param {string} event - The event to listen for.
+<span class='line'>139</span>      * @param {function} callback - The callback function.
+<span class='line'>140</span>      * @param {*} scope - The scope of the callback.
+<span class='line'>141</span>      */</span><span class="WHIT">
+<span class='line'>142</span> </span><span class="WHIT">    </span><span class="NAME">on</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">scope</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>143</span> </span><span class="WHIT">        </span><span class="COMM">// </span><span class="WHIT">
+<span class='line'>144</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>145</span> </span><span class="WHIT">     </span><span class="COMM">/**
+<span class='line'>146</span>      * Unregisters an event listener.
+<span class='line'>147</span>      * @param {string} event - The event to stop listening for.
+<span class='line'>148</span>      * @param {function} callback - The callback function.
+<span class='line'>149</span>      * @param {*} scope - The scope of the callback.
+<span class='line'>150</span>      */</span><span class="WHIT">
+<span class='line'>151</span> </span><span class="WHIT">    </span><span class="NAME">un</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">scope</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>152</span> </span><span class="WHIT">        </span><span class="COMM">// </span><span class="WHIT">
+<span class='line'>153</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>154</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>155</span> 
+<span class='line'>156</span> </span><span class="COMM">/**
+<span class='line'>157</span>  * Represents a utility for handling local notifications.
+<span class='line'>158</span>  * @class
+<span class='line'>159</span>  * @extends Destructable
+<span class='line'>160</span>  */</span><span class="WHIT">
+<span class='line'>161</span> </span><span class="NAME">Colibri.Devices.LocalNotifications</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">class</span><span class="WHIT"> </span><span class="NAME">extends</span><span class="WHIT"> </span><span class="NAME">Destructable</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>162</span> </span><span class="WHIT">    
+<span class='line'>163</span>     </span><span class="COMM">/**
+<span class='line'>164</span>      * Instance variable representing the device.
+<span class='line'>165</span>      * @type {Colibri.UI.Device}
+<span class='line'>166</span>      * @private
+<span class='line'>167</span>      */</span><span class="WHIT">
+<span class='line'>168</span> </span><span class="WHIT">    </span><span class="NAME">_device</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>169</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>170</span>      * Instance variable representing the plugin.
+<span class='line'>171</span>      * @type {object}
+<span class='line'>172</span>      * @private
+<span class='line'>173</span>      */</span><span class="WHIT">
+<span class='line'>174</span> </span><span class="WHIT">    </span><span class="NAME">_plugin</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>175</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>176</span>      * Flag indicating whether permission is granted.
+<span class='line'>177</span>      * @type {boolean}
+<span class='line'>178</span>      * @private
+<span class='line'>179</span>      */</span><span class="WHIT">
+<span class='line'>180</span> </span><span class="WHIT">    </span><span class="NAME">_permited</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>181</span> 
+<span class='line'>182</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>183</span>      * Creates an instance of LocalNotifications.
+<span class='line'>184</span>      * @param {*} device - The device object.
+<span class='line'>185</span>      */</span><span class="WHIT">
+<span class='line'>186</span> </span><span class="WHIT">    </span><span class="NAME">constructor</span><span class="PUNC">(</span><span class="NAME">device</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>187</span> </span><span class="WHIT">        </span><span class="NAME">super</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>188</span> </span><span class="WHIT">        </span><span class="NAME">this._device</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">device</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>189</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._device.isWeb</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>190</span> </span><span class="WHIT">            </span><span class="NAME">this._plugin</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">local</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Colibri.Devices.LocalNotificationsEmulator</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>191</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>192</span> </span><span class="WHIT">            </span><span class="NAME">this._plugin</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._device.Plugin</span><span class="PUNC">(</span><span class="STRN">'plugins.notification'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>193</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>194</span> </span><span class="WHIT">        </span><span class="NAME">this._plugin.local.setDummyNotifications</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>195</span> </span><span class="WHIT">        </span><span class="NAME">this._plugin.local.fireQueuedEvents</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>196</span> 
+<span class='line'>197</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>198</span> 
+<span class='line'>199</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>200</span>      * Checks if permission is granted.
+<span class='line'>201</span>      * @returns {Promise} - Promise resolving when permission is granted.
+<span class='line'>202</span>      */</span><span class="WHIT">
+<span class='line'>203</span> </span><span class="WHIT">    </span><span class="NAME">HasPermission</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>204</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Promise</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">resolve</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">reject</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>205</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._granted</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>206</span> </span><span class="WHIT">                </span><span class="NAME">resolve</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>207</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>208</span> </span><span class="WHIT">                </span><span class="NAME">this._plugin.local.hasPermission</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">granted</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>209</span> </span><span class="WHIT">                    </span><span class="NAME">this._granted</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">granted</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>210</span> </span><span class="WHIT">                    </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">granted</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>211</span> </span><span class="WHIT">                        </span><span class="NAME">resolve</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>212</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>213</span> </span><span class="WHIT">                        </span><span class="NAME">reject</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>214</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>215</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>216</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>217</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>218</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>219</span> 
+<span class='line'>220</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>221</span>      * Requests permission for notifications.
+<span class='line'>222</span>      * @returns {Promise} - Promise resolving when permission is granted.
+<span class='line'>223</span>      */</span><span class="WHIT">
+<span class='line'>224</span> </span><span class="WHIT">    </span><span class="NAME">RequestPermission</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>225</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Promise</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">resolve</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">reject</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>226</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._granted</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>227</span> </span><span class="WHIT">                </span><span class="NAME">resolve</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>228</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>229</span> </span><span class="WHIT">                </span><span class="NAME">this.HasPermission</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="KEYW">catch</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>230</span> </span><span class="WHIT">                    </span><span class="NAME">this._plugin.local.requestPermission</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">granted</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>231</span> </span><span class="WHIT">                        </span><span class="NAME">this._granted</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">granted</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>232</span> </span><span class="WHIT">                        </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">granted</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>233</span> </span><span class="WHIT">                            </span><span class="NAME">resolve</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>234</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>235</span> </span><span class="WHIT">                            </span><span class="NAME">reject</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>236</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>237</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">    
+<span class='line'>238</span>                 </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">then</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">resolve</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>239</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>240</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>241</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>242</span> 
+<span class='line'>243</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>244</span>      * Adds actions to a notification group.
+<span class='line'>245</span>      * @param {string} groupName - The name of the notification group.
+<span class='line'>246</span>      * @param {*} actions - Actions to add.
+<span class='line'>247</span>      */</span><span class="WHIT">
+<span class='line'>248</span> </span><span class="WHIT">    </span><span class="NAME">AddActions</span><span class="PUNC">(</span><span class="NAME">groupName</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">actions</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>249</span> </span><span class="WHIT">        </span><span class="NAME">this._plugin.local.addActions</span><span class="PUNC">(</span><span class="NAME">groupName</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">actions</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>250</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>251</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>252</span>      * Removes actions from a notification group.
+<span class='line'>253</span>      * @param {string} groupName - The name of the notification group.
+<span class='line'>254</span>      */</span><span class="WHIT">
+<span class='line'>255</span> </span><span class="WHIT">    </span><span class="NAME">RemoveActions</span><span class="PUNC">(</span><span class="NAME">groupName</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>256</span> </span><span class="WHIT">        </span><span class="NAME">this._plugin.local.removeActions</span><span class="PUNC">(</span><span class="NAME">groupName</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>257</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>258</span> 
+<span class='line'>259</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>260</span>      * Schedules a notification with given parameters.
+<span class='line'>261</span>      * @param {string} title - The title of the notification.
+<span class='line'>262</span>      * @param {string} message - The message of the notification.
+<span class='line'>263</span>      * @param {*} actions - Actions to attach to the notification.
+<span class='line'>264</span>      * @param {*} trigger - Trigger for the notification.
+<span class='line'>265</span>      * @param {boolean} isForeground - Flag indicating whether the notification should appear in foreground.
+<span class='line'>266</span>      * @param {boolean} isLaunch - Flag indicating whether the notification should launch the app.
+<span class='line'>267</span>      * @param {number} priority - Priority of the notification.
+<span class='line'>268</span>      * @param {number} id - The id of the notification.
+<span class='line'>269</span>      * @param {*} progressBar - Progress bar configuration.
+<span class='line'>270</span>      * @param {boolean} sound - Flag indicating whether to include sound with the notification.
+<span class='line'>271</span>      */</span><span class="WHIT">
+<span class='line'>272</span> </span><span class="WHIT">    </span><span class="NAME">Schedule</span><span class="PUNC">(</span><span class="NAME">title</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">message</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">actions</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">trigger</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">isForeground</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">isLaunch</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">priority</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">2</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">id</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">progressBar</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">sound</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>273</span> </span><span class="WHIT">        </span><span class="COMM">// trigger = { in: 1, unit: 'second' }, { in: 15, unit: 'minutes' }</span><span class="WHIT">
+<span class='line'>274</span> </span><span class="WHIT">        </span><span class="NAME">this.RequestPermission</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">then</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>275</span> </span><span class="WHIT">            </span><span class="KEYW">const</span><span class="WHIT"> </span><span class="NAME">params</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>276</span> </span><span class="WHIT">                </span><span class="NAME">title</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">title</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>277</span> </span><span class="WHIT">                </span><span class="NAME">text</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">message</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>278</span> </span><span class="WHIT">                </span><span class="NAME">foreground</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">isForeground</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>279</span> </span><span class="WHIT">                </span><span class="NAME">launch</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">isLaunch</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>280</span> </span><span class="WHIT">                </span><span class="NAME">priority</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">priority</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>281</span> </span><span class="WHIT">                </span><span class="NAME">sticky</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>282</span> </span><span class="WHIT">                </span><span class="NAME">sound</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">sound</span><span class="WHIT">
+<span class='line'>283</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>284</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">id</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>285</span> </span><span class="WHIT">                </span><span class="NAME">params.id</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">id</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>286</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>287</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">trigger</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>288</span> </span><span class="WHIT">                </span><span class="NAME">params.trigger</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">trigger</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>289</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>290</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">actions</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">actions.length</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>291</span> </span><span class="WHIT">                </span><span class="NAME">params.actions</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">actions</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>292</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>293</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">progressBar</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>294</span> </span><span class="WHIT">                </span><span class="NAME">params.progressBar</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">progressBar</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>295</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>296</span> </span><span class="WHIT">            
+<span class='line'>297</span>             </span><span class="NAME">this._plugin.local.schedule</span><span class="PUNC">(</span><span class="NAME">params</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>298</span> 
+<span class='line'>299</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>300</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>301</span> 
+<span class='line'>302</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>303</span>      * Cancels a scheduled notification with given id.
+<span class='line'>304</span>      * @param {number} id - The id of the notification to cancel.
+<span class='line'>305</span>      */</span><span class="WHIT">
+<span class='line'>306</span> </span><span class="WHIT">    </span><span class="NAME">Cancel</span><span class="PUNC">(</span><span class="NAME">id</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>307</span> </span><span class="WHIT">        </span><span class="NAME">this.RequestPermission</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">then</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>308</span> </span><span class="WHIT">            </span><span class="NAME">this._plugin.local.cancel</span><span class="PUNC">(</span><span class="NAME">id</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">    
+<span class='line'>309</span>         </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>310</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>311</span> 
+<span class='line'>312</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>313</span>      * Registers an event listener.
+<span class='line'>314</span>      * @param {string} event - The event to listen for.
+<span class='line'>315</span>      * @param {function} callback - The callback function.
+<span class='line'>316</span>      * @param {*} scope - The scope of the callback.
+<span class='line'>317</span>      */</span><span class="WHIT">
+<span class='line'>318</span> </span><span class="WHIT">    </span><span class="NAME">On</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">scope</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>319</span> </span><span class="WHIT">        </span><span class="NAME">this._plugin.local.on</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">scope</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>320</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>321</span> 
+<span class='line'>322</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>323</span>      * Unregisters an event listener.
+<span class='line'>324</span>      * @param {string} event - The event to stop listening for.
+<span class='line'>325</span>      * @param {function} callback - The callback function.
+<span class='line'>326</span>      * @param {*} scope - The scope of the callback.
+<span class='line'>327</span>      */</span><span class="WHIT">
+<span class='line'>328</span> </span><span class="WHIT">    </span><span class="NAME">Off</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">scope</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>329</span> </span><span class="WHIT">        </span><span class="NAME">this._plugin.local.un</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">scope</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>330</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>331</span> 
+<span class='line'>332</span> </span><span class="PUNC">}</span></pre></body></html>

@@ -2,6 +2,7 @@
  * Handles the connection to the Comet server and message communication.
  * @class 
  * @extends Colibri.Events.Dispatcher
+ * @memberof Colibri.Web
  */
 Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 

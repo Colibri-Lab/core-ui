@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.Pane = class extends Colibri.UI.Component {
 
     static ResizeNone = 'none';

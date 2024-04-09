@@ -1,4 +1,8 @@
-
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.PopupList = class extends Colibri.UI.List {
 
     constructor(name, container, multiple, __render, titleField = 'title', valueField = 'value', groupField = null, canSelectGroup = false) {

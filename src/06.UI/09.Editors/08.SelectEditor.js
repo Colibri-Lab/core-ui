@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @memberof Colibri.UI
+ * @extends Colibri.UI.Editor
+ */
 Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
     constructor(name, container) {
         super(name, container, Element.create('div'));

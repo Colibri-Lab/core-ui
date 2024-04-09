@@ -3,6 +3,7 @@
  * Represents a utility for accessing geolocation information.
  * @class
  * @extends Destructable
+ * @memberof Colibri.Devices
  */
 Colibri.Devices.GeoLocation = class extends Destructable {
 

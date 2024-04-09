@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Editor
+ * @memberof Colibri.UI
+ */
 Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
     
     constructor(name, container) {

@@ -1,5 +1,6 @@
 /**
  * @class
+ * @memberof Colibri.UI
  */
 Colibri.UI.Shortcuts = {
 

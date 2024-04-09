@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.Notices = class extends Colibri.UI.Pane {
     
     constructor(name, container) {

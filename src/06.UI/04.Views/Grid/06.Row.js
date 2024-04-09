@@ -1,5 +1,8 @@
 /**
- * Класс строки
+ * Grid row component
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI.Grid
  */
 Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 

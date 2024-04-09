@@ -1,45 +1,8 @@
 /**
- *
- * Класс выпадашка
- *
- * @example
- *
- * ! Создание компонента
- * const select = new Colibri.UI.Select('select', document.body);
- *
- * ! деалем компонент с мультивыбором
- * select.dropdown.list.multiple = true;
- *
- * ! если хотим нарисовать содержание элемента сами (пункта в списке)
- * const renderItem = (data) => data.id + ' - ' + data.title;
- *
- * ! создаем группу - группа обязательно должна быть
- * const group1 = select.dropdown.list.AddGroup('group1', 'title_group');
- *
- * ! добавляем
- * group1.AddItem({ title: '...', id: '', __render: renderItem});
- *
- * ! создаем опции внизу, под списком
- * const option1 = select.dropdown.options.AddOption('reference', 'Справочник');
- * const option2 = select.dropdown.options.AddOption('reference2', 'Справочник');
- *
- * ! получаем событие изменение списка
- * select.AddHandler('SelectionChanged', (event, args) => { наш код, args.selected - выбранное });
- *
- * ! получаем инфу, если клинкнули на опцию
- * select.dropdown.AddHandler('OptionClicked', (event, args) => { наш код, args.option - название опции  });
- *
- * ! если хотим свой дропдаун
- * const select = new Colibri.UI.Select('select', document.body, dropdownComponent);
- * ! dropdownComponent - компонент, наследованный от Colibri.UI.Select.Dropdown,
- * ! должен переопределять свойство selected
- * ! должен поднимать событие SelectionChanged - this.Dispatch('SelectionChanged', args);
- *
- */
-
-/**
- * Komponent выпадашка
- * @type {Colibri.UI.Select}
+ * Component select box
+ * @class
+ * @extends Colibri.UI.Input
+ * @memberof Colibri.UI
  */
 Colibri.UI.Select = class extends Colibri.UI.Input {
 

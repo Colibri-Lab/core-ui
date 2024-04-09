@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Window
+ * @memberof Colibri.UI
+ */
 Colibri.UI.AlertDialog = class extends Colibri.UI.Window {
 
     constructor(name, container, width) {

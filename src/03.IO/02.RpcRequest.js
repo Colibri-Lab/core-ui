@@ -2,6 +2,7 @@
  * Represents a remote procedure call (RPC) request.
  * @class 
  * @extends Colibri.Events.Dispatcher
+ * @memberof Colibri.IO
  */
 Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
 

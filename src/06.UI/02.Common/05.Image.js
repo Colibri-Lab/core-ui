@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.Image = class extends Colibri.UI.Component {
 
     constructor(name, container) {
@@ -15,6 +20,10 @@ Colibri.UI.Image = class extends Colibri.UI.Component {
         value = value.replaceAll(/\w+\(/, '').replaceAll(')', '');
         if(value.indexOf('data:') === -1) {
             const img = new Image();
+            /**
+             * @private
+             * @param {Event} e 
+             */
             img.onload = (e) => {
                 this.width = img.width;
                 this.height = img.height;
@@ -24,21 +33,31 @@ Colibri.UI.Image = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Repeat the background
+     * @type {string}
+     */
     get repeat() {
         return this._element.css('background-repeat');
     }
 
+    /**
+     * Repeat the background
+     * @type {string}
+     */
     set repeat(value) {
         this._element.css('background-repeat', value);
     }
 
     /**
+     * Background size
      * @type {contain,cover,revert}
      */
     get size() {
         return this._element.css('background-size');
     }
     /**
+     * Background size
      * @type {contain,cover,revert}
      */
     set size(value) {
@@ -46,20 +65,30 @@ Colibri.UI.Image = class extends Colibri.UI.Component {
     }
 
     /**
+     * Background position
      * @type {String}
      */
     get position() {
         return this._element.css('background-position');
     }
     /**
+     * Background position
      * @type {String}
      */
     set position(value) {
         this._element.css('background-position', value);
     }
     
+    /**
+     * Value of image
+     * @type {string}
+     */
     set image(value) {
         let reader = new FileReader();
+        /**
+         * @private
+         * @param {Event} e 
+         */
         reader.onload = (e) => {
             this.source = 'url("' + reader.result + '")';
         }
@@ -67,6 +96,10 @@ Colibri.UI.Image = class extends Colibri.UI.Component {
         this._name = value.name;
     }
 
+    /**
+     * Value of image
+     * @type {string}
+     */
     get image() {
         const imageSrc = this.source.replaceAll('url("', '').replaceAll('")', '');
         const data = imageSrc.split(';');

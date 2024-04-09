@@ -1,8 +1,10 @@
 /**
  * RGB color representation
  * @class
+ * @memberof Colibri.UI
  */
 Colibri.UI.Rgb = class {
+
 
     /**
      * @private

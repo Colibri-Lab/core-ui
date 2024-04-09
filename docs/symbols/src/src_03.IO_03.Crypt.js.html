@@ -8,32 +8,33 @@
 	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/**
 <span class='line'>  2</span>  * Provides encryption and decryption functionality.
 <span class='line'>  3</span>  * @class
-<span class='line'>  4</span>  */</span><span class="WHIT">
-<span class='line'>  5</span> </span><span class="NAME">Colibri.IO.Crypt</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">class</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>  6</span> 
-<span class='line'>  7</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>  8</span>      * Encrypts the given data using the specified key.
-<span class='line'>  9</span>      * @param {string} key The encryption key.
-<span class='line'> 10</span>      * @param {string} data The data to encrypt.
-<span class='line'> 11</span>      * @returns {Promise&lt;string>} A promise that resolves to the encrypted data.
-<span class='line'> 12</span>      */</span><span class="WHIT">
-<span class='line'> 13</span> </span><span class="WHIT">    </span><span class="NAME">static</span><span class="WHIT"> </span><span class="NAME">Encrypt</span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 14</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Promise</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">resolve</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">reject</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 15</span> </span><span class="WHIT">            </span><span class="NAME">key.sha256</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">then</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">sha256</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 16</span> </span><span class="WHIT">                </span><span class="KEYW">const</span><span class="WHIT"> </span><span class="NAME">encoded</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">data.rc4</span><span class="PUNC">(</span><span class="NAME">sha256</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 17</span> </span><span class="WHIT">                </span><span class="NAME">resolve</span><span class="PUNC">(</span><span class="NAME">encoded</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 18</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="KEYW">catch</span><span class="PUNC">(</span><span class="NAME">error</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">reject</span><span class="PUNC">(</span><span class="NAME">error</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 19</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 20</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 21</span> 
-<span class='line'> 22</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'> 23</span>      * Decrypts the given data using the specified key.
-<span class='line'> 24</span>      * @param {string} key The decryption key.
-<span class='line'> 25</span>      * @param {string} data The data to decrypt.
-<span class='line'> 26</span>      * @returns {Promise&lt;string>} A promise that resolves to the decrypted data.
-<span class='line'> 27</span>      */</span><span class="WHIT">
-<span class='line'> 28</span> </span><span class="WHIT">    </span><span class="NAME">static</span><span class="WHIT"> </span><span class="NAME">Decrypt</span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 29</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">Colibri.IO.Crypt.Encrypt</span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 30</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 31</span> 
-<span class='line'> 32</span> </span><span class="PUNC">}</span></pre></body></html>
+<span class='line'>  4</span>  * @memberof Colibri.IO
+<span class='line'>  5</span>  */</span><span class="WHIT">
+<span class='line'>  6</span> </span><span class="NAME">Colibri.IO.Crypt</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">class</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>  7</span> 
+<span class='line'>  8</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>  9</span>      * Encrypts the given data using the specified key.
+<span class='line'> 10</span>      * @param {string} key The encryption key.
+<span class='line'> 11</span>      * @param {string} data The data to encrypt.
+<span class='line'> 12</span>      * @returns {Promise&lt;string>} A promise that resolves to the encrypted data.
+<span class='line'> 13</span>      */</span><span class="WHIT">
+<span class='line'> 14</span> </span><span class="WHIT">    </span><span class="NAME">static</span><span class="WHIT"> </span><span class="NAME">Encrypt</span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 15</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Promise</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">resolve</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">reject</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 16</span> </span><span class="WHIT">            </span><span class="NAME">key.sha256</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">then</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">sha256</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="WHIT">                </span><span class="KEYW">const</span><span class="WHIT"> </span><span class="NAME">encoded</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">data.rc4</span><span class="PUNC">(</span><span class="NAME">sha256</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="WHIT">                </span><span class="NAME">resolve</span><span class="PUNC">(</span><span class="NAME">encoded</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="KEYW">catch</span><span class="PUNC">(</span><span class="NAME">error</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">reject</span><span class="PUNC">(</span><span class="NAME">error</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 20</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 21</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 22</span> 
+<span class='line'> 23</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 24</span>      * Decrypts the given data using the specified key.
+<span class='line'> 25</span>      * @param {string} key The decryption key.
+<span class='line'> 26</span>      * @param {string} data The data to decrypt.
+<span class='line'> 27</span>      * @returns {Promise&lt;string>} A promise that resolves to the decrypted data.
+<span class='line'> 28</span>      */</span><span class="WHIT">
+<span class='line'> 29</span> </span><span class="WHIT">    </span><span class="NAME">static</span><span class="WHIT"> </span><span class="NAME">Decrypt</span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 30</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">Colibri.IO.Crypt.Encrypt</span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 31</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 32</span> 
+<span class='line'> 33</span> </span><span class="PUNC">}</span></pre></body></html>

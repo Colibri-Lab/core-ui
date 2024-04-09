@@ -1,5 +1,8 @@
 /**
- * Класс ячейки
+ * Grid cell component
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI.Grid
  */
 Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
 

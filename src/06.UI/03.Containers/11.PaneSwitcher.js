@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.PaneSwitcher = class extends Colibri.UI.Pane {
     
     constructor(name, container) {

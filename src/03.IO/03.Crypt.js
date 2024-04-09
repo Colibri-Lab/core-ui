@@ -1,6 +1,7 @@
 /**
  * Provides encryption and decryption functionality.
  * @class
+ * @memberof Colibri.IO
  */
 Colibri.IO.Crypt = class {
 

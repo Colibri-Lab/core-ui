@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @memberof Colibri.UI
+ * @extends Colibri.UI.Viewer
+ */
 Colibri.UI.JsonViewer = class extends Colibri.UI.Pane {
     
     constructor(name, container) {

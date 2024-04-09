@@ -1,5 +1,8 @@
 /**
  * Button viewed as link
+ * @class
+ * @extends Colibri.UI.ExtendedButton
+ * @memberof Colibri.UI
  */
 Colibri.UI.AsLinkButton = class extends Colibri.UI.ExtendedButton {
     constructor(name, container) {

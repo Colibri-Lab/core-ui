@@ -2,6 +2,7 @@
  * Represents a media utility for handling audio playback and recording.
  * @class
  * @extends Colibri.Events.Dispatcher
+ * @memberof Colibri.Devices
  */
 
 Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {

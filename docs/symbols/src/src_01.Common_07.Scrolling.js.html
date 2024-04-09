@@ -8,75 +8,76 @@
 	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/**
 <span class='line'>  2</span>  * Class representing scrolling utility functions.
 <span class='line'>  3</span>  * @class
-<span class='line'>  4</span>  */</span><span class="WHIT">
-<span class='line'>  5</span> </span><span class="NAME">Colibri.Common.Scrolling</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">class</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>  6</span> 
-<span class='line'>  7</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>  8</span>      * Creates an instance of Colibri.Common.Scrolling.
-<span class='line'>  9</span>      * @param {HTMLElement} element - The HTML element to apply scrolling behavior.
-<span class='line'> 10</span>      */</span><span class="WHIT">
-<span class='line'> 11</span> </span><span class="WHIT">    </span><span class="NAME">constructor</span><span class="PUNC">(</span><span class="NAME">element</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 12</span> </span><span class="WHIT">        
-<span class='line'> 13</span>         </span><span class="NAME">this._element</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">element</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 14</span> 
-<span class='line'> 15</span> </span><span class="WHIT">        </span><span class="NAME">this.supportsPassive</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 16</span> </span><span class="WHIT">        </span><span class="NAME">this.wheelOpt</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.supportsPassive</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">passive</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 17</span> </span><span class="WHIT">        </span><span class="NAME">this.wheelEvent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'onwheel'</span><span class="WHIT"> </span><span class="KEYW">in</span><span class="WHIT"> </span><span class="NAME">document.createElement</span><span class="PUNC">(</span><span class="STRN">'div'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="STRN">'wheel'</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'mousewheel'</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 18</span> </span><span class="WHIT">    
-<span class='line'> 19</span>     </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 20</span> 
-<span class='line'> 21</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'> 22</span>      * Creates an instance of Colibri.Common.Scrolling.
-<span class='line'> 23</span>      * @param {HTMLElement} element - The HTML element to apply scrolling behavior.
-<span class='line'> 24</span>      * @returns {Colibri.Common.Scrolling} A new instance of Colibri.Common.Scrolling.
-<span class='line'> 25</span>      * @static
-<span class='line'> 26</span>      */</span><span class="WHIT">
-<span class='line'> 27</span> </span><span class="WHIT">    </span><span class="NAME">Create</span><span class="PUNC">(</span><span class="NAME">element</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 28</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Colibri.Common.Scrolling</span><span class="PUNC">(</span><span class="NAME">element</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 29</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 30</span> 
-<span class='line'> 31</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'> 32</span>      * Prevents default behavior for the event.
-<span class='line'> 33</span>      * @param {Event} e - The event object.
-<span class='line'> 34</span>      * @private
-<span class='line'> 35</span>      */</span><span class="WHIT">
-<span class='line'> 36</span> </span><span class="WHIT">    </span><span class="NAME">__preventDefault</span><span class="PUNC">(</span><span class="NAME">e</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 37</span> </span><span class="WHIT">        </span><span class="KEYW">try</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">e.preventDefault</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">catch</span><span class="PUNC">(</span><span class="NAME">e</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 38</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 39</span> 
-<span class='line'> 40</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'> 41</span>      * Prevents default behavior for scroll keys.
-<span class='line'> 42</span>      * @param {KeyboardEvent} e - The keyboard event object.
-<span class='line'> 43</span>      * @returns {boolean} True if default behavior is prevented, otherwise false.
-<span class='line'> 44</span>      * @private
-<span class='line'> 45</span>      */</span><span class="WHIT">
-<span class='line'> 46</span> </span><span class="WHIT">    </span><span class="NAME">__preventDefaultForScrollKeys</span><span class="PUNC">(</span><span class="NAME">e</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 47</span> </span><span class="WHIT">        </span><span class="KEYW">const</span><span class="WHIT"> </span><span class="NAME">keys</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NUMB">37</span><span class="PUNC">,</span><span class="NUMB">38</span><span class="PUNC">,</span><span class="NUMB">39</span><span class="PUNC">,</span><span class="NUMB">40</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 48</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">keys.indexOf</span><span class="PUNC">(</span><span class="NAME">e.keyCode</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 49</span> </span><span class="WHIT">            </span><span class="NAME">this.__preventDefault</span><span class="PUNC">(</span><span class="NAME">e</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 50</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 51</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 52</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 53</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 54</span> </span><span class="WHIT">    
-<span class='line'> 55</span>     </span><span class="COMM">/**
-<span class='line'> 56</span>      * Disables scrolling behavior on the element.
-<span class='line'> 57</span>      */</span><span class="WHIT">
-<span class='line'> 58</span> </span><span class="WHIT">    </span><span class="NAME">Disable</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 59</span> </span><span class="WHIT">        </span><span class="NAME">this._element.addEventListener</span><span class="PUNC">(</span><span class="STRN">'DOMMouseScroll'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.__preventDefault</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// older FF</span><span class="WHIT">
-<span class='line'> 60</span> </span><span class="WHIT">        </span><span class="NAME">this._element.addEventListener</span><span class="PUNC">(</span><span class="NAME">this.wheelEvent</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.__preventDefault</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.wheelOpt</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// modern desktop</span><span class="WHIT">
-<span class='line'> 61</span> </span><span class="WHIT">        </span><span class="NAME">this._element.addEventListener</span><span class="PUNC">(</span><span class="STRN">'touchmove'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.__preventDefault</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.wheelOpt</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// mobile</span><span class="WHIT">
-<span class='line'> 62</span> </span><span class="WHIT">        </span><span class="NAME">this._element.addEventListener</span><span class="PUNC">(</span><span class="STRN">'keydown'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.__preventDefaultForScrollKeys</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 63</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 64</span> 
-<span class='line'> 65</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'> 66</span>      * Enables scrolling behavior on the element.
-<span class='line'> 67</span>      */</span><span class="WHIT">
-<span class='line'> 68</span> </span><span class="WHIT">    </span><span class="NAME">Enable</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 69</span> </span><span class="WHIT">        </span><span class="NAME">this._element.removeEventListener</span><span class="PUNC">(</span><span class="STRN">'DOMMouseScroll'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.__preventDefault</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 70</span> </span><span class="WHIT">        </span><span class="NAME">this._element.removeEventListener</span><span class="PUNC">(</span><span class="NAME">this.wheelEvent</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.__preventDefault</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.wheelOpt</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> 
-<span class='line'> 71</span>         </span><span class="NAME">this._element.removeEventListener</span><span class="PUNC">(</span><span class="STRN">'touchmove'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.__preventDefault</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.wheelOpt</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 72</span> </span><span class="WHIT">        </span><span class="NAME">this._element.removeEventListener</span><span class="PUNC">(</span><span class="STRN">'keydown'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.__preventDefaultForScrollKeys</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 73</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 74</span> 
-<span class='line'> 75</span> </span><span class="PUNC">}</span></pre></body></html>
+<span class='line'>  4</span>  * @memberof Colibri.Common
+<span class='line'>  5</span>  */</span><span class="WHIT">
+<span class='line'>  6</span> </span><span class="NAME">Colibri.Common.Scrolling</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">class</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>  7</span> 
+<span class='line'>  8</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>  9</span>      * Creates an instance of Colibri.Common.Scrolling.
+<span class='line'> 10</span>      * @param {HTMLElement} element - The HTML element to apply scrolling behavior.
+<span class='line'> 11</span>      */</span><span class="WHIT">
+<span class='line'> 12</span> </span><span class="WHIT">    </span><span class="NAME">constructor</span><span class="PUNC">(</span><span class="NAME">element</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 13</span> </span><span class="WHIT">        
+<span class='line'> 14</span>         </span><span class="NAME">this._element</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">element</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 15</span> 
+<span class='line'> 16</span> </span><span class="WHIT">        </span><span class="NAME">this.supportsPassive</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="WHIT">        </span><span class="NAME">this.wheelOpt</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.supportsPassive</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">passive</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="WHIT">        </span><span class="NAME">this.wheelEvent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'onwheel'</span><span class="WHIT"> </span><span class="KEYW">in</span><span class="WHIT"> </span><span class="NAME">document.createElement</span><span class="PUNC">(</span><span class="STRN">'div'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="STRN">'wheel'</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'mousewheel'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="WHIT">    
+<span class='line'> 20</span>     </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 21</span> 
+<span class='line'> 22</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 23</span>      * Creates an instance of Colibri.Common.Scrolling.
+<span class='line'> 24</span>      * @param {HTMLElement} element - The HTML element to apply scrolling behavior.
+<span class='line'> 25</span>      * @returns {Colibri.Common.Scrolling} A new instance of Colibri.Common.Scrolling.
+<span class='line'> 26</span>      * @static
+<span class='line'> 27</span>      */</span><span class="WHIT">
+<span class='line'> 28</span> </span><span class="WHIT">    </span><span class="NAME">Create</span><span class="PUNC">(</span><span class="NAME">element</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 29</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Colibri.Common.Scrolling</span><span class="PUNC">(</span><span class="NAME">element</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 30</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 31</span> 
+<span class='line'> 32</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 33</span>      * Prevents default behavior for the event.
+<span class='line'> 34</span>      * @param {Event} e - The event object.
+<span class='line'> 35</span>      * @private
+<span class='line'> 36</span>      */</span><span class="WHIT">
+<span class='line'> 37</span> </span><span class="WHIT">    </span><span class="NAME">__preventDefault</span><span class="PUNC">(</span><span class="NAME">e</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 38</span> </span><span class="WHIT">        </span><span class="KEYW">try</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">e.preventDefault</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">catch</span><span class="PUNC">(</span><span class="NAME">e</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 39</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 40</span> 
+<span class='line'> 41</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 42</span>      * Prevents default behavior for scroll keys.
+<span class='line'> 43</span>      * @param {KeyboardEvent} e - The keyboard event object.
+<span class='line'> 44</span>      * @returns {boolean} True if default behavior is prevented, otherwise false.
+<span class='line'> 45</span>      * @private
+<span class='line'> 46</span>      */</span><span class="WHIT">
+<span class='line'> 47</span> </span><span class="WHIT">    </span><span class="NAME">__preventDefaultForScrollKeys</span><span class="PUNC">(</span><span class="NAME">e</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 48</span> </span><span class="WHIT">        </span><span class="KEYW">const</span><span class="WHIT"> </span><span class="NAME">keys</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NUMB">37</span><span class="PUNC">,</span><span class="NUMB">38</span><span class="PUNC">,</span><span class="NUMB">39</span><span class="PUNC">,</span><span class="NUMB">40</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 49</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">keys.indexOf</span><span class="PUNC">(</span><span class="NAME">e.keyCode</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 50</span> </span><span class="WHIT">            </span><span class="NAME">this.__preventDefault</span><span class="PUNC">(</span><span class="NAME">e</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 51</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 52</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 53</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 54</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 55</span> </span><span class="WHIT">    
+<span class='line'> 56</span>     </span><span class="COMM">/**
+<span class='line'> 57</span>      * Disables scrolling behavior on the element.
+<span class='line'> 58</span>      */</span><span class="WHIT">
+<span class='line'> 59</span> </span><span class="WHIT">    </span><span class="NAME">Disable</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 60</span> </span><span class="WHIT">        </span><span class="NAME">this._element.addEventListener</span><span class="PUNC">(</span><span class="STRN">'DOMMouseScroll'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.__preventDefault</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// older FF</span><span class="WHIT">
+<span class='line'> 61</span> </span><span class="WHIT">        </span><span class="NAME">this._element.addEventListener</span><span class="PUNC">(</span><span class="NAME">this.wheelEvent</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.__preventDefault</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.wheelOpt</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// modern desktop</span><span class="WHIT">
+<span class='line'> 62</span> </span><span class="WHIT">        </span><span class="NAME">this._element.addEventListener</span><span class="PUNC">(</span><span class="STRN">'touchmove'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.__preventDefault</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.wheelOpt</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// mobile</span><span class="WHIT">
+<span class='line'> 63</span> </span><span class="WHIT">        </span><span class="NAME">this._element.addEventListener</span><span class="PUNC">(</span><span class="STRN">'keydown'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.__preventDefaultForScrollKeys</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 65</span> 
+<span class='line'> 66</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 67</span>      * Enables scrolling behavior on the element.
+<span class='line'> 68</span>      */</span><span class="WHIT">
+<span class='line'> 69</span> </span><span class="WHIT">    </span><span class="NAME">Enable</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 70</span> </span><span class="WHIT">        </span><span class="NAME">this._element.removeEventListener</span><span class="PUNC">(</span><span class="STRN">'DOMMouseScroll'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.__preventDefault</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 71</span> </span><span class="WHIT">        </span><span class="NAME">this._element.removeEventListener</span><span class="PUNC">(</span><span class="NAME">this.wheelEvent</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.__preventDefault</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.wheelOpt</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> 
+<span class='line'> 72</span>         </span><span class="NAME">this._element.removeEventListener</span><span class="PUNC">(</span><span class="STRN">'touchmove'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.__preventDefault</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.wheelOpt</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 73</span> </span><span class="WHIT">        </span><span class="NAME">this._element.removeEventListener</span><span class="PUNC">(</span><span class="STRN">'keydown'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.__preventDefaultForScrollKeys</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 74</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 75</span> 
+<span class='line'> 76</span> </span><span class="PUNC">}</span></pre></body></html>

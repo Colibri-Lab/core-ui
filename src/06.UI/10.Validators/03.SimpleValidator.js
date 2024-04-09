@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.Events.Dispatcher
+ * @memberof Colibri.UI
+ */
 Colibri.UI.SimpleFormValidator = class {
 
     constructor(form) {

@@ -2,6 +2,7 @@
  * Represents a dispatcher for events.
  * @class
  * @extends Destructable
+ * @memberof Colibri.Events
  */
 Colibri.Events.Dispatcher = class extends Destructable {
 

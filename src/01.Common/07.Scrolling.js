@@ -1,6 +1,7 @@
 /**
  * Class representing scrolling utility functions.
  * @class
+ * @memberof Colibri.Common
  */
 Colibri.Common.Scrolling = class {
 

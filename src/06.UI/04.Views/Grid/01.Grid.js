@@ -1,5 +1,9 @@
 /**
- * Класс ГРИД
+ * Grid component
+ * @class
+ * @namespace
+ * @extends Colibri.UI.Pane
+ * @memberof Colibri.UI
  */
 Colibri.UI.Grid = class extends Colibri.UI.Pane {
 

@@ -1,3 +1,7 @@
+/**
+ * @class
+ * @memberof Colibri.UI.Utilities
+ */
 Colibri.UI.Utilities.Validator = class {
 
     static IsUKPostCode(string) {

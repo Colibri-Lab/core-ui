@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Heading
+ * @memberof Colibri.UI
+ */
 Colibri.UI.H2 = class extends Colibri.UI.Heading {
     constructor(name, container) {
         super(name, container, 2);

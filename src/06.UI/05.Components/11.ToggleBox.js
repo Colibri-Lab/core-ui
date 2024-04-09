@@ -1,4 +1,8 @@
-
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.ToggleBox = class extends Colibri.UI.Component {
 
     constructor(name, container) {

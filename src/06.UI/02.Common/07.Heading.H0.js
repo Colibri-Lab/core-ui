@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.Heading = class extends Colibri.UI.Component {
     constructor(name, container, level = 1) {
         super(name, container, Element.create('h' + level));

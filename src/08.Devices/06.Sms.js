@@ -2,6 +2,7 @@
  * Represents a utility for handling SMS operations.
  * @class
  * @extends Destructable
+ * @memberof Colibri.Devices
  */
 Colibri.Devices.Sms = class extends Destructable {
     

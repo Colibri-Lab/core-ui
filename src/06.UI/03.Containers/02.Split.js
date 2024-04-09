@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.Split = class extends Colibri.UI.Component {
 
     static OrientationHorizontal = 'horizontal';

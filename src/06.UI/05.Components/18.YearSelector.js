@@ -1,4 +1,8 @@
-
+/**
+ * @class
+ * @extends Colibri.UI.Selector
+ * @memberof Colibri.UI
+ */
 Colibri.UI.YearSelector = class extends Colibri.UI.Selector {
 
     constructor(name, container, startYear, endYear) {

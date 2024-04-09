@@ -1,4 +1,8 @@
-
+/**
+ * @class
+ * @extends Colibri.UI.Pane
+ * @memberof Colibri.UI
+ */
 Colibri.UI.Popup = class extends Colibri.UI.Pane {
 
     constructor(name, container, element) {

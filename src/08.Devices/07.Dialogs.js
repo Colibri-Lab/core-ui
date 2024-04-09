@@ -2,6 +2,7 @@
  * Represents a utility for displaying dialogs and notifications.
  * @class
  * @extends Destructable
+ * @memberof Colibri.Devices
  */
 Colibri.Devices.Dialogs = class extends Destructable {
     

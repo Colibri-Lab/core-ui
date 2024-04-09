@@ -2,6 +2,7 @@
  * Represents a utility for handling web requests.
  * @class
  * @extends Destructable
+ * @memberof Colibri.Web
  */
 Colibri.Web.Request = class extends Destructable {
 

@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.Editor = class extends Colibri.UI.Component {
     constructor(name, container, element) {
         super(name, container, element || '<input />');

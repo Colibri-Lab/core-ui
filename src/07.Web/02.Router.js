@@ -2,6 +2,7 @@
  * Represents a router for handling web routes.
  * @class
  * @extends Colibri.Events.Dispatcher
+ * @memberof Colibri.Web
  */
 Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 

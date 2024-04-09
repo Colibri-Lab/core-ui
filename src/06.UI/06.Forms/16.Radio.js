@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @memberof Colibri.UI.Forms
+ * @extends Colibri.UI.Forms.Field
+ */
 Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
 
     RenderFieldContainer() {

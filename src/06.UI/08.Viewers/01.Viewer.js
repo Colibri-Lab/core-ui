@@ -1,10 +1,7 @@
 /**
- * Используется отображения ячеек
- * viewer="Colibri.UI.Viewer"
- * 
- * при использовании внутри можно 
- * 
- * 
+ * @class
+ * @memberof Colibri.UI
+ * @extends Colibri.UI.Component
  */
 Colibri.UI.Viewer = class extends Colibri.UI.Component {
 

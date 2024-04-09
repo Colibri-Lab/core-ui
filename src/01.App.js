@@ -2,6 +2,7 @@
  * The main application class.
  * @class
  * @extends Colibri.Events.Dispatcher
+ * @memberof Colibri
  */
 Colibri.App = class extends Colibri.Events.Dispatcher { 
     

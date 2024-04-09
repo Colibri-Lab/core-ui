@@ -8,43 +8,44 @@
 	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/**
 <span class='line'>  2</span>  * Represents a browser storage utility.
 <span class='line'>  3</span>  * @class
-<span class='line'>  4</span>  */</span><span class="WHIT">
-<span class='line'>  5</span> </span><span class="NAME">Colibri.Common.BrowserStorage</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">class</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>  6</span> </span><span class="WHIT">    </span><span class="COMM">/** @constructor */</span><span class="WHIT">
-<span class='line'>  7</span> </span><span class="WHIT">    </span><span class="NAME">constructor</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>  8</span> 
-<span class='line'>  9</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'> 10</span>      * Sets a value in the browser storage.
-<span class='line'> 11</span>      * @param {string} name - The name of the item.
-<span class='line'> 12</span>      * @param {*} [value=true] - The value to set. Defaults to true if not provided.
-<span class='line'> 13</span>      */</span><span class="WHIT">
-<span class='line'> 14</span> </span><span class="WHIT">    </span><span class="NAME">Set</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 15</span> </span><span class="WHIT">        </span><span class="NAME">window.localStorage.setItem</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 16</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 17</span> 
-<span class='line'> 18</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'> 19</span>      * Gets a value from the browser storage.
-<span class='line'> 20</span>      * @param {string} name - The name of the item.
-<span class='line'> 21</span>      * @returns {*} - The value retrieved from the storage.
-<span class='line'> 22</span>      */</span><span class="WHIT">
-<span class='line'> 23</span> </span><span class="WHIT">    </span><span class="NAME">Get</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 24</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">window.localStorage.getItem</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 25</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 26</span> 
-<span class='line'> 27</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'> 28</span>      * Deletes an item from the browser storage.
-<span class='line'> 29</span>      * @param {string} name - The name of the item to delete.
-<span class='line'> 30</span>      */</span><span class="WHIT">
-<span class='line'> 31</span> </span><span class="WHIT">    </span><span class="NAME">Delete</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 32</span> </span><span class="WHIT">        </span><span class="NAME">window.localStorage.removeItem</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 33</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 34</span> 
-<span class='line'> 35</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'> 36</span>      * Checks if an item exists in the browser storage.
-<span class='line'> 37</span>      * @param {string} name - The name of the item to check.
-<span class='line'> 38</span>      * @returns {boolean} - True if the item exists, false otherwise.
-<span class='line'> 39</span>      */</span><span class="WHIT">
-<span class='line'> 40</span> </span><span class="WHIT">    </span><span class="NAME">Has</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 41</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="PUNC">!</span><span class="NAME">this.Get</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 42</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 43</span> </span><span class="PUNC">}</span><span class="PUNC">;</span></pre></body></html>
+<span class='line'>  4</span>  * @memberof Colibri.Common
+<span class='line'>  5</span>  */</span><span class="WHIT">
+<span class='line'>  6</span> </span><span class="NAME">Colibri.Common.BrowserStorage</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">class</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>  7</span> </span><span class="WHIT">    </span><span class="COMM">/** @constructor */</span><span class="WHIT">
+<span class='line'>  8</span> </span><span class="WHIT">    </span><span class="NAME">constructor</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>  9</span> 
+<span class='line'> 10</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 11</span>      * Sets a value in the browser storage.
+<span class='line'> 12</span>      * @param {string} name - The name of the item.
+<span class='line'> 13</span>      * @param {*} [value=true] - The value to set. Defaults to true if not provided.
+<span class='line'> 14</span>      */</span><span class="WHIT">
+<span class='line'> 15</span> </span><span class="WHIT">    </span><span class="NAME">Set</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 16</span> </span><span class="WHIT">        </span><span class="NAME">window.localStorage.setItem</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 18</span> 
+<span class='line'> 19</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 20</span>      * Gets a value from the browser storage.
+<span class='line'> 21</span>      * @param {string} name - The name of the item.
+<span class='line'> 22</span>      * @returns {*} - The value retrieved from the storage.
+<span class='line'> 23</span>      */</span><span class="WHIT">
+<span class='line'> 24</span> </span><span class="WHIT">    </span><span class="NAME">Get</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 25</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">window.localStorage.getItem</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 26</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 27</span> 
+<span class='line'> 28</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 29</span>      * Deletes an item from the browser storage.
+<span class='line'> 30</span>      * @param {string} name - The name of the item to delete.
+<span class='line'> 31</span>      */</span><span class="WHIT">
+<span class='line'> 32</span> </span><span class="WHIT">    </span><span class="NAME">Delete</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 33</span> </span><span class="WHIT">        </span><span class="NAME">window.localStorage.removeItem</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 34</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 35</span> 
+<span class='line'> 36</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 37</span>      * Checks if an item exists in the browser storage.
+<span class='line'> 38</span>      * @param {string} name - The name of the item to check.
+<span class='line'> 39</span>      * @returns {boolean} - True if the item exists, false otherwise.
+<span class='line'> 40</span>      */</span><span class="WHIT">
+<span class='line'> 41</span> </span><span class="WHIT">    </span><span class="NAME">Has</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 42</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="PUNC">!</span><span class="NAME">this.Get</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 43</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 44</span> </span><span class="PUNC">}</span><span class="PUNC">;</span></pre></body></html>

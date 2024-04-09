@@ -1,3 +1,8 @@
+/**
+ * @memberof Colibri.UI
+ * @class
+ * @extends Colibri.UI.Viewer
+ */
 Colibri.UI.CheckboxViewer = class extends Colibri.UI.Viewer {
 
     constructor(name, container, element = null, root = null) {
