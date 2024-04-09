@@ -8,6 +8,12 @@ Colibri.UI.FlexBox = class extends Colibri.UI.Component {
     static Horizontal = 'row';
     static Vertical = 'column'
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     * @param {string|HTMLElement} element element to generate in
+     */
     constructor(name, container, element) {
         super(name, container, element || Element.create('div'));
         this.AddClass('app-component-flexbox');

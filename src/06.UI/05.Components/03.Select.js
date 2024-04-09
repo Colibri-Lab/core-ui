@@ -8,6 +8,12 @@ Colibri.UI.Select = class extends Colibri.UI.Input {
 
     _dropdown = null;
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     * @params {Colibri.UI.Component} dropdown dropdown component
+     */
     constructor(name, container, dropdown) {
         super(name, container);
         this.AddClass('app-component-select');

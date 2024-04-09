@@ -12,6 +12,12 @@ Colibri.UI.Toolbar = class extends Colibri.UI.Component {
     static Left = 'left';
     static Center = 'center';
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     * @param {string|HTMLElement} element element to generate in
+     */
     constructor(name, container, element) {
         super(name, container, element || Element.create('div'));
         this.AddClass('app-toolbar-container-component');

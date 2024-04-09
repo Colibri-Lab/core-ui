@@ -5,6 +5,15 @@
  */
 Colibri.UI.Window = class extends Colibri.UI.Component {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     * @param {string|Element} element element to create in
+     * @param {string} title title of window
+     * @param {number|null} width width of window
+     * @param {number|null} height height of window
+     */
     constructor(name, container, element, title, width, height) {
         super(name, container, Element.fromHtml('<div><div class="app-component-window-container"><div class="app-component-window-title"><span></span><div class="minimize-button"></div><div class="close-button"></div></div><div class="app-component-window-content"></div><div class="app-component-window-minimized-content"></div><div class="app-component-window-footer"></div></div></div>')[0]);
 

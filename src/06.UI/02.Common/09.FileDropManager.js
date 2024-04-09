@@ -1,4 +1,5 @@
 /**
+ * Drop manager
  * @class
  * @extends Colibri.Events.Dispatcher
  * @memberof Colibri.UI
@@ -6,9 +7,9 @@
 Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
 
     /**
-     * Менеджер перетаскиваний
-     * @param {Colibri.UI.Component[]} sources массив источников
-     * @param {Colibri.UI.Component[]} destinations массив назначений 
+     * @constructor
+     * @param {Colibri.UI.Component} container container to drop in
+     * @param {string} message message to show when dragging 
      */
     constructor(container, message = '#{ui-filedropmanager-message}') {
         super();

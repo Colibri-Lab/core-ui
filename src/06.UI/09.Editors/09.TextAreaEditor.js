@@ -4,6 +4,11 @@
  * @extends Colibri.UI.Editor
  */
 Colibri.UI.TextAreaEditor = class extends Colibri.UI.Editor {
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container element and component
+     */ 
     constructor(name, container) {
         super(name, container, Element.create('textarea'));
         this.AddClass('app-textarea-editor-component');

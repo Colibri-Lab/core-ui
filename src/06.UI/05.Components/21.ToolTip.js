@@ -13,11 +13,12 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
     static RM = 'rm';
 
     /**
-     * 
+     * @constructor
      * @param {string} name Coponent name
      * @param {*} container Component container|parenbt
-     * @param {Array} orientation coords on container to point to, and orientation around the container, example: rt, rb; 
-     *                rt - container coords, rb - orientation
+     * @param {Array} orientation coords on container to point to, and orientation around the container, example: rt, rb; rt - container coords, rb - orientation
+     * @param {{left, top}|null} point point to show tooltip
+     * @param {boolean} permanent is tooltip shows permanently 
      */
     constructor(name, container, orientation = [Colibri.UI.ToolTip.RT, Colibri.UI.ToolTip.RB], point = null, permanent = false) {
         super(name, container, Element.create('div'));

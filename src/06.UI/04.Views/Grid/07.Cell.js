@@ -6,6 +6,11 @@
  */
 Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     */
     constructor(name, container) {
         super(name, container, Element.create('td'));
 

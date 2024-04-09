@@ -9,6 +9,11 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
     /** @type {Colibri.UI.TreeNode|null} */
     _selected = null;
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     */
     constructor(name, container) {
         super(name, container, Element.create('div'));
 

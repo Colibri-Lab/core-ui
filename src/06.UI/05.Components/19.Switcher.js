@@ -4,6 +4,12 @@
  * @memberof Colibri.UI
  */
 Colibri.UI.Switcher = class extends Colibri.UI.Component {
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     * @param {*} data data to swith
+     */    
     constructor(name, container, data) {
         super(name, container, Element.create('div'));
 

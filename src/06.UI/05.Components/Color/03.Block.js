@@ -5,6 +5,11 @@
  */
 Colibri.UI.Color.Block = class extends Colibri.UI.Component {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     */
     constructor(name, container) {
         super(name, container, Element.fromHtml('<div><div class="grad"></div></div>')[0]);
         this.AddClass('app-color-block-component');

@@ -15,6 +15,11 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
     _validating = false;
     _validators = [];
 
+    /**
+     * @constructor
+     * @param {Colibri.UI.Forms.Field} fieldComponent field component
+     * @param {Colibri.UI.Forms.Form} formComponent form component
+     */ 
     constructor(fieldComponent, formComponent) {
         super();
         this.RegisterEvent('Validated', false, 'Когда поле валидировано');

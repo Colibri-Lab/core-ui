@@ -18,10 +18,10 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     static SortDesc = 'desc';
 
     /**
-     * Конструктор
-     * @param {string} name название компонента
-     * @param {Element|Colibri.UI.Component} container контейнер
-     * @param {string|Element} element содержание
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     * @param {string|Element} element element to create in
      */
     constructor(name, container, element) {
         super(name, container);

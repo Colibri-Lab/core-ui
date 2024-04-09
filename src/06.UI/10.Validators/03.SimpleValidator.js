@@ -5,6 +5,10 @@
  */
 Colibri.UI.SimpleFormValidator = class {
 
+    /**
+     * @constructor
+     * @param {Colibri.UI.Forms.Form} form form component
+     */ 
     constructor(form) {
         this._form = form;
         this._init(this._form.Fields());

@@ -4,7 +4,12 @@
  * @memberof Colibri.UI
  */
 Colibri.UI.Image = class extends Colibri.UI.Component {
-
+    
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container element and component
+     */
     constructor(name, container) {
         super(name, container, Element.create('span'));
         this.AddClass('app-component-image');

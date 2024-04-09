@@ -11,10 +11,11 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
     static RT = 'rt'; 
 
     /**
-     * 
+     * @constructor
      * @param {string} name Coponent name
      * @param {*} container Component container|parenbt
      * @param {Array} orientation coords on container to point to, and orientation around the container, example: rt, rb; rt - container coords, rb - orientation
+     * @param {Array<{title,name,icon}>} items context menu items
      */
     constructor(name, container, orientation = [Colibri.UI.ContextMenu.RT, Colibri.UI.ContextMenu.RB], point = null, items = []) {
         super(name, container, Element.create('div'));

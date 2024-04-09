@@ -9,19 +9,19 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     _itemSelected;
 
     /**
-     * Конструктор
-     * @param {string} name название компонента
-     * @param {Element|string|Colibri.UI.Component} container 
-     * @param {boolean} multiple мультивыбор 
-     * @param {boolean} readonly только для чтения 
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|string|Colibri.UI.Component} container component container 
+     * @param {boolean} multiple is multiple selection
+     * @param {boolean} readonly only for read
      * @param {boolean} searchable can search in items 
-     * @param {string[]|null} values значения 
-     * @param {string|number|null} defaultValue значение по умолчанию 
-     * @param {string} titleField название поля для отображения 
-     * @param {string} valueField название поля для значения 
-     * @param {Function|null} __render метод отрисовки
-     * @param {boolean} allowEmpty разрешено пустое значение
-     * @param {boolean} clearIcon показать clearIcon
+     * @param {string[]|null} values values to show in select box 
+     * @param {string|number|null} defaultValue default value for selection 
+     * @param {string} titleField name of title field
+     * @param {string} valueField name of value field 
+     * @param {Function|null} __render method for render items
+     * @param {boolean} allowEmpty is allowed empty values
+     * @param {boolean} clearIcon show clear icon
      */
     constructor(name, container, multiple = false, readonly = true, searchable = true, values = [], defaultValue = null, titleField = 'title', valueField = 'value', groupField = null, __render = null, allowEmpty = true, clearIcon = false, canSelectGroup = false) {
         super(name, container, Element.create('div'));

@@ -4,6 +4,12 @@
  * @memberof Colibri.UI
  */
 Colibri.UI.Editor = class extends Colibri.UI.Component {
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container element and component
+     * @param {Element|string} element element to generate childs
+     */ 
     constructor(name, container, element) {
         super(name, container, element || '<input />');
         this.AddClass('app-editor-component');

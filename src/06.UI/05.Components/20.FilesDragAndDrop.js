@@ -4,6 +4,13 @@
  * @memberof Colibri.UI
  */
 Colibri.UI.FilesDragAndDrop = class extends Colibri.UI.Component {
+    
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     * @param {boolean} multiple can drop multiple files
+     */    
     constructor(name, container, multiple = false) {
         super(name, container, Element.create('div'));
         this.AddClass('app-component-files-drag-and-drop');

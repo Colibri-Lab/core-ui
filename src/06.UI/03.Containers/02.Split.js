@@ -10,6 +10,13 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
 
     _orientation = Colibri.UI.Split.OrientationHorizontal;
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     * @param {string|HTMLElement} element element to generate in
+     * @param {orientation} orientation orientation of split (horizontal|vertical) 
+     */
     constructor(name, container, element, orientation) {
         super(name, container, element || Element.create('div'));
 

@@ -5,7 +5,11 @@
  * @memberof Colibri.UI.Grid
  */
 Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
-
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     */
     constructor(name, container, element) {
         super(name, container, Element.create('td'));
         this.AddClass('app-ui-column');

@@ -1,10 +1,17 @@
 /**
+ * Alert dialog component
  * @class
  * @extends Colibri.UI.Window
  * @memberof Colibri.UI
  */
 Colibri.UI.AlertDialog = class extends Colibri.UI.Window {
 
+    /**
+     * @constructor
+     * @param {string} name Name of component
+     * @param {Element|Colibri.UI.Component} container parent container or component
+     * @param {number} width width of window
+     */
     constructor(name, container, width) {
         super(name, container, Colibri.UI.Templates['Colibri.UI.AlertDialog'], '', width);
         this.AddClass('app-alert-dialog-component')
@@ -14,8 +21,11 @@ Colibri.UI.AlertDialog = class extends Colibri.UI.Window {
     }
 
     /**
-     * Показывает диалог
-     * @param {Function(dialogResult)} callback
+     * Shows alert
+     * @param {string} title title of window
+     * @param {string} message message to show in window
+     * @param {string} button button title
+     * @returns {Promise}
      */
     Show(title, message, button) {
         return new Promise((resolve, reject) => {

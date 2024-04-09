@@ -5,6 +5,11 @@
  */
 Colibri.UI.JsonViewer = class extends Colibri.UI.Pane {
     
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container element and component
+     */ 
     constructor(name, container) {
         /* создаем компонент и передаем шаблон */
         super(name, container);

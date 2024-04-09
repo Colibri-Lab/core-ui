@@ -5,6 +5,12 @@
  */
 Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     * @param {string|HTMLElement} element element to generate in
+     */
     constructor(name, container, element) {
         super(name, container, Element.fromHtml('<div><div class="widget-header"></div><div class="widget-container"></div><div class="widget-footer"></div></div>')[0]);
         this.AddClass('app-component-widget');

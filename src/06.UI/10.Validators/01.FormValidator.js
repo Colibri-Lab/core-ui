@@ -8,6 +8,10 @@ Colibri.UI.FormValidator = class extends Colibri.Events.Dispatcher {
     _form = null;
     _validators = null;
 
+    /**
+     * @constructor
+     * @param {Colibri.UI.Forms.Form} form form component
+     */ 
     constructor(form) {
         super();
 

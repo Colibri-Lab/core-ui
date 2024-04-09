@@ -5,6 +5,11 @@
  */
 Colibri.UI.DateSelector = class extends Colibri.UI.Component {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     */    
     constructor(name, container) {
         super(name, container, Element.create('div'));
 
@@ -248,8 +253,19 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
     }
 
 }
+
+/**
+ * @class
+ * @extends Colibri.UI.Pane
+ * @memberof Colibri.UI
+ */
 Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     */        
     constructor(name, container) {
         super(name, container);
 
@@ -471,8 +487,18 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
 
 }
 
+/**
+ * @class
+ * @extends Colibri.UI.Pane
+ * @memberof Colibri.UI
+ */
 Colibri.UI.DatePicker = class extends Colibri.UI.Pane {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     */    
     constructor(name, container) {
         super(name, container);
 
@@ -567,8 +593,18 @@ Colibri.UI.DatePicker = class extends Colibri.UI.Pane {
 
 }
 
+/**
+ * @class
+ * @extends Colibri.UI.Pane
+ * @memberof Colibri.UI
+ */
 Colibri.UI.MonthPicker = class extends Colibri.UI.Pane {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     */    
     constructor(name, container) {
         super(name, container);
 
@@ -638,8 +674,18 @@ Colibri.UI.MonthPicker = class extends Colibri.UI.Pane {
 
 }
 
+/**
+ * @class
+ * @extends Colibri.UI.Pane
+ * @memberof Colibri.UI
+ */
 Colibri.UI.YearPicker = class extends Colibri.UI.Pane {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     */    
     constructor(name, container) {
         super(name, container);
 

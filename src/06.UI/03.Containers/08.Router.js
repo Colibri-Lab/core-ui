@@ -5,6 +5,11 @@
  */
 Colibri.UI.Router = class extends Colibri.UI.Pane {
     
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     */
     constructor(name, container) {
         /* создаем компонент и передаем шаблон */
         super(name, container, Element.create('div'));

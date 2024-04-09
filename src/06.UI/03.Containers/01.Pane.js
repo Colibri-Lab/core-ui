@@ -19,11 +19,11 @@ Colibri.UI.Pane = class extends Colibri.UI.Component {
     };
 
     /**
-     * Конструктор
-     * @param {string} name Наименование компонента
-     * @param {(HTMLElement|Colibri.UI.Component))} container контейнер 
-     * @param {(string|HTMLElement)} element название тэга, либо содержание компонента (шаблон) в виде строки или обьекта 
-     * @param {int} resizable способ изменения размера 
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     * @param {string|HTMLElement} element element to generate in
+     * @param {number} resizable is component resizable 
      */
     constructor(name, container, element, resizable= 'none') {
         super(name, container, element || Element.create('div'));

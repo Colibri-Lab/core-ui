@@ -5,6 +5,11 @@
  */
 Colibri.UI.Input.File = class extends Colibri.UI.Component {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     */
     constructor(name, container) {
         super(name, container, Element.fromHtml('<button type="button"><input type="file"></input><span class="app-component-input-type-file-text"></span></button>')[0]);
         this.AddClass('app-component-input-type-file');

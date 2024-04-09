@@ -5,6 +5,11 @@
  */
 Colibri.UI.Frame = class extends Colibri.UI.Component {
     
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     */
     constructor(name, container) {
         /* создаем компонент и передаем шаблон */
         super(name, container, Element.create('iframe'));

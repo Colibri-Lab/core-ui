@@ -5,12 +5,22 @@
  */
 Colibri.UI.Table = class extends Colibri.UI.Component {
     
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     */
     constructor(name, container) {
         /* создаем компонент и передаем шаблон */
         super(name, container, Element.create('table'));
         this.AddClass('colibri-ui-table');
     }
 
+    /**
+     * Adds a row to table
+     * @param {string} name name of cell
+     * @returns {Colibri.UI.TableRow}
+     */
     AddRow(name) {
         return new Colibri.UI.TableRow(name, this);
     }
@@ -48,8 +58,18 @@ Colibri.UI.Table = class extends Colibri.UI.Component {
 
 }
 
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.TableRow = class extends Colibri.UI.Component {
     
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     */
     constructor(name, container) {
         /* создаем компонент и передаем шаблон */
         super(name, container, Element.create('tr'));
@@ -57,6 +77,13 @@ Colibri.UI.TableRow = class extends Colibri.UI.Component {
         this.shown = true;
     }
 
+    /**
+     * Adds a cell to table row
+     * @param {string} name name of cell
+     * @param {string} className class name of cell
+     * @param {string} value value of cell
+     * @returns {Colibri.UI.TableCell}
+     */
     AddCell(name, className = null, value = null) {
         const ret = new Colibri.UI.TableCell(name, this);
         if(className) {
@@ -68,6 +95,13 @@ Colibri.UI.TableRow = class extends Colibri.UI.Component {
         return ret;
     }
 
+    /**
+     * Adds a header cell to table row
+     * @param {string} name name of cell
+     * @param {string} className class name of cell
+     * @param {string} value value of cell
+     * @returns {Colibri.UI.TableHeaderCell}
+     */
     AddHeaderCell(name, className = null, value = null) {
         const ret = new Colibri.UI.TableHeaderCell(name, this);
         if(className) {
@@ -81,8 +115,18 @@ Colibri.UI.TableRow = class extends Colibri.UI.Component {
 
 }
 
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.TableHeaderCell = class extends Colibri.UI.Component {
     
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     */
     constructor(name, container) {
         /* создаем компонент и передаем шаблон */
         super(name, container, Element.create('th'));
@@ -152,8 +196,18 @@ Colibri.UI.TableHeaderCell = class extends Colibri.UI.Component {
 
 }
 
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.TableCell = class extends Colibri.UI.Component {
     
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     */
     constructor(name, container) {
         /* создаем компонент и передаем шаблон */
         super(name, container, Element.create('td'));

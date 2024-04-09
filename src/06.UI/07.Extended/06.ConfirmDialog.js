@@ -1,24 +1,30 @@
 /**
+ * Confirmation dialog
  * @class
  * @extends Colibri.UI.Window
  * @memberof Colibri.UI
  */
 Colibri.UI.ConfirmDialog = class extends Colibri.UI.Window {
 
+    /**
+     * @constructor
+     * @param {string} name name of window
+     * @param {Element|Colibri.UI.Component} container container component or element
+     * @param {number} width width of confirmation window
+     */
     constructor(name, container, width) {
         super(name, container, Colibri.UI.Templates['Colibri.UI.ConfirmDialog'], '', width);
         this.AddClass('app-confirm-dialog-component')
-
         this._callback = null;
-
-        
-
-
     }
-
+    
     /**
-     * Показывает диалог
-     * @param {Function(dialogResult)} callback результат диалога, true - да, false - нет 
+     * Shown dialog
+     * @param {string} title title of dialog
+     * @param {string} message message to show in dialog
+     * @param {string} okbutton ok button title
+     * @param {string} cancelbutton cancel button title
+     * @returns Promise
      */
     Show(title, message, okbutton = null, cancelbutton = null) {
     

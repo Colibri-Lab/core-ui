@@ -16,19 +16,19 @@
 <span class='line'>  9</span> </span><span class="WHIT">    </span><span class="NAME">_itemSelected</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 10</span> 
 <span class='line'> 11</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'> 12</span>      * Конструктор
-<span class='line'> 13</span>      * @param {string} name название компонента
-<span class='line'> 14</span>      * @param {Element|string|Colibri.UI.Component} container 
-<span class='line'> 15</span>      * @param {boolean} multiple мультивыбор 
-<span class='line'> 16</span>      * @param {boolean} readonly только для чтения 
+<span class='line'> 12</span>      * @constructor
+<span class='line'> 13</span>      * @param {string} name name of component
+<span class='line'> 14</span>      * @param {Element|string|Colibri.UI.Component} container component container 
+<span class='line'> 15</span>      * @param {boolean} multiple is multiple selection
+<span class='line'> 16</span>      * @param {boolean} readonly only for read
 <span class='line'> 17</span>      * @param {boolean} searchable can search in items 
-<span class='line'> 18</span>      * @param {string[]|null} values значения 
-<span class='line'> 19</span>      * @param {string|number|null} defaultValue значение по умолчанию 
-<span class='line'> 20</span>      * @param {string} titleField название поля для отображения 
-<span class='line'> 21</span>      * @param {string} valueField название поля для значения 
-<span class='line'> 22</span>      * @param {Function|null} __render метод отрисовки
-<span class='line'> 23</span>      * @param {boolean} allowEmpty разрешено пустое значение
-<span class='line'> 24</span>      * @param {boolean} clearIcon показать clearIcon
+<span class='line'> 18</span>      * @param {string[]|null} values values to show in select box 
+<span class='line'> 19</span>      * @param {string|number|null} defaultValue default value for selection 
+<span class='line'> 20</span>      * @param {string} titleField name of title field
+<span class='line'> 21</span>      * @param {string} valueField name of value field 
+<span class='line'> 22</span>      * @param {Function|null} __render method for render items
+<span class='line'> 23</span>      * @param {boolean} allowEmpty is allowed empty values
+<span class='line'> 24</span>      * @param {boolean} clearIcon show clear icon
 <span class='line'> 25</span>      */</span><span class="WHIT">
 <span class='line'> 26</span> </span><span class="WHIT">    </span><span class="NAME">constructor</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">container</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">multiple</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">readonly</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">searchable</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">values</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">defaultValue</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">titleField</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'title'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">valueField</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'value'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">groupField</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">__render</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">allowEmpty</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">clearIcon</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">canSelectGroup</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'> 27</span> </span><span class="WHIT">        </span><span class="NAME">super</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">container</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Element.create</span><span class="PUNC">(</span><span class="STRN">'div'</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">

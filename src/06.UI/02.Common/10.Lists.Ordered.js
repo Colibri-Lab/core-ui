@@ -5,6 +5,12 @@
  */
 Colibri.UI.OrderedList = class extends Colibri.UI.Component {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container element and component
+     * @param {*} element element to generate in 
+     */
     constructor(name, container, element) {
         super(name, container, element || Element.create('ol'));
         this.AddClass('app-component-orderedlist');

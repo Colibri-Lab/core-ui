@@ -1,4 +1,5 @@
 /**
+ * Drag manager
  * @class
  * @extends Colibri.Events.Dispatcher
  * @memberof Colibri.UI
@@ -6,9 +7,9 @@
 Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
 
     /**
-     * Менеджер перетаскиваний
-     * @param {Colibri.UI.Component[]} sources массив источников
-     * @param {Colibri.UI.Component[]} destinations массив назначений 
+     * @constructor
+     * @param {Colibri.UI.Component[]} sources array of source items
+     * @param {Colibri.UI.Component[]} destinations destination items 
      */
     constructor(sources, destinations) {
         super();

@@ -5,6 +5,12 @@
  */
 Colibri.UI.ImageViewWindow = class extends Colibri.UI.Window {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     * @param {string} title title of window
+     */
     constructor(name, container, title) {
         super(name, container, '<div><div class="content-container"><div class="text-description-before"></div><img class="image-container" src="#" alt="#"></img><div class="text-description-after"></div></div><div class="buttons-container"><button class="app-component-image-view-window-close-button">Закрыть</button></div></div>', title);
         this.AddClass('app-component-image-view-window');

@@ -5,6 +5,12 @@
  */
 Colibri.UI.YearQuarterSelector = class extends Colibri.UI.FlexBox {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     * @param {Array} values values to show
+     */    
     constructor(name, container, values = null) {
         super(name, container);
         this.AddClass('app-component-year-quarter-selector');

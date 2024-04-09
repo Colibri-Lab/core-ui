@@ -6,6 +6,13 @@
  */
 Colibri.UI.List = class extends Colibri.UI.Component {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     * @param {Element|string} element element to create in
+     * @param {boolean} multiple is list has multiple selection 
+     */
     constructor(name, container, element, multiple) {
         super(name, container, element);
         this.AddClass('app-component-list');

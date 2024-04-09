@@ -31,6 +31,12 @@
  */
 Colibri.UI.Tabs = class extends Colibri.UI.Component {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     * @param {string|HTMLElement} element element to generate in
+     */
     constructor(name, container, element) {
         super(name, container, element || Element.create('div'));
         this.AddClass('app-tabs-container-component');

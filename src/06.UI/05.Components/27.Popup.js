@@ -5,6 +5,12 @@
  */
 Colibri.UI.Popup = class extends Colibri.UI.Pane {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     * @param {*} element element to create in
+     */    
     constructor(name, container, element) {
         super(name, container, element);
         this.AddClass('app-popup-component');

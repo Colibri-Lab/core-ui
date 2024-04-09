@@ -1,10 +1,17 @@
 /**
+ * Prompt dialog
  * @class
  * @extends Colibri.UI.Window
  * @memberof Colibri.UI
  */
 Colibri.UI.PromptDialog = class extends Colibri.UI.Window {
 
+    /**
+     * @constructor
+     * @param {string} name name of dialog
+     * @param {Element|Colibri.UI.Component} container container element or component
+     * @param {number} width width ot dialog
+     */
     constructor(name, container, width) {
         super(name, container, Colibri.UI.Templates['Colibri.UI.PromptDialog'], '', width);
         this.AddClass('app-prompt-dialog-component');
@@ -24,18 +31,18 @@ Colibri.UI.PromptDialog = class extends Colibri.UI.Window {
                 args.domEvent.preventDefault();
                 return false;
             }
-        })
-
+        });
 
     }
 
     /**
-     * Показывает диалог
-     * @param {Function(dialogResult)} callback результат диалога, true - да, false - нет 
+     * Shows dialog
+     * @param {string} title dialog title
+     * @param {object} fields fields object
+     * @param {string} button button title
+     * @returns {Promise}
      */
     Show(title, fields, button) {
-    
-    
         return new Promise((resolve, reject) => {
             this.title = title;
 
@@ -49,7 +56,6 @@ Colibri.UI.PromptDialog = class extends Colibri.UI.Window {
             }
             this._form.fields = fields;
             this._form.value = {};
-
 
             this._save.value = button || '#{ui-prompt-ok}';
             super.Show();

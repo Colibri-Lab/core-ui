@@ -4,6 +4,11 @@
  * @memberof Colibri.UI
  */
 Colibri.UI.Link = class extends Colibri.UI.Component {
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container element and component
+     */
     constructor(name, container, value) {
         super(name, container, Element.create('a'));
         this.AddClass('app-component-link');

@@ -5,6 +5,13 @@
  */
 Colibri.UI.FilesViewer = class extends Colibri.UI.Viewer {
     
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container element and component
+     * @param {Element|string} element element to generate childs
+     * @param {Colibri.UI.Component|null} root root component 
+     */ 
     constructor(name, container, element = null, root = null) {
         super(name, container, element || Element.create('div'), root);
         this.AddClass('app-files-viewer-component');

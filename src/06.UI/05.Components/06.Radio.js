@@ -5,6 +5,12 @@
  */
 Colibri.UI.Radio = class extends Colibri.UI.Component {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     * @param {string} fieldName name of field to generate
+     */
     constructor(name, container, fieldName) {
         super(name, container, Element.create('span'));
         this.AddClass('app-component-radio');

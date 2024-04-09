@@ -5,6 +5,13 @@
  */
 Colibri.UI.YearSelector = class extends Colibri.UI.Selector {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     * @param {number} startYear year to start enumeration
+     * @param {number} endYear year to end enumeration
+     */    
     constructor(name, container, startYear, endYear) {
         super(
             name, 

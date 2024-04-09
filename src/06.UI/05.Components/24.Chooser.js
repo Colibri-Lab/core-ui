@@ -8,19 +8,20 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
 
     _skipLooseFocus;
     _itemSelected;
+
     /**
-     * Конструктор
-     * @param {string} name название компонента
-     * @param {Element|string|Colibri.UI.Component} container 
-     * @param {boolean} multiple мультивыбор 
-     * @param {boolean} readonly только для чтения 
-     * @param {string[]|null} values значения 
-     * @param {string|number|null} defaultValue значение по умолчанию 
-     * @param {string} titleField название поля для отображения 
-     * @param {string} valueField название поля для значения 
-     * @param {Function|null} __render метод отрисовки
-     * @param {boolean} allowEmpty разрешено пустое значение
-     * @param {boolean} clearIcon показать clearIcon
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|string|Colibri.UI.Component} container component container 
+     * @param {boolean} multiple is multiselectable
+     * @param {boolean} readonly only for read
+     * @param {string[]|null} values values to show
+     * @param {string|number|null} defaultValue default value 
+     * @param {string} titleField name of title field 
+     * @param {string} valueField name of value field 
+     * @param {Function|null} __render render items method
+     * @param {boolean} allowEmpty is empty values allowed
+     * @param {boolean} clearIcon show clear icon
      */
     constructor(name, container, multiple = false, readonly = true, placeholder = '', selector = null, defaultValue = null, allowEmpty = true, clearIcon = false) {
         super(name, container, Element.create('div'));

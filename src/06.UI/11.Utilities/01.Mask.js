@@ -10,7 +10,10 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
     static ALPHANUM = "S";
     static BY_PASS_KEYS = [9, 16, 17, 18, 36, 37, 38, 39, 40, 91, 92, 93];
 
-
+    /**
+     * @constructor
+     * @param {Array<Element>} elements elements to mask
+     */ 
     constructor(elements) {
         super();
         this.elements = elements;

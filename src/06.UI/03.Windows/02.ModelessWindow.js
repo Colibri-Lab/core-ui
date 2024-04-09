@@ -5,6 +5,15 @@
  */
 Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     * @param {string|Element} element element to create in
+     * @param {string} title title of window
+     * @param {number|null} width width of window
+     * @param {number|null} height height of window
+     */
     constructor(name, container, element, title, width, height) {
         super(name, container, Colibri.UI.Templates['Colibri.UI.ModelessWindow']);
         this.AddClass('app-component-modeless-window');

@@ -5,6 +5,12 @@
  */
 Colibri.UI.Input = class extends Colibri.UI.Component {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     * @param {Element|string} element to create in
+     */
     constructor(name, container, element) {
         super(name, container, Element.create('div', {class: 'app-ui-component'}));
 

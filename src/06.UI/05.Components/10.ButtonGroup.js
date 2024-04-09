@@ -1,10 +1,17 @@
 /**
+ * Button group
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
  */
 Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container element and component
+     * @param {Element|string} element element to generate childs 
+     */
     constructor(name, container, element) {
         super(name, container, element || Element.create('div'));
         this.AddClass('app-buttongroup-component');
@@ -12,24 +19,30 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
         this._selectedButton = null;
 
         this.AddHandler('Clicked', (event, args) => this.__thisClicked(event, args));
-        
-        // this.AddHandler('ChildsProcessed', (event, args) => {
-        //     this.ForEach((name, button) => {
-        //         button.AddHandler('Clicked', (event, args) => this.SelectButton(button));
-        //     });
-        // });
     }
 
+    /**
+     * @private
+     * @param {Colibri.UI.Event} event event object 
+     * @param {*} args event args 
+     */
     __thisClicked(event, args) {
         const button = args.domEvent.target.tag('component').Closest(component => component.parent instanceof Colibri.UI.ButtonGroup);
         this.SelectButton(button);
     }
 
+    /**
+     * @protected
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'Поднимается, когда изменилась выбранная кнопка');
     }
 
+    /**
+     * Select the button by index or name
+     * @param {string|number} button button index or name
+     */
     SelectButton(button) {
         if(typeof button == 'string' || typeof button == 'number') {
             button = this.Children(button);
@@ -52,7 +65,12 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
 
     }
     
-
+    /**
+     * Adds a button to group
+     * @param {string} name name of button
+     * @param {string} title title of button
+     * @returns {Colibri.UI.Button}
+     */
     AddButton(name, title) {
         if(this.Children(name)) {
             return this.Children(name);
@@ -60,20 +78,29 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
         const button = new Colibri.UI.Button(name, this);
         button.value = (title[Lang.Current] ?? title);
         button.shown = true;
-        // button.AddHandler('Clicked', (event, args) => {
-        //     this.SelectButton(button);
-        // });
         return button;
     }
 
+    /**
+     * Selected button
+     * @type {Colibri.UI.Button}
+     */
     get selected() {
         return this._selectedButton;
     }
 
+    /**
+     * Selected button
+     * @type {Colibri.UI.Button}
+     */
     set selected(value) {
         this.SelectButton(value);
     }
 
+    /**
+     * Selected button index
+     * @type {number}
+     */
     set selectedIndex(index) {
         const button = this.Children(index);
         if(button) {
@@ -81,18 +108,28 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Selected button index
+     * @type {number}
+     */
     get selectedIndex() {
         return this._selectedButton ? this._selectedButton.childIndex : null;
     }
 
+    /**
+     * Disables all buttons
+     */
     DisableAllButtons() {
         const childs = this.Children();
         for(const child of childs) {
             child.enabled = false;
         }
-        // this.ForEach((name, component) => component.enabled = false);
     }
 
+    /**
+     * Enables button by index or name
+     * @param {string|number} name button index or number
+     */
     EnableButton(name) {
         this.Children(name).enabled = true;
     }
