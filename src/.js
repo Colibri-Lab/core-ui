@@ -1,6 +1,6 @@
 /**
  * Colibri class serves as a namespace for related functionality.
- * @namespace Colibri
+ * @namespace
  */
 const Colibri = class {
  

@@ -1,9 +1,25 @@
 /**
  * The main application class.
  * @class
+ * @extends Colibri.Events.Dispatcher
  */
 Colibri.App = class extends Colibri.Events.Dispatcher { 
     
+
+    /**
+     * Indicates wheter the App is initialized
+     * @type {boolean}
+     * @private
+     */
+    _initialized = false;
+
+    /**
+     * Indicates last change time
+     * @type {string}
+     * @private
+     */
+    _changeLastTime = null;
+
     /** 
      * Constructs a new instance of the Colibri.App class.
      */
@@ -15,13 +31,13 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         this._changeLastTime = Date.Now().getTime(); 
    
         this.RegisterEvents();  
- 
         this.RegisterEventHandlers();
   
     } 
 
     /**
      * Registers application events.
+     * @public
      */
     RegisterEvents() { 
         this.RegisterEvent('Event', false, 'When any event dispatched');
