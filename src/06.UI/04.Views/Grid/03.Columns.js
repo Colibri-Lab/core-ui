@@ -12,6 +12,11 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
         this.AddHandler('ChildAdded', (event, args) => this.__thisChildAdded(event, args));
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __thisChildAdded(event, args) {
         args.component.AddHandler('ColumnStickyChange', (event, args) => {
             this.Dispatch('ColumnStickyChange', args);
@@ -26,6 +31,7 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
         });
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('ColumnAdded', false, 'Поднимается, когда добавляется колонка');

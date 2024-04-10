@@ -27,6 +27,7 @@ Colibri.UI.ToggleBox = class extends Colibri.UI.Component {
 
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'Когда изменилось состояние переключателя');

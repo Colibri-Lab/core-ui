@@ -72,6 +72,7 @@ Colibri.UI.Forms.Email = class extends Colibri.UI.Forms.Field {
         
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         // если нужно добавить что то

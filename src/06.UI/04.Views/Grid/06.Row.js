@@ -58,6 +58,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         super.Dispose();
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('RowStickyChange', false, 'Поднимается, когда строка меняет липкость');

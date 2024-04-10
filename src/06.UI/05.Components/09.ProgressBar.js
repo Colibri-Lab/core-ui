@@ -21,6 +21,7 @@ Colibri.UI.ProgressBar = class extends Colibri.UI.Component {
         this._progress.style.width = '0%';
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('ProgressIsZero', false, 'Поднимается когда прогресс равен 0');

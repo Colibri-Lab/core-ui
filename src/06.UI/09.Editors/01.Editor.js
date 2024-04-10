@@ -32,6 +32,11 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __thisFocused(event, args) {
         const fieldEditoPane = this._element.closest('.app-field-pane-editor');
         if(fieldEditoPane && fieldEditoPane.tag('component')) {
@@ -39,6 +44,11 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __thisUnfocused(event, args) {
         const fieldEditoPane = this._element.closest('.app-field-pane-editor');
         if(fieldEditoPane && fieldEditoPane.tag('component')) {
@@ -46,6 +56,7 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
         }
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'Прозошло изменение данных компонента')

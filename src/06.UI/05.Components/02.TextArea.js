@@ -54,6 +54,7 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
 
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('KeyUp', false, 'Поднимается, когда клавиша поднята');

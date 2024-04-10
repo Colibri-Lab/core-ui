@@ -56,6 +56,7 @@ Colibri.UI.Switcher = class extends Colibri.UI.Component {
 
     }
 
+    /** @protected */
     _registerEvents() {
         this.RegisterEvent('Changed', false, 'Поднимается когда происходи изменение');
         this.RegisterEvent('ButtonClicked', false, 'Поднимается когда происходит нажатие на кнопку пред/след');

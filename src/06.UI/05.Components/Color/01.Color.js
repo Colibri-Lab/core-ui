@@ -63,6 +63,11 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
         this.Dispatch('Changed');
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __lineValueChanged(event, args) {
         const alpha = this._value.alpha;
         this._colorSelectedColorGrad.color = this._colorGrad.value;
@@ -71,6 +76,11 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
         this._showValue();
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __blockValueChanged(event, args) {
         const alpha = this._value.alpha;
         this._value = this._colorSelectedColorGrad.value;
@@ -78,6 +88,11 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
         this._showValue();
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __opacityValueChanged(event, args) {
         this._value.alpha = this._colorOpacityGrad.value;
         this._showValue();

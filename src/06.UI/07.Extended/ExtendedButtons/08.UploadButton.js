@@ -34,6 +34,7 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
 
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
 
@@ -74,6 +75,11 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
         return this._allowSize;
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __clicked(event, args) {
         this.ClickOnButton();
     }

@@ -128,7 +128,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */
+     */ 
     __CloseClicked(event, args) {
         
         if(this._minimizable === true && this._state === 'minimized') {
@@ -156,7 +156,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */
+     */ 
     __MinimizeClicked(event, args) {
         
         this.MinimizeToggle();
@@ -197,7 +197,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */
+     */ 
     __MouseUp(event, args) {
         const domEvent = args.domEvent;
         domEvent.stopPropagation();
@@ -209,7 +209,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */
+     */ 
     __MouseDown(event, args) {
         const domEvent = args.domEvent;
         if (domEvent.target == this._element && !Colibri.UI.Resizing && this._closableOnShadow) {
@@ -221,7 +221,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */
+     */ 
     __KeyDown(event, args) {
         const domEvent = args.domEvent;
         if(domEvent.code === 'Escape') {

@@ -43,6 +43,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         }
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('CellClicked', false, 'Поднимается, когда щелкнули по ячейке');

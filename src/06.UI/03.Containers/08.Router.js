@@ -138,7 +138,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */
+     */ 
     __appRouteChanged(event, args) {
         if(args.url.substring(0, this._current.length) === this._current) {
             this.ForEach((name, component) => {

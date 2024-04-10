@@ -47,6 +47,11 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __thisGoogleChartsLoaded(event, args) {
 
         if(!this._type) {
@@ -94,6 +99,7 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
         });
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('GoogleChartsLoaded', false, 'Когда загрузка завершена');

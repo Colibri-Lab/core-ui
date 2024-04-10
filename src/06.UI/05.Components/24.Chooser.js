@@ -71,6 +71,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
     /**
      * Регистрация событий
      */
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
 
@@ -138,6 +139,11 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
     }
 
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __Filled(event, args) {
         this._itemSelected = false;
         this.__BeforeFilled().then((ret) => {
@@ -155,6 +161,11 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         return false;
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __Cleared(event, args) {
         this._setValue(null);
         this.Dispatch('Changed', args);
@@ -362,6 +373,7 @@ Colibri.UI.Chooser.ChooseWindow = class extends Colibri.UI.Window {
         super(name, container, element, title, width, height);
     }
 
+    /** @protected */
     _registerEvents() {
         this.RegisterEvent('Choosed', false, 'Когда выбор сделан');
     }

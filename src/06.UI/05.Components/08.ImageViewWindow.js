@@ -23,6 +23,7 @@ Colibri.UI.ImageViewWindow = class extends Colibri.UI.Window {
         this._handleEvents();
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('ClickedCloseButton', false, 'Поднимается когда нажали на кнопку закрыть!');

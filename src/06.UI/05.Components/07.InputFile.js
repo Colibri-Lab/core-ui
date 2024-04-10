@@ -22,6 +22,7 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
         this._element.querySelector('.app-component-input-type-file-text').html(this.__title());
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('InputFileChanged', false, 'Изменён выбранный файл/файлы');

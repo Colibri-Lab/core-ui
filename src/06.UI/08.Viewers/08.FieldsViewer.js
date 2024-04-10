@@ -66,6 +66,11 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         return this._hidden.shown;
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __toggleHidden(event, args) {
         this._hidden.shown = !this._hidden.shown;
         this._hiddenLink1.shown = !this._hiddenLink1.shown;

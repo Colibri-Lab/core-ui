@@ -90,6 +90,7 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
 
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'Когда значение изменилось');

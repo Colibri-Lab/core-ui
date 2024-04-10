@@ -39,11 +39,17 @@ Colibri.UI.YearQuarterSelector = class extends Colibri.UI.FlexBox {
 
     }
     
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'Когда значение изменилось');
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __yearSelectorChanged(event, args) {
         const selectedYear = this._yearSelector.value.value;
         
@@ -64,6 +70,11 @@ Colibri.UI.YearQuarterSelector = class extends Colibri.UI.FlexBox {
         this.Dispatch('Changed', Object.assign(args, {value: this._value}));
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __quarterSelectorChanged(event, args) {
         this._value = {year: this._yearSelector.value.value, quarter: this._quarterSelector.value.value};
         this.Dispatch('Changed', Object.assign(args, {value: this._value}));

@@ -28,6 +28,7 @@ Colibri.UI.FilesDragAndDrop = class extends Colibri.UI.Component {
         this._handleEvents();
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('InputFileChosen', false, 'Выбран файл/файлы');

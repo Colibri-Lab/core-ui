@@ -86,6 +86,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
      * Registers events for the router.
      * @private
      */
+    /** @protected */
     _registerEvents() {
         this.RegisterEvent('RouteChanged', false, 'При изменении раута');
     }

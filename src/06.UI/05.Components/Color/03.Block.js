@@ -46,6 +46,11 @@ Colibri.UI.Color.Block = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __blockClicked(event, args) {
         const bounds = this._element.bounds();
         const pointBounds = this._pointer.container.bounds();

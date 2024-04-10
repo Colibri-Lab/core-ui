@@ -81,6 +81,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         this.Dispatch('FieldsRendered');
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         // если нужно добавить что то

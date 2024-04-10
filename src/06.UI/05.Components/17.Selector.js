@@ -76,6 +76,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     /**
      * Регистрация событий
      */
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
 
@@ -173,6 +174,11 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __Filled(event, args) {
         this._itemSelected = false;
         this.__BeforeFilled().then((searchAllreadyPerformed = false) => {
@@ -200,6 +206,11 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         return true;
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __Cleared(event, args) {
         const values = this._search(!this.searchable ? '' : this._input.value);
         this._setValue(null);
@@ -218,6 +229,11 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         return false;
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __Clicked(event, args) { 
         this.Focus();
         if(this.enabled) {

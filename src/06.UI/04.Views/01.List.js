@@ -51,6 +51,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('SelectionChanged', false, 'Поднимается, изменилось выделение');
@@ -406,6 +407,11 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __searchBoxChanged(event, args) {
         const f = this._searchFilterCallback;
         this.ForEach((name, component) => {
@@ -497,6 +503,7 @@ Colibri.UI.List.SearchBox = class extends Colibri.UI.Pane {
 
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'Когда изменился поиск');
@@ -832,14 +839,29 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __ItemSelected(event, args) {
         this.list.Dispatch('ItemClicked', Object.assign(args, {item: this, domEvent: args.domEvent}));
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __ItemDblSelected(event, args) {
         this.list.Dispatch('ItemDoubleClicked', {item: this, domEvent: args.domEvent});
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __ItemMouseDown(event, args) {
         if(this.list) {
             this.list.selected = this;

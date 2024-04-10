@@ -74,10 +74,16 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
         
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __buttonClicked(event, args) {
         this._showPopup();
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         // если нужно добавить что то

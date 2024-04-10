@@ -134,7 +134,7 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */
+     */ 
     __dragStartFromSources(event, args) {
         this._current = args.domEvent.target.closest('[data-object-name]').tag('component');
     }
@@ -143,7 +143,7 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */
+     */ 
     __dragEndFromSources(event, args) {
         this._current = null;
 
@@ -158,7 +158,7 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */
+     */ 
     __dragOverTheDestination(event, args) {
         if(!this._current) {
             return false;
@@ -187,7 +187,7 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */
+     */ 
     __dragLeaveTheDestination(event, args) {
         if(!this._current) {
             return false;
@@ -209,7 +209,7 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */
+     */ 
     __dragDropOnTheDestination(event, args) {
 
         if(!this._current) {

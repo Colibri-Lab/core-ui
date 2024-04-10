@@ -75,6 +75,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
      * Registers events for the device.
      * @private
      */
+    /** @protected */
     _registerEvents() {
         this.RegisterEvent('OrientationChanged', false, 'Когда ориентация была изменена');
         this.RegisterEvent('ThemeChanged', false, 'Когда тема изменена');

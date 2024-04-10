@@ -78,6 +78,11 @@ Colibri.UI.GridFileViewer = class extends Colibri.UI.Viewer {
         }
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __createContextMenu(event, args) {
         let contextmenu = [];
         this.value.forEach((v) => {
@@ -93,6 +98,11 @@ Colibri.UI.GridFileViewer = class extends Colibri.UI.Viewer {
         
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __clickOnContextMenu(event, args) {
         if(!args.menuData) {
             return;

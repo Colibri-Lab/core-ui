@@ -243,6 +243,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         });
     }
 
+    /** @protected */
     _registerEvents() { 
         super._registerEvents();  
         this.RegisterEvent('Validated', false, 'Прошла валидация')

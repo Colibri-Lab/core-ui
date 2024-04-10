@@ -43,6 +43,11 @@ Colibri.UI.Color.Alpha = class extends Colibri.UI.Component {
         this.Dispatch('Changed');          
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __keyDown(event, args) {
         if(['ArrowUp', 'ArrowDown'].indexOf(args.domEvent.code) !== -1) {
             if(args.domEvent.code == 'ArrowUp') {
@@ -58,6 +63,11 @@ Colibri.UI.Color.Alpha = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __lineClicked(event, args) {
         const bounds = this._element.bounds();
         const trackbounds = this._pointer.container.bounds();

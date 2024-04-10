@@ -40,6 +40,11 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __thisShadowClicked(event, args) {
         if(!this._permanent) {
             this.shown = false;

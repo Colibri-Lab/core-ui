@@ -67,6 +67,7 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('RowAdded', false, 'Поднимается, когда добавляется строка');

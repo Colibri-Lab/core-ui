@@ -31,6 +31,7 @@ Colibri.Storages.Models.Table = class extends Colibri.Events.Dispatcher {
     
     }
 
+    /** @protected */
     _registerEvents() {
         this.RegisterEvent('DataChanged', false, 'Когда данные изменились');
     }
@@ -42,6 +43,11 @@ Colibri.Storages.Models.Table = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __cometEventReveived(event, args) {
         if(args.message.action == 'data-changed' && args.message.binding == this._binding) {
             this.Load();

@@ -69,6 +69,11 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     /**
      * @private
      */
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __close(event, args) {
         if (this._closable) {
             this.shown = false;

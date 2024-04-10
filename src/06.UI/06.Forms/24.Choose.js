@@ -69,6 +69,11 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __clickOnNote(event, args) {
         if(!this.readonly) {
             this._input.ShowChooser();

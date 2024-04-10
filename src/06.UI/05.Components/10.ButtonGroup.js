@@ -26,6 +26,11 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
      * @param {Colibri.UI.Event} event event object 
      * @param {*} args event args 
      */
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __thisClicked(event, args) {
         const button = args.domEvent.target.tag('component').Closest(component => component.parent instanceof Colibri.UI.ButtonGroup);
         this.SelectButton(button);
@@ -34,6 +39,7 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
     /**
      * @protected
      */
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'Поднимается, когда изменилась выбранная кнопка');

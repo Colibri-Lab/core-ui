@@ -64,6 +64,7 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
      * Registers events for media.
      * @private
      */
+    /** @protected */
     _registerEvents() {
         this.RegisterEvent('Stopped', false, 'Когда медия остановлено');
         this.RegisterEvent('ErrorOccurred', false, 'Когда произошла ошибка');

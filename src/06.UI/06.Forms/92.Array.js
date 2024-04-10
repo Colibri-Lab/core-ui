@@ -187,6 +187,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         return object;
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         // если нужно добавить что то

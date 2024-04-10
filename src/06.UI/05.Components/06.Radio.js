@@ -24,6 +24,7 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
         this._handleEvents();
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'Поднимается, когда изменил состояние');

@@ -22,6 +22,7 @@ Colibri.UI.Grid.Header = class extends Colibri.UI.Component {
 
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('ColumnAdded', false, 'Поднимается, когда добавляется колонка');

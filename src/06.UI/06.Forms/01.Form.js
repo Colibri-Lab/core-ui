@@ -27,6 +27,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Validated', false, 'Когда форма полностью валидирована');

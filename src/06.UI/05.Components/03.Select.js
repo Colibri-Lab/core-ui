@@ -65,6 +65,7 @@ Colibri.UI.Select = class extends Colibri.UI.Input {
 
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('OptionClicked', false, 'Поднимается, когда кликаем по опции');
@@ -88,6 +89,11 @@ Colibri.UI.Select = class extends Colibri.UI.Input {
         this.value = this.GenerateSelectionText();
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __DropdownSelectionChanged(event, args) {
         this.HandleSelectionChanged();
         this.Dispatch('SelectionChanged', args);
@@ -118,6 +124,7 @@ Colibri.UI.Select.Dropdown = class extends Colibri.UI.Pane {
         super(name, container, Element.create('div'), resizable);
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('SelectionChanged', false, 'Поднимается, когда меняется выбранный элемент');
@@ -154,6 +161,7 @@ Colibri.UI.Select.DefaultDropdown = class extends Colibri.UI.Select.Dropdown {
         this._handleEvents();
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('OptionClicked', false, 'Поднимается, когда кликаем по опции');
@@ -222,6 +230,7 @@ Colibri.UI.Select.DefaultDropdown.Options = class extends Colibri.UI.Pane {
         });
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('OptionClicked', false, 'Поднимается, когда кликаем по опции');

@@ -84,6 +84,7 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
 
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'Когда файлы выбраны');

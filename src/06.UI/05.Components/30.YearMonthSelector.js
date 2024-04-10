@@ -26,11 +26,17 @@ Colibri.UI.YearMonthSelector = class extends Colibri.UI.FlexBox {
 
     }
     
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'Когда значение изменилось');
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __selectorChanged(event, args) {
         this.Dispatch('Changed', Object.assign(args, {value: this._selector.value.value}));
     }

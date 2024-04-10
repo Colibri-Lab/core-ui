@@ -541,6 +541,11 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      * @param {Object} args 
      * @returns 
      */
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __processKeydown(event, args) {
 
         const e = args.domEvent;
@@ -710,6 +715,11 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __clickedProcessing(event, args) {
         const   target = args.domEvent.target,
                 cell = target.closest('.app-ui-row-cell')?.tag('component');
@@ -928,6 +938,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     /**
      * Регистрация событий
      */
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
 

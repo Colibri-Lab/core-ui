@@ -26,6 +26,11 @@ Colibri.UI.SlideDown = class extends Colibri.UI.Pane {
         this.__handlerClicked();    
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __handlerClicked(event, args) {
         if(this.shown) {
             this.shown = false;

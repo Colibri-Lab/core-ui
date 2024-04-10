@@ -74,6 +74,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         this.Dispatch('FieldsRendered');
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         // если нужно добавить что то

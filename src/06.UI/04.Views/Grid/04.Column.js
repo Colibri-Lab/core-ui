@@ -33,6 +33,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
 
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('ColumnStickyChange', false, 'Поднимается, когда колонка меняет липкость');

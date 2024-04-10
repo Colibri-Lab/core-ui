@@ -25,6 +25,7 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         this._handleEvents();
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('NodeExpanded', false, 'Поднимается, когда ветка дерева раскрывается');
@@ -387,6 +388,7 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         }
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Expanded', false, 'When node is expanded');
@@ -634,6 +636,11 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         this._editable = value;
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __nodeEditableStart(event, args) {
         if(!this._editable) {
             return true;
@@ -728,6 +735,11 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         return this._checkBox;
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __checkChanged(event, args) {
         if(!this.isLeaf) {
             this.nodes.ForEach((name, node) => {

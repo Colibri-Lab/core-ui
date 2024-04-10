@@ -41,6 +41,11 @@ Colibri.UI.Color.Line = class extends Colibri.UI.Component {
         
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __keyDown(event, args) {
         if(['ArrowLeft', 'ArrowRight'].indexOf(args.domEvent.code) !== -1) {
             if(args.domEvent.code == 'ArrowLeft') {
@@ -98,6 +103,11 @@ Colibri.UI.Color.Line = class extends Colibri.UI.Component {
 		canva.fillRect(0, 0, bounds.outerWidth + 100, bounds.outerHeight * 100);
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __lineClicked(event, args) {
         const bounds = this._element.bounds();
         const e = args.domEvent;

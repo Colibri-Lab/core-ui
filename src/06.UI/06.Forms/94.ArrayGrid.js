@@ -130,6 +130,11 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
      * @param args
      * @private
      */
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __newObject(event, args) {
         this._openObjectWindow();
     }
@@ -140,6 +145,11 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
      * @param args
      * @private
      */
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __showObject(event, args) {
         let row = this._getRow(args.object_row);
         if (row) { this._openObjectWindow(row.tag._objectValue || null); }
@@ -151,6 +161,11 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
      * @param args
      * @private
      */
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __addObjectRow(event, args) {
         let value = this._objectWindow?.value || args.formValues || {};
         this._addRow(value);
@@ -162,6 +177,11 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
      * @param args
      * @private
      */
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __updateObjectRow(event, args) {
         let row = this._getRow(args.object_row);
         let value = this._objectWindow?.value || args.formValues || {};
@@ -175,6 +195,11 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
      * @param args
      * @private
      */
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __removeObjectRow(event, args) {
         let row = this._getRow(args.object_row);
         if (row) { row.Dispose(); }
@@ -196,6 +221,11 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
      * @param args
      * @private
      */
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __showContextMenu(event, args) {
         args.domEvent.preventDefault();
         args.domEvent.stopPropagation();
@@ -223,6 +253,11 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
      * @param args
      * @private
      */
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __processContextMenuAction(event, args) {
         if (args?.menuData && args?.item) {
             switch (args.menuData.name) {
@@ -240,6 +275,11 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __toggleMassActionsMenu(event, args) {
         if (this._objectsGrid.checked.length > 1) {
             this._objectsGrid.massActionsMenu = [
@@ -255,6 +295,11 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __processMassAction(event, args) {
         if (args?.menuData && args?.items) {
             switch (args.menuData.name) {
@@ -400,6 +445,7 @@ Colibri.UI.Forms.ArrayGrid.ObjectWindow = class extends Colibri.UI.ModelessWindo
         this._saveButton.shown = true;
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', 'Когда содержимое формы внутри окна изменилось');
