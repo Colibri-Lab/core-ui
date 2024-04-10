@@ -64,6 +64,12 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         this.RegisterEvent('ItemEventHandled', false, 'Поднимается, какое то событие рендерера произошло');
     }
 
+    /**
+     * Adds a new group to list
+     * @param {string} name name of group
+     * @param {string} title title of group
+     * @returns Colibri.UI.List.Group
+     */
     AddGroup(name, title) {
         const group = new Colibri.UI.List.Group(name, this);
         group.label.value = title;
@@ -72,6 +78,11 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         return group;
     }
 
+    /**
+     * Search for item
+     * @param {Function|string} searchingItemIdOrCompareMethod item id or compare method
+     * @returns {Colibri.UI.List.Item}
+     */
     FindItem(searchingItemIdOrCompareMethod) {
         
         let found = null;
@@ -88,18 +99,22 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
                 if(condition) {
                     found = item;
-                    return false;
+                    return null;
                 }
 
             });
             if(found) {
-                return false;
+                return null;
             }
         });
 
         return found;
     }
 
+    /**
+     * Unselect items
+     * @param {Colibri.UI.List.Item[]} selected items to unselect
+     */
     UnselectItem(selected) {
         if(!this._multiple) {
             this.ClearSelection(false);
@@ -120,7 +135,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
     }
 
     /**
-     * Устанавливает выбор на пункт
+     * Select the item
      * @param {Colibri.UI.List.Item} selected
      */
     SelectItem(selected) {
@@ -154,7 +169,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
     }
 
     /**
-     * Устанавливает выбор на пункт
+     * Select the item
      * @deprecated
      * @param {Colibri.UI.List.Item} selected
      */
@@ -162,6 +177,10 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         return this.SelectItem(selected);
     }
 
+    /**
+     * Selected index
+     * @type {number}
+     */
     get selectedIndex() {
         
         if(this._selected.length == 0) {
@@ -174,6 +193,10 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
     }
     
+    /**
+     * Selected index
+     * @type {number}
+     */
     set selectedIndex(value) {
 
         const currentSelection = JSON.stringify(this.selectedIndex);
@@ -207,7 +230,10 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
     }
 
-    /** @type {Object} */
+    /** 
+     * Selected Item value
+     * @type {Object} 
+     */
     get selectedValue() {
         let values = [];
         this._selected.forEach((item) => {
@@ -216,6 +242,10 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         return this._multiple ? values : values.pop();
     }
 
+    /** 
+     * Selected Item value
+     * @type {Object} 
+     */
     set selectedValue(value) {
 
         const currentSelection = JSON.stringify(this.selectedIndex);
@@ -244,13 +274,20 @@ Colibri.UI.List = class extends Colibri.UI.Component {
     }
 
 
-    /** @type {Colibri.UI.List.Item} */
+    /**
+     * Selected item 
+     * @type {Colibri.UI.List.Item} 
+     */
     get selected() {
         if (!this._multiple) {
             return this._selected[0];
         }
         return this._selected;
     }
+    /**
+     * Selected item 
+     * @type {Colibri.UI.List.Item} 
+     */
     set selected(value) {
         // value - Colibri.UI.Item
         const currentSelection = JSON.stringify(this.selectedIndex);
@@ -262,6 +299,9 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Show selection, ensures visibility of selected item
+     */
     ShowSelection() {
         
         if(this._selected.length > 0) {
@@ -270,14 +310,25 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Is list can select multiple items
+     * @type {boolean}
+     */
     get multiple() {
         return this._multiple;
     }
 
+    /**
+     * Is list can select multiple items
+     * @type {boolean}
+     */
     set multiple(value) {
         this._multiple = value;
     }
 
+    /**
+     * Removes all groups from list
+     */
     ClearAllGroups() {
         this.ForEach((name, component) => {
             if(component instanceof Colibri.UI.List.Group) {
@@ -286,6 +337,10 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         })
     }
 
+    /**
+     * Clears selection
+     * @param {boolean} fireAnEvent fire the SelectionChanged event
+     */
     ClearSelection(fireAnEvent = true) {
         this._selected.forEach((item) => {
             item.selected = false;
@@ -296,18 +351,28 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         }
     }
 
+    /** @protected */
     _createContextMenuButton() {
         // Do nothing
     }
 
+    /** @protected */
     _removeContextMenuButton() {
         // Do nothing
     }
 
+    /**
+     * Items of list
+     * @type {Array}
+     */
     get value() {
-
+        return [];
     }
 
+    /**
+     * Items of list
+     * @type {Array}
+     */
     set value(data) {
 
         this.ClearSelection(false);
@@ -319,9 +384,15 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
         this.Retreive();
 
-    }
+    } 
 
-    __renderBoundedValues(data) {
+    /**
+     * Render bounded to component data
+     * @protected
+     * @param {*} data 
+     * @param {String} path 
+     */
+    __renderBoundedValues(data, path) {
         try {
             this.value = data;
         }
@@ -492,6 +563,11 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
 }
 
+/**
+ * @class
+ * @extends Colibri.UI.Pane
+ * @memberof Colibri.UI
+ */
 Colibri.UI.List.SearchBox = class extends Colibri.UI.Pane {
     constructor(name, container) {
         super(name, container);
@@ -560,6 +636,11 @@ Colibri.UI.List.SearchBox = class extends Colibri.UI.Pane {
 
 }
 
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
 Colibri.UI.List.Group = class extends Colibri.UI.Component {
 
     constructor(name, container) {

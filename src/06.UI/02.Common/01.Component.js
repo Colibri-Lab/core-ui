@@ -1612,7 +1612,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @protected
      * @param {*} data data in store to bind
      */
-    __renderBoundedValues(data) {
+    __renderBoundedValues(data, path) {
         try {
             if(typeof data == 'string') {
                 this.value = data;
