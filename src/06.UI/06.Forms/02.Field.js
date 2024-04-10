@@ -254,9 +254,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this.RegisterEvent('MessageClicked', false, 'Когда ткнули в ошибку')
     }
 
-    /**
-     * Обработка binding
-     */
+    
     /**
      * Render bounded to component data
      * @protected

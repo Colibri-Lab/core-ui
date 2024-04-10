@@ -402,14 +402,14 @@ Colibri.UI.List = class extends Colibri.UI.Component {
     }
 
     /**
-     * Компонент отрисовщик
+     * Renderer component
      * @type {string|Colibri.UI.Component|Function}
      */
     get rendererComponent() {
         return this._rendererComponent;
     }
     /**
-     * Компонент отрисовщик
+     * Renderer component
      * @type {string|Colibri.UI.Component|Function}
      */
     set rendererComponent(value) {
@@ -417,14 +417,14 @@ Colibri.UI.List = class extends Colibri.UI.Component {
     }
 
     /**
-     * Атрибуты для передачи в компонент отрисовщик
+     * Renderer component attributes
      * @type {string|Object}
      */
     get rendererAttrs() {
         return this._rendererAttrs;
     }
     /**
-     * Атрибуты для передачи в компонент отрисовщик
+     * Renderer component attributes
      * @type {string|Object}
      */
     set rendererAttrs(value) {
@@ -539,20 +539,23 @@ Colibri.UI.List = class extends Colibri.UI.Component {
     }
 
     /**
-     * 
-     * @type {}
+     * Filter callback
+     * @type {Function}
      */
     get searchFilterCallback() {
         return this._searchFilterCallback;
     }
     /**
-     * 
-     * @type {}
+     * Filter callback
+     * @type {Function}
      */
     set searchFilterCallback(value) {
         this._searchFilterCallback = value;
     }
 
+    /**
+     * Sets the focus on searchbox
+     */
     FocusOnSearchBox() {
         if(!this._searchBox) {
             return;
@@ -569,6 +572,11 @@ Colibri.UI.List = class extends Colibri.UI.Component {
  * @memberof Colibri.UI
  */
 Colibri.UI.List.SearchBox = class extends Colibri.UI.Pane {
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     */
     constructor(name, container) {
         super(name, container);
         this.AddClass('app-component-list-searchbox');
@@ -586,35 +594,38 @@ Colibri.UI.List.SearchBox = class extends Colibri.UI.Pane {
     }
 
     /**
-     * 
-     * @type {}
+     * Searchbox has icon
+     * @type {boolean}
      */
     get hasIcon() {
         return this._input.hasIcon;
     }
     /**
-     * 
-     * @type {}
+     * Searchbox has icon
+     * @type {boolean}
      */
     set hasIcon(value) {
         this._input.hasIcon = value;
     }
 
     /**
-     * 
-     * @type {}
+     * Searchbox placeholder
+     * @type {string}
      */
     get placeholder() {
         return this._input.placeholder;
     }
     /**
-     * 
-     * @type {}
+     * Searchbox placeholder
+     * @type {string}
      */
     set placeholder(value) {
         this._input.placeholder = value;
     }
 
+    /**
+     * Set the focus on searchbox
+     */
     Focus() {
         this._input.Focus();
     }
@@ -643,6 +654,11 @@ Colibri.UI.List.SearchBox = class extends Colibri.UI.Pane {
  */
 Colibri.UI.List.Group = class extends Colibri.UI.Component {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     */
     constructor(name, container) {
         super(name, container);
 
@@ -660,10 +676,17 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         
     }
 
+    /**
+     * Generates an ID for item
+     * @static
+     * @param {object} itemData data of item
+     * @returns string
+     */
     static CreateKey(itemData) {
         return itemData?.__id ?? itemData?.id ?? String.MD5(JSON.stringify(Object.sortPropertiesRecursive(itemData))); 
     }
 
+    /** @protected */
     _handlerEvents() {
 
         this.AddHandler('ContextMenuIconClicked', (event, args) => this.parent.Dispatch('ContextMenuIconClicked', Object.assign({item: args.item}, args)));
