@@ -33,6 +33,9 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
         this._initManager();
     }
     
+    /**
+     * Dispose the component
+     */
     Dispose() {
         this._current = null;
 
@@ -55,6 +58,9 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
         super.Dispose();
     }
 
+    /**
+     * @private
+     */
     _initManager() {
 
         this._sources.forEach((source) => {
@@ -72,11 +78,21 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __dragStartFromSources(event, args) {
         this._current = args.domEvent.target.closest('[data-object-name][draggable="true"]').tag('component');
         this._current.styles = {overflow: 'hidden'};
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __dragEndFromSources(event, args) {
         this._current = null;
         const dropComponent = document.querySelector('.app-drop-component');
@@ -86,6 +102,11 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __dragOverTheDestination(event, args) {
         if(!this._current) {
             return false;
@@ -119,6 +140,11 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
         return true;
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __dragLeaveTheDestination(event, args) {
         if(!this._current) {
             return false;
@@ -141,6 +167,11 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
         args.domEvent.preventDefault();
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __dragDropOnTheDestination(event, args) {
 
         if(!this._current) {

@@ -15,9 +15,17 @@ Colibri.UI.Heading = class extends Colibri.UI.Component {
         this.AddClass('app-component-heading');
     }
 
+    /**
+     * Value string
+     * @type {string}
+     */
     get value() {
         return this._element.html();
     }
+    /**
+     * Value string
+     * @type {string}
+     */
     set value(value) {
         this._element.html(value);
     }

@@ -40,18 +40,39 @@ Colibri.UI.DropDown = class extends Colibri.UI.Component {
 
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('ItemClicked', false, 'Выбран пунт меню');
     }
 
+    /**
+     * Show search box
+     * @type {boolean}
+     */
     set search(value) {
         this._search.shown = value;
     }
+    /**
+     * Show search box
+     * @type {boolean}
+     */
     get search() {
         return this._search.shown;
     }
 
+    /**
+     * Show/Hide component
+     * @type {boolean}
+     */
+    get shown () {
+        return super.shown;
+    }
+
+    /**
+     * Show/Hide component
+     * @type {boolean}
+     */
     set shown(value) {
         super.shown = value;
         if(value) {

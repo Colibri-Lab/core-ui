@@ -62,8 +62,5 @@ Colibri.UI.PaneGrid = class extends Colibri.UI.Component {
     set gap(value) {
         this._element.css('gap', value);
     }
-    _showGap() {
-        
-    }
 
 }

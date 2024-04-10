@@ -15,16 +15,32 @@ Colibri.UI.Link = class extends Colibri.UI.Component {
         this.value = value;
     }
 
+    /**
+     * Href string
+     * @type {string}
+     */
     get href() {
         return this._element.attr('href');
     }
+    /**
+     * Href string
+     * @type {string}
+     */
     set href(value) {
         this._element.attr('href', value);
     }
 
+    /**
+     * Navigate to
+     * @type {{url,options}}
+     */
     get navigate() {
         return this._navigate;
     }
+    /**
+     * Navigate to
+     * @type {{url,options}}
+     */
     set navigate(value) {
         this._navigate = value;
         this._element.attr('href', '#' + Date.Mc());
@@ -36,23 +52,47 @@ Colibri.UI.Link = class extends Colibri.UI.Component {
         });
     }
 
+    /**
+     * Value string
+     * @type {string}
+     */
     get value() {
         return this._element.html();
     }
+    /**
+     * Value string
+     * @type {string}
+     */
     set value(value) {
         this._element.html(value);
     }
 
+    /**
+     * Target value
+     * @type {_blank,_self,_top}
+     */
     get target() {
         return this._element.attr('target');
     }
+    /**
+     * Target value
+     * @type {_blank,_self,_top}
+     */
     set target(value) {
         this._element.attr('target', value);
     }
 
+    /**
+     * Download attribute
+     * @type {string}
+     */
     get download() {
         return this._element.attr('download');
     }
+    /**
+     * Download attribute
+     * @type {string}
+     */
     set download(value) {
         this._element.attr('download', value);
     }

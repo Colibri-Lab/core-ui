@@ -5,11 +5,16 @@
  */
 Colibri.UI.Toolbar = class extends Colibri.UI.Component {
 
+    /** Vertical orientation */
     static Vertical = 'vertical';
+    /** Horizontal orientation */
     static Horizontal = 'horizontal';
 
+    /** Right aligned buttons  */
     static Right = 'right';
+    /** Left aligned buttons  */
     static Left = 'left';
+    /** Center aligned buttons  */
     static Center = 'center';
 
     /**
@@ -26,11 +31,16 @@ Colibri.UI.Toolbar = class extends Colibri.UI.Component {
 
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('ToolbarButtonClicked', false, 'Кликнули на кнопку внутри Toolbar-а');
     }
 
+    /**
+     * Orientation
+     * @type {vertical,horizontal}
+     */
     set orientation(value) {
         if(value == Colibri.UI.Toolbar.Vertical) {
             this.AddClass('-vertical');
@@ -40,6 +50,10 @@ Colibri.UI.Toolbar = class extends Colibri.UI.Component {
         } 
     }
 
+    /**
+     * Orientation
+     * @type {vertical,horizontal}
+     */
     get orientation() {
         if(this.HasClass('-vertical')) {
             return Colibri.UI.Toolbar.Vertical;
@@ -51,7 +65,7 @@ Colibri.UI.Toolbar = class extends Colibri.UI.Component {
 
     /**
      * Align the itens
-     * @type {String}
+     * @type {right,left,center}
      */
     get align() {
         if(this.HasClass('-right')) {
@@ -64,7 +78,7 @@ Colibri.UI.Toolbar = class extends Colibri.UI.Component {
     }
     /**
      * Align the itens
-     * @type {String}
+     * @type {right,left,center}
      */
     set align(value) {
         this.RemoveClass('-left');
@@ -78,6 +92,11 @@ Colibri.UI.Toolbar = class extends Colibri.UI.Component {
         } 
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object 
+     * @param {*} args event arguments
+     */
     __clicked(event, args) {
         const component = args.domEvent.target.closest('.app-toolbar-container-component > *')?.tag('component');
         this.Dispatch('ToolbarButtonClicked', {button: component});

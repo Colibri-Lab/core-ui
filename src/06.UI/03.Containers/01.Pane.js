@@ -10,9 +10,13 @@ Colibri.UI.Pane = class extends Colibri.UI.Component {
     static ResizeHorizontalOnly = 'horizontal';
     static ResizeVerticalOnly = 'vertical';
 
+    /** @type {string} */
     _resizable = Colibri.UI.Pane.ResizeNone;
+    /** @type {Function|null} */
     _resizeHandler = null;
+    /** @type {boolean} */
     _resizing = false;
+    /** @type {{horizontalSize,verticalSize}} */
     _resizeData = {
         horizontalSize: 0,
         verticalSize: 0,
@@ -34,6 +38,7 @@ Colibri.UI.Pane = class extends Colibri.UI.Component {
         this.AddClass('app-component-resize-' + this._resizable);
     }
 
+    /** @private */
     _createResizeHandler() {
         this._resizeHandler = Element.create('div', {class: 'app-component-pane-resize'});
         this._element.prepend(this._resizeHandler);
@@ -99,13 +104,22 @@ Colibri.UI.Pane = class extends Colibri.UI.Component {
 
     }
 
+    /** @private */
     _removeResizeHandler() {
         this._resizeHandler && this._resizeHandler.remove();
     }
 
+    /**
+     * Is block resizable
+     * @type {boolean}
+     */
     get resizable() {
         return this._resizable;
     }
+    /**
+     * Is block resizable
+     * @type {boolean}
+     */
     set resizable(value) {
         this.RemoveClass('app-component-resize-' + this._resizable);
         this._resizable = value;

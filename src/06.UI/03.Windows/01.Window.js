@@ -71,7 +71,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
     }
 
-
+    /** @private */
     _movingHandler(e) {
         const windowElement = e.currentTarget.closest('.app-component-window');
         const windowContainer = windowElement.querySelector('.app-component-window-container');
@@ -82,6 +82,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         windowContainer.css('top', (e.pageY - point.top - parseInt(windowContainer.css('margin-top'))) + 'px');
     }
 
+    /** @private */
     _movingStartHandler(e) {
         
         if(e.target.is('button')) {
@@ -96,6 +97,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         windowElement.tag('movingPoint', {left: e.layerX, top: e.layerY});
     }
 
+    /** @private */
     _movingStopHandler(e) {
         const windowElement = e.currentTarget.closest('.app-component-window');
         const windowComponent = windowElement.tag('component');
@@ -104,6 +106,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         windowElement.removeEventListener('mouseup', windowComponent._movingStopHandler);
     }
 
+    /** @private */
     _setMovableEvents(value) {
         if(value) {
             this._titleContainer.addEventListener('mousedown', this._movingStartHandler);
@@ -113,6 +116,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         }
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('WindowMinimizing', false, 'Поднимается когда окно минимизируется');
@@ -120,6 +124,11 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         this.RegisterEvent('WindowContentRendered', false, 'Когда содержание окна отрисовалось');
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __CloseClicked(event, args) {
         
         if(this._minimizable === true && this._state === 'minimized') {
@@ -138,16 +147,25 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         
     }
 
+    /** @private */
     __getMinimizedContent() {
         return Promise.resolve(null);
     }
     
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __MinimizeClicked(event, args) {
         
         this.MinimizeToggle();
 
     }
 
+    /**
+     * Toggle minimize state
+     */
     MinimizeToggle() {
         const content = this._minimizedGetContentMethod(this);
         if(content) {
@@ -175,6 +193,11 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __MouseUp(event, args) {
         const domEvent = args.domEvent;
         domEvent.stopPropagation();
@@ -182,6 +205,11 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         return false;
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __MouseDown(event, args) {
         const domEvent = args.domEvent;
         if (domEvent.target == this._element && !Colibri.UI.Resizing && this._closableOnShadow) {
@@ -189,6 +217,11 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __KeyDown(event, args) {
         const domEvent = args.domEvent;
         if(domEvent.code === 'Escape') {
@@ -199,6 +232,9 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     }
 
 
+    /**
+     * Start tab index routine
+     */
     StartTabIndexRoutine() {
         const firstInput = this._element.querySelector('input,textarea,select');
         if(firstInput) {
@@ -206,49 +242,93 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Element object
+     * @type {Element}
+     * @readonly
+     */
     get element() {
         return this._element;
     }
 
+    /**
+     * Container object
+     * @type {Element}
+     * @readonly
+     */
     get container() {
         return this._content;
     }
 
+    /**
+     * Footer element
+     * @type {Element}
+     * @readonly
+     */
     get footer() {
         return this._footer;
     }
 
+    /**
+     * Header container element
+     * @type {Element}
+     * @readonly
+     */
     get header() {
         return this._titleContainer.querySelector('span');
     }
 
+    /**
+     * Window content string
+     * @type {string}
+     */
     get content() {
         return this._content.innerHTML;
     }
 
+    /**
+     * Window content string
+     * @type {string}
+     */
     set content(value) {
         return this._content.innerHTML = value;
     }
 
+    /**
+     * Is window movable
+     * @type {boolean}
+     */
     get movable() {
         return this._movable;
     }
 
+    /**
+     * Is window movable
+     * @type {boolean}
+     */
     set movable(value) {
         this._movable = value;
         this._setMovableEvents(value);
     }
 
+    /**
+     * Is window currently moving
+     * @type {boolean}
+     */
     set moving(value) {
         this._moving = value;
     }
 
+    /**
+     * Is window currently moving
+     * @type {boolean}
+     */
     get moving() {
         return this._moving;
     }
 
     /**
-     * Ширина компонента
+     * Window width
      * @type {number}
      */
     get width() {
@@ -256,6 +336,10 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         return bounds.outerWidth;
     }
 
+    /**
+     * Window width
+     * @type {number}
+     */
     set width(value) {
         if(value === null) {
             this._element.querySelector('.app-component-window-content').css('width', null);    
@@ -271,7 +355,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     }
 
     /**
-     * Ширина компонента
+     * Window container height
      * @type {number}
      */
     get containerWidth() {
@@ -279,6 +363,10 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         return bounds.outerWidth;
     }
 
+    /**
+     * Window container height
+     * @type {number}
+     */
     set containerWidth(value) {
         if(value === null) {
             this._element.querySelector('.app-component-window-container').css('width', null);    
@@ -290,7 +378,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     }
 
     /**
-     * Высота компонента
+     * Window height
      * @type {number}
      */
     get height() {
@@ -298,6 +386,10 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         return bounds.outerHeight;
     }
 
+    /**
+     * Window height
+     * @type {number}
+     */
     set height(value) {
         if(value === null) {
             this._element.querySelector('.app-component-window-content').css('height', null);    
@@ -309,13 +401,17 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     }
 
     /**
-     * Заголовок окна
-     * @type {number}
+     * Window title
+     * @type {string}
      */
     get title() {
         return this._element.querySelector('.app-component-window-title > span').innerHTML;
     }
 
+    /**
+     * Window title
+     * @type {string}
+     */
     set title(value) {
         this._element.querySelector('.app-component-window-title > span').innerHTML = value;
         if(!value) {
@@ -326,23 +422,43 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Is window closable
+     * @type {boolean}
+     */
     get closable() {
         return this._closable;
     }
 
+    /**
+     * Is window closable
+     * @type {boolean}
+     */
     set closable(value) {
         this._closable = value;
         this.Children('closebutton').shown = this._closable;
     }
 
+    /**
+     * Is window closed when clicked on shadow
+     * @type {boolean}
+     */
     get closableOnShadow() {
         return this._closableOnShadow;
     }
 
+    /**
+     * Is window closed when clicked on shadow
+     * @type {boolean}
+     */
     set closableOnShadow(value) {
         this._closableOnShadow = value;
     }
 
+    /**
+     * Show/Hide window
+     * @type {boolean}
+     */
     set shown(value) {
         super.shown = value;
         if(value) {
@@ -354,6 +470,10 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         this.StartTabIndexRoutine();
     }
 
+    /**
+     * Show/Hide window
+     * @type {boolean}
+     */
     get shown() {
         return super.shown;
     }
@@ -373,6 +493,12 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         this._titleContainer.css('display', value ? 'block' : 'none');
     }
 
+    /**
+     * Adds button to footer
+     * @param {string} title button title
+     * @param {string} name button name
+     * @returns {Colibri.UI.Button}
+     */
     AddButton(title, name) {
         this._footer.hideElement();
         this._footer.showElement();
@@ -403,6 +529,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         this._minimizable = value;
         this._showMinimizable();
     }
+    /** @private */
     _showMinimizable() {
         this.Children('minimizebutton').shown = this._minimizable;
         if(!this._minimizable) {
@@ -416,14 +543,14 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     }
 
     /**
-     * Позиция (правый нижний угол) при минимизации
+     * Right bottom corner of window when minimized
      * @type {object<integer, integer>} 
      */
     get minimizedPosition() {
         return this._minimizedPosition;
     }
     /**
-     * Позиция (правый нижний угол) при минимизации
+     * Right bottom corner of window when minimized
      * @type {object<integer, integer>} 
      */
     set minimizedPosition(value) {
@@ -431,14 +558,14 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     }
 
     /**
-     * Размер при минимизации
+     * Minimized size
      * @type {object(integer, integer)}
      */
     get minimizedSize() {
         return this._minimizedSize;
     }
     /**
-     * Размер при минимизации
+     * Minimized size
      * @type {object(integer, integer)}
      */
     set minimizedSize(value) {
@@ -446,14 +573,14 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     }
 
     /**
-     * Получение содержания минимизурованного окна
+     * Method to get content of minimized window
      * @type {Function}
      */
     get minimizedGetContentMethod() {
         return this._minimizedGetContentMethod;
     }
     /**
-     * Получение содержания минимизурованного окна
+     * Method to get content of minimized window
      * @type {Function}
      */
     set minimizedGetContentMethod(value) {

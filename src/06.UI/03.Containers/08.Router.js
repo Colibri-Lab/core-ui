@@ -25,6 +25,9 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * Disposes the component
+     */
     Dispose() {
         App.Router.RemoveHandler('RouteChanged', this._routeChangedEvent);
         super.Dispose();
@@ -62,6 +65,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
         }
 
     }
+    /** @private */
     _initStructure() {
         
         for(const pattern of Object.keys(this._structure)) {
@@ -95,6 +99,12 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * Creates plane object with keys separated by dot
+     * @param {object} object object to plain
+     * @param {string} prefix prefix to add in keys
+     * @returns object
+     */
     toPlain(object, prefix = '') {
         let ret = {};
         object = Object.cloneRecursive(object, null, ['parent']);
@@ -110,20 +120,25 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
     }
 
     /**
-     * 
-     * @type {}
+     * Base route pattern
+     * @type {string}
      */
     get basePattern() {
         return this._current;
     }
     /**
-     * 
-     * @type {}
+     * Base route pattern
+     * @type {string}
      */
     set basePattern(value) {
         this._current = value;
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __appRouteChanged(event, args) {
         if(args.url.substring(0, this._current.length) === this._current) {
             this.ForEach((name, component) => {

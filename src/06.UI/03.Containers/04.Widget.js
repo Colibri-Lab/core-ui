@@ -37,6 +37,7 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
         this._handlerEvents();
     }
 
+    /** @protected */
     _handlerEvents() {
         this._headerCloseToggle.AddHandler('Clicked', (event, args) => {
             if(this.ContainsClass('-minimized')) {
@@ -54,19 +55,33 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
         });
     }
 
+    /**
+     * Header container
+     * @type {Element}
+     * @readonly
+     */
     get header() {
         return this._header.querySelector('span');
     }
 
+    /**
+     * Content container
+     * @type {Element}
+     * @readonly
+     */
     get container() {
         return this._element.querySelector('.widget-container');
     }
 
+    /**
+     * Footer container
+     * @type {Element}
+     * @readonly
+     */
     get footer() {
         return this._footer;
     }
 
-    
     /**
      * Title of widget
      * @type {string}
@@ -82,6 +97,7 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
         this._title = value;
         this._showTitle();
     }
+    /** @private */
     _showTitle() {
         this._headerTitle.value = this._title;
         if(this._title) {
@@ -106,6 +122,7 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
         this._closable = value === true || value === 'true';
         this._showClosable();
     }
+    /** @private */
     _showClosable() {        
         this._headerCloseButton.shown = this._closable;
     }
@@ -125,6 +142,7 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
         this._togglable = value === true || value === 'true';
         this._showTogglable();
     }
+    /** @private */
     _showTogglable() {
         this._headerCloseToggle.shown = this._togglable;
     }

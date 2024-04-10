@@ -34,6 +34,7 @@ Colibri.UI.PaneSwitcher = class extends Colibri.UI.Pane {
         this._value = value;
         this._showValue();
     }
+    /** @private */
     _showValue() {
         
         this.ForEach((name, component) => component.Disconnect())

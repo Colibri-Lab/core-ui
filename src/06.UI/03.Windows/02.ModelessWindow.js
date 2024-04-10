@@ -43,13 +43,14 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
         this._handleEvents();
     }
 
-
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('WindowClosed', false, 'Поднимается, когда окно закрылось');
         this.RegisterEvent('WindowContentRendered', false, 'Когда содержание окна отрисовалось');
     }
 
+    /** @protected */
     _handleEvents() {
         this._getCloseButton().AddHandler('Clicked', (event, args) => this.__close(event, args));
 
@@ -66,7 +67,6 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     }
 
     /**
-     * Закрыть окно
      * @private
      */
     __close(event, args) {
@@ -79,8 +79,6 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     }
 
     /**
-     * Запомнить позицию мыши и окна, когда начали перетаскивать
-     * @param {MouseEvent} event
      * @private
      */
     __dragStart(event) {
@@ -98,8 +96,6 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     }
 
     /**
-     * Обновить позицию окна после каждого перемещения мыши
-     * @param {MouseEvent} event
      * @private
      */
     __move(event) {
@@ -115,7 +111,6 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     }
 
     /**
-     * Удалить обработчики по окончании перетаскивания
      * @private
      */
     __dragStop() {
@@ -128,7 +123,6 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     }
 
     /**
-     * Обновить переменные css
      * @private
      */
     _updateStyleVariables() {
@@ -138,8 +132,6 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     }
 
     /**
-     * Показать/скрыть скролл на странице
-     * @param {boolean} value
      * @private
      */
     _toggleBodyScroll(value) {
@@ -152,22 +144,27 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     }
 
     /**
-     * Закрыть окно
+     * When window closed
      */
     close() {
         this._getCloseButton().Dispatch('Clicked');
     }
 
     /**
-     * "Приклеено" ли окно (по умолчанию становится в центр контейнера)
+     * Is window sticky
      * @type {boolean}
      */
     get sticky() {
         return this._sticky;
     }
+    /**
+     * Is window sticky
+     * @type {boolean}
+     */
     set sticky(value) {
         return this._setSticky(value);
     }
+    /** @private */
     _setSticky(value) {
         this._sticky = (value === true || value === 'true');
 
@@ -181,16 +178,20 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     }
 
     /**
-     * Положение окна относительно контейнера по оси X
-     * 3 возможных положения: слева, справа, по центру
-     * @type {string|null}
+     * Sticky X position
+     * @type {left,right,center}
      */
     get stickyX() {
         return this._stickyX;
     }
+    /**
+     * Sticky position
+     * @type {left,right,center}
+     */
     set stickyX(value) {
         this._stickToX(value);
     }
+    /** @private */
     _stickToX(value) {
         this._stickyX = value;
 
@@ -213,16 +214,20 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     }
 
     /**
-     * Положение окна относительно контейнера по оси Y
-     * 3 возможных положения: сверху, снизу, по центру
-     * @type {string|null}
-     */
+     * Sticky Y position
+     * @type {top,bottom,center}
+     */    
     get stickyY() {
         return this._stickyY;
     }
+    /**
+     * Sticky Y position
+     * @type {top,bottom,center}
+     */    
     set stickyY(value) {
         this._stickToY(value);
     }
+    /** @private */
     _stickToY(value) {
         this._stickyY = value;
 
@@ -245,16 +250,22 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     }
 
     /**
-     * Точка, начиная от которой окно займёт всю доступную ширину в зависимости от stickyX
-     * если stickyX - центр, займёт такую ширину, чтобы окно оказалось по центру
+     * The point from which the window will occupy the entire available width depending on stickyX 
+     * if stickyX is the center, it will occupy such a width so that the window is centered
      * @type {string|number|null}
      */
     get startPointX() {
         return this._startPointX;
     }
+    /**
+     * The point from which the window will occupy the entire available width depending on stickyX 
+     * if stickyX is the center, it will occupy such a width so that the window is centered
+     * @type {string|number|null}
+     */
     set startPointX(value) {
         this._setStartPointX(value);
     }
+    /** @private */
     _setStartPointX(value) {
         if (![null, false, undefined].includes(value)) {
 
@@ -287,16 +298,22 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     }
 
     /**
-     * Точка, начиная от которой окно займёт всю доступную высоту в зависимости от stickyY
-     * если stickyY - центр, займёт такую высоту, чтобы окно оказалось по центру
+     * The point from which the window will occupy the entire available height depending on stickyY
+     * if stickyY is the center, it will take such a height so that the window is centered
      * @type {string|number|null}
      */
     get startPointY() {
         return this._startPointY;
     }
+    /**
+     * The point from which the window will occupy the entire available height depending on stickyY
+     * if stickyY is the center, it will take such a height so that the window is centered
+     * @type {string|number|null}
+     */
     set startPointY(value) {
         this._setStartPointY(value);
     }
+    /** @private */
     _setStartPointY(value) {
         if (![null, false, undefined].includes(value)) {
 
@@ -329,33 +346,49 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     }
 
     /**
-     * Можно ли закрыть окно
+     * Is window can be closed
      * @type {boolean}
      */
     get closable() {
         return this._closable;
     }
+    /**
+     * Is window can be closed
+     * @type {boolean}
+     */
     set closable(value) {
         this._setClosable(value);
     }
+    /** @private */
     _setClosable(value) {
         this._closable = (value === true || value === 'true');
         this._getCloseButton().shown = this._closable;
     }
 
     /**
-     * Удалять ли окно из DOM при закрытии
+     * Remove window from DOM when closed
      * @type {boolean}
      */
     get disposeOnClose() {
         return this._disposeOnClose;
     }
+    /**
+     * Remove window from DOM when closed
+     * @type {boolean}
+     */
     set disposeOnClose(value) {
         this._disposeOnClose = (value === true || value === 'true');
     }
 
     /**
-     * Ширина компонента
+     * Content width
+     * @type {number}
+     */
+    get width() {
+        return super.width;
+    }
+    /**
+     * Content width
      * @type {number}
      */
     set width(value) {
@@ -363,13 +396,21 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
             this._setWidth(value);
         }
     }
+    /** @private */
     _setWidth(value) {
         super.width = value;
         this._updateStyleVariables();
     }
 
     /**
-     * Высота компонента
+     * Content height
+     * @type {number}
+     */
+    get height() {
+        return super.height;
+    }
+    /**
+     * Content height
      * @type {number}
      */
     set height(value) {
@@ -377,21 +418,27 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
             this._setHeight(value);
         }
     }
+    /** @private */
     _setHeight(value) {
         super.height = value;
         this._updateStyleVariables();
     }
 
     /**
-     * Содержимое заголовка окна
+     * Window title
      * @type {string|Element}
      */
     get title() {
         return this._getHeader().html();
     }
+    /**
+     * Window title
+     * @type {string|Element}
+     */
     set title(value) {
         this._setTitle(value);
     }
+    /** @private */
     _setTitle(value) {
         if (value) {
             this._getHeader().html(value);
@@ -404,41 +451,42 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     }
 
     /**
-     * DOM элемент header
-     * @return {Element}
+     * header DOM element 
+     * @type {Element}
      */
     get header() {
         return this._getHeader();
     }
+    /** @private */
     _getHeader() {
         return this._element.querySelector('.modeless-window-header-container > .modeless-window-header');
     }
 
     /**
-     * DOM элемент container
-     * @return {Element}
+     * Container DOM element
+     * @type {Element}
      */
     get container() {
         return this._getContainer();
     }
+    /** @private */
     _getContainer() {
         return this._element.querySelector('.modeless-window-container');
     }
 
     /**
-     * DOM элемент footer
-     * @return {Element}
+     * Footer DOM element
+     * @type {Element}
      */
     get footer() {
         return this._getFooter();
     }
+    /** @private */
     _getFooter() {
         return this._element.querySelector('.modeless-window-footer');
     }
 
     /**
-     * Кнопка закрытия окна (компонент)
-     * @return {Colibri.UI.Component}
      * @private
      */
     _getCloseButton() {
@@ -446,8 +494,15 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     }
 
     /**
-     * При отображении поместить над всеми остальными элементами и обновить переменные css
-     * @param {boolean} value
+     * Show/Hide component
+     * @type {boolean}
+     */
+    get shown() {
+        return super.shown;
+    }
+    /**
+     * Show/Hide component
+     * @type {boolean}
      */
     set shown(value) {
         this._element.style.visibility = 'hidden';

@@ -8,6 +8,7 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
     static OrientationHorizontal = 'horizontal';
     static OrientationVertical = 'vertical';
 
+    /** @type {string} */
     _orientation = Colibri.UI.Split.OrientationHorizontal;
 
     /**
@@ -97,6 +98,7 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
 
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('SplitResizeStart', false, 'Когда начинаем изменять размер');
@@ -105,12 +107,14 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
     }
 
     /**
-     * @type {String}
+     * Orienatation of split
+     * @type {vertical,horizontal}
      */
     get orientation() {
         return this._orientation;
     }
     /**
+     * Orienatation of split
      * @type {vertical,horizontal}
      */
     set orientation(value) {
@@ -119,6 +123,7 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
     }
 
     /**
+     * Container element
      * @type {Element}
      */
     get container() {
@@ -131,12 +136,14 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
     }
 
     /**
+     * Is split has resize handle
      * @type {Boolean}
      */
     get hasHandle() {
         return this._hasHandle;
     }
     /**
+     * Is split has resize handle
      * @type {Boolean}
      */
     set hasHandle(value) {
@@ -147,7 +154,12 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
             this._handler.style.display = 'none';
         }
     }
-
+    
+    /**
+     * Processes the children object
+     * @param {string|Element|Element[]} children children to generate
+     * @param {Element|Colibri.UI.Component} parent parent component or element
+     */
     ProcessChildren(children, parent) {
 
         for (let i = 0; i < children.length; i++) {
@@ -162,12 +174,14 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
     }
 
     /**
+     * Right width
      * @type {Number}
      */
     get rightWidth() {
         return parseInt(this._right.css('width'));
     }
     /**
+     * Left width
      * @type {Number}
      */
     get leftWidth() {
@@ -175,10 +189,11 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
     }
 
     /**
+     * Left width
      * @type {Number}
      */
     set leftWidth(value) {
-        this._left.css('flex', '0 0 ' + value );
+        this._left.css('flex', '0 0 ' + value);
     }
 
 }

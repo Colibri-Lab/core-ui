@@ -21,6 +21,10 @@ Colibri.UI.FlexBox = class extends Colibri.UI.Component {
         // this.wrap = false;
     }
 
+    /**
+     * Wrap type
+     * @type {string}
+     */
     get wrap() {
         let flexWrap = this._element.css('flex-wrap');
         switch (flexWrap) {
@@ -31,6 +35,10 @@ Colibri.UI.FlexBox = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Wrap type
+     * @type {string}
+     */
     set wrap(value) {
         if (value) {
             this._element.css('flex-wrap', 'wrap');
@@ -39,13 +47,22 @@ Colibri.UI.FlexBox = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Flex direction
+     * @type {string}
+     */
     get direction() {
         return this._element.css('flex-direction');
     }
 
+    /**
+     * Flex direction
+     * @type {string}
+     */
     set direction(value) {
         if ([Colibri.UI.FlexBox.Horizontal, Colibri.UI.FlexBox.Vertical].indexOf(value) !== -1) {
             this._element.css('flex-direction', value);
         }
     }
+    
 }

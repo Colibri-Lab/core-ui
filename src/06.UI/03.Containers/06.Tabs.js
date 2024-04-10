@@ -55,6 +55,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         });
     }
 
+    /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('TabClicked', false, 'Когда кликнули на вкладку');
@@ -62,11 +63,13 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         this.RegisterEvent('Changed', false, 'Когда выбранная вкладка изменилась');
     }
 
+    /** @protected */
     _processEvents() {
         const buttons = this.header.querySelectorAll(':scope > .app-ui-component');
         buttons.forEach((button) => button.tag('component').AddHandler('Clicked', (event, args) => this.Dispatch('TabClicked', {domEvent: args.domEvent, tab: event.sender})));
     }
 
+    /** @private */
     _unselectAllTabs() {
         const buttons = this.header.querySelectorAll(':scope > .app-ui-component');
         const containers = this.container.querySelectorAll(':scope > .app-ui-component');
@@ -84,6 +87,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
 
     }
 
+    /** @private */
     _selectTab(index) {
 
         const currentSelection = this.selectedIndex;
@@ -123,6 +127,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     }
 
     /**
+     * Header container
      * @type {Element}
      */
     get headerContainer() {
@@ -130,6 +135,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     }
 
     /**
+     * Header container
      * @type {Element}
      */
     set headerContainer(value) {
@@ -142,6 +148,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     }
 
     /**
+     * Header container element
      * @type {Element}
      * @readonly
      */
@@ -150,6 +157,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     }
 
     /**
+     * Links container element
      * @type {Element}
      * @readonly
      */
@@ -158,6 +166,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     }
 
     /**
+     * Content container element
      * @type {Element}
      * @readonly
      */
@@ -166,6 +175,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     }
 
     /**
+     * Selected tab index
      * @type {Number}
      */
     get selectedIndex() {
@@ -173,6 +183,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     }
 
     /**
+     * Selected tab index
      * @type {Number}
      */
     set selectedIndex(value) {
@@ -180,6 +191,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     }
 
     /**
+     * Selected tab button name
      * @type {String}
      */
     get selectedTab() {
@@ -187,6 +199,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     }
 
     /**
+     * Selected tab button name
      * @type {String}
      */
     set selectedTab(value) {
@@ -195,6 +208,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     }
 
     /**
+     * Selected container component
      * @type {Colibri.UI.Component}
      * @readonly
      */
@@ -204,6 +218,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     }
 
     /**
+     * Count of tabs
      * @type {Number}
      * @readonly
      */
@@ -211,6 +226,12 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         return this._element.querySelectorAll(':scope > .tabs-header-container > .tabs-header > *').length;
     }
 
+    /**
+     * Adds tab button and container
+     * @param {Colibri.UI.button} componentHeaderButton tab button
+     * @param {Colibri.UI.Pane} componentContainer tab content component
+     * @returns Colibri.UI.Pane
+     */
     AddTab(componentHeaderButton, componentContainer) {
 
         componentHeaderButton.contentContainer = componentContainer;
@@ -224,6 +245,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
 
 
     /**
+     * Array of tab components
      * @type {Array}
      * @readonly
      */
@@ -240,6 +262,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     }
 
     /**
+     * Array of tab buttons
      * @type {Array}
      * @readonly
      */
@@ -255,6 +278,9 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Clear tab buttons and containers
+     */
     Clear() {
         Object.forEach(this.buttons, (name, button) => {
             button.Dispose();

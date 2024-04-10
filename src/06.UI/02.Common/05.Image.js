@@ -15,10 +15,18 @@ Colibri.UI.Image = class extends Colibri.UI.Component {
         this.AddClass('app-component-image');
     }
 
+    /**
+     * Source string
+     * @type {string}
+     */
     get source() {
         return this._element.css('background-image');
     }
 
+    /**
+     * Source string
+     * @type {string}
+     */
     set source(value) {
         
         this._element.css('background-image', value);
