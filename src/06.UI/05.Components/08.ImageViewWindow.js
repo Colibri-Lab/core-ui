@@ -29,6 +29,7 @@ Colibri.UI.ImageViewWindow = class extends Colibri.UI.Window {
         this.RegisterEvent('ClickedCloseButton', false, 'Поднимается когда нажали на кнопку закрыть!');
     }
 
+    /** @protected */
     _handleEvents() {
         this._closeButton.addEventListener('click', (event) => {
             this.Dispatch('ClickedCloseButton', {});
@@ -36,34 +37,66 @@ Colibri.UI.ImageViewWindow = class extends Colibri.UI.Window {
         });
     }
 
+    /**
+     * Source of image
+     * @type {string}
+     */
     get source() {
         return this._img.attr('src');
     }
 
+    /**
+     * Source of image
+     * @type {string}
+     */
     set source(value) {
         this._img.attr('src', value);
     }
 
+    /**
+     * Alternate text
+     * @type {string}
+     */
     get alternativeText() {
         return this._img.attr('alt');
     }
 
+    /**
+     * Alternate text
+     * @type {string}
+     */
     set alternativeText(value) {
         this._img.attr('alt', value);
     }
 
+    /**
+     * Description of before image
+     * @type {string}
+     */
     get textDescriptionBefore() {
         return this._textDescriptionBefore.innerHTML;
     }
 
+    /**
+     * Description of before image
+     * @type {string}
+     */
     set textDescriptionBefore(value) {
         this._textDescriptionBefore.innerHTML = value;
     }
 
+    /**
+     * Description of after image
+     * @type {string}
+     */
     get textDescriptionAfter() {
         return this._textDescriptionAfter.innerHTML;
     }
 
+    /**
+     * Description of after image
+     * @type {string}
+     */
     set textDescriptionAfter(value) {
         this._textDescriptionAfter.innerHTML = value;
     }

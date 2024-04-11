@@ -1,13 +1,17 @@
 /**
  * @class
+ * @namespace
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
  */
 Colibri.UI.Chart = class extends Colibri.UI.Component {
 
+    /** Horizontal orientation */
     static OrientationHorizontal = 'horizontal';
+    /** Vertical orientation */
     static OrientationVertical = 'vertical';
 
+    /** @type {string} */
     _orientation = Colibri.UI.Split.OrientationHorizontal;
 
     /**
@@ -20,14 +24,27 @@ Colibri.UI.Chart = class extends Colibri.UI.Component {
         this.AddClass('app-component-chart');
     }
 
+    /**
+     * Orientation of chart
+     * @type {string}
+     */
     get orientation() {
         return this._orientation;
     }
+    /**
+     * Orientation of chart
+     * @type {string}
+     */
     set orientation(value) {
         this._orientation = value;
         this.AddClass('app-component-chart-' + this._orientation);
     }
 
+    /**
+     * Adds a bar chart
+     * @param {string} name name of chart
+     * @returns {Colibri.UI.Chart.Barchart}
+     */
     AddBarchart(name) {
         let barchart = new Colibri.UI.Chart.Barchart(name, this);
         barchart._orientation = this._orientation;
@@ -35,7 +52,18 @@ Colibri.UI.Chart = class extends Colibri.UI.Component {
     }
 }
 
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI.Chart
+ */
 Colibri.UI.Chart.Barchart = class extends Colibri.UI.Component {
+
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     */
     constructor(name, container) {
         super(name, container, Element.create('div'));
 
@@ -56,27 +84,52 @@ Colibri.UI.Chart.Barchart = class extends Colibri.UI.Component {
         this._textValue.AddClass('barchart-text-value');
     }
 
+    /**
+     * Title of chart
+     * @type {string}
+     */
     get title() {
         return this._title;
     }
 
+    /**
+     * Title of chart
+     * @type {string}
+     */
     set title(value) {
         this._title.value = value;
     }
 
+    /**
+     * Chart value
+     * @type {number}
+     */
     set value(value) {
         return this._barchart._element.css('width', value + '%');
     }
 
+    /**
+     * Chart value
+     * @type {number}
+     */
     get value() {
         return this._barchart._element.css('width');
     }
 
+    /**
+     * Text value
+     * @type {string}
+     */
     get textValue() {
         return this._textValue;
     }
 
+    /**
+     * Text value
+     * @type {string}
+     */
     set textValue(value) {
         this._textValue.value = value;
     }
+    
 }

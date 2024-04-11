@@ -30,6 +30,7 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
         this.RegisterEvent('Changed', false, 'Поднимается, когда изменил состояние');
     }
 
+    /** @protected */
     _handleEvents() {
         this.AddHandler('Clicked', (event, args) => {
             if (!this._readonly && this._enabled) {
@@ -55,7 +56,7 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
     }
 
     /**
-     * Нарисовать инпут
+     * Render input
      * @private
      */
     _renderInput() {
@@ -69,32 +70,36 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
     }
 
     /**
-     * Установить нужную иконку
+     * Set the icon
      * @private
      */
     _setIcon() {
         this._checkIcon.value = Colibri.UI.AltRadioMarkIcon;
     }
 
+    /**
+     * Focus on input
+     */
     Focus() {
         this._input.focus();
     }
 
     /**
-     * Чекбокс отмечен
+     * Checkbox is checked
      * @type {boolean}
      */
     get checked() {
         return this._input.checked;
     }
+    /**
+     * Checkbox is checked
+     * @type {boolean}
+     */
     set checked(value) {
         this._setChecked(value);
     }
+    /** @private */
     _setChecked(value, process = true) {
-        // if (this._readonly || !this._enabled) {
-        //     return;
-        // }
-
         this._input.checked = value;
         if (value) {
             this.AddClass('-checked');
@@ -108,6 +113,7 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
 
     }
 
+    /** @private */
     _unsetAllByGroup() {
         document.querySelectorAll('input[type=radio][name="' + this._fieldName + '"]').forEach(el => {
             if(el != this._input) {
@@ -118,7 +124,7 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
     }
 
     /**
-     * Элемент выключен
+     * Enable/Disable component
      * @type {boolean}
      */
     set enabled(value) {
@@ -126,29 +132,45 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
         this._input.disabled = !this._enabled;
         super.enabled = value;
     }
+    /**
+     * Enable/Disable component
+     * @type {boolean}
+     */
     get enabled() {
         return this._enabled;
     }
 
     /**
-     * Только для чтения
+     * Is checkbox readonly
      * @type {boolean}
      */
     get readonly() {
         return this._readonly;
     }
+    /**
+     * Is checkbox readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         this._readonly = (value === true || value === 'true');
         super.readonly = this._readonly;
     }
 
+    /**
+     * Placeholder
+     * @type {string}
+     */
     get placeholder() {
         return this._placeholder?.value;
     }
+    /**
+     * Placeholder
+     * @type {string}
+     */
     set placeholder(value) {
         this._setPlaceholder(value ? value[Lang.Current] ?? value : '');
     }
-    
+    /** @private */
     _setPlaceholder(value) {
         if(!value) {
             this._placeholder.Dispose();
@@ -161,8 +183,7 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Tab index
      * @type {number}
      */
     get tabIndex() {
@@ -174,6 +195,10 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
         }
         
     }
+    /**
+     * Tab index
+     * @type {number}
+     */
     set tabIndex(value) {
         if (this._placeholder) {
             this._placeholder.tabIndex = value === true ? Colibri.UI.tabIndex++ : value;
@@ -182,6 +207,5 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
             this._checkIcon.tabIndex = value === true ? Colibri.UI.tabIndex++ : value;
         }
     }
-
 
 }

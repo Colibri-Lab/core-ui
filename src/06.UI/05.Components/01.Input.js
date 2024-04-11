@@ -1,5 +1,6 @@
 /**
  * @class
+ * @namespace
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
  */

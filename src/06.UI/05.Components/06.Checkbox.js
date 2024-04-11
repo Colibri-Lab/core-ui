@@ -31,6 +31,7 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
         this.RegisterEvent('Changed', false, 'Поднимается, когда изменил состояние');
     }
 
+    /** @protected */
     _handleEvents() {
         this.AddHandler('Clicked', (event, args) => {
             if (!this._readonly && this._enabled) {
@@ -55,7 +56,7 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
     }
 
     /**
-     * Нарисовать инпут
+     * Render input
      * @private
      */
     _renderInput() {
@@ -68,13 +69,16 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
     }
 
     /**
-     * Установить нужную иконку
+     * Set icon
      * @private
      */
     _setIcon() {
         this._checkIcon.value = (this._hasThirdState && this._thirdState) ? Colibri.UI.MinusIcon : Colibri.UI.AltCheckMarkIcon;
     }
 
+    /**
+     * Focus on component
+     */
     Focus() {
         this._input.focus();
     }
@@ -93,10 +97,8 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
     set checked(value) {
         this._setChecked(value);
     }
+    /** @private */
     _setChecked(value) {
-        // if (this._readonly || !this._enabled) {
-        //     return;
-        // }
         value = value === true || value === 'true';
         this._input.checked = value;
         if (value) {
@@ -186,6 +188,7 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
         this._setPlaceholder(value ? value[Lang.Current] ?? value : '');
     }
     
+    /** @private */
     _setPlaceholder(value) {
         if(!value) {
             this._placeholder && this._placeholder.Dispose();

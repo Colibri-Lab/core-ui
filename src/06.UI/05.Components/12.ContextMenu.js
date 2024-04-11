@@ -5,9 +5,13 @@
  */
 Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
 
+    /** Left bottom */
     static LB = 'lb';
+    /** Right bottom */
     static RB = 'rb';
+    /** Left top */
     static LT = 'lt';
+    /** Right top */
     static RT = 'rt'; 
 
     /**
@@ -38,14 +42,23 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
         this.value = items;
     }
 
+    /**
+     * Orientation 
+     * @type {string}
+     */
     get orientation() {
         return this._orientation;
     }
 
+    /**
+     * Orientation 
+     * @type {string}
+     */
     set orientation(value) {
         this._orientation = value;
     }
 
+    /** @private */
     _addItem(item) {
         if(item.name === 'separator' || item.name == '-') {
             const itemObject = new Colibri.UI.Hr('separator-' + Date.Mc(), this);
@@ -107,12 +120,14 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
 
     }
 
+    /** @private */
     _renderItems() {
         this._items.forEach((item) => {
             this._addItem(item);
         });
     }
 
+    /** @private */
     _findParent() {
         if(this.parent) {
             const iconParent = this.parent.Children(this.parent.name + '-contextmenu-icon-parent') ?? this.parent;
@@ -122,6 +137,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
         }
     }
 
+    /** @private */
     _findPointOnParent() {
         const parent = this._findParent();
         const ori = this._orientation[0];
@@ -155,6 +171,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
         }
     }
 
+    /** @private */
     _getOrientationPoint(pointOnParent) {
         const ori = this._orientation[1];
         const thisBounds = this._element.bounds(true, true);
@@ -187,6 +204,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
         }
     }
 
+    /** @private */
     _setPosition() {
 
         const pointOnParent = this._point || this._findPointOnParent();
@@ -195,6 +213,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
 
     }
 
+    /** @private */
     _checkPosition() {
         const thisBounds = this.container.bounds(true, true);
 
@@ -207,8 +226,6 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
             
         }
         if(thisBounds.left + thisBounds.outerWidth > window.innerWidth) {
-            // надо двинуть точку на паренте и относительную ориентацию
-            // справа на лево, или слева на право
             orientation[0] = orientation[0].replaceAll('r', 'l');
             orientation[1] = orientation[1].replaceAll('r', 'l');
         }
@@ -220,15 +237,34 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Value array
+     * @type {Array}
+     */
     get value() {
         return this._items;
     }
 
+    /**
+     * Value array
+     * @type {Array}
+     */
     set value(items) {
         this._items = items;
         this._renderItems();
     }
 
+    /**
+     * Show/Hide component
+     * @type {boolean}
+     */
+    get shown() {
+        return super.shown;
+    }
+    /**
+     * Show/Hide component
+     * @type {boolean}
+     */
     set shown(value) {
         super.shown = value;
         
@@ -243,6 +279,11 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Show context menu
+     * @param {Array} menu menu items
+     * @param {Colibri.UI.Component} parent parent component
+     */
     Show(menu, parent = null) {
         if(parent) {
             this.parent = parent;
@@ -251,6 +292,9 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
         this.shown = true;
     }
 
+    /**
+     * Dispose the component
+     */
     Dispose() {
         const shadow = this._element.next();
         if(shadow && shadow.classList.contains('app-component-shadow-div')) {

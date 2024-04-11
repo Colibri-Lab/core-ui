@@ -1,7 +1,7 @@
 /**
  * @class
  * @extends Colibri.UI.Component
- * @memberof Colibri.UI
+ * @memberof Colibri.UI.Input
  */
 Colibri.UI.Input.File = class extends Colibri.UI.Component {
 
@@ -28,6 +28,7 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
         this.RegisterEvent('InputFileChanged', false, 'Изменён выбранный файл/файлы');
     }
 
+    /** @protected */
     _handleEvents() {
         this.AddHandler('Clicked', (sender, args) => {
             this._input.click();
@@ -43,27 +44,49 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
         });
     }
 
+    /** @private */
     __title() {
         return this.multiple ? '#{ui-files-choosefiles}' : '#{ui-files-choosefile}';
     }
 
+    /**
+     * Container element
+     * @type {Element}
+     * @readonly
+     */
     get container() {
         return this._element.querySelector('.app-component-input-type-file-text');
     }
 
+    /**
+     * Title string
+     * @type {string}
+     */
     get title() {
         return this._element.querySelector('.app-component-input-type-file-text').html();
     }
 
+    /**
+     * Title string
+     * @type {string}
+     */
     set title(value) {
         this._title = value;
         this._element.querySelector('.app-component-input-type-file-text').html(value || this.__title());
     }
 
+    /**
+     * Is multiple file can be selected
+     * @type {boolean}
+     */
     get multiple() {
         return this._input.getAttribute('multiple');
     }
 
+    /**
+     * Is multiple file can be selected
+     * @type {boolean}
+     */
     set multiple(value) {
         if (value) {
             this._input.setAttribute('multiple', 'true');
@@ -75,6 +98,10 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Get the selected files
+     * @returns {Array}
+     */
     Files() {
         if (this._input.hasAttribute('multiple')) {
             return this._inputFiles;
@@ -83,6 +110,9 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Clears data in component, files and selection of input
+     */
     ClearData() {
         this._input.value = null;
         this._inputFiles = [];

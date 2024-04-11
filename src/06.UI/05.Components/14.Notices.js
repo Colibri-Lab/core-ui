@@ -20,8 +20,8 @@ Colibri.UI.Notices = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Добавить сообщение
-     * @param {Colibri.UI.Notice} noticeData сообщение 
+     * Add the notice
+     * @param {Colibri.UI.Notice} noticeData notice data 
      * @returns {Colibri.UI.Notice}
      */
     Add(noticeData) {
@@ -74,17 +74,32 @@ Colibri.UI.Notices = class extends Colibri.UI.Pane {
 
 }
 
+/**
+ * @class
+ * @memberof Colibri.UI
+ */
 Colibri.UI.Notice = class {
 
+    /** Error message */
     static Error = 'error';
+    /** Success message */
     static Success = 'success';
+    /** Warning message */
     static Warning = 'warning';
+    /** White message */
     static White = 'white';
 
+    /** @type {object} */
     _exception = null;
 
+    /**
+     * @constructor
+     * @param {string|object} title title of message
+     * @param {string} severity message severity
+     * @param {number} timeout timeout to hide
+     */
     constructor(title, severity = Colibri.UI.Notice.Error, timeout = 3000) {
-        if(typeof title === 'object' && !!title.code && !!title.message) {
+        if(Object.isObject(title) && !!title.code && !!title.message) {
             // error object
             this._exception = title;
             title = this._exception.message;
@@ -94,18 +109,38 @@ Colibri.UI.Notice = class {
         this._timeout = timeout;
     }
 
+    /**
+     * Message title
+     * @type {string}
+     * @readonly
+     */
     get title() {
         return this._title;
     }
 
+    /**
+     * Message severity
+     * @type {string}
+     * @readonly
+     */
     get severity() {
         return this._severity;
     }
 
+    /**
+     * Timeout for hide
+     * @type {number}
+     * @readonly
+     */
     get timeout() {
         return this._timeout;
     }
 
+    /**
+     * Class name
+     * @type {string}
+     * @readonly
+     */
     get className() {
         return 'app-notice-' + this.severity + '-component';
     }

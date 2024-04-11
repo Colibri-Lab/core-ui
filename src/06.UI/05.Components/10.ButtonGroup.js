@@ -23,11 +23,6 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
 
     /**
      * @private
-     * @param {Colibri.UI.Event} event event object 
-     * @param {*} args event args 
-     */
-    /**
-     * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
      */ 
@@ -36,9 +31,6 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
         this.SelectButton(button);
     }
 
-    /**
-     * @protected
-     */
     /** @protected */
     _registerEvents() {
         super._registerEvents();

@@ -31,10 +31,18 @@ Colibri.UI.ProgressBar = class extends Colibri.UI.Component {
         this.RegisterEvent('ProgressChanged', false, 'Поднимается когда прогресс изменился');
     }
 
+    /**
+     * Progress value
+     * @type {number}
+     */
     get progress() {
         return parseInt(this._progress.style.width);
     }
 
+    /**
+     * Progress value
+     * @type {number}
+     */
     set progress(value) {
         this._progress.style.width = value + '%';
 
@@ -72,6 +80,11 @@ Colibri.UI.ProgressBar = class extends Colibri.UI.Component {
         this._progress.css('background', value);
     }
 
+    /**
+     * Starts a timer
+     * @param {number} timer timer of progress bar
+     * @param {number} speed speed
+     */
     Start(timer, speed) {
         this._progressiveIterator = 100;
         if(this._intervalId != -1) {
@@ -86,11 +99,17 @@ Colibri.UI.ProgressBar = class extends Colibri.UI.Component {
         }, timer);
     }
 
+    /**
+     * Pauses the timer
+     */
     Pause() {
         clearInterval(this._intervalId);
         this._intervalId = -1;
     }
 
+    /**
+     * Stop the timer
+     */
     Stop() {
         this.progress = 100;
         clearInterval(this._intervalId);
