@@ -8,7 +8,7 @@ Colibri.UI.Forms.Label = class extends Colibri.UI.Forms.Field {
     /**
      * Render field component
      */
-    RenderFielContainer() {
+    RenderFieldContainer() {
 
         this.AddClass('app-component-label-field');
 
