@@ -28,6 +28,7 @@ Colibri.UI.Color.Block = class extends Colibri.UI.Component {
 
     }
 
+    /** @private */
     _setNewColor(left, top) {
         this._setPoint(left, top);
 
@@ -60,6 +61,7 @@ Colibri.UI.Color.Block = class extends Colibri.UI.Component {
         this._setNewColor(left, top);     
     }
 
+    /** @private */
     _setPoint(left = null, top = null) {
         const bounds = this._element.bounds();
         const pointBounds = this._pointer.container.bounds();
@@ -71,10 +73,22 @@ Colibri.UI.Color.Block = class extends Colibri.UI.Component {
         this._pointer.styles = {left: (left) + 'px', top: (top) + 'px'};
     }
 
-    
+    /** @private */
     _showColor() {
         this.styles = {backgroundImage: 'linear-gradient(to right, #ffffff, ' + this._color + ')'};
     }
+
+    /**
+     * Color of block
+     * @type {Colibri.UI.Rgb|string|{r,g,b,a}}
+     */
+    get color() {
+        // do nothing
+    }
+    /**
+     * Color of block
+     * @type {Colibri.UI.Rgb|string|{r,g,b,a}}
+     */
     set color(value) {
         if(value instanceof Colibri.UI.Rgb) {
             value = value.hex;
@@ -91,6 +105,10 @@ Colibri.UI.Color.Block = class extends Colibri.UI.Component {
         this._showColor();
     }
 
+    /**
+     * Value
+     * @type {string|number}
+     */
     set value(value) {
         if(typeof value == 'string') {
             value = Colibri.UI.Rgb.Create().fromHex(value);
@@ -106,6 +124,10 @@ Colibri.UI.Color.Block = class extends Colibri.UI.Component {
         this._setPoint();
     }
 
+    /**
+     * Value
+     * @type {Colibri.UI.Rgb}
+     */
     get value() {
         return Colibri.UI.Rgb.Create().fromHSV(this._hue, this._S, this._V);
     }

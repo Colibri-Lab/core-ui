@@ -57,15 +57,23 @@ Colibri.UI.Color.Line = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Component width
+     * @type {number}
+     */
     set width(value) {
         super.width = value;
         this._renderGradient();
     }
+    /**
+     * Component width
+     * @type {number}
+     */
     set height(value) {
         super.height = value;
         this._renderGradient();
     }
-
+    /** @private */
     _setNewValue(left) {
         left += 5;
         const bounds = this._element.bounds();
@@ -78,6 +86,7 @@ Colibri.UI.Color.Line = class extends Colibri.UI.Component {
         this.Dispatch('Changed', {value: this.value}); 
     }
 
+    /** @private */
     _showValue() {
         let t = this.value;
         const bounds = this._element.bounds();
@@ -89,6 +98,7 @@ Colibri.UI.Color.Line = class extends Colibri.UI.Component {
 
     }
 
+    /** @private */
     _renderGradient() {
         const bounds = this._element.bounds(); 
 		const canva = this._canvas.container.getContext("2d");
@@ -116,10 +126,17 @@ Colibri.UI.Color.Line = class extends Colibri.UI.Component {
         this._setNewValue(left);
     }
     
-
+    /**
+     * Component value
+     * @type {string}
+     */
     get value() {
         return this._value;
     }
+    /**
+     * Component value
+     * @type {string}
+     */
     set value(value) {
         if(value <= 0) {
             value = 0;

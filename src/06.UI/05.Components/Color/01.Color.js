@@ -51,12 +51,14 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
 
     }
 
+    /** @private */
     _updateUIComponents() {
         this._colorGrad.value = this._value.hue;
         this._colorSelectedColorGrad.value = this._value;
         this._colorOpacityGrad.value = this._value.alpha;
     }
 
+    /** @private */
     _showValue() {
         this._colorHex.value = this._value.hex;
         this._colorSelected.css('background-color', this._colorHex.value);
@@ -98,14 +100,25 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
         this._showValue();
     }
 
+    /**
+     * Focus on component hex input
+     */
     Focus() {
         this._colorHex.focus();
     }
     
+    /**
+     * Is component readonly
+     * @type {boolean}
+     */
     get readonly() {
         return this._colorHex.attr('readonly') === 'readonly';
     }
 
+    /**
+     * Is component readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         if(value === true || value === 'true') {
             this._colorHex.attr('readonly', 'readonly');
@@ -115,14 +128,26 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Component placeholder
+     * @type {string}
+     */
     get placeholder() {
         return this._colorHex.attr('placeholder');
     }
 
+    /**
+     * Component placeholder
+     * @type {string}
+     */
     set placeholder(value) {
         this._colorHex.attr('placeholder', value ? value[Lang.Current] ?? value : '');
     }
 
+    /**
+     * Component value
+     * @type {string}
+     */
     get value() {
         let value = this._value;
         if(this._fieldData?.params?.emptyAsNull && !value) {
@@ -134,6 +159,10 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
         return value;
     }
 
+    /**
+     * Component value
+     * @type {string}
+     */
     set value(value) {
         if(typeof value == 'string') {
             this._value = Colibri.UI.Rgb.Create().fromHex(value);
@@ -150,12 +179,19 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
         this._updateUIComponents();
         this._showValue();
     }
-
     
+    /**
+     * Is component enabled
+     * @type {boolean}
+     */
     get enabled() {
         return this._colorHex.attr('disabled') != 'disabled';
     }
 
+    /**
+     * Is component enabled
+     * @type {boolean}
+     */
     set enabled(value) {
         if(value) {
             this.RemoveClass('app-component-disabled');
@@ -168,13 +204,17 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Tab index
      * @type {number}
      */
     get tabIndex() {
         return this._colorHex && this._colorHex.attr('tabIndex');
     }
+
+    /**
+     * Tab index
+     * @type {number}
+     */
     set tabIndex(value) {
         this._colorHex && this._colorHex.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
     }

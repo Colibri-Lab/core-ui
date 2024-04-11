@@ -37,7 +37,7 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
     }
 
     /** @protected */
-    _hanleEvents() {
+    _handleEvents() {
         this.AddHandler('Clicked', (sender, args) => {
             this.ClearSelection();
             this.Dispatch('SelectionChanged', {node: null});

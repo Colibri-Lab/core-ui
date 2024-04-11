@@ -31,6 +31,7 @@ Colibri.UI.Color.Alpha = class extends Colibri.UI.Component {
         
     }
 
+    /** @private */
     _setNewValue(top) {
         const bounds = this._element.bounds();
         const trackbounds = this._pointer.container.bounds();
@@ -77,6 +78,7 @@ Colibri.UI.Color.Alpha = class extends Colibri.UI.Component {
         this._setNewValue(top);
     }
 
+    /** @private */
     _setTrackPosition() {
         const bounds = this._element.bounds()
         const topPercent = this._value * 100 / 255;
@@ -84,10 +86,18 @@ Colibri.UI.Color.Alpha = class extends Colibri.UI.Component {
         this._pointer.styles = {top: top + 'px'};
     }
     
+    /**
+     * Alpha value
+     * @type {number}
+     */
     get value() {
         return this._value;
     }
 
+    /**
+     * Alpha value
+     * @type {number}
+     */
     set value(value) {
         this._value = value;
         this._setTrackPosition();
