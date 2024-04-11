@@ -5,6 +5,9 @@
  */
 Colibri.UI.Forms.MonthYear = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
 
         this.AddClass('app-component-monthyear-field');
@@ -38,18 +41,33 @@ Colibri.UI.Forms.MonthYear = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * Focus on component
+     */
     Focus() {
         this._month.Focus()
     }
 
-    get value() {
-        return (this._year?.value?.value ?? '') + '-' + (this._month?.value?.value ?? '');
-    }
-
+    /**
+     * Get value title
+     * @returns {string}
+     */
     getValueTitle() {
         return this._month.value.title + ' ' + this._year.value.title;
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
+    get value() {
+        return (this._year?.value?.value ?? '') + '-' + (this._month?.value?.value ?? '');
+    }
+
+    /**
+     * Value
+     * @type {string}
+     */
     set value(value) {
 
         const parts = value.split('-');
@@ -58,10 +76,18 @@ Colibri.UI.Forms.MonthYear = class extends Colibri.UI.Forms.Field {
         this._year.value = parts[1];
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     get readonly() {
         return this._month.readonly;
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
         this._month.readonly = value;
@@ -69,13 +95,16 @@ Colibri.UI.Forms.MonthYear = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Tab index
      * @type {number}
      */
     get tabIndex() {
         return this._month && this._month.tabIndex;
     }
+    /**
+     * Tab index
+     * @type {number}
+     */
     set tabIndex(value) {
         if (this._month) {
             this._month.tabIndex = value === true ? Colibri.UI.tabIndex++ : value;

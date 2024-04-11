@@ -5,6 +5,9 @@
  */
 Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
 
         this.AddClass('app-component-array-field');

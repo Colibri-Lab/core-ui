@@ -5,7 +5,9 @@
  */
 Colibri.UI.Selector = class extends Colibri.UI.Component {
 
+    /** @type {boolean} */
     _skipLooseFocus;
+    /** @type {boolean} */
     _itemSelected;
 
     /**
@@ -62,6 +64,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._handleEvents();
     }
 
+    /** @private */
     _inprooveValues() {
         let v = [];
         for(let vv of this._values) {
@@ -73,9 +76,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._values = v;
     }
 
-    /**
-     * Регистрация событий
-     */
+
     /** @protected */
     _registerEvents() {
         super._registerEvents();
@@ -83,10 +84,12 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this.RegisterEvent('Changed', false, 'Когда выбор изменился');
     }
 
+    /** @private */
     __preventScrolling(e) {
         e.preventDefault();
     }
     
+    /** @private */
     _changeBodyScroll() {
 
         let wnd = this._element.closest('.app-component-window');
@@ -99,9 +102,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         }
     }
 
-    /**
-     * Регистрация обработчиков событий
-     */
+    /** @protected */
     _handleEvents() {
 
         this._input.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
@@ -202,6 +203,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         return false;
     }
 
+    /** @public */
     async __BeforeFilled() {
         return true;
     }
@@ -244,6 +246,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         return false;
     }
 
+    /** @private */
     _removePopup() {
         if(this._popup) {
             this._popup.shown = false;
@@ -256,6 +259,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         }
     }
 
+    /** @private */
     _hidePopup() {
         this._removePopup();
         this._input.SendToBack();
@@ -263,8 +267,9 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     /**
-     * Показать выпадащий список
-     * @param {array} values массив значений
+     * Show dropdown
+     * @private
+     * @param {Array} values values to show
      */
     _showPopup(values) {
 
@@ -292,6 +297,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
     }
 
+    /** @private */
     __moveSelection(positionDelta) {
         if(!this._popup?.selected) {
             this._popup.selectedIndex = 0;
@@ -303,8 +309,8 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     /**
-     * Выбранное значение
-     * @return array|Object|boolean
+     * Selected value
+     * @return {Array|Object|boolean}
      */
     get value() {
         if (!this._multiple) {
@@ -314,8 +320,8 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     /**
-     * Установить выбранное значение
-     * @param {*} value
+     * Selected value
+     * @return {Array|Object|boolean}
      */
     set value(value) {
         this._setValue(value);
@@ -323,23 +329,22 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     /**
-     * @type {Boolean}
+     * Is multiple
+     * @type {boolean}
      */
     set multiple(value) {
         this._multiple = value === 'true' || value === true;
     }
     /**
-     * @type {Boolean}
+     * Is multiple
+     * @type {boolean}
      */
     get multiple() {
         return this._multiple;
     }
 
 
-    /**
-     * Установить выбранное значение
-     * @param {*} value
-     */
+    /** @private */
     _setValue(value) {
         if (value === null || value === false) {
             this._value = [];
@@ -388,8 +393,8 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     /**
-     * Выбрать значение
-     * @param {string|number} value значение
+     * Search for value
+     * @param {string|number} value value
      * @returns string
      */
     _findValue(value) {
@@ -413,7 +418,8 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     /**
-     * Отобразить значения
+     * Render values
+     * @private
      */
     _renderValue(renderValue = true) {
         if (!this.multiple) {
@@ -478,7 +484,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     /**
-     * Поставить фокус
+     * Set focus on selector
      */
     Focus() {
         if(this._input?.readonly) {
@@ -489,21 +495,25 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Is selector has values
+     * @returns {boolean}
+     */
     HaveValues() {
         const values = this.values;
         return !!(values && Object.values(values).length);
     }
 
     /**
-     * Свойство только для чтения
-     * @type {Boolean}
+     * Readonly
+     * @type {boolean}
      */
     get readonly() {
         return this._readonly;
     }
     /**
-     * Свойство только для чтения
-     * @type {Boolean}
+     * Readonly
+     * @type {boolean}
      */
     set readonly(value) {
         this._readonly = value === true || value === 'true';
@@ -524,14 +534,14 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
     /**
      * Can search in items
-     * @type {Boolean}
+     * @type {boolean}
      */
     get searchable() {
         return this._searchable;
     }
     /**
      * Can search in items
-     * @type {Boolean}
+     * @type {boolean}
      */
     set searchable(value) {
         this._searchable = value === true || value === 'true';
@@ -547,15 +557,15 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     /**
-     * Текст для отображения вместо значения
-     * @type {String}
+     * Selector placeholder 
+     * @type {string}
      */
     get placeholder() {
         return this._placeholder;
     }
     /**
-     * Текст для отображения вместо значения
-     * @type {String}
+     * Selector placeholder
+     * @type {string}
      */
     set placeholder(value) {
         this._placeholder = value ? value[Lang.Current] ?? value : '';
@@ -563,21 +573,31 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._renderValue(false);
     }
 
+    /**
+     * Selector placeholder 
+     * @type {Object}
+     */
     get placeholderinfo() {
         return this._placeholderinfo;
     }
+    /**
+     * Selector placeholder 
+     * @type {Object}
+     */
     set placeholderinfo(value) {
         this._placeholderinfo = value;
         this._renderValue(false);
     }
 
     /**
+     * Empty placeholder generate method
      * @type {Function}
      */
     get placeholderempty() {
         return this._placeholderempty;
     }
     /**
+     * Empty placeholder generate method
      * @type {Function}
      */
     set placeholderempty(value) {
@@ -585,15 +605,15 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     /**
-     * Вкючено/выключено
-     * @type {Boolean}
+     * Enable/Disable
+     * @type {boolean}
      */
     get enabled() {
         return this._input.enabled;
     }
     /**
-     * Вкючено/выключено
-     * @type {Boolean}
+     * Enable/Disable
+     * @type {boolean}
      */
     set enabled(value) {
         if(value) {
@@ -606,14 +626,14 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     /**
-     * Список значений
+     * Array of values to show
      * @type {Array}
      */
     get values() {
         return this._values;
     }
     /**
-     * Список значений
+     * Array of values to show
      * @type {Array}
      */
     set values(value) {
@@ -622,9 +642,9 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     /**
-     * Найти значения для отображения в селекторе
-     * @param {string} searchString строка поиска
-     * @return {array} массив подходящих значений
+     * Search for items to show in selector
+     * @param {string} searchString search string
+     * @return {Array}
      *  */
     _search(searchString) {
         if (!searchString) {
@@ -648,28 +668,30 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     /**
-     * @type {Any}
+     * Config of popup
+     * @type {*}
      */
     get popupconfig() {
         return this._popupconfig;
     }
     /**
-     * @type {Any}
+     * Config of popup
+     * @type {*}
      */
     set popupconfig(value) {
         this._popupconfig = value;
     }
 
     /**
-     * Индекс табуляции
-     * @type {Number}
+     * Tab index
+     * @type {number}
      */
     get tabIndex() {
         return this._input && this._input.tabIndex;
     }
     /**
-     * Индекс табуляции
-     * @type {Number}
+     * Tab index
+     * @type {number}
      */
     set tabIndex(value) {
         if (this._input) {
@@ -677,6 +699,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         }
     }
 
+    /** @private */
     _createPopup(values) {
         const popup = new Colibri.UI.PopupList(this.name + '-select-popup', document.body, this._multiple, this.__render, this._titleField, this._valueField, this._groupField, this._canSelectGroup);
         popup.parent = this;
@@ -690,6 +713,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         return popup;
     }
 
+    /** @private */
     _registerPopupEventHandlers(popup) {
         // сначала происходит SelectionChanged потом ItemClicked, странность, но так сделано
         // SelectionChanged появляется внутри списка, и не связан с значением по умолчанию в селекторе
@@ -734,15 +758,15 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     /**
-     * Можно ли выбирать группу
-     * @type {Boolean}
+     * Groups can be selected
+     * @type {boolean}
      */
     get canSelectGroup() {
         return this._canSelectGroup;
     }
     /**
-     * Можно ли выбирать группу
-     * @type {Boolean}
+     * Groups can be selected
+     * @type {boolean}
      */
     set canSelectGroup(value) {
         this._canSelectGroup = value;
@@ -796,14 +820,14 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
     /**
      * Tooltip string
-     * @type {String}
+     * @type {string}
      */
     get showToolTip() {
         return this._showToolTip;
     }
     /**
      * Tooltip string
-     * @type {String}
+     * @type {string}
      */
     set showToolTip(value) {
         this._showToolTip = value === true || value === 'true';

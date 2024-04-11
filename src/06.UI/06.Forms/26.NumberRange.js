@@ -5,6 +5,9 @@
  */
 Colibri.UI.Forms.NumberRange = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
         
         this.AddClass('app-component-numberrange-field');
@@ -94,15 +97,26 @@ Colibri.UI.Forms.NumberRange = class extends Colibri.UI.Forms.Field {
         // если нужно добавить что то
     }
 
+    /**
+     * Focus on component
+     */
     Focus() {
         this._input1.focus();
         // this._input1.select();
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     get readonly() {
         return this._input1.attr('readonly') === 'readonly';
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
         if(value) {
@@ -115,10 +129,18 @@ Colibri.UI.Forms.NumberRange = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /**
+     * Placeholder
+     * @type {string}
+     */
     get placeholder() {
         return this._placeholder;
     }
 
+    /**
+     * Placeholder
+     * @type {string}
+     */
     set placeholder(value) {
         value = this._convertProperty('String', value);
         this._placeholder = value;
@@ -126,6 +148,10 @@ Colibri.UI.Forms.NumberRange = class extends Colibri.UI.Forms.Field {
         this._input2.attr('placeholder', this._placeholder + ' (#{ui-fields-numberrange-to})');
     }
 
+    /**
+     * Value
+     * @type {Array}
+     */
     get value() {
         let value1 = this._input1.value;
         if(this._fieldData?.params?.emptyAsNull && value === '') {
@@ -138,6 +164,10 @@ Colibri.UI.Forms.NumberRange = class extends Colibri.UI.Forms.Field {
         return [this._convertValue(value1, false), this._convertValue(value2, false)];
     }
 
+    /**
+     * Value
+     * @type {Array}
+     */
     set value(value) {
 
         if(!Array.isArray(value)) {
@@ -151,6 +181,7 @@ Colibri.UI.Forms.NumberRange = class extends Colibri.UI.Forms.Field {
         this._input2.value = value[1];
     }
 
+    /** @private */
     _convertValue(value, direction = true) {
         if(this._fieldData?.params?.format === 'percent') {
             value = direction ? value * (value <= 1 ? 100 : 1) : value / (value <= 1 ? 100 : 1);
@@ -158,11 +189,18 @@ Colibri.UI.Forms.NumberRange = class extends Colibri.UI.Forms.Field {
         return value;
     }
 
-    
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     get enabled() {
         return this._input1.attr('disabled') != 'disabled';
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
         if(value) {
@@ -176,13 +214,16 @@ Colibri.UI.Forms.NumberRange = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Tab index
      * @type {number}
      */
     get tabIndex() {
         return this._input1 && this._input1.attr('tabIndex');
     }
+    /**
+     * Tab index
+     * @type {number}
+     */
     set tabIndex(value) {
         this._input1 && this._input1.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
         this._input2 && this._input2.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);

@@ -6,7 +6,9 @@
  */
 Colibri.UI.Chooser = class extends Colibri.UI.Component {
 
+    /** @type {boolean} */
     _skipLooseFocus;
+    /** @type {boolean} */
     _itemSelected;
 
     /**
@@ -68,9 +70,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         this._handleEvents();
     }
 
-    /**
-     * Регистрация событий
-     */
+
     /** @protected */
     _registerEvents() {
         super._registerEvents();
@@ -79,6 +79,9 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         this.RegisterEvent('ChooserClicked', false, 'Когда нажали на кнопку выбора');
     }
 
+    /**
+     * Show chooser window
+     */
     ShowChooser() {
         if(this._chooser) {
             const component = this._chooser;
@@ -98,9 +101,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         return false; 
     }
 
-    /**
-     * Регистрация обработчиков событий
-     */
+    /** @protected */
     _handleEvents() {
 
         this._input.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
@@ -133,7 +134,9 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
 
     }
 
-    
+    /**
+     * @public
+     */
     async __BeforeFilled() {
         return true;
     }
@@ -177,33 +180,48 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
     }
 
     /**
-     * Выбранное значение
-     * @return array|Object|boolean
+     * Choosed value
+     * @type {Array|Object|boolean}
      */
     get value() {
         return this._value;
     }
 
     /**
-     * Установить выбранное значение
-     * @param {*} value
+     * Choosed value
+     * @type {Array|Object|boolean}
      */
     set value(value) {
         this._setValue(value);
         this._renderValue();
     }
 
+    /**
+     * Value object
+     * @type {object}
+     */
     get valueObject() {
         return this._valueObject;
     }
+    /**
+     * Value object
+     * @type {object}
+     */
     set valueObject(value) {
         this._valueObject = value;
     }
 
+    /**
+     * Is multiple selection
+     * @type {boolean}
+     */
     set multiple(value) {
         this._multiple = value === 'true' || value === true;
     }
-
+    /**
+     * Is multiple selection
+     * @type {boolean}
+     */
     get multiple() {
         return this._multiple;
     }
@@ -223,15 +241,12 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         this._openButton = value;
         this._showOpenButton();
     }
+    /** @private */
     _showOpenButton() {
         this._arrow.css('display', this._openButton ? 'block' : 'none');
     }
 
-
-    /**
-     * Установить выбранное значение
-     * @param {Object|Array} value
-     */
+    /** @private */
     _setValue(value) {
 
         if( value && this.multiple && !Array.isArray(value) ) {
@@ -240,9 +255,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         this._value = value;
     }
 
-    /**
-     * Отобразить значения
-     */
+    /** @private */
     _renderValue() {
 
         const set = () => {
@@ -283,18 +296,23 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
     }
 
     /**
-     * Поставить фокус
+     * Focus on component
      */
     Focus() {
         this._input.Focus();
     }
 
     /**
-     * Свойство только для чтения
+     * Readonly
+     * @type {boolean}
      */
     get readonly() {
         return !!this._readonly;
     }
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         if(value === true || value === 'true') {
             this.AddClass('app-component-readonly');
@@ -307,11 +325,16 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
     }
 
     /**
-     * Текст для отображения вместо значения
+     * Placeholder text
+     * @type {string}
      */
     get placeholder() {
         return this._placeholder;
     }
+    /**
+     * Placeholder text
+     * @type {string}
+     */
     set placeholder(value) {
         this._placeholder = Lang ? Lang.Translate(value) : value;
         this._input.placeholder = this._placeholder;
@@ -319,11 +342,16 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
     }
 
     /**
-     * Вкючено/выключено
+     * Enable/Disable component
+     * @type {boolean}
      */
     get enabled() {
         return this._input.enabled;
     }
+    /**
+     * Enable/Disable component
+     * @type {boolean}
+     */
     set enabled(value) {
         if(value) {
             this.RemoveClass('app-component-disabled');
@@ -336,13 +364,16 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
 
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Tab index
      * @type {number}
      */
     get tabIndex() {
         return this._input && this._input.tabIndex;
     }
+    /**
+     * Tab index
+     * @type {number}
+     */
     set tabIndex(value) {
         if (this._input) {
             this._input.tabIndex = value;
@@ -350,11 +381,16 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
     }
 
     /**
-     * Список значений
+     * Values array
+     * @type {Array}
      */
     get values() {
         return this._values;
     }
+    /**
+     * Values array
+     * @type {Array}
+     */
     set values(value) {
         this._values = value;
         this._renderValue();
@@ -369,6 +405,15 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
  */
 Colibri.UI.Chooser.ChooseWindow = class extends Colibri.UI.Window {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|string|Colibri.UI.Component} container component container 
+     * @param {Element|string} element child elements 
+     * @param {string} title title of window
+     * @param {number} width window width
+     * @param {number} height window height
+     */
     constructor(name, container, element, title, width, height) {
         super(name, container, element, title, width, height);
     }
@@ -378,9 +423,17 @@ Colibri.UI.Chooser.ChooseWindow = class extends Colibri.UI.Window {
         this.RegisterEvent('Choosed', false, 'Когда выбор сделан');
     }
 
+    /**
+     * Params
+     * @type {object}
+     */
     get params() {
         return this._params;
     }
+    /**
+     * Params
+     * @type {object}
+     */
     set params(value) {
         this._params = value;
     }

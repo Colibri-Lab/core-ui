@@ -5,6 +5,9 @@
  */
 Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
 
         this.AddClass('app-component-list-field');
@@ -46,7 +49,9 @@ Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
 
     } 
 
-    
+    /**
+     * Reload values to component
+     */
     ReloadValues() {
 
         let values = this._fieldData.values;
@@ -61,14 +66,25 @@ Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * Focus on component
+     */
     Focus() {
         this._list.focus();
     }
 
+    /**
+     * Value
+     * @type {Object|string}
+     */
     get value() {
         return this._list.selectedValue;
     }
 
+    /**
+     * Value
+     * @type {Object|string}
+     */
     set value(value) {
         if(!Object.isObject(value)) {
             this._list.selectedValue = Array.findObject(this._fieldData.values, 'value', value);
@@ -78,13 +94,16 @@ Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Tab index
      * @type {number}
      */
     get tabIndex() {
         return this._list.tabIndex;
     }
+    /**
+     * Tab index
+     * @type {number}
+     */
     set tabIndex(value) {
         this._list.tabIndex = value === true ? Colibri.UI.tabIndex++ : value;
     }

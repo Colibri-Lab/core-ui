@@ -22,6 +22,9 @@ Colibri.UI.SlideDown = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * Toggle component
+     */
     Toggle() {
         this.__handlerClicked();    
     }

@@ -5,6 +5,9 @@
  */
 Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
 
         this.AddClass('app-component-simplearray-field');

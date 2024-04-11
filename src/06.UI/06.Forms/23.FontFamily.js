@@ -5,6 +5,9 @@
  */
 Colibri.UI.Forms.FontFamily = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
 
         this.AddClass('app-component-color-field');
@@ -35,35 +38,57 @@ Colibri.UI.Forms.FontFamily = class extends Colibri.UI.Forms.Field {
 
     }
 
-
     /** @protected */
     _registerEvents() {
         super._registerEvents();
         // если нужно добавить что то
     }
 
+    /**
+     * Focus on component
+     */
     Focus() {
         this._input.Focus();
     }
     
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     get readonly() {
         return this._input.readonly;
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
         this._input.readonly = value
     }
 
+    /**
+     * Placeholder
+     * @type {string}
+     */
     get placeholder() {
         return this._input.placeholder;
     }
 
+    /**
+     * Placeholder
+     * @type {string}
+     */
     set placeholder(value) {
         value = this._convertProperty('String', value);
         this._input.placeholder = value ? value[Lang.Current] ?? value : '';
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
     get value() {
         let value = this._input.value;
         if(this._fieldData?.params?.emptyAsNull && !value) {
@@ -75,28 +100,42 @@ Colibri.UI.Forms.FontFamily = class extends Colibri.UI.Forms.Field {
         return value;
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
     set value(value) {
         this._input.value = value ?? '';
     }
 
-    
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     get enabled() {
         return this._input.enabled;
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
         this._input.enabled = value
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Tab index
      * @type {number}
      */
     get tabIndex() {
         return this._input && this._input.tabIndex;
     }
+    /**
+     * Tab index
+     * @type {number}
+     */
     set tabIndex(value) {
         this._input && (this._input.tabIndex = value === true ? Colibri.UI.tabIndex++ : value);
     }

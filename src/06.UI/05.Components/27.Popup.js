@@ -78,6 +78,10 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
         this._positionOnParent = value;
     }
 
+    /**
+     * Show/Hide component
+     * @type {boolean}
+     */
     set shown(value) {
         value = value === true || value === 'true';
         super.shown = value;
@@ -141,6 +145,10 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * Show/Hide component
+     * @type {boolean}
+     */
     get shown() {
         return super.shown;
     }
@@ -160,6 +168,11 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
         this._align = value;
     }
 
+    /**
+     * Show popup
+     * @param {Colibri.UI.Component} parent parent of popup
+     * @param {boolean} connectToBody connect to body
+     */
     Show(parent, connectToBody = false) {
         this._connectToBody = connectToBody;
         if(parent) {

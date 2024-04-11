@@ -34,6 +34,7 @@ Colibri.UI.SimplePieChart = class extends Colibri.UI.Pane {
         this._value = value;
         this._showValue();
     }
+    /** @private */
     _showValue() {
         this._element.css('--p', this._value);
     }

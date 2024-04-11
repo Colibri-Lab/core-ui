@@ -5,6 +5,9 @@
  */
 Colibri.UI.Forms.Year = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
 
         this.AddClass('app-component-year-field');
@@ -32,35 +35,53 @@ Colibri.UI.Forms.Year = class extends Colibri.UI.Forms.Field {
 
     }
 
-
+    /**
+     * Focus on component
+     */
     Focus() {
         this._input.Focus();
     }
 
+    /**
+     * Value
+     * @type {number}
+     */
     get value() {
         return this._input.value.value;
     }
 
-    getValueTitle() {
-        return this._input.value.title;
-    }
-
+    /**
+     * Value
+     * @type {number}
+     */
     set value(value) {
         this._input.value = value;
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Get value title
+     * @returns {string}
+     */
+    getValueTitle() {
+        return this._input.value.title;
+    }
+
+    /**
+     * Tab index
      * @type {number}
      */
     get tabIndex() {
         return this._input && this._input.tabIndex;
     }
+    /**
+     * Tab index
+     * @type {number}
+     */
     set tabIndex(value) {
         if (this._input) {
             this._input.tabIndex = value === true ? Colibri.UI.tabIndex++ : value;
         }
     }
 }
+
 Colibri.UI.Forms.Field.RegisterFieldComponent('Year', 'Colibri.UI.Forms.Year', '#{ui-fields-year}')

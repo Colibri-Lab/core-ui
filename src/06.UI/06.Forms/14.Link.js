@@ -5,6 +5,9 @@
  */
 Colibri.UI.Forms.Link = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
 
         this.AddClass('app-component-link-field');
@@ -27,27 +30,41 @@ Colibri.UI.Forms.Link = class extends Colibri.UI.Forms.Field {
 
     }
 
-
+    /**
+     * Focus on component
+     */
     Focus() {
         this._input.focus();
         this._input.select();
     }
+
+    /**
+     * Value
+     * @type {string}
+     */
     get value() {
         return this._input.html();
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
     set value(value) {
         this._input.html(value);
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Tab index
      * @type {number}
      */
     get tabIndex() {
         return this._input && this._input.attr('tabIndex');
     }
+    /**
+     * Tab index
+     * @type {number}
+     */
     set tabIndex(value) {
         this._input && this._input.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
     }

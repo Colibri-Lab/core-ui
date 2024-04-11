@@ -5,6 +5,9 @@
  */
 Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
 
         this.AddClass('app-component-files-field');
@@ -59,6 +62,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /** @protected */
     _handleEvents() {
 
         this._files.AddHandler('ItemClicked', (event, args) => this._itemClicked(args.item.value));
@@ -104,10 +108,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /**
-     * Нарисовать список выбранных файлов
-     * @private
-     */
+    /** @private */
     _renderFilesList() {
         this._files = new Colibri.UI.List('list', this.contentContainer);
         this._filesGroup = this._files.AddGroup('group', '');
@@ -198,10 +199,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /**
-     * Нарисовать инпут
-     * @private
-     */
+    /** @private */
     _renderInput() {
         if (!this._dropAreaEnabled) {
             this._input = new Colibri.UI.Input.File('input', this.contentContainer);
@@ -221,10 +219,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         this._delDialog = this._fieldData.params?.deletedialog ?? false;
     }
 
-    /**
-     * Очистить инпут от ошибок
-     * @private
-     */
+    /** @private */
     _clearInput() {
         if (this._dropAreaEnabled) {
             this._input.errorMessages = [];
@@ -232,10 +227,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /**
-     * Показать ошибки валидации
-     * @private
-     */
+    /** @private */
     _showError() {
         this._errorMessages.forEach((message) => {
             App.Notices.Add({
@@ -248,11 +240,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         this._errorMessages = [];
     }
 
-    /**
-     * Собрать список разрешенных расширений в строку нужного формата
-     * @return {string}
-     * @private
-     */
+    /** @private */
     _extensionsToString() {
         let extensionsString = [];
 
@@ -273,12 +261,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         return extensionsString.join(' ');
     }
 
-    /**
-     * Валидация выбранного списка файлов
-     * @param {array} filesList
-     * @return {array} список файлов, прошедших проверку
-     * @private
-     */
+    /** @private */
     _validate(filesList) {
         let error = false;
         let validatedList = filesList;
@@ -336,6 +319,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         return validatedList;
     }
 
+    /** @private */
     _itemClicked(value) {
         if (value.file instanceof File) {
             value.file.download();
@@ -345,6 +329,9 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /**
+     * Rollback to the last selection
+     */
     Rollback() {
         if (this.lastValue !== undefined) {
             this._filesGroup.Clear();
@@ -357,23 +344,23 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Поставить фокус
+     * Focus on component
      */
     Focus() {
         this._input.Focus();
     }
 
     /**
-     * Отображать ли drag-and-drop
-     * @return {boolean}
+     * Show drop container
+     * @type {boolean}
      */
     get dropAreaEnabled() {
         return this._dropAreaEnabled;
     }
 
     /**
-     * Отображать ли drag-and-drop
-     * @param {boolean|string} value
+     * Show drop container
+     * @type {boolean}
      */
     set dropAreaEnabled(value) {
         value = this._convertProperty('Boolean', value);
@@ -381,21 +368,21 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Значение поля (выбранные файлы)
+     * Value array
      * @type {File[]}
      */
     get value() {
         return this._getValue();
     }
+    /**
+     * Value array
+     * @type {File[]}
+     */
     set value(value) {
         this._setValue(value);
     }
 
-    /**
-     * Значение поля (выбранные файлы)
-     * @type {File[]}
-     * @private
-     */
+    /** @private */
     _getValue() {
         let ret = [];
         this._filesGroup.ForEach((name, item) => {
@@ -403,6 +390,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         })
         return ret;
     }
+    /** @private */
     _setValue(value) {
         if(Array.isArray(value)) {
             this._filesGroup.value = [];
@@ -418,6 +406,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         this._files.shown = this._filesGroup.value.length > 0;
 
     }
+    /** @private */
     _addValue(value) {
         if(Array.isArray(value)) {
             for(const file of value) {
@@ -430,49 +419,64 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Максимальное количество выбранных файлов
+     * Allowed extensions
      * @type {array|null}
      */
     get allowedExtensions() {
         return this._allowedExtensions;
     }
+    /**
+     * Allowed extensions
+     * @type {array|null}
+     */
     set allowedExtensions(value) {
         this._allowedExtensions = value;
         if (this._dropAreaEnabled) { this._input.extensionsLabel.value = this._extensionsToString(); }
     }
 
     /**
-     * Максимальный размер одного файла
+     * Maximum file size
      * @type {number|null}
      */
     get maxFileSize() {
         return this._maxFileSize;
     }
+    /**
+     * Maximum file size
+     * @type {number|null}
+     */
     set maxFileSize(value) {
         value = this._convertProperty('Number', value);
         this._maxFileSize = value;
     }
 
     /**
-     * Максимальное количество выбранных файлов
+     * Max files
      * @type {number|null}
      */
     get maxCount() {
         return this._maxCount;
     }
+    /**
+     * Max files
+     * @type {number|null}
+     */
     set maxCount(value) {
         value = this._convertProperty('Number', value);
         this._maxCount = value;
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Tab index
      * @type {number}
      */
     get tabIndex() {
         return this._input && this._input.tabIndex;
     } 
+    /**
+     * Tab index
+     * @type {number}
+     */
     set tabIndex(value) {
         if (this._input) {
             this._input.tabIndex = value === true ? Colibri.UI.tabIndex++ : value;

@@ -20,20 +20,13 @@ Colibri.UI.MassActionsMenu = class extends Colibri.UI.Component {
         this._renderMenuPanel();
     }
 
-    /**
-     * Регистрация событий
-     * @protected
-     */
     /** @protected */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('ActionClicked', false, 'Когда кликнули по кнопке в меню');
     }
 
-    /**
-     * Нарисовать меню с контейнером для кнопок
-     * @private
-     */
+    /** @private */
     _renderMenuPanel() {
         this._actionsContainer = new Colibri.UI.Pane(this.name + '-actions-container', this);
         this._selectedItemsCounter = new Colibri.UI.Pane(this.name + '-selected-counter', this);
@@ -43,10 +36,7 @@ Colibri.UI.MassActionsMenu = class extends Colibri.UI.Component {
         this._selectedItemsCounter.shown = true;
     }
 
-    /**
-     * Нарисовать кнопки
-     * @private
-     */
+    /** @private */
     _renderActions() {
         this._actionsContainer.Clear();
         this._actions.forEach((action) => {
@@ -75,24 +65,32 @@ Colibri.UI.MassActionsMenu = class extends Colibri.UI.Component {
     }
 
     /**
-     * Список экшенов (кнопок) в меню
-     * @type {array}
+     * Action menu items
+     * @type {Array}
      */
     get actions() {
         return this._actions;
     }
+    /**
+     * Action menu items
+     * @type {Array}
+     */
     set actions(value) {
         this._actions = value;
         this._renderActions();
     }
 
     /**
-     * Список выбранных объектов
-     * @type {array}
+     * Selected items
+     * @type {Array}
      */
     get selectedItems() {
         return this._selectedItems;
     }
+    /**
+     * Selected items
+     * @type {Array}
+     */
     set selectedItems(value) {
         this._selectedItems = value;
         this._selectedItemsCounter.value = '#{ui-massactions-choosed}'.replaceAll('%s', this._selectedItems.length);
@@ -103,6 +101,9 @@ Colibri.UI.MassActionsMenu = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Disposes the object
+     */
     Dispose() {
         this.shown = false;
         Colibri.Common.Delay(300).then(() => super.Dispose());

@@ -98,6 +98,7 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         this.RegisterEvent('PopupClosed', false, 'Попап закрыт');
     }
 
+    /** @private */
     _showValue() {
 
         try {
@@ -117,6 +118,9 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Open selector
+     */
     Open() {
         if(!this._popup) {
             this._popup = new Colibri.UI.DateSelectorPopup('popup', document.body);
@@ -134,6 +138,9 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Close selector
+     */
     Close() {
         
         this.ToggleView(false);
@@ -146,6 +153,9 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         this.Dispatch('PopupClosed', {});
     }
 
+    /**
+     * Focus on component
+     */
     Focus() {
         if(!this.enabled) {
             return;
@@ -154,6 +164,10 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         this._hiddenElement.focus();
     }
 
+    /**
+     * Toggle view of input
+     * @param {boolean} view toggle view of input
+     */
     ToggleView(view) {
 
         if(!view) {
@@ -172,30 +186,58 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Placeholder
+     * @type {string}
+     */
     set placeholder(value) {
         this._viewElement.attr('placeholder', value ? value[Lang.Current] ?? value : '');
     }
 
+    /**
+     * Placeholder
+     * @type {string}
+     */
     get placeholder() {
         return this._viewElement.attr('placeholder');
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     set enabled(value) {
         this._viewElement.attr('disabled', value ? null: 'disabled');
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     get enabled() {
         return this._viewElement.attr('disabled') !== 'disabled';
     }
 
+    /**
+     * Is component readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         this._viewElement.attr('readonly', value ? 'readonly' : null);
     }
 
+    /**
+     * Is component readonly
+     * @type {boolean}
+     */
     get readonly() {
         return this._viewElement.attr('readonly') !== 'readonly';
     }
 
+    /**
+     * Date value
+     * @type {Date|string}
+     */
     set value(value) {
         const oldValue = this._hiddenElement.value;
         if(!value) {
@@ -213,6 +255,10 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Date value
+     * @type {Date|string}
+     */
     get value() {
         if(typeof this._hiddenElement.value == 'string') {
             return new Date(this._hiddenElement.value);
@@ -225,30 +271,49 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Format of date
+     * @type {string}
+     */
     get format() {
         return this._format;
     }
 
+    /**
+     * Format of date
+     * @type {string}
+     */
     set format(value) {
         this._format = value;
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
-     * @type {number}
+     * Tab index
+     * @type {number|boolean}
      */
     get tabIndex() {
         return this._viewElement.attr('tabIndex');
     }
+    /**
+     * Tab index
+     * @type {number|boolean}
+     */
     set tabIndex(value) {
         this._viewElement.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
         this._hiddenElement.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
     }
 
+    /**
+     * Has icon
+     * @type {boolean}
+     */
     get hasIcon() {
         return this._icon.shown;
     }
+    /**
+     * Has icon
+     * @type {boolean}
+     */
     set hasIcon(value) {
         this._icon.shown = value;
     }
@@ -385,6 +450,10 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * Show/Hide
+     * @type {boolean}
+     */
     set shown(value) {
         super.shown = value;
         this.container.hideShowProcess(() => {
@@ -405,15 +474,34 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
             }    
         });
     }
+    /**
+     * Show/Hide
+     * @type {boolean}
+     */
+    get shown() {
+        return super.shown;
+    }
 
+    /**
+     * Mode
+     * @type {datepicker,monthpicker,yearpicker}
+     */
     set mode(value) {
         this._mode = value;
     }
 
+    /**
+     * Mode
+     * @type {datepicker,monthpicker,yearpicker}
+     */
     get mode() {
         return this._mode;
     }
 
+    /**
+     * Date value
+     * @type {Date}
+     */
     get value() {
 
         let value = this._value;
@@ -424,6 +512,10 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
         return value;
     }
 
+    /**
+     * Date value
+     * @type {Date}
+     */
     set value(value) {
         this._value = value.copy();
         this._show();
@@ -432,6 +524,9 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
         this._monthPicker.Render();
     }
 
+    /**
+     * Toggle mode
+     */
     ToggleMode() {
         if (this.mode == 'datepicker') {
             this.mode = 'monthpicker';
@@ -441,6 +536,9 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
         this._show();
     }
 
+    /**
+     * Toggle mode to back
+     */
     ToggleModeBack() {
         if (this.mode == 'yearpicker') {
             this.mode = 'monthpicker';
@@ -450,6 +548,10 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
         this._show();
     }
 
+    /**
+     * Show selected mode
+     * @private
+     */
     _show() {
         if (this.mode == 'datepicker') {
             this._datePicker.shown = true;
@@ -470,6 +572,7 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
         }
     }
 
+    /** @private */
     _showPickerTitle() {
 
         let value = this.value.copy();
@@ -507,11 +610,16 @@ Colibri.UI.DatePicker = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * Render the component
+     * @protected
+     */
     Render() {
         this._renderContent();
         this._bind();
     }
 
+    /** @private */
     _renderContent() {
 
         this._element.html('');
@@ -575,6 +683,7 @@ Colibri.UI.DatePicker = class extends Colibri.UI.Pane {
         tfoot.append(Element.fromHtml('<td colspan="7" data-today="today" data-value="' + (today.getTime()) + '">#{ui-dateselector-today}</td>'));
     }
 
+    /** @private */
     _bind() {
         this._element.querySelectorAll('td').forEach((td) => {
             td.addEventListener('mousedown', (e) => {
@@ -613,11 +722,15 @@ Colibri.UI.MonthPicker = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * Render the component
+     */
     Render() {
         this._renderContent();
         this._bind();
     }
 
+    /** @private */
     _renderContent() {
 
         this._element.html('');
@@ -660,6 +773,7 @@ Colibri.UI.MonthPicker = class extends Colibri.UI.Pane {
 
     }
 
+    /** @private */
     _bind() {
         this._element.querySelectorAll('td').forEach((td) => {
             td.addEventListener('mousedown', (e) => {
@@ -689,19 +803,19 @@ Colibri.UI.YearPicker = class extends Colibri.UI.Pane {
      */    
     constructor(name, container) {
         super(name, container);
-
         this.AddClass('app-month-picker-component');
-
         this.Render();
-
-
     }
 
+    /**
+     * Render the component
+     */
     Render() {
         this._renderContent();
         this._bind();
     }
 
+    /** @private */
     _renderContent() {
 
         this._element.html('');
@@ -744,6 +858,7 @@ Colibri.UI.YearPicker = class extends Colibri.UI.Pane {
 
     }
 
+    /** @private */
     _bind() {
         this._element.querySelectorAll('td').forEach((td) => {
             td.addEventListener('mousedown', (e) => {
@@ -757,6 +872,11 @@ Colibri.UI.YearPicker = class extends Colibri.UI.Pane {
         })
     }
 
+    /**
+     * Start year
+     * @type {number}
+     * @readonly
+     */
     get startYear() {
         let dt = this.parent.value.copy()
         let currentYear = dt.getFullYear();

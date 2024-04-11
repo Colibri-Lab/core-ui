@@ -6,7 +6,7 @@
 Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
 
     /**
-     * Отрисовка содержания компонента поля 
+     * Render field component
      */
     RenderFieldContainer() {
 
@@ -81,18 +81,23 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Поставить фокус
+     * Focus on component
      */
     Focus() {
         this._input.Focus();
     }
 
     /**
-     * Только для чтения
+     * Readonly
+     * @type {boolean}
      */
     get readonly() {
         return this._input.readonly;
     }
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
         if(value) {
@@ -104,32 +109,54 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Замещающий текст
+     * Placeholder
+     * @type {string}
      */
     get placeholder() {
         return this._input.placeholder;
     }
+    /**
+     * Placeholder
+     * @type {string}
+     */
     set placeholder(value) {
         value = this._convertProperty('String', value);
         this._input.placeholder = value;
     }
 
+    /**
+     * Placeholder info
+     * @type {object}
+     */
     get placeholderinfo() {
         return this._input.placeholderinfo;
     }
+    /**
+     * Placeholder info
+     * @type {object}
+     */
     set placeholderinfo(value) {
         this._input.placeholderinfo = value;
     }
 
+    /**
+     * Empty placeholder generator
+     * @type {Function}
+     */
     get placeholderempty() {
         return this._input.placeholderempty;
     }
+    /**
+     * Empty placeholder generator
+     * @type {Function}
+     */
     set placeholderempty(value) {
         this._input.placeholderempty = value;
     }
 
     /**
-     * Выбранное значение
+     * Value
+     * @type {object|string}
      */
     get value() {
         let value = this._input.value ?? null;
@@ -147,14 +174,18 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
         }
         return value;
     }
+    /**
+     * Value
+     * @type {object|string}
+     */
     set value(value) {
         this._input.value = value;
     }
 
     /**
-     * Значения селектора
-     * @param {array} value
-     * */
+     * Values
+     * @type {Array}
+     */
     set values(value) {
         let required = this._fieldData?.params?.required;
         if(required === undefined) {
@@ -170,24 +201,29 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Значения селектора
-     * @return {array} value
-     * */
+     * Values
+     * @type {Array}
+     */
     get values() {
         return this._input.values;
     }
 
     /**
-     * Включен/выключен
+     * Enable/Disable
+     * @type {boolean}
      */
     get enabled() {
         return this._input.enabled;
     }
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
         this._input.enabled = value;
     }
-
+    /** @private */
     _setEnabled() {
         if(!this.value && this._fieldData.default) {
             this.value = this._fieldData.default;
@@ -195,9 +231,8 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Установить новое значение свойству lookup
-     * Загрузить значения селектора альтернативным способом, указанным в lookup
-     * @param {(Object|function)} value
+     * Run lookup
+     * @param {Object|Function} value
      */
     _setLookup(value) {
         let lookupPromise;
@@ -267,6 +302,7 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
         return lookupPromise;
     }
 
+    /** @private */
     _getDependsValue(type = null) {
         if (this.root && this._fieldData?.lookup) {
 
@@ -286,10 +322,7 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /**
-     * Если необходимо инициализировать данные из lookup
-     * @private
-     */
+    /** @private */
     _initializeValues() {
         if (this._fieldData.lookup) {
             this.loading = true;
@@ -317,23 +350,34 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Tab index
      * @type {number}
      */
     get tabIndex() {
         return this._input && this._input.tabIndex;
     }
+    /**
+     * Tab index
+     * @type {number}
+     */
     set tabIndex(value) {
         if (this._input) {
             this._input.tabIndex = value;
         }
     }
 
+    /**
+     * Popup configuration
+     * @type {object}
+     */
     set popupconfig(value) {
         this._input.popupconfig = value;
     }
+    get popupconfig() {
+        return this._input.popupconfig;
+    }
 
+    /** @private */
     _createSelector() {
         return new Colibri.UI.Chooser(
             'input',
@@ -348,8 +392,14 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
         );
     }
 
+    /**
+     * Value object
+     * @type {object}
+     * @readonly
+     */
     get valueObject() {
         return this._input.valueObject;
     }
+    
 }
 Colibri.UI.Forms.Field.RegisterFieldComponent('Choose', 'Colibri.UI.Forms.Choose', '#{ui-fields-choose}')

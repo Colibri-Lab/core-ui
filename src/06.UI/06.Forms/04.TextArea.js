@@ -4,7 +4,10 @@
  * @memberof Colibri.UI.Forms
  */
 Colibri.UI.Forms.TextArea = class extends Colibri.UI.Forms.Field {
-
+    
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
 
         this.AddClass('app-component-textarea-field');

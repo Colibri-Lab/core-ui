@@ -1,6 +1,6 @@
 /**
  * @class
- * @extends Colibri.UI.Component
+ * @extends Colibri.UI.List
  * @memberof Colibri.UI
  */
 Colibri.UI.PopupList = class extends Colibri.UI.List {
@@ -45,10 +45,15 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
 
     }
 
+    /** @private */
     __popupBounds() {
         return this.parent.container.bounds();
     }
 
+    /**
+     * Show/Hide component
+     * @type {boolean}
+     */
     set shown(value) {
         super.shown = value;
         this.container.hideShowProcess(() => {
@@ -73,10 +78,15 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
         });
     }
 
+    /**
+     * Show/Hide component
+     * @type {boolean}
+     */
     get shown() {
         return super.shown;
     }
 
+    /** @protected */
     __renderItemContent(itemData, item) {
         let html = '';
 
@@ -100,6 +110,11 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
         return html;
     }
 
+    /**
+     * Fill the items
+     * @param {Array} value items
+     * @param {Array} selectedValues Selected items
+     */
     FillItems(value, selectedValues = null) {
 
         this.ClearAllGroups();
@@ -180,7 +195,5 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
         }
 
     }
-
-
 
 }

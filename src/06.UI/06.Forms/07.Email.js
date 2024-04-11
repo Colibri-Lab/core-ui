@@ -5,6 +5,9 @@
  */
 Colibri.UI.Forms.Email = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
 
         this.AddClass('app-component-email-field');
@@ -78,14 +81,25 @@ Colibri.UI.Forms.Email = class extends Colibri.UI.Forms.Field {
         // если нужно добавить что то
     }
 
+    /**
+     * Focus on component
+     */
     Focus() {
         this._input.focus();
     }
 
+    /**
+     * Field is readonly
+     * @type {boolean}
+     */
     get readonly() {
         return this._input.attr('readonly') === 'readonly';
     }
 
+    /**
+     * Field is readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
         if(value) {
@@ -96,15 +110,27 @@ Colibri.UI.Forms.Email = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /**
+     * Field placeholder
+     * @type {string}
+     */
     get placeholder() {
         return this._input.attr('placeholder');
     }
 
+    /**
+     * Field placeholder
+     * @type {string}
+     */
     set placeholder(value) {
         value = this._convertProperty('String', value);
         this._input.attr('placeholder', value ? value[Lang.Current] ?? value : '');
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
     get value() {
         let value = this._input.value;
         if(this._fieldData?.params?.emptyAsNull && !value) {
@@ -116,25 +142,44 @@ Colibri.UI.Forms.Email = class extends Colibri.UI.Forms.Field {
         return value.trimString();
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
     set value(value) {
         this._original = (value ?? '').trimString();
         this._input.value = (value ?? '').trimString();
     }
 
+    /**
+     * Validation text
+     * @type {string}
+     */
     get validationText() {
         return this._validationText;
     }
 
+    /**
+     * Validation text
+     * @type {string}
+     */
     set validationText(value) {
         value = this._convertProperty('String', value);
         this._validationText = value;
     }
 
-
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */ 
     get enabled() {
         return this._input.attr('disabled') != 'disabled';
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */ 
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
         if(value) {
@@ -148,13 +193,16 @@ Colibri.UI.Forms.Email = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
-     * @type {number}
+     * Tab index
+     * @type {number|boolean}
      */
     get tabIndex() {
         return this._input && this._input.attr('tabIndex');
     }
+    /**
+     * Tab index
+     * @type {number|boolean}
+     */
     set tabIndex(value) {
         this._input && this._input.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
     }

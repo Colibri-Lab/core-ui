@@ -5,7 +5,10 @@
  */
 Colibri.UI.Forms.Label = class extends Colibri.UI.Forms.Field {
 
-    RenderFieldContainer() {
+    /**
+     * Render field component
+     */
+    RenderFielContainer() {
 
         this.AddClass('app-component-label-field');
 
@@ -31,26 +34,38 @@ Colibri.UI.Forms.Label = class extends Colibri.UI.Forms.Field {
 
     }
 
-
+    /**
+     * Focus on component
+     */
     Focus() {
         // do nothing
     }
+    /**
+     * Value string
+     * @type {string}
+     */
     get value() {
         return this._input.html();
     }
-
+    /**
+     * Value string
+     * @type {string}
+     */
     set value(value) {
         this._input.html(value);
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
-     * @type {number}
+     * Tab index
+     * @type {number|boolean}
      */
     get tabIndex() {
         return null;
     }
+    /**
+     * Tab index
+     * @type {number|boolean}
+     */
     set tabIndex(value) {
         // do nothing
     }

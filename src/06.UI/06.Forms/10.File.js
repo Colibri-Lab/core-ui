@@ -5,17 +5,13 @@
  */
 Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
 
         this.AddClass('app-component-file-field');
         const contentContainer = this.contentContainer;
-
-        // this.AddHandler('Clicked', (event, args) => {
-        //     const value = args.item.value;
-        //     if(this._field && this._field.params && this._field.params.download) {
-        //         window.open(window.rpchandler + this._download + '?guid=' + value.file.guid);
-        //     }
-        // });
 
         this._value = null;
         this._valueData = null;
@@ -57,6 +53,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /** @private */
     _clicked(value) {
         if (this._value instanceof File) {
             this._value.download();
@@ -66,6 +63,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /** @protected */
     _handleEvents() {
 
         this.AddHandler('Clicked', (event, args) => this._clicked(args));
@@ -101,10 +99,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /**
-     * Нарисовать инпут и контейнер для отображения выбранного файла
-     * @private
-     */
+    /** @private */
     _renderInput() {
         if (!this._dropAreaEnabled) {
             this._input = new Colibri.UI.Input.File('input', this.contentContainer);
@@ -134,10 +129,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /**
-     * Отобразить выбранный файл
-     * @private
-     */
+    /** @private */
     _showFile() {
         if (this._dropAreaEnabled && this._value) {
             let file = this._value;
@@ -164,10 +156,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /**
-     * Очистить инпут от файла и ошибок
-     * @private
-     */
+    /** @private */
     _clearInput() {
         if (this._dropAreaEnabled) {
             this.RemoveClass('-file-chosen');
@@ -181,10 +170,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /**
-     * Показать ошибки валидации
-     * @private
-     */
+    /** @private */
     _showError() {
         if (this._dropAreaEnabled) {
             this._input.AddClass('-validation-error');
@@ -196,11 +182,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /**
-     * Собрать список разрешенных расширений в строку нужного формата
-     * @return {string}
-     * @private
-     */
+    /** @private */
     _extensionsToString() {
         let extensionsString = '';
 
@@ -211,11 +193,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         return extensionsString;
     }
 
-    /**
-     * Валидация выбранного списка файлов
-     * @param {array} filesList
-     * @private
-     */
+    /** @private */
     _validate(filesList) {
         let error = false;
 
@@ -255,23 +233,23 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Поставить фокус
+     * Focus on component
      */
     Focus() {
         this._input.Focus();
     }
 
     /**
-     * Отображать ли drag-and-drop
-     * @return {boolean}
+     * Show drop container
+     * @type {boolean}
      */
     get dropAreaEnabled() {
         return this._dropAreaEnabled;
     }
 
     /**
-     * Отображать ли drag-and-drop
-     * @param {boolean|string} value
+     * Show drop container
+     * @type {boolean}
      */
     set dropAreaEnabled(value) {
         value = this._convertProperty('Boolean', value);
@@ -279,12 +257,16 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Значение поля (выбранный файл)
+     * Value
      * @type {File}
      */
     get value() {
         return this._value;
     }
+    /**
+     * Value
+     * @type {File}
+     */
     set value(value) {
         if(value instanceof File) {
             this._value = value;
@@ -303,22 +285,34 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * Download the file
+     * @type {boolean}
+     */ 
     set download(value) {
         value = this._convertProperty('String', value);
         this._download = value;
     }
 
+    /**
+     * Download the file
+     * @type {boolean}
+     */ 
     get download() {
         return this._download;
     }
 
     /**
-     * Максимальное количество выбранных файлов
+     * Allowed extensions
      * @type {array|null}
      */
     get allowedExtensions() {
         return this._allowedExtensions;
     }
+    /**
+     * Allowed extensions
+     * @type {array|null}
+     */
     set allowedExtensions(value) {
         this._allowedExtensions = value;
         if (this._dropAreaEnabled) { 
@@ -327,37 +321,48 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Максимальный размер одного файла
+     * Max allowed file size
      * @type {number|null}
      */
     get maxFileSize() {
         return this._maxFileSize;
     }
+    /**
+     * Max allowed file size
+     * @type {number|null}
+     */
     set maxFileSize(value) {
         value = this._convertProperty('Number', value);
         this._maxFileSize = value;
     }
 
     /**
-     * Максимальное количество выбранных файлов
+     * Max allowed files
      * @type {number|null}
      */
     get maxCount() {
         return this._maxCount;
     }
+    /**
+     * Max allowed files
+     * @type {number|null}
+     */
     set maxCount(value) {
         value = this._convertProperty('Number', value);
         this._maxCount = value;
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
-     * @type {number}
+     * Tab index
+     * @type {number|boolean}
      */
     get tabIndex() {
         return this._input && this._input.tabIndex;
     }
+    /**
+     * Tab index
+     * @type {number|boolean}
+     */
     set tabIndex(value) {
         if (this._input) {
             this._input.tabIndex = value === true ? Colibri.UI.tabIndex++ : value;

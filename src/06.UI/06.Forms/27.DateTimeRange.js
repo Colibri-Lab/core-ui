@@ -5,6 +5,9 @@
  */
 Colibri.UI.Forms.DateTimeRange = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
 
         this.AddClass('app-component-datetimerange-field');
@@ -71,24 +74,43 @@ Colibri.UI.Forms.DateTimeRange = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * Focus on component
+     */
     Focus() {
         this._input1.Focus();
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     get readonly() {
         return this._input1.readonly;
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
         this._input1.readonly = value;
         this._input2.readonly = value;
     }
 
+    /**
+     * Placeholder
+     * @type {string}
+     */
     get placeholder() {
         return this._placeholder;
     }
 
+    /**
+     * Placeholder
+     * @type {string}
+     */
     set placeholder(value) {
         value = this._convertProperty('String', value);
         this._placeholder = value;
@@ -96,6 +118,10 @@ Colibri.UI.Forms.DateTimeRange = class extends Colibri.UI.Forms.Field {
         this._input2.placeholder = this._placeholder + ' (#{ui-fields-datetimerage-to})';
     }
 
+    /**
+     * Value
+     * @type {Array<Date>}
+     */
     get value() {
         let value1 = this._input1.value;
         let value2 = this._input2.value;
@@ -107,6 +133,10 @@ Colibri.UI.Forms.DateTimeRange = class extends Colibri.UI.Forms.Field {
         return [value1 ? value1 + ' ' + timeValue1 : null, value2 ? value2 + ' ' + timeValue2 : null];
     }
 
+    /**
+     * Value
+     * @type {Array<Date>}
+     */
     set value(value) {
         if(!Array.isArray(value)) {
             value = [value ?? '', ''];
@@ -124,11 +154,18 @@ Colibri.UI.Forms.DateTimeRange = class extends Colibri.UI.Forms.Field {
 
     }
 
-    
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     get enabled() {
         return this._input1.enabled;
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
         this._input1.enabled = value;
@@ -136,13 +173,16 @@ Colibri.UI.Forms.DateTimeRange = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Tab index
      * @type {number}
      */
     get tabIndex() {
         return this._input1 && this._input1.tabIndex;
     }
+    /**
+     * Tab index
+     * @type {number}
+     */
     set tabIndex(value) {
         if (this._input1) {
             this._input1.tabIndex = value;

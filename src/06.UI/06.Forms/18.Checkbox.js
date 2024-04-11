@@ -5,6 +5,9 @@
  */
 Colibri.UI.Forms.Checkbox = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
 
         this.AddClass('app-component-checkbox-field');
@@ -36,6 +39,7 @@ Colibri.UI.Forms.Checkbox = class extends Colibri.UI.Forms.Field {
         this._handleEvents();
     }
 
+    /** @protected */
     _handleEvents() {
         this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args || {}, {component: this})));
         this._input.AddHandler('Clicked', (event, args) => {
@@ -54,14 +58,25 @@ Colibri.UI.Forms.Checkbox = class extends Colibri.UI.Forms.Field {
         });
     }
 
+    /**
+     * Focus on component
+     */
     Focus() {
         this._input.Focus();
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     get readonly() {
         return this._input.readonly;
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
         this._input.readonly = value;
@@ -72,31 +87,50 @@ Colibri.UI.Forms.Checkbox = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /**
+     * Value
+     * @type {boolean}
+     */
     get value() {
         return this._input.checked;
     }
 
+    /**
+     * Value
+     * @type {boolean}
+     */
     set value(value) {
         this._input.checked = value === 'true' || value === true || value === 1 || value === '1';
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */ 
     get enabled() {
         return this._input.enabled;
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */ 
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
         this._input.enabled = value;
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Tab index
      * @type {number}
      */
     get tabIndex() {
         return this._input && this._input.tabIndex;
     }
+    /**
+     * Tab index
+     * @type {number}
+     */
     set tabIndex(value) {
         if (this._input) {
             this._input.tabIndex = value;

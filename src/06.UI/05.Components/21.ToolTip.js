@@ -5,11 +5,17 @@
  */
 Colibri.UI.ToolTip = class extends Colibri.UI.Component {
 
+    /** Left bottom */
     static LB = 'lb';
+    /** Left top */
     static LT = 'lt';
+    /** Left middle */
     static LM = 'lm';
+    /** Right bottom */
     static RB = 'rb';
+    /** Right top */
     static RT = 'rt';
+    /** Right middle */
     static RM = 'rm';
 
     /**
@@ -51,23 +57,38 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Container element
+     * @type {Element}
+     * @readonly
+     */
     get container() {
         return this._contentContainer.container;
     } 
 
+    /**
+     * Orientation
+     * @type {Array<string>}
+     */
     get orientation() {
         return this._orientation;
     }
 
+    /**
+     * Orientation
+     * @type {Array<string>}
+     */
     set orientation(value) {
         this._orientation = value;
         this._element.data('orientation', value);
     }
 
+    /** @private */
     _findParent() {
         return this.parent ?? null;
     }
 
+    /** @private */
     _findPointOnParent() {
         const parent = this._findParent();
         const ori = this._orientation[0];
@@ -117,6 +138,7 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
         }
     }
 
+    /** @private */
     _getOrientationPoint(pointOnParent) {
         const ori = this._orientation[1];
         const thisBounds = this._element.bounds(true, true);
@@ -161,6 +183,7 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
         }
     }
 
+    /** @private */
     _setPosition() {
 
         const pointOnParent = this._point || this._findPointOnParent();
@@ -169,6 +192,7 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
 
     }
 
+    /** @private */
     _checkPosition() {
         const thisBounds = this._element.bounds(true, true);
 
@@ -194,9 +218,17 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Show/Hide component
+     * @type {boolean}
+     */
     get shown() {
         return super.shown;
     }
+    /**
+     * Show/Hide component
+     * @type {boolean}
+     */
     set shown(value) {
         super.shown = value;
         
@@ -211,6 +243,10 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Show tooltip on component
+     * @param {Colibri.UI.Component} parent parent component
+     */
     Show(parent = null) {
         if(parent) {
             this.parent = parent;
@@ -250,6 +286,7 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
         this._permanent = value;
         this._showPermanent();
     }
+    /** @private */
     _showPermanent() {
         if(this._permanent && !this.shown) {
             this.shown = true;

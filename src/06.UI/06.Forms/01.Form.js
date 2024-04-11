@@ -39,6 +39,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         this.RegisterEvent('ActiveFieldChanged', false, 'Когда активное поле изменилось');
     }
 
+    /** @protected */
     _registerEventHandlers() {
         this.AddHandler('Changed', (event, args) => {
             this._hideAndShow();
@@ -46,6 +47,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         });
     }
 
+    /** @protected */
     _setFilledMark() {
         Object.forEach(this._fields, (name, fieldData) => {
             const fieldComponent = this.Children(name);
@@ -53,6 +55,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         });
     }
 
+    /** @protected */
     _calcRuntimeValues(rootValue = null) {
         if(this._calculating) {
             return;
@@ -78,6 +81,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         this._calculating = false;
     }
 
+    /** @protected */
     _hideAndShow() {
 
         const data = this.value;
@@ -139,10 +143,25 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Download attribute
+     * @type {string|boolean}
+     */
     set download(value) {
         this._download = value;
     }
+    /**
+     * Download attribute
+     * @type {string|boolean}
+     */
+    get download() {
+        return this._download;
+    }
 
+    /**
+     * Fields object
+     * @type {object}
+     */
     set fields(fields) {
         if(typeof fields == 'string') {
             fields = this._storage.Query(fields);
@@ -153,10 +172,19 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         this._hideAndShow();
         this._setFilledMark();
     }
+    /**
+     * Fields object
+     * @type {object}
+     */
     get fields() {
         return this._fields;
     }
 
+    /**
+     * Searches for field
+     * @param {string} name name of field to find
+     * @returns Colibri.UI.Forms.Field
+     */
     Fields(name = null) {
 
         if(name) {
@@ -172,6 +200,10 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         return ret;
     }
 
+    /**
+     * Value object
+     * @type {object}
+     */
     set value(value) {
 
         this._value = Object.assign({}, value);
@@ -226,6 +258,10 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         this._setFilledMark();
     }
 
+    /**
+     * Value object
+     * @type {object}
+     */
     get value() {
         let data = Object.assign({}, this._value);
         this.ForEach((name, component) => {
@@ -244,13 +280,25 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         return data;
     }
 
+    /**
+     * Message string
+     * @type {string}
+     */
     set message(value) {
         this._error && (this._error.value = value);
     }
+    /**
+     * Message string
+     * @type {string}
+     */
     get message() {
         return this._error?.value ?? '';
     }
 
+    /**
+     * Shuffle field names to prevent autofill
+     * @type {boolean}
+     */
     set shuffleFieldNames(value) {
         this._shuffleFieldNames = value === true || value === 'true';
         if(this._shuffleFieldNames) {
@@ -258,10 +306,15 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Shuffle field names to prevent autofill
+     * @type {boolean}
+     */
     get shuffleFieldNames() {
         return this._shuffleFieldNames;
     }
 
+    /** @private */
     _prepareOneOf(data, field) {
         if(Object.isObject(data)) {
             Object.forEach(data, (n, v) => {
@@ -284,6 +337,11 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         return data;
     }
 
+    /**
+     * Searches for field in all debt
+     * @param {string} fieldName field name or path
+     * @returns {Colibri.UI.Forms.Field}
+     */
     FindField(fieldName) {
         let field = null,
             queryString = fieldName.split('/')
@@ -308,6 +366,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         return field;
     }
 
+    /** @private */
     _renderField(name, fieldData, value, shown = true) {
         const root = this.root || this;
         const component = Colibri.UI.Forms.Field.Create(name, this, fieldData, null, root);
@@ -334,6 +393,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         }
     }
 
+    /** @private */
     _renderFields(value) {
         
         let hasGroups = false;
@@ -393,12 +453,16 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         this.Dispatch('FieldsRendered');
     }
 
+    /** @private */
     __renderBoundedValues(values) {
         Object.forEach(values, (name, value) => {
             this.Children(name).value = value;
         });
     }
 
+    /**
+     * Focus on form (to the first component)
+     */
     Focus() {
         const firstComponent = this.Children('firstChild');
         if(firstComponent) {
@@ -425,14 +489,14 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     }
 
     /**
-     * Активное поле
+     * Active field
      * @type {Colibri.UI.Form.Field}
      */
     get activeField() {
         return this._activeField;
     }
     /**
-     * Активное поле
+     * Active field
      * @type {Colibri.UI.Form.Field}
      */
     set activeField(value) {

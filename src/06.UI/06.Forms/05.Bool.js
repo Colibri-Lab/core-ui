@@ -5,6 +5,9 @@
  */
 Colibri.UI.Forms.Bool = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
 
         this.AddClass('app-component-bool-field');
@@ -47,23 +50,41 @@ Colibri.UI.Forms.Bool = class extends Colibri.UI.Forms.Field {
         // если нужно добавить что то
     }
 
+    /**
+     * Focus on component
+     */
     Focus() {
         this._input.focus();
         this._input.select();
     }
 
+    /**
+     * Label for checkbox
+     * @type {string}
+     */
     get title() {
         return this._label.html();
     }
+    /**
+     * Label for checkbox
+     * @type {string}
+     */
     set title(value) {
         value = this._convertProperty('String', value);
         this._label.html(value);
     }
 
+    /**
+     * Field is readonly
+     * @type {boolean}
+     */
     get readonly() {
         return this._input.attr('readonly') === 'readonly';
     }
-
+    /**
+     * Field is readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
         if(value) {
@@ -74,18 +95,34 @@ Colibri.UI.Forms.Bool = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /**
+     * Field placeholder
+     * @type {string}
+     */
     get placeholder() {
         return '';
     }
 
+    /**
+     * Field placeholder
+     * @type {string}
+     */
     set placeholder(value) {
-        // ничего не делаем
+        // do nothing
     }
 
+    /**
+     * Value
+     * @type {boolean}
+     */
     get value() {
         return this._input.is(':checked');
     }
 
+    /**
+     * Value
+     * @type {boolean}
+     */
     set value(value) {
         
         if(value === null) {
@@ -101,11 +138,18 @@ Colibri.UI.Forms.Bool = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */    
     get enabled() {
         return this._input.attr('disabled') != 'disabled';
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */    
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
         if(value) {
@@ -119,13 +163,16 @@ Colibri.UI.Forms.Bool = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
-     * @type {number}
+     * Tab index
+     * @type {number|boolean}
      */
     get tabIndex() {
         return this._input && this._input.attr('tabIndex');
     }
+    /**
+     * Tab index
+     * @type {number|boolean}
+     */
     set tabIndex(value) {
         this._input && this._input.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
     }

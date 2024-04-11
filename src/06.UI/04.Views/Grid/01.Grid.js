@@ -935,9 +935,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     }
 
-    /**
-     * Регистрация событий
-     */
+
     /** @protected */
     _registerEvents() {
         super._registerEvents();

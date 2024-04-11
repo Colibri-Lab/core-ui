@@ -15,8 +15,6 @@ Colibri.UI.Note = class extends Colibri.UI.Pane {
         super(name, container);
         this.AddClass('app-component-note');
 
-
-
     }
 
 }

@@ -34,6 +34,7 @@ Colibri.UI.FilesDragAndDrop = class extends Colibri.UI.Component {
         this.RegisterEvent('InputFileChosen', false, 'Выбран файл/файлы');
     }
 
+    /** @protected */
     _handleEvents() {
         this._innerInput.addEventListener('change', (event) => {
             this._dropContainer.Dispatch('Drop', {domEvent: event, inputFiles: this._innerInput.files});
@@ -71,7 +72,7 @@ Colibri.UI.FilesDragAndDrop = class extends Colibri.UI.Component {
     }
 
     /**
-     * Выбрать файлы
+     * Choose file
      * @param {FileList|DataTransferItemList} filesList
      * @private
      */
@@ -89,7 +90,7 @@ Colibri.UI.FilesDragAndDrop = class extends Colibri.UI.Component {
     }
 
     /**
-     * Нарисовать drag-and-drop область
+     * Render drop container
      * @private
      */
     _renderDropContainer() {
@@ -112,71 +113,69 @@ Colibri.UI.FilesDragAndDrop = class extends Colibri.UI.Component {
     }
 
     /**
-     * drag-and-drop контейнер
+     * Drop container
+     * @type {Element}
      */
     get dropContainer() {
         return this._dropContainer;
     }
 
     /**
-     * Лэйбл с допустимыми расширениями
+     * Label
+     * @type {string}
      */
     get extensionsLabel() {
         return this._extensionsLabel;
     }
 
     /**
-     * Отображаемый текст
-     * @return {string}
+     * Title text
+     * @type {string}
      */
     get title() {
         return this._title.value;
     }
 
     /**
-     * Отображаемый текст
-     * @param {string} value
+     * Title text
+     * @type {string}
      */
     set title(value) {
         this._setTitle(value);
     }
 
     /**
-     * Текст ошибки валидации
-     * @param {string} value
+     * Error text
+     * @type {string}
      */
     set errorMessage(value) {
         this._errorMessage = value;
     }
 
     /**
-     * Текст ошибки валидации
-     * @return {string}
+     * Error text
+     * @type {string}
      */
     get errorMessage() {
         return this._errorMessage;
     }
 
-    /**
-     * Изменить отображаемый текст на новый, либо по умолчанию
-     * @param {string} value
-     * @private
-     */
+    /** @private */
     _setTitle(value) {
         this._title.value = value ?? (this._multiple ? '#{ui-filesdragdrop-choosefiles}' : '#{ui-filesdragdrop-choosefile}');
     }
 
     /**
-     * Возможность загрузить больше одного файла
-     * @return {boolean}
+     * Multiple file selection mode
+     * @type {boolean}
      */
     get multiple() {
         return this._multiple;
     }
 
     /**
-     * Возможность загрузить больше одного файла
-     * @param {boolean} value
+     * Multiple file selection mode
+     * @type {boolean}
      */
     set multiple(value) {
         if (value === true || value === 'true') {
@@ -191,8 +190,8 @@ Colibri.UI.FilesDragAndDrop = class extends Colibri.UI.Component {
     }
 
     /**
-     * Показать элемент (обновить отображаемый текст и отобразить все вложенные элементы)
-     * @param {boolean|string} value
+     * Show/Hide component
+     * @type {boolean}
      */
     set shown(value) {
         super.shown = value === 'true' || value === true;
@@ -211,5 +210,12 @@ Colibri.UI.FilesDragAndDrop = class extends Colibri.UI.Component {
             this._title.shown = true;
             this._extensionsLabel.shown = true;
         }
+    }
+    /**
+     * Show/Hide component
+     * @type {boolean}
+     */
+    get shown() {
+        return super.shown;
     }
 }

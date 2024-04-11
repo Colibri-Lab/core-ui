@@ -107,6 +107,7 @@ Colibri.UI.Switcher = class extends Colibri.UI.Component {
         this._showItemIndex();
     }
 
+    /** @private */
     _showItemIndex() {
         if(!this._items) {
             return ;
@@ -156,6 +157,7 @@ Colibri.UI.Switcher = class extends Colibri.UI.Component {
         this._items = value;
         this._showValue();
     }
+    /** @private */
     _showValue() {
         this.itemIndex = 0;
     }

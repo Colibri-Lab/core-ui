@@ -4,6 +4,10 @@
  * @memberof Colibri.UI.Forms
  */
 Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
+
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
         this.AddClass('app-component-array-grid-field');
 

@@ -5,6 +5,9 @@
  */
 Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
 
         this.AddClass('app-component-checkboxlist-field');

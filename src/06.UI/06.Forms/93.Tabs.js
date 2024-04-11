@@ -5,6 +5,9 @@
  */
 Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
         this.AddClass('app-component-tabs-field');
 

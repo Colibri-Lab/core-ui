@@ -5,6 +5,9 @@
  */
 Colibri.UI.Forms.Passport = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     */
 	RenderFieldContainer() {
 
 		this.AddClass('app-component-passport-field');
@@ -75,18 +78,34 @@ Colibri.UI.Forms.Passport = class extends Colibri.UI.Forms.Field {
 
 	}
 
+	/**
+	 * Title string
+	 * @type {string}
+	 */
 	get title() {
 		return this.Children(this._name + '-title').value;
 	}
+	/**
+	 * Title string
+	 * @type {string}
+	 */
 	set title(value) {
         value = this._convertProperty('String', value);
 		this.Children(this._name + '-title').value = value;
 	}
 
+	/**
+     * Readonly
+     * @type {boolean}
+     */
 	get readonly() {
 		return this._input1.attr('readonly') === 'readonly';
 	}
 
+	/**
+     * Readonly
+     * @type {boolean}
+     */
 	set readonly(value) {
         value = this._convertProperty('Boolean', value);
 		if (value) {
@@ -99,10 +118,18 @@ Colibri.UI.Forms.Passport = class extends Colibri.UI.Forms.Field {
 		}
 	}
 
+	/**
+     * Placeholder
+     * @type {string}
+     */
 	get placeholder() {
 		return this._input1.attr('placeholder') + ' | ' + this._input2.attr('placeholder');
 	}
 
+	/**
+     * Placeholder
+     * @type {string}
+     */
 	set placeholder(value) {
 		if(Array.isArray(value)) {
 			this._input1.attr('placeholder', value[0][Lang.Current] ?? value[0]);
@@ -119,6 +146,10 @@ Colibri.UI.Forms.Passport = class extends Colibri.UI.Forms.Field {
 		}
 	}
 
+	/**
+     * Value
+     * @type {Array}
+     */
 	get value() {
 		return [
 			this._input1.value, 
@@ -126,15 +157,27 @@ Colibri.UI.Forms.Passport = class extends Colibri.UI.Forms.Field {
 		];
 	}
 
+	/**
+     * Value
+     * @type {Array}
+     */
 	set value(value) {
 		this._input1.value = value[0];
 		this._input2.value = value[0];
 	}
 
+	/**
+     * Enable/Disable
+     * @type {boolean}
+     */ 
 	get enabled() {
 		return this._input1.attr('disabled') != 'disabled';
 	}
 
+	/**
+     * Enable/Disable
+     * @type {boolean}
+     */ 
 	set enabled(value) {
         value = this._convertProperty('Boolean', value);
 		if (value) {
@@ -150,22 +193,33 @@ Colibri.UI.Forms.Passport = class extends Colibri.UI.Forms.Field {
 	}
 
 	/**
-	 * Индекс табуляции
-	 * @todo проверить правильно ли получаю tabIndex и исправить
-	 * @type {number}
-	 */
+     * Tab index
+     * @type {number}
+     */
 	get tabIndex() {
 		return this._input1.attr('tabIndex');
 	}
+	/**
+     * Tab index
+     * @type {number}
+     */
 	set tabIndex(value) {
 		this._input1.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
 		this._input2.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value + 1);
 	}
 
+	/**
+     * Width of component
+     * @type {number}
+     */
 	set width(value) {
 		this._div1.width = value[0];
 		this._div2.width = value[0];
 	}
+	/**
+     * Width of component
+     * @type {number}
+     */
 	get width() {
 		return [
 			this._div1.width,

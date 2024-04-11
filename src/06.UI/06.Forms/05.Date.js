@@ -5,6 +5,9 @@
  */
 Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
 
         this.AddClass('app-component-date-field');
@@ -48,34 +51,60 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
         }
 
     }
-
+    /**
+     * Focus on component
+     */
     Focus() {
         this._input.Focus();
     }
 
+    /**
+     * Field is readonly
+     * @type {boolean}
+     */
     get readonly() {
         return this._input.readonly;
     }
 
+    /**
+     * Field is readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
         this._input.readonly = value;
     }
 
+    /**
+     * Field placeholder
+     * @type {string}
+     */
     get placeholder() {
         return this._input.placeholder;
     }
 
+    /**
+     * Field placeholder
+     * @type {string}
+     */
     set placeholder(value) {
         value = this._convertProperty('String', value);
         this._input.placeholder = value;
     }
 
+    /**
+     * Value
+     * @type {Date}
+     */
     get value() {
         let value = this._input.value;
         return (value?.toString() === 'Invalid Date' ? null : value.toShortDateString());
     }
 
+    /**
+     * Value
+     * @type {Date}
+     */
     set value(value) {
         if(typeof value == 'string') {
             value = new Date(value);
@@ -83,11 +112,18 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
         this._input.value = value;
     }
 
-    
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */   
     get enabled() {
         return this._input.enabled;
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */   
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
         this._input.enabled = value;
@@ -95,13 +131,16 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
-     * @type {number}
+     * Tab index
+     * @type {number|boolean}
      */
     get tabIndex() {
         return this._input && this._input.tabIndex;
     }
+    /**
+     * Tab index
+     * @type {number|boolean}
+     */
     set tabIndex(value) {
         if (this._input) {
             this._input.tabIndex = value;

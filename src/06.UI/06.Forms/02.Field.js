@@ -5,17 +5,40 @@
  */
 Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
+    /**
+     * @static
+     * @type {object}
+     */
     static Components = {};
+    /**
+     * Registers field to show in backend when choosing component on storage field
+     * @param {string} name name of component
+     * @param {string} className class name of component
+     * @param {string} description component description
+     * @param {string} icon icon of component
+     */
     static RegisterFieldComponent(name, className, description, icon) {
         if(!icon) {
             icon = Colibri.UI.FieldIcons[className];
         }
         Colibri.UI.Forms.Field.Components[name] = {className, description, icon};
     }
+    /**
+     * Unregisters a field from backend list
+     * @param {string} name name of component
+     */
     static UnregisterFieldComponent(name) {
         delete Colibri.UI.Forms.Field.Components[name];
     }
 
+    /**
+     * Creates a new field object
+     * @param {string} name name of field
+     * @param {Colibri.UI.Component} container container of component
+     * @param {object} field field data
+     * @param {Colibri.UI.Forms.Field} parent parent field
+     * @param {Colibri.UI.Forms.Form} root form component
+     */
     static Create(name, container, field, parent, root = null) {
         if(!field.component && !field.type) {
             return ;
@@ -206,6 +229,10 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Adds remove link on field
+     * @param {Function} callback handle click on remove link
+     */
     AddRemoveLink(callback) {
         this._removeLink = new Colibri.UI.Icon(this._name + '-remove', this);
         this._removeLink.AddClass('app-component-remove-field')
@@ -220,6 +247,11 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         });
     }
 
+    /**
+     * Adds up and down link on field
+     * @param {Function} upCallback handle click on up link
+     * @param {Function} downCallback handle click on down link
+     */
     AddUpDownLink(upCallback, downCallback) {
         this._upLink = new Colibri.UI.Icon(this._name + '-up', this);
         this._upLink.AddClass('app-component-up-field')
@@ -265,6 +297,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this.value = data;
     }
 
+    /** @private */
     _applyRuntimes() {
         let runtime = this._fieldData?.params?.runtime;
         if(runtime) {
@@ -273,6 +306,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         }
     }
 
+    /** @protected */
     _setFilledMark() {
         if(this instanceof Colibri.UI.Forms.Array) {
             this.itemsContainer.ForEach((name, component) => component instanceof Colibri.UI.Forms.Field && component._setFilledMark());
@@ -294,24 +328,40 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Validate field
+     */
     Validate() {
         this._validated = true;
     }
 
+    /** @protected */
     RenderFieldContainer() {
         throw new Error('#{ui-field-needtooverload-error}');
     }
 
+    /**
+     * Reset validation results
+     */
     ResetValidation() {
         this.params && (this.params.validated = true);
         this.RemoveClass('app-validate-error');
         this.message = '';
     }
 
+    /**
+     * Message component
+     * @type {Colibri.UI.Component}
+     * @readonly
+     */
     get messageObject() {
         return this._content.Children(this._name + '-message');
     }
 
+    /**
+     * Message string
+     * @type {string}
+     */
     get message() {
         const message = this._content.Children(this._name + '-message');
         if(!message) {
@@ -320,6 +370,10 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         return message.value;
     }
 
+    /**
+     * Message string
+     * @type {string}
+     */
     set message(value) {
         const message = this._content.Children(this._name + '-message');
         if(!message) {
@@ -329,13 +383,26 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         message.value = value ? value[Lang.Current] ?? value : '';
     }
 
+    /**
+     * Title object
+     * @type {Colibri.UI.Component}
+     * @readonly
+     */
     get titleObject() {
         return this._content.Children(this._name + '-title');
     }
 
+    /**
+     * Title string
+     * @type {string}
+     */
     get title() {
         return this._title.value;
     }
+    /**
+     * Title string
+     * @type {string}
+     */
     set title(value) {
         if(typeof value === 'function') {
             value(this).then((v) => {
@@ -358,92 +425,188 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         }
     }
 
+     /**
+     * Note object
+     * @type {Colibri.UI.Component}
+     * @readonly
+     */
     get noteObject() {
         return this._content.Children(this._name + '-note');
     }
 
+    /**
+     * Note string
+     * @type {string}
+     */
     get note() {
         return this._content.Children(this._name + '-note').value;
     }
+    /**
+     * Note string
+     * @type {string}
+     */
     set note(value) {
         this._content.Children(this._name + '-note').value = value ? value[Lang.Current] ?? value : '';
     }
 
+    /**
+     * Content container
+     * @type {Element}
+     * @readonly
+     */
     get contentContainer() {
         return this._content.Children(this._name + '-container');
     }
 
+    /**
+     * Content pane component
+     * @type {Colibri.UI.Component}
+     * @readonly
+     */
     get contentPane() {
         return this._content;
     }
 
+    /**
+     * Field object
+     * @type {object}
+     */
     get field() {
         return this._fieldData;
     }
 
+    /**
+     * Field object
+     * @type {object}
+     */
     set field(value) {
         this._fieldData = value;
     }
 
+    /**
+     * Field width
+     * @type {number}
+     */
     set inputWidth(value) {
         this._content.Children(this._name + '-container').width = value;
     }
 
+    /**
+     * Field width
+     * @type {number}
+     */
     get inputWidth() {
         return this._content.Children(this._name + '-container').width;
     }
 
+    /**
+     * Field root parent
+     * @type {Colibri.UI.Forms.Field|Colibri.UI.Forms.Form}
+     */
     get root() {
         return this._root;
     }
 
+    /**
+     * Field root parent
+     * @type {Colibri.UI.Forms.Field|Colibri.UI.Forms.Form}
+     */
     set root(value) {
         this._root = value;
     }
 
+    /**
+     * Field form
+     * @type {Colibri.UI.Forms.Form}
+     * @readonly
+     */
     get form() {
         const formElement = this._element.closest('.app-form-component');
         return formElement ? formElement.tag('component') : null;
     }
 
+    /**
+     * Field field
+     * @type {Colibri.UI.Forms.Field}
+     * @readonly
+     */
     get parentField() {
         return this._parentField;
     }
 
+    /**
+     * Original value, before change
+     * @type {*}
+     * @readonly
+     */
     get original() {
         return this._original;
     }
 
-
 }
 
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI.Forms
+ */
 Colibri.UI.Forms.HiddenField = class extends Colibri.UI.Component {
+    /**
+     * Creates a new field object
+     * @param {string} name name of field
+     * @param {Colibri.UI.Component} container container of component
+     * @param {object} fieldData field data
+     */
     constructor(name, container, fieldData) {
         super(name, container, Element.create('input', {type: 'hidden'}));
         this._fieldData = fieldData;
         this._validated = true;
     }
 
+    /**
+     * Value string
+     * @type {string}
+     */
     get value() {
         return this._element.value;
     }
 
+    /**
+     * Value string
+     * @type {string}
+     */
     set value(value) {
         this._element.value = value;
     }
 
+    /**
+     * Validate field
+     */
     Validate() {
         this._validated = true;
     }
 
+    /**
+     * Is field validated
+     * @type {boolean}
+     * @readonly
+     */
     get validated() {
         return this._validated;
     }
 
+    /**
+     * Return field object
+     * @type {object}
+     * @readonly
+     */
     get field() {
         return {};
     }
 
+    /**
+     * Reset validation results of field
+     */
     ResetValidation() {
         // Do nothing
     }

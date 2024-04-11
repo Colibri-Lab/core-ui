@@ -5,6 +5,9 @@
  */
 Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
 
         this.AddClass('app-component-period-field');
@@ -53,23 +56,42 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * Focus on component
+     */
     Focus() {
         this._input1.Focus();
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     get readonly() {
         return this._input1.readonly;
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
         this._input1.readonly = value;
     }
 
+    /**
+     * Field placeholder
+     * @type {string}
+     */
     get placeholder() {
         return this._input2.placeholder ? [this._input1.placeholder, this._input2.placeholder] : this._input1.placeholder;
     }
 
+    /**
+     * Field placeholder
+     * @type {string}
+     */
     set placeholder(value) {
         if(Array.isArray(value)) {
             value[0] = this._convertProperty('String', value[0]);
@@ -83,22 +105,37 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /**
+     * Value
+     * @type {Array}
+     */
     get value() {
         let input1 = this._input1.value != 'Invalid Date' ? this._input1.value.toShortDateString() : this._input1.value;
         let input2 = this._input2.value != 'Invalid Date' ? this._input2.value.toShortDateString() : this._input2.value;
         return [input1, input2];
     }
 
+    /**
+     * Value
+     * @type {Array}
+     */
     set value(value) {
         this._input1.value = value ? value[0] : null;
         this._input2.value = value ? value[1] : null;
     }
 
-
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */   
     get enabled() {
         return this._input1.enabled;
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */   
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
         this._input1.enabled = value;
@@ -106,13 +143,16 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Tab index
      * @type {number}
      */
     get tabIndex() {
         return this._input1 && this._input1.tabIndex;
     }
+    /**
+     * Tab index
+     * @type {number}
+     */
     set tabIndex(value) {
         if (this._input1) {
             this._input1.tabIndex = value === true ? Colibri.UI.tabIndex++ : value;

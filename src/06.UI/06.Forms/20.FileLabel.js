@@ -5,6 +5,9 @@
  */
 Colibri.UI.Forms.FileLabel = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
 
         this.AddClass('app-component-filelabel-field');
@@ -44,36 +47,57 @@ Colibri.UI.Forms.FileLabel = class extends Colibri.UI.Forms.Field {
 
     }
 
-
+    /**
+     * Focus on component
+     */
     Focus() {
         this._input.focus();
         this._input.select();
     }
 
+    /**
+     * Value
+     * @type {File|object|string}
+     */
     get value() {
         return this._value;
     }
 
+    /**
+     * Value
+     * @type {File|object|string}
+     */
     set value(value) {
         this._value = value;
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Tab index
      * @type {number}
      */
     get tabIndex() {
         return null;
     }
+    /**
+     * Tab index
+     * @type {number}
+     */
     set tabIndex(value) {
         // do nothing
     }
 
+    /**
+     * Placeholder text
+     * @type {string}
+     */
     get placeholder() {
         return this._placeholder.html();
     }
 
+    /**
+     * Placeholder text
+     * @type {string}
+     */
     set placeholder(value) {
         value = this._convertProperty('String', value);
         this._placeholder.html(value);

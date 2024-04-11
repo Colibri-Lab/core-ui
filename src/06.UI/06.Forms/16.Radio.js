@@ -5,6 +5,9 @@
  */
 Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     */
     RenderFieldContainer() {
 
         this.AddClass('app-component-radio-field');
@@ -28,7 +31,9 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
 
     }
 
-
+    /**
+     * Focus on component
+     */
     Focus() {
         if(this._element.querySelector('input')) {
             this._element.querySelector('input').focus();
@@ -37,16 +42,25 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
     get value() {
         return this._value;
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
     set value(value) {
         this._value = value;
         this._showValue();
         this.Validate();
     }
 
+    /** @private */
     _showValue() {
 
         let value = this._value;
@@ -77,7 +91,8 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
         this._fieldData.values = value;
         this._loadValues();
     }
-    
+
+    /** @private */
     _loadValues() {
         const contentContainer = this.contentContainer;
         const ident = Date.Mc();
@@ -122,15 +137,20 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Tab index
      * @type {number}
      */
     get tabIndex() {
         return this._input && this._input.attr('tabIndex');
     }
+    /**
+     * Tab index
+     * @type {number}
+     */
     set tabIndex(value) {
         this._input && this._input.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
     }
+    
 }
+
 Colibri.UI.Forms.Field.RegisterFieldComponent('Radio', 'Colibri.UI.Forms.Radio', '#{ui-fields-radio}')

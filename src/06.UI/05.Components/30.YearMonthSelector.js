@@ -71,7 +71,7 @@ Colibri.UI.YearMonthSelector = class extends Colibri.UI.FlexBox {
         this._values = value;
         this._showValues();
     }
-
+    /** @private */
     _showValues() {
         
         if(!this._values) {
@@ -103,6 +103,7 @@ Colibri.UI.YearMonthSelector = class extends Colibri.UI.FlexBox {
         this._value = value;
         this._showValue();
     }
+    /** @private */
     _showValue() {
         
         if(typeof value === 'string') {
