@@ -569,7 +569,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 /**
  * @class
  * @extends Colibri.UI.Pane
- * @memberof Colibri.UI
+ * @memberof Colibri.UI.List
  */
 Colibri.UI.List.SearchBox = class extends Colibri.UI.Pane {
     /**
@@ -650,7 +650,7 @@ Colibri.UI.List.SearchBox = class extends Colibri.UI.Pane {
 /**
  * @class
  * @extends Colibri.UI.Component
- * @memberof Colibri.UI
+ * @memberof Colibri.UI.List
  */
 Colibri.UI.List.Group = class extends Colibri.UI.Component {
 
@@ -699,6 +699,10 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         });
     }
 
+    /**
+     * Cycles for each children
+     * @param {Function} handler method to execute for each child component
+     */
     ForEach(handler) {
         this._div.ForEach(handler);
     }
@@ -743,6 +747,11 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Searches for index by key
+     * @param {string} key key to search for
+     * @returns {number}
+     */
     FindByKey(key) {
         return this._div.indexOf((item) => {
             const itemKey = Colibri.UI.List.Group.CreateKey(item.value); 
@@ -750,22 +759,43 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         });
     }
 
+    /**
+     * Childs
+     * @type {Array}
+     * @readonly
+     */
     get children() {
         return this._div.children;
     }
 
+    /**
+     * Label element
+     * @type {Element}
+     */
     get label() {
         return this._span;
     }
 
+    /**
+     * Label element
+     * @type {Element}
+     */
     set label(value) {
         this._span.value = value;
     }
 
+    /**
+     * Is group expandable
+     * @type {boolean}
+     */    
     get expandable() {
         return this.ContainsClass('app-component-expandable');
     }
 
+    /**
+     * Is group expandable
+     * @type {boolean}
+     */    
     set expandable(value) {
         if (value) {
             this.AddClass('app-component-expandable');
@@ -774,10 +804,18 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Is group expanded
+     * @type {boolean}
+     */    
     get expanded() {
         return !this.ContainsClass('app-component-collapsed')
     }
 
+    /**
+     * Is group expanded
+     * @type {boolean}
+     */    
     set expanded(value) {
         if (this.ContainsClass('app-component-collapsed')) {
             this.Expand();
@@ -786,10 +824,18 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Value array
+     * @type {Array}
+     */    
     get value() {
         return this._div.Map((name, item, index) => item.value);
     }
 
+    /**
+     * Value array
+     * @type {Array}
+     */    
     set value(value) {
 
         this.parent.ClearSelection(false);
@@ -857,6 +903,9 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         return this.emptyMessage;
     }
 
+    /**
+     * Expand group
+     */
     Expand() {
         if (this.expandable) {
             this.RemoveClass('app-component-collapsed');
@@ -866,6 +915,9 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Collapse group
+     */
     Collapse() {
         if (this.expandable) {
             this.AddClass('app-component-collapsed');
@@ -875,23 +927,35 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         }
     }
 
+    /** @protected */
     _createContextMenuButton() {
         // Do nothing
     }
 
+    /** @protected */
     _removeContextMenuButton() {
         // Do nothing
     }
 
+    /**
+     * Context menu items
+     * @type {Array}
+     */
     get contextmenu() {
         return this.parent.contextmenu;
     }
 
+    /**
+     * Context menu items
+     * @type {Array}
+     */
     set contextmenu(items) {
         this.parent.contextmenu = items;
     }
 
-
+    /**
+     * Clear items
+     */
     Clear() {
         this._div.Clear();
     }
@@ -911,8 +975,18 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
 
 }
 
+/**
+ * @class
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI.List
+ */
 Colibri.UI.List.Item = class extends Colibri.UI.Component {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     */
     constructor(name, container) {
         super(name, container);
 
@@ -929,11 +1003,18 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
     }
 
 
-    /** @type {boolean} */
+    /**
+     * Is item selected 
+     * @type {boolean} 
+     */
     get selected() {
         return this._element.is('.app-component-selected');
     }
 
+    /**
+     * Is item selected 
+     * @type {boolean} 
+     */
     set selected(value) {
         if (value) {
             this.AddClass('app-component-selected');
@@ -973,11 +1054,18 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
         }
     }
 
-    /** @type {object} */
+    /** 
+     * Value object
+     * @type {object}
+     */
     get value() {
         return this._itemData;
     }
 
+    /** 
+     * Value object
+     * @type {object}
+     */
     set value(value) {
 
         const oldKey = String.MD5(JSON.stringify(Object.sortPropertiesRecursive(this._itemData)));
@@ -1027,10 +1115,18 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
         this._element.tag(data);
     }
 
+    /** 
+     * Context menu items
+     * @type {Array}
+     */
     get contextmenu() {
         return this.group.contextmenu;
     }
 
+    /** 
+     * Context menu items
+     * @type {Array}
+     */
     set contextmenu(items) {
         this.group.contextmenu = items;
     }
@@ -1050,10 +1146,20 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
         this._key = value;
     }
 
+    /**
+     * List associated by item
+     * @type {Colibri.UI.List}
+     * @readonly
+     */
     get list() {
         return this.group?.parent ?? null;
     }
 
+    /**
+     * List group associated by item
+     * @type {Colibri.UI.List.Group}
+     * @readonly
+     */
     get group() {
         return this.parent?.parent ?? null;
     }

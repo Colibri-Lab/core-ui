@@ -5,6 +5,9 @@
  */
 Colibri.UI.Tree.JsonRenderer = class extends Colibri.UI.Renderer {
 
+    /**
+     * Render data in renderer as nodes
+     */
     Render() {
 
         this._data = Object.values(this._data);
