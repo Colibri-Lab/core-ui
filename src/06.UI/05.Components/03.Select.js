@@ -6,6 +6,7 @@
  */
 Colibri.UI.Select = class extends Colibri.UI.Input {
 
+    /** @type {Colibri.UI.Select.Dropdown} */
     _dropdown = null;
 
     /**
@@ -72,6 +73,10 @@ Colibri.UI.Select = class extends Colibri.UI.Input {
         this.RegisterEvent('SelectionChanged', false, 'Поднимается, когда кликаем по элементу списка');
     }
 
+    /**
+     * Generate selection text
+     * @returns {string}
+     */
     GenerateSelectionText() {
         const selected = this.dropdown.selected;
         if (!Array.isArray(selected)) {
@@ -85,6 +90,9 @@ Colibri.UI.Select = class extends Colibri.UI.Input {
         }
     }
 
+    /**
+     * Handle selection is changed
+     */
     HandleSelectionChanged() {
         this.value = this.GenerateSelectionText();
     }
@@ -99,14 +107,27 @@ Colibri.UI.Select = class extends Colibri.UI.Input {
         this.Dispatch('SelectionChanged', args);
     }
 
+    /**
+     * Select icon
+     * @type {Element}
+     * @readonly
+     */
     get icon() {
         return this.Children('icon');
     }
 
+    /**
+     * Dropdown of Select component
+     * @type {Colibri.UI.Select.Dropdown}
+     */
     get dropdown() {
         return this._dropdown;
     }
 
+    /**
+     * Dropdown of Select component
+     * @type {Colibri.UI.Select.Dropdown}
+     */
     set dropdown(value) {
         this._dropdown = value;
         this._dropdown.AddHandler('SelectionChanged', (event, args) => this.__DropdownSelectionChanged(event, args));
@@ -115,11 +136,19 @@ Colibri.UI.Select = class extends Colibri.UI.Input {
 };
 
 /**
- * Компонент выпадашка выпадашки
- * @type {Colibri.UI.Select.Dropdown}
+ * Component select box dropdown
+ * @class
+ * @extends Colibri.UI.Pane
+ * @memberof Colibri.UI.Select
  */
 Colibri.UI.Select.Dropdown = class extends Colibri.UI.Pane {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     * @params {boolean} resizable dropdown is component
+     */
     constructor(name, container, resizable) {
         super(name, container, Element.create('div'), resizable);
     }
@@ -130,10 +159,19 @@ Colibri.UI.Select.Dropdown = class extends Colibri.UI.Pane {
         this.RegisterEvent('SelectionChanged', false, 'Поднимается, когда меняется выбранный элемент');
     }
 
+    /**
+     * Filters an items (do nothing)
+     * @param {string} term term to filter
+     */
     FilterItems(term) {
         // Do nothing
     }
 
+    /**
+     * Selected items
+     * @type {Array}
+     * @readonly
+     */
     get selected() {
         return [];
     }
@@ -141,7 +179,7 @@ Colibri.UI.Select.Dropdown = class extends Colibri.UI.Pane {
 };
 
 /**
- * Компонент выпадашка по умолчанию
+ * Default dropdown
  * @type {Colibri.UI.Select.DefaultDropdown}
  */
 Colibri.UI.Select.DefaultDropdown = class extends Colibri.UI.Select.Dropdown {

@@ -64,24 +64,33 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
     }
 
     /**
-     * Ставит фокус на компоменту
-     * @returns {Colibri.UI.Component}
+     * Focus on component
+     * @returns this
      */
      Focus() {
         this._input.focus();
-        //this._input.select();
         return this;
     }
 
-    /** @type {integer} */
+    /**
+     * Maximum length in chars of component 
+     * @type {number} 
+     */
     get maxlength() {
         return this._input.attr('maxlength');
     }
+    /**
+     * Maximum length in chars of component 
+     * @type {number} 
+     */
     set maxlength(value) {
         this._input.attr('maxlength', value);
     }
 
-    /** @type {string} */
+    /**
+     * Textarea placeholder 
+     * @type {string} 
+     */
     get placeholder() {
         try {
             return this._input.attr('placeholder');
@@ -90,26 +99,41 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
             return '';
         }
     }
+    /**
+     * Textarea placeholder 
+     * @type {string} 
+     */
     set placeholder(value) {
         this._input.attr('placeholder', value ? value[Lang.Current] ?? value : '');
     }
 
-    /** @type {string} */
+    /**
+     * Value string 
+     * @type {string} 
+     */
     get value() {
         return this._input.value;
     }
+    /**
+     * Value string 
+     * @type {string} 
+     */
     set value(value) {
         this._input.value = value;
         this.Children('clear').shown = this._input.value.length > 0;
     }
 
     /**
-     * Элемент только для чтения
+     * Is textarea readonly
      * @type {boolean}
      */
     get readonly() {
         return this._input.is(':scope[readonly]');
     }
+    /**
+     * Is textarea readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         this._input.attr('readonly', value);
         this.Dispatch('ReadonlyStateChanged');
