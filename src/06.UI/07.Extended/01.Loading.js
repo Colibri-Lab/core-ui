@@ -20,6 +20,10 @@ Colibri.UI.Loading = class extends Colibri.UI.Pane {
         this._sendToFront = sendToFront;
     }
 
+    /**
+     * Show/Hide component
+     * @type {boolean}
+     */
     set shown(value) {
         super.shown = value;
         if(this._sendToFront) {
@@ -29,6 +33,13 @@ Colibri.UI.Loading = class extends Colibri.UI.Pane {
                 this.SendToBack();
             }
         }
+    }
+    /**
+     * Show/Hide component
+     * @type {boolean}
+     */
+    get shown () {
+        return super.shown;
     }
 
     /**
@@ -46,6 +57,7 @@ Colibri.UI.Loading = class extends Colibri.UI.Pane {
         this._icon = value;
         this._showicon();
     }
+    /** @private */
     _showicon() {
         this._element.html(eval(this._icon));
     }

@@ -42,6 +42,10 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
 
     }
 
+    /**
+     * Multiple
+     * @type {boolean}
+     */
     set multiple(value) {
         if(value) {
             this._input.attr('multiple', 'multiple');
@@ -51,10 +55,18 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
         }
     }
 
+    /**
+     * Multiple
+     * @type {boolean}
+     */
     get multiple() {
         return this._input.attr('multiple') === 'multiple';
     }
 
+    /**
+     * Allowed types
+     * @type {Array|string}
+     */
     set allowTypes(value) {
         if(typeof value === 'string') {
             value = value.split(',');
@@ -63,14 +75,26 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
         this._setAccept();
     }
 
+    /**
+     * Allowed types
+     * @type {Array|string}
+     */
     get allowTypes() {
         return this._allowTypes;
     }
 
+    /**
+     * Allowed size
+     * @type {number}
+     */
     set allowSize(value) {
         this._allowSize = parseInt(value);
     }
 
+    /**
+     * Allowed size
+     * @type {number}
+     */
     get allowSize() {
         return this._allowSize;
     }
@@ -84,10 +108,14 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
         this.ClickOnButton();
     }
     
+    /**
+     * Perform click on button
+     */
     ClickOnButton() {
         this._input.click();
     }
 
+    /** @private */
     _checkChoosedFiles(files) {
         let errors = [];
         let success = [];
@@ -103,6 +131,7 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
         this.Dispatch('Changed', {errors: errors, success: success});
     }
     
+    /** @private */
     _setAccept() {
         let ret = [];
         for(const ext of this._allowTypes) {
