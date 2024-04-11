@@ -7,73 +7,73 @@
 	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
 	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/**
 <span class='line'>  2</span>  * @class
-<span class='line'>  3</span>  * @extends Colibri.UI.Forms.Field
-<span class='line'>  4</span>  * @memberof Colibri.UI.Forms
-<span class='line'>  5</span>  */</span><span class="WHIT">
-<span class='line'>  6</span> </span><span class="NAME">Colibri.UI.Forms.ArrayGrid</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">class</span><span class="WHIT"> </span><span class="NAME">extends</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.Forms.Field</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>  7</span> </span><span class="WHIT">    </span><span class="NAME">RenderFieldContainer</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>  8</span> </span><span class="WHIT">        </span><span class="NAME">this.AddClass</span><span class="PUNC">(</span><span class="STRN">'app-component-array-grid-field'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>  9</span> 
-<span class='line'> 10</span> </span><span class="WHIT">        </span><span class="NAME">this._setDisplayedColumns</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 11</span> </span><span class="WHIT">        </span><span class="NAME">this._renderAddObjectButton</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 12</span> </span><span class="WHIT">        </span><span class="NAME">this._renderObjectsGrid</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 13</span> 
-<span class='line'> 14</span> </span><span class="WHIT">        </span><span class="NAME">this._objectWindow</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 15</span> 
-<span class='line'> 16</span> </span><span class="WHIT">        </span><span class="NAME">this._handleEvents</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 17</span> 
-<span class='line'> 18</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._fieldData</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">params</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">readonly</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 19</span> </span><span class="WHIT">            </span><span class="NAME">this.readonly</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">    
-<span class='line'> 20</span>         </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 21</span> </span><span class="WHIT">        </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 22</span> </span><span class="WHIT">            </span><span class="NAME">this.readonly</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._fieldData</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">params</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">readonly</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 23</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 24</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._fieldData</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">params</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">enabled</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 25</span> </span><span class="WHIT">            </span><span class="NAME">this.enabled</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 26</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 27</span> </span><span class="WHIT">        </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 28</span> </span><span class="WHIT">            </span><span class="NAME">this.enabled</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._fieldData.params.enabled</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 29</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 30</span> 
-<span class='line'> 31</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 32</span> 
-<span class='line'> 33</span> </span><span class="WHIT">    </span><span class="NAME">_handleEvents</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 34</span> </span><span class="WHIT">        </span><span class="COMM">/** Открыть окно с новым объектом */</span><span class="WHIT">
-<span class='line'> 35</span> </span><span class="WHIT">        </span><span class="NAME">this._addObjectButton.AddHandler</span><span class="PUNC">(</span><span class="STRN">'Clicked'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">this.__newObject</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 36</span> 
-<span class='line'> 37</span> </span><span class="WHIT">        </span><span class="COMM">/** Открыть окно с выбранным объектом */</span><span class="WHIT">
-<span class='line'> 38</span> </span><span class="WHIT">        </span><span class="NAME">this._objectsGrid.AddHandler</span><span class="PUNC">(</span><span class="STRN">'SelectionChanged'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 39</span> </span><span class="WHIT">            </span><span class="COMM">// не открываем окно, если на строке вызывают контекстное меню</span><span class="WHIT">
-<span class='line'> 40</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">args.isContextMenuEvent</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 41</span> </span><span class="WHIT">                </span><span class="NAME">this.__showObject</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Object.assign</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="NAME">object_row</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this._getSelected</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'> 42</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 43</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 44</span> 
-<span class='line'> 45</span> </span><span class="WHIT">        </span><span class="COMM">/** Добавить строкам таблицы контекстное меню */</span><span class="WHIT">
-<span class='line'> 46</span> </span><span class="WHIT">        </span><span class="NAME">this._objectsGrid.AddHandler</span><span class="PUNC">(</span><span class="STRN">'ContextMenuIconClicked'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">this.__showContextMenu</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 47</span> 
-<span class='line'> 48</span> </span><span class="WHIT">        </span><span class="COMM">/** Вызвать нужный обработчик контекстного меню */</span><span class="WHIT">
-<span class='line'> 49</span> </span><span class="WHIT">        </span><span class="NAME">this._objectsGrid.AddHandler</span><span class="PUNC">(</span><span class="STRN">'ContextMenuItemClicked'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">this.__processContextMenuAction</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>  3</span>  * @namespace
+<span class='line'>  4</span>  * @extends Colibri.UI.Forms.Field
+<span class='line'>  5</span>  * @memberof Colibri.UI.Forms
+<span class='line'>  6</span>  */</span><span class="WHIT">
+<span class='line'>  7</span> </span><span class="NAME">Colibri.UI.Forms.ArrayGrid</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">class</span><span class="WHIT"> </span><span class="NAME">extends</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.Forms.Field</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>  8</span> 
+<span class='line'>  9</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 10</span>      * Render field component
+<span class='line'> 11</span>      */</span><span class="WHIT">
+<span class='line'> 12</span> </span><span class="WHIT">    </span><span class="NAME">RenderFieldContainer</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 13</span> </span><span class="WHIT">        </span><span class="NAME">this.AddClass</span><span class="PUNC">(</span><span class="STRN">'app-component-array-grid-field'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 14</span> 
+<span class='line'> 15</span> </span><span class="WHIT">        </span><span class="NAME">this._setDisplayedColumns</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 16</span> </span><span class="WHIT">        </span><span class="NAME">this._renderAddObjectButton</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="WHIT">        </span><span class="NAME">this._renderObjectsGrid</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 18</span> 
+<span class='line'> 19</span> </span><span class="WHIT">        </span><span class="NAME">this._objectWindow</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 20</span> 
+<span class='line'> 21</span> </span><span class="WHIT">        </span><span class="NAME">this._handleEvents</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 22</span> 
+<span class='line'> 23</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._fieldData</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">params</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">readonly</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 24</span> </span><span class="WHIT">            </span><span class="NAME">this.readonly</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">    
+<span class='line'> 25</span>         </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 26</span> </span><span class="WHIT">        </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 27</span> </span><span class="WHIT">            </span><span class="NAME">this.readonly</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._fieldData</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">params</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">readonly</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 28</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 29</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._fieldData</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">params</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">enabled</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 30</span> </span><span class="WHIT">            </span><span class="NAME">this.enabled</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 31</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 32</span> </span><span class="WHIT">        </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 33</span> </span><span class="WHIT">            </span><span class="NAME">this.enabled</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._fieldData.params.enabled</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 34</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 35</span> 
+<span class='line'> 36</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 37</span> 
+<span class='line'> 38</span> </span><span class="WHIT">    </span><span class="COMM">/** @protected */</span><span class="WHIT">
+<span class='line'> 39</span> </span><span class="WHIT">    </span><span class="NAME">_handleEvents</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 40</span> </span><span class="WHIT">        </span><span class="COMM">/** Открыть окно с новым объектом */</span><span class="WHIT">
+<span class='line'> 41</span> </span><span class="WHIT">        </span><span class="NAME">this._addObjectButton.AddHandler</span><span class="PUNC">(</span><span class="STRN">'Clicked'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">this.__newObject</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 42</span> 
+<span class='line'> 43</span> </span><span class="WHIT">        </span><span class="COMM">/** Открыть окно с выбранным объектом */</span><span class="WHIT">
+<span class='line'> 44</span> </span><span class="WHIT">        </span><span class="NAME">this._objectsGrid.AddHandler</span><span class="PUNC">(</span><span class="STRN">'SelectionChanged'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 45</span> </span><span class="WHIT">            </span><span class="COMM">// не открываем окно, если на строке вызывают контекстное меню</span><span class="WHIT">
+<span class='line'> 46</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">args.isContextMenuEvent</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 47</span> </span><span class="WHIT">                </span><span class="NAME">this.__showObject</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Object.assign</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="NAME">object_row</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this._getSelected</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 48</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 49</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 50</span> 
-<span class='line'> 51</span> </span><span class="WHIT">        </span><span class="NAME">this._objectsGrid.AddHandler</span><span class="PUNC">(</span><span class="STRN">'RowSelected'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">this.__toggleMassActionsMenu</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 52</span> 
-<span class='line'> 53</span> </span><span class="WHIT">         </span><span class="NAME">this._objectsGrid.AddHandler</span><span class="PUNC">(</span><span class="STRN">'MassActionsMenuActionClicked'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">this.__processMassAction</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 54</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 55</span> 
-<span class='line'> 56</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'> 57</span>      * Нарисовать кнопку добавления нового объекта
-<span class='line'> 58</span>      * @private
-<span class='line'> 59</span>      */</span><span class="WHIT">
-<span class='line'> 60</span> </span><span class="WHIT">    </span><span class="NAME">_renderAddObjectButton</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 61</span> </span><span class="WHIT">        </span><span class="NAME">this._addObjectButton</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.OutlineBlueButton</span><span class="PUNC">(</span><span class="NAME">this._name</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'-add-object-button'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.contentContainer</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 62</span> </span><span class="WHIT">        </span><span class="NAME">this._addObjectButton.value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._fieldData.params</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">addlink</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="STRN">'#{ui-arraygrid-add} «'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._fieldData.desc</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'»'</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 63</span> </span><span class="WHIT">        </span><span class="NAME">this._addObjectButton.shown</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 64</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 65</span> 
-<span class='line'> 66</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'> 67</span>      * Нарисовать таблицу с нужными колонками
-<span class='line'> 68</span>      * @private
-<span class='line'> 69</span>      */</span><span class="WHIT">
+<span class='line'> 51</span> </span><span class="WHIT">        </span><span class="COMM">/** Добавить строкам таблицы контекстное меню */</span><span class="WHIT">
+<span class='line'> 52</span> </span><span class="WHIT">        </span><span class="NAME">this._objectsGrid.AddHandler</span><span class="PUNC">(</span><span class="STRN">'ContextMenuIconClicked'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">this.__showContextMenu</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 53</span> 
+<span class='line'> 54</span> </span><span class="WHIT">        </span><span class="COMM">/** Вызвать нужный обработчик контекстного меню */</span><span class="WHIT">
+<span class='line'> 55</span> </span><span class="WHIT">        </span><span class="NAME">this._objectsGrid.AddHandler</span><span class="PUNC">(</span><span class="STRN">'ContextMenuItemClicked'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">this.__processContextMenuAction</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 56</span> 
+<span class='line'> 57</span> </span><span class="WHIT">        </span><span class="NAME">this._objectsGrid.AddHandler</span><span class="PUNC">(</span><span class="STRN">'RowSelected'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">this.__toggleMassActionsMenu</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 58</span> 
+<span class='line'> 59</span> </span><span class="WHIT">         </span><span class="NAME">this._objectsGrid.AddHandler</span><span class="PUNC">(</span><span class="STRN">'MassActionsMenuActionClicked'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">this.__processMassAction</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 60</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 61</span> 
+<span class='line'> 62</span> </span><span class="WHIT">    </span><span class="COMM">/** @private */</span><span class="WHIT">
+<span class='line'> 63</span> </span><span class="WHIT">    </span><span class="NAME">_renderAddObjectButton</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="WHIT">        </span><span class="NAME">this._addObjectButton</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.OutlineBlueButton</span><span class="PUNC">(</span><span class="NAME">this._name</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'-add-object-button'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.contentContainer</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="WHIT">        </span><span class="NAME">this._addObjectButton.value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._fieldData.params</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">addlink</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="STRN">'#{ui-arraygrid-add} «'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._fieldData.desc</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'»'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">        </span><span class="NAME">this._addObjectButton.shown</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 67</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 68</span> 
+<span class='line'> 69</span> </span><span class="WHIT">    </span><span class="COMM">/** @private */</span><span class="WHIT">
 <span class='line'> 70</span> </span><span class="WHIT">    </span><span class="NAME">_renderObjectsGrid</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'> 71</span> </span><span class="WHIT">        </span><span class="NAME">this._objectsGrid</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.Grid</span><span class="PUNC">(</span><span class="NAME">this._name</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'-container-grid'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.contentContainer</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 72</span> </span><span class="WHIT">        </span><span class="NAME">this._objectsGrid.selectionMode</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.Grid.FullRow</span><span class="PUNC">;</span><span class="WHIT">
@@ -90,8 +90,8 @@
 <span class='line'> 83</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'> 84</span> 
 <span class='line'> 85</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'> 86</span>      * Открыть окно с объектом
-<span class='line'> 87</span>      * @param {Object|null} value //содержимое полей объекта/формы
+<span class='line'> 86</span>      * Opens window for clicked object
+<span class='line'> 87</span>      * @param {Object|null} value
 <span class='line'> 88</span>      * @private
 <span class='line'> 89</span>      */</span><span class="WHIT">
 <span class='line'> 90</span> </span><span class="WHIT">    </span><span class="NAME">_openObjectWindow</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
@@ -132,358 +132,404 @@
 <span class='line'>125</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>126</span> 
 <span class='line'>127</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>128</span>      * Открыть окно с новым объектом
-<span class='line'>129</span>      * @param event
-<span class='line'>130</span>      * @param args
-<span class='line'>131</span>      * @private
-<span class='line'>132</span>      */</span><span class="WHIT">
-<span class='line'>133</span> </span><span class="WHIT">    </span><span class="NAME">__newObject</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>134</span> </span><span class="WHIT">        </span><span class="NAME">this._openObjectWindow</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>135</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>136</span> 
-<span class='line'>137</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>138</span>      * Открыть окно с существующим объектом
-<span class='line'>139</span>      * @param event
-<span class='line'>140</span>      * @param args
-<span class='line'>141</span>      * @private
-<span class='line'>142</span>      */</span><span class="WHIT">
-<span class='line'>143</span> </span><span class="WHIT">    </span><span class="NAME">__showObject</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>144</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">row</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._getRow</span><span class="PUNC">(</span><span class="NAME">args.object_row</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>145</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">row</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">this._openObjectWindow</span><span class="PUNC">(</span><span class="NAME">row.tag._objectValue</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>146</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>147</span> 
-<span class='line'>148</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>149</span>      * Добавить строку с новым объектом
-<span class='line'>150</span>      * @param event
-<span class='line'>151</span>      * @param args
-<span class='line'>152</span>      * @private
-<span class='line'>153</span>      */</span><span class="WHIT">
-<span class='line'>154</span> </span><span class="WHIT">    </span><span class="NAME">__addObjectRow</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>155</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._objectWindow</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">args.formValues</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>156</span> </span><span class="WHIT">        </span><span class="NAME">this._addRow</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>157</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>158</span> 
-<span class='line'>159</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>160</span>      * Обвновить строку с объектом
-<span class='line'>161</span>      * @param event
-<span class='line'>162</span>      * @param args
-<span class='line'>163</span>      * @private
-<span class='line'>164</span>      */</span><span class="WHIT">
-<span class='line'>165</span> </span><span class="WHIT">    </span><span class="NAME">__updateObjectRow</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>166</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">row</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._getRow</span><span class="PUNC">(</span><span class="NAME">args.object_row</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>167</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._objectWindow</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">args.formValues</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>168</span> 
-<span class='line'>169</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">row</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">row.value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">row.tag._objectValue</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>170</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>171</span> 
-<span class='line'>172</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>173</span>      * Удалить строку с объектом
-<span class='line'>174</span>      * @param event
-<span class='line'>175</span>      * @param args
-<span class='line'>176</span>      * @private
-<span class='line'>177</span>      */</span><span class="WHIT">
-<span class='line'>178</span> </span><span class="WHIT">    </span><span class="NAME">__removeObjectRow</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>179</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">row</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._getRow</span><span class="PUNC">(</span><span class="NAME">args.object_row</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>180</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">row</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">row.Dispose</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>181</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>182</span> 
-<span class='line'>183</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>184</span>      * Добавить строку
-<span class='line'>185</span>      * @param {Object} value
-<span class='line'>186</span>      * @private
-<span class='line'>187</span>      */</span><span class="WHIT">
-<span class='line'>188</span> </span><span class="WHIT">    </span><span class="NAME">_addRow</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>189</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">row</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._objectsGrid.rows.Add</span><span class="PUNC">(</span><span class="STRN">'row-'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">Date.Now</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">getTime</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>190</span> </span><span class="WHIT">        </span><span class="NAME">row.tag._objectValue</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>191</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>192</span> 
-<span class='line'>193</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>194</span>      * Показать контекстное меню строки
-<span class='line'>195</span>      * @param event
-<span class='line'>196</span>      * @param args
-<span class='line'>197</span>      * @private
-<span class='line'>198</span>      */</span><span class="WHIT">
-<span class='line'>199</span> </span><span class="WHIT">    </span><span class="NAME">__showContextMenu</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>200</span> </span><span class="WHIT">        </span><span class="NAME">args.domEvent.preventDefault</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>201</span> </span><span class="WHIT">        </span><span class="NAME">args.domEvent.stopPropagation</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>202</span> 
-<span class='line'>203</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">contextmenu</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="WHIT">
-<span class='line'>204</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>205</span> </span><span class="WHIT">                </span><span class="NAME">name</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'show-object'</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>206</span> </span><span class="WHIT">                </span><span class="NAME">title</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'#{ui-arraygrid-contextmenu-edit}'</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>207</span> </span><span class="WHIT">                </span><span class="NAME">icon</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.ContextMenuEditIcon</span><span class="WHIT">
-<span class='line'>208</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>209</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>210</span> </span><span class="WHIT">                </span><span class="NAME">name</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'remove-object-row'</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>211</span> </span><span class="WHIT">                </span><span class="NAME">title</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'#{ui-arraygrid-contextmenu-remove}'</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>212</span> </span><span class="WHIT">                </span><span class="NAME">icon</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.ContextMenuRemoveIcon</span><span class="WHIT">
-<span class='line'>213</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>214</span> </span><span class="WHIT">        </span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>215</span> 
-<span class='line'>216</span> </span><span class="WHIT">        </span><span class="NAME">args.item.contextmenu</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">contextmenu</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>217</span> </span><span class="WHIT">        </span><span class="NAME">args.item.ShowContextMenu</span><span class="PUNC">(</span><span class="NAME">args.isContextMenuEvent</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">Colibri.UI.ContextMenu.RB</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.ContextMenu.RB</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">Colibri.UI.ContextMenu.RB</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.ContextMenu.LB</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args.isContextMenuEvent</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">left</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">args.domEvent.clientX</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">top</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">args.domEvent.clientY</span><span class="PUNC">}</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>218</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>219</span> 
-<span class='line'>220</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>221</span>      * Обработать клик по одному из пунктов контекстного меню
-<span class='line'>222</span>      * @param event
-<span class='line'>223</span>      * @param args
-<span class='line'>224</span>      * @private
-<span class='line'>225</span>      */</span><span class="WHIT">
-<span class='line'>226</span> </span><span class="WHIT">    </span><span class="NAME">__processContextMenuAction</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>227</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">args</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">menuData</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">item</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>228</span> </span><span class="WHIT">            </span><span class="KEYW">switch</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">args.menuData.name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>229</span> </span><span class="WHIT">                </span><span class="KEYW">case</span><span class="WHIT"> </span><span class="STRN">'show-object'</span><span class="PUNC">:</span><span class="WHIT">
-<span class='line'>230</span> </span><span class="WHIT">                    </span><span class="NAME">this._objectsGrid.UnselectAllRows</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>231</span> </span><span class="WHIT">                    </span><span class="NAME">args.item.selected</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>232</span> 
-<span class='line'>233</span> </span><span class="WHIT">                    </span><span class="NAME">this.__showObject</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Object.assign</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="NAME">object_row</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">args.item</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>234</span> </span><span class="WHIT">                    </span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>128</span>      * @private
+<span class='line'>129</span>      * @param {Colibri.Events.Event} event event object
+<span class='line'>130</span>      * @param {*} args event arguments
+<span class='line'>131</span>      */</span><span class="WHIT"> 
+<span class='line'>132</span>     </span><span class="NAME">__newObject</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>133</span> </span><span class="WHIT">        </span><span class="NAME">this._openObjectWindow</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>134</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>135</span> 
+<span class='line'>136</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>137</span>      * @private
+<span class='line'>138</span>      * @param {Colibri.Events.Event} event event object
+<span class='line'>139</span>      * @param {*} args event arguments
+<span class='line'>140</span>      */</span><span class="WHIT"> 
+<span class='line'>141</span>     </span><span class="NAME">__showObject</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>142</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">row</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._getRow</span><span class="PUNC">(</span><span class="NAME">args.object_row</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>143</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">row</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">this._openObjectWindow</span><span class="PUNC">(</span><span class="NAME">row.tag._objectValue</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>144</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>145</span> 
+<span class='line'>146</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>147</span>      * @private
+<span class='line'>148</span>      * @param {Colibri.Events.Event} event event object
+<span class='line'>149</span>      * @param {*} args event arguments
+<span class='line'>150</span>      */</span><span class="WHIT"> 
+<span class='line'>151</span>     </span><span class="NAME">__addObjectRow</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>152</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._objectWindow</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">args.formValues</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>153</span> </span><span class="WHIT">        </span><span class="NAME">this._addRow</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>154</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>155</span> 
+<span class='line'>156</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>157</span>      * @private
+<span class='line'>158</span>      * @param {Colibri.Events.Event} event event object
+<span class='line'>159</span>      * @param {*} args event arguments
+<span class='line'>160</span>      */</span><span class="WHIT"> 
+<span class='line'>161</span>     </span><span class="NAME">__updateObjectRow</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>162</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">row</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._getRow</span><span class="PUNC">(</span><span class="NAME">args.object_row</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>163</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._objectWindow</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">args.formValues</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>164</span> 
+<span class='line'>165</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">row</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">row.value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">row.tag._objectValue</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>166</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>167</span> 
+<span class='line'>168</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>169</span>      * @private
+<span class='line'>170</span>      * @param {Colibri.Events.Event} event event object
+<span class='line'>171</span>      * @param {*} args event arguments
+<span class='line'>172</span>      */</span><span class="WHIT"> 
+<span class='line'>173</span>     </span><span class="NAME">__removeObjectRow</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>174</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">row</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._getRow</span><span class="PUNC">(</span><span class="NAME">args.object_row</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>175</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">row</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">row.Dispose</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>176</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>177</span> 
+<span class='line'>178</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>179</span>      * Adds a new row
+<span class='line'>180</span>      * @param {Object} value
+<span class='line'>181</span>      * @private
+<span class='line'>182</span>      */</span><span class="WHIT">
+<span class='line'>183</span> </span><span class="WHIT">    </span><span class="NAME">_addRow</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>184</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">row</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._objectsGrid.rows.Add</span><span class="PUNC">(</span><span class="STRN">'row-'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">Date.Now</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">getTime</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>185</span> </span><span class="WHIT">        </span><span class="NAME">row.tag._objectValue</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>186</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>187</span> 
+<span class='line'>188</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>189</span>      * @private
+<span class='line'>190</span>      * @param {Colibri.Events.Event} event event object
+<span class='line'>191</span>      * @param {*} args event arguments
+<span class='line'>192</span>      */</span><span class="WHIT"> 
+<span class='line'>193</span>     </span><span class="NAME">__showContextMenu</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>194</span> </span><span class="WHIT">        </span><span class="NAME">args.domEvent.preventDefault</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>195</span> </span><span class="WHIT">        </span><span class="NAME">args.domEvent.stopPropagation</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>196</span> 
+<span class='line'>197</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">contextmenu</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="WHIT">
+<span class='line'>198</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>199</span> </span><span class="WHIT">                </span><span class="NAME">name</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'show-object'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>200</span> </span><span class="WHIT">                </span><span class="NAME">title</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'#{ui-arraygrid-contextmenu-edit}'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>201</span> </span><span class="WHIT">                </span><span class="NAME">icon</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.ContextMenuEditIcon</span><span class="WHIT">
+<span class='line'>202</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>203</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>204</span> </span><span class="WHIT">                </span><span class="NAME">name</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'remove-object-row'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>205</span> </span><span class="WHIT">                </span><span class="NAME">title</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'#{ui-arraygrid-contextmenu-remove}'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>206</span> </span><span class="WHIT">                </span><span class="NAME">icon</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.ContextMenuRemoveIcon</span><span class="WHIT">
+<span class='line'>207</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>208</span> </span><span class="WHIT">        </span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>209</span> 
+<span class='line'>210</span> </span><span class="WHIT">        </span><span class="NAME">args.item.contextmenu</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">contextmenu</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>211</span> </span><span class="WHIT">        </span><span class="NAME">args.item.ShowContextMenu</span><span class="PUNC">(</span><span class="NAME">args.isContextMenuEvent</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">Colibri.UI.ContextMenu.RB</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.ContextMenu.RB</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">Colibri.UI.ContextMenu.RB</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.ContextMenu.LB</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args.isContextMenuEvent</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">left</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">args.domEvent.clientX</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">top</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">args.domEvent.clientY</span><span class="PUNC">}</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>212</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>213</span> 
+<span class='line'>214</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>215</span>      * @private
+<span class='line'>216</span>      * @param {Colibri.Events.Event} event event object
+<span class='line'>217</span>      * @param {*} args event arguments
+<span class='line'>218</span>      */</span><span class="WHIT"> 
+<span class='line'>219</span>     </span><span class="NAME">__processContextMenuAction</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>220</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">args</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">menuData</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">item</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>221</span> </span><span class="WHIT">            </span><span class="KEYW">switch</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">args.menuData.name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>222</span> </span><span class="WHIT">                </span><span class="KEYW">case</span><span class="WHIT"> </span><span class="STRN">'show-object'</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>223</span> </span><span class="WHIT">                    </span><span class="NAME">this._objectsGrid.UnselectAllRows</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>224</span> </span><span class="WHIT">                    </span><span class="NAME">args.item.selected</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>225</span> 
+<span class='line'>226</span> </span><span class="WHIT">                    </span><span class="NAME">this.__showObject</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Object.assign</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="NAME">object_row</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">args.item</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>227</span> </span><span class="WHIT">                    </span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>228</span> 
+<span class='line'>229</span> </span><span class="WHIT">                </span><span class="KEYW">case</span><span class="WHIT"> </span><span class="STRN">'remove-object-row'</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>230</span> </span><span class="WHIT">                    </span><span class="NAME">this.__removeObjectRow</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Object.assign</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="NAME">object_row</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">args.item</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>231</span> </span><span class="WHIT">                    </span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>232</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>233</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>234</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>235</span> 
-<span class='line'>236</span> </span><span class="WHIT">                </span><span class="KEYW">case</span><span class="WHIT"> </span><span class="STRN">'remove-object-row'</span><span class="PUNC">:</span><span class="WHIT">
-<span class='line'>237</span> </span><span class="WHIT">                    </span><span class="NAME">this.__removeObjectRow</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Object.assign</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="NAME">object_row</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">args.item</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>238</span> </span><span class="WHIT">                    </span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>239</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>240</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>241</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>242</span> 
-<span class='line'>243</span> </span><span class="WHIT">    </span><span class="NAME">__toggleMassActionsMenu</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>244</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._objectsGrid.checked.length</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>245</span> </span><span class="WHIT">            </span><span class="NAME">this._objectsGrid.massActionsMenu</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="WHIT">
-<span class='line'>246</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>247</span> </span><span class="WHIT">                    </span><span class="NAME">name</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'remove-object-rows'</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>248</span> </span><span class="WHIT">                    </span><span class="NAME">title</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'#{ui-arraygrid-massactions-remove}'</span><span class="WHIT">
-<span class='line'>249</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>250</span> </span><span class="WHIT">            </span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>251</span> 
-<span class='line'>252</span> </span><span class="WHIT">            </span><span class="NAME">this._objectsGrid.ShowMassActionsMenu</span><span class="PUNC">(</span><span class="NAME">document.body</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>253</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>254</span> </span><span class="WHIT">            </span><span class="NAME">this._objectsGrid.massActionsMenu</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>255</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>256</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>257</span> 
-<span class='line'>258</span> </span><span class="WHIT">    </span><span class="NAME">__processMassAction</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>259</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">args</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">menuData</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">items</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>260</span> </span><span class="WHIT">            </span><span class="KEYW">switch</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">args.menuData.name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>261</span> </span><span class="WHIT">                </span><span class="KEYW">case</span><span class="WHIT"> </span><span class="STRN">'remove-object-rows'</span><span class="PUNC">:</span><span class="WHIT">
-<span class='line'>262</span> </span><span class="WHIT">                    </span><span class="NAME">args.items.forEach</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">item</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>263</span> </span><span class="WHIT">                        </span><span class="NAME">this.__removeObjectRow</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Object.assign</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="NAME">object_row</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">item</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>264</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'>265</span> </span><span class="WHIT">                    </span><span class="NAME">this._objectsGrid.massActionsMenu</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>266</span> </span><span class="WHIT">                    </span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>267</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>268</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>269</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>270</span> 
-<span class='line'>271</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>272</span>      * Выбранная строка грида
-<span class='line'>273</span>      * @return {Colibri.UI.Component[]}
-<span class='line'>274</span>      * @private
-<span class='line'>275</span>      */</span><span class="WHIT">
-<span class='line'>276</span> </span><span class="WHIT">    </span><span class="NAME">_getSelected</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>277</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._objectsGrid.selected</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>278</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>279</span> 
-<span class='line'>280</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>281</span>      * Получить строку по имени
-<span class='line'>282</span>      * @param {string|Colibri.UI.Grid.Row} value имя строки/объект строки
-<span class='line'>283</span>      * @return {null|Colibri.UI.Grid.Row}
-<span class='line'>284</span>      * @private
-<span class='line'>285</span>      */</span><span class="WHIT">
-<span class='line'>286</span> </span><span class="WHIT">    </span><span class="NAME">_getRow</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>287</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>288</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="KEYW">instanceof</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.Grid.Row</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this._objectsGrid.FindRow</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>289</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>290</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>291</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>292</span> 
-<span class='line'>293</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>294</span>      * Список отображаемых колонок (если не указан, отображаются все)
-<span class='line'>295</span>      * @private
-<span class='line'>296</span>      */</span><span class="WHIT">
-<span class='line'>297</span> </span><span class="WHIT">    </span><span class="NAME">_setDisplayedColumns</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>298</span> </span><span class="WHIT">        </span><span class="NAME">this._displayedColumns</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>299</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">paramColumns</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._fieldData.params</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">displayed_columns</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>300</span> 
-<span class='line'>301</span> </span><span class="WHIT">        </span><span class="NAME">Object.forEach</span><span class="PUNC">(</span><span class="NAME">this._fieldData.fields</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">fieldName</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">fieldData</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>302</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">paramColumns</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="PUNC">(</span><span class="NAME">fieldName</span><span class="WHIT"> </span><span class="KEYW">in</span><span class="WHIT"> </span><span class="NAME">paramColumns</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>303</span> </span><span class="WHIT">                </span><span class="KEYW">return</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>304</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>305</span> 
-<span class='line'>306</span> </span><span class="WHIT">            </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">column</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>307</span> </span><span class="WHIT">            </span><span class="NAME">column</span><span class="PUNC">[</span><span class="STRN">'name'</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">fieldName</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>308</span> </span><span class="WHIT">            </span><span class="NAME">column</span><span class="PUNC">[</span><span class="STRN">'title'</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">fieldData.desc</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>309</span> </span><span class="WHIT">            </span><span class="NAME">column</span><span class="PUNC">[</span><span class="STRN">'viewer'</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">paramColumns</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">paramColumns</span><span class="PUNC">[</span><span class="NAME">fieldName</span><span class="PUNC">]</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">viewer</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>310</span> </span><span class="WHIT">            </span><span class="NAME">column</span><span class="PUNC">[</span><span class="STRN">'editor'</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">paramColumns</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">paramColumns</span><span class="PUNC">[</span><span class="NAME">fieldName</span><span class="PUNC">]</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">editor</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>311</span> 
-<span class='line'>312</span> </span><span class="WHIT">            </span><span class="NAME">this._displayedColumns.push</span><span class="PUNC">(</span><span class="NAME">column</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>313</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>314</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>315</span> 
-<span class='line'>316</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>317</span>      * Фокус
-<span class='line'>318</span>      */</span><span class="WHIT">
-<span class='line'>319</span> </span><span class="WHIT">    </span><span class="NAME">Focus</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>320</span> </span><span class="WHIT">        </span><span class="COMM">// do nothing</span><span class="WHIT">
-<span class='line'>321</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>322</span> 
-<span class='line'>323</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>324</span>      * Только для чтения
-<span class='line'>325</span>      */</span><span class="WHIT">
-<span class='line'>326</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">readonly</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>327</span> </span><span class="WHIT">        </span><span class="COMM">// do nothing</span><span class="WHIT">
-<span class='line'>328</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>329</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">readonly</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>330</span> </span><span class="WHIT">        </span><span class="COMM">// do nothing</span><span class="WHIT">
-<span class='line'>331</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>332</span> 
+<span class='line'>236</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>237</span>      * @private
+<span class='line'>238</span>      * @param {Colibri.Events.Event} event event object
+<span class='line'>239</span>      * @param {*} args event arguments
+<span class='line'>240</span>      */</span><span class="WHIT"> 
+<span class='line'>241</span>     </span><span class="NAME">__toggleMassActionsMenu</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>242</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._objectsGrid.checked.length</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>243</span> </span><span class="WHIT">            </span><span class="NAME">this._objectsGrid.massActionsMenu</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="WHIT">
+<span class='line'>244</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>245</span> </span><span class="WHIT">                    </span><span class="NAME">name</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'remove-object-rows'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>246</span> </span><span class="WHIT">                    </span><span class="NAME">title</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'#{ui-arraygrid-massactions-remove}'</span><span class="WHIT">
+<span class='line'>247</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>248</span> </span><span class="WHIT">            </span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>249</span> 
+<span class='line'>250</span> </span><span class="WHIT">            </span><span class="NAME">this._objectsGrid.ShowMassActionsMenu</span><span class="PUNC">(</span><span class="NAME">document.body</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>251</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>252</span> </span><span class="WHIT">            </span><span class="NAME">this._objectsGrid.massActionsMenu</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>253</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>254</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>255</span> 
+<span class='line'>256</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>257</span>      * @private
+<span class='line'>258</span>      * @param {Colibri.Events.Event} event event object
+<span class='line'>259</span>      * @param {*} args event arguments
+<span class='line'>260</span>      */</span><span class="WHIT"> 
+<span class='line'>261</span>     </span><span class="NAME">__processMassAction</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>262</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">args</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">menuData</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">items</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>263</span> </span><span class="WHIT">            </span><span class="KEYW">switch</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">args.menuData.name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>264</span> </span><span class="WHIT">                </span><span class="KEYW">case</span><span class="WHIT"> </span><span class="STRN">'remove-object-rows'</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>265</span> </span><span class="WHIT">                    </span><span class="NAME">args.items.forEach</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">item</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>266</span> </span><span class="WHIT">                        </span><span class="NAME">this.__removeObjectRow</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Object.assign</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="NAME">object_row</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">item</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>267</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>268</span> </span><span class="WHIT">                    </span><span class="NAME">this._objectsGrid.massActionsMenu</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>269</span> </span><span class="WHIT">                    </span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>270</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>271</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>272</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>273</span> 
+<span class='line'>274</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>275</span>      * Returns selected row
+<span class='line'>276</span>      * @return {Colibri.UI.Component[]}
+<span class='line'>277</span>      * @private
+<span class='line'>278</span>      */</span><span class="WHIT">
+<span class='line'>279</span> </span><span class="WHIT">    </span><span class="NAME">_getSelected</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>280</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._objectsGrid.selected</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>281</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>282</span> 
+<span class='line'>283</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>284</span>      * Gets a row by row or row name
+<span class='line'>285</span>      * @param {string|Colibri.UI.Grid.Row} value 
+<span class='line'>286</span>      * @return {null|Colibri.UI.Grid.Row}
+<span class='line'>287</span>      * @private
+<span class='line'>288</span>      */</span><span class="WHIT">
+<span class='line'>289</span> </span><span class="WHIT">    </span><span class="NAME">_getRow</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>290</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>291</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="KEYW">instanceof</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.Grid.Row</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this._objectsGrid.FindRow</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>292</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>293</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>294</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>295</span> 
+<span class='line'>296</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>297</span>      * Shows/hides columns
+<span class='line'>298</span>      * @private
+<span class='line'>299</span>      */</span><span class="WHIT">
+<span class='line'>300</span> </span><span class="WHIT">    </span><span class="NAME">_setDisplayedColumns</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>301</span> </span><span class="WHIT">        </span><span class="NAME">this._displayedColumns</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>302</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">paramColumns</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._fieldData.params</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">displayed_columns</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>303</span> 
+<span class='line'>304</span> </span><span class="WHIT">        </span><span class="NAME">Object.forEach</span><span class="PUNC">(</span><span class="NAME">this._fieldData.fields</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">fieldName</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">fieldData</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>305</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">paramColumns</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="PUNC">(</span><span class="NAME">fieldName</span><span class="WHIT"> </span><span class="KEYW">in</span><span class="WHIT"> </span><span class="NAME">paramColumns</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>306</span> </span><span class="WHIT">                </span><span class="KEYW">return</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>307</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>308</span> 
+<span class='line'>309</span> </span><span class="WHIT">            </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">column</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>310</span> </span><span class="WHIT">            </span><span class="NAME">column</span><span class="PUNC">[</span><span class="STRN">'name'</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">fieldName</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>311</span> </span><span class="WHIT">            </span><span class="NAME">column</span><span class="PUNC">[</span><span class="STRN">'title'</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">fieldData.desc</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>312</span> </span><span class="WHIT">            </span><span class="NAME">column</span><span class="PUNC">[</span><span class="STRN">'viewer'</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">paramColumns</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">paramColumns</span><span class="PUNC">[</span><span class="NAME">fieldName</span><span class="PUNC">]</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">viewer</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>313</span> </span><span class="WHIT">            </span><span class="NAME">column</span><span class="PUNC">[</span><span class="STRN">'editor'</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">paramColumns</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">paramColumns</span><span class="PUNC">[</span><span class="NAME">fieldName</span><span class="PUNC">]</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">editor</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>314</span> 
+<span class='line'>315</span> </span><span class="WHIT">            </span><span class="NAME">this._displayedColumns.push</span><span class="PUNC">(</span><span class="NAME">column</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>316</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>317</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>318</span> 
+<span class='line'>319</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>320</span>      * Focus on grid
+<span class='line'>321</span>      */</span><span class="WHIT">
+<span class='line'>322</span> </span><span class="WHIT">    </span><span class="NAME">Focus</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>323</span> </span><span class="WHIT">        </span><span class="COMM">// do nothing</span><span class="WHIT">
+<span class='line'>324</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>325</span> 
+<span class='line'>326</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>327</span>      * Readonly
+<span class='line'>328</span>      * @type {boolean}
+<span class='line'>329</span>      */</span><span class="WHIT">
+<span class='line'>330</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">readonly</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>331</span> </span><span class="WHIT">        </span><span class="COMM">// do nothing</span><span class="WHIT">
+<span class='line'>332</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>333</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>334</span>      * Значение поля (все объекты)
-<span class='line'>335</span>      * @type {Object[]}
+<span class='line'>334</span>      * Readonly
+<span class='line'>335</span>      * @type {boolean}
 <span class='line'>336</span>      */</span><span class="WHIT">
-<span class='line'>337</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>338</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">data</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>339</span> </span><span class="WHIT">        </span><span class="NAME">this._objectsGrid.rows</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">ForEach</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">row</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">data.push</span><span class="PUNC">(</span><span class="NAME">row.value</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>337</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">readonly</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>338</span> </span><span class="WHIT">        </span><span class="COMM">// do nothing</span><span class="WHIT">
+<span class='line'>339</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>340</span> 
-<span class='line'>341</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>342</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>343</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>344</span> </span><span class="WHIT">        </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">eval_default_values</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>345</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">Array.isArray</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> 
-<span class='line'>346</span>             </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">'#{ui-arraygrid-errors}'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> 
-<span class='line'>347</span>         </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>341</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>342</span>      * Value
+<span class='line'>343</span>      * @type {Object[]}
+<span class='line'>344</span>      */</span><span class="WHIT">
+<span class='line'>345</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>346</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">data</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>347</span> </span><span class="WHIT">        </span><span class="NAME">this._objectsGrid.rows</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">ForEach</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">row</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">data.push</span><span class="PUNC">(</span><span class="NAME">row.value</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>348</span> 
-<span class='line'>349</span> </span><span class="WHIT">        </span><span class="NAME">this._objectsGrid.rows.Clear</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>350</span> </span><span class="WHIT">        </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">value.forEach</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">item</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">this._addRow</span><span class="PUNC">(</span><span class="NAME">item</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>351</span> </span><span class="WHIT">        
-<span class='line'>352</span>     </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>353</span> 
-<span class='line'>354</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>355</span>      * Поля объекта
-<span class='line'>356</span>      * @param {string|null} name имя поля, (если не указано, возвращает сразу все)
-<span class='line'>357</span>      * @return {Object|Colibri.UI.Forms.Field}
-<span class='line'>358</span>      * @constructor
-<span class='line'>359</span>      */</span><span class="WHIT">
-<span class='line'>360</span> </span><span class="WHIT">    </span><span class="NAME">Fields</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>361</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._objectWindow</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">form</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">Children</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>362</span> 
-<span class='line'>363</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">fields</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>364</span> </span><span class="WHIT">        </span><span class="NAME">this._objectWindow</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">form</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">ForEach</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">field</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>365</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">field</span><span class="WHIT"> </span><span class="KEYW">instanceof</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.Forms.Field</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">fields</span><span class="PUNC">[</span><span class="NAME">name</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">field</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>366</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>367</span> 
-<span class='line'>368</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">fields</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>369</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>370</span> 
-<span class='line'>371</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">tabIndex</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>372</span> </span><span class="WHIT">        </span><span class="COMM">// do nothing</span><span class="WHIT">
-<span class='line'>373</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>349</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>350</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>351</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>352</span>      * Value
+<span class='line'>353</span>      * @type {Object[]}
+<span class='line'>354</span>      */</span><span class="WHIT">
+<span class='line'>355</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>356</span> </span><span class="WHIT">        </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">eval_default_values</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>357</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">Array.isArray</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> 
+<span class='line'>358</span>             </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">'#{ui-arraygrid-errors}'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> 
+<span class='line'>359</span>         </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>360</span> 
+<span class='line'>361</span> </span><span class="WHIT">        </span><span class="NAME">this._objectsGrid.rows.Clear</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>362</span> </span><span class="WHIT">        </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">value.forEach</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">item</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">this._addRow</span><span class="PUNC">(</span><span class="NAME">item</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>363</span> </span><span class="WHIT">        
+<span class='line'>364</span>     </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>365</span> 
+<span class='line'>366</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>367</span>      * Fiels of object
+<span class='line'>368</span>      * @param {string|null} name имя поля, (если не указано, возвращает сразу все)
+<span class='line'>369</span>      * @return {Object|Colibri.UI.Forms.Field}
+<span class='line'>370</span>      * @constructor
+<span class='line'>371</span>      */</span><span class="WHIT">
+<span class='line'>372</span> </span><span class="WHIT">    </span><span class="NAME">Fields</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>373</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._objectWindow</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">form</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">Children</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>374</span> 
-<span class='line'>375</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">tabIndex</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>376</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._objectsGrid.tabIndex</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>377</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>378</span> 
-<span class='line'>379</span> </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>380</span> 
-<span class='line'>381</span> 
-<span class='line'>382</span> </span><span class="NAME">Colibri.UI.Forms.ArrayGrid.ObjectWindow</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">class</span><span class="WHIT"> </span><span class="NAME">extends</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.ModelessWindow</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>383</span> </span><span class="WHIT">    </span><span class="NAME">constructor</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">container</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>384</span> </span><span class="WHIT">        </span><span class="NAME">super</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">container</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>385</span> </span><span class="WHIT">        </span><span class="NAME">this.AddClass</span><span class="PUNC">(</span><span class="STRN">'app-component-array-grid-object-window'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>386</span> 
-<span class='line'>387</span> </span><span class="WHIT">        </span><span class="NAME">this._containsNewObject</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>388</span> 
-<span class='line'>389</span> </span><span class="WHIT">        </span><span class="NAME">this._form</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.Forms.Form</span><span class="PUNC">(</span><span class="NAME">this._name</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'-form'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.container</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>390</span> </span><span class="WHIT">        </span><span class="NAME">this._saveButton</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.SuccessButton</span><span class="PUNC">(</span><span class="NAME">this._name</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'-save-button'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.footer</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>391</span> </span><span class="WHIT">        </span><span class="NAME">this._saveButton.value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'#{ui-arraygrid-save}'</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>392</span> 
-<span class='line'>393</span> </span><span class="WHIT">        </span><span class="NAME">this._form.AddHandler</span><span class="PUNC">(</span><span class="STRN">'Changed'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">this.Dispatch</span><span class="PUNC">(</span><span class="STRN">'Changed'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">formValues</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this._form.value</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">component</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>394</span> </span><span class="WHIT">        </span><span class="NAME">this._saveButton.AddHandler</span><span class="PUNC">(</span><span class="STRN">'Clicked'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>395</span> </span><span class="WHIT">            </span><span class="NAME">this.Dispatch</span><span class="PUNC">(</span><span class="STRN">'FormSubmitted'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">formValues</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this._form.value</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>396</span> </span><span class="WHIT">            </span><span class="NAME">this.close</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>397</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>375</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">fields</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>376</span> </span><span class="WHIT">        </span><span class="NAME">this._objectWindow</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">form</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">ForEach</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">field</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>377</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">field</span><span class="WHIT"> </span><span class="KEYW">instanceof</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.Forms.Field</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">fields</span><span class="PUNC">[</span><span class="NAME">name</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">field</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>378</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>379</span> 
+<span class='line'>380</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">fields</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>381</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>382</span> 
+<span class='line'>383</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>384</span>      * Tab indes
+<span class='line'>385</span>      * @type {number|boolean}
+<span class='line'>386</span>      */</span><span class="WHIT">
+<span class='line'>387</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">tabIndex</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>388</span> </span><span class="WHIT">        </span><span class="COMM">// do nothing</span><span class="WHIT">
+<span class='line'>389</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>390</span> 
+<span class='line'>391</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>392</span>      * Tab indes
+<span class='line'>393</span>      * @type {number|boolean}
+<span class='line'>394</span>      */</span><span class="WHIT">
+<span class='line'>395</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">tabIndex</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>396</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._objectsGrid.tabIndex</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>397</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>398</span> 
-<span class='line'>399</span> </span><span class="WHIT">        </span><span class="NAME">this._form.shown</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>400</span> </span><span class="WHIT">        </span><span class="NAME">this._saveButton.shown</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>401</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>402</span> 
-<span class='line'>403</span> </span><span class="WHIT">    </span><span class="NAME">_registerEvents</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>404</span> </span><span class="WHIT">        </span><span class="NAME">super._registerEvents</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>405</span> </span><span class="WHIT">        </span><span class="NAME">this.RegisterEvent</span><span class="PUNC">(</span><span class="STRN">'Changed'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'Когда содержимое формы внутри окна изменилось'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>406</span> </span><span class="WHIT">        </span><span class="NAME">this.RegisterEvent</span><span class="PUNC">(</span><span class="STRN">'FormSubmitted'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'Когда форма внутри окна отправлена'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>407</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>408</span> 
-<span class='line'>409</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>410</span>      * Настройки окна
-<span class='line'>411</span>      * @param {Object} params
+<span class='line'>399</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>400</span> 
+<span class='line'>401</span> </span><span class="COMM">/**
+<span class='line'>402</span>  * @class
+<span class='line'>403</span>  * @extends Colibri.UI.ModelessWindow
+<span class='line'>404</span>  * @memberof Colibri.UI.Forms.ArrayGrid
+<span class='line'>405</span>  */</span><span class="WHIT">
+<span class='line'>406</span> </span><span class="NAME">Colibri.UI.Forms.ArrayGrid.ObjectWindow</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">class</span><span class="WHIT"> </span><span class="NAME">extends</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.ModelessWindow</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>407</span> 
+<span class='line'>408</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>409</span>      * @constructor
+<span class='line'>410</span>      * @param {string} name name of component
+<span class='line'>411</span>      * @param {Element|Colibri.UI.Component} container container of component
 <span class='line'>412</span>      */</span><span class="WHIT">
-<span class='line'>413</span> </span><span class="WHIT">    </span><span class="NAME">setParams</span><span class="PUNC">(</span><span class="NAME">params</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>414</span> </span><span class="WHIT">        </span><span class="NAME">this.title</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.title</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>415</span> </span><span class="WHIT">        </span><span class="NAME">this.width</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.width</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>416</span> </span><span class="WHIT">        </span><span class="NAME">this.height</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.height</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>417</span> </span><span class="WHIT">        </span><span class="NAME">this.sticky</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.sticky</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>418</span> </span><span class="WHIT">        </span><span class="NAME">this.stickyX</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.sticky_x</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>419</span> </span><span class="WHIT">        </span><span class="NAME">this.stickyY</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.sticky_y</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>420</span> </span><span class="WHIT">        </span><span class="NAME">this.startPointX</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.start_point_x</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>421</span> </span><span class="WHIT">        </span><span class="NAME">this.startPointY</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.start_point_y</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>422</span> </span><span class="WHIT">        </span><span class="NAME">this.disposeOnClose</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.dispose_on_close</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>423</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>424</span> 
-<span class='line'>425</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>426</span>      * Форма с объектом
-<span class='line'>427</span>      * @return {Colibri.UI.Forms.Form}
-<span class='line'>428</span>      */</span><span class="WHIT">
-<span class='line'>429</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">form</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>430</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._form</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>413</span> </span><span class="WHIT">    </span><span class="NAME">constructor</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">container</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>414</span> </span><span class="WHIT">        </span><span class="NAME">super</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">container</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>415</span> </span><span class="WHIT">        </span><span class="NAME">this.AddClass</span><span class="PUNC">(</span><span class="STRN">'app-component-array-grid-object-window'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>416</span> 
+<span class='line'>417</span> </span><span class="WHIT">        </span><span class="NAME">this._containsNewObject</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>418</span> 
+<span class='line'>419</span> </span><span class="WHIT">        </span><span class="NAME">this._form</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.Forms.Form</span><span class="PUNC">(</span><span class="NAME">this._name</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'-form'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.container</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>420</span> </span><span class="WHIT">        </span><span class="NAME">this._saveButton</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Colibri.UI.SuccessButton</span><span class="PUNC">(</span><span class="NAME">this._name</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'-save-button'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.footer</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>421</span> </span><span class="WHIT">        </span><span class="NAME">this._saveButton.value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'#{ui-arraygrid-save}'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>422</span> 
+<span class='line'>423</span> </span><span class="WHIT">        </span><span class="NAME">this._form.AddHandler</span><span class="PUNC">(</span><span class="STRN">'Changed'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">this.Dispatch</span><span class="PUNC">(</span><span class="STRN">'Changed'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">formValues</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this._form.value</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">component</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>424</span> </span><span class="WHIT">        </span><span class="NAME">this._saveButton.AddHandler</span><span class="PUNC">(</span><span class="STRN">'Clicked'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>425</span> </span><span class="WHIT">            </span><span class="NAME">this.Dispatch</span><span class="PUNC">(</span><span class="STRN">'FormSubmitted'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">formValues</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this._form.value</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>426</span> </span><span class="WHIT">            </span><span class="NAME">this.close</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>427</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>428</span> 
+<span class='line'>429</span> </span><span class="WHIT">        </span><span class="NAME">this._form.shown</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>430</span> </span><span class="WHIT">        </span><span class="NAME">this._saveButton.shown</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>431</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>432</span> 
-<span class='line'>433</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>434</span>      * Поля формы
-<span class='line'>435</span>      * @return {Object}
-<span class='line'>436</span>      */</span><span class="WHIT">
-<span class='line'>437</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">fields</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>438</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._form.fields</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>439</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>433</span> </span><span class="WHIT">    </span><span class="COMM">/** @protected */</span><span class="WHIT">
+<span class='line'>434</span> </span><span class="WHIT">    </span><span class="NAME">_registerEvents</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>435</span> </span><span class="WHIT">        </span><span class="NAME">super._registerEvents</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>436</span> </span><span class="WHIT">        </span><span class="NAME">this.RegisterEvent</span><span class="PUNC">(</span><span class="STRN">'Changed'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'Когда содержимое формы внутри окна изменилось'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>437</span> </span><span class="WHIT">        </span><span class="NAME">this.RegisterEvent</span><span class="PUNC">(</span><span class="STRN">'FormSubmitted'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'Когда форма внутри окна отправлена'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>438</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>439</span> 
 <span class='line'>440</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>441</span>      * Поля формы
-<span class='line'>442</span>      * @param {string|Object} value
+<span class='line'>441</span>      * Set a window params
+<span class='line'>442</span>      * @param {Object} params
 <span class='line'>443</span>      */</span><span class="WHIT">
-<span class='line'>444</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">fields</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>445</span> </span><span class="WHIT">        </span><span class="NAME">this._form.fields</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>446</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>447</span> 
-<span class='line'>448</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>449</span>      * Значения полей формы
-<span class='line'>450</span>      * @type {Object|null}
-<span class='line'>451</span>      */</span><span class="WHIT">
-<span class='line'>452</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>453</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._form.value</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>444</span> </span><span class="WHIT">    </span><span class="NAME">setParams</span><span class="PUNC">(</span><span class="NAME">params</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>445</span> </span><span class="WHIT">        </span><span class="NAME">this.title</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.title</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>446</span> </span><span class="WHIT">        </span><span class="NAME">this.width</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.width</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>447</span> </span><span class="WHIT">        </span><span class="NAME">this.height</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.height</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>448</span> </span><span class="WHIT">        </span><span class="NAME">this.sticky</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.sticky</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>449</span> </span><span class="WHIT">        </span><span class="NAME">this.stickyX</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.sticky_x</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>450</span> </span><span class="WHIT">        </span><span class="NAME">this.stickyY</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.sticky_y</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>451</span> </span><span class="WHIT">        </span><span class="NAME">this.startPointX</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.start_point_x</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>452</span> </span><span class="WHIT">        </span><span class="NAME">this.startPointY</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.start_point_y</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>453</span> </span><span class="WHIT">        </span><span class="NAME">this.disposeOnClose</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.dispose_on_close</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>454</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>455</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>456</span> </span><span class="WHIT">        </span><span class="NAME">this._form.value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>457</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>458</span> 
-<span class='line'>459</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>460</span>      * Находится ли в форме новый объект
-<span class='line'>461</span>      * @type {boolean}
-<span class='line'>462</span>      */</span><span class="WHIT">
-<span class='line'>463</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">containsNewObject</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>464</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._containsNewObject</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>465</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>466</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">containsNewObject</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>467</span> </span><span class="WHIT">        </span><span class="NAME">this._containsNewObject</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">'true'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>468</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>469</span> 
-<span class='line'>470</span> </span><span class="WHIT">    
-<span class='line'>471</span>     </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">root</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>472</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._form.root</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>473</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>474</span> 
-<span class='line'>475</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">root</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>476</span> </span><span class="WHIT">        </span><span class="NAME">this._form.root</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>455</span> 
+<span class='line'>456</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>457</span>      * Form with object
+<span class='line'>458</span>      * @type {Colibri.UI.Forms.Form}
+<span class='line'>459</span>      */</span><span class="WHIT">
+<span class='line'>460</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">form</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>461</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._form</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>462</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>463</span> 
+<span class='line'>464</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>465</span>      * Form fields
+<span class='line'>466</span>      * @type {Object}
+<span class='line'>467</span>      */</span><span class="WHIT">
+<span class='line'>468</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">fields</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>469</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._form.fields</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>470</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>471</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>472</span>      * Form fields
+<span class='line'>473</span>      * @param {string|Object} value
+<span class='line'>474</span>      */</span><span class="WHIT">
+<span class='line'>475</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">fields</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>476</span> </span><span class="WHIT">        </span><span class="NAME">this._form.fields</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>477</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>478</span> 
-<span class='line'>479</span> </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>480</span> 
-<span class='line'>481</span> </span><span class="NAME">Colibri.UI.Forms.Field.RegisterFieldComponent</span><span class="PUNC">(</span><span class="STRN">'ArrayGrid'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'Colibri.UI.Forms.ArrayGrid'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'#{ui-fields-arraygrid}'</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'>482</span> </span></pre></body></html>
+<span class='line'>479</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>480</span>      * Form values
+<span class='line'>481</span>      * @type {Object|null}
+<span class='line'>482</span>      */</span><span class="WHIT">
+<span class='line'>483</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>484</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._form.value</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>485</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>486</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>487</span>      * Form values
+<span class='line'>488</span>      * @type {Object|null}
+<span class='line'>489</span>      */</span><span class="WHIT">
+<span class='line'>490</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>491</span> </span><span class="WHIT">        </span><span class="NAME">this._form.value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>492</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>493</span> 
+<span class='line'>494</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>495</span>      * Is form contains new object
+<span class='line'>496</span>      * @type {boolean}
+<span class='line'>497</span>      */</span><span class="WHIT">
+<span class='line'>498</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">containsNewObject</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>499</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._containsNewObject</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>500</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>501</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>502</span>      * Is form contains new object
+<span class='line'>503</span>      * @type {boolean}
+<span class='line'>504</span>      */</span><span class="WHIT">
+<span class='line'>505</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">containsNewObject</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>506</span> </span><span class="WHIT">        </span><span class="NAME">this._containsNewObject</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">'true'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>507</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>508</span> 
+<span class='line'>509</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>510</span>      * Returns root object
+<span class='line'>511</span>      * @type {object}
+<span class='line'>512</span>      */</span><span class="WHIT">
+<span class='line'>513</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">root</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>514</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._form.root</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>515</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>516</span> 
+<span class='line'>517</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>518</span>      * Returns root object
+<span class='line'>519</span>      * @type {object}
+<span class='line'>520</span>      */</span><span class="WHIT">
+<span class='line'>521</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">root</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>522</span> </span><span class="WHIT">        </span><span class="NAME">this._form.root</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>523</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>524</span> 
+<span class='line'>525</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>526</span> 
+<span class='line'>527</span> </span><span class="NAME">Colibri.UI.Forms.Field.RegisterFieldComponent</span><span class="PUNC">(</span><span class="STRN">'ArrayGrid'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'Colibri.UI.Forms.ArrayGrid'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'#{ui-fields-arraygrid}'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>528</span> </span></pre></body></html>

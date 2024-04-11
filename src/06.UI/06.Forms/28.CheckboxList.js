@@ -31,6 +31,7 @@ Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /** @protected */
     _handleEvents(input) {
         input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args || {}, {component: this})));
         input.AddHandler('Clicked', (event, args) => {
@@ -43,14 +44,25 @@ Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
         input.AddHandler('LoosedFocus', (event, args) => this.Dispatch('LoosedFocus', args));
     }
 
+    /**
+     * Focus on component
+     */
     Focus() {
         this.contentContainer.Children('firstChild')?.Focus();
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     get readonly() {
         return this.contentContainer.Children('firstChild')?.readonly ?? false;
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
         this.contentContainer.ForEach((name, component) => {
@@ -58,6 +70,10 @@ Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
         });
     }
 
+    /**
+     * Value
+     * @type {Array}
+     */
     get value() {
         const contentContainer = this.contentContainer;
         const ret = [];
@@ -69,6 +85,10 @@ Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
         return ret;
     }
 
+    /**
+     * Value
+     * @type {Array}
+     */
     set value(value) {
 
         if(!Array.isArray(value)) {
@@ -82,10 +102,18 @@ Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     get enabled() {
         return this.contentContainer.Children('firstChild')?.enabled ?? true;
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
         this.contentContainer.ForEach((name, component) => {
@@ -94,13 +122,16 @@ Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Tab index
      * @type {number}
      */
     get tabIndex() {
         return this.contentContainer.Children('firstChild').tabIndex;
     }
+    /**
+     * Tab index
+     * @type {number}
+     */
     set tabIndex(value) {
         this.contentContainer.ForEach((name, component) => {
             component.tabIndex = (value++);
@@ -122,6 +153,7 @@ Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
         this._values = value;
         this._showValues();
     }
+    /** @private */
     _showValues() {
         const contentContainer = this.contentContainer;
         contentContainer.Clear();

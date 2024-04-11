@@ -46,6 +46,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
     }
 
+    /** @protected */
     _renderFields() {
 
         // this._fieldData.vertical && this.AddClass('app-field-vertical');
@@ -84,15 +85,26 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         this.RegisterEvent('TabChanged', false, 'Когда вкладка переключена');
     }
 
+    /**
+     * Focus on component to the first object of array
+     */
     Focus() {
         this.contentContainer.Children('firstChild').Focus();
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     get readonly() {
         const first = this.contentContainer.Children('firstChild');
         return first.readonly;
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
         super.readonly = value;
@@ -101,6 +113,10 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         });
     }
 
+    /**
+     * Value
+     * @type {object}
+     */
     get value() {
 
         let data = {};
@@ -117,6 +133,10 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
     }
 
+    /**
+     * Value
+     * @type {object}
+     */
     set value(value) {
         value = eval_default_values(value);
         
@@ -152,6 +172,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         }
     }
 
+    /** @protected */
     _hideAndShow() {
 
         const data = this.value;
@@ -213,6 +234,11 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
     }
 
+    /**
+     * Searches for field
+     * @param {string} name field to search for
+     * @returns {Array<Colibri.UI.Forms.Object>}
+     */
     Fields(name = null) {
         if(!this._tabs) {
             return [];
@@ -220,26 +246,47 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         return name ? this._tabs.components[name] : this._tabs.components;
     }
 
+    /**
+     * Cycles all rows in array
+     * @param {Function} callback callback for each item
+     */
     ForEveryField(callback) {
         Object.forEach(this._tabs.components, callback);
     }
 
+    /**
+     * Selected index
+     * @type {number}
+     */
     set selectedIndex(value) {
         value = this._convertProperty('Number', value);
         this._tabs.selectedIndex = value;
     }
+    /**
+     * Selected index
+     * @type {number}
+     */
     get selectedIndex() {
         return this._tabs.selectedIndex;
     }
 
+    /**
+     * Buttons
+     * @type {Array}
+     */
     get buttons() {
         return this._tabs.buttons;
     }
 
+    /**
+     * Components
+     * @type {Array}
+     */
     get panes() {
         return this._tabs.components;
     }
 
+    /** @protected */
     _calcRuntimeValues(rootValue = null) {
         Object.forEach(this._fieldData.fields, (name, fieldData) => {
             const fieldComponent = this.Fields(name);         

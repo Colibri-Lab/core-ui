@@ -63,23 +63,42 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
         // если нужно добавить что то
     }
 
+    /**
+     * Focus on component 
+     */
     Focus() {
         this.contentContainer.Children('firstChild').Focus();
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     get readonly() {
         return this._grid.readonly;
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
         this._grid.readonly = value;
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     get enabled() {
         return this._enabled ?? true;
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
         if(this._enabled != value) {
@@ -91,6 +110,10 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /**
+     * Value
+     * @type {Array}
+     */
     get value() {
 
         let val = [];
@@ -106,6 +129,10 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
         return val;
     }
 
+    /**
+     * Value
+     * @type {Array}
+     */
     set value(value) {
         if(!Array.isArray(value)) {
             value = [];
@@ -119,46 +146,36 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
         }
     }
 
-
+    /**
+     * Tab index
+     * @type {number|boolean}
+     */
     set tabIndex(value) {
         this._grid.tabIndex = value;
     }
 
-
+    /**
+     * Tab index
+     * @type {number|boolean}
+     */
     get tabIndex() {
         return this._grid.tabIndex;
     }
 
     /**
-     * Высота
+     * Height
      * @type {number}
      */
     get height() {
         return this._grid.height;
     }
     /**
-     * Высота
+     * Height
      * @type {number}
      */
     set height(value) {
         this._grid.height = value;
     }
-
-    // /**
-    //  * Ширина
-    //  * @type {number}
-    //  */
-    // get width() {
-    //     return this._grid.width;
-    // }
-    // /**
-    //  * Высота
-    //  * @type {number}
-    //  */
-    // set width(value) {
-    //     this._element.css('width', value + 'px');
-    // }
-    
 
 }
 Colibri.UI.Forms.Field.RegisterFieldComponent('SimpleArray', 'Colibri.UI.Forms.SimpleArray', '#{ui-fields-simplearray}')

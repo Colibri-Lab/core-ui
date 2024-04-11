@@ -1,5 +1,6 @@
 /**
  * @class
+ * @namespace
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
  */
@@ -34,6 +35,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /** @protected */
     _handleEvents() {
         /** Открыть окно с новым объектом */
         this._addObjectButton.AddHandler('Clicked', (event, args) => this.__newObject(event, args));
@@ -57,20 +59,14 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
          this._objectsGrid.AddHandler('MassActionsMenuActionClicked', (event, args) => this.__processMassAction(event, args));
     }
 
-    /**
-     * Нарисовать кнопку добавления нового объекта
-     * @private
-     */
+    /** @private */
     _renderAddObjectButton() {
         this._addObjectButton = new Colibri.UI.OutlineBlueButton(this._name + '-add-object-button', this.contentContainer);
         this._addObjectButton.value = this._fieldData.params?.addlink || '#{ui-arraygrid-add} «' + (this._fieldData.desc) + '»';
         this._addObjectButton.shown = true;
     }
 
-    /**
-     * Нарисовать таблицу с нужными колонками
-     * @private
-     */
+    /** @private */
     _renderObjectsGrid() {
         this._objectsGrid = new Colibri.UI.Grid(this._name + '-container-grid', this.contentContainer);
         this._objectsGrid.selectionMode = Colibri.UI.Grid.FullRow;
@@ -87,8 +83,8 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Открыть окно с объектом
-     * @param {Object|null} value //содержимое полей объекта/формы
+     * Opens window for clicked object
+     * @param {Object|null} value
      * @private
      */
     _openObjectWindow(value) {
@@ -129,12 +125,6 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Открыть окно с новым объектом
-     * @param event
-     * @param args
-     * @private
-     */
-    /**
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -143,12 +133,6 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         this._openObjectWindow();
     }
 
-    /**
-     * Открыть окно с существующим объектом
-     * @param event
-     * @param args
-     * @private
-     */
     /**
      * @private
      * @param {Colibri.Events.Event} event event object
@@ -160,12 +144,6 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Добавить строку с новым объектом
-     * @param event
-     * @param args
-     * @private
-     */
-    /**
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -175,12 +153,6 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         this._addRow(value);
     }
 
-    /**
-     * Обвновить строку с объектом
-     * @param event
-     * @param args
-     * @private
-     */
     /**
      * @private
      * @param {Colibri.Events.Event} event event object
@@ -194,12 +166,6 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Удалить строку с объектом
-     * @param event
-     * @param args
-     * @private
-     */
-    /**
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -210,7 +176,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Добавить строку
+     * Adds a new row
      * @param {Object} value
      * @private
      */
@@ -219,12 +185,6 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         row.tag._objectValue = value;
     }
 
-    /**
-     * Показать контекстное меню строки
-     * @param event
-     * @param args
-     * @private
-     */
     /**
      * @private
      * @param {Colibri.Events.Event} event event object
@@ -251,12 +211,6 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         args.item.ShowContextMenu(args.isContextMenuEvent ? [Colibri.UI.ContextMenu.RB, Colibri.UI.ContextMenu.RB] : [Colibri.UI.ContextMenu.RB, Colibri.UI.ContextMenu.LB], '', args.isContextMenuEvent ? {left: args.domEvent.clientX, top: args.domEvent.clientY} : null);
     }
 
-    /**
-     * Обработать клик по одному из пунктов контекстного меню
-     * @param event
-     * @param args
-     * @private
-     */
     /**
      * @private
      * @param {Colibri.Events.Event} event event object
@@ -318,7 +272,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Выбранная строка грида
+     * Returns selected row
      * @return {Colibri.UI.Component[]}
      * @private
      */
@@ -327,8 +281,8 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Получить строку по имени
-     * @param {string|Colibri.UI.Grid.Row} value имя строки/объект строки
+     * Gets a row by row or row name
+     * @param {string|Colibri.UI.Grid.Row} value 
      * @return {null|Colibri.UI.Grid.Row}
      * @private
      */
@@ -340,7 +294,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Список отображаемых колонок (если не указан, отображаются все)
+     * Shows/hides columns
      * @private
      */
     _setDisplayedColumns() {
@@ -363,24 +317,29 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Фокус
+     * Focus on grid
      */
     Focus() {
         // do nothing
     }
 
     /**
-     * Только для чтения
+     * Readonly
+     * @type {boolean}
      */
     get readonly() {
         // do nothing
     }
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         // do nothing
     }
 
     /**
-     * Значение поля (все объекты)
+     * Value
      * @type {Object[]}
      */
     get value() {
@@ -389,6 +348,10 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
 
         return data;
     }
+    /**
+     * Value
+     * @type {Object[]}
+     */
     set value(value) {
         value = eval_default_values(value);
         if(value && !Array.isArray(value)) { 
@@ -401,7 +364,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Поля объекта
+     * Fiels of object
      * @param {string|null} name имя поля, (если не указано, возвращает сразу все)
      * @return {Object|Colibri.UI.Forms.Field}
      * @constructor
@@ -417,18 +380,36 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         return fields;
     }
 
+    /**
+     * Tab indes
+     * @type {number|boolean}
+     */
     set tabIndex(value) {
         // do nothing
     }
 
+    /**
+     * Tab indes
+     * @type {number|boolean}
+     */
     get tabIndex() {
         return this._objectsGrid.tabIndex;
     }
 
 }
 
-
+/**
+ * @class
+ * @extends Colibri.UI.ModelessWindow
+ * @memberof Colibri.UI.Forms.ArrayGrid
+ */
 Colibri.UI.Forms.ArrayGrid.ObjectWindow = class extends Colibri.UI.ModelessWindow {
+
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     */
     constructor(name, container) {
         super(name, container);
         this.AddClass('app-component-array-grid-object-window');
@@ -457,7 +438,7 @@ Colibri.UI.Forms.ArrayGrid.ObjectWindow = class extends Colibri.UI.ModelessWindo
     }
 
     /**
-     * Настройки окна
+     * Set a window params
      * @param {Object} params
      */
     setParams(params) {
@@ -473,22 +454,22 @@ Colibri.UI.Forms.ArrayGrid.ObjectWindow = class extends Colibri.UI.ModelessWindo
     }
 
     /**
-     * Форма с объектом
-     * @return {Colibri.UI.Forms.Form}
+     * Form with object
+     * @type {Colibri.UI.Forms.Form}
      */
     get form() {
         return this._form;
     }
 
     /**
-     * Поля формы
-     * @return {Object}
+     * Form fields
+     * @type {Object}
      */
     get fields () {
         return this._form.fields;
     }
     /**
-     * Поля формы
+     * Form fields
      * @param {string|Object} value
      */
     set fields(value) {
@@ -496,32 +477,47 @@ Colibri.UI.Forms.ArrayGrid.ObjectWindow = class extends Colibri.UI.ModelessWindo
     }
 
     /**
-     * Значения полей формы
+     * Form values
      * @type {Object|null}
      */
     get value() {
         return this._form.value;
     }
+    /**
+     * Form values
+     * @type {Object|null}
+     */
     set value(value) {
         this._form.value = value;
     }
 
     /**
-     * Находится ли в форме новый объект
+     * Is form contains new object
      * @type {boolean}
      */
     get containsNewObject() {
         return this._containsNewObject;
     }
+    /**
+     * Is form contains new object
+     * @type {boolean}
+     */
     set containsNewObject(value) {
         this._containsNewObject = (value === true || value === 'true');
     }
 
-    
+    /**
+     * Returns root object
+     * @type {object}
+     */
     get root() {
         return this._form.root;
     }
 
+    /**
+     * Returns root object
+     * @type {object}
+     */
     set root(value) {
         this._form.root = value;
     }

@@ -37,6 +37,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /** @protected */
     _renderFields() {
 
         this._fieldData?.params?.vertical && this.AddClass('app-field-vertical');
@@ -90,12 +91,19 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         // если нужно добавить что то
     }
 
+    /**
+     * Focus on component
+     */
     Focus() {
         if(this.contentContainer.Children('firstChild')) {
             this.contentContainer.Children('firstChild').Focus();
         }
     }
 
+    /**
+     * Value
+     * @type {Object}
+     */
     get value() {
 
         if(this.contentContainer?.Children('nofields')) {
@@ -120,6 +128,10 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * Value
+     * @type {Object}
+     */
     set value(value) {
 
         if(this.contentContainer?.Children('nofields')) {
@@ -176,20 +188,36 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * Tab index
+     * @type {number}
+     */
     set tabIndex(value) {
         // do nothing
     }
 
+    /**
+     * Tab index
+     * @type {number}
+     */
     get tabIndex() {
         const first = this.contentContainer.Children('firstChild');
         return first && first.tabIndex;
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     get readonly() {
         const first = this.contentContainer.Children('firstChild');
         return first && first.readonly;
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
         super.readonly = value;
@@ -208,10 +236,18 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     get enabled() {
         return this._enabled;
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
         if(this._enabled != value) {
@@ -225,6 +261,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /** @protected */
     _calcRuntimeValues(rootValue = null) {
         this.ForEveryField((name, fieldComponent) => {
             const fieldData = fieldComponent.field;
@@ -240,6 +277,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         });
     }
     
+    /** @protected */
     _hideAndShow() {
 
         const data = this.value;
@@ -303,6 +341,11 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * Searches for field or returns all fields
+     * @param {string|null} name name of field to find
+     * @returns 
+     */
     Fields(name = null) {
         if(!this.contentContainer) {
             return [];
@@ -310,6 +353,10 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         return name ? this.contentContainer.Children(name) : this.contentContainer.Children();
     }
 
+    /**
+     * Cycles all fields
+     * @param {Function} callback callback for each field
+     */
     ForEveryField(callback) {
         this.contentContainer && this.contentContainer.ForEach(callback);
     }

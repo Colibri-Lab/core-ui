@@ -42,6 +42,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
     } 
 
+    /** @private */
     _createAddNewLink() {
         if(this._fieldData.params && this._fieldData.params.addlink === null) {
             return;
@@ -77,10 +78,16 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         return this._link;
     }
 
+    /** @private */
     __updateObjectFields(fieldData) {
         return fieldData;
     }
 
+    /**
+     * Adds new object to array
+     * @param {Object} value add new row
+     * @returns {Colibri.UI.Forms.Object}
+     */
     AddNew(value) {
         if(this._link.ContainsClass('ui-disabled')) {
             return;
@@ -90,6 +97,12 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         return object;
     }
 
+    /**
+     * Adds new object
+     * @private
+     * @param {object} value object for add
+     * @returns {Colibri.UI.Forms.Object}
+     */
     _addNew(value = null) {
         // const containerElement = this.contentContainer.container.querySelector('.array-component-container');
         let fieldData = Object.cloneRecursive(this._fieldData);
@@ -196,17 +209,28 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         // если нужно добавить что то
     }
 
+    /**
+     * Focus on component to the first object of array
+     */
     Focus() {
         if(this._itemsContainer.Children('firstChild')) {
             this._itemsContainer.Children('firstChild').Focus();
         }
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     get readonly() {
         const first = this._itemsContainer.Children('firstChild');
         return first?.readonly ?? false;
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
         super.readonly = true;
@@ -217,10 +241,18 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     get enabled() {
         return this._enabled ?? true;
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
         if(this._enabled != value) {
@@ -232,6 +264,10 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /**
+     * Value
+     * @type {Array}
+     */
     get value() {
 
         let data = [];
@@ -245,6 +281,10 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * Value
+     * @type {Array}
+     */
     set value(value) {
         
         value = eval_default_values(value);
@@ -264,6 +304,11 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * Searches for objects in array
+     * @param {string} name field to search for
+     * @returns {Array<Colibri.UI.Forms.Object>}
+     */
     Fields(name) {
         if(!this._itemsContainer) {
             return [];
@@ -283,15 +328,26 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         return ret;
     }
 
+    /**
+     * Cycles all rows in array
+     * @param {Function} callback callback for each item
+     */
     ForEveryField(callback) {
         this._itemsContainer.ForEach(callback);
     }
 
+    /**
+     * Tab index
+     * @type {number}
+     */
     set tabIndex(value) {
         // do nothing
     }
 
-
+    /**
+     * Tab index
+     * @type {number}
+     */
     get tabIndex() {
         const first = this._itemsContainer.Children('firstChild');
         return first?.tabIndex ?? 0;
@@ -305,6 +361,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         return this._itemsContainer;
     }
 
+    /** @proptected */
     _calcRuntimeValues(rootValue = null) {
         const formValue = rootValue ?? this.root?.value ?? {};
         this.itemsContainer.ForEach((name, rowObject) => {
@@ -312,10 +369,16 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         });
     }
 
+    /**
+     * Items container component
+     * @type {Colibri.UI.Component}
+     * @readonly
+     */
     get itemsContainer() {
         return this._itemsContainer;
     }
 
+    /** @private */
     _hideAndShow() {
         this.ForEveryField((name, component) => component._hideAndShow());
     }
