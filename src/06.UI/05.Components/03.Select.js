@@ -1,6 +1,7 @@
 /**
  * Component select box
  * @class
+ * @namespace
  * @extends Colibri.UI.Input
  * @memberof Colibri.UI
  */
@@ -179,11 +180,21 @@ Colibri.UI.Select.Dropdown = class extends Colibri.UI.Pane {
 };
 
 /**
- * Default dropdown
- * @type {Colibri.UI.Select.DefaultDropdown}
+ * Default dropdown component
+ * @class
+ * @namespace
+ * @extends Colibri.UI.Select.Dropdown
+ * @memberof Colibri.UI.Select
  */
 Colibri.UI.Select.DefaultDropdown = class extends Colibri.UI.Select.Dropdown {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     * @params {boolean} resizable dropdown is component
+     * @params {boolean} multiple is component multiple selection 
+     */
     constructor(name, container, resizable, multiple) {
         super(name, container, resizable);
 
@@ -206,10 +217,15 @@ Colibri.UI.Select.DefaultDropdown = class extends Colibri.UI.Select.Dropdown {
         this.RegisterEvent('SelectionChanged', false, 'Поднимается, когда кликаем по элементу списка');
     }
 
+    /**
+     * Filters item array
+     * @param {string} searchText filter term
+     */
     FilterItems(searchText) {
         this._emptySearchResult.shown = this._recursiveForEach(this.list, searchText) === 0;
     }
 
+    /** @private */
     _recursiveForEach(component, searchText) {
         let totalCountValidItem = 0;
         component.ForEach((name, obj) => {
@@ -230,19 +246,35 @@ Colibri.UI.Select.DefaultDropdown = class extends Colibri.UI.Select.Dropdown {
         return totalCountValidItem;
     }
 
+    /** @protected */
     _handleEvents() {
         this.list.AddHandler('SelectionChanged', (event, args) => { return this.Dispatch('SelectionChanged', args) });
         this.options.AddHandler('OptionClicked', (event, args) => { return this.Dispatch('OptionClicked', args) });
     }
 
+    /**
+     * List container
+     * @type {Colibri.UI.List}
+     * @readonly
+     */
     get list() {
         return this.Children('default-dropdown-list');
     }
 
+    /**
+     * Options container
+     * @type {Colibri.UI.Select.DefaultDropdown.Options}
+     * @readonly
+     */
     get options() {
         return this.Children('default-dropdown-options');
     }
 
+    /**
+     * Selected item
+     * @type {Colibri.UI.ListItem}
+     * @readonly
+     */
     get selected() {
         return this.list.selected;
     }
@@ -250,16 +282,24 @@ Colibri.UI.Select.DefaultDropdown = class extends Colibri.UI.Select.Dropdown {
 };
 
 /**
- * Компонент опции в выпадашке по умолчанию
- * @type {Colibri.UI.Select.DefaultDropdown.Options}
+ * Default dropdown options component
+ * @class
+ * @extends Colibri.UI.Pane
+ * @memberof Colibri.UI.Select.DefaultDropdown
  */
 Colibri.UI.Select.DefaultDropdown.Options = class extends Colibri.UI.Pane {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     */
     constructor(name, container) {
         super(name, container);
         this._handleEvents();
     }
 
+    /** @protected */
     _handleEvents() {
         this.AddHandler('Clicked', (event, args) => {
             if(args.domEvent.target.is('[data-option-name]')) {
@@ -274,6 +314,12 @@ Colibri.UI.Select.DefaultDropdown.Options = class extends Colibri.UI.Pane {
         this.RegisterEvent('OptionClicked', false, 'Поднимается, когда кликаем по опции');
     }
 
+    /**
+     * Adds and option
+     * @param {string} name name of option
+     * @param {string} title title of option
+     * @returns {Element}
+     */
     AddOption(name, title) {
         this.shown = true;
         const newOption = Element.create("a", {
@@ -287,6 +333,10 @@ Colibri.UI.Select.DefaultDropdown.Options = class extends Colibri.UI.Pane {
         return newOption;
     }
 
+    /**
+     * Removes an option
+     * @param {string} name name of option
+     */
     RemoveOption(name) {
         this._element.querySelector('[data-option-name="' + name + '"]').remove();
         if(this._element.querySelectorAll('[data-option-name]').length === 0) {
