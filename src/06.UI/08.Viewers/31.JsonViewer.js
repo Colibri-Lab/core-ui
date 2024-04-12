@@ -34,6 +34,8 @@ Colibri.UI.JsonViewer = class extends Colibri.UI.Pane {
         this._value = value;
         this._showValue();
     }
+    
+    /** @private */
     _showValue() {
         const value = Object.cloneRecursive(this._value);
 

@@ -25,6 +25,7 @@ Colibri.UI.FormValidator = class extends Colibri.Events.Dispatcher {
         this._createValidators();
     }
 
+    /** @private */
     _createValidators() {
         this._validators = [];
         this._form.ForEach((name, component) => {
@@ -37,7 +38,7 @@ Colibri.UI.FormValidator = class extends Colibri.Events.Dispatcher {
     }
 
     /**
-     *
+     * Validate form
      * @param {boolean} messages отображать ли сообщения
      * @param {boolean} breakFirst прерывается на первом не валидном поле
      * @param {string} className
@@ -74,6 +75,12 @@ Colibri.UI.FormValidator = class extends Colibri.Events.Dispatcher {
         return this._validated;
     }
 
+    /**
+     * Invalidate field
+     * @param {string} field field to invalidate
+     * @param {string} message message to show
+     * @param {string} className classname for error
+     */
     Invalidate(field, message, className = 'app-validate-error') {
         const fieldObject = this._form.FindField(field);
         if(!fieldObject) {
@@ -84,6 +91,11 @@ Colibri.UI.FormValidator = class extends Colibri.Events.Dispatcher {
         validator.Invalidate(message, className);
     }
 
+    /**
+     * Form object
+     * @type {Colibri.UI.Forms.Form}
+     * @readonly
+     */
     get form() {
         return this._form;
     }

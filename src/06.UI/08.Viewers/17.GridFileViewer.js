@@ -23,10 +23,18 @@ Colibri.UI.GridFileViewer = class extends Colibri.UI.Viewer {
 
     }
 
+    /**
+     * Value
+     * @type {Array}
+     */
     get value() {
         return this._value;
     }
 
+    /**
+     * Value
+     * @type {Array}
+     */
     set value(value) {
         value = this._convertValue(value);
 
@@ -40,6 +48,7 @@ Colibri.UI.GridFileViewer = class extends Colibri.UI.Viewer {
 
     }
 
+    /** @private */
     _createContextMenuButton() {
         if(!this._hasContextMenu || this.Children(this._name + '-contextmenu-icon-parent')) {
             return;
@@ -71,6 +80,7 @@ Colibri.UI.GridFileViewer = class extends Colibri.UI.Viewer {
         
     }
 
+    /** @private */
     _removeContextMenuButton() {
         if(this._hasContextMenu && this.Children(this._name + '-contextmenu-icon-parent')) {
             this.Children(this._name + '-contextmenu-icon-parent').Dispose();
@@ -112,9 +122,17 @@ Colibri.UI.GridFileViewer = class extends Colibri.UI.Viewer {
         
     }
 
+    /**
+     * Download url string
+     * @type {string}
+     */
     set download(value) {
         this._download = value;
     }
+    /**
+     * Download url string
+     * @type {string}
+     */
     get download() {
         return this._download;
     }

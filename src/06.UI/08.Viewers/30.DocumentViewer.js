@@ -18,14 +18,14 @@ Colibri.UI.DocumentViewer = class extends Colibri.UI.Viewer {
     }
 
     /**
-     * Метод для скачивания данных
+     * Download handler
      * @type {Function}
      */
     get downloadHandler() {
         return this._downloadHandler;
     }
     /**
-     * Метод для скачивания данных
+     * Download handler
      * @type {Function}
      */
     set downloadHandler(value) {
@@ -33,20 +33,21 @@ Colibri.UI.DocumentViewer = class extends Colibri.UI.Viewer {
     }
     
     /**
-     * Неизвестный формат, сообщение
+     * Unknown formate message
      * @type {string}
      */
     get unknownFormatText() {
         return this._unknownFormatText;
     }
     /**
-     * Неизвестный формат, сообщение
+     * Unknown formate message
      * @type {string}
      */
     set unknownFormatText(value) {
         this._unknownFormatText = value;
     }
 
+    /** @private */
     _isFileViewable(mimetype) {
         let found = false;
         ['application/pdf', 'image/'].forEach((m) => {
@@ -58,6 +59,17 @@ Colibri.UI.DocumentViewer = class extends Colibri.UI.Viewer {
         return found;
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
+    get value() {
+        return this._value;
+    }
+    /**
+     * Value
+     * @type {string}
+     */
     set value(value) {
         value = this._convertValue(value);
 

@@ -23,10 +23,18 @@ Colibri.UI.FileSizeViewer = class extends Colibri.UI.Viewer {
 
     }
 
+    /**
+     * Value
+     * @type {number}
+     */
     get value() {
         return this._value;
     }
 
+    /**
+     * Value
+     * @type {number}
+     */
     set value(value) {
         value = this._convertValue(value);
         if(typeof value !== 'number') {

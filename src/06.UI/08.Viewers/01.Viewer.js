@@ -18,6 +18,7 @@ Colibri.UI.Viewer = class extends Colibri.UI.Component {
         this.root = root;
     }
 
+    /** @private */
     _injectParams() {
         if(this._field?.params && this._field?.params?.className) {
             let className = this._field?.params?.className;
@@ -37,23 +38,43 @@ Colibri.UI.Viewer = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Value object
+     * @type {object}
+     */
     get viewedObject() {
         return this._object;
     }
 
+    /**
+     * Value object
+     * @type {object}
+     */
     set viewedObject(value) {
         this._object = value;
     }
 
+    /**
+     * Field object
+     * @type {object}
+     */
     set field(value) {
         this._field = value;
         this._injectParams();
     }
 
+    /**
+     * Field object
+     * @type {object}
+     */
     get field() {
         return this._field;
     }
 
+    /**
+     * Value object
+     * @type {object}
+     */
     set value(value) {
         if(this.field?.params?.pre) {
             value = this.field?.params?.pre + ' ' + value;
@@ -64,18 +85,31 @@ Colibri.UI.Viewer = class extends Colibri.UI.Component {
         super.value = this._convertValue(value);
     }
 
+    /**
+     * Value object
+     * @type {object}
+     */
     get value() {
         return super.value;
     }
 
+    /**
+     * Root component
+     * @type {Colibri.UI.Component}
+     */
     get root() {
         return this._root;
     }
 
+    /**
+     * Root component
+     * @type {Colibri.UI.Component}
+     */
     set root(value) {
         this._root = value;
     }
 
+    /** @private */
     _convertValue(value) {
         
         if(this.field?.params?.converter) {
@@ -86,10 +120,27 @@ Colibri.UI.Viewer = class extends Colibri.UI.Component {
         return value;
     }
 
+    /**
+     * Registered viewers
+     * @private
+     * @static
+     * @type {Array}
+     */
     static _registered = [];
+    /**
+     * Registers the viewer
+     * @static
+     * @param {string} name name of viewer
+     * @param {string} desc description of viewer
+     */
     static Register(name, desc) {
         Colibri.UI.Viewer._registered.push({value: name, title: desc});
     }
+    /**
+     * Enums the registered viewers
+     * @static
+     * @returns Array
+     */
     static Enum() {
         return Colibri.UI.Viewer._registered;
     }

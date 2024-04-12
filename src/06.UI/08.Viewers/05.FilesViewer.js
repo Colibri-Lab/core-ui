@@ -50,6 +50,7 @@ Colibri.UI.FilesViewer = class extends Colibri.UI.Viewer {
 
     }
 
+    /** @private */
     _showValue() {
 
         const group = this._list.Children('group');
@@ -69,32 +70,67 @@ Colibri.UI.FilesViewer = class extends Colibri.UI.Viewer {
         
     }
     
+    /**
+     * Value
+     * @type {Array<{file, name}>}
+     */
     get value() {
         return this._value;
     }
 
+    /**
+     * Value
+     * @type {Array<{file, name}>}
+     */
     set value(value) {
         this._value = this._convertValue(Object.isObject(value) ? Object.values(value) : value);
         this._showValue();
     }
 
+    /**
+     * Field object
+     * @type {object}
+     */
     get field() {
         return this._field;
     }
 
+    /**
+     * Field object
+     * @type {object}
+     */
     set field(field) {
         this._field = field;
         this._showValue();
     }
 
+    /**
+     * Download url address
+     * @type {string}
+     */
+    get download() {
+        return this._download;
+    }
+    /**
+     * Download url address
+     * @type {string}
+     */
     set download(value) {
         this._download = value;
     }
 
+    /**
+     * File not exists text
+     * @type {string}
+     */
     get fileNotExistText() {
         return this._fileNotExistText
     }
 
+    /**
+     * File not exists text
+     * @type {string}
+     */
     set fileNotExistText(value) {
         this._fileNotExistText = value
     }

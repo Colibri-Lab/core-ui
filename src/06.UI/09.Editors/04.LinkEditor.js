@@ -37,6 +37,7 @@ Colibri.UI.LinkEditor = class extends Colibri.UI.Editor {
 
     }
 
+    /** @private */
     _showValue() {
         this._text.value = this.value;
         if(this._grid) {
@@ -54,22 +55,41 @@ Colibri.UI.LinkEditor = class extends Colibri.UI.Editor {
 
     }
 
+    /** @private */
     _clickOnLink() {
         if(this.field && this._downloadlink) {
             window.open((window.rpchandler ? window.rpchandler : '') + this._downloadlink + '?name=' + this.field.name + '&data=' + this.field.params.data);
         }
     }
 
-    
+    /**
+     * Value
+     * @type {string}
+     */
     get value() {
         return this._value;
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
     set value(value) {
         this._value = value;
         this._showValue();
     }
 
+    /**
+     * Download link
+     * @type {string}
+     */
+    get downloadlink() {
+        return this._downloadlink;
+    }
+    /**
+     * Download link
+     * @type {string}
+     */
     set downloadlink(value) {
         this._downloadlink = value;
     }

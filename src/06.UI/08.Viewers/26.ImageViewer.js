@@ -24,6 +24,11 @@ Colibri.UI.ImageViewer = class extends Colibri.UI.Viewer {
 
     }
 
+    /**
+     * Get the image size
+     * @param {string} value url of image
+     * @returns {Promise}
+     */
     GetImageSize(value) {
         return new Promise((resolve, reject) => {
             value = value.indexOf('url') !== -1 ? value.replace(/url\((['"])?(.*?)\1\)/gi, '$2') : value;
@@ -37,20 +42,36 @@ Colibri.UI.ImageViewer = class extends Colibri.UI.Viewer {
         });
     }
  
+    /**
+     * Value
+     * @type {string}
+     */
     set value(value) {
         value = this._convertValue(value);
         this._colorBox.styles = {backgroundImage: value.indexOf('url') !== -1 ? value : 'url(' + value + ')'};
         this._view.value = value;
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
     get value() {
         return this._view.value;
     }
 
+    /**
+     * Field object
+     * @type {object}
+     */
     get field() {
         return this._field;
     }
 
+    /**
+     * Field object
+     * @type {object}
+     */
     set field(field) {
         this._field = field;
     }

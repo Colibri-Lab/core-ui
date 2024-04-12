@@ -24,20 +24,36 @@ Colibri.UI.BorderViewer = class extends Colibri.UI.Viewer {
 
     }
  
+    /**
+     * Value
+     * @type {string}
+     */
     set value(value) {
         value = this._convertValue(value);
         this._colorBox.styles = {border: value};
         this._view.value = value;
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
     get value() {
         return this._view.value;
     }
 
+    /**
+     * Field object
+     * @type {object}
+     */
     get field() {
         return this._field;
     }
 
+    /**
+     * Field object
+     * @type {object}
+     */
     set field(field) {
         this._field = field;
     }

@@ -18,10 +18,18 @@ Colibri.UI.DateDiffViewer = class extends Colibri.UI.Viewer {
         this._value = null;
     }
 
+    /**
+     * Value
+     * @type {Array|string}
+     */
     get value() {
         return this._value;
     }
 
+    /**
+     * Value
+     * @type {Array|string}
+     */
     set value(value) {
         if(!Array.isArray(value)) {
             value = [value, (new Date()).toDbDate()];

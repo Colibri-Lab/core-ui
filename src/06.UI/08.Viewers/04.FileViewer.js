@@ -22,10 +22,18 @@ Colibri.UI.FileViewer = class extends Colibri.UI.Viewer {
         this._icon.value = Colibri.UI.FileDownloadIcon;
     }
 
+    /**
+     * Value
+     * @type {Array<{file, name}>}
+     */
     get value() {
         return this._value;
     }
 
+    /**
+     * Value
+     * @type {Array<{file, name}>}
+     */
     set value(value) {
         
         /**

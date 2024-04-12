@@ -19,6 +19,7 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
         this.elements = elements;
     }
 
+    /** @private */
     _isAllowedKeyCode(keyCode) {
         for (var i = 0, len = Colibri.UI.Utilities.Mask.BY_PASS_KEYS.length; i < len; i++) {
             if (keyCode == Colibri.UI.Utilities.Mask.BY_PASS_KEYS[i]) {
@@ -28,6 +29,7 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
         return true;
     }
 
+    /** @private */
     _mergeMoneyOptions(opts) {
         opts = opts || {};
         opts = {
@@ -44,6 +46,7 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
         return opts;
     }
 
+    /** @private */
     _unbindElementToMask() {
         for (var i = 0, len = this.elements.length; i < len; i++) {
             this.elements[i].lastOutput = "";
@@ -56,6 +59,7 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
         }
     }
 
+    /** @private */
     _bindElementToMask(maskFunction) {
         const onType = (e) => {
             e = e || window.event;
@@ -81,31 +85,55 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
         }
     }
 
+    /**
+     * Mask as money
+     * @param {object} opts options
+     */
     maskMoney(opts) {
         this.opts = this._mergeMoneyOptions(opts);
         this._bindElementToMask("toMoney");
     }
 
+    /**
+     * Mask as number
+     */
     maskNumber() {
         this.opts = {};
         this._bindElementToMask("toNumber");
     }
 
+    /**
+     * Mask as alphanumeric
+     */
     maskAlphaNum() {
         this.opts = {};
         this._bindElementToMask("toAlphaNumeric");
     }
 
+    /**
+     * Mask with pattern
+     * @param {string} pattern mask pattern
+     */
     maskPattern(pattern) {
         this.opts = { pattern: pattern };
         this._bindElementToMask("toPattern");
     }
 
+    /**
+     * Unmask field
+     */
     unMask() {
         this._unbindElementToMask();
     }
 
-    // Fill wildcards past index in output with placeholder
+    /**
+     * Fill wildcards past index in output with placeholder
+     * @static
+     * @param {*} output 
+     * @param {*} index 
+     * @param {*} placeholder 
+     * @returns {string}
+     */
     static _addPlaceholdersToOutput(output, index, placeholder) {
         for (; index < output.length; index++) {
             if (output[index] === Colibri.UI.Utilities.Mask.DIGIT || output[index] === Colibri.UI.Utilities.Mask.ALPHA || output[index] === Colibri.UI.Utilities.Mask.ALPHANUM) {
@@ -115,7 +143,13 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
         return output;
     }
 
-
+    /**
+     * Perform convertion to money
+     * @static
+     * @param {*} value value to mask
+     * @param {object} opts options
+     * @returns {string}
+     */
     static toMoney(value, opts) {
         opts = this._mergeMoneyOptions(opts);
         if (opts.zeroCents) {
@@ -174,6 +208,13 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
         return output.replace(clearSeparator, "") + opts.suffixUnit;
     };
 
+    /**
+     * Perform mask process with pattern
+     * @static
+     * @param {*} value value to mask 
+     * @param {object} opts mask options 
+     * @returns 
+     */
     static toPattern(value, opts) {
 
         var pattern = (typeof opts === 'object' ? opts.pattern : opts),
@@ -224,14 +265,29 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
         return output.join("").substr(0, i);
     };
 
+    /**
+     * Perform mask process to number
+     * @param {*} value value to mask
+     * @returns {string}
+     */
     static toNumber(value) {
         return value.toString().replace(/(?!^-)[^0-9]/g, "");
     }
 
+    /**
+     * Perform mask process to alphanumeric
+     * @param {*} value value to mask
+     * @returns {string}
+     */
     static toAlphaNumeric(value) {
         return value.toString().replace(/[^a-z0-9 ]+/i, "");
     }
 
+    /**
+     * Check string to mask pattern
+     * @param {*} value value to mask
+     * @returns {string}
+     */
     static Check(value, pattern) {
         const v = Colibri.UI.Utilities.Mask.toPattern(value, {pattern: pattern, placeholder: "_"});
         return v === value;

@@ -28,40 +28,91 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         this.RegisterEvent('ViewerClicked', false, 'Когда вьюер нажат');
     }
 
+    /**
+     * Download url string
+     * @type {string}
+     */
+    get download() {
+        return this._download;
+    }
+    /**
+     * Download url string
+     * @type {string}
+     */
     set download(value) {
         this._download = value;
     }
 
+    /**
+     * Download url string
+     * @type {string}
+     */
+    get downloadlink() {
+        return this._downloadlink;
+    }
+    /**
+     * Download url string
+     * @type {string}
+     */
     set downloadlink(value) {
         this._downloadlink = value;
     }
 
+    /**
+     * Fields object
+     * @type {object}
+     */
     set fields(value) {
         this._fields = value;
     }
 
+    /**
+     * Fields object
+     * @type {object}
+     */
     get fields() {
         return this._fields;
     }
 
+    /**
+     * Value object
+     * @type {object}
+     */
     get value() {
         return this._value;
     }
 
+    /**
+     * Value object
+     * @type {object}
+     */
     set value(value) {
         value = this._convertValue(value);
         this._value = value;
         this._updateFields();
     }
 
+    /**
+     * Root component
+     * @type {Colibri.UI.Component}
+     */
     get root() {
         return this._root;
     }
 
+    /**
+     * Root component
+     * @type {Colibri.UI.Component}
+     */
     set root(value) {
         this._root = value;
     }
 
+    /**
+     * State
+     * @type {boolean}
+     * @readonly
+     */
     get state() {
         return this._hidden.shown;
     }
@@ -78,6 +129,13 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         this.Dispatch('FieldsToggled', {state: this._hidden.shown});
     }
 
+    /**
+     * Generate fields
+     * @param {object} fields fields object
+     * @param {object} value value object
+     * @param {Element} contentElement content element
+     * @param {boolean} showTitles show titles
+     */
     _createFields(fields = null, value = null, contentElement = null, showTitles = true) {
         const root = this.root || this;
         contentElement = contentElement || this;
@@ -283,6 +341,13 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
 
     }
 
+    /**
+     * Update fields
+     * @param {object} fields fields object
+     * @param {object} value value object
+     * @param {Element} contentElement content element
+     * @param {boolean} showTitles show titles
+     */
     _updateFields(fields = null, value = null, contentElement = null, showTitles = true) {
         const root = this.root || this;
         contentElement = contentElement || this;
@@ -308,39 +373,41 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
     }
 
     /**
-     * Отображать поля без значения
+     * Show fields that does not have values
      * @type {boolean}
      */
     get showUnsetFields() {
         return this._showUnsetFields;
     }
     /**
-     * Отображать поля без значения
+     * Show fields that does not have values
      * @type {boolean}
      */
     set showUnsetFields(value) {
         this._showUnsetFields = value === 'true' || value === true;
         this._showShowUnsetFields();
     }
+    /** @private */
     _showShowUnsetFields() {
         this._createFields();
     }
 
     /**
-     * Не отображать поля
+     * Hide fields
      * @type {string|Array}
      */
     get hideFields() {
         return this._hideFields;
     }
     /**
-     * Не отображать поля
+     * Hide fields
      * @type {string|Array}
      */
     set hideFields(value) {
         this._hideFields = typeof value === 'string' ? value.split(',') : value;
         this._showHideFields();
     }
+    /** @private */
     _showHideFields() {
         this._createFields();
     }

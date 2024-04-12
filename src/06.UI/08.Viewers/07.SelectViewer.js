@@ -17,10 +17,18 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
         this.AddClass('app-select-viewer-component');
     }
 
+    /**
+     * Value 
+     * @type {string|object}
+     */
     get value() {
         return this._value;
     }
 
+    /**
+     * Value 
+     * @type {string|object}
+     */
     set value(value) {
         this._value = value;
         if(value !== null && value !== undefined && value !== '') {
@@ -159,6 +167,7 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
 
     }
 
+    /** @private */
     _getDependsValue() {
         if (this.root && this._field?.lookup &&
             this._field.lookup['depends']) {
@@ -175,8 +184,8 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
     }
 
     /**
-     * Установить новое значение свойству lookup
-     * Загрузить значения селектора альтернативным способом, указанным в lookup
+     * Set lookup
+     * @param {object|string} value
      */
      _setLookup(value) {
         let lookupPromise;
@@ -232,5 +241,6 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
         // каждый метод должен возвращать промис
         return lookupPromise;
     }
+    
 }
 Colibri.UI.Viewer.Register('Colibri.UI.SelectViewer', '#{ui-viewers-select}');

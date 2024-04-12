@@ -4,11 +4,21 @@
  */
 Colibri.UI.Utilities.Validator = class {
 
+    /**
+     * Validate UK post code
+     * @param {string} string uk post code
+     * @returns {boolean}
+     */
     static IsUKPostCode(string) {
         var postcodeRegEx = /[A-Z]{1,2}[0-9A-Z]{1,2} ?[0-9][A-Z]{2}/i; 
         return postcodeRegEx.test(string); 
     }
 
+    /**
+     * Validate Russian tax code
+     * @param {string} value russian tax code
+     * @returns {boolean}
+     */
     static IsValidRuINN(value){
         //первая цифра ИНН может быть нулём, поэтому он не может быть числом
         if(typeof value !== 'string'){
@@ -106,15 +116,13 @@ Colibri.UI.Utilities.Validator = class {
                 
             }else if(checkSumOne !== Number(arNumbers[10])){
                 console.error(
-                    `Первая контрольная сумма не совпала
-    с одиннадцатым символом ${checkSumOne} != ${arNumbers[10]}`
+                    `Первая контрольная сумма не совпала с одиннадцатым символом ${checkSumOne} != ${arNumbers[10]}`
                 );
                 return false;
                 
             }else if(checkSumTwo !== Number(arNumbers[11])){
                 console.error(
-                    `Вторая контрольная сумма не совпала
-    с двенадцатым символом ${checkSumTwo} != ${arNumbers[11]}`
+                    `Вторая контрольная сумма не совпала с двенадцатым символом ${checkSumTwo} != ${arNumbers[11]}`
                 );
                 return false;
             }

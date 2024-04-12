@@ -38,6 +38,7 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
         this._createValidators();
     }
 
+    /** @private */
     _createValidators() {
         if (this._field?.Fields) {
             this._validators = [];
@@ -51,6 +52,10 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Clear validation
+     * @param {string} className class name
+     */
     Clear(className = null) {
         this._validated = true;
         this._message = '';
@@ -63,6 +68,12 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Validate form
+     * @param {Array<string>} messages messages
+     * @param {string} className class name
+     * @returns {boolean}
+     */
     Validate(messages = true, className = null) {
         this._className = className;
         // валидируем и потом выставляем поля validated и message
@@ -110,16 +121,31 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
         return this._validated;
     }
 
+    /**
+     * Invalidate form
+     * @param {string} message message
+     * @param {string} className class name
+     */
     Invalidate(message, className) {
         this._validated = false;
         this._field.message = message;
         this._field.AddClass(className);    
     }
 
+    /**
+     * Is form validated
+     * @type {boolean}
+     * @readonly
+     */
     get validated() {
         return this._validated;
     }
 
+    /**
+     * Message
+     * @type {string}
+     * @readonly
+     */
     get message() {
         if (this._validators.length > 0) {
             let messages = [];
@@ -134,10 +160,20 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Field object
+     * @type {object}
+     * @readonly
+     */
     get field() {
         return this._field;
     }
 
+    /**
+     * Form object
+     * @type {object}
+     * @readonly
+     */
     get form() {
         return this._form;
     }

@@ -22,6 +22,10 @@ Colibri.UI.CheckboxViewer = class extends Colibri.UI.Viewer {
 
     }
 
+    /**
+     * Value
+     * @type {boolean}
+     */
     set value(value) {
         if(this._convertValue(value)) {
             this._checkbox.AddClass('-checked');
@@ -30,14 +34,26 @@ Colibri.UI.CheckboxViewer = class extends Colibri.UI.Viewer {
         }
     }
 
+    /**
+     * Value
+     * @type {boolean}
+     */
     get value() {
         return this._checkbox.ContainsClass('-checked');
     }
 
+    /**
+     * Field object
+     * @type {object}
+     */
     get field() {
         return this._field;
     }
 
+    /**
+     * Field object
+     * @type {object}
+     */
     set field(field) {
         this._field = field;
     }

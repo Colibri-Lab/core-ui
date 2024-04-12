@@ -19,10 +19,18 @@ Colibri.UI.CheckboxAsTextViewer = class extends Colibri.UI.Viewer {
         this._value = false;
     }
 
+    /**
+     * Value
+     * @type {boolean}
+     */
     get value() {
         return this.value === false ? '' : this._field.placeholder;
     }
 
+    /**
+     * Value
+     * @type {boolean}
+     */
     set value(value) {
     
         this._value = value;

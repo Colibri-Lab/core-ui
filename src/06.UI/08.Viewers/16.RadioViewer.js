@@ -20,10 +20,18 @@ Colibri.UI.RadioViewer = class extends Colibri.UI.Viewer {
 
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
     get value() {
-        return this.ContainsClass('app-is-read-component');
+        return super.value;
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
     set value(value) {
         super.value = value.title;
     }

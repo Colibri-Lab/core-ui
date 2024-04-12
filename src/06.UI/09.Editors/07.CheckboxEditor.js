@@ -22,31 +22,58 @@ Colibri.UI.CheckboxEditor = class extends Colibri.UI.Editor {
 
     }
 
+    /**
+     * Validate
+     */
     Validate() {
         
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     get readonly() {
         return this._fieldData.readonly;
     }  
  
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         this._fieldData.readonly = value === true || value === 'true';
         this._input.readonly = value === true || value === 'true';
     }
 
+    /**
+     * Placeholder
+     * @type {string}
+     */
     get placeholder() {
         return this._input.placeholder;
     }
 
+    /**
+     * Placeholder
+     * @type {string}
+     */
     set placeholder(value) {
         this._input.placeholder = value ? value[Lang.Current] ?? value : '';
     }
 
+    /**
+     * Value
+     * @type {boolean}
+     */
     get value() {
         return this._input.checked;
     }
 
+    /**
+     * Value
+     * @type {boolean}
+     */
     set value(value) {
         this._input.checked = value === true || value === 1;
         this.Validate();
@@ -57,10 +84,18 @@ Colibri.UI.CheckboxEditor = class extends Colibri.UI.Editor {
         }
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     get enabled() {
         return this._input.enabled;
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     set enabled(value) {
         if(value) {
             this.RemoveClass('ui-disabled');
@@ -72,6 +107,9 @@ Colibri.UI.CheckboxEditor = class extends Colibri.UI.Editor {
         }
     }
 
+    /**
+     * Focus on editor
+     */
     Focus() {
         this._input.Focus();
     }

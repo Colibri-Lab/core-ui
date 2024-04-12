@@ -33,10 +33,18 @@ Colibri.UI.TextViewer = class extends Colibri.UI.Viewer {
         this._emptyMessage = value;
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
     get value() {
         return super.value;
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
     set value(value) {
         const emptyMessage = this.field?.params?.empty ?? this._emptyMessage ?? '';
         super.value = !value ? emptyMessage : value;

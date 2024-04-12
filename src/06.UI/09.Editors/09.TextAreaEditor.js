@@ -21,6 +21,7 @@ Colibri.UI.TextAreaEditor = class extends Colibri.UI.Editor {
 
     }
 
+    /** @private */
     __elementChanged(e) {
         if(this.value) {
             this._setFilled();
@@ -30,28 +31,46 @@ Colibri.UI.TextAreaEditor = class extends Colibri.UI.Editor {
 
     }
 
+    /** @private */
     _updateFieldData() {
         this.placeholder = this._fieldData?.placeholder;
     }
 
+    /**
+     * Validate
+     */
     Validate() {
         
     }
 
+    /**
+     * Focus on editor
+     */
     Focus() {
         this._element.focus();
         // this._element.select();
         this.parent.parent.AddClass('-focused');
     } 
 
+    /**
+     * Remove focus from editor
+     */
     Blur() {
         this.parent.parent.RemoveClass('-focused');
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     get readonly() {
         return this._fieldData.readonly;
     }  
  
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         this._fieldData.readonly = value === true || value === 'true';
         if(value === true || value === 'true') {
@@ -62,18 +81,34 @@ Colibri.UI.TextAreaEditor = class extends Colibri.UI.Editor {
         }
     }
 
+    /**
+     * Placeholder
+     * @type {string}
+     */
     get placeholder() {
         return this._element.attr('placeholder');
     }
 
+    /**
+     * Placeholder
+     * @type {string}
+     */
     set placeholder(value) {
         this._element.attr('placeholder', value ? value[Lang.Current] ?? value : '');
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
     get value() {
         return this._element.value;
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
     set value(value) {
         this._element.value = value;
         this.Validate();
@@ -85,10 +120,18 @@ Colibri.UI.TextAreaEditor = class extends Colibri.UI.Editor {
 
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     get enabled() {
         return this._element.attr('disabled') != 'disabled';
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     set enabled(value) {
         if(value) {
             this.RemoveClass('ui-disabled');

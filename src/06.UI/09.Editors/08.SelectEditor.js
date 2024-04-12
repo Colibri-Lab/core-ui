@@ -18,31 +18,58 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
 
     }
 
+    /**
+     * Validate editor
+     */
     Validate() {
         
     }
 
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     get readonly() {
         return this.field.readonly;
     }  
  
+    /**
+     * Readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         this.field.readonly = value === true || value === 'true';
         this._input.readonly = value === true || value === 'true';
     }
 
+    /**
+     * Placeholder
+     * @type {string}
+     */
     get placeholder() {
         return this._input.placeholder;
     }
 
+    /**
+     * Placeholder
+     * @type {string}
+     */
     set placeholder(value) {
         this._input.placeholder = value ? value[Lang.Current] ?? value : '';
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
     get value() {
         return this._input.value?.value;
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
     set value(value) {
         Colibri.Common.Wait(() => !this.loading).then(() => {
             this._input.value = value;
@@ -56,10 +83,18 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
         
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     get enabled() {
         return this._input.enabled;
     }
 
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
     set enabled(value) {
         if(value) {
             this.RemoveClass('ui-disabled');
@@ -86,6 +121,7 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
         super.field = value;
         this._showField();
     }
+    /** @private */
     _showField() {
         this._input = this._createSelector();
         this._input.shown = true;
@@ -134,6 +170,7 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
         }
     }
 
+    /** @private */
     _createSelector() {
 
         return new Colibri.UI.Selector(
@@ -154,7 +191,7 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
     }
 
     /**
-     * Заново загрузить значения из хранилища
+     * Reload values
      */
     ReloadValues() {
         this.values = this.field.values;
@@ -175,6 +212,7 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
         }
     }
 
+    /** @private */
     _getDependsValue(type = null) {
         if (this.root && this.field?.lookup) {
 
@@ -194,8 +232,7 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
     }
 
     /**
-     * Установить новое значение свойству lookup
-     * Загрузить значения селектора альтернативным способом, указанным в lookup
+     * Set the lookup object
      * @param {(Object|function)} value
      */
     _setLookup(value) {
@@ -265,9 +302,9 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
     }
 
     /**
-     * Значения селектора
-     * @param {array} value
-     * */
+     * Selector values
+     * @type {Array}
+     */
     set values(value) {
         let required = this.field?.params?.required;
         if(required === undefined) {
@@ -283,15 +320,15 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
     }
 
     /**
-     * Значения селектора
-     * @return {array} value
-     * */
+     * Selector values
+     * @type {Array}
+     */
     get values() {
         return this._input.values;
     }
 
     /**
-     * Если необходимо инициализировать данные из lookup
+     * Initialize data from lookup when component is created
      * @private
      */
     _initializeValues() {
@@ -320,6 +357,7 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
         }
     }
 
+    /** @private */
     _setEnabled() {
         if(!this.value && this.field.default) {
             this.value = this.field.default;
@@ -344,6 +382,9 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
         }
     }
 
+    /**
+     * Focus on editor
+     */
     Focus() {
         this._input.Focus();
     }

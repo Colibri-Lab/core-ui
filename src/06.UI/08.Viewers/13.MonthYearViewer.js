@@ -17,6 +17,17 @@ Colibri.UI.MonthYearViewer = class extends Colibri.UI.Viewer {
         this.AddClass('app-monthyear-viewer-component');
     }
 
+    /**
+     * Value
+     * @type {Date|string}
+     */
+    get value() {
+        return super.value;
+    }
+    /**
+     * Value
+     * @type {Date|string}
+     */
     set value(value) {
         value = this._convertValue(value);
         if(typeof value == 'string') {

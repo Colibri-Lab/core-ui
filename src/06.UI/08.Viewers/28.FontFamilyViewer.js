@@ -18,23 +18,39 @@ Colibri.UI.FontFamilyViewer = class extends Colibri.UI.Viewer {
 
     }
  
+    /**
+     * Value
+     * @type {string}
+     */
     set value(value) {
         super.value = value;
         this.styles = {fontFamily: value};
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
     get value() {
         return super.value;
     }
 
+    /**
+     * Field object
+     * @type {object}
+     */
     get field() {
         return this._field;
     }
 
+    /**
+     * Field object
+     * @type {object}
+     */
     set field(field) {
         this._field = field;
     }
 
-
 }
+
 Colibri.UI.Viewer.Register('Colibri.UI.FontFamilyViewer', '#{ui-viewers-font-family}');

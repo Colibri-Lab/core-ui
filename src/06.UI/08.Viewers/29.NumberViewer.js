@@ -17,10 +17,18 @@ Colibri.UI.NumberViewer = class extends Colibri.UI.Viewer {
         this.AddClass('app-number-viewer-component');
     }
 
+    /**
+     * Value
+     * @type {number}
+     */
     get value() {
         return this._value;
     }
 
+    /**
+     * Value
+     * @type {number}
+     */
     set value(value) {
         this._value = value;
         value = this._convertValue(value);

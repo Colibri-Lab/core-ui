@@ -20,6 +20,11 @@ Colibri.UI.SimpleFormValidator = class {
         });
     }
 
+    /**
+     * Init
+     * @private
+     * @param {object} fields fields object
+     */
     _init(fields) {
         if(fields.length == 0) {
             return;
@@ -32,6 +37,10 @@ Colibri.UI.SimpleFormValidator = class {
         });
     }
 
+    /**
+     * Validate field
+     * @param {object} field field object
+     */
     __validateField(field) {
 
         field.field.params && (field.field.params.validated = 'success');
@@ -62,6 +71,10 @@ Colibri.UI.SimpleFormValidator = class {
 
     }
 
+    /**
+     * Status of validation
+     * @param {object} fields fields object
+     */
     Status(fields = null) {
 
         if(!fields) {
@@ -91,6 +104,10 @@ Colibri.UI.SimpleFormValidator = class {
 
     }
 
+    /**
+     * Clear messages of validation
+     * @param {object} fields fields object
+     */
     Clear(fields = null) {
 
         this._form.message = '';
@@ -118,6 +135,10 @@ Colibri.UI.SimpleFormValidator = class {
 
     }
 
+    /**
+     * Validate all fields
+     * @param {object|null} fields fields object
+     */
     ValidateAll(fields = null) {
 
         this._form.message = '';
@@ -143,6 +164,10 @@ Colibri.UI.SimpleFormValidator = class {
 
     }
 
+    /**
+     * Set field as valid
+     * @param {object|string} field field object
+     */
     SetAsValid(field) {
         const f = typeof field === 'string' ? this._form.FindField(field) : field;
         if(!f) {
@@ -153,6 +178,11 @@ Colibri.UI.SimpleFormValidator = class {
         f.RemoveClass('app-validate-error');
     }
 
+    /**
+     * Invalidate field
+     * @param {object|string"} field field object 
+     * @param {string} message validation message 
+     */
     Invalidate(field, message) {
         if(field == 'form') {
             this._form.message = message;
@@ -167,6 +197,11 @@ Colibri.UI.SimpleFormValidator = class {
         f.AddClass('app-validate-error');
     }
 
+    /**
+     * Form object
+     * @type {object}
+     * @readonly
+     */
     get form() {
         return this._form;
     }

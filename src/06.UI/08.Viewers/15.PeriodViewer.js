@@ -20,10 +20,18 @@ Colibri.UI.PeriodViewer = class extends Colibri.UI.Viewer {
 
     }
 
+    /**
+     * Value
+     * @type {boolean}
+     */
     get value() {
         return this.ContainsClass('app-is-read-component');
     }
 
+    /**
+     * Value
+     * @type {boolean}
+     */
     set value(value) {
         let _value = value;
         if(typeof _value === 'string') {

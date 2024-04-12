@@ -17,6 +17,17 @@ Colibri.UI.HtmlDataViewer = class extends Colibri.UI.Viewer {
         this.AddClass('app-htmldata-viewer-component');
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
+    get value() {
+        return super.value;
+    }
+    /**
+     * Value
+     * @type {string}
+     */
     set value(value) {
         let v = !value ? '&mdash;' : value.replaceAll(/\n/, '<br />');
         v = v.stripHtml().words(20);

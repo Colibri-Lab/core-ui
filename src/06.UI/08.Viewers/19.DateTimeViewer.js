@@ -23,10 +23,18 @@ Colibri.UI.DateTimeViewer = class extends Colibri.UI.Viewer {
 
     }
 
+    /**
+     * Value
+     * @type {Date}
+     */
     get value() {
         return this._value;
     }
 
+    /**
+     * Value
+     * @type {Date}
+     */
     set value(value) {
         value = this._convertValue(value);
         if(typeof value === 'string') {

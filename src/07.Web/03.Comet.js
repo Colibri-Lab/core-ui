@@ -6,16 +6,26 @@
  */
 Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
+    /** @type {string} */
     _url = '';
+    /** @type {object} */
     _storage = window.localStorage;
+    /** @type {Colibri.Storages.Store} */
     _store = null;
+    /** @type {string} */
     _storeMessages = '';
+    /** @type {string} */
     _storeUnread = '';
 
+    /** @type {object} */
     _settings = null;
+    /** @type {WebSocket|null} */
     _ws = null;
+    /** @type {boolean} */
     _connected = false;
+    /** @type {object} */
     _user = null;
+    /** @type {string} */
     _clientId = null;
 
     /**
@@ -48,6 +58,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     /**
      * Generates a unique device ID for the Comet connection.
+     * @private
      * @returns {string} - The generated device ID.
      */
     _generateDeviceId() {
@@ -61,6 +72,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     /**
      * Initializes the WebSocket connection.
+     * @private
      */
     _initConnection() {
         this._ws && this._ws.close();
@@ -107,6 +119,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     /**
      * Handles the WebSocket connection open event.
+     * @private
      */
     __onCometOpened() {
         this._connected = true;
@@ -115,6 +128,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     /**
      * Handles incoming messages from the Comet server.
+     * @private
      * @param {object} message - The received message object.
      */
     __onCometMessage(message) {
@@ -145,6 +159,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     /**
      * Handles WebSocket connection errors.
+     * @private
      * @param {object} error - The error object.
      */
     __onCometError(error) {
@@ -158,6 +173,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     /**
      * Retrieves stored messages from local storage.
+     * @private
      * @returns {array} - Array of stored messages.
      */
     _getStoredMessages() {
@@ -171,6 +187,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     /**
      * Saves messages to local storage.
+     * @private
      * @param {array} messages - Array of messages to be stored.
      */
     _setStoredMessages(messages) {
@@ -179,6 +196,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     /**
      * Saves messages to the application store.
+     * @private
      */
     _saveToStore() {
         let messages = this._getStoredMessages();
@@ -264,7 +282,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the client ID for the Comet connection.
-     * @returns {string} - The client ID.
+     * @type {string}
+     * @readonly
      */
     get clientId() {
         return this._clientId;

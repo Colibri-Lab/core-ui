@@ -155,7 +155,7 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
     }
 
     /**
-     * Показать ошибки валидации
+     * Show errors
      * @private
      */
      _showError() {
@@ -170,11 +170,17 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
         this._errorMessages = [];
     }
 
-    
+    /**
+     * Validate editor
+     */
     Validate() {
         
     }
 
+    /**
+     * Value
+     * @type {Array}
+     */
     get value() {
         let ret = [];
         this._filesGroup.ForEach((name, item) => {
@@ -183,6 +189,10 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
         return ret;
     }
 
+    /**
+     * Value
+     * @type {Array}
+     */
     set value(value) {
         this._filesGroup.Clear();
         value && value.forEach((file) => {
@@ -199,6 +209,10 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
     }
     
     
+    /**
+     * Field object
+     * @type {object}
+     */
     set field(value) {
         this._fieldData = value;
 
@@ -210,6 +224,10 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
 
     }
 
+    /**
+     * Field object
+     * @type {object}
+     */
     get field() {
         return this._fieldData;
     }

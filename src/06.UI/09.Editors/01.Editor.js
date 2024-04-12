@@ -62,18 +62,35 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
         this.RegisterEvent('Changed', false, 'Прозошло изменение данных компонента')
     }
 
+    /**
+     * Is editor data is invalid
+     * @type {boolean}
+     * @readonly
+     */
     get invalid() {
         return this.ContainsClass('-invalid');
     }
 
+    /**
+     * Edited object
+     * @type {object}
+     */
     get editedObject() {
         return this._editedObject;
     }
 
+    /**
+     * Edited object
+     * @type {object}
+     */
     set editedObject(value) {
         this._editedObject = value;
     }
 
+    /**
+     * Field object
+     * @type {object}
+     */
     set field(value) {
         this._fieldData = value;
         if(this._updateFieldData) {
@@ -81,10 +98,15 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Field object
+     * @type {object}
+     */
     get field() {
         return this._fieldData;
     }
-    
+
+    /** @protected */
     _setFilled() {
         const fieldEditoPane = this._element.closest('.app-field-pane-editor');
         if(fieldEditoPane && fieldEditoPane.tag('component')) {
@@ -92,6 +114,7 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
         }
     }
 
+    /** @protected */
     _unsetFilled() {
         const fieldEditoPane = this._element.closest('.app-field-pane-editor');
         if(fieldEditoPane && fieldEditoPane.tag('component')) {

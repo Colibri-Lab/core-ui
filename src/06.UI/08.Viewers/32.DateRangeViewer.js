@@ -23,11 +23,18 @@ Colibri.UI.DateRangeViewer = class extends Colibri.UI.Viewer {
 
     }
    
-
+    /**
+     * Value
+     * @type {Date|string}
+     */
     get value() {
         return this._value;
     }
 
+    /**
+     * Value
+     * @type {Date|string}
+     */
     set value(value) {
         if(!Array.isArray(value)) {
             value = [value, null];

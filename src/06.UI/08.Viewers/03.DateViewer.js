@@ -22,10 +22,18 @@ Colibri.UI.DateViewer = class extends Colibri.UI.Viewer {
 
     }
 
+    /**
+     * Value
+     * @type {Date|string}
+     */
     get value() {
         return this.ContainsClass('app-is-read-component');
     }
 
+    /**
+     * Value
+     * @type {Date|string}
+     */
     set value(value) {
         if(typeof value === 'string') {
             value = value.toDate();

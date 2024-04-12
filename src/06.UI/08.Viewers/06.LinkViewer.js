@@ -17,9 +17,17 @@ Colibri.UI.LinkViewer = class extends Colibri.UI.Viewer {
         this.AddClass('app-link-viewer-component');
     }
 
+    /**
+     * Value
+     * @type {string}
+     */
     get value() {
         return this._value;
     }
+    /**
+     * Value
+     * @type {string}
+     */
     set value(value) {
         value = this._convertValue(value);
         this._value = value;

@@ -24,7 +24,18 @@ Colibri.UI.LoadingBallun = class extends Colibri.UI.Component {
         this._iconObject.value = Colibri.UI.LoadingIcon;
 
     }
-
+    
+    /**
+     * Show/Hide component
+     * @type {boolean}
+     */
+    get shown() {
+        return super.shown;
+    }
+    /**
+     * Show/Hide component
+     * @type {boolean}
+     */
     set shown(value) {
         super.shown = value;
         if(value) {
@@ -36,44 +47,54 @@ Colibri.UI.LoadingBallun = class extends Colibri.UI.Component {
     }
 
     /**
-     * Текст
+     * Text
      * @type {string}
      */
     get text() {
         return this._text;
     }
     /**
-     * Текст
+     * Text
      * @type {string}
      */
     set text(value) {
         this._text = value;
         this._showText();
     }
+    /** @private */
     _showText() {
         this._textObject.shown = !!this._text;
         this._textObject.value = this._text;
     }
 
     /**
-     * Иконка
+     * Icon
      * @type {string}
      */
     get icon() {
         return this._icon;
     }
     /**
-     * Иконка
+     * Icon
      * @type {string}
      */
     set icon(value) {
         this._icon = value;
         this._showIcon();
     }
+    /** @private */
     _showIcon() {
         this._iconObject.value = this._icon;       
     }
 
+    /**
+     * Starts the ballun
+     * @param {string} loadingText loading text
+     * @param {string} completeText complete text
+     * @param {string} errorText error text
+     * @param {string} completeIcon complete icon
+     * @param {string} errorIcon error icon
+     */
     Start(loadingText, completeText, errorText, completeIcon, errorIcon) {
         this._completeIcon = completeIcon;
         this._errorIcon = errorIcon;
@@ -87,6 +108,9 @@ Colibri.UI.LoadingBallun = class extends Colibri.UI.Component {
         this.text = loadingText;
     }
 
+    /**
+     * Set error
+     */
     Error() {
         this.RemoveClass('-loading');
         this.AddClass('-error');
@@ -97,6 +121,9 @@ Colibri.UI.LoadingBallun = class extends Colibri.UI.Component {
         });
     }
 
+    /**
+     * Complete
+     */
     Complete() {
         this.RemoveClass('-loading');
         this.AddClass('-complete');
