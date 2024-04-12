@@ -26,10 +26,10 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
         this._input.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', {domEvent: e}));
         this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', {domEvent: e}));
         this._input.addEventListener('change', (e) => {
-            if(this.max !== null && this._input.value > this.max) {
+            if(this.max !== null && parseFloat(this._input.value) > this.max) {
                 this._input.value = this.max;
             }
-            if(this.min !== null && this._input.value < this.min) {
+            if(this.min !== null && parseFloat(this._input.value) < this.min) {
                 this._input.value = this.min;
             }
             if(this._original != this._input.value) {
@@ -188,7 +188,7 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
         
         if(value !== '' && value !== null && this._fieldData?.params?.decimal !== undefined) {
             try {
-                value = (value * 1.0).toFixed(this._fieldData?.params?.decimal);
+                value = (value * 1.0).toFixed(this._isShare && !direction ? 2 : this._fieldData?.params?.decimal);
             } catch(e) {
                 // console.log(e, value)
             }
@@ -240,7 +240,7 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
      * @type {Number}
      */
     get max() {
-        return this._input.attr('max');
+        return parseFloat(this._input.attr('max'));
     }
     /**
      * Maximum allowed value
@@ -255,7 +255,7 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
      * @type {Number}
      */
     get min() {
-        return this._input.attr('min');
+        return parseFloat(this._input.attr('min'));
     }
     /**
      * Minimum allowed value

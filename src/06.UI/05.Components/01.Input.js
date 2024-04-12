@@ -79,7 +79,6 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         });
 
         this._input.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', { domEvent: e }));
-        this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', { domEvent: e }));
 
         this._input.addEventListener('mousedown', (e) => {
             e.target.focus();
