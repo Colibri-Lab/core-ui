@@ -215,7 +215,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
         this._preventNextEvent = preventNextEvent;
 
-        const u = url + (Object.countKeys(options) > 0 ? '?' + String.fromObject(options, ['&', '=']) : '') + this.GetSafeParamsAsString();
+        const u = url + (Object.countKeys(options) > 0 ? '?' + String.fromObject(options, ['&', '=']) + '&' + this.GetSafeParamsAsString() : '');
         if(this._type == Colibri.Web.Router.RouteOnHash) {
             location.hash = '#' + u;
         } else if(this._type == Colibri.Web.Router.RouteOnHistory) {
