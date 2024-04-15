@@ -2183,6 +2183,24 @@ Date.prototype.DiffInDays = function (dateTo) {
     return Math.ceil(this.Diff(dateTo) / 86400);
 };
 /**
+ * Calculates holidays count within two dates
+ * @param {Date} dateTo date to
+ * @param {Array} holidays holidays with holidays mark
+ */
+Date.prototype.DiffInDaysHolidays = function(dateTo, holidays) {
+    let holidays2 = holidays.filter(v => v.isholiday).map(v => v.date);
+    let d = new Date();
+    d.setTime(this.getTime());
+    let i = 0;
+    while(d <= dateTo) {
+        if(holidays2.indexOf(d.toShortDateString()) !== -1) {
+            i++;
+        }
+        d.addDays(1);
+    }
+    return i;
+}
+/**
  * Calculates the difference in years between the current date and the specified date.
  * @param {Date} dateTo - The date to compare with.
  * @returns {number} The difference in years.
