@@ -42,7 +42,6 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
                 this._preventNextEvent = false;
                 return;
             }
-            console.log('popstate', App.Request.uri, App.Request.query);
             if(this._url !== App.Request.uri || this._options !== App.Request.query) {
                 this._url = App.Request.uri;
                 this._path = App.Request.uri.split('/').filter(v => v != '');
@@ -53,12 +52,21 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
             }
         };
         this._handleNavigate = (e) => {
-            let url = e.destination.url;
-            let options = url.split('?')[1]?.toObject(['&', '=']) || {};
-            this._url = url.split('?')[0];
+            let url = '';
+            let options = {};
+            if(this._type == Colibri.Web.Router.RouteOnHash) {
+                url = e.destination.url;
+                options = url.split('#')[1]?.toObject(['&', '=']) || {};
+                this._url = url.split('#')[0];
+            } else if(this._type == Colibri.Web.Router.RouteOnHistory) {
+                url = e.destination.url;
+                options = url.split('?')[1]?.toObject(['&', '=']) || {};
+                this._url = url.split('?')[0];
+            }
             this._path = url.split('/').filter(v => v != '');
             this._options = options;
             this._history.push({url: this._url, options: this._options});
+            
         };
 
         if(type == Colibri.Web.Router.RouteOnHash) {
@@ -113,8 +121,8 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
      */
     _initRouterOnHash() {
         window.removeEventListener('popstate', this._handlePopState);
-        navigation.removeEventListener('navigate', this._handleNavigate);
         window.addEventListener('hashchange', this._handleHashChange);
+        navigation.addEventListener('navigate', this._handleNavigate);
     }
 
     /**
