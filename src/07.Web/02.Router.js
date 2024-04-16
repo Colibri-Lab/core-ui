@@ -122,7 +122,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
     _initRouterOnHash() {
         window.removeEventListener('popstate', this._handlePopState);
         window.addEventListener('hashchange', this._handleHashChange);
-        navigation.addEventListener('navigate', this._handleNavigate);
+        navigation && navigation.addEventListener('navigate', this._handleNavigate);
     }
 
     /**
@@ -132,7 +132,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
     _initRouterOnHistory() {
         window.removeEventListener('hashchange', this._handleHashChange);
         window.addEventListener('popstate', this._handlePopState);
-        navigation.addEventListener('navigate', this._handleNavigate);
+        navigation && navigation.addEventListener('navigate', this._handleNavigate);
     }
 
     /**
