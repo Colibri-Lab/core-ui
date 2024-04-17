@@ -125,6 +125,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this.AddClass('app-component-field');
 
         this._title = new Colibri.UI.TextSpan(this._name + '-title', this);
+        this._before = new Colibri.UI.Pane(this._name + '-before', this);
         this._content = new Colibri.UI.Pane(this._name + '-content', this);
         new Colibri.UI.Pane(this._name + '-container', this._content);
         new Colibri.UI.TextSpan(this._name + '-note', this._content);
@@ -150,6 +151,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this.RenderFieldContainer();
 
         this.title = this._fieldData?.desc ? this._fieldData?.desc[Lang.Current] ?? this._fieldData?.desc ?? '' : '';
+        this.before = this._fieldData?.before ? this._fieldData.before[Lang.Current] ?? this._fieldData.before ?? '' : '';
         this.note = this._fieldData?.note ? this._fieldData?.note[Lang.Current] ?? this._fieldData?.note ?? '' : '';
         this.placeholder = this._fieldData?.placeholder ? this._fieldData?.placeholder[Lang.Current] ?? this._fieldData?.placeholder ?? '' : '';
 
@@ -423,6 +425,22 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
                 this.RemoveClass('-without-title');
             }    
         }
+    }
+
+    /**
+     * Before content
+     * @type {string}
+     */
+    get before() {
+        return this._before.value;
+    }
+    /**
+     * Before content
+     * @type {string}
+     */
+    set before(value) {
+        this._before.value = value;
+        this._before.shown = !!value;
     }
 
      /**
