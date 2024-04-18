@@ -210,13 +210,22 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         this._backgroundMode = value;
         cordova.plugins.backgroundMode.setEnabled(value);
         if(value) {
-            cordova.plugins.backgroundMode.setDefaults({ silent: true });
-            // cordova.plugins.backgroundMode.overrideBackButton();
+            cordova.plugins.backgroundMode.setDefaults({ silent: false });
             cordova.plugins.backgroundMode.on('activate', function () {
                 cordova.plugins.backgroundMode.disableWebViewOptimizations();
             });
         }
     
+    }
+
+    get overrideBackButton() {
+        return this._overrideBackButton;
+    }
+    set overrideBackButton(value) {
+        this._overrideBackButton = value;
+        if(value) {
+            cordova.plugins.backgroundMode.overrideBackButton();
+        }
     }
 
     /**

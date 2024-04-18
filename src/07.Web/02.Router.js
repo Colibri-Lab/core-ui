@@ -299,14 +299,14 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
     }
 
     /**
-     * Возвращается на шаг назад, добавляет в историю пункт
+     * Gets back
      */
     Back() {
         history.back();
     }
 
     /**
-     * Возвращается в начало истории
+     * Returns to start of navigation
      */
     Pop() {
         const data = this._history.pop();
@@ -322,7 +322,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
     /**
      * Returns the current URL.
-     * @returns {string} - The current URL.
+     * @type {string} - The current URL.
      */
     get current() {
         return this._url;
@@ -330,7 +330,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
     /**
      * Returns the path segments of the current URL.
-     * @returns {Array} - The path segments of the current URL.
+     * @type {Array} - The path segments of the current URL.
      */
     get path() {
         return this._path;
@@ -338,10 +338,19 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
     /**
      * Returns the query parameters of the current URL.
-     * @returns {Object} - The query parameters of the current URL.
+     * @type {Object} - The query parameters of the current URL.
      */
     get options() {
         return this._options;
+    }
+
+    /**
+     * History object
+     * @type {Array}
+     * @readonly
+     */
+    get history() {
+        return this._history;
     }
 
     /**
