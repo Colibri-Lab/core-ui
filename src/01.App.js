@@ -115,6 +115,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
             this._router = new Colibri.Web.Router(routerType);
             this._device = new Colibri.Devices.Device();
             this._browser = new Colibri.Common.BrowserStorage();
+            this._session = new Colibri.Common.SessionStorage();
             this._db = new Colibri.Web.IndexDB(this._name, this._version);
             this._dateformat = dateformat;
             this._numberformat = numberformat;
@@ -432,6 +433,14 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
      */
     get Browser() {
         return this._browser;
+    }
+
+    /**
+     * Gets the browser session storage associated with the application.
+     * @returns {Colibri.Common.SessionStorage} The browser session storage associated with the application.
+     */
+    get Session() {
+        return this._session;
     }
 
     /**
