@@ -26,13 +26,15 @@ Colibri.UI.ConfirmDialog = class extends Colibri.UI.Window {
      * @param {string} cancelbutton cancel button title
      * @returns Promise
      */
-    Show(title, message, okbutton = null, cancelbutton = null) {
+    Show(title, message, okbutton = null, cancelbutton = null, hideCancelButton = false) {
     
         return new Promise((resolve, reject) => {
             this.title = title;
             this.Children('message').value = message;
             this.Children('btn-save').value = okbutton || '#{ui-confirm-ok}';
             this.Children('btn-cancel').value = cancelbutton || '#{ui-confirm-cancel}';
+            this.Children('btn-cancel').shown = !hideCancelButton;
+            
             super.Show();
 
             this.Children('btn-save').ClearHandlers();
