@@ -171,14 +171,17 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
         Colibri.Common.StartTimer(this._moduleEntry.toLowerCase() + '-defered-timer', timeout, () => {
 
             if(this._deferedCalls.length > 0) {
-                const currentCalls = [].concat(this._deferedCalls);
-                this._deferedCalls = [];
-                this.Call(deferedController, deferedMethod, {calls: currentCalls}).then((response) => {
-                    const results = response.result;
-                    for(const result of results) {
-                        this._deferedResults['_' + result.requestKeyword] = result;
-                    }
-                });
+                while(this._deferedCalls.length > 0) {
+                    const currentCalls = [].concat(this._deferedCalls.splice(0, 10));
+                    setTimeout(() => {
+                        this.Call(deferedController, deferedMethod, {calls: currentCalls}).then((response) => {
+                            const results = response.result;
+                            for(const result of results) {
+                                this._deferedResults['_' + result.requestKeyword] = result;
+                            }
+                        });
+                    }, 5);
+                }
 
                 
             }
