@@ -236,7 +236,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
             // значит это Module:Controller.Method
             const parts = loader.split(':');
             const module = eval(parts[0]);
-            loader = () => module.Call(parts[1].split('.')[0], parts[1].split('.')[1], params);
+            loader = () => module.Call(parts[1].split('.')[0], parts[1].split('.')[1], Object.assign(params, {__defered: true}));
         }
 
         this._pathLoaders[path] = {loader: loader, loading: false, loaded: false};

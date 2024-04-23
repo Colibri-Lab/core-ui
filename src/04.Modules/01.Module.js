@@ -25,6 +25,11 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
         
     }
 
+    
+    destructor() {
+        this._stopDeferedTimer();
+    }
+
     /**
      * Initializes the module.
      * This method is automatically called during module construction.
@@ -142,5 +147,92 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
             return super.Call(controller, method, params, headers, withCredentials, requestKeyword);
         }
     }
+
+    /**
+     * Calls saved to next launch
+     * @protected
+     */
+    _deferedCalls = [];
+
+    /**
+     * Call results by requestKeyword
+     * @protected
+     */
+    _deferedResults = {};
+
+    /**
+     * Start timer for defered calls
+     * @param {number} timeout timeout for defer call
+     * @param {string} deferedController controller for executing defered calls
+     * @param {string} deferedMethod defered calls method
+     */
+    _startDeferedTimer(timeout = 500, deferedController, deferedMethod) {
+
+        Colibri.Common.StartTimer(this._moduleEntry.toLowerCase() + '-defered-timer', timeout, () => {
+
+            if(this._deferedCalls.length > 0) {
+                const currentCalls = [].concat(this._deferedCalls);
+                this._deferedCalls = [];
+                this.Call(deferedController, deferedMethod, {calls: currentCalls}).then((response) => {
+                    const results = response.result;
+                    for(const result of results) {
+                        this._deferedResults['_' + result.requestKeyword] = result;
+                    }
+                });
+
+                
+            }
+
+        });
+
+    }
+
+    /**
+     * Stop timer
+     */
+    _stopDeferedTimer() {
+        Colibri.Common.StopTimer(this.name + '-defered-timer');
+    }
+
+    /**
+     * Makes an RPC (Remote Procedure Call) to the specified controller and method.
+     * @param {string} controller - The name of the controller to call.
+     * @param {string} method - The name of the method to call.
+     * @param {Object|null} params - Parameters to pass to the method.
+     * @param {Object} headers - Additional headers for the RPC request.
+     * @param {boolean} withCredentials - Whether to include credentials in the request.
+     * @param {string} requestKeyword - The request keyword.
+     * @returns {Promise} - A promise representing the result of the RPC call.
+     * @public 
+     */
+    Defer(controller, method, params = null, headers= {}, withCredentials= true, requestKeyword = Date.Mc()) {
+
+        this._deferedCalls.push({
+            controller, 
+            method, 
+            params, 
+            headers, 
+            withCredentials, 
+            requestKeyword
+        });
+
+        return new Promise((resolve, reject) => {
+            Colibri.Common.StartTimer('request_' + requestKeyword, 100, () => {
+                if(!!this._deferedResults['_' + requestKeyword]) {
+                    Colibri.Common.StopTimer('request_' + requestKeyword);
+                    const response = this._deferedResults['_' + requestKeyword];
+                    delete this._deferedResults['_' + requestKeyword];
+                    if(response.code != 200) {
+                        reject(response);
+                    } else {
+                        resolve(response);
+                    }    
+                }
+            });
+        }); 
+        
+        
+    }
+
 
 }
