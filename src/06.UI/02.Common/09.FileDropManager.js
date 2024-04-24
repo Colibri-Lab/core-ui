@@ -16,6 +16,7 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
 
         this._allowSize = 900000000;
         this._allowTypes = '*';
+        this._enabled = true;
         
         this._dropContainer = container;this._dropHover = Element.create('div', {class: 'app-drop-over'});
         this._dropHover.append(Element.create('div'));
