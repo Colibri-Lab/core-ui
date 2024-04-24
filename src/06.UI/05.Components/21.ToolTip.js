@@ -90,52 +90,58 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
 
     /** @private */
     _findPointOnParent() {
-        const parent = this._findParent();
-        const ori = this._orientation[0];
-        const parentBounds = parent.container.bounds(true, true);
-        if(parent.container.contains(this._element)) {
-            parentBounds.left = 0;
-            parentBounds.top = 0;
+        try {
+            const parent = this._findParent();
+            const ori = this._orientation[0];
+            const parentBounds = parent.container ? parent.container.bounds(true, true) : {top: 0, left: 0, width: 0, height: 0};
+            if(parent?.container?.contains(this._element)) {
+                parentBounds.left = 0;
+                parentBounds.top = 0;
+            }
+            switch(ori) {
+                default:
+                case Colibri.UI.ToolTip.RB: {
+                    return {
+                        left: parentBounds.left + parentBounds.outerWidth, 
+                        top: parentBounds.top + parentBounds.outerHeight
+                    };
+                }
+                case Colibri.UI.ToolTip.LB: {
+                    return {
+                        left: parentBounds.left, 
+                        top: parentBounds.top + parentBounds.outerHeight
+                    };
+                }
+                case Colibri.UI.ToolTip.LM: {
+                    return {
+                        left: parentBounds.left, 
+                        top: parentBounds.top + (parentBounds.outerHeight / 2)
+                    };
+                }
+                case Colibri.UI.ToolTip.LT: {
+                    return {
+                        left: parentBounds.left, 
+                        top: parentBounds.top
+                    };
+                }
+                case Colibri.UI.ToolTip.RT: {
+                    return {
+                        left: parentBounds.left + parentBounds.outerWidth, 
+                        top: parentBounds.top
+                    };
+                }
+                case Colibri.UI.ToolTip.RM: {
+                    return {
+                        left: parentBounds.left + parentBounds.outerWidth, 
+                        top: parentBounds.top + (parentBounds.outerHeight / 2)
+                    };
+                }
+            }
+        } catch(e) {
+
         }
-        switch(ori) {
-            default:
-            case Colibri.UI.ToolTip.RB: {
-                return {
-                    left: parentBounds.left + parentBounds.outerWidth, 
-                    top: parentBounds.top + parentBounds.outerHeight
-                };
-            }
-            case Colibri.UI.ToolTip.LB: {
-                return {
-                    left: parentBounds.left, 
-                    top: parentBounds.top + parentBounds.outerHeight
-                };
-            }
-            case Colibri.UI.ToolTip.LM: {
-                return {
-                    left: parentBounds.left, 
-                    top: parentBounds.top + (parentBounds.outerHeight / 2)
-                };
-            }
-            case Colibri.UI.ToolTip.LT: {
-                return {
-                    left: parentBounds.left, 
-                    top: parentBounds.top
-                };
-            }
-            case Colibri.UI.ToolTip.RT: {
-                return {
-                    left: parentBounds.left + parentBounds.outerWidth, 
-                    top: parentBounds.top
-                };
-            }
-            case Colibri.UI.ToolTip.RM: {
-                return {
-                    left: parentBounds.left + parentBounds.outerWidth, 
-                    top: parentBounds.top + (parentBounds.outerHeight / 2)
-                };
-            }
-        }
+        
+        return {left: 0, top: 0};    
     }
 
     /** @private */
