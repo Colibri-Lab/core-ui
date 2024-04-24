@@ -107,7 +107,7 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
     _initManager() {
         
         this._dropContainer.addEventListener('dragover', (e) => {
-            if(this._enabled) {
+            if(!this._enabled) {
                 e.stopPropagation();
                 e.preventDefault();
                 return false;                    
@@ -122,7 +122,7 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
 
         });
         this._dropHover.addEventListener('dragleave', (e) => {
-            if(this._enabled) {
+            if(!this._enabled) {
                 e.stopPropagation();
                 e.preventDefault();
                 return false;                    
@@ -134,7 +134,7 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
             return false;
         });
         this._dropHover.addEventListener('drop', (e) => {
-            if(this._enabled) {
+            if(!this._enabled) {
                 e.stopPropagation();
                 e.preventDefault();
                 return false;                    
