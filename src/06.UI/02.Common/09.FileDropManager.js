@@ -28,6 +28,21 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
     }
 
     /**
+     * Enable/Disable manager
+     * @type {boolean}
+     */
+    get enabled() {
+        return this._enabled;
+    }
+    /**
+     * Enable/Disable manager
+     * @type {boolean}
+     */
+    set enabled(value) {
+        this._enabled = value;
+    }
+
+    /**
      * Message value
      * @type {string}
      */
@@ -92,6 +107,11 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
     _initManager() {
         
         this._dropContainer.addEventListener('dragover', (e) => {
+            if(this._enabled) {
+                e.stopPropagation();
+                e.preventDefault();
+                return false;                    
+            }
             if(!this._dropContainer.classList.contains('-dragging')) {
                 this._dropContainer.classList.add('-dragging');
                 this._dropHover.css({zIndex: Colibri.UI.maxZIndex + 1});
@@ -102,6 +122,11 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
 
         });
         this._dropHover.addEventListener('dragleave', (e) => {
+            if(this._enabled) {
+                e.stopPropagation();
+                e.preventDefault();
+                return false;                    
+            }
             this._dropContainer.classList.remove('-dragging');
             this._dropHover.css({zIndex: null});
             e.stopPropagation();
@@ -109,6 +134,11 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
             return false;
         });
         this._dropHover.addEventListener('drop', (e) => {
+            if(this._enabled) {
+                e.stopPropagation();
+                e.preventDefault();
+                return false;                    
+            }
             this._dropContainer.classList.remove('-dragging');
             this._dropHover.css({zIndex: null});
 
