@@ -21,10 +21,35 @@ Colibri.UI.Loading = class extends Colibri.UI.Pane {
     }
 
     /**
+     * Use event to show and hide custom loading
+     * @type {boolean}
+     */
+    get useEvent() {
+        return this._useEvent;
+    }
+    /**
+     * Use event to show and hide custom loading
+     * @type {boolean}
+     */
+    set useEvent(value) {
+        this._useEvent = value;
+    }
+
+    /**
      * Show/Hide component
      * @type {boolean}
      */
     set shown(value) {
+
+        if(this._useEvent === true) {
+            if(value) {
+                this.Dispatch('Shown');
+            } else {
+                this.Dispatch('Hidden');
+            }
+            return;
+        }
+
         super.shown = value;
         if(this._sendToFront) {
             if (super.shown) {
