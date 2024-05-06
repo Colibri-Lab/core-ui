@@ -136,6 +136,22 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
     }
 
     /**
+     * Left container
+     * @type {Element}
+     */
+    get left() {
+        return this._element.querySelector(':scope > .app-component-split-left');
+    }
+
+    /**
+     * Right container
+     * @type {Element}
+     */
+    get right() {
+        return this._element.querySelector(':scope > .app-component-split-right');
+    }
+    
+    /**
      * Is split has resize handle
      * @type {Boolean}
      */
