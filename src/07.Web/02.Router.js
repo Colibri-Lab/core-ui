@@ -64,7 +64,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
                 this._url = url.split('?')[0];
                 this._url = this._url.replaceAll(location.protocol + '//' + location.hostname, '');
             }
-            this._path = url.split('/').filter(v => v != '');
+            this._path = this._url.split('/').filter(v => v != '');
             this._options = options;
             this._history.push({url: this._url, options: this._options});
             
