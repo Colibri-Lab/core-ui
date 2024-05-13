@@ -24,12 +24,23 @@
 <span class='line'> 17</span> </span><span class="WHIT">        </span><span class="NAME">this.AddClass</span><span class="PUNC">(</span><span class="STRN">'app-htmldata-viewer-component'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 18</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'> 19</span> 
-<span class='line'> 20</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 21</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">v</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="STRN">'&mdash;'</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">value.replaceAll</span><span class="PUNC">(</span><span class="REGX">/\n/</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'&lt;br />'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 22</span> </span><span class="WHIT">        </span><span class="NAME">v</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">v.stripHtml</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">words</span><span class="PUNC">(</span><span class="NUMB">20</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 23</span> </span><span class="WHIT">        </span><span class="NAME">super.value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">v</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 24</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 25</span> 
-<span class='line'> 26</span> 
-<span class='line'> 27</span> </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 28</span> </span><span class="NAME">Colibri.UI.Viewer.Register</span><span class="PUNC">(</span><span class="STRN">'Colibri.UI.HtmlDataViewer'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'#{ui-viewers-htmldata}'</span><span class="PUNC">)</span><span class="PUNC">;</span></pre></body></html>
+<span class='line'> 20</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 21</span>      * Value
+<span class='line'> 22</span>      * @type {string}
+<span class='line'> 23</span>      */</span><span class="WHIT">
+<span class='line'> 24</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 25</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">super.value</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 26</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 27</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 28</span>      * Value
+<span class='line'> 29</span>      * @type {string}
+<span class='line'> 30</span>      */</span><span class="WHIT">
+<span class='line'> 31</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 32</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">v</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="STRN">'&mdash;'</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">value.replaceAll</span><span class="PUNC">(</span><span class="REGX">/\n/</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'&lt;br />'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 33</span> </span><span class="WHIT">        </span><span class="NAME">v</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">v.stripHtml</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">words</span><span class="PUNC">(</span><span class="NUMB">20</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 34</span> </span><span class="WHIT">        </span><span class="NAME">super.value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">v</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 35</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 36</span> 
+<span class='line'> 37</span> 
+<span class='line'> 38</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 39</span> </span><span class="NAME">Colibri.UI.Viewer.Register</span><span class="PUNC">(</span><span class="STRN">'Colibri.UI.HtmlDataViewer'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'#{ui-viewers-htmldata}'</span><span class="PUNC">)</span><span class="PUNC">;</span></pre></body></html>

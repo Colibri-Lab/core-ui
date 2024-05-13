@@ -30,19 +30,27 @@
 <span class='line'> 23</span> 
 <span class='line'> 24</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'> 25</span> 
-<span class='line'> 26</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 27</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._value</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 28</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 29</span> 
-<span class='line'> 30</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 31</span> </span><span class="WHIT">        </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._convertValue</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 32</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="STRN">'number'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 33</span> </span><span class="WHIT">            </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">value.toInt</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 34</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 35</span> </span><span class="WHIT">        </span><span class="NAME">this._value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 36</span> </span><span class="WHIT">        </span><span class="NAME">this._size.value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._value.toSizeString</span><span class="PUNC">(</span><span class="PUNC">[</span><span class="STRN">'bytes'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'Kb'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'Mb'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'Gb'</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">1024</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 37</span> 
-<span class='line'> 38</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 39</span> 
-<span class='line'> 40</span> </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 41</span> </span><span class="NAME">Colibri.UI.Viewer.Register</span><span class="PUNC">(</span><span class="STRN">'Colibri.UI.FileSizeViewer'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'#{ui-viewers-filesize}'</span><span class="PUNC">)</span><span class="PUNC">;</span></pre></body></html>
+<span class='line'> 26</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 27</span>      * Value
+<span class='line'> 28</span>      * @type {number}
+<span class='line'> 29</span>      */</span><span class="WHIT">
+<span class='line'> 30</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 31</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._value</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 32</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 33</span> 
+<span class='line'> 34</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 35</span>      * Value
+<span class='line'> 36</span>      * @type {number}
+<span class='line'> 37</span>      */</span><span class="WHIT">
+<span class='line'> 38</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 39</span> </span><span class="WHIT">        </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._convertValue</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 40</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="STRN">'number'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 41</span> </span><span class="WHIT">            </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">value.toInt</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 42</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 43</span> </span><span class="WHIT">        </span><span class="NAME">this._value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 44</span> </span><span class="WHIT">        </span><span class="NAME">this._size.value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._value.toSizeString</span><span class="PUNC">(</span><span class="PUNC">[</span><span class="STRN">'bytes'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'Kb'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'Mb'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'Gb'</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">1024</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 45</span> 
+<span class='line'> 46</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 47</span> 
+<span class='line'> 48</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 49</span> </span><span class="NAME">Colibri.UI.Viewer.Register</span><span class="PUNC">(</span><span class="STRN">'Colibri.UI.FileSizeViewer'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'#{ui-viewers-filesize}'</span><span class="PUNC">)</span><span class="PUNC">;</span></pre></body></html>

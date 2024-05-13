@@ -162,7 +162,7 @@
 <span class='line'>155</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>156</span> 
 <span class='line'>157</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>158</span>      * Показать ошибки валидации
+<span class='line'>158</span>      * Show errors
 <span class='line'>159</span>      * @private
 <span class='line'>160</span>      */</span><span class="WHIT">
 <span class='line'>161</span> </span><span class="WHIT">     </span><span class="NAME">_showError</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
@@ -177,48 +177,66 @@
 <span class='line'>170</span> </span><span class="WHIT">        </span><span class="NAME">this._errorMessages</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>171</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>172</span> 
-<span class='line'>173</span> </span><span class="WHIT">    
-<span class='line'>174</span>     </span><span class="NAME">Validate</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>175</span> </span><span class="WHIT">        
-<span class='line'>176</span>     </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>177</span> 
-<span class='line'>178</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>179</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>180</span> </span><span class="WHIT">        </span><span class="NAME">this._filesGroup.ForEach</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>181</span> </span><span class="WHIT">            </span><span class="NAME">ret.push</span><span class="PUNC">(</span><span class="NAME">item.value.file</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>182</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'>183</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>184</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>185</span> 
-<span class='line'>186</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>187</span> </span><span class="WHIT">        </span><span class="NAME">this._filesGroup.Clear</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>188</span> </span><span class="WHIT">        </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">value.forEach</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">file</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>189</span> </span><span class="WHIT">            </span><span class="KEYW">const</span><span class="WHIT"> </span><span class="NAME">item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">title</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">file.name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">file</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">file</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>190</span> </span><span class="WHIT">            </span><span class="NAME">this._filesGroup.AddItem</span><span class="PUNC">(</span><span class="NAME">item</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>191</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>192</span> </span><span class="WHIT">        
-<span class='line'>193</span>         </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">value.length</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>194</span> </span><span class="WHIT">            </span><span class="NAME">this._setFilled</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>195</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>196</span> </span><span class="WHIT">            </span><span class="NAME">this._unsetFilled</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>197</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>198</span> 
-<span class='line'>199</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>200</span> </span><span class="WHIT">    
-<span class='line'>201</span>     
-<span class='line'>202</span>     </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">field</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>203</span> </span><span class="WHIT">        </span><span class="NAME">this._fieldData</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>204</span> 
-<span class='line'>205</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._fieldData</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">params</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">this._fieldData</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">params.allow</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>206</span> </span><span class="WHIT">            </span><span class="NAME">this._allowedExtensions</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._fieldData.params.allow.exts</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="PUNC">?</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>207</span> </span><span class="WHIT">            </span><span class="NAME">this._maxFileSize</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._fieldData.params.allow.size</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="PUNC">?</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>208</span> </span><span class="WHIT">            </span><span class="NAME">this._maxCount</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._fieldData.params.allow.count</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="PUNC">?</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>209</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>210</span> 
-<span class='line'>211</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>212</span> 
-<span class='line'>213</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">field</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>214</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._fieldData</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>215</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>216</span> 
-<span class='line'>217</span> </span><span class="PUNC">}</span></pre></body></html>
+<span class='line'>173</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>174</span>      * Validate editor
+<span class='line'>175</span>      */</span><span class="WHIT">
+<span class='line'>176</span> </span><span class="WHIT">    </span><span class="NAME">Validate</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>177</span> </span><span class="WHIT">        
+<span class='line'>178</span>     </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>179</span> 
+<span class='line'>180</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>181</span>      * Value
+<span class='line'>182</span>      * @type {Array}
+<span class='line'>183</span>      */</span><span class="WHIT">
+<span class='line'>184</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>185</span> </span><span class="WHIT">        </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>186</span> </span><span class="WHIT">        </span><span class="NAME">this._filesGroup.ForEach</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>187</span> </span><span class="WHIT">            </span><span class="NAME">ret.push</span><span class="PUNC">(</span><span class="NAME">item.value.file</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>188</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>189</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>190</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>191</span> 
+<span class='line'>192</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>193</span>      * Value
+<span class='line'>194</span>      * @type {Array}
+<span class='line'>195</span>      */</span><span class="WHIT">
+<span class='line'>196</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>197</span> </span><span class="WHIT">        </span><span class="NAME">this._filesGroup.Clear</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>198</span> </span><span class="WHIT">        </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">value.forEach</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">file</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>199</span> </span><span class="WHIT">            </span><span class="KEYW">const</span><span class="WHIT"> </span><span class="NAME">item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">title</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">file.name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">file</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">file</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>200</span> </span><span class="WHIT">            </span><span class="NAME">this._filesGroup.AddItem</span><span class="PUNC">(</span><span class="NAME">item</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>201</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>202</span> </span><span class="WHIT">        
+<span class='line'>203</span>         </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">value.length</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>204</span> </span><span class="WHIT">            </span><span class="NAME">this._setFilled</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>205</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>206</span> </span><span class="WHIT">            </span><span class="NAME">this._unsetFilled</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>207</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>208</span> 
+<span class='line'>209</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>210</span> </span><span class="WHIT">    
+<span class='line'>211</span>     
+<span class='line'>212</span>     </span><span class="COMM">/**
+<span class='line'>213</span>      * Field object
+<span class='line'>214</span>      * @type {object}
+<span class='line'>215</span>      */</span><span class="WHIT">
+<span class='line'>216</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">field</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>217</span> </span><span class="WHIT">        </span><span class="NAME">this._fieldData</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>218</span> 
+<span class='line'>219</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._fieldData</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">params</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">this._fieldData</span><span class="PUNC">?</span><span class="PUNC">.</span><span class="NAME">params.allow</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>220</span> </span><span class="WHIT">            </span><span class="NAME">this._allowedExtensions</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._fieldData.params.allow.exts</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="PUNC">?</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>221</span> </span><span class="WHIT">            </span><span class="NAME">this._maxFileSize</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._fieldData.params.allow.size</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="PUNC">?</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>222</span> </span><span class="WHIT">            </span><span class="NAME">this._maxCount</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._fieldData.params.allow.count</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="PUNC">?</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>223</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>224</span> 
+<span class='line'>225</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>226</span> 
+<span class='line'>227</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>228</span>      * Field object
+<span class='line'>229</span>      * @type {object}
+<span class='line'>230</span>      */</span><span class="WHIT">
+<span class='line'>231</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">field</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>232</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._fieldData</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>233</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>234</span> 
+<span class='line'>235</span> </span><span class="PUNC">}</span></pre></body></html>

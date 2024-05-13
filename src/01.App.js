@@ -23,6 +23,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /** 
      * Constructs a new instance of the Colibri.App class.
+     * @constructor
      */
     constructor() {
         super('App'); 
@@ -39,6 +40,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     /**
      * Registers application events.
      * @public
+     * @method
      */
     RegisterEvents() { 
         this.RegisterEvent('Event', false, 'When any event dispatched');
@@ -53,6 +55,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Registers event handlers.
+     * @method
      */
     RegisterEventHandlers() {
         this.AddHandler('DocumentShown', (event, args) => {
@@ -62,6 +65,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Initializes the application with the specified configuration.
+     * @method
      * @param {string} [name='app'] - The name of the application.
      * @param {number} [version=1] - The version of the application.
      * @param {string} [routerType=Colibri.Web.Router.RouteOnHash] - The type of router to use.
@@ -298,7 +302,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the version of the application.
-     * @returns {number} The version of the application.
+     * @type {number} The version of the application.
      */
     get appVersion() {
         return this._appVersion;
@@ -306,7 +310,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Sets the version of the application.
-     * @param {number} value - The version of the application.
+     * @type {number} value - The version of the application.
      */
     set appVersion(value) {
         this._appVersion = value;
@@ -314,7 +318,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the name of the application.
-     * @returns {string} The name of the application.
+     * @type {string} The name of the application.
      */
     get name() {
         return this._name;
@@ -322,7 +326,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the actions associated with the application.
-     * @returns {Colibri.Common.HashActions} The actions associated with the application.
+     * @type {Colibri.Common.HashActions} The actions associated with the application.
      */
     get Actions() {
         return this._actions;
@@ -330,7 +334,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the storage associated with the application.
-     * @returns {Colibri.Storages.Store} The storage associated with the application.
+     * @type {Colibri.Storages.Store} The storage associated with the application.
      */
     get Storage() {
         return this._storage;
@@ -338,7 +342,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     
     /**
      * Gets the store associated with the application.
-     * @returns {Colibri.Storages.Store} The store associated with the application.
+     * @type {Colibri.Storages.Store} The store associated with the application.
      */
     get Store() {
         return this._store;
@@ -346,7 +350,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the request associated with the application.
-     * @returns {Colibri.Web.Request} The request associated with the application.
+     * @type {Colibri.Web.Request} The request associated with the application.
      */
     get Request() {
         return this._request;
@@ -354,7 +358,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the router associated with the application.
-     * @returns {Colibri.Web.Router} The router associated with the application.
+     * @type {Colibri.Web.Router} The router associated with the application.
      */
     get Router() {
         return this._router;
@@ -362,7 +366,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the notices associated with the application.
-     * @returns {Colibri.UI.Notices} The notices associated with the application.
+     * @type {Colibri.UI.Notices} The notices associated with the application.
      */
     get Notices() {
         return this._notices;
@@ -370,7 +374,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the loader associated with the application.
-     * @returns {Colibri.UI.LoadingContainer} The loader associated with the application.
+     * @type {Colibri.UI.LoadingContainer} The loader associated with the application.
      */
     get Loader() {
         if(!this._loader) {
@@ -381,7 +385,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the confirm dialog associated with the application.
-     * @returns {Colibri.UI.ConfirmDialog} The confirm dialog associated with the application.
+     * @type {Colibri.UI.ConfirmDialog} The confirm dialog associated with the application.
      */
     get Confirm() {
         return this._confirmDialog;
@@ -389,7 +393,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the prompt dialog associated with the application.
-     * @returns {Colibri.UI.PromptDialog} The prompt dialog associated with the application.
+     * @type {Colibri.UI.PromptDialog} The prompt dialog associated with the application.
      */
     get Prompt() {
         return this._promptDialog;
@@ -397,7 +401,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     
     /**
      * Gets the alert dialog associated with the application.
-     * @returns {Colibri.UI.AlertDialog} The alert dialog associated with the application.
+     * @type {Colibri.UI.AlertDialog} The alert dialog associated with the application.
      */
     get Alert() {
         return this._alertDialog;
@@ -405,7 +409,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the loading box associated with the application.
-     * @returns {Colibri.UI.Loading} The loading box associated with the application.
+     * @type {Colibri.UI.Loading} The loading box associated with the application.
      */
     get Loading() {
         return this._loadingBox;
@@ -413,7 +417,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     
     /**
      * Gets the loading ballun associated with the application.
-     * @returns {Colibri.UI.LoadingBallun} The loading ballun associated with the application.
+     * @type {Colibri.UI.LoadingBallun} The loading ballun associated with the application.
      */
     get LoadingBallun() {
         return this._loadingBallun;
@@ -421,7 +425,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the comet associated with the application.
-     * @returns {Colibri.Web.Comet} The comet associated with the application.
+     * @type {Colibri.Web.Comet} The comet associated with the application.
      */
     get Comet() {
         return this._comet;
@@ -429,7 +433,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the browser storage associated with the application.
-     * @returns {Colibri.Common.BrowserStorage} The browser storage associated with the application.
+     * @type {Colibri.Common.BrowserStorage} The browser storage associated with the application.
      */
     get Browser() {
         return this._browser;
@@ -437,7 +441,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the browser session storage associated with the application.
-     * @returns {Colibri.Common.SessionStorage} The browser session storage associated with the application.
+     * @type {Colibri.Common.SessionStorage} The browser session storage associated with the application.
      */
     get Session() {
         return this._session;
@@ -445,7 +449,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the database associated with the application.
-     * @returns {Colibri.Web.IndexDB} The database associated with the application.
+     * @type {Colibri.Web.IndexDB} The database associated with the application.
      */
     get Db() {
         return this._db;
@@ -453,7 +457,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the tooltip associated with the application.
-     * @returns {Colibri.UI.ToolTip} The tooltip associated with the application.
+     * @type {Colibri.UI.ToolTip} The tooltip associated with the application.
      */
     get ToolTip() {
         return this._customToolTip;
@@ -461,7 +465,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the device associated with the application.
-     * @returns {Colibri.Devices.Device} The device associated with the application.
+     * @type {Colibri.Devices.Device} The device associated with the application.
      */
     get Device() {
         return this._device;
@@ -469,7 +473,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the remote domain associated with the application.
-     * @returns {string} The remote domain associated with the application.
+     * @type {string} The remote domain associated with the application.
      */
     get RemoteDomain() {
         return this._remoteDomain;
@@ -477,7 +481,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     
     /**
      * Indicates whether the application is initialized.
-     * @returns {boolean} `true` if the application is initialized; otherwise, `false`.
+     * @type {boolean} `true` if the application is initialized; otherwise, `false`.
      */
     get Initialized() {
         return this._initialized;
@@ -485,42 +489,42 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the date format used by the application.
-     * @returns {string|null} The date format used by the application, or `null` if not set.
+     * @type {string|null} The date format used by the application, or `null` if not set.
      */
     get DateFormat() {
         return this._dateformat;
     }
     /**
      * Sets the date format used by the application.
-     * @param {string} value - The date format to set.
+     * @type {string} value - The date format to set.
      */
     set DateFormat(value) {
         this._dateformat = value;
     }
     /**
      * Gets the number format used by the application.
-     * @returns {string|null} The number format used by the application, or `null` if not set.
+     * @type {string|null} The number format used by the application, or `null` if not set.
      */
     get NumberFormat() {
         return this._numberformat;
     }
     /**
      * Sets the number format used by the application.
-     * @param {string} value - The number format to set.
+     * @type {string} value - The number format to set.
      */
     set NumberFormat(value) {
         this._numberformat = value;
     }
     /**
      * Gets the currency used by the application.
-     * @returns {string|null} The currency used by the application, or `null` if not set.
+     * @type {string|null} The currency used by the application, or `null` if not set.
      */
     get Currency() {
         return this._currency;
     }
     /**
      * Sets the currency used by the application.
-     * @param {string} value - The currency to set.
+     * @type {string} value - The currency to set.
      */
     set Currency(value) {
         this._currency = value;
@@ -528,7 +532,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the CSRF token used by the application.
-     * @returns {string|null} The CSRF token used by the application, or `null` if not set.
+     * @type {string|null} The CSRF token used by the application, or `null` if not set.
      */
     get CsrfToken()
     {
@@ -536,7 +540,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     }
     /**
      * Sets the CSRF token used by the application.
-     * @param {string} value - The CSRF token to set.
+     * @type {string|null} value - The CSRF token to set.
      */
     set CsrfToken(value) {
         this._csrfToken = value;

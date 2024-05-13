@@ -48,4 +48,49 @@
 <span class='line'> 41</span> </span><span class="WHIT">    </span><span class="NAME">Has</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'> 42</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="PUNC">!</span><span class="NAME">this.Get</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 43</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 44</span> </span><span class="PUNC">}</span><span class="PUNC">;</span></pre></body></html>
+<span class='line'> 44</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 45</span> 
+<span class='line'> 46</span> </span><span class="COMM">/**
+<span class='line'> 47</span>  * Represents a browser session storage utility.
+<span class='line'> 48</span>  * @class
+<span class='line'> 49</span>  * @memberof Colibri.Common
+<span class='line'> 50</span>  */</span><span class="WHIT">
+<span class='line'> 51</span> </span><span class="NAME">Colibri.Common.SessionStorage</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">class</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 52</span> </span><span class="WHIT">    </span><span class="COMM">/** @constructor */</span><span class="WHIT">
+<span class='line'> 53</span> </span><span class="WHIT">    </span><span class="NAME">constructor</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 54</span> 
+<span class='line'> 55</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 56</span>      * Sets a value in the browser storage.
+<span class='line'> 57</span>      * @param {string} name - The name of the item.
+<span class='line'> 58</span>      * @param {*} [value=true] - The value to set. Defaults to true if not provided.
+<span class='line'> 59</span>      */</span><span class="WHIT">
+<span class='line'> 60</span> </span><span class="WHIT">    </span><span class="NAME">Set</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 61</span> </span><span class="WHIT">        </span><span class="NAME">window.sessionStorage.setItem</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 62</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 63</span> 
+<span class='line'> 64</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 65</span>      * Gets a value from the browser storage.
+<span class='line'> 66</span>      * @param {string} name - The name of the item.
+<span class='line'> 67</span>      * @returns {*} - The value retrieved from the storage.
+<span class='line'> 68</span>      */</span><span class="WHIT">
+<span class='line'> 69</span> </span><span class="WHIT">    </span><span class="NAME">Get</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 70</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">window.sessionStorage.getItem</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 71</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 72</span> 
+<span class='line'> 73</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 74</span>      * Deletes an item from the browser storage.
+<span class='line'> 75</span>      * @param {string} name - The name of the item to delete.
+<span class='line'> 76</span>      */</span><span class="WHIT">
+<span class='line'> 77</span> </span><span class="WHIT">    </span><span class="NAME">Delete</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 78</span> </span><span class="WHIT">        </span><span class="NAME">window.sessionStorage.removeItem</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 79</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 80</span> 
+<span class='line'> 81</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 82</span>      * Checks if an item exists in the browser storage.
+<span class='line'> 83</span>      * @param {string} name - The name of the item to check.
+<span class='line'> 84</span>      * @returns {boolean} - True if the item exists, false otherwise.
+<span class='line'> 85</span>      */</span><span class="WHIT">
+<span class='line'> 86</span> </span><span class="WHIT">    </span><span class="NAME">Has</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 87</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="PUNC">!</span><span class="NAME">this.Get</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 88</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 89</span> </span><span class="PUNC">}</span><span class="PUNC">;</span></pre></body></html>

@@ -143,64 +143,80 @@
 <span class='line'>136</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>137</span> 
 <span class='line'>138</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>139</span>      * Is split has resize handle
-<span class='line'>140</span>      * @type {Boolean}
+<span class='line'>139</span>      * Left container
+<span class='line'>140</span>      * @type {Element}
 <span class='line'>141</span>      */</span><span class="WHIT">
-<span class='line'>142</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">hasHandle</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>143</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._hasHandle</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>142</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">left</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>143</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._element.querySelector</span><span class="PUNC">(</span><span class="STRN">':scope > .app-component-split-left'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>144</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>145</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>146</span>      * Is split has resize handle
-<span class='line'>147</span>      * @type {Boolean}
-<span class='line'>148</span>      */</span><span class="WHIT">
-<span class='line'>149</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">hasHandle</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>150</span> </span><span class="WHIT">        </span><span class="NAME">this._hasHandle</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>151</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">'true'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>152</span> </span><span class="WHIT">            </span><span class="NAME">this._handler.style.display</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>153</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>154</span> </span><span class="WHIT">            </span><span class="NAME">this._handler.style.display</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'none'</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>155</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>156</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>157</span> </span><span class="WHIT">    
-<span class='line'>158</span>     </span><span class="COMM">/**
-<span class='line'>159</span>      * Processes the children object
-<span class='line'>160</span>      * @param {string|Element|Element[]} children children to generate
-<span class='line'>161</span>      * @param {Element|Colibri.UI.Component} parent parent component or element
-<span class='line'>162</span>      */</span><span class="WHIT">
-<span class='line'>163</span> </span><span class="WHIT">    </span><span class="NAME">ProcessChildren</span><span class="PUNC">(</span><span class="NAME">children</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">parent</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>164</span> 
-<span class='line'>165</span> </span><span class="WHIT">        </span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">children.length</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="PUNC">++</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>166</span> </span><span class="WHIT">            </span><span class="KEYW">const</span><span class="WHIT"> </span><span class="NAME">element</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">children</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>167</span> </span><span class="WHIT">            </span><span class="KEYW">const</span><span class="WHIT"> </span><span class="NAME">componentClass</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.CreateComponentClass</span><span class="PUNC">(</span><span class="NAME">element</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>168</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">componentClass</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>169</span> </span><span class="WHIT">                </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">component</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.CreateComponent</span><span class="PUNC">(</span><span class="NAME">componentClass</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">element</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>170</span> </span><span class="WHIT">                </span><span class="NAME">component</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">component.ProcessChildren</span><span class="PUNC">(</span><span class="NAME">element.childNodes</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">component.container</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>171</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>172</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>173</span> 
-<span class='line'>174</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>175</span> 
-<span class='line'>176</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>177</span>      * Right width
-<span class='line'>178</span>      * @type {Number}
-<span class='line'>179</span>      */</span><span class="WHIT">
-<span class='line'>180</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">rightWidth</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>181</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">parseInt</span><span class="PUNC">(</span><span class="NAME">this._right.css</span><span class="PUNC">(</span><span class="STRN">'width'</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>182</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>183</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>184</span>      * Left width
-<span class='line'>185</span>      * @type {Number}
-<span class='line'>186</span>      */</span><span class="WHIT">
-<span class='line'>187</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">leftWidth</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>188</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">parseInt</span><span class="PUNC">(</span><span class="NAME">this._left.css</span><span class="PUNC">(</span><span class="STRN">'width'</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>189</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>190</span> 
-<span class='line'>191</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>192</span>      * Left width
-<span class='line'>193</span>      * @type {Number}
-<span class='line'>194</span>      */</span><span class="WHIT">
-<span class='line'>195</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">leftWidth</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>196</span> </span><span class="WHIT">        </span><span class="NAME">this._left.css</span><span class="PUNC">(</span><span class="STRN">'flex'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'0 0 '</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>197</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>198</span> 
-<span class='line'>199</span> </span><span class="PUNC">}</span></pre></body></html>
+<span class='line'>145</span> 
+<span class='line'>146</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>147</span>      * Right container
+<span class='line'>148</span>      * @type {Element}
+<span class='line'>149</span>      */</span><span class="WHIT">
+<span class='line'>150</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">right</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>151</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._element.querySelector</span><span class="PUNC">(</span><span class="STRN">':scope > .app-component-split-right'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>152</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>153</span> </span><span class="WHIT">    
+<span class='line'>154</span>     </span><span class="COMM">/**
+<span class='line'>155</span>      * Is split has resize handle
+<span class='line'>156</span>      * @type {Boolean}
+<span class='line'>157</span>      */</span><span class="WHIT">
+<span class='line'>158</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">hasHandle</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>159</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._hasHandle</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>160</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>161</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>162</span>      * Is split has resize handle
+<span class='line'>163</span>      * @type {Boolean}
+<span class='line'>164</span>      */</span><span class="WHIT">
+<span class='line'>165</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">hasHandle</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>166</span> </span><span class="WHIT">        </span><span class="NAME">this._hasHandle</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>167</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">'true'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>168</span> </span><span class="WHIT">            </span><span class="NAME">this._handler.style.display</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>169</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>170</span> </span><span class="WHIT">            </span><span class="NAME">this._handler.style.display</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'none'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>171</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>172</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>173</span> </span><span class="WHIT">    
+<span class='line'>174</span>     </span><span class="COMM">/**
+<span class='line'>175</span>      * Processes the children object
+<span class='line'>176</span>      * @param {string|Element|Element[]} children children to generate
+<span class='line'>177</span>      * @param {Element|Colibri.UI.Component} parent parent component or element
+<span class='line'>178</span>      */</span><span class="WHIT">
+<span class='line'>179</span> </span><span class="WHIT">    </span><span class="NAME">ProcessChildren</span><span class="PUNC">(</span><span class="NAME">children</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">parent</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>180</span> 
+<span class='line'>181</span> </span><span class="WHIT">        </span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">children.length</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="PUNC">++</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>182</span> </span><span class="WHIT">            </span><span class="KEYW">const</span><span class="WHIT"> </span><span class="NAME">element</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">children</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>183</span> </span><span class="WHIT">            </span><span class="KEYW">const</span><span class="WHIT"> </span><span class="NAME">componentClass</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.CreateComponentClass</span><span class="PUNC">(</span><span class="NAME">element</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>184</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">componentClass</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>185</span> </span><span class="WHIT">                </span><span class="NAME">let</span><span class="WHIT"> </span><span class="NAME">component</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.CreateComponent</span><span class="PUNC">(</span><span class="NAME">componentClass</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">element</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>186</span> </span><span class="WHIT">                </span><span class="NAME">component</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">component.ProcessChildren</span><span class="PUNC">(</span><span class="NAME">element.childNodes</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">component.container</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>187</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>188</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>189</span> 
+<span class='line'>190</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>191</span> 
+<span class='line'>192</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>193</span>      * Right width
+<span class='line'>194</span>      * @type {Number}
+<span class='line'>195</span>      */</span><span class="WHIT">
+<span class='line'>196</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">rightWidth</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>197</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">parseInt</span><span class="PUNC">(</span><span class="NAME">this._right.css</span><span class="PUNC">(</span><span class="STRN">'width'</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>198</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>199</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>200</span>      * Left width
+<span class='line'>201</span>      * @type {Number}
+<span class='line'>202</span>      */</span><span class="WHIT">
+<span class='line'>203</span> </span><span class="WHIT">    </span><span class="NAME">get</span><span class="WHIT"> </span><span class="NAME">leftWidth</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>204</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">parseInt</span><span class="PUNC">(</span><span class="NAME">this._left.css</span><span class="PUNC">(</span><span class="STRN">'width'</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>205</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>206</span> 
+<span class='line'>207</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>208</span>      * Left width
+<span class='line'>209</span>      * @type {Number}
+<span class='line'>210</span>      */</span><span class="WHIT">
+<span class='line'>211</span> </span><span class="WHIT">    </span><span class="NAME">set</span><span class="WHIT"> </span><span class="NAME">leftWidth</span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>212</span> </span><span class="WHIT">        </span><span class="NAME">this._left.css</span><span class="PUNC">(</span><span class="STRN">'flex'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'0 0 '</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>213</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>214</span> 
+<span class='line'>215</span> </span><span class="PUNC">}</span></pre></body></html>

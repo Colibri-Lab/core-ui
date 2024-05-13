@@ -5,7 +5,14 @@
 	},
 	"source": {
 		"include": [
-			"src"
+			"/srv/www/cblank/htdocs/vendor/colibri/ui/src",
+			"./src/.js",
+			"./src/*.js",
+			"./src/**/.js",
+			"./src/**/*.js",
+			"./src/**/**/.js",
+			"./src/**/**/*.js",
+			"./src/**/**/**/*.js"
 		]
 	},
 	"plugins": [
