@@ -3,18 +3,22 @@
  * @class
  * @memberof Colibri.Common
  */
-Colibri.Common.HashActions = class {
+Colibri.Common.HashActions = class extends Colibri.Events.Dispatcher {
     
     
     /** @constructor */
     constructor() {
+        super();
         this.handlers = {};
         this.init();
     }
     
     init() {
+        
+        this.RegisterEvent('ActionRaised', false, 'When action is raised');
+
         this.__clickEvent = (e) => {
-            this._handleAction(e.target.data('action').substring(1));
+            this._handleAction(e.target.data('action').substring(1), e);
             e.preventDefault();
             e.stopPropagation();
             return false;
@@ -81,12 +85,13 @@ Colibri.Common.HashActions = class {
      * @param {Object} [args={}] - Additional arguments.
      * @returns {boolean} - Indicates if the action was raised successfully.
      */
-    Raise(action, args = {}) {
+    Raise(action, args = {}, domEvent = null) {
         try {
             if(this.handlers[action] === undefined)
                 return false;
             var handlers = this.handlers[action];
             for(const handler of handlers) {
+                this.Dispatch('ActionRaised', {action: action, args: args, domEvent: domEvent});
                 if(!handler.apply(this, [action, args])) {
                     return false;
                 }
@@ -102,7 +107,7 @@ Colibri.Common.HashActions = class {
      * @param {string} actionString - The hash action string.
      * @private
      */
-    _handleAction(actionString) {
+    _handleAction(actionString, domEvent) {
         
         var queryString = actionString.toObject('&=');
         if(queryString.action == undefined)
@@ -113,7 +118,7 @@ Colibri.Common.HashActions = class {
                 :
             history.pushState("", document.title, window.location.pathname + window.location.search);
         
-        this.Raise(queryString.action, queryString);
+        this.Raise(queryString.action, queryString, domEvent);
         
     }
     

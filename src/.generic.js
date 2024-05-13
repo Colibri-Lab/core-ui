@@ -2835,6 +2835,14 @@ Element.prototype.parent = function () {
 }));
 
 /**
+ * Returns closest component object
+ * @returns Colibri.UI.Component|null
+ */
+Element.prototype.closestComponent = function() {
+    return this.closest('[data-object-name]')?.tag('component') ?? null;
+}
+
+/**
  * Retrieves the computed style value of the specified CSS property for the element.
  * @param {string} name The name of the CSS property.
  * @returns {string} The computed style value of the specified CSS property.
