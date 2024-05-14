@@ -23,7 +23,8 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * @param {string} valueField name of value field 
      * @param {Function|null} __render method for render items
      * @param {boolean} allowEmpty is allowed empty values
-     * @param {boolean} clearIcon show clear icon
+     * @param {boolean|string} clearIcon show clear icon
+     * @param {boolean} canSelectGroup can selector select group
      */
     constructor(name, container, multiple = false, readonly = true, searchable = true, values = [], defaultValue = null, titleField = 'title', valueField = 'value', groupField = null, __render = null, allowEmpty = true, clearIcon = false, canSelectGroup = false) {
         super(name, container, Element.create('div'));
@@ -45,7 +46,10 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._input.shown = true;
         this._input.icon = null;
         this._input.hasIcon = false;
-        this._input.hasClearIcon = clearIcon;
+        this._input.hasClearIcon = !!clearIcon;
+        if(typeof clearIcon === 'string') {
+            this._input.clearIcon = clearIcon;
+        }
         this._input.placeholder = this._placeholder;
         this._input.toolTip = '';
 

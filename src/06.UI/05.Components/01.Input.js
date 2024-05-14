@@ -247,6 +247,21 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Clear icon
+     * @type {String}
+     */
+    get clearIcon() {
+        return this.Children('clear').html;
+    }
+    /**
+     * Clear icon
+     * @type {String}
+     */
+    set clearIcon(value) {
+        this.Children('clear').html = value;
+    }
+
     /** 
      * Input value
      * @type {string} 
