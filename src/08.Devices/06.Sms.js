@@ -114,13 +114,16 @@ Colibri.Devices.Sms = class extends Destructable {
                         intent: intent
                         //intent: '' // send SMS without opening any other app, require : android.permission.SEND_SMS and android.permission.READ_PHONE_STATE
                     }
-                }, () => {
+                }, (response) => {
+                    alert(JSON.stringify(response));
                     resolve();
-                }, () => {
+                }, (error) => {
+                    alert(JSON.stringify(error));
                     reject();
                 });        
             }).catch(e => {
                 // do nothing
+                
             });
         });
     }

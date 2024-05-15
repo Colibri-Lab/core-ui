@@ -285,6 +285,9 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             plugin = eval('cordova.plugins.' + query);
         }
         if(!plugin) {
+            plugin = eval('window.plugins.' + query);
+        }
+        if(!plugin) {
             plugin = eval('window.' + query);
         }
         if(!plugin) {
@@ -410,6 +413,17 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             this._geoLocation = new Colibri.Devices.GeoLocation(this);
         }
         return this._geoLocation;
+    }
+
+    /**
+     * Retrieves the sim instance.
+     * @returns {Colibri.Devices.Sim} The sim instance.
+     */
+    get Sim() {
+        if(!this._sim) {
+            this._sim = new Colibri.Devices.Sim(this);
+        }
+        return this._sim;
     }
 
 }
