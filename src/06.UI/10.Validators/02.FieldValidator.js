@@ -80,6 +80,7 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
         let message;
         this._validated = true;
 
+        
         if (this._validators.length > 0) {
             this._validators.forEach((validator) => {
                 const v = validator.Validate(messages, className);
@@ -99,9 +100,8 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
                     continue;
                 }
 
-                const v = validate[key],
-                      method = eval(v.method);
-
+                const v = validate[key]; 
+                const method = typeof v.method === 'string' ? eval(v.method) : v.method;
                 if (!method(this._field, this)) {
                     this._validated = false;
                     message = v.message instanceof Function ? v.message(this._field, this) : v.message;

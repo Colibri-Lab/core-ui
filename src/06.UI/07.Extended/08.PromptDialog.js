@@ -63,7 +63,9 @@ Colibri.UI.PromptDialog = class extends Colibri.UI.Window {
             this._form.Children('firstChild').Focus();
 
             this._validator.ClearHandlers();
-            this._validator.AddHandler('Validated', (event, args) => this._save.enabled = this._validator.Validate());
+            this._validator.AddHandler('Validated', (event, args) => {
+                return this._save.enabled = this._validator.Validate();
+            });
 
             this._save.ClearHandlers();
             this._save.AddHandler('Clicked', (event, args) => {

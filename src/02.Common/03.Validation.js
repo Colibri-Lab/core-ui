@@ -40,6 +40,7 @@ Colibri.Common.Validation = class {
      * @returns {boolean} - Indicates whether the ИНН is valid.
      */
     static ValidateInn(inn, error) {
+        error = error ?? {};
         var result = false;
         if (typeof inn === 'number') {
             inn = inn.toString();
