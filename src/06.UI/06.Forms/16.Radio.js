@@ -56,8 +56,7 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
      */
     set value(value) {
         this._value = value;
-        this._showValue();
-        this.Validate();
+        this._loadValues();
     }
 
     /** @private */
@@ -125,6 +124,7 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
             }
             
             this._showValue();
+            this.Validate();
 
             if(this._focusOnFirst) {
                 this.Focus();
