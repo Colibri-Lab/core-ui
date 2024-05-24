@@ -63,7 +63,7 @@ Colibri.UI.BoolViewer = class extends Colibri.UI.Viewer {
         }
 
         
-        let value = this._value[this._field.selector?.value || 'value'] ?? this._value;
+        let value = this._value && (this._value[this._field.selector?.value || 'value'] ?? this._value);
         value = this._convertValue(value);
 
         const values = Object.values(this._field.values);
