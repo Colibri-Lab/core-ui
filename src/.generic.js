@@ -850,6 +850,70 @@ Object.map = function (obj, func) {
 };
 
 /**
+ * 
+ * @param {object} textAsObject object to render
+ * @param {boolean} showLineBrakes show line breaks
+ * @param {string} itemsTag item tag
+ * @param {boolean} isPrintVersion is printable version
+ * @returns 
+ */
+Object.PerformFormatConversion = function(textAsObject, showLineBrakes = false, itemsTag = 'p', isPrintVersion = false) {
+    if(typeof textAsObject === 'string') {
+        return '<div>' + textAsObject + '</div>';
+    }
+
+    if(!textAsObject) {
+        return '<div />';
+    }
+
+    if(!Array.isArray(textAsObject) || textAsObject.length === 0) {
+        return '';
+    }
+
+    let ret = [];
+    for(const obj of textAsObject) {
+        if(obj?.type) {
+            let color = (obj?.color ? ' style="color: ' + obj.color + '"' : '');
+            switch (obj.type) {
+                case 'br': {
+                    ret.push(showLineBrakes ? '<br />' : '');
+                    break;
+                }
+                default:
+                case 'default': {
+                    ret.push(!obj?.txt ? '' : '<' + itemsTag + ' class="default"' + color + '>' + obj.txt + '</' + itemsTag + '>');
+                    break;
+                }
+                case 'strong': {
+                    color = (obj?.color ? ' style="color: ' + obj.color + '"' : '');
+                    ret.push(!obj?.txt ? '' : '<' + itemsTag + ' ' + (isPrintVersion ? '' : 'class="strong"') + '' + color + '>' + (isPrintVersion ? '<b>' : '') + obj.txt + (isPrintVersion ? '</b>' : '') + '</' + itemsTag + '>');
+                    break;
+                }
+                case 'title': {
+                    color = (obj?.color ? ' style="color: ' + obj.color + '"' : '');
+                    if(isPrintVersion) {
+                        ret.push(!obj?.txt ? '' : '<b>' + obj.txt + '</b>');
+                    }
+                    else {
+                        ret.push(!obj?.txt ? '' : '<' + itemsTag + ' class="title"' + color + '>' + obj.txt + '</' + itemsTag + '>');
+                    } 
+                    break;
+                }
+                case 'anchor': {
+                    color = (obj?.color ? ' style="color: ' + obj.color + '"' : '');
+                    ret.push(!obj.txt ? '' : '<a href="' + obj.command + '" ' + color + '>' + obj.txt + '</a>');
+                    break;
+                }
+            }
+        }
+        else if(obj?.txt) {
+            ret.push('<' + itemsTag + '>' + obj.txt + '</' + itemsTag + '>');
+        }
+    }
+    return '<div>' + ret.join('') + '</div>';
+}
+
+/**
  * Returns an array of all captured groups in a string that match the regular expression.
  * @param {string} str - The string to search for matches.
  * @returns {Array} Returns an array containing all captured groups.
