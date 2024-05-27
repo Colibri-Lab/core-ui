@@ -28,6 +28,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         this._value = null;
 
         this._parentColumn = this.grid.header.FindColumn(this.columnName);
+        this.className = this._parentColumn.className;
         this._editor = this._parentColumn?.editor;
         this._viewer = this._parentColumn?.viewer;
         this._editorObject = null;

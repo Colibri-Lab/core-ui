@@ -1028,13 +1028,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @type {string}
      */
     get className() {
-        return this._element.attr('class');
+        return this._className ?? this._element.attr('class');
     }
     /**
      * Class name of component element
      * @type {string}
      */
     set className(value) {
+        this._className = value;
         value.split(' ').forEach((v) => {
             if(v) {
                 this._element.classList.add(v);
