@@ -40,6 +40,10 @@ Colibri.UI.DateViewer = class extends Colibri.UI.Viewer {
         }
 
         this._value = value;
+        if(this._field?.params?.format) {
+            let dateformat = App.DateFormat || 'ru-RU';
+            this._format = new Intl.DateTimeFormat(dateformat, this._field?.params?.format);
+        }
     
         try {
             super.value = this._value && this._format.format(this._value);
