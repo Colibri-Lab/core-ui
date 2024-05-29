@@ -14,6 +14,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @param {*} args arguments for event 
      */
     static __nullHandler = (event, args) => {};
+    static __disableHandler = (event, args) => { args.domEvent?.stopPropagation(); args.domEvent?.preventDefault(); return false; };
 
     /**
      * Dom events map to Colibri events
