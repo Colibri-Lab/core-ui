@@ -16,7 +16,7 @@ Colibri.UI.Forms.DateRange = class extends Colibri.UI.Forms.Field {
         this._input1 = new Colibri.UI.DateSelector(this._name + '-input1', contentContainer);
         this._input1.shown = true;
         this._input1.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args || {}, {component: this})));
-        this._input1.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
+        this._input1.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', Object.assign(args || {}, {component: this._input1})));
         this._input1.AddHandler('Clicked', (event, args) => {
             this.Focus();
             this.Dispatch('Clicked', args);
@@ -31,7 +31,7 @@ Colibri.UI.Forms.DateRange = class extends Colibri.UI.Forms.Field {
         this._input2.shown = true;
         this._input2.hasIcon = false;
         this._input2.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args || {}, {component: this})));
-        this._input2.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
+        this._input2.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', Object.assign(args || {}, {component: this._input2})));
         this._input2.AddHandler('Clicked', (event, args) => {
             this.Focus();
             this.Dispatch('Clicked', args);
@@ -61,6 +61,7 @@ Colibri.UI.Forms.DateRange = class extends Colibri.UI.Forms.Field {
             this._input1.format = new Intl.DateTimeFormat(this._fieldData?.params?.format?.locale || dateformat, this._fieldData?.params?.format?.options ?? {day: '2-digit', month: 'short', year: 'numeric'});
             this._input2.format = new Intl.DateTimeFormat(this._fieldData?.params?.format?.locale || dateformat, this._fieldData?.params?.format?.options ?? {day: '2-digit', month: 'short', year: 'numeric'});
         }
+
 
     }
 
