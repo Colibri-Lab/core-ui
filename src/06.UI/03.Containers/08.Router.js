@@ -67,7 +67,6 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
     }
     /** @private */
     _initStructure() {
-        
         for(const pattern of Object.keys(this._structure)) {
             const route = this._structure[pattern];
             let component = null;
