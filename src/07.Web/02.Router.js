@@ -54,6 +54,9 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
         this._handleNavigate = (e) => {
             let url = '';
             let options = {};
+            if(!e.destination || !e.destination.sameDocument) {
+                return;
+            }
             if(this._type == Colibri.Web.Router.RouteOnHash) {
                 url = e.destination.url;
                 options = url.split('#')[1]?.toObject(['&', '=']) || {};
