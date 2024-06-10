@@ -25,6 +25,10 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         this._element.append(this._hiddenElement);
         this._element.append(this._viewElement);
 
+        this._clearIcon = new Colibri.UI.Icon('clear-icon', this);
+        this._clearIcon.value = Colibri.UI.ClearIcon;
+        this._clearIcon.shown = false;
+
         this._hiddenElement.addEventListener('click', (e) => {this.Dispatch('Clicked', { domEvent: e }); e.preventDefault(); e.stopPropagation(); return false;});
         this._hiddenElement.addEventListener('change', (e) => {
             this._showValue();
@@ -41,6 +45,8 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         // this._hiddenElement.addEventListener('keydown', (e) => {
         //     e.stopPropagation(); 
         // });
+
+        this._clearIcon.AddHandler('Clicked', (event, args) => this.__clearIconClicked(event, args));
 
         this._viewElement.addEventListener('click', (e) => this.Dispatch('Clicked', { domEvent: e }));
         this._viewElement.addEventListener('dblclick', (e) => this.Dispatch('DoubleClicked', { domEvent: e }));
@@ -98,6 +104,13 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         this.RegisterEvent('PopupClosed', false, 'Попап закрыт');
     }
 
+    __clearIconClicked(event, args) {
+        this.value = '';
+        args.domEvent.stopPropagation();
+        args.domEvent.preventDefault();
+        return false;
+    }
+
     /** @private */
     _showValue() {
 
@@ -116,6 +129,9 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
                 this._popup.value = new Date();
             }    
         }
+
+        this._clearIcon.shown = this._viewElement.value !== '';
+
     }
 
     /**
