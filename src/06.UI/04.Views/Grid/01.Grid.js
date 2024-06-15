@@ -950,11 +950,13 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
         this.RegisterEvent('ColumnVerticalAlignChanged', false, 'Изменилась вертикальная ориентация колонки')
         this.RegisterEvent('ColumnHorizontalAlignChanged', false, 'Изменилась горизонтальная ориентация колонки')
+        this.RegisterEvent('ColumnVisibilityChanged', false, 'When column visibility is changed')
         this.RegisterEvent('ColumnClicked', false, 'Поднимается, когда щелкнули по колонке в заголовке');
         this.RegisterEvent('ColumnStickyChange', false, 'Поднимается, когда колонка меняет липкость');
         this.RegisterEvent('ColumnDisposed', false, 'Поднимается, когда удаляют колонку');
         this.RegisterEvent('ColumnEditorChanged', false, 'Когда изменился редактор в колонке');
         this.RegisterEvent('ColumnViewerChanged', false, 'Когда изменился компонент отображения в колонке');
+        this.RegisterEvent('SortChanged', false, 'When sort column or order is changed');
 
         this.RegisterEvent('RowClicked', false, 'Поднимается, когда щелкнули по строке');
         this.RegisterEvent('RowStickyChange', false, 'Поднимается, когда строка меняет липкость');
@@ -973,6 +975,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     _setSortAndOrder(column) {
+        const check = [this._sortColumn?.name, this._sortOrder];
         if(this._sortColumn && this._sortColumn === column) {
             if(this._sortOrder === null) {
                 this._sortOrder = Colibri.UI.Grid.SortAsc;
@@ -993,6 +996,11 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         }
 
         this._sortColumn.sortState = this._sortOrder;
+
+        if(JSON.stringify(check) !== JSON.stringify([this._sortColumn?.name, this._sortOrder])) {
+            this.Dispatch('SortChanged', {sortColumn: this._sortColumn, order: this._sortOrder});
+        }
+
     }
 
     /**
@@ -1097,6 +1105,10 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             });
         });
 
+        this.AddHandler('ColumnVisibilityChanged', (event, args) => {
+            this.RecalculateCellVisibility(args.column);
+        });
+
     }
 
     /**
@@ -1170,6 +1182,16 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         }
     }
 
+    RecalculateCellVisibility(column) {
+        this.ForEveryRow((name, row) => {
+            row.ForEach((name, cell) => {
+                if(cell.parentColumn) {
+                    cell.shown = cell.parentColumn.shown;
+                }
+            });
+        });
+    }
+
     get draggable() {
         return this._draggable;
     }
@@ -1223,7 +1245,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     get value() {
         const ret = [];
-        this.ForEveryRow((row) => {
+        this.ForEveryRow((name, row) => {
             ret.push(row.value);
         });
         return ret;

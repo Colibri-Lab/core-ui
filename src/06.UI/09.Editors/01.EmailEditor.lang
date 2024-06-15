@@ -1,3 +1,7 @@
 ui-editors-email-message:
   ru: Пожалуйста, введите корректный email
   en: Please enter a valid email
+ui-editors-email:
+  ru: Эл. почта
+  en: Email
+  hy: Էլ հասցե

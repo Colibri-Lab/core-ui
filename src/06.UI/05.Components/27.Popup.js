@@ -185,6 +185,7 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
             this.container.data('for', parent.path);
         }
         this.shown = true;
+        this.BringToFront();
     }
     
 }

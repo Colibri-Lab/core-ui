@@ -10,8 +10,25 @@
             margin: 10px 0;
         }
 
+        .app-ui-grid-container {
+            contain: content;
+        }
+
         table [data-object-name^="controls-column-"] {
             width: 0;
         }
+    }
+}
+
+.app-component-array-grid-object-window {
+    [data-object-name$="-form"] {
+        width: 100%;
+        &.app-component-shown {
+            display: flex;
+        }
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 10px;
     }
 }

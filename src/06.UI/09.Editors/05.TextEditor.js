@@ -144,3 +144,4 @@ Colibri.UI.TextEditor = class extends Colibri.UI.Editor {
     }
 
 }
+Colibri.UI.Editor.Register('Colibri.UI.TextEditor', '#{ui-editors-text}');

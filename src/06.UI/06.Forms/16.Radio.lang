@@ -1,3 +1,7 @@
 ui-fields-radio:
   ru: Радио кнопки
   en: Radio buttons
+ui-fields-radio-: {}
+ui-fields-radio-clear:
+  ru: Очистить
+  en: Clear

@@ -51,3 +51,5 @@ Colibri.UI.DateRangeViewer = class extends Colibri.UI.Viewer {
 
     }
 }
+
+Colibri.UI.Viewer.Register('Colibri.UI.DateRangeViewer', '#{ui-viewers-daterange}');

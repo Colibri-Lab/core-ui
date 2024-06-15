@@ -499,6 +499,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      */
     set field(value) {
         this._fieldData = value;
+        
     }
 
     /**
@@ -559,6 +560,54 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      */
     get original() {
         return this._original;
+    }
+
+    _needRecalcF(fields) {
+        let nr = false;
+        Object.forEach(fields, (n, f) => {
+            if(!!f.fields) {
+                nr = nr || this._needRecalcF(f.fields);
+            } else {
+                nr = nr || !!(f?.params?.valuegenerator ?? false);
+            }
+        });
+        return nr;
+    }
+
+    _needHideAndShowF(fields) {
+        let nr = false;
+        Object.forEach(fields, (n, f) => {
+            if(!!f.fields) {
+                nr = nr || this._needHideAndShowF(f.fields);
+            } else {
+                nr = nr || (!!(f?.params?.fieldgenerator ?? false) || !!(f?.params?.condition ?? false) || !!(f?.params?.hidden ?? false));
+            }
+        });
+        return nr;
+    }
+
+    /**
+     * Needs recalc every time when changed to form field
+     * @readonly
+     */
+    get needRecalc() {
+        if(!!this._fieldData.fields) {
+            return !!(this._fieldData?.params?.valuegenerator ?? false) || this._needRecalcF(this._fieldData.fields);
+        } else {
+            return !!(this._fieldData?.params?.valuegenerator ?? false);
+        }
+    }
+
+    /**
+     * Needs hide and show when changed the form
+     * @readonly
+     */
+    get needHideAndShow() {
+        if(!!this._fieldData.fields) {
+            return (!!(this._fieldData?.params?.fieldgenerator ?? false) || !!(this._fieldData?.params?.condition ?? false) || !!(this._fieldData?.params?.hidden ?? false)) || this._needHideAndShowF(this._fieldData.fields);
+        } else {
+            return (!!(this._fieldData?.params?.fieldgenerator ?? false) || !!(this._fieldData?.params?.condition ?? false) || !!(this._fieldData?.params?.hidden ?? false));
+        }
     }
 
 }
@@ -627,6 +676,10 @@ Colibri.UI.Forms.HiddenField = class extends Colibri.UI.Component {
      */
     ResetValidation() {
         // Do nothing
+    }
+
+    get needRecalc() {
+        return false;
     }
 
 }

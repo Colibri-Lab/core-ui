@@ -57,14 +57,14 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     /** @protected */
     _calcRuntimeValues(rootValue = null) {
-        if(this._calculating) {
+        if(this._calculating || !this.needRecalc) {
             return;
         }
 
         this._calculating = true;
         Object.forEach(this._fields, (name, fieldData) => {
             const fieldComponent = this.Children(name);            
-            if(!fieldComponent) {
+            if(!fieldComponent || !fieldComponent.needRecalc) {
                 return true;
             } 
 
@@ -78,16 +78,24 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                 }
             }
         });
+
         this._calculating = false;
     }
 
     /** @protected */
     _hideAndShow() {
 
+        if(!this.needHideAndShow) {
+            return;
+        }
+
         const data = this.value;
 
         Object.forEach(this._fields, (name, fieldData) => {
             const fieldComponent = this.Children(name);
+            if(!fieldComponent || !fieldComponent.needHideAndShow) {
+                return true;
+            }
 
             if(fieldData?.params?.fieldgenerator) {
                 const gen = eval(fieldData.params.fieldgenerator);
@@ -391,11 +399,27 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         if(value && value[name] !== undefined) {
             component.value = value[name];
         }
+
+    }
+
+    get needRecalc() {
+        let nr = false;
+        this.ForEach((n, c) => {
+            nr = nr || c.needRecalc;
+        });
+        return nr;
+    }
+
+    get needHideAndShow() {
+        let nr = false;
+        this.ForEach((n, c) => {
+            nr = nr || c.needHideAndShow;
+        });
+        return nr;
     }
 
     /** @private */
     _renderFields(value) {
-        
         let hasGroups = false;
         Object.forEach(this._fields, (name, fieldData) => {
             fieldData = Object.cloneRecursive(fieldData);
@@ -426,10 +450,12 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                     fieldData.group && (fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group);
                     if(fieldData.group !== 'window') {
                         if(fieldData.group === groupName) {
+                            this.Children(name).Retreive();
                             this.Children(name).shown = true;
                         }
                         else {
                             this.Children(name).shown = false;
+                            this.Children(name).KeepInMind();
                         }
                     }
                 });
@@ -520,6 +546,20 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             }
             
         }
+    }
+
+    defaultValues(fields = null) {
+        let ret = {};
+        Object.forEach(fields || this._fields, (name, field) => {
+            if(field.fields) {
+                ret[name] = this.defaultValues(field.fields);
+            } else if(field.default) {
+                ret[name] = field.default
+            } else {
+                ret[name] = null;
+            }
+        });
+        return ret;
     }
 
 } 

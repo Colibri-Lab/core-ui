@@ -72,6 +72,10 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
             };
         }
 
+        if(this._fieldData?.values) {
+            this.values = this._fieldData?.values ?? [];
+        }
+
     }
 
     /**
@@ -154,6 +158,9 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
                     let dependsValue = this._getDependsValue();
                     let dependsField = this._lookup.depends ?? null;   
                     lookupPromise = lookupMethod(this._input._input.value, dependsValue, dependsField, this);
+                    if(!(lookupPromise instanceof Promise)) {
+                        lookupPromise = Promise.resolve(lookupPromise);
+                    }
                 }
             }
             else if(this._lookup?.binding) {

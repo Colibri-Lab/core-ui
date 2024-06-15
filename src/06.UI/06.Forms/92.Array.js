@@ -149,7 +149,9 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
                 this.Dispatch('ObjectRemoved', {component: this});
 
-                this._hideAndShow();
+                if(!this.root) {
+                    this._hideAndShow();
+                }
 
             });
         }
@@ -170,7 +172,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
                 const f = eval(this._fieldData.params.title);
                 f && f(object, this);
             }
-            return this.Dispatch('Changed', Object.assign(args ?? {}, {component: this}));
+            // return this.Dispatch('Changed', Object.assign(args ?? {}, {component: this}));
         });
         this._itemsContainer.Children(object.name, object);
         if(this._fieldData.params && this._fieldData.params.title !== null) {
@@ -363,6 +365,10 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
     /** @proptected */
     _calcRuntimeValues(rootValue = null) {
+        if(!this.needRecalc) {
+            return ;
+        }
+
         const formValue = rootValue ?? this.root?.value ?? {};
         this.itemsContainer.ForEach((name, rowObject) => {
             rowObject._calcRuntimeValues(formValue);
@@ -380,8 +386,12 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
     /** @private */
     _hideAndShow() {
+        if(!this.needHideAndShow) {
+            return;
+        }
         this.ForEveryField((name, component) => component._hideAndShow());
     }
+
 
 }
 Colibri.UI.Forms.Field.RegisterFieldComponent('Array', 'Colibri.UI.Forms.Array', '#{ui-fields-array}')

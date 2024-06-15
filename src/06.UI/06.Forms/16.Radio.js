@@ -113,6 +113,17 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
                 }
                 contentContainer.container.append(Element.fromHtml('<label><input type="radio" name="' + this.name + '" id="' + ident + '" value="' + value.value + '"' + (value?.__selected ? ' checked="checked"' : '') + ' /><span>' + (value.title[Lang.Current] ?? value.title) + '</span></label>'))
             });
+
+            
+            if(!(this._fieldData?.params?.required ?? false)) {
+                const icon = new Colibri.UI.Icon('clear', contentContainer);
+                icon.shown = true;
+                icon.iconSVG = 'Colibri.UI.CloseIcon';
+                icon.toolTip = '#{ui-fields-radio-clear}';
+                icon.AddHandler('Clicked', (event, args) => {
+                    contentContainer.container.querySelectorAll('input').forEach(input => input.checked = false);
+                });
+            }
     
             contentContainer.container.querySelectorAll('input').forEach(input => input.addEventListener('click', e => {
                 this._value = e.target.value;
@@ -131,6 +142,7 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
             }
 
         });
+
 
 
 

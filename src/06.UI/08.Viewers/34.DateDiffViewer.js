@@ -45,3 +45,4 @@ Colibri.UI.DateDiffViewer = class extends Colibri.UI.Viewer {
 
     }
 }
+Colibri.UI.Viewer.Register('Colibri.UI.DateDiffViewer', '#{ui-viewers-datediff}');

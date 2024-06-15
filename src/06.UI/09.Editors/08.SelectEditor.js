@@ -391,3 +391,4 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
 
 
 }
+Colibri.UI.Editor.Register('Colibri.UI.SelectEditor', '#{ui-editors-select}');

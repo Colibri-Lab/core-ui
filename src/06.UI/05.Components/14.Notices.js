@@ -30,8 +30,6 @@ Colibri.UI.Notices = class extends Colibri.UI.Pane {
             return;
         }
 
-        console.log(noticeData); 
-
         this.shown = true;
         this.BringToFront();
 

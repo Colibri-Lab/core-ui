@@ -40,6 +40,8 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
         this._fieldData.params.simplearraywidth = (this._fieldData.params?.simplearraywidth ?? 1);
         this._fieldData.params.simplearrayheight = (this._fieldData.params?.simplearrayheight ?? 1);
 
+        this._grid.hasContextMenu = true;
+
         const column1 = this._grid.header.columns.Add('key', '');
         column1.width = '50%';
         column1.align = 'left';
@@ -55,10 +57,25 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
         column2.editor = Colibri.UI.TextEditor;
         column2.value = '#{ui-fields-keyvalueobject-value}';
 
+        this._grid.AddHandler('ContextMenuIconClicked', (event, args) => this.__gridContextMenuIconClicked(event, args));
+        this._grid.AddHandler('ContextMenuItemClicked', (event, args) => this.__gridContextMenuItemClicked(event, args));
         this._grid.AddHandler('CellEditorChanged', (event, args) => this.Dispatch('Changed', {component: this}));
         this._link.AddHandler('Clicked', (event, args) => this._grid.rows.Add('row' + Date.Mc(), {key: 'new-key-' + (this._grid.rows.children - 1), value: ''}));
 
-    } 
+    }
+    
+    __gridContextMenuIconClicked(event, args) {
+        args.item.contextmenu = [{name: 'remove', title: '#{ui-fields-keyvalueobject-remove}'}];
+        args.item.ShowContextMenu(args.isContextMenuEvent ? [Colibri.UI.ContextMenu.RB, Colibri.UI.ContextMenu.RB] : [Colibri.UI.ContextMenu.RB, Colibri.UI.ContextMenu.LB], '', args.isContextMenuEvent ? {left: args.domEvent.clientX, top: args.domEvent.clientY} : null);
+    }
+
+    __gridContextMenuItemClicked(event, args) {
+        if(args.menuData?.name) {
+            if(args.menuData?.name === 'remove') {
+                args.item.Dispose();
+            }
+        }
+    }
 
     /** @protected */
     _registerEvents() {
@@ -137,7 +154,7 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
             this._grid.rows.Add('row' + Date.Mc(), {key: key, value: value});
         });
 
-        if(this._grid.rows.children === 1) {
+        if(this._grid.rows.children === 1 && this._fieldData?.params?.initempty === true) {
             this._link.Dispatch('Clicked');
         }
 

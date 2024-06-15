@@ -96,3 +96,4 @@ Colibri.UI.LinkEditor = class extends Colibri.UI.Editor {
 
 
 }
+Colibri.UI.Editor.Register('Colibri.UI.LinkEditor', '#{ui-editors-link}');

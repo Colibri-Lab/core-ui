@@ -233,3 +233,4 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
     }
 
 }
+Colibri.UI.Editor.Register('Colibri.UI.FilesEditor', '#{ui-editors-files}');

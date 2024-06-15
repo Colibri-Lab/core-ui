@@ -16,7 +16,11 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         this._renderFields();
         this._hideAndShow();
 
-        this.AddHandler('Changed', (event, args) => this._hideAndShow());
+        this.AddHandler('Changed', (event, args) => {
+            if(!this.root) {
+                this._hideAndShow();
+            }
+        });
 
         if(this._fieldData.className) {
             this.AddClass(this._fieldData.className);
@@ -75,8 +79,8 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
                 component.message = false;
                 component.shown = true;
-                component.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign({component: this}, args)))
-                
+                //component.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign({component: this}, args)));
+
             });    
         }
 
@@ -263,7 +267,15 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     /** @protected */
     _calcRuntimeValues(rootValue = null) {
+        if(!this.needRecalc) {
+            return;
+        }
+
         this.ForEveryField((name, fieldComponent) => {
+            if(!fieldComponent || !fieldComponent.needRecalc) {
+                return true;
+            }
+
             const fieldData = fieldComponent.field;
             if(fieldComponent instanceof Colibri.UI.Forms.Object || fieldComponent instanceof Colibri.UI.Forms.Array || fieldComponent instanceof Colibri.UI.Forms.Tabs) {
                 fieldComponent._calcRuntimeValues();
@@ -279,6 +291,10 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
     
     /** @protected */
     _hideAndShow() {
+
+        if(!this.needHideAndShow) {
+            return;
+        }
 
         const data = this.value;
         const formData = this.root.value;
@@ -360,7 +376,6 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
     ForEveryField(callback) {
         this.contentContainer && this.contentContainer.ForEach(callback);
     }
-
     
 }
 Colibri.UI.Forms.Field.RegisterFieldComponent('Object', 'Colibri.UI.Forms.Object', '#{ui-fields-object}')

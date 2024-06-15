@@ -38,13 +38,14 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
     /** @protected */
     _handleEvents() {
         /** Открыть окно с новым объектом */
-        this._addObjectButton.AddHandler('Clicked', (event, args) => this.__newObject(event, args));
+        this._addObjectButton.AddHandler('Clicked', (event, args) => this.newObject(event, args));
 
         /** Открыть окно с выбранным объектом */
         this._objectsGrid.AddHandler('SelectionChanged', (event, args) => {
             // не открываем окно, если на строке вызывают контекстное меню
-            if (args.isContextMenuEvent !== true) {
-                this.__showObject(event, Object.assign({object_row: this._getSelected()}, args))
+            const selected = this._getSelected();
+            if (args.isContextMenuEvent !== true && selected) {
+                this.showObject(selected.value);
             }
         });
 
@@ -54,15 +55,12 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         /** Вызвать нужный обработчик контекстного меню */
         this._objectsGrid.AddHandler('ContextMenuItemClicked', (event, args) => this.__processContextMenuAction(event, args));
 
-        this._objectsGrid.AddHandler('RowSelected', (event, args) => this.__toggleMassActionsMenu(event, args));
-
-         this._objectsGrid.AddHandler('MassActionsMenuActionClicked', (event, args) => this.__processMassAction(event, args));
     }
 
     /** @private */
     _renderAddObjectButton() {
         this._addObjectButton = new Colibri.UI.OutlineBlueButton(this._name + '-add-object-button', this.contentContainer);
-        this._addObjectButton.value = this._fieldData.params?.addlink || '#{ui-arraygrid-add} «' + (this._fieldData.desc) + '»';
+        this._addObjectButton.value = Lang.Translate(this._fieldData.params?.addlink) || '#{ui-arraygrid-add} «' + (Lang.Translate(this._fieldData.desc)) + '»';
         this._addObjectButton.shown = true;
     }
 
@@ -71,15 +69,14 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         this._objectsGrid = new Colibri.UI.Grid(this._name + '-container-grid', this.contentContainer);
         this._objectsGrid.selectionMode = Colibri.UI.Grid.FullRow;
         this._objectsGrid.hasContextMenu = true;
-        this._objectsGrid.hasMassActionsMenu = true;
         this._objectsGrid.shown = true;
+        this._objectsGrid.rows.title = '';
 
         this._displayedColumns.forEach((column) => {
-            let newColumn = this._objectsGrid.header.columns.Add(column.name, column.title);
+            let newColumn = this._objectsGrid.header.columns.Add(column.name, Lang.Translate(column.title));
             newColumn.viewer = column.viewer || null;
             newColumn.editor = column.editor || null;
         });
-        this._objectsGrid.header.columns.Add('controls-column-' + Date.Now().getTime(), '');
     }
 
     /**
@@ -91,19 +88,27 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         if (!this._objectWindow) {
             this._objectWindow = new Colibri.UI.Forms.ArrayGrid.ObjectWindow(this._name + '-object-window', document.body);
             this._objectWindow.parent = this;
+            this._objectWindow.closable = true;
 
             this._objectWindow.fields = this._fieldData.fields;
-            this._objectWindow.title = this._fieldData.desc;
-            this._objectWindow.stickyX = "center";
-            this._objectWindow.stickyY = "center";
+            if(this._fieldData?.desc) {
+                this._objectWindow.title = Lang.Translate(this._fieldData.desc);
+            }
+            // this._objectWindow.stickyX = "center";
+            // this._objectWindow.stickyY = "center";
             this._objectWindow.root = this.root;
+            this._objectWindow.width = this.width;
 
             if (this._fieldData.params?.window) { this._objectWindow.setParams(this._fieldData.params.window); }
 
             /** Добавить или обновить объект после отправки формы */
             this._objectWindow.AddHandler('FormSubmitted', (event, args) => {
                 let newArgs = Object.assign({object_row: this._getSelected()}, args);
-                this._objectWindow.containsNewObject ? this.__addObjectRow(event, newArgs) : this.__updateObjectRow(event, newArgs);
+                if(this._objectWindow.containsNewObject) {
+                    this.addObjectRow(args.value) 
+                } else {
+                    this.updateObjectRow(args.value);
+                }
 
                 this._objectsGrid.UnselectAllRows();
             });
@@ -124,65 +129,23 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         this._objectWindow.shown = true;
     }
 
-    /**
-     * @private
-     * @param {Colibri.Events.Event} event event object
-     * @param {*} args event arguments
-     */ 
-    __newObject(event, args) {
+    newObject(event, args) {
         this._openObjectWindow();
     }
 
-    /**
-     * @private
-     * @param {Colibri.Events.Event} event event object
-     * @param {*} args event arguments
-     */ 
-    __showObject(event, args) {
-        let row = this._getRow(args.object_row);
-        if (row) { this._openObjectWindow(row.tag._objectValue || null); }
+    showObject(value) {
+        this._openObjectWindow(value); 
     }
 
-    /**
-     * @private
-     * @param {Colibri.Events.Event} event event object
-     * @param {*} args event arguments
-     */ 
-    __addObjectRow(event, args) {
-        let value = this._objectWindow?.value || args.formValues || {};
-        this._addRow(value);
+    addObjectRow(value) {
+        this._objectsGrid.rows.Add('row-' + Date.Now().getTime(), value || {});
     }
 
-    /**
-     * @private
-     * @param {Colibri.Events.Event} event event object
-     * @param {*} args event arguments
-     */ 
-    __updateObjectRow(event, args) {
-        let row = this._getRow(args.object_row);
-        let value = this._objectWindow?.value || args.formValues || {};
-
-        if (row) { row.value = row.tag._objectValue = value; }
-    }
-
-    /**
-     * @private
-     * @param {Colibri.Events.Event} event event object
-     * @param {*} args event arguments
-     */ 
-    __removeObjectRow(event, args) {
-        let row = this._getRow(args.object_row);
-        if (row) { row.Dispose(); }
-    }
-
-    /**
-     * Adds a new row
-     * @param {Object} value
-     * @private
-     */
-    _addRow(value) {
-        let row = this._objectsGrid.rows.Add('row-' + Date.Now().getTime(), value || {});
-        row.tag._objectValue = value;
+    updateObjectRow(value) {
+        let row = this._getSelected();
+        if (row) { 
+            row.value = value;
+        }
     }
 
     /**
@@ -223,49 +186,11 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
                     this._objectsGrid.UnselectAllRows();
                     args.item.selected = true;
 
-                    this.__showObject(event, Object.assign({object_row: args.item}, args));
+                    this.showObject(args.item.value || null);
                     break;
 
                 case 'remove-object-row':
-                    this.__removeObjectRow(event, Object.assign({object_row: args.item}, args));
-                    break;
-            }
-        }
-    }
-
-    /**
-     * @private
-     * @param {Colibri.Events.Event} event event object
-     * @param {*} args event arguments
-     */ 
-    __toggleMassActionsMenu(event, args) {
-        if (this._objectsGrid.checked.length > 1) {
-            this._objectsGrid.massActionsMenu = [
-                {
-                    name: 'remove-object-rows',
-                    title: '#{ui-arraygrid-massactions-remove}'
-                }
-            ];
-
-            this._objectsGrid.ShowMassActionsMenu(document.body);
-        } else {
-            this._objectsGrid.massActionsMenu = null;
-        }
-    }
-
-    /**
-     * @private
-     * @param {Colibri.Events.Event} event event object
-     * @param {*} args event arguments
-     */ 
-    __processMassAction(event, args) {
-        if (args?.menuData && args?.items) {
-            switch (args.menuData.name) {
-                case 'remove-object-rows':
-                    args.items.forEach((item) => {
-                        this.__removeObjectRow(event, Object.assign({object_row: item}, args));
-                    })
-                    this._objectsGrid.massActionsMenu = null;
+                    args.item.Dispose();
                     break;
             }
         }
@@ -300,17 +225,20 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
     _setDisplayedColumns() {
         this._displayedColumns = [];
         let paramColumns = this._fieldData.params?.displayed_columns;
+        if(typeof paramColumns === 'string') {
+            paramColumns = paramColumns.split(';');
+        }
 
         Object.forEach(this._fieldData.fields, (fieldName, fieldData) => {
-            if (paramColumns !== undefined && !(fieldName in paramColumns)) {
+            if (paramColumns !== undefined && paramColumns.indexOf(fieldName) === -1) {
                 return;
             }
 
             let column = {};
             column['name'] = fieldName;
             column['title'] = fieldData.desc || '';
-            column['viewer'] = paramColumns ? (paramColumns[fieldName]?.viewer || null) : null;
-            column['editor'] = paramColumns ? (paramColumns[fieldName]?.editor || null) : null;
+            column['viewer'] = fieldData?.params?.viewer ? fieldData.params.viewer : null;
+            column['editor'] = fieldData?.params?.editor ? fieldData.params.editor : null;
 
             this._displayedColumns.push(column);
         });
@@ -343,10 +271,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
      * @type {Object[]}
      */
     get value() {
-        let data = [];
-        this._objectsGrid.rows?.ForEach((name, row) => data.push(row.value));
-
-        return data;
+        return this._objectsGrid.value;
     }
     /**
      * Value
@@ -358,8 +283,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
             throw new Error('#{ui-arraygrid-errors}'); 
         }
 
-        this._objectsGrid.rows.Clear();
-        value && value.forEach((item) => this._addRow(item));
+        this._objectsGrid.value = value;
         
     }
 
@@ -403,7 +327,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
  * @extends Colibri.UI.ModelessWindow
  * @memberof Colibri.UI.Forms.ArrayGrid
  */
-Colibri.UI.Forms.ArrayGrid.ObjectWindow = class extends Colibri.UI.ModelessWindow {
+Colibri.UI.Forms.ArrayGrid.ObjectWindow = class extends Colibri.UI.Window {
 
     /**
      * @constructor
@@ -414,16 +338,17 @@ Colibri.UI.Forms.ArrayGrid.ObjectWindow = class extends Colibri.UI.ModelessWindo
         super(name, container);
         this.AddClass('app-component-array-grid-object-window');
 
+        this.title = '#{ui-arraygrid-title}';
+
         this._containsNewObject = true;
 
         this._form = new Colibri.UI.Forms.Form(this._name + '-form', this.container);
         this._saveButton = new Colibri.UI.SuccessButton(this._name + '-save-button', this.footer);
         this._saveButton.value = '#{ui-arraygrid-save}';
 
-        this._form.AddHandler('Changed', () => this.Dispatch('Changed', {formValues: this._form.value, component: this}));
         this._saveButton.AddHandler('Clicked', (event, args) => {
-            this.Dispatch('FormSubmitted', {formValues: this._form.value});
-            this.close();
+            this.Dispatch('FormSubmitted', {value: this._form.value});
+            this.Hide();
         });
 
         this._form.shown = true;
@@ -433,7 +358,6 @@ Colibri.UI.Forms.ArrayGrid.ObjectWindow = class extends Colibri.UI.ModelessWindo
     /** @protected */
     _registerEvents() {
         super._registerEvents();
-        this.RegisterEvent('Changed', 'Когда содержимое формы внутри окна изменилось');
         this.RegisterEvent('FormSubmitted', 'Когда форма внутри окна отправлена');
     }
 
@@ -488,7 +412,7 @@ Colibri.UI.Forms.ArrayGrid.ObjectWindow = class extends Colibri.UI.ModelessWindo
      * @type {Object|null}
      */
     set value(value) {
-        this._form.value = value;
+        this._form.value = value || this._form.defaultValues();
     }
 
     /**

@@ -7,3 +7,7 @@ ui-editors-files-message3:
 ui-editors-files-message5:
   ru: Недопустимый формат файла
   en: Invalid file format
+ui-editors-files:
+  ru: Файлы
+  en: Files
+  hy: Ֆայլեր

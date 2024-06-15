@@ -121,7 +121,29 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
             fieldEditoPane.tag('component').RemoveClass('-filled');
         }
     }
-
-
+    /**
+     * Registered editors
+     * @private
+     * @static
+     * @type {Array}
+     */
+    static _registered = [];
+    /**
+     * Registers the editor
+     * @static
+     * @param {string} name name of editor
+     * @param {string} desc description of editor
+     */
+    static Register(name, desc) {
+        Colibri.UI.Editor._registered.push({value: name, title: desc});
+    }
+    /**
+     * Enums the registered editors
+     * @static
+     * @returns Array
+     */
+    static Enum() {
+        return Colibri.UI.Editor._registered;
+    }
 
 }

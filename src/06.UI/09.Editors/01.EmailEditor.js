@@ -133,3 +133,4 @@ Colibri.UI.EmailEditor = class extends Colibri.UI.Editor {
     }
 
 }
+Colibri.UI.Editor.Register('Colibri.UI.EmailEditor', '#{ui-editors-email}');

@@ -236,6 +236,9 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
             newCell = new Colibri.UI.Grid.Cell(this.name + '-' + column.name, this);
             newCell.parentColumn = column;
             newCell.shown = true;
+            if(!column.shown) {
+                newCell.shown = false;
+            }
         
             newCell.AddHandler('CellDoubleClicked', (event, args) => {
                 this.Dispatch('CellDoubleClicked', args);

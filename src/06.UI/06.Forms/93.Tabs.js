@@ -16,7 +16,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
         this._tabs.AddHandler('SelectionChanged', (event, args) => {
             // ! нужно видимо убрать событие TabChanged
-            this.Dispatch('TabChanged', args);
+            // this.Dispatch('TabChanged', args);
             this.Dispatch('Changed', args);
         });
 
@@ -25,7 +25,11 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
         this._tabs.selectedIndex = 0;
 
-        this.AddHandler('Changed', (event, args) => this._hideAndShow());
+        this.AddHandler('Changed', (event, args) => {
+            if(!this.root) {
+                this._hideAndShow();
+            }
+        });
 
         if(this._fieldData.className) {
             this.AddClass(this._fieldData.className);
@@ -62,9 +66,9 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
             const component = Colibri.UI.Forms.Field.Create(name, this._tabs.container, field, this, this.root);
             component.message = false;
             component.shown = true;
-            component.AddHandler('Changed', (event, args) => {
-                this.Dispatch('Changed', {component: this});
-            });
+            // component.AddHandler('Changed', (event, args) => {
+            //     this.Dispatch('Changed', {component: this});
+            // });
 
             const tabButton = new Colibri.UI.Button(component.name + '-button', this._tabs.header);
             tabButton.value = tabTitle;
@@ -139,7 +143,6 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
      */
     set value(value) {
         value = eval_default_values(value);
-        
         Object.forEach(this._tabs.components, (name, component) => {
             if(name == '_adds') {
                 // если наткнулись на _adds
@@ -174,6 +177,9 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
     /** @protected */
     _hideAndShow() {
+        if(!this.needHideAndShow) {
+            return;
+        }
 
         const data = this.value;
         const formData = this.root.value;
@@ -288,7 +294,15 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
     /** @protected */
     _calcRuntimeValues(rootValue = null) {
+        if(!this.needRecalc) {
+            return;
+        }
+
         Object.forEach(this._fieldData.fields, (name, fieldData) => {
+            if(!fieldComponent || !fieldComponent.needRecalc) {
+                return true;
+            }
+            
             const fieldComponent = this.Fields(name);         
             if(fieldComponent instanceof Colibri.UI.Forms.Object || fieldComponent instanceof Colibri.UI.Forms.Array || fieldComponent instanceof Colibri.UI.Forms.Tabs) {
                 fieldComponent._calcRuntimeValues();
@@ -302,6 +316,5 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         });
     }
     
-
 }
 Colibri.UI.Forms.Field.RegisterFieldComponent('Tabs', 'Colibri.UI.Forms.Tabs', '#{ui-fields-tabs}')

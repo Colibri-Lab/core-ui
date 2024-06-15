@@ -10,3 +10,7 @@ ui-fields-keyvalueobject-key:
 ui-fields-keyvalueobject-value:
   ru: Значение
   en: Value
+ui-fields-keyvalueobject-remove:
+  ru: Удалить
+  en: Delete
+  hy: Ջնջել

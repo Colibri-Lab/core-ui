@@ -239,7 +239,15 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      * @type {Colibri.UI.Grid}
      */
     get grid() {
-        return this.parent;
+        return this.parent.parent.parent.parent;
+    }
+
+    /**
+     * Header
+     * @type {Colibri.UI.Header}
+     */
+    get header() {
+        return this.parent.parent;
     }
 
     /**
@@ -402,6 +410,22 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
             value = eval(value);
         }
         this._sortIcons = value;
+    }
+
+    /**
+     * Hide and show column
+     * @type {boolean}
+     */
+    get shown() {
+        return super.shown;
+    }
+    /**
+     * Hide and show column
+     * @type {boolean}
+     */
+    set shown(value) {
+        super.shown = value;
+        this.grid.Dispatch('ColumnVisibilityChanged', {column: this});   
     }
 
 }

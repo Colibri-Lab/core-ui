@@ -115,3 +115,4 @@ Colibri.UI.CheckboxEditor = class extends Colibri.UI.Editor {
     }
 
 }
+Colibri.UI.Editor.Register('Colibri.UI.CheckboxEditor', '#{ui-editors-checkbox}');

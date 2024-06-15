@@ -27,10 +27,12 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
         this._field = fieldComponent;
         fieldComponent.container.tag('validator', this);
         this._field.AddHandler(['Changed', 'KeyUp', 'Pasted'], (event, args) => {
-            this.Clear();
-            const messages = !(event.sender._fieldData?.params && event.sender._fieldData.params.messages === false);
-            this.Validate(messages, this._className);
-            this.Dispatch('Validated', {messages: messages});
+            Colibri.Common.Delay(100).then(() => {
+                this.Clear();
+                const messages = !(event.sender._fieldData?.params && event.sender._fieldData.params.messages === false);
+                this.Validate(messages, this._className);
+                this.Dispatch('Validated', {messages: messages});    
+            });
         });
         this._field.AddHandler('FieldsRendered', (event, args) => {
             this._createValidators();

@@ -160,3 +160,4 @@ Colibri.UI.NumberEditor = class extends Colibri.UI.Editor {
     }
 
 }
+Colibri.UI.Editor.Register('Colibri.UI.NumberEditor', '#{ui-editors-number}');

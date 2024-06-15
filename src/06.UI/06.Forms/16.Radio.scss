@@ -54,6 +54,16 @@
             }
 
         }
+
+        position: relative;
+        [data-object-name="clear"] {
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            cursor: pointer;
+            width: 10px;
+            height: 10px;  
+        } 
         
     }
 

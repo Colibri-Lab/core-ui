@@ -1952,7 +1952,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     KeepInMind() {
         if(this._container) {
-            this._hideData = {index: this.index, parent: this._container};
+            this._hideData = {index: this.index, parent: this._element.parentElement};
+            this._element.tag('containedAt', this._element.parentElement);
             this.Disconnect();
             this.Dispatch('Hidden', {});
             this._sendEventToChilds('Hidden', {});
@@ -1962,9 +1963,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     /**
      * Retreives component from memory to DOM in its older position
      */
-    Retreive() {
+    Retreive(performBinding = false) {
         if(this._hideData && this._hideData.parent) {
-            this.ConnectTo(this._hideData.parent, this._hideData.index);
+            this.ConnectTo(this._hideData.parent, this._hideData.index, performBinding);
+            this._element.tag('containedAt', null);
             this._hideData = null;
             this.Dispatch('Shown', {});
             this._sendEventToChilds('Shown', {});

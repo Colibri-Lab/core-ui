@@ -44,14 +44,27 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         this._element.append(Element.fromHtml('<div class="tabs-header-container"><div class="tabs-header"></div><div class="tabs-links"></div></div>'));
         this._element.append(Element.fromHtml('<div class="tabs-container"></div>'));
 
-        this.AddHandler('ChildsProcessed', (event, args) => {
-            this._processEvents();
-            this._selectTab(0);
-        });
-
         this.AddHandler('TabClicked', (event, args) => {
             let newIndex = args.tab.container.index();
             this._selectTab(newIndex);
+        });
+
+        // this.AddHandler('ChildsProcessed', (event, args) => {
+        //     this._selectTab(0);
+        // });
+
+        this.AddHandler('Clicked', (event, args) => {
+            const senderComponent = args.domEvent.target.closest('.app-component-button');
+            if(
+                senderComponent && 
+                senderComponent?.tag('component').parentContainer === this.header && 
+                senderComponent?.tag('component') instanceof Colibri.UI.Button
+            ) {
+                this.Dispatch('TabClicked', {domEvent: args.domEvent, tab: senderComponent.tag('component')});
+                args.domEvent.stopPropagation();
+                args.domEvent.preventDefault();
+                return false;
+            }
         });
     }
 
@@ -61,12 +74,6 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         this.RegisterEvent('TabClicked', false, 'Когда кликнули на вкладку');
         this.RegisterEvent('SelectionChanged', false, 'Deprecated event, must handle Changed');
         this.RegisterEvent('Changed', false, 'Когда выбранная вкладка изменилась');
-    }
-
-    /** @protected */
-    _processEvents() {
-        const buttons = this.header.querySelectorAll(':scope > .app-ui-component');
-        buttons.forEach((button) => button.tag('component').AddHandler('Clicked', (event, args) => this.Dispatch('TabClicked', {domEvent: args.domEvent, tab: event.sender})));
     }
 
     /** @private */
@@ -83,6 +90,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
             const cc = container.tag('component');
             cc.RemoveClass('tab-selected');
             cc.shown = false;
+            cc.KeepInMind();
         });
 
     }
@@ -91,36 +99,34 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     _selectTab(index) {
 
         const currentSelection = this.selectedIndex;
-        const newIndex = index;
-
-        index ++;
 
         this._unselectAllTabs();
+        if(index >= this.buttonsByIndex.length) {
+            index = this.buttonsByIndex.length - 1;
+        }
 
-        const foundButton = this.header.querySelector(':scope > .app-ui-component:nth-child(' + index + ')');
-
-        if(!foundButton) {
+        const button = this.buttonsByIndex[index];
+        if(!button) {
             return;
         }
 
-        const button = foundButton.tag('component');
-        let container = button.contentContainer;
+        let container = this.componentsByIndex[index];
         if(!container) {
-            const foundContainer = this.container.querySelector(':scope > .app-ui-component:nth-child(' + index + ')');
-            container = foundContainer?.tag('component');
+            return;
         }
 
         button.AddClass('tab-selected');
-        if(container) {        
+        if(container) {
+            container.Retreive(true);
             container.shown = true;
             container.AddClass('tab-selected');
         }
 
-        if(currentSelection != newIndex) {
+        if(currentSelection != index) {
             
-            this.Dispatch('Changed', {newIndex: newIndex, oldIndex: currentSelection, tab: button, container: container});
+            this.Dispatch('Changed', {newIndex: index, oldIndex: currentSelection, tab: button, container: container});
             // @deprecation warning !!
-            this.Dispatch('SelectionChanged', {newIndex: newIndex, oldIndex: currentSelection, tab: button, container: container});
+            this.Dispatch('SelectionChanged', {newIndex: index, oldIndex: currentSelection, tab: button, container: container});
             
         }
 
@@ -233,7 +239,6 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
      * @returns Colibri.UI.Pane
      */
     AddTab(componentHeaderButton, componentContainer) {
-
         componentHeaderButton.contentContainer = componentContainer;
 
         this.Children(componentHeaderButton.name, componentHeaderButton);
@@ -246,14 +251,14 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
 
     /**
      * Array of tab components
-     * @type {Array}
+     * @type {Object}
      * @readonly
      */
     get components() {
 
         let ret = {};
         this.ForEach((name, component) => {
-            if(this.container && this.container.contains(component.container)) {
+            if(component && this.container && (component.container?.tag('containedAt') === this.container || this.container.contains(component.container))) {
                 ret[name] = component;
             }
         });
@@ -262,16 +267,50 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     }
 
     /**
-     * Array of tab buttons
+     * Array of tab components by index
      * @type {Array}
+     * @readonly
+     */
+    get componentsByIndex() {
+
+        let ret = [];
+        this.ForEach((name, component) => {
+            if(component && this.container && (component.container?.tag('containedAt') === this.container || this.container.contains(component.container))) {
+                ret.push(component);
+            }
+        });
+        return ret;
+
+    }
+
+    /**
+     * Array of tab buttons
+     * @type {Object}
      * @readonly
      */
     get buttons() {
 
         let ret = {};
         this.ForEach((name, component) => {
-            if(this.container && this.header.contains(component.container)) {
+            if(component && this.container && this.header.contains(component.container)) {
                 ret[name] = component;
+            }
+        });
+        return ret;
+
+    }
+
+    /**
+     * Array of tab buttons by index
+     * @type {Array}
+     * @readonly
+     */
+    get buttonsByIndex() {
+
+        let ret = [];
+        this.ForEach((name, component) => {
+            if(this.container && this.header.contains(component.container)) {
+                ret.push(component);
             }
         });
         return ret;

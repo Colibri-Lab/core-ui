@@ -29,11 +29,14 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
             this.enabled = true;
         }
         else {
-            this.enabled = this._fieldData.params.enabled;
+            this.enabled = this._fieldData?.params?.enabled;
         }
 
-        this._fieldData.params.simplearraywidth = (this._fieldData.params?.simplearraywidth ?? 1);
-        this._fieldData.params.simplearrayheight = (this._fieldData.params?.simplearrayheight ?? 1);
+        if(!this._fieldData.params) {
+            this._fieldData.params = {};
+        }
+        this._fieldData.params.simplearraywidth = (this._fieldData?.params?.simplearraywidth ?? 1);
+        this._fieldData.params.simplearrayheight = (this._fieldData?.params?.simplearrayheight ?? 1);
 
         const column = this._grid.header.columns.Add('col0', '');
         column.width = 50;

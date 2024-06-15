@@ -654,6 +654,39 @@ Object.toStyles = function (o) {
 };
 
 /**
+ * Find last key of object
+ * @param {Object} o object to find last key
+ * @returns {string}
+ */
+Object.lastKey = function(o) {
+    const keys = Object.keys(o);
+    return keys[keys.length - 1];
+}
+
+/**
+ * Find last value of object
+ * @param {Object} o object to find last value
+ * @returns {*}
+ */
+Object.lastValue = function(o) {
+    return o[Object.lastKey(o)];
+}
+
+/**
+ * Enum internal objects and sum specific property within
+ * @param {Object} o object fo enumerate
+ * @param {string} field field within value of object properties
+ * @returns {Number}
+ */
+Object.sumInternal = function(o, field) {
+    let s = 0;
+    Object.forEach(o, (key, value) => {
+        s += value[field];
+    });
+    return s;
+}
+
+/**
  * Inserts a key-value pair into an object at a specified index.
  * @param {Object} object - The object to insert into.
  * @param {string} key - The key to insert.

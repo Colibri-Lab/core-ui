@@ -1,2 +1,5 @@
----
-...
+ui-viewers-badge: {}
+ui-viewers-daterange:
+  ru: Отрезок даты
+  en: Date range
+  hy: Ամսաթվեր
