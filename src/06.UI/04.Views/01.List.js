@@ -563,6 +563,20 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         this._searchBox.Focus();
     }
 
+    /**
+     * Name of object field for ID
+     * @type {String}
+     */
+    get idField() {
+        return this._idField;
+    }
+    /**
+     * Name of object field for ID
+     * @type {String}
+     */
+    set idField(value) {
+        this._idField = value;
+    }
 
 }
 
@@ -682,7 +696,10 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
      * @param {object} itemData data of item
      * @returns string
      */
-    static CreateKey(itemData) {
+    static CreateKey(itemData, idField = null) {
+        if(idField) {
+            return itemData[idField];
+        }
         return itemData?.__id ?? itemData?.id ?? String.MD5(JSON.stringify(Object.sortPropertiesRecursive(itemData))); 
     }
 
@@ -713,7 +730,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
 
     AddItem(itemData, id = null, selected = false, index = null) {
 
-        const newKey = Colibri.UI.List.Group.CreateKey(itemData); 
+        const newKey = Colibri.UI.List.Group.CreateKey(itemData, this.parent.idField); 
         const foundItem = this.FindByKey(newKey);
 
         let control;
@@ -754,7 +771,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
      */
     FindByKey(key) {
         return this._div.indexOf((item) => {
-            const itemKey = Colibri.UI.List.Group.CreateKey(item.value); 
+            const itemKey = Colibri.UI.List.Group.CreateKey(item.value, this.parent.idField); 
             return itemKey === key;
         });
     }
@@ -848,14 +865,14 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         const oldKeys = [];
         const oldValues = this.value;
         for(const item of oldValues) {
-            const key = Colibri.UI.List.Group.CreateKey(item);
+            const key = Colibri.UI.List.Group.CreateKey(item, this.parent.idField);
             oldKeys.push(key);
         }
 
         const newKeys = [];
         let index = 0;
         for(const item of value) {
-            newKeys.push(Colibri.UI.List.Group.CreateKey(item));
+            newKeys.push(Colibri.UI.List.Group.CreateKey(item, this.parent.idField));
             this.AddItem(item, null, item?.__selected, index++);
         }
 

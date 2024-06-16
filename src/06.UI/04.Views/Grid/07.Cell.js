@@ -397,6 +397,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
 
     _createViewer() {
         if(this._viewer && !this._viewerObject) {
+            const cell = this;
             const viewer = eval(this._viewer);
             if(!viewer) {
                 throw 'Can not find viewer component: ' + this._viewer;
