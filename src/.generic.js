@@ -511,6 +511,24 @@ Object.convertToExtended = function(object) {
     return object;
 }
 
+Object.sort = function(object, fn) {
+    const indexes = [];
+    const keys = Object.keys(object);
+    const values = Object.values(object);
+    for(i=0; i<values.length;i++) {
+        const key = keys[i];
+        const value = values[i];
+        indexes[fn(key, value, object, i)] = [key, value];
+    }
+    const ret = {};
+    for(const v of indexes) {
+        if(v) {
+            ret[v[0]] = v[1];
+        }
+    }
+    return ret;
+}
+
 /**
  * Recursively sorts the properties of an object alphabetically.
  * @param {Object} object - The object to sort.
