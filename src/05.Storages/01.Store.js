@@ -315,13 +315,24 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @returns {Colibri.Storages.Store} The store instance.
      */
     RemovePathHandler(path, respondent, handler) {
-        for (let i = 0; i < this._pathHandlers[path].length; i++) {
-            const h = this._pathHandlers[path][i];
+
+        const childStoreData = this.GetChild(path);
+        if(childStoreData) {
+            return childStoreData.child.RemovePathHandler(childStoreData.path, respondent, handler);
+        }
+
+        const handlers = this._pathHandlers[path];
+        if(!handlers) {
+            return this;
+        }
+        for (let i = 0; i < handlers.length; i++) {
+            const h = handlers[i];
             if (h.handler == handler && h.respondent == respondent) {
-                this._pathHandlers[path].splice(i, 1);
+                handlers.splice(i, 1);
                 break;
             }
         }
+        this._pathHandlers[path] = handlers;
         return this;
     }
 

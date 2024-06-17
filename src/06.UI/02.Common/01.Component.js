@@ -1648,6 +1648,26 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return this._binding;
     }
 
+    _handler(data, path) {
+        try {
+            if(this.isConnected) {
+                this.__renderBoundedValues(data, path);
+            }
+            //  else {
+            //     Colibri.Common.Wait(() => {
+            //         console.log('wating', this.name);
+            //         return this.isConnected;
+            //     }, 0, 100).then(() => {
+            //         console.log('found', this.name);
+            //         return this.__renderBoundedValues(data, path)
+            //     });
+            // }
+        } catch(e) {
+            console.error(e);
+            App.Notices.Add(new Colibri.UI.Notice(e, Colibri.UI.Notice.Error));
+        }
+    }
+
     /**
      * Path in store to bind to component
      * @type {String}
@@ -1656,6 +1676,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         if (value === this._binding) {
             return;
+        }
+
+
+        if(this._binding && typeof this._binding === 'string') {
+            let binding = this._binding.split(';');
+            for(const pathsToLoad of binding) {
+                this._storage.RemovePathHandler(pathsToLoad, this, this._handler);
+            }
         }
 
         this._binding = value;
@@ -1673,27 +1701,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             this._storage = App.Store;
         } 
 
-        const handler = (data, path) => {
-            try {
-                if(this.isConnected) {
-                    this.__renderBoundedValues(data, path);
-                }
-                //  else {
-                //     Colibri.Common.Wait(() => {
-                //         console.log('wating', this.name);
-                //         return this.isConnected;
-                //     }, 0, 100).then(() => {
-                //         console.log('found', this.name);
-                //         return this.__renderBoundedValues(data, path)
-                //     });
-                // }
-            } catch(e) {
-                console.error(e);
-                App.Notices.Add(new Colibri.UI.Notice(e, Colibri.UI.Notice.Error));
-            }
-        };
-
-        
         let pathsToLoad = this._binding;
         if(this._binding.indexOf(';') !== -1) {
             pathsToLoad = this._binding.split(';');
@@ -1706,26 +1713,24 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 for(let i=0; i<responses.length; i++) {
                     this.__renderBoundedValues(responses[i], pathsToLoad[i]);
                 }
-                this._storage.AddPathHandler(pathsToLoad, [this, handler]);
+                this._storage.AddPathHandler(pathsToLoad, [this, this._handler]);
             }).catch(response => {
-                console.log(response);
                 this.__renderBoundedValues(null, pathsToLoad);
-                this._storage.AddPathHandler(pathsToLoad, [this, handler]);
+                this._storage.AddPathHandler(pathsToLoad, [this, this._handler]);
             });
             
         }
         else {
             this._storage.AsyncQuery(value).then(data => {
                 this.__renderBoundedValues(data, value);
-                this._storage.AddPathHandler(value, [this, handler]);
+                this._storage.AddPathHandler(value, [this, this._handler]);
             }).catch((response) => {
                 console.log(response);
                 // App.Notices.Add(new Colibri.UI.Notice(response, Colibri.UI.Notice.Error));
                 this.__renderBoundedValues(null, value);
-                this._storage.AddPathHandler(value, [this, handler]);
+                this._storage.AddPathHandler(value, [this, this._handler]);
             });    
         }
-
         
     }
 
