@@ -30,13 +30,16 @@ Colibri.UI = class {
      * @static
      */
     static _getZIndex(elements = null) {
-        return (elements ?? [...document.querySelectorAll('body *')]).reduce((accumulator, current_value) => {
-            current_value = +getComputedStyle(current_value).zIndex;
-            if (current_value === current_value) {
-                return Math.max(accumulator, current_value) 
-            }
-            return accumulator;
-        }, 0);
+        // return (elements ?? [...document.querySelectorAll('body *')]).reduce((accumulator, current_value) => {
+        //     current_value = +getComputedStyle(current_value).zIndex;
+        //     if (current_value === current_value) {
+        //         return Math.max(accumulator, current_value) 
+        //     }
+        //     return accumulator;
+        // }, 0);
+        return (elements ?? [...document.querySelectorAll('body *')])
+            .map(elt => parseFloat(getComputedStyle(elt).zIndex))
+            .reduce((highest, z) => z > highest ? z : highest, 1);
     }
 
     /** 
@@ -46,7 +49,7 @@ Colibri.UI = class {
     static registerMutationObserver() {
         // fixing start max z-index 
         Colibri.UI.maxZIndex = Colibri.UI._getZIndex();
-        Colibri.Common.StartTimer('z-index-timer', 10000, () => {
+        Colibri.Common.StartTimer('z-index-timer', 30000, () => {
             Colibri.UI.maxZIndex = Colibri.UI._getZIndex();
         });
         new MutationObserver((mutationList, observer) => {

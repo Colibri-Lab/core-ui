@@ -23,6 +23,7 @@ Colibri.Events.Dispatcher = class extends Destructable {
     }
 
     destructor() {
+        super.destructor();
         this.Dispose();
     }
 

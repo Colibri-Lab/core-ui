@@ -188,21 +188,28 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         
         this.Dispatch('ComponentRendered');
 
-        this.AddHandler('MouseEnter', (event, args) => {
+        this._mouseEnterHandler = (event, args) => {
             if(this._toolTip) {
                 this._createTipObject();
                 this._setToolTipPositionAndGap();
                 this._tipObject.html(this._toolTip);
                 this._tipObject.showElement();
             }
-        });
-        this.AddHandler('MouseLeave', (event, args) => {
+        }
+        this._mouseLeaveHandler = (event, args) => {
             if(this._tipObject) {
                 this._tipObject.html('');
                 this._tipObject.hideElement();
             }
-        });
+        };
+
+        this.AddHandler('MouseEnter', this._mouseEnterHandler);
+        this.AddHandler('MouseLeave', this._mouseLeaveHandler);
+
+        element = null;
+
     }
+
 
     /**
      * Converts property to its correct type, if the value is function then runs a function
@@ -275,7 +282,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     CreateComponentClass(element, parent) {
         let comp = null;
         try {
-            comp = element.getAttribute('Component') || element.getAttribute('component') || element.tagName; 
+            comp = element.getAttribute ? (element?.getAttribute('Component') ?? element?.getAttribute('component') ?? element.tagName ?? null) : null; 
         }
         catch(e) {
             return null;
@@ -649,11 +656,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @returns {Colibri.Events.Dispatcher}
      */
     AddHandler(eventName, handler, prepend = false, respondent = this) {
-        handler = handler || Colibri.UI.Component.__nullHandler;
         const __domHandlers = Colibri.UI.Component.__domHandlers;
-        __domHandlers[eventName] && this.__bindHtmlEvent(eventName, __domHandlers[eventName]);
+        if(__domHandlers[eventName]) {
+            this.__bindHtmlEvent(eventName, __domHandlers[eventName]);
+        }
 
-        return super.AddHandler(eventName, handler, prepend, respondent);
+        return super.AddHandler(eventName, handler || Colibri.UI.Component.__nullHandler, prepend, respondent);
     }
 
     /**
@@ -675,16 +683,18 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @param {*} args event arguments
      */
     __bindHtmlEvent(eventName, args) {
-        let {domEvent, respondent, delay, handler} = args;
-        handler = handler ? handler : (e => this.Dispatch(eventName, {domEvent: e}));
-        respondent = respondent ? respondent : this._element;
 
         if(this.__domHandlersAttached[eventName]) {
             return;
         }
 
+        let {domEvent, respondent, delay, handler} = args;
+        respondent = respondent ? respondent : this._element;
+
         if(delay) {
             handler = e => Colibri.Common.Delay(delay).then(() => handler(e))
+        } else {
+            handler = handler ? handler : (e => this.Dispatch(eventName, {domEvent: e}));
         }
 
         this.__domHandlersAttached[eventName] = {
@@ -1224,7 +1234,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @type {String}
      */
     set value(value) {
-       this._element.html(value);
+        this._element.html(value);
     }
 
     /**
@@ -1566,6 +1576,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @returns {Colibri.UI.Component}
      */
     indexOf(name) {
+        if(!this._children) {
+            this._children = [];
+        }
         if(name instanceof Function) {
             return Array.findIndex(this._children, name);
         } else {
@@ -2022,11 +2035,19 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.__removeHtmlEvents();
         try {
             this._element.remove();
+            // this._element = null;
         }
         catch(e) { console.log('error removing element from DOM', e); }
         this.Dispatch('ComponentDisposed');
 
+        // this._parent = null;
+        // this._children = null;
+        // this._tag = null;
+        // this._container = null;
+
         super.Dispose();
+
+        // delete this;
 
     }
 
@@ -2075,7 +2096,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             val = val.split(' ');
         }
         for(const v of val) {
-            this._element.classList.add(v);
+            if(!this._element.classList.contains(v)) {
+                this._element.classList.add(v);
+            }
         }
         return this;
     }
@@ -2088,11 +2111,13 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     RemoveClass(val) {
         if(Array.isArray(val)) {
             for(const v of val) {
-                this._element.classList.remove(v);
+                if(this._element.classList.contains(v)) {
+                    this._element.classList.remove(v);
+                }
             }
-        } else {
+        } else if(this._element.classList.contains(val)) {
             this._element.classList.remove(val);
-        }
+        }    
         return this;
     }
 

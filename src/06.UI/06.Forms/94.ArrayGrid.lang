@@ -23,3 +23,11 @@ ui-arraygrid-титле: {}
 ui-arraygrid-title:
   ru: Добавить/Редактировать элемент
   en: Add/Edit element
+ui-arraygrid-contextmenu-up:
+  ru: Вверх
+  en: Up
+  hy: Վերեվ
+ui-arraygrid-contextmenu-down:
+  ru: Вниз
+  en: Down
+  hy: Ներքև

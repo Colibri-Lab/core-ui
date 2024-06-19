@@ -168,6 +168,16 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
                 title: '#{ui-arraygrid-contextmenu-remove}',
                 icon: Colibri.UI.ContextMenuRemoveIcon
             },
+            {
+                name: 'up-object-row',
+                title: '#{ui-arraygrid-contextmenu-up}',
+                icon: Colibri.UI.UpIcon
+            },
+            {
+                name: 'down-object-row',
+                title: '#{ui-arraygrid-contextmenu-down}',
+                icon: Colibri.UI.DownIcon
+            },
         ];
 
         args.item.contextmenu = contextmenu;
@@ -191,6 +201,12 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
 
                 case 'remove-object-row':
                     args.item.Dispose();
+                    break;
+                case 'up-object-row':
+                    args.item.MoveUp();
+                    break;
+                case 'down-object-row':
+                    args.item.MoveDown();
                     break;
             }
         }

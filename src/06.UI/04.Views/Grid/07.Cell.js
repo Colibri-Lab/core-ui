@@ -78,7 +78,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         });
 
         this.AddHandler('ViewerClicked', (event, args) => {
-            this.grid.Dispatch('CellViewerClicked', {cell: this, field: this.columnName, data: this.parentRow.value});
+            this.grid.Dispatch('CellViewerClicked', Object.assign(args, {cell: this, field: this.columnName, data: this.parentRow.value}));
             this.Dispatch('CellClicked', {cell: this});
             this.EditValue();
         });
@@ -273,6 +273,10 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         this._createEditor();
     }
 
+    get editorObject() {
+        return this._editorObject;
+    }
+
     /**
      * Viewer component
      * @type {Colibri.UI.Component}
@@ -287,6 +291,10 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
     set viewer(value) {
         this._viewer = value;
         this._createViewer();
+    }
+
+    get viewerObject() {
+        return this._viewerObject;
     }
 
     /**
@@ -403,7 +411,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
                 throw 'Can not find viewer component: ' + this._viewer;
             }
             this._viewerObject = new viewer(this.name + '_viewer', this);
-            this._viewerObject.AddHandler('Clicked', (event, args) => this.Dispatch('ViewerClicked', {value: event.sender.value}));
+            this._viewerObject.AddHandler('Clicked', (event, args) => this.Dispatch('ViewerClicked', Object.assign(args, {value: event.sender.value})));
             this._viewerObject.shown = true;
             this._viewerObject.field = this.parentColumn.tag;
             this._viewerObject.download = this.parentColumn.download;
@@ -455,7 +463,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         if(this._editorObject) {
             Colibri.Common.Delay(50).then(() => {
                 this.AddClass('-editing');
-                this.parentRow.AddClass('-editing');
+                this.parentRow && this.parentRow.AddClass('-editing');
                 this._valueContainer.Hide();
                 this._viewerObject && this._viewerObject.Hide();
                 this._editorObject.field = this._parentColumn.tag;
@@ -463,7 +471,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
                 if(setFocus) {
                     this._editorObject.Focus();
                 }
-                this._editorObject.editedObject = this.parentRow.value; 
+                this._editorObject.editedObject = this.parentRow ? this.parentRow.value : null; 
                 this._editorObject.value = this.value;   
             });
             return true;

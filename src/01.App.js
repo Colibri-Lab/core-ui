@@ -37,6 +37,23 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
   
     } 
 
+    destructor() {
+        this._actions = null;
+        this._alertDialog = null;
+        this._browser = null;
+        this._comet = null;
+        this._confirmDialog = null;
+        this._db = null;
+        this._device = null;
+        this._loader = null;
+        this._loadingBallun = null;
+        this._loadingBox = null;
+        this._notices = null;
+        this._promptDialog = null;
+        this._request = null;
+        this._router = null;
+    }
+
     /**
      * Registers application events.
      * @public
@@ -331,14 +348,6 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     get Actions() {
         return this._actions;
     } 
-
-    /**
-     * Gets the storage associated with the application.
-     * @type {Colibri.Storages.Store} The storage associated with the application.
-     */
-    get Storage() {
-        return this._storage;
-    }
     
     /**
      * Gets the store associated with the application.

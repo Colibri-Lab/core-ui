@@ -40,6 +40,22 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
     }
 
+    destructor() {
+        super.destructor();
+        this.Dispose();
+    }
+
+    Dispose() {
+
+        this._owner = null;
+        this._parent = null;
+        this._data = null;
+
+        this._pathHandlers = null;
+        this._pathLoaders = null;
+        
+    }
+
     /**
      * Saves the store data in the permanent storage.
      */
@@ -259,9 +275,6 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
             return this;
         }
 
-        // let data = this._parsePathIfHasParam(path);
-        // path = data[0];
-
         const childStoreData = this.GetChild(path);
         if(childStoreData) {
             return childStoreData.child.AddPathHandler(childStoreData.path, handler, prepend);
@@ -319,6 +332,10 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         const childStoreData = this.GetChild(path);
         if(childStoreData) {
             return childStoreData.child.RemovePathHandler(childStoreData.path, respondent, handler);
+        }
+
+        if(!this._pathHandlers) {
+            return this;
         }
 
         const handlers = this._pathHandlers[path];

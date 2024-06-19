@@ -29,7 +29,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
      * Disposes the component
      */
     Dispose() {
-        App.Router.RemoveHandler('RouteChanged', this._routeChangedEvent);
+        App?.Router?.RemoveHandler('RouteChanged', this._routeChangedEvent);
         super.Dispose();
     }
 
@@ -57,45 +57,54 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
         if(struct instanceof Promise) {
             struct.then(structure => {
                 this._structure = this.toPlain(structure, '');
-                this._initStructure();        
+                // this._initStructure();        
             });
         } else {
             this._structure = this.toPlain(struct, '/');
-            this._initStructure();    
+            // this._initStructure();    
         }
 
     }
-    /** @private */
-    _initStructure() {
-        for(const pattern of Object.keys(this._structure)) {
-            const route = this._structure[pattern];
-            let component = null;
-            if(route?.component ?? null) {
-                let componentObject = route.component;
-                if(typeof componentObject === 'string') {
-                    componentObject = eval(componentObject);
-                }
-                if(componentObject) {
-                    component = new componentObject(route?.name ?? ('component-' + Date.Mc()), this);
-                }
-            } else {
-                component = new route('component-' + Date.Mc(), this);
-            }
 
-            if(component) {
-                component.routePattern = pattern.substring(this.basePattern.length); 
-                if(route?.attrs ?? null) {
-                    Object.forEach(route?.attrs, (attrName, attrValue) => {
-                        component[attrName] = attrValue;
-                    });
-                }
-    
-                component.Disconnect();
-                component.shown = true;    
+    _createComponent(pattern, route) {
+        let component = null;
+        if(route?.component ?? null) {
+            let componentObject = route.component;
+            if(typeof componentObject === 'string') {
+                componentObject = eval(componentObject);
             }
+            if(componentObject) {
+                component = new componentObject(route?.name ?? ('component-' + Date.Mc()), this);
+            }
+        } else {
+            component = new route('component-' + Date.Mc(), this);
         }
 
+        if(component) {
+            component.routePattern = pattern.substring(this.basePattern.length); 
+            if(route?.attrs ?? null) {
+                Object.forEach(route?.attrs, (attrName, attrValue) => {
+                    component[attrName] = attrValue;
+                });
+            }
 
+            component.Disconnect();
+            component.shown = true;    
+        }
+        return component;
+    }
+
+    /** @private */
+    _initStructure(pattern = null) {
+        if(!pattern) {
+            for(const pattern of Object.keys(this._structure)) {
+                const route = this._structure[pattern];
+                this._createComponent(pattern, route);
+            }
+        } else {
+            const route = this._structure[pattern];
+            return this._createComponent(pattern, route);
+        }
     }
 
     /**
@@ -139,27 +148,57 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
      * @param {*} args event arguments
      */ 
     __appRouteChanged(event, args) {
+
         if(args.url.substring(0, this._current.length) === this._current) {
-            this.ForEach((name, component) => {
-                let isPattern = component.routePattern === args.url;
-                let match = args.url;
-                if(component.routeIsRegExp) {
-                    const pattern = this._current + (component.routePattern ?? '').replace('#', '.+').replaceAll('?', '.*') + '$';
-                    const reg = new RegExp(pattern);
-                    isPattern = reg.test(args.url);
-                    match = reg.all(args.url);
-                }
-                if(isPattern) {
-                    if(!component.isConnected) {
-                        component.ConnectTo(this, null, true);
+
+            if(this._structure) {
+                this.Clear();
+                for(const pattern of Object.keys(this._structure)) {
+                    const route = this._structure[pattern];
+                    
+                    let isPattern = pattern === args.url;
+                    let match = args.url;
+                    // if(component.routeIsRegExp) {
+                    // this._current + 
+                        const regPattern = (pattern ?? '').replace('#', '.+').replaceAll('?', '.*') + '$';
+                        const reg = new RegExp(regPattern);
+                        isPattern = reg.test(args.url);
+                        match = reg.all(args.url);
+                    // }
+    
+                    if(isPattern) {
+                        const component = this._initStructure(pattern, route);
+                        if(component) {
+                            if(!component.isConnected) {
+                                component.ConnectTo(this, null, true);
+                            }
+                            component.__processChangeOnRouteSwitch(match);
+                        }
+                    } 
+                }    
+            } else {
+                this.ForEach((name, component) => {
+                    let isPattern = component.routePattern === args.url;
+                    let match = args.url;
+                    if(component.routeIsRegExp) {
+                        const pattern = this._current + (component.routePattern ?? '').replace('#', '.+').replaceAll('?', '.*') + '$';
+                        const reg = new RegExp(pattern);
+                        isPattern = reg.test(args.url);
+                        match = reg.all(args.url);
                     }
-                    component.__processChangeOnRouteSwitch(match);
-                } else {
-                    if(component.isConnected) {
-                        component.Disconnect();
+                    if(isPattern) {
+                        if(!component.isConnected) {
+                            component.ConnectTo(this, null, true);
+                        }
+                        component.__processChangeOnRouteSwitch(match);
+                    } else {
+                        if(component.isConnected) {
+                            component.Disconnect();
+                        }
                     }
-                }
-            });
+                });
+            }
+
         }
 
 

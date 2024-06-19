@@ -855,7 +855,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
      */    
     set value(value) {
 
-        this.parent.ClearSelection(false);
+        this.parent && this.parent.ClearSelection(false);
         if(!(Symbol.iterator in Object(value))) {
             return;
         }
