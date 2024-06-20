@@ -119,9 +119,10 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     /** @protected */
     _registerEvents() {
         super._registerEvents();
-        this.RegisterEvent('WindowMinimizing', false, 'Поднимается когда окно минимизируется');
-        this.RegisterEvent('WindowClosed', false, 'Поднимается когда окно закрылось');
-        this.RegisterEvent('WindowContentRendered', false, 'Когда содержание окна отрисовалось');
+        this.RegisterEvent('WindowMinimizing', false, 'When window minimized');
+        this.RegisterEvent('WindowClosed', false, 'When window closed');
+        this.RegisterEvent('WindowBeforeClosed', false, 'When close button clicked');
+        this.RegisterEvent('WindowContentRendered', false, 'When window content is rendered');
     }
 
     /**
@@ -130,21 +131,30 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      * @param {*} args event arguments
      */ 
     __CloseClicked(event, args) {
-        
-        if(this._minimizable === true && this._state === 'minimized') {
-            this.RemoveClass('-minimized');   
-            super.width = null;
-            super.height = null;
-            super.right = null;
-            super.bottom = null;
-            this._state = 'normal';
-        }
 
+        const aargs = {cancel: false};
+        this.Dispatch('WindowBeforeClosed', aargs);
+        if(aargs.cancel) {
+            return;
+        }
+        
+        this.Close();
+        
+    }
+
+    Close() {
         if (this._closable === true) {
+            if(this._minimizable === true && this._state === 'minimized') {
+                this.RemoveClass('-minimized');   
+                super.width = null;
+                super.height = null;
+                super.right = null;
+                super.bottom = null;
+                this._state = 'normal';
+            }
             this.shown = false;
             this.Dispatch('WindowClosed', {});
         }
-        
     }
 
     /** @private */
