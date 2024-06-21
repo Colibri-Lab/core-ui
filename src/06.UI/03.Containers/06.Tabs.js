@@ -90,7 +90,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
             const cc = container.tag('component');
             cc.RemoveClass('tab-selected');
             cc.shown = false;
-            cc.KeepInMind();
+            !this._allTabsInDoc && cc.KeepInMind();
         });
 
     }
@@ -117,7 +117,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
 
         button.AddClass('tab-selected');
         if(container) {
-            container.Retreive(true);
+            !this._allTabsInDoc && container.Retreive(true);
             container.shown = true;
             container.AddClass('tab-selected');
         }
@@ -327,6 +327,21 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         Object.forEach(this.components, (name, component) => {
             component.Dispose();
         });
+    }
+
+    /**
+     * 
+     * @type {}
+     */
+    get allTabsInDoc() {
+        return this._allTabsInDoc;
+    }
+    /**
+     * 
+     * @type {}
+     */
+    set allTabsInDoc(value) {
+        this._allTabsInDoc = value;
     }
 
 }

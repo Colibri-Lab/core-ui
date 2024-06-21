@@ -13,6 +13,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
         this._tabs = new Colibri.UI.Tabs('tabs', this.contentContainer);
         this._tabs.shown = true;
+        this._tabs.allTabsInDoc = true;
 
         this._tabs.AddHandler('SelectionChanged', (event, args) => {
             // ! нужно видимо убрать событие TabChanged
