@@ -730,7 +730,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
 
     AddItem(itemData, id = null, selected = false, index = null) {
 
-        const newKey = Colibri.UI.List.Group.CreateKey(itemData, this.parent.idField); 
+        const newKey = Colibri.UI.List.Group.CreateKey(itemData, this.parent?.idField); 
         const foundItem = this.FindByKey(newKey);
 
         let control;
@@ -771,7 +771,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
      */
     FindByKey(key) {
         return this._div.indexOf((item) => {
-            const itemKey = Colibri.UI.List.Group.CreateKey(item.value, this.parent.idField); 
+            const itemKey = Colibri.UI.List.Group.CreateKey(item.value, this.parent?.idField); 
             return itemKey === key;
         });
     }
@@ -865,14 +865,14 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         const oldKeys = [];
         const oldValues = this.value;
         for(const item of oldValues) {
-            const key = Colibri.UI.List.Group.CreateKey(item, this.parent.idField);
+            const key = Colibri.UI.List.Group.CreateKey(item, this.parent?.idField);
             oldKeys.push(key);
         }
 
         const newKeys = [];
         let index = 0;
         for(const item of value) {
-            newKeys.push(Colibri.UI.List.Group.CreateKey(item, this.parent.idField));
+            newKeys.push(Colibri.UI.List.Group.CreateKey(item, this.parent?.idField));
             this.AddItem(item, null, item?.__selected, index++);
         }
 
