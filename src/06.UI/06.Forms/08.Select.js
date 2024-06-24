@@ -217,10 +217,14 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
     set values(value) {
         value = this._convertProperty('Array', value);
         let required = this._fieldData?.params?.required;
+        let multiple = this._fieldData?.params?.multiple;
         if(required === undefined) {
             required = false;
         }
-        if(!required) {
+        if(multiple === undefined) {
+            multiple = false;
+        }
+        if(!required && !multiple) {
             const o = {};
             o[this._fieldData?.selector?.title ?? 'title'] = '---';
             o[this._fieldData?.selector?.value ?? 'value'] = 0;
