@@ -83,6 +83,7 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
      * @type {boolean}
      */
     set shown(value) {
+
         value = value === true || value === 'true';
         super.shown = value;
 
@@ -166,6 +167,10 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
      */
     set align(value) {
         this._align = value;
+    }
+
+    get connectedToBody() {
+        return this._connectToBody;
     }
 
     /**

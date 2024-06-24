@@ -96,7 +96,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
 
     /** @private */
     _initStructure(pattern = null) {
-        if(!pattern) {
+        if(pattern === null) {
             for(const pattern of Object.keys(this._structure)) {
                 const route = this._structure[pattern];
                 this._createComponent(pattern, route);
@@ -148,12 +148,10 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
      * @param {*} args event arguments
      */ 
     __appRouteChanged(event, args) {
-
         if(args.url.substring(0, this._current.length) === this._current) {
-
             if(this._structure) {
                 this.Clear();
-                for(const pattern of Object.keys(this._structure)) {
+                for(const pattern of Object.keys(this._structure).sort().reverse()) {
                     const route = this._structure[pattern];
                     
                     let isPattern = pattern === args.url;
@@ -173,6 +171,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
                                 component.ConnectTo(this, null, true);
                             }
                             component.__processChangeOnRouteSwitch(match);
+                            break;
                         }
                     } 
                 }    
