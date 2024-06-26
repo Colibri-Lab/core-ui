@@ -82,22 +82,28 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
             legend: 'none'
         }, this._options);
 
-        let data;
-        if(this._drawDataHandle) {
-            data = this._drawDataHandle(this._value, this);
-        } else {
-            data = google.visualization.arrayToDataTable(this._value);
+        try {
+
+            let data;
+            if(this._drawDataHandle) {
+                data = this._drawDataHandle(this._value, this);
+            } else {
+                data = google.visualization.arrayToDataTable(this._value);
+            }
+
+
+            this._chart.draw(data, options);
+            google.visualization.events.addListener(this._chart, 'ready', () => {
+                setTimeout(() => {
+                    if(this._chartReadyHandler) {
+                        this._chartReadyHandler(this._chart);
+                    }
+                }, 500);
+            });
+        } catch(e) {
+                
         }
 
-
-        this._chart.draw(data, options);
-        google.visualization.events.addListener(this._chart, 'ready', () => {
-            setTimeout(() => {
-                if(this._chartReadyHandler) {
-                    this._chartReadyHandler(this._chart);
-                }
-            }, 500);
-        });
     }
 
     /** @protected */
