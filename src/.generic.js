@@ -901,6 +901,22 @@ Object.map = function (obj, func) {
 };
 
 /**
+ * Filters over the properties of an object, applying a function to each key-value pair.
+ * @param {Object} obj - The object to map over.
+ * @param {Function} func - The mapping function to apply to each key-value pair.
+ * @returns {Object} Returns a new object with the mapped key-value pairs.
+ */
+Object.filter = function (obj, func) {
+    let newObject = {};
+    Object.forEach(obj, (key, value) => {
+        if (func(key, value)) {
+            newObject[key] = value;
+        }
+    });
+    return newObject;
+};
+
+/**
  * 
  * @param {object} textAsObject object to render
  * @param {boolean} showLineBrakes show line breaks
