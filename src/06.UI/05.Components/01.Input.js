@@ -86,6 +86,12 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
             return false;
         });
 
+        this._input.addEventListener('paste', (e) => {
+            Colibri.Common.Delay(100).then(() => {
+                this.Dispatch('Pasted', {domEvent: e});
+            });
+        });
+
         this.Children('clear').AddHandler('Clicked', (event, args) => {
             if(!this.enabled) {
                 return;
