@@ -23,7 +23,7 @@ Colibri.UI.MassActionsMenu = class extends Colibri.UI.Component {
     /** @protected */
     _registerEvents() {
         super._registerEvents();
-        this.RegisterEvent('ActionClicked', false, 'Когда кликнули по кнопке в меню');
+        this.RegisterEvent('ActionClicked', false, 'When you click on the button in the menu');
     }
 
     /** @private */

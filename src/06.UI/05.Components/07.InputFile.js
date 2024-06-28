@@ -25,7 +25,7 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
     /** @protected */
     _registerEvents() {
         super._registerEvents();
-        this.RegisterEvent('InputFileChanged', false, 'Изменён выбранный файл/файлы');
+        this.RegisterEvent('InputFileChanged', false, 'The selected file/files have been changed');
     }
 
     /** @protected */

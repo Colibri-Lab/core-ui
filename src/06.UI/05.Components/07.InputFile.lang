@@ -1,6 +1,8 @@
 ui-files-choosefiles:
   ru: Выбрать файлы
   en: Select files
+  hy: Ընտրեք ֆայլեր
 ui-files-choosefile:
   ru: Выбрать файл
   en: Select a file
+  hy: Ընտրեք ֆայլ

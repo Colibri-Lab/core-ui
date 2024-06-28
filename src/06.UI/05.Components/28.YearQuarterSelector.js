@@ -42,7 +42,7 @@ Colibri.UI.YearQuarterSelector = class extends Colibri.UI.FlexBox {
     /** @protected */
     _registerEvents() {
         super._registerEvents();
-        this.RegisterEvent('Changed', false, 'Когда значение изменилось');
+        this.RegisterEvent('Changed', false, 'When the meaning changed');
     }
 
     /**

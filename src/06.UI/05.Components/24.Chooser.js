@@ -75,8 +75,8 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
     _registerEvents() {
         super._registerEvents();
 
-        this.RegisterEvent('Changed', false, 'Когда выбор изменился');
-        this.RegisterEvent('ChooserClicked', false, 'Когда нажали на кнопку выбора');
+        this.RegisterEvent('Changed', false, 'When the choice changed');
+        this.RegisterEvent('ChooserClicked', false, 'When you press the select button');
     }
 
     /**
@@ -420,7 +420,7 @@ Colibri.UI.Chooser.ChooseWindow = class extends Colibri.UI.Window {
 
     /** @protected */
     _registerEvents() {
-        this.RegisterEvent('Choosed', false, 'Когда выбор сделан');
+        this.RegisterEvent('Choosed', false, 'When the choice is made');
     }
 
     /**

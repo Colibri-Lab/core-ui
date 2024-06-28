@@ -1,6 +1,7 @@
 ui-viewers-document:
   ru: Документ
   en: Document
+  hy: Փաստաթուղթ
 ui-viewers-document-unknownformat:
   ru: Неизвестный формат документа
   en: Unknown format

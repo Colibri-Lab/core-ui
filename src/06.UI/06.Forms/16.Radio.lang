@@ -1,7 +1,9 @@
 ui-fields-radio:
   ru: Радио кнопки
   en: Radio buttons
+  hy: Ռադիո կոճակներ
 ui-fields-radio-: {}
 ui-fields-radio-clear:
   ru: Очистить
   en: Clear
+  hy: Պարզ

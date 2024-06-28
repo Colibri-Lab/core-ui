@@ -1,12 +1,16 @@
 ui-yearquarter-selector-1:
   ru: I квартал
   en: I quarter
+  hy: I քառորդ
 ui-yearquarter-selector-2:
   ru: II квартал
   en: II quarter
+  hy: II եռամսյակ
 ui-yearquarter-selector-3:
   ru: III квартал
   en: III quarter
+  hy: III եռամսյակ
 ui-yearquarter-selector-4:
   ru: IV квартал
   en: IV quarter
+  hy: IV եռամսյակ

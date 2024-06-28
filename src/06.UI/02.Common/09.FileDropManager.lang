@@ -3,12 +3,17 @@ ui-filedropmanager-message:
     выбранную папку
   en: Please release files in this area. The download will be made in the selected
     folder
+  hy: "Խնդրում ենք թողարկել այս տարածքում գտնվող ֆայլերը: Ներբեռնումը կկատարվի
+    ընտրված պանակում"
 ui-filedropmanager-error1:
   ru: Файл слишком большой или не подходящего типа.
   en: The file is too large or of the wrong type.
+  hy: "Ֆայլը չափազանց մեծ է կամ սխալ տեսակի է:"
 ui-renderer-allowed:
   ru: "Разрешено: %s"
   en: "Allowed: %s"
+  hy: Թույլատրված է՝ %s
 ui-renderer-max:
   ru: максимум %s
   en: "%s maximum"
+  hy: "%s առավելագույնը"

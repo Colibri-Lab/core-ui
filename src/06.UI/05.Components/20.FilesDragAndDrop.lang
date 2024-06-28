@@ -1,6 +1,8 @@
 ui-filesdragdrop-choosefiles:
   ru: Выберите или перетащите файлы
   en: Select or drag files
+  hy: Ընտրեք կամ քաշեք ֆայլեր
 ui-filesdragdrop-choosefile:
   ru: Выберите или перетащите файл
   en: Select or drag a file
+  hy: Ընտրեք կամ քաշեք ֆայլ

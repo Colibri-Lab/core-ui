@@ -1,7 +1,8 @@
 ui-editors-email-message:
   ru: Пожалуйста, введите корректный email
   en: Please enter a valid email
+  hy: Խնդրում ենք մուտքագրել վավեր էլ
 ui-editors-email:
   ru: Эл. почта
   en: Email
-  hy: Էլ հասցե
+  hy: Էլ

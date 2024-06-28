@@ -1,6 +1,7 @@
 ui-files-sign:
   ru: Подписать
   en: Sign
+  hy: Նշան
 ui-files-about:
   ru: до
 ui-files-files:
@@ -18,18 +19,24 @@ ui-files-verybig:
 ui-files-format:
   ru: Недопустимый формат файла
   en: Invalid file format
+  hy: Ֆայլի անվավեր ձևաչափ
 ui-fields-files:
   ru: Список файлов
   en: Files list
+  hy: Ֆայլերի ցուցակ
 ui-files-filescount:
   ru: до %s файлов
   en: up to %s files
+  hy: մինչև %s ֆայլ
 ui-files-size:
   ru: не больше %s
   en: no more than %s
+  hy: "%s-ից ոչ ավելի"
 ui-files-filescount2:
   ru: Можно выбрать не больше %s файлов
   en: You can select no more than %s files
+  hy: Դուք կարող եք ընտրել ոչ ավելի, քան %s ֆայլ
 ui-files-filehuge:
   ru: Файл %s слишком большой
   en: File %s is too large
+  hy: "%s ֆայլը չափազանց մեծ է"

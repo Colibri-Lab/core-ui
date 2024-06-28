@@ -280,12 +280,12 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     /** @protected */
     _registerEvents() { 
         super._registerEvents();  
-        this.RegisterEvent('Validated', false, 'Прошла валидация')
-        this.RegisterEvent('Changed', false, 'Прозошло изменение данных компонента') 
-        this.RegisterEvent('KeyDown', false, 'Когда кнопка нажата')
-        this.RegisterEvent('KeyUp', false, 'Когда кнопка отжата')
-        this.RegisterEvent('FieldsRendered', false, 'Когда поля созданы');
-        this.RegisterEvent('MessageClicked', false, 'Когда ткнули в ошибку')
+        this.RegisterEvent('Validated', false, 'Validation passed')
+        this.RegisterEvent('Changed', false, 'A change in component data has occurred') 
+        this.RegisterEvent('KeyDown', false, 'When the button is pressed')
+        this.RegisterEvent('KeyUp', false, 'When the button is released')
+        this.RegisterEvent('FieldsRendered', false, 'When the fields are created');
+        this.RegisterEvent('MessageClicked', false, 'When you were pointed at an error')
     }
 
     

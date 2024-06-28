@@ -1,6 +1,8 @@
 ui-prompt-ok:
   ru: Продолжить
   en: Continue
+  hy: Շարունակել
 ui-prompt-cancel:
   ru: Отмена
   en: Cancel
+  hy: Չեղարկել

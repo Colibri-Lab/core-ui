@@ -1,11 +1,12 @@
 ui-viewers-fields:
   ru: Поля (JSON)
   en: Fields viewer
+  hy: Դաշտերի դիտող
 ui-viewers-fields-expand:
   ru: Развернуть
   en: Expand
-  hy: Ընդլայնել
+  hy: Ընդարձակել
 ui-viewers-fields-collapse:
   ru: Свернуть
   en: Collapse
-  hy: Փլուզվել
+  hy: Փլուզում

@@ -1,6 +1,8 @@
 ui-confirm-ok:
   ru: Продолжить
   en: Continue
+  hy: Շարունակել
 ui-confirm-cancel:
   ru: Отмена
   en: Cancel
+  hy: Չեղարկել

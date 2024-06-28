@@ -1,6 +1,8 @@
 ui-filelabel-download:
   ru: Скачать
   en: Download
+  hy: Բեռնել
 ui-fields-filelabel:
   ru: Ссылка на файл
   en: Link to file
+  hy: Հղում դեպի ֆայլ

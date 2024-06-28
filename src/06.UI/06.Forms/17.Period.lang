@@ -1,12 +1,16 @@
 ui-period-day1:
   ru: день
   en: day
+  hy: օր
 ui-period-day2:
   ru: дня
   en: days
+  hy: օրեր
 ui-period-day3:
   ru: дней
   en: days
+  hy: օրեր
 ui-fields-period:
   ru: Период
   en: Period
+  hy: Ժամանակաշրջան

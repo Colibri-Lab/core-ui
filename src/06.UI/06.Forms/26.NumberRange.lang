@@ -1,9 +1,12 @@
 ui-fields-numberrange:
   ru: Число от/до
   en: Number from/to
+  hy: Համարը/ից
 ui-fields-numberrange-from:
   ru: от
   en: from
+  hy: -ից
 ui-fields-numberrange-to:
   ru: до
   en: to
+  hy: դեպի
