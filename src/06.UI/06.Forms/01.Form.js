@@ -92,14 +92,19 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         const data = this.value;
 
         Object.forEach(this._fields, (name, fieldData) => {
-            const fieldComponent = this.Children(name);
+            let fieldComponent = this.Children(name);
             if(!fieldComponent || !fieldComponent.needHideAndShow) {
                 return true;
             }
 
             if(fieldData?.params?.fieldgenerator) {
                 const gen = eval(fieldData.params.fieldgenerator);
+                const oldComponent = fieldData.component;
                 gen(fieldData, fieldComponent, this);
+                if(oldComponent != fieldData.component) {
+                    fieldComponent.Dispose();
+                    fieldComponent = this._renderField(name, fieldData, data[name] ?? null, true);
+                }
             } 
 
             if(fieldData.params && fieldData.params.condition) {

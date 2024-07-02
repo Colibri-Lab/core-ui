@@ -51,6 +51,31 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
     }
 
+    _renderField(name, fieldData, value, shown = true) {
+        
+        const field = Object.cloneRecursive(fieldData);
+        const tabTitle = field.desc[Lang.Current] ?? field.desc ?? '';
+
+        delete field.desc;
+
+        const component = Colibri.UI.Forms.Field.Create(name, this._tabs.container, fieldData, this, this.root);
+        component.message = false;
+        component.shown = shown;
+        // component.AddHandler('Changed', (event, args) => {
+        //     this.Dispatch('Changed', {component: this});
+        // });
+
+        const tabButton = new Colibri.UI.Button(component.name + '-button', this._tabs.header);
+        tabButton.value = tabTitle;
+        tabButton.shown = shown;
+
+        if(value) {
+            component.value = value;
+        }
+
+        this._tabs.AddTab(tabButton, component);
+    }
+
     /** @protected */
     _renderFields() {
 
@@ -58,26 +83,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         // this._fieldData.params && this._fieldData.params.merged && this.AddClass('app-merged-object-component');
 
         Object.forEach(this._fieldData.fields, (name, fieldData) => {
-
-            const field = Object.cloneRecursive(fieldData);
-            const tabTitle = field.desc[Lang.Current] ?? field.desc ?? '';
-
-            delete field.desc;
-            
-            const component = Colibri.UI.Forms.Field.Create(name, this._tabs.container, field, this, this.root);
-            component.message = false;
-            component.shown = true;
-            // component.AddHandler('Changed', (event, args) => {
-            //     this.Dispatch('Changed', {component: this});
-            // });
-
-            const tabButton = new Colibri.UI.Button(component.name + '-button', this._tabs.header);
-            tabButton.value = tabTitle;
-            tabButton.shown = true;
-
-            this._tabs.AddTab(tabButton, component);
-            
-            
+            this._renderField(name, fieldData, null, true);
         });
 
         this.Dispatch('FieldsRendered');
@@ -190,10 +196,16 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
                 return true;
             }
             
-            const fieldComponent = this.contentContainer.Children(name);
+            let fieldComponent = this.contentContainer.Children(name);
             if(fieldData?.params?.fieldgenerator) {
                 const gen = eval(fieldData.params.fieldgenerator);
+                const oldComponent = fieldData.component;
                 gen(fieldData, fieldComponent, this);
+                if(oldComponent != fieldData.component) {
+                    fieldComponent.Dispose();
+                    fieldComponent = this._renderField(name, fieldData, data[name] ?? null, true);
+                }
+
             } 
             if(fieldComponent && fieldData.params && fieldData.params.condition) {
                 const condition = fieldData.params.condition;

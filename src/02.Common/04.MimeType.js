@@ -57,6 +57,7 @@ Colibri.Common.MimeType = class {
         "fif" :  "application/fractals",
         "flr" :  "x-world/x-vrml",
         "gif" :  "image/gif",
+        "webp" :  "image/webp",
         "gtar" :  "application/x-gtar",
         "gz" :  "application/x-gzip",
         "h" :  "text/plain",
@@ -247,7 +248,7 @@ Colibri.Common.MimeType = class {
      * @param {string} ext - The file extension.
      * @returns {boolean} True if the file is an image, otherwise false.
      */
-    static isImage(ext) { return ["gif", "jpeg", "jpg", "png", "bmp", "dib", "svg"].indexOf(ext.toLowerCase()) != -1; }
+    static isImage(ext) { return ["gif", "jpeg", "jpg", "png", "bmp", "dib", "svg", "webp"].indexOf(ext.toLowerCase()) != -1; }
     /**
      * Check if a file with the given extension is an audio file.
      * @param {string} ext - The file extension.

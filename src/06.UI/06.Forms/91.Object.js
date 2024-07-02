@@ -41,6 +41,27 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     }
 
+    _renderField(name, fieldData, value, shown = true) {
+        const component = Colibri.UI.Forms.Field.Create(name, this.contentContainer, fieldData, this, this.root);
+        if(!component) {
+            return true;
+        }
+        if(this._fieldData?.params?.removedesc !== false) {
+            let placeholder = this._fieldData?.params?.vertical ? fieldData.placeholder : fieldData.desc;
+            placeholder = placeholder ? placeholder[Lang.Current] ?? placeholder : '';
+            if(!this._fieldData?.params?.vertical) {
+                delete fieldData.desc;
+            }
+            component.placeholder = placeholder;
+        }
+
+        component.message = false;
+        component.shown = shown;
+        if(value) {
+            component.value = value;
+        }
+    }
+
     /** @protected */
     _renderFields() {
 
@@ -63,23 +84,8 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
             Object.forEach(this._fieldData.fields, (name, fieldData) => {
             
                 const field = Object.cloneRecursive(fieldData);
-                
-                const component = Colibri.UI.Forms.Field.Create(name, this.contentContainer, field, this, this.root);
-                if(!component) {
-                    return true;
-                }
-                if(this._fieldData?.params?.removedesc !== false) {
-                    let placeholder = this._fieldData?.params?.vertical ? field.placeholder : field.desc;
-                    placeholder = placeholder ? placeholder[Lang.Current] ?? placeholder : '';
-                    if(!this._fieldData?.params?.vertical) {
-                        delete field.desc;
-                    }
-                    component.placeholder = placeholder;
-                }
 
-                component.message = false;
-                component.shown = true;
-                //component.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign({component: this}, args)));
+                this._renderField(name, field, null, true);
 
             });    
         }
@@ -304,10 +310,15 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
                 return true;
             }
 
-            const fieldComponent = this.contentContainer.Children(name);
+            let fieldComponent = this.contentContainer.Children(name);
             if(fieldData?.params?.fieldgenerator) {
                 const gen = eval(fieldData.params.fieldgenerator);
+                const oldComponent = fieldData.component;
                 gen(fieldData, fieldComponent, this);
+                if(oldComponent != fieldData.component) {
+                    fieldComponent.Dispose();
+                    fieldComponent = this._renderField(name, fieldData, data[name] ?? null, true);
+                }
             } 
         
             if(fieldComponent && fieldData.params && fieldData.params.condition) {
