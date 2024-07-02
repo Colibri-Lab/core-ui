@@ -390,7 +390,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
             contextMenuObject.Hide();
             this.Dispatch('ContextMenuItemClicked', args);
             contextMenuObject.Dispose();            
-            cell.Children(cell.name + '-contextmenu-icon-parent').RemoveClass('-selected');
+            cell.Children(cell.name + '-contextmenu-icon-parent')?.RemoveClass('-selected');
         });
         
 

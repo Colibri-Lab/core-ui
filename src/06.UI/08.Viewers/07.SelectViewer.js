@@ -44,7 +44,7 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                     let isObject = false;
                     for(let vv of value) {
                         if(Object.isObject(vv)) {
-                            r.push(vv[this._field?.selector?.title ?? 'title']);
+                            r.push(Lang ? Lang.Translate(vv[this._field?.selector?.title ?? 'title']) : vv[this._field?.selector?.title ?? 'title']);
                             isObject = true;
                         }
                     }
@@ -69,7 +69,7 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                             if(_result?.length) {
                                 for (let val of _result) {
                                     if (value.indexOf(val[this._field?.selector?.value || 'value']) !== -1) {
-                                        r.push(val[this._field?.selector?.title || 'title']);
+                                        r.push(Lang ? Lang.Translate(val[this._field?.selector?.title || 'title']) : val[this._field?.selector?.title || 'title']);
                                     }
                                 }
                             }
@@ -94,7 +94,7 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                     else if(this._field.values) {
                         for(const v of this._field.values) {
                             if(vv == (v.value ?? v.title ?? v)) {
-                                r.push(v.title);
+                                r.push(Lang ? Lang.TranslatE(v.title) : v.title);
                             }
                         }
                         if(r.length > 1) {

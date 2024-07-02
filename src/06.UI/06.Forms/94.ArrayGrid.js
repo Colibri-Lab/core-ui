@@ -115,7 +115,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
             /** Обновить объект, когда содержимое формы изменилось */
             this._objectWindow.AddHandler('Changed', (event, args) => {
                 if (!this._objectWindow.containsNewObject) {
-                    this.__updateObjectRow(event, Object.assign({object_row: this._getSelected()}, args));
+                    this.updateObjectRow(event, Object.assign({object_row: this._getSelected()}, args));
                 }
             });
             /** Удалить окно из свойства, если оно было удалено из DOM */
@@ -139,12 +139,14 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
 
     addObjectRow(value) {
         this._objectsGrid.rows.Add('row-' + Date.Now().getTime(), value || {});
+        this.Dispatch('Changed');
     }
 
     updateObjectRow(value) {
         let row = this._getSelected();
         if (row) { 
             row.value = value;
+            this.Dispatch('Changed');
         }
     }
 
