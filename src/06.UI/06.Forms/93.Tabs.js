@@ -312,11 +312,12 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         }
 
         Object.forEach(this._fieldData.fields, (name, fieldData) => {
+
+            const fieldComponent = this.Fields(name);         
             if(!fieldComponent || !fieldComponent.needRecalc) {
                 return true;
             }
             
-            const fieldComponent = this.Fields(name);         
             if(fieldComponent instanceof Colibri.UI.Forms.Object || fieldComponent instanceof Colibri.UI.Forms.Array || fieldComponent instanceof Colibri.UI.Forms.Tabs) {
                 fieldComponent._calcRuntimeValues();
             } else {
