@@ -62,24 +62,30 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         }
 
         this._calculating = true;
-        Object.forEach(this._fields, (name, fieldData) => {
-            const fieldComponent = this.Children(name);            
-            if(!fieldComponent || !fieldComponent.needRecalc) {
-                return true;
-            } 
+        try {
 
-            if(fieldComponent instanceof Colibri.UI.Forms.Object || fieldComponent instanceof Colibri.UI.Forms.Array || fieldComponent instanceof Colibri.UI.Forms.Tabs) {
-                fieldComponent._calcRuntimeValues();
-            } else {
-                if(fieldData?.params?.valuegenerator) {
-                    const f = eval(fieldData?.params?.valuegenerator);
-                    const v = f(this.value, this.value, fieldComponent, this);
-                    fieldComponent.value = v;
+            Object.forEach(this._fields, (name, fieldData) => {
+                const fieldComponent = this.Children(name);            
+                if(!fieldComponent || !fieldComponent.needRecalc) {
+                    return true;
+                } 
+
+                if(fieldComponent instanceof Colibri.UI.Forms.Object || fieldComponent instanceof Colibri.UI.Forms.Array || fieldComponent instanceof Colibri.UI.Forms.Tabs) {
+                    fieldComponent._calcRuntimeValues();
+                } else {
+                    if(fieldData?.params?.valuegenerator) {
+                        const f = eval(fieldData?.params?.valuegenerator);
+                        const v = f(fieldComponent.value, this.value, fieldComponent, this);
+                        fieldComponent.value = v;
+                    }
                 }
-            }
-        });
+            });
+        } catch(e) {
+                
+        } finally {
+            this._calculating = false;
+        }
 
-        this._calculating = false;
     }
 
     /** @protected */
