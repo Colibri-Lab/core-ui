@@ -102,7 +102,7 @@ Colibri.UI.Notice = class {
             this._exception = title;
             title = this._exception.message;
         }
-        this._title = title;
+        this._title = title.message ?? title;
         this._severity = severity;
         this._timeout = timeout;
     }
