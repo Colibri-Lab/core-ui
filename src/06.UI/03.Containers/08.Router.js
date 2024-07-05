@@ -68,16 +68,27 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
 
     _createComponent(pattern, route) {
         let component = null;
+        let changed = true;
         if(route?.component ?? null) {
             let componentObject = route.component;
             if(typeof componentObject === 'string') {
                 componentObject = eval(componentObject);
             }
             if(componentObject) {
-                component = new componentObject(route?.name ?? ('component-' + Date.Mc()), this);
+                if(componentObject !== this.Children('firstChild')) {
+                    component = new componentObject(route?.name ?? ('component-' + Date.Mc()), this);
+                } else {
+                    component = this.Children('firstChild');
+                    changed = false;
+                }
             }
         } else {
-            component = new route('component-' + Date.Mc(), this);
+            if(route !== this.Children('firstChild')) {
+                component = new route('component-' + Date.Mc(), this);
+            } else {
+                component = this.Children('firstChild');
+                changed = false;
+            }
         }
 
         if(component) {
@@ -91,11 +102,11 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
             component.Disconnect();
             component.shown = true;    
         }
-        return component;
+        return [component, changed];
     }
 
     /** @private */
-    _initStructure(pattern = null) {
+    _initStructure(pattern = null, route = null) {
         if(pattern === null) {
             for(const pattern of Object.keys(this._structure)) {
                 const route = this._structure[pattern];
@@ -150,7 +161,6 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
     __appRouteChanged(event, args) {
         if(args.url.substring(0, this._current.length) === this._current) {
             if(this._structure) {
-                this.Clear();
                 for(const pattern of Object.keys(this._structure).sort().reverse()) {
                     const route = this._structure[pattern];
                     
@@ -165,7 +175,12 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
                     // }
     
                     if(isPattern) {
-                        const component = this._initStructure(pattern, route);
+                        const [component, changed] = this._initStructure(pattern, route);
+                        if(changed) {
+                            if(this.children > 1) {
+                                this.Children('firstChild').Dispose();
+                            }
+                        }
                         if(component) {
                             if(!component.isConnected) {
                                 component.ConnectTo(this, null, true);
