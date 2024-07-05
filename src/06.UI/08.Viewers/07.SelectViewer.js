@@ -92,9 +92,11 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                         });
                     }
                     else if(this._field.values) {
-                        for(const v of this._field.values) {
-                            if(vv == (v.value ?? v.title ?? v)) {
-                                r.push(Lang ? Lang.TranslatE(v.title) : v.title);
+                        for(let vv of value) {
+                            for(const v of this._field.values) {
+                                if(vv == (v?.value ?? v?.title ?? v)) {
+                                    r.push(Lang ? Lang.Translate(v?.title) : v?.title);
+                                }
                             }
                         }
                         if(r.length > 1) {
