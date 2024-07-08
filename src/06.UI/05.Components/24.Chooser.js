@@ -86,7 +86,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         if(this._chooser) {
             const component = this._chooser;
             if(!this._chooserObject) {
-                this._chooserObject = new component(this.name + '-chooser', document.body, this._selector?.params || {}, this._values, this._selector.title, this._selector.value);
+                this._chooserObject = new component(this.name + '-chooser', document.body, null, this._selector?.params || {}, this._values, this._selector.title, this._selector.value, this._value);
                 this._chooserObject.AddHandler('Choosed', (event, args) => {
                     this.value = args.value;
                     this.valueObject = args.valueObject;
@@ -414,8 +414,13 @@ Colibri.UI.Chooser.ChooseWindow = class extends Colibri.UI.Window {
      * @param {number} width window width
      * @param {number} height window height
      */
-    constructor(name, container, element, title, width, height) {
-        super(name, container, element, title, width, height);
+    constructor(name, container, element, params, values, titleField, valueField, selectedValue) {
+        super(name, container, element, 'Choose', 800, 600);
+        this._params = params;
+        this._values = values;
+        this._value = selectedValue;
+        this._valueField = valueField;
+        this._titleValue = titleField;
     }
 
     /** @protected */

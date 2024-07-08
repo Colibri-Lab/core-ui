@@ -253,7 +253,6 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     /** @private */
     _removePopup() {
         if(this._popup) {
-            debugger;
             this._popup.shown = false;
             this._popup.Dispose();
             this._popup = null;

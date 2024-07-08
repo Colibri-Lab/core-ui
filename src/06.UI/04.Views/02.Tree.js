@@ -28,11 +28,12 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
     /** @protected */
     _registerEvents() {
         super._registerEvents();
-        this.RegisterEvent('NodeExpanded', false, 'Поднимается, когда ветка дерева раскрывается');
-        this.RegisterEvent('NodeCollapsed', false, 'Поднимается, когда ветка дерева закрывается');
-        this.RegisterEvent('SelectionChanged', false, 'Поднимается, когда ментяется выбранный элемент');
-        this.RegisterEvent('NodeEditCompleted', false, 'Поднимается, когда заканчивается редактирование узла');
-        this.RegisterEvent('NodeClicked', false, 'Поднимается, когда ткнули в узел');
+        this.RegisterEvent('NodeExpanded', false, 'When node is expanded');
+        this.RegisterEvent('NodeCollapsed', false, 'When node is collapsed');
+        this.RegisterEvent('SelectionChanged', false, 'When selection is changed');
+        this.RegisterEvent('NodeEditCompleted', false, 'When node editing is complete');
+        this.RegisterEvent('NodeClicked', false, 'When node is clicked');
+        this.RegisterEvent('NodeDoubleClicked', false, 'When node is double clicked');
         this.RegisterEvent('CheckChanged', false, 'When node checkbox is changed');
     }
 
@@ -495,6 +496,13 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
                 if(this.tree.expandOnClick) {
                     this.expanded = true;
                 }
+            }
+            args.domEvent.stopPropagation();
+            return false;
+        });
+        this.AddHandler('DoubleClicked', (sender, args) => {
+            if(this._element.querySelector('div>em.expander') !== args.domEvent.target) {
+                this._nodes.tree.Dispatch('NodeDoubleClicked', Object.assign({item: this}, args));
             }
             args.domEvent.stopPropagation();
             return false;
