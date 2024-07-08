@@ -75,7 +75,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
                 componentObject = eval(componentObject);
             }
             if(componentObject) {
-                if(componentObject !== this.Children('firstChild')) {
+                if(!(this.Children('firstChild') instanceof componentObject)) {
                     component = new componentObject(route?.name ?? ('component-' + Date.Mc()), this);
                 } else {
                     component = this.Children('firstChild');
@@ -175,6 +175,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
                     // }
     
                     if(isPattern) {
+                        debugger;
                         const [component, changed] = this._initStructure(pattern, route);
                         if(changed) {
                             if(this.children > 1) {
