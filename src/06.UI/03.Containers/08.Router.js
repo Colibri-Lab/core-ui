@@ -175,7 +175,6 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
                     // }
     
                     if(isPattern) {
-                        debugger;
                         const [component, changed] = this._initStructure(pattern, route);
                         if(changed) {
                             if(this.children > 1) {
