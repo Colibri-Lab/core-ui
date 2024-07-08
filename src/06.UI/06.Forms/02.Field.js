@@ -682,4 +682,12 @@ Colibri.UI.Forms.HiddenField = class extends Colibri.UI.Component {
         return false;
     }
 
+    get loading() {
+        return this._loading ?? false;
+    }
+
+    set loading(value) {
+        this._loading = value;
+    }
+
 }

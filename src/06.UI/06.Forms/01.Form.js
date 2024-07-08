@@ -105,9 +105,8 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
             if(fieldData?.params?.fieldgenerator) {
                 const gen = eval(fieldData.params.fieldgenerator);
-                const oldComponent = fieldData.component;
                 gen(fieldData, fieldComponent, this);
-                if(oldComponent != fieldData.component) {
+                if(fieldData?.replace ?? false) {
                     fieldComponent.Dispose();
                     fieldComponent = this._renderField(name, fieldData, data[name] ?? null, true);
                 }

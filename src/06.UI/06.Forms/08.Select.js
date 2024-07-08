@@ -176,7 +176,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
                         App.Store.AsyncQuery(binding).then((results) => {
                             let ret = [];
                             for(const result of results) {
-                                if(result[dependsField] == dependsValue) {
+                                if(!dependsField || result[dependsField] == dependsValue) {
                                     ret.push(result);
                                 }
                             }
@@ -400,6 +400,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
                     this.values = response.result || response;
                 }).finally(() => {
                     this.loading = false;
+                    let isChanged = false;
                     if(this._lastValue) {
                         this.value = this._lastValue;
                         this._lastValue = null;
@@ -407,7 +408,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
                         this._input._renderValue(false);
                     }
                     this.RemoveClass('app-select-loading');
-                    this._setEnabled();
+                    this._setEnabled();        
                 });
             });
         } else {

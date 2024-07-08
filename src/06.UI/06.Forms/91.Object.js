@@ -192,7 +192,19 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
             }    
         }
 
-        this._hideAndShow();
+        Colibri.Common.Wait(() => {
+            let loading = false;
+            this.ForEveryField((name, component) => {
+                if(component.loading) {
+                    loading = true;
+                    return false;
+                }
+                return true;
+            });
+            return !loading;
+        }).then(() => {
+            this._hideAndShow();
+        });
 
         this.readonly = !!this._fieldData?.params?.readonly;
 
@@ -297,7 +309,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
     
     /** @protected */
     _hideAndShow() {
-
+        
         if(!this.needHideAndShow) {
             return;
         }
@@ -313,9 +325,8 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
             let fieldComponent = this.contentContainer.Children(name);
             if(fieldData?.params?.fieldgenerator) {
                 const gen = eval(fieldData.params.fieldgenerator);
-                const oldComponent = fieldData.component;
                 gen(fieldData, fieldComponent, this);
-                if(oldComponent != fieldData.component) {
+                if(fieldData?.replace ?? false) {
                     fieldComponent.Dispose();
                     fieldComponent = this._renderField(name, fieldData, data[name] ?? null, true);
                 }

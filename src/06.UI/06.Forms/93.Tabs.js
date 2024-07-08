@@ -180,6 +180,22 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
                 oneof.value = keys[0];
             }
         }
+
+        Colibri.Common.Wait(() => {
+            let loading = false;
+            this.ForEveryField((name, component) => {
+                if(component.loading) {
+                    loading = true;
+                    return false;
+                }
+                return true;
+            });
+            return !loading;
+        }).then(() => {
+            this._hideAndShow();
+        });
+
+        
     }
 
     /** @protected */
@@ -199,9 +215,8 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
             let fieldComponent = this.contentContainer.Children(name);
             if(fieldData?.params?.fieldgenerator) {
                 const gen = eval(fieldData.params.fieldgenerator);
-                const oldComponent = fieldData.component;
                 gen(fieldData, fieldComponent, this);
-                if(oldComponent != fieldData.component) {
+                if(fieldData?.replace ?? false) {
                     fieldComponent.Dispose();
                     fieldComponent = this._renderField(name, fieldData, data[name] ?? null, true);
                 }
