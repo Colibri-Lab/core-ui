@@ -88,6 +88,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
             if(!this._chooserObject) {
                 this._chooserObject = new component(this.name + '-chooser', document.body, null, this._selector?.params || {}, this._values, this._selector.title, this._selector.value, this._value);
                 this._chooserObject.AddHandler('Choosed', (event, args) => {
+                    this.values = this._chooserObject.values;
                     this.value = args.value;
                     this.valueObject = args.valueObject;
                     this.Dispatch('Changed', {});
@@ -285,7 +286,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         }
         
         if(!this.values) {
-            Colibri.Common.Wait(Array.isArray(this.values)).then(() => {
+            Colibri.Common.Wait(() => Array.isArray(this.values)).then(() => {
                 set();
             })
         } else {
