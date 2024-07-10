@@ -515,7 +515,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         if(queryList) {
             // queryList = field=value
             const queryParts = queryList.split('=');
-            data = Array.isArray(data) ? data.filter(v => v[queryParts[0]] === queryParts[1]) : []; 
+            data = Array.isArray(data) ? data.filter(v => v[queryParts[0]] == queryParts[1]) : []; 
             if(data.length === 1) {
                 data = data[0];
             }
