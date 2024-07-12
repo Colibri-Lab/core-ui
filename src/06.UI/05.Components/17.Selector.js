@@ -450,6 +450,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                         v = (this._value + '').stripHtml();
                     }
                 }
+                
                 this._input.value = v;
             }
 
@@ -458,6 +459,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
             } else {
                 this._input.placeholder = this._placeholderempty.stripHtml();
             }
+
         } else {
             let itemCount = this._value.length;
             this._input._forcedClearIcon = (itemCount !== 0);
@@ -465,6 +467,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
             if(itemCount === 0) {
                 this._input.placeholder = this.placeholder ?? '';
+                this.RemoveClass('-selected');
             } else if(this._placeholderinfo) {
                 let info = this._placeholderinfo;
                 if(this._placeholderinfo instanceof Function) {
@@ -482,13 +485,18 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                         this._input.placeholder = String.Pluralize(this._placeholderinfo, itemCount).stripHtml();
                     }    
                 }
+                this.AddClass('-selected');
             } else {
                 this._input.placeholder = '#{ui-selector-choosed}'.replaceAll('%s1', itemCount).replaceAll('%s2', this?.parent?.parent?.title).stripHtml();
+                this.AddClass('-selected');
             }
+
         }
+
         if(this._showToolTip) {
             this._input.toolTip = this._input.isValueExceeded ? (this._input.value ?? this._input.placeholder) : '';
         }
+
     }
 
     /**
