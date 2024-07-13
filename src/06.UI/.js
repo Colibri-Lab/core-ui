@@ -164,5 +164,6 @@ Colibri.UI = class {
 
 
 }
-
-Colibri.UI.registerMutationObserver();
+Colibri.Common.Wait(() => !!document.body).then(() => {
+    Colibri.UI.registerMutationObserver();
+});

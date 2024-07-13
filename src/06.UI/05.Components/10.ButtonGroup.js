@@ -129,7 +129,9 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
      * @param {string|number} name button index or number
      */
     EnableButton(name) {
-        this.Children(name).enabled = true;
+        if(this.Children(name)) {
+            this.Children(name).enabled = true;
+        }
     }
 
 }
