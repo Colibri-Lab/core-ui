@@ -43,6 +43,8 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
             this.remoteDomain = App.RemoteDomain;
         }
 
+        this.Dispatch('ModuleInitialized');
+
     }
 
     /**
@@ -52,6 +54,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
      */
     RegisterEvents() {
         // Тут регистрируем все события (свои события)
+        this.RegisterEvent('ModuleInitialized', false, 'When module is initialized');
     }
 
     /**
