@@ -51,13 +51,17 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
 
                     if(isObject) {
                         if(r.length > 1) {
-                            let v1 = r.splice(0, 1);
-                            let v2 = r.join('<br />');
-                            super.value = v1;
-                            const icon1 = new Colibri.UI.Icon(this.name + '-hover', this);
-                            icon1.shown = true;
-                            icon1.value = '<em>+' + r.length + '</em> ' + (this._field.params?.infoIcon ?? Colibri.UI.InfoIcon);
-                            icon1.toolTip = v2;
+                            if((this._field?.params?.showicon ?? false)) {                        
+                                let v1 = r.splice(0, 1);
+                                let v2 = r.join('<br />');
+                                super.value = v1;
+                                const icon1 = new Colibri.UI.Icon(this.name + '-hover', this);
+                                icon1.shown = true;
+                                icon1.value = '<em>+' + r.length + '</em> ' + (this._field.params?.infoIcon ?? Colibri.UI.InfoIcon);
+                                icon1.toolTip = v2;
+                            } else {
+                                super.value = r.join(', ');
+                            }
                         }
                         else {
                             super.value = r.pop();
@@ -77,13 +81,17 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                             this.RemoveClass('app-viewer-loading')
 
                             if(r.length > 1) {
-                                let v1 = '<dd>' + r[0] + '</dd>';
-                                let v2 = r.join('<br />');
-                                super.value = v1;
-                                const icon1 = new Colibri.UI.Icon(this.name + '-hover', this);
-                                icon1.shown = true;
-                                icon1.value = '<em>' + r.length + '</em> ' + (this._field.params?.infoIcon ?? Colibri.UI.InfoIcon);
-                                icon1.toolTip = v2;
+                                if((this._field?.params?.showicon ?? false)) {     
+                                    let v1 = '<dd>' + r[0] + '</dd>';
+                                    let v2 = r.join('<br />');
+                                    super.value = v1;
+                                    const icon1 = new Colibri.UI.Icon(this.name + '-hover', this);
+                                    icon1.shown = true;
+                                    icon1.value = '<em>' + r.length + '</em> ' + (this._field.params?.infoIcon ?? Colibri.UI.InfoIcon);
+                                    icon1.toolTip = v2;
+                                } else {
+                                    super.value = r.join(', ');
+                                }
                             }
                             else {
                                 super.value = r.pop();
@@ -100,13 +108,17 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                             }
                         }
                         if(r.length > 1) {
-                            let v1 = '<dd>' + r[0] + '</dd>';
-                            let v2 = r.join('<br />');
-                            super.value = v1;
-                            const icon1 = new Colibri.UI.Icon(this.name + '-hover', this);
-                            icon1.shown = true;
-                            icon1.value = '<em>' + r.length + '</em> ' + (this._field.params?.infoIcon ?? Colibri.UI.InfoIcon);
-                            icon1.toolTip = v2;
+                            if((this._field?.params?.showicon ?? false)) {     
+                                let v1 = '<dd>' + r[0] + '</dd>';
+                                let v2 = r.join('<br />');
+                                super.value = v1;
+                                const icon1 = new Colibri.UI.Icon(this.name + '-hover', this);
+                                icon1.shown = true;
+                                icon1.value = '<em>' + r.length + '</em> ' + (this._field.params?.infoIcon ?? Colibri.UI.InfoIcon);
+                                icon1.toolTip = v2;
+                            } else {
+                                super.value = r.join(', ');
+                            }
                         }
                         else {
                             super.value = r.pop();

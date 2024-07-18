@@ -74,7 +74,7 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
             return this.Children(name);
         }
         const button = new Colibri.UI.Button(name, this);
-        button.value = (title[Lang.Current] ?? title);
+        button.value = (Lang ? Lang.Translate(title) : title);
         button.shown = true;
         button.tag = tag;
         return button;
