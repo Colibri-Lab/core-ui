@@ -130,7 +130,7 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
             }    
         }
 
-        this._clearIcon.shown = this._viewElement.value !== '';
+        this._clearIcon.shown = this._showClearIcon && this._viewElement.value !== '';
 
     }
 
@@ -897,6 +897,22 @@ Colibri.UI.YearPicker = class extends Colibri.UI.Pane {
         let dt = this.parent.value.copy()
         let currentYear = dt.getFullYear();
         return parseInt(currentYear / 10) * 10;
+    }
+
+    /**
+     * Show hide clear icon
+     * @type {Boolean}
+     */
+    get clearIcon() {
+        return this._showClearIcon;
+    }
+    /**
+     * Show hide clear icon
+     * @type {Boolean}
+     */
+    set clearIcon(value) {
+        this._showClearIcon = value;
+        this._clearIcon.shown = value;
     }
 
 }
