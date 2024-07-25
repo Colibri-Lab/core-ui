@@ -95,7 +95,8 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
             this._input.AddHandler('InputFileChanged', (event, args) => {
                 this._files.shown = true;
                 this.lastValue = this.value;
-                this._addValue(this._input.Files());
+                let validatedFiles = this._validate(this._input.Files());
+                this._addValue(validatedFiles);
 
                 if (this._fieldData.params && this._fieldData.params.more) {
                     this._input.title = this._fieldData.params.more;

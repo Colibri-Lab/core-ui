@@ -43,68 +43,74 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         if(!field.component && !field.type) {
             return ;
         }
+        try {
 
-        let component = field.component || '';
-        if(!component) {
+            let component = field.component || '';
+            if(!component) {
 
-            if(field.values !== undefined || field.lookup !== undefined) {
-                component = 'Select';
-            }
-            else if(['varchar', 'char'].indexOf(field.type) !== -1 && field.class === 'string') {
-                component = 'Text';
-            }
-            else if(['text', 'longtext', 'tinytext', 'mediumtext'].indexOf(field.type) !== -1 && field.class === 'string') {
-                component = 'TextArea';
-            }
-            else if(['date', 'datetime', 'timestamp'].indexOf(field.type)) {
-                component = 'Date';
-            }
-            else if(['tinyint'].indexOf(field.type) !== -1) {
-                component = 'Bool';
-            }
-            else if(['int', 'integer', 'bigint', 'float', 'decimal', 'double', 'real', 'smallint'].indexOf(field.type) !== -1) {
-                component = 'Number';
-            }
-            else if(['json', 'longtext'].indexOf(field.type) !== -1) {
-                if(field.class.indexOf('ArrayField') !== -1) {
-                    component = 'Object';
+                if(field.values !== undefined || field.lookup !== undefined) {
+                    component = 'Select';
                 }
-                else {
-                    component = 'Array';
-                }   
+                else if(['varchar', 'char'].indexOf(field.type) !== -1 && field.class === 'string') {
+                    component = 'Text';
+                }
+                else if(['text', 'longtext', 'tinytext', 'mediumtext'].indexOf(field.type) !== -1 && field.class === 'string') {
+                    component = 'TextArea';
+                }
+                else if(['date', 'datetime', 'timestamp'].indexOf(field.type)) {
+                    component = 'Date';
+                }
+                else if(['tinyint'].indexOf(field.type) !== -1) {
+                    component = 'Bool';
+                }
+                else if(['int', 'integer', 'bigint', 'float', 'decimal', 'double', 'real', 'smallint'].indexOf(field.type) !== -1) {
+                    component = 'Number';
+                }
+                else if(['json', 'longtext'].indexOf(field.type) !== -1) {
+                    if(field.class.indexOf('ArrayField') !== -1) {
+                        component = 'Object';
+                    }
+                    else {
+                        component = 'Array';
+                    }   
+                }
             }
-        }
 
-        if(!component) {
-            return null;
-        }
-
-        let componentObject = null;
-
-        if(component === 'Colibri.UI.Forms.Hidden') {
-            componentObject = new Colibri.UI.Forms.HiddenField(name, container, field, parent, root);
-        } else {
-
-            if (typeof Colibri.UI.Forms[component] === 'function') {
-                componentObject = new Colibri.UI.Forms[component](name, container, field, parent, root);
-            } else if (eval(`typeof ${component}`) === 'function') {
-                componentObject = eval(`new ${component}(name, container, field, parent, root);`);
+            if(!component) {
+                return null;
             }
 
-            if (!componentObject || !(componentObject instanceof Colibri.UI.Forms.Field)) {
-                throw new Error(`${component} is not an Colibri.UI.Forms.Field instance`);
+            let componentObject = null;
+
+            if(component === 'Colibri.UI.Forms.Hidden') {
+                componentObject = new Colibri.UI.Forms.HiddenField(name, container, field, parent, root);
+            } else {
+
+                if (typeof Colibri.UI.Forms[component] === 'function') {
+                    componentObject = new Colibri.UI.Forms[component](name, container, field, parent, root);
+                } else if (eval(`typeof ${component}`) === 'function') {
+                    componentObject = eval(`new ${component}(name, container, field, parent, root);`);
+                }
+
+                if (!componentObject || !(componentObject instanceof Colibri.UI.Forms.Field)) {
+                    throw new Error(`${component} is not an Colibri.UI.Forms.Field instance`);
+                }
             }
+
+            componentObject.shown = true;
+            componentObject.tabIndex = true;
+            if(field.attrs) {
+                Object.forEach(field.attrs, (attrName, attrValue) => {
+                    componentObject[attrName] = attrValue;
+                });
+            }
+
+            return componentObject;
+        
+        } catch(e) {
+            // debugger;
         }
 
-        componentObject.shown = true;
-        componentObject.tabIndex = true;
-        if(field.attrs) {
-            Object.forEach(field.attrs, (attrName, attrValue) => {
-                componentObject[attrName] = attrValue;
-            });
-        }
-
-        return componentObject;
     }
 
     /**

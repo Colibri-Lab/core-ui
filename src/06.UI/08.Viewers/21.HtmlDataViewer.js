@@ -15,6 +15,7 @@ Colibri.UI.HtmlDataViewer = class extends Colibri.UI.Viewer {
     constructor(name, container, element = null, root = null) {
         super(name, container, element || Element.create('span'), root);
         this.AddClass('app-htmldata-viewer-component');
+        this._strip = true;
     }
 
     /**
@@ -30,8 +31,26 @@ Colibri.UI.HtmlDataViewer = class extends Colibri.UI.Viewer {
      */
     set value(value) {
         let v = !value ? '&mdash;' : (Lang ? Lang.Translate(value) : value).replaceAll(/\n/, '<br />');
-        v = v.stripHtml().words(20);
+        if((this._strip ?? true)) {
+            v = v.stripHtml().words(20);
+        }
         super.value = v;
+    }
+
+    /**
+     * 
+     * @type {Boolean}
+     */
+    get strip() {
+        return this._strip;
+    }
+    /**
+     * 
+     * @type {Boolean}
+     */
+    set strip(value) {
+        value = this._convertProperty('Boolean', value);
+        this._strip = value;
     }
 
 

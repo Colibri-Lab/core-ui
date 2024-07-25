@@ -122,6 +122,8 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
                 icon.toolTip = '#{ui-fields-radio-clear}';
                 icon.AddHandler('Clicked', (event, args) => {
                     contentContainer.container.querySelectorAll('input').forEach(input => input.checked = false);
+                    this._value = null;
+                    this.Dispatch('Changed', {domEvent: args.domEvent, component: this});
                 });
             }
     
