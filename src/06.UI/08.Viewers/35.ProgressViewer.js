@@ -45,7 +45,7 @@ Colibri.UI.ProgressViewer = class extends Colibri.UI.Viewer {
         const value = this._value.value;
 
         this._view.width = value === 0 ? 0 : (value * 100 / (max - min)) + '%';
-        this._text.value = value === 0 ? '0%' : (value * 100 / (max - min)) + '%'
+        this._text.value = value === 0 ? '0%' : (value * 100 / (max - min)).toMoney(2) + '%'
 
     }
 
