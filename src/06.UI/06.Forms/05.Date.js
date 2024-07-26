@@ -51,6 +51,8 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
             this.enabled = this._fieldData.params.enabled;
         }
 
+        this._input.clearIcon = this._fieldData?.params?.dateselectorclear ?? false;
+
     }
     /**
      * Focus on component
