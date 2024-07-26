@@ -2245,6 +2245,15 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
+     * Is component element has offset parent
+     * @readonly
+     */
+    get elementIsInOffset() {
+        return this._element.offsetParent !== null;
+    }
+
+
+    /**
      * Is component must handle visibility change
      * @type {Boolean}
      */

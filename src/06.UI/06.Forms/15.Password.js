@@ -105,9 +105,10 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
             if(!this._passwordTip) {
                 this._passwordTip = new Colibri.UI.ToolTip(
                     this.name + '_tip', document.body, 
-                    tipData.orientation ? tipData.orientation : [Colibri.UI.ToolTip.RB, Colibri.UI.ToolTip.LB
-                ]);
+                    tipData.orientation ? tipData.orientation : [Colibri.UI.ToolTip.RB, Colibri.UI.ToolTip.LB]
+                );
             }
+
 
             if(tipData.className) {
                 this._passwordTip.AddClass(tipData.className);
@@ -132,7 +133,6 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
             
             
             this._passwordTip.value = tipText;
-            this._passwordTip.Show(this.contentContainer);
             const a = this._passwordTip.container.querySelector('a');
             if(a) {
                 a.addEventListener('click', (e) => this._generatePassword(e));
@@ -140,7 +140,9 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
 
             if(cls != 'weak' && cls != 'bad') {
                 this._hidePasswordTip();
-            }            
+            } else if(this.value.length > 0 && this.elementIsInOffset) {
+                this._passwordTip.Show(this.contentContainer, true);
+            }     
             
         }
     }

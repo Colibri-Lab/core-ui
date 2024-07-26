@@ -253,10 +253,11 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
      * Show tooltip on component
      * @param {Colibri.UI.Component} parent parent component
      */
-    Show(parent = null) {
+    Show(parent = null, permanent = false) {
         if(parent) {
             this.parent = parent;
         }
+        this.permanent = permanent;
         if(!this.shown) {
             this.shown = true;
         }

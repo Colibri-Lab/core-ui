@@ -184,7 +184,7 @@ Colibri.UI.SimpleFormValidator = class {
      * @param {string} message validation message 
      */
     Invalidate(field, message) {
-        if(field == 'form') {
+        if(field == 'form' || field instanceof Colibri.UI.Forms.Form) {
             this._form.message = message;
             return;
         }
