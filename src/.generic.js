@@ -2185,6 +2185,15 @@ Date.isLeapYear = function (year) {  return (((year % 4 === 0) && (year % 100 !=
  */
 Date.daysInMonth = function (year, month) { return [31, (Date.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]; };
 
+Date.prototype.getPeriods = function(dateFrom) {
+    let periods = [];
+    while(dateFrom < this) {
+        periods.push(dateFrom.getFullYear() + '-' + ((dateFrom.getMonth() + 1) + '').expand('0', 2));
+        dateFrom = dateFrom.addMonths(1);
+    }
+    return periods;
+}
+
 /**
  * Returns the number of days in the month of the current date.
  * @returns {number} The number of days in the month.
