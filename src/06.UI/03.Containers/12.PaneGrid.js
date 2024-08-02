@@ -10,11 +10,12 @@ Colibri.UI.PaneGrid = class extends Colibri.UI.Component {
      * @param {string} name name of component
      * @param {HTMLElement|Colibri.UI.Component} container container of component 
      */
-    constructor(name, container) {
+    constructor(name, container, element) {
         /* создаем компонент и передаем шаблон */
         super(name, container, Colibri.UI.Templates['Colibri.UI.PaneGrid']);
         this.AddClass('colibri-ui-panegrid');
 
+        this.GenerateChildren(element, this);
 
     }
 
