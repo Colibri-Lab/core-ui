@@ -27,6 +27,9 @@
 
         .app-ui-grid-head {
             background-color: white;
+            position: sticky;
+            top: 0;
+            z-index: 2;
 
             &.app-component-shown {
                 display: table-header-group;
