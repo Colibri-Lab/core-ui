@@ -139,6 +139,10 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
 
     }
 
+    DispatchChanged(){
+        this.Dispatch('Changed', {newIndex: this.selectedIndex, oldIndex: this.selectedIndex, tab: this.buttonsByIndex[0], container: this.componentsByIndex[0]});
+    }
+
     /**
      * Header container
      * @type {Element}
