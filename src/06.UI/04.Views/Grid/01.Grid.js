@@ -1131,6 +1131,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         return this._massActionsMenu;
     }
     set massActionsMenu(value) {
+        value = this._convertProperty('Array', value);
         this._massActionsMenu = value;
         if (!this._massActionsMenu) { 
             this._massActionsMenuObject?.Dispose(); 

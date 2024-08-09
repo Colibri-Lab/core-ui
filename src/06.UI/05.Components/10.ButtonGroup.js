@@ -27,7 +27,7 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
      * @param {*} args event arguments
      */ 
     __thisClicked(event, args) {
-        const button = args.domEvent.target.tag('component').Closest(component => component.parent instanceof Colibri.UI.ButtonGroup);
+        const button = args.domEvent.target.closest('[data-object-name]').tag('component').Closest(component => component.parent instanceof Colibri.UI.ButtonGroup);
         this.SelectButton(button);
     }
 
