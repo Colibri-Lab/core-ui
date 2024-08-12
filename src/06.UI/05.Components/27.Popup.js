@@ -141,7 +141,7 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
 
         if(!super.shown && this._connectToBody) {
             this.Disconnect();
-            this.ConnectTo(this.parent.container);
+            this?.parent?.container && this.ConnectTo(this?.parent?.container);
             this.hasShadow = value;
         }
     }
