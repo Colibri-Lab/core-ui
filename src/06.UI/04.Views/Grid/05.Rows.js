@@ -155,6 +155,13 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
         this._titleCellCountSpan.value = ' (' + this.rowsCount + ')';
 
+        if(value?.__selected === true) {
+            this.grid.selected = newRow;
+        }
+        if(value?.__checked === true) {
+            newRow.checked = true;
+        }
+
         return newRow;
     }
 
