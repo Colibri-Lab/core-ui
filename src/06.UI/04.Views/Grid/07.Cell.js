@@ -16,19 +16,20 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
 
         this.AddClass('app-ui-row-cell');
 
+        this._parentColumn = this.grid.header.FindColumn(this.columnName);
+        this.className = this._parentColumn.className;
+
         this._valueContainer = new Colibri.UI.TextSpan('span', this);
         this._valueContainer.AddClass('app-ui-row-cell-value-container');
         this._valueContainer.shown = true;
+        this._valueContainer.copy = this.parentColumn.canCopy;
 
         this._stickyHorizontally = false;
         this._stickyVertically = false;
         this._selected = false;
         this._activated = false;
-        this._parentColumn = null;
         this._value = null;
 
-        this._parentColumn = this.grid.header.FindColumn(this.columnName);
-        this.className = this._parentColumn.className;
         this._editor = this._parentColumn?.editor;
         this._viewer = this._parentColumn?.viewer;
         this._editorObject = null;

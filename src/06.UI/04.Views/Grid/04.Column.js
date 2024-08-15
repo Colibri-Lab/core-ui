@@ -428,4 +428,19 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         this.grid.Dispatch('ColumnVisibilityChanged', {column: this});   
     }
 
+    /**
+     * Value can be copied, works when viewer is not set
+     * @type {Boolean}
+     */
+    get canCopy() {
+        return this._canCopy;
+    }
+    /**
+     * Value can be copied, works when viewer is not set
+     * @type {Boolean}
+     */
+    set canCopy(value) {
+        this._canCopy = value;
+    }
+
 }
