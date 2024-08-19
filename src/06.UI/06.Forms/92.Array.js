@@ -392,6 +392,10 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         this.ForEveryField((name, component) => component._hideAndShow());
     }
 
+    ClearAllRows() {
+        this._itemsContainer.Clear();
+    }
+
 
 }
 Colibri.UI.Forms.Field.RegisterFieldComponent('Array', 'Colibri.UI.Forms.Array', '#{ui-fields-array}')
