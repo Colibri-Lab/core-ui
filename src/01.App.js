@@ -555,6 +555,15 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         this._csrfToken = value;
     }
 
+    /**
+     * Is browser tab is active
+     * @type {Boolean}
+     */
+    get isActive() {
+        return !document.hidden;
+    }
+    
+
 }
 
 /**
