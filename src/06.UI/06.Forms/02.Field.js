@@ -584,7 +584,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         let nr = false;
         Object.forEach(fields, (n, f) => {
             if(!!f.fields) {
-                nr = nr || this._needHideAndShowF(f.fields);
+                nr = nr || (!!(f?.params?.fieldgenerator ?? false) || !!(f?.params?.condition ?? false) || !!(f?.params?.hidden ?? false)) || this._needHideAndShowF(f.fields);
             } else {
                 nr = nr || (!!(f?.params?.fieldgenerator ?? false) || !!(f?.params?.condition ?? false) || !!(f?.params?.hidden ?? false));
             }
