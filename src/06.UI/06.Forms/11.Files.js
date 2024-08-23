@@ -290,7 +290,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
             });
         }
 
-        if (this._allowedExtensions && this._allowedExtensions != '*') {
+        if (this._allowedExtensions && this._allowedExtensions != '*' && this._allowedExtensions != '*.*') {
             let extensions = this._allowedExtensions.map((item) => item.toLowerCase());
 
             filesList.forEach((file, index) => {
