@@ -97,7 +97,18 @@ Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
 
         const contentContainer = this.contentContainer;
         for(const v of value) {
-            contentContainer.Children(this._name + '-input-' + String.MD5(v.value + v.title)).checked = true;
+            try {
+                let input = contentContainer.Children(this._name + '-input-' + String.MD5(v.value + v.title));
+                if(!input) {
+                    input = new Colibri.UI.Checkbox(this._name + '-input-' + String.MD5(v.value + v.title), contentContainer);
+                    input.shown = true;
+                    input.placeholder = v.title;
+                    input.tag = v;
+                    input.tabIndex = true;
+                    this._handleEvents(input);
+                }
+                input.checked = v.__checked ?? true;
+            } catch(e) {}
         }
 
     }
@@ -164,6 +175,11 @@ Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
             input.placeholder = v.title;
             input.tag = v;
             input.tabIndex = true;
+            if(v.__checked) {
+                input.checked = true;
+            } else {
+                input.checked = false;
+            }
             this._handleEvents(input);
 
         }

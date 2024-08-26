@@ -79,6 +79,15 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
     }
 
     /**
+     * Register events
+     * @protected
+     */
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('LookupCompleted', false, 'When lookup finalized');
+    }
+
+    /**
      * Reload values to component
      */
     ReloadValues() {
@@ -409,6 +418,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
                     }
                     this.RemoveClass('app-select-loading');
                     this._setEnabled();        
+                    this.Dispatch('LookupCompleted');
                 });
             });
         } else {
