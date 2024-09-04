@@ -1096,13 +1096,13 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
         let html = this._itemData?.title ?? '';
         if(this.list?.rendererComponent) {
             const attrs = this.list?.rendererAttrs ?? {};
-            let content = this.Children(this._itemData?.name ?? this.name + '_renderer');
+            let content = this.Children((this._itemData?.name ?? this.name).replaceAll('"', '') + '_renderer');
             if(!content) {
                 let comp = typeof(this.list.rendererComponent) === 'string' ? this.list.rendererComponent : this.list.rendererComponent(this._itemData, this);
                 if(!(comp instanceof Colibri.UI.Component)) {
                     comp = eval(comp);
                 }
-                content = new comp(this._itemData?.name ?? this.name + '_renderer', this);
+                content = new comp((this._itemData?.name ?? this.name).replaceAll('"', '') + '_renderer', this);
                 content.shown = true;
                 delete attrs.name;
                 Object.forEach(attrs, (key, value) => {

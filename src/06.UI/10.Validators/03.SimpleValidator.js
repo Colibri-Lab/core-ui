@@ -206,5 +206,22 @@ Colibri.UI.SimpleFormValidator = class {
         return this._form;
     }
 
+    GetFirstInvalid(fields = null) {
+        let found = null;
+        if(!fields) {
+            fields = this._form.Fields();
+        }
+        Object.forEach(fields, (name, field) => {
+            if(field.field.params.validated === 'error') {
+                found = field;
+                return false;
+            }
+            if( field.Fields && (found = this.GetFirstInvalid(field.Fields())) ) {
+                return false;
+            }
+        });
+        return found;
+    }
+
 
 }
