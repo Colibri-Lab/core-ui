@@ -19,10 +19,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         this._parentColumn = this.grid.header.FindColumn(this.columnName);
         this.className = this._parentColumn.className;
 
-        this._valueContainer = new Colibri.UI.TextSpan('span', this);
-        this._valueContainer.AddClass('app-ui-row-cell-value-container');
-        this._valueContainer.shown = true;
-        this._valueContainer.copy = this.parentColumn.canCopy;
+        this._valueContainer = null;
 
         this._stickyHorizontally = false;
         this._stickyVertically = false;
@@ -316,9 +313,11 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
             this._viewerObject.viewedObject = this.parentRow.value;
         }
         else {
+            this._createValueContainer();
             this._valueContainer.value = '';
             this._valueContainer.value = this._generateViewFromParams();
         }
+
         if(this._editorObject) {
             this._editorObject.value = this._value;
         }
@@ -404,6 +403,15 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         }
     }
 
+    _createValueContainer() {
+        if(!this._valueContainer) {
+            this._valueContainer = new Colibri.UI.TextSpan('span', this);
+            this._valueContainer.AddClass('app-ui-row-cell-value-container');
+            this._valueContainer.shown = true;
+            this._valueContainer.copy = this.parentColumn.canCopy;
+        }
+    }
+
     _createViewer() {
         if(this._viewer && !this._viewerObject) {
             const cell = this;
@@ -421,11 +429,11 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
                 this._viewerObject[name] = value;
             });
 
-            this._valueContainer.shown = false;
+            this._valueContainer && (this._valueContainer.shown = false);
         }
         else if(!this._viewer && this._viewerObject) {
             this._viewerObject.Dispose();
-            this._valueContainer.shown = true;
+            this._valueContainer ? (this._valueContainer.shown = true) : this._createValueContainer();
         }
     }
 
@@ -465,7 +473,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
             Colibri.Common.Delay(50).then(() => {
                 this.AddClass('-editing');
                 this.parentRow && this.parentRow.AddClass('-editing');
-                this._valueContainer.Hide();
+                this._valueContainer && this._valueContainer.Hide();
                 this._viewerObject && this._viewerObject.Hide();
                 this._editorObject.field = this._parentColumn.tag;
                 this._editorObject.Show();
@@ -490,7 +498,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
             this._viewerObject.Show();
         }
         else {
-            this._valueContainer.Show();
+            this._valueContainer ? this._valueContainer.Show() : this._createValueContainer();
         }
         hide && this._editorObject && this._editorObject.Hide();
     } 
