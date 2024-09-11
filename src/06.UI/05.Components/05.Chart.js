@@ -47,7 +47,7 @@ Colibri.UI.Chart = class extends Colibri.UI.Component {
      */
     AddBarchart(name) {
         let barchart = new Colibri.UI.Chart.Barchart(name, this);
-        barchart._orientation = this._orientation;
+        barchart.orientation = this._orientation;
         return barchart
     }
 }
@@ -77,7 +77,6 @@ Colibri.UI.Chart.Barchart = class extends Colibri.UI.Component {
 
         this._barchart = new Colibri.UI.Component('barchart', this);
         this._barchart.AddClass('barchart-body');
-        this._barchart._element.css('width', '50%');
         this._barchart.shown = true;
 
         this._textValue = new Colibri.UI.Component('barchart-text-value', this);
@@ -105,7 +104,7 @@ Colibri.UI.Chart.Barchart = class extends Colibri.UI.Component {
      * @type {number}
      */
     set value(value) {
-        return this._barchart._element.css('width', value + '%');
+        return this._barchart._element.css(this._orientation === 'vertical' ? 'height' : 'width', value + '%');
     }
 
     /**
@@ -130,6 +129,21 @@ Colibri.UI.Chart.Barchart = class extends Colibri.UI.Component {
      */
     set textValue(value) {
         this._textValue.value = value;
+    }
+
+    /**
+     * Orientation of bar
+     * @type {String}
+     */
+    get orientation() {
+        return this._orientation;
+    }
+    /**
+     * Orientation of bar
+     * @type {String}
+     */
+    set orientation(value) {
+        this._orientation = value;
     }
     
 }

@@ -427,6 +427,38 @@ Array.prototype.avg = function(field = null) {
 }
 
 /**
+ * Calculates the max of all elements in the array.
+ * @param {(string|Function)} field - Optional field to specify which values to average.
+ * @returns {number} Returns the average value.
+ */
+Array.prototype.max = function(field = null) {
+    let max = -9999999999;
+    for(const v of this) {
+        let f = (typeof field == 'function' ? field() : v[field]);
+        if( f > max ) {
+            max = f;
+        }
+    }
+    return max;
+}
+
+/**
+ * Calculates the min of all elements in the array.
+ * @param {(string|Function)} field - Optional field to specify which values to average.
+ * @returns {number} Returns the average value.
+ */
+Array.prototype.min = function(field = null) {
+    let min = 9999999999;
+    for(const v of this) {
+        let f = (typeof field == 'function' ? field() : v[field]);
+        if( f < min ) {
+            min = f;
+        }
+    }
+    return min;
+}
+
+/**
  * Converts an array of objects into an object with specified keys and values.
  * @param {Array} array - The array of objects.
  * @param {string} fieldKey - The field to use as keys in the resulting object.

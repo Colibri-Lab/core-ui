@@ -1,10 +1,31 @@
 .app-component-chart {
   width: 100%;
+  
+
   .app-component-barchart {
     width: 100%;
+
     .barchart-body {
       height: 5px;
       background-color: black;
+      width: 100%;
+    }
+  }
+
+  &.app-component-chart-vertical {
+    overflow: auto;
+    &.app-component-shown {
+      display: flex;
+    }
+    align-items: stretch;
+    justify-content: flex-start;
+    .app-component-barchart {
+      width: auto;
+      height: 100%;
+      &.app-component-shown {
+        display: flex;
+      }
+      align-items: flex-end;
     }
   }
 }
