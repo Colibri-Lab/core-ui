@@ -101,7 +101,7 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
                 }, 500);
             });
         } catch(e) {
-                
+            console.log(e);
         }
 
     }
@@ -170,6 +170,7 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
      * @type {Object}
      */
     set options(value) {
+        value = this._convertProperty('Object', value);
         this._options = value;
     }
 
