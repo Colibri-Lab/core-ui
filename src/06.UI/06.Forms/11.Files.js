@@ -127,7 +127,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
             const deleteIcon = new Colibri.UI.TextSpan('delete', container);
 
             filename.AddClass('files-file-name');
-            if ((itemData.file?.type ?? itemData.file?.mimetype).match('image.*')) {
+            if ((itemData.file?.type ?? itemData.file?.mimetype)?.match('image.*') ?? false) {
                 picture.shown = filename.shown = deleteIcon.shown = true;
                 picture.image = itemData.file;
                 picture.width = picture.height = 40;

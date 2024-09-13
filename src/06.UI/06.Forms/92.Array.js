@@ -44,13 +44,16 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
     /** @private */
     _createAddNewLink() {
-        if(this._fieldData.params && this._fieldData.params.addlink === null) {
+        if (!this._fieldData?.params) {
+            this._fieldData.params = {};
+        }
+        if(this._fieldData?.params && this._fieldData.params?.addlink === null) {
             return;
         }
 
         this.contentContainer.Children('add-new') && this.contentContainer.Children('add-new').Dispose();
-        if(typeof Lang.Translate(this._fieldData.params.addlink) === 'object') {
-            const linkData = this._fieldData.params.addlink;
+        if(typeof Lang.Translate(this._fieldData.params?.addlink) === 'object') {
+            const linkData = this._fieldData.params?.addlink;
             const c = eval(linkData.component);
             this._link = new c('add-new', this.contentContainer);
             Object.forEach(linkData.attrs, (name, value) => {
@@ -59,9 +62,9 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
         } else {
             this._fieldData.desc = this._fieldData.desc ? this._fieldData.desc[Lang.Current] ?? this._fieldData.desc : ''; 
-            this._fieldData.params.addlink = this._fieldData?.params?.addlink ? this._fieldData.params.addlink[Lang.Current] ?? this._fieldData.params.addlink : '';
+            this._fieldData.params.addlink = this._fieldData?.params?.addlink ? this._fieldData.params?.addlink[Lang.Current] ?? this._fieldData.params?.addlink : '';
             this._link = new Colibri.UI.Link('add-new', this.contentContainer);
-            this._link.value = this._fieldData.params && this._fieldData.params.addlink || '#{ui-array-add} «' + (this._fieldData.desc) + '»';    
+            this._link.value = this._fieldData.params && this._fieldData.params?.addlink || '#{ui-array-add} «' + (this._fieldData.desc) + '»';    
         }
         
 

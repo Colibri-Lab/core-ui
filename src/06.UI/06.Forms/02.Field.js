@@ -108,7 +108,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             return componentObject;
         
         } catch(e) {
-            // debugger;
+            debugger;
         }
 
     }
