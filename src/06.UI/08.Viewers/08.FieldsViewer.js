@@ -227,13 +227,13 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                 const title = new Colibri.UI.TextSpan(name + '-title', pane);
                 title.AddClass('app-field-title');
                 try {
-                    let tvalue = field.desc[Lang.Current] ?? field.desc;
-                    if(typeof tvalue === 'function') {
+                    if(typeof field.desc === 'function') {
+                        const tvalue = field.desc;
                         tvalue(field, this).then((value) => {
                             title.value = value;
                         });
                     } else {
-                        title.value = tvalue;
+                        title.value = Lang !== undefined ? Lang.Translate(field.desc) : field.desc;
                     }
                 } catch(e) {
                     title.value = field.desc;
