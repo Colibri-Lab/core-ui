@@ -1003,6 +1003,12 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     }
 
+    Sort(columnName, order) {
+        this._sortColumn = this.header.FindColumn(columnName);
+        this._sortOrder = order;
+        this.Dispatch('SortChanged', {sortColumn: this._sortColumn, order: this._sortOrder});
+    }
+
     /**
      * Регистрация обработчиков событий
      */
