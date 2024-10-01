@@ -123,6 +123,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         this.RegisterEvent('WindowClosed', false, 'When window closed');
         this.RegisterEvent('WindowBeforeClosed', false, 'When close button clicked');
         this.RegisterEvent('WindowContentRendered', false, 'When window content is rendered');
+        this.RegisterEvent('WindowOpened', false, 'When window is opened');
     }
 
     /**
@@ -478,6 +479,9 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             this.SendToBack();
         }
         this.StartTabIndexRoutine();
+        if(value === true) {
+            this.Dispatch('WindowOpened');
+        }
     }
 
     /**
