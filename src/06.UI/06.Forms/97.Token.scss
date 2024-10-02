@@ -1,0 +1,20 @@
+.colibri-ui-forms-token {
+    
+    [data-object-name$="-container"] {
+        &.app-component-shown {
+            display: flex;
+        }
+        flex-wrap: nowrap;
+        gap: 10px;
+            
+        [data-object-name="input"] {
+            flex: 1 1 100%;
+        }
+
+        [data-object-name="button"] {
+            flex: 0 0 20%;
+        }
+
+    }
+
+}
