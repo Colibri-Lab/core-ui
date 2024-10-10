@@ -114,17 +114,18 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
                 this._passwordTip.AddClass(tipData.className);
             }
 
+            const requirements = this._fieldData?.params?.requirements || {digits: 8, strength: 40};
+
             let cls = 'bad';
-            if (strength > 80) {
+            if (strength > requirements?.minForStrong ?? 80) {
                 cls = "strong";
             }
-            else if (strength > 60) {
+            else if (strength > requirements?.minForGood ?? 60) {
                 cls = "good";
             }
-            else if (strength >= 30) {
+            else if (strength >= requirements?.minForWeak ?? 30) {
                 cls = "weak";
             }
-            const requirements = this._fieldData?.params?.requirements || {digits: 8, strength: 40};
             let tipText = '<p>' + (Array.isArray(tipData.text) ? tipData.text.join('</p><p>') : tipData.text) + '</p>' + 
                 '<ul><li>' + (Array.isArray(tipData.digits) ? requirements.digits.formatSequence(tipData.digits, true) : tipData.digits.replaceAll('%s', requirements.digits)) + '</li>' + tipData.additional.map(f => '<li>' + f + '</li>').join('') + '</ul>' + 
                 '<div class="password-progress ' + cls + '"><span style="width: ' + strength + '%"></span></div>' +  
@@ -138,7 +139,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
                 a.addEventListener('click', (e) => this._generatePassword(e));
             }
 
-            if(cls != 'weak' && cls != 'bad') {
+            if(cls === 'strong') {
                 this._hidePasswordTip();
             } else if(this.value.length > 0 && this.elementIsInOffset) {
                 this._passwordTip.Show(this.contentContainer, true);
