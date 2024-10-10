@@ -408,6 +408,14 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         super.Dispose();
     }
 
+    /**
+     * 
+     * @type {}
+     */
+    get passwordTip() {
+        return this._passwordTip;
+    }
+    
 }
 
 Colibri.UI.Forms.Field.RegisterFieldComponent('Password', 'Colibri.UI.Forms.Password', '#{ui-fields-password}')
