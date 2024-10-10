@@ -79,7 +79,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
             this.eyeIcon = this._fieldData?.params?.eyeicon;
         }
 
-        this.AddHandler(['Changed', 'KeyUp', 'Paste', 'ReceiveFocus'], (event, args) => {
+        this.AddHandler(['KeyUp', 'Paste', 'ReceiveFocus'], (event, args) => {
             const strength = this.CalcPasswordStrength();
             this._showPasswordTip(strength);
             this.Dispatch('PasswordValidated', {strength: strength});
@@ -131,7 +131,6 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
                 '<div class="password-progress ' + cls + '"><span style="width: ' + strength + '%"></span></div>' +  
                 '<p>' + (strength < requirements.strength ? tipData.error : tipData.success) + '</p>' + 
                 '<a href="#">' + tipData.generate + '</a>';
-            
             
             this._passwordTip.value = tipText;
             const a = this._passwordTip.container.querySelector('a');
