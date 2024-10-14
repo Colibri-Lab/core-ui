@@ -289,7 +289,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
                 }
             });
         }
-
+        debugger;
         this._allowedExtensions = this._allowedExtensions.filter(v => !!v);
         if (this._allowedExtensions && 
             (Array.isArray(this._allowedExtensions) ? 
@@ -297,24 +297,25 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
                 (this._allowedExtensions != '*' && this._allowedExtensions != '*.*'))
         ) {
             let extensions = this._allowedExtensions.map((item) => item.toLowerCase());
-
-            filesList.forEach((file, index) => {
-                let fileName = file.name;
-                let ext = '';
-
-                if (fileName.includes('.')) {
-                    ext = fileName.substring(fileName.lastIndexOf('.') + 1);
-                    ext = ext.toLowerCase();
-                }
-
-                if (!extensions.includes(ext)) {
-                    error = true;
-                    this._validated = false;
-
-                    validatedList.splice(index, 1);
-                    this._errorMessages.push('#{ui-files-format} ' + fileName);
-                }
-            });
+            if(!(extensions.includes('*') || extensions.includes('*.*'))) {
+                filesList.forEach((file, index) => {
+                    let fileName = file.name;
+                    let ext = '';
+    
+                    if (fileName.includes('.')) {
+                        ext = fileName.substring(fileName.lastIndexOf('.') + 1);
+                        ext = ext.toLowerCase();
+                    }
+    
+                    if (!extensions.includes(ext)) {
+                        error = true;
+                        this._validated = false;
+    
+                        validatedList.splice(index, 1);
+                        this._errorMessages.push('#{ui-files-format} ' + fileName);
+                    }
+                });    
+            }
         }
 
         if (!error) {
