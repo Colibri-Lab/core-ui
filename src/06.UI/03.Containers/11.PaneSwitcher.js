@@ -19,6 +19,10 @@ Colibri.UI.PaneSwitcher = class extends Colibri.UI.Pane {
 
     }
 
+    HideAll() {
+        this.ForEach((name, component) => component.Disconnect());
+    }
+
     /**
      * Show/Hide element
      * @type {Number|String}
