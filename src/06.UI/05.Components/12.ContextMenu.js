@@ -180,25 +180,25 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
             default: 
             case Colibri.UI.ContextMenu.RB: {
                 return {
-                    left: pointOnParent.left - thisBounds.outerWidth, 
+                    left: pointOnParent.left, 
                     top: pointOnParent.top
                 };
             }
             case Colibri.UI.ContextMenu.LB: {
                 return {
-                    left: pointOnParent.left, 
+                    left: pointOnParent.left - thisBounds.outerWidth, 
                     top: pointOnParent.top
                 };
             }
             case Colibri.UI.ContextMenu.LT: {
                 return {
-                    left: pointOnParent.left - thisBounds.outerWidth, 
+                    left: pointOnParent.left, 
                     top: pointOnParent.top - thisBounds.outerHeight
                 };
             }
             case Colibri.UI.ContextMenu.RT: {
                 return {
-                    left: pointOnParent.left, 
+                    left: pointOnParent.left - thisBounds.outerWidth, 
                     top: pointOnParent.top - thisBounds.outerHeight
                 };
             }
