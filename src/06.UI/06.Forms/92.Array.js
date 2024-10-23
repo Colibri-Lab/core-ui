@@ -97,6 +97,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         }
         const object = this._addNew(value);
         this.Dispatch('Changed', {component: this});
+        
         return object;
     }
 
@@ -397,6 +398,15 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
     ClearAllRows() {
         this._itemsContainer.Clear();
+    }
+
+    HideAddLink() {
+        this._linkCanBeShown = false;
+        this._link.shown = false;
+    }
+    ShowAddLink() {
+        this._linkCanBeShown = true;
+        this._link.shown = true;
     }
 
 
