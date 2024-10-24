@@ -150,40 +150,40 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
         const thisBounds = this._element.bounds(true, true);
         switch(ori) {
             default:
-            case Colibri.UI.ToolTip.RB: {
-                return {
-                    left: pointOnParent.left, 
-                    top: pointOnParent.top
-                };
-            }
             case Colibri.UI.ToolTip.LB: {
                 return {
-                    left: pointOnParent.left - thisBounds.outerWidth, 
-                    top: pointOnParent.top
+                    left: pointOnParent.left, 
+                    top: pointOnParent.top - thisBounds.outerHeight
                 };
             }
             case Colibri.UI.ToolTip.LM: {
                 return {
-                    left: pointOnParent.left - thisBounds.outerWidth, 
-                    top: pointOnParent.top - (thisBounds.outerHeight / 2)
+                    left: pointOnParent.left, 
+                    top: pointOnParent.top - (thisBounds.outerHeight / 2) - 10
                 };
             }
             case Colibri.UI.ToolTip.LT: {
                 return {
                     left: pointOnParent.left, 
-                    top: pointOnParent.top 
+                    top: pointOnParent.top  - 10
+                };
+            }
+            case Colibri.UI.ToolTip.RB: {
+                return {
+                    left: pointOnParent.left - thisBounds.outerWidth, 
+                    top: pointOnParent.top - thisBounds.outerHeight - 10
                 };
             }
             case Colibri.UI.ToolTip.RT: {
                 return {
                     left: pointOnParent.left - thisBounds.outerWidth, 
-                    top: pointOnParent.top - thisBounds.outerHeight
+                    top: pointOnParent.top - 10
                 };
             }
             case Colibri.UI.ToolTip.RM: {
                 return {
-                    left: pointOnParent.left, 
-                    top: pointOnParent.top - (thisBounds.outerHeight / 2)
+                    left: pointOnParent.left - thisBounds.outerWidth, 
+                    top: pointOnParent.top - (thisBounds.outerHeight / 2) - 10
                 };
             }
         }
