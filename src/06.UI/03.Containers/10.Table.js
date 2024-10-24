@@ -21,8 +21,12 @@ Colibri.UI.Table = class extends Colibri.UI.Component {
      * @param {string} name name of cell
      * @returns {Colibri.UI.TableRow}
      */
-    AddRow(name) {
-        return new Colibri.UI.TableRow(name, this);
+    AddRow(name, className = null) {
+        const row = new Colibri.UI.TableRow(name, this);
+        if(className) {
+            row.AddClass(className);
+        }
+        return row;
     }
 
 
