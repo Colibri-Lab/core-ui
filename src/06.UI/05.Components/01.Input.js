@@ -22,6 +22,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         this.AddClass('app-input-component');
 
         this._fillTimeoutValue = 500;
+        this._showClearIconAllways = false;
 
         new Colibri.UI.Icon('icon', this);
         new Colibri.UI.Pane('loadingicon', this);
@@ -29,7 +30,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         this._input = Element.create('input', { type: 'text', placeholder: this.placeholder || '' });
         this._element.append(this._input);
 
-        new Colibri.UI.Pane('clear', this);
+        new Colibri.UI.Icon('clear', this);
 
         this.Children('icon').shown = true;
         this.Children('clear').html = Colibri.UI.ClearIcon;
@@ -51,11 +52,15 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
                 }
             }
 
-            if(this.readonly) {
-                this.Children('clear').shown = false;
+            if(!this._showClearIconAllways) {
+                if(this.readonly) {
+                    this.Children('clear').shown = false;
+                } else {
+                    this.Children('clear').shown = this._hasClearIcon && this._input.value.length > 0;
+                } 
             } else {
-                this.Children('clear').shown = this._hasClearIcon && this._input.value.length > 0;
-            } 
+                this.Children('clear').shown = true;
+            }
 
             this.Dispatch('KeyUp', { value: this.value, domEvent: e });
 
@@ -99,10 +104,15 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
             if(!this.enabled) {
                 return;
             }
+            this.Dispatch('BeforeClear', args);
+            if(args.cancel) {
+                return;
+            }
+
             this._input.value = '';
             this._input.focus();
             // this._input.select();
-            this.Children('clear').shown = false;
+            this.Children('clear').shown = this._showClearIconAllways;
             this.loading = false;
             this.Dispatch('Cleared', args);
         });
@@ -131,7 +141,8 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         this.RegisterEvent('KeyDown', false, 'Поднимается, когда клавиша нажата');
         this.RegisterEvent('Changed', false, 'Поднимается, когда содержимое поля обновлено');
         this.RegisterEvent('Filled', false, 'Поднимается, когда содержимое поля обновлено и не изменилось в течении fillTimeout мс');
-        this.RegisterEvent('Cleared', false, 'Поднимается, когда содержимое поля очищено с помощью крестика');
+        this.RegisterEvent('Cleared', false, 'When clear icon is clicked and input is cleared');
+        this.RegisterEvent('BeforeClear', false, 'Before clear is complete');
     }
 
     /**
@@ -261,14 +272,14 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
      * @type {String}
      */
     get clearIcon() {
-        return this.Children('clear').html;
+        return this.Children('clear').iconSVG;
     }
     /**
      * Clear icon
      * @type {String}
      */
     set clearIcon(value) {
-        this.Children('clear').html = value;
+        this.Children('clear').iconSVG = value;
     }
 
     /** 
@@ -285,7 +296,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
     set value(value) { 
         value = this._convertProperty('String', value);
         this._input.value = value;
-        if(this.Children('clear')) {
+        if(this.Children('clear') && !this._showClearIconAllways) {
             this.Children('clear').shown = this._hasClearIcon && this._input.value.length > 0;
         }
     }
@@ -459,6 +470,25 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
      */
     get isValueExceeded() {
         return this._input.isValueExceeded();
+    }
+
+    /**
+     * Show clear icon allways
+     * @type {Boolean}
+     */
+    get showClearIconAllways() {
+        return this._showClearIconAllways;
+    }
+    /**
+     * Show clear icon allways
+     * @type {Boolean}
+     */
+    set showClearIconAllways(value) {
+        value = this._convertProperty('Boolean', value);
+        this._showClearIconAllways = value;
+        if(value) {
+            this.Children('clear').shown = true;
+        }
     }
 
 }
