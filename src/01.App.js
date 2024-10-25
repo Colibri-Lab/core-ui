@@ -244,7 +244,6 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
             });
 
             document.addEventListener("visibilitychange", () => {
-                console.log('Document is ' + (!document.hidden ? 'shown' : 'hidden'));
                 this._isActive = !document.hidden;
             });
     
