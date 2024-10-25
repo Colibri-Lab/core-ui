@@ -129,11 +129,17 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
             else if (strength >= requirements?.minForWeak ?? 30) {
                 cls = "weak";
             }
-            let tipText = '<p>' + (Array.isArray(tipData.text) ? tipData.text.join('</p><p>') : tipData.text) + '</p>' + 
-                '<ul><li>' + (Array.isArray(tipData.digits) ? requirements.digits.formatSequence(tipData.digits, true) : tipData.digits.replaceAll('%s', requirements.digits)) + '</li>' + tipData.additional.map(f => '<li>' + f + '</li>').join('') + '</ul>' + 
-                '<div class="password-progress ' + cls + '"><span style="width: ' + strength + '%"></span></div>' +  
-                '<p>' + (strength < requirements.strength ? tipData.error : tipData.success) + '</p>' + 
-                '<a href="#">' + tipData.generate + '</a>';
+            let tipText = '';
+            if(typeof tipData.text === 'function') {
+                const f = tipData.text;
+                tipText = c(pass, tipData);
+            } else {
+                tipText = '<p>' + (Array.isArray(tipData.text) ? tipData.text.join('</p><p>') : tipData.text) + '</p>' + 
+                    '<ul><li>' + (Array.isArray(tipData.digits) ? requirements.digits.formatSequence(tipData.digits, true) : tipData.digits.replaceAll('%s', requirements.digits)) + '</li>' + tipData.additional.map(f => '<li>' + f + '</li>').join('') + '</ul>' + 
+                    '<div class="password-progress ' + cls + '"><span style="width: ' + strength + '%"></span></div>' +  
+                    '<p>' + (strength < requirements.strength ? tipData.error : tipData.success) + '</p>' + 
+                    '<a href="#">' + tipData.generate + '</a>';
+            }
             
             this._passwordTip.value = tipText;
             const a = this._passwordTip.container.querySelector('a');
@@ -172,6 +178,12 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
      */
     CalcPasswordStrength() {
         const pass = this.value;
+
+        if(this._fieldData?.params?.strenchMethod) {
+            const f = this._fieldData?.params?.strenchMethod;
+            return f(pass);
+        }
+
         const requirements = this._fieldData?.params?.requirements || {digits: 8, strength: 40};
 
         if (!pass || pass.length < requirements.digits) {
