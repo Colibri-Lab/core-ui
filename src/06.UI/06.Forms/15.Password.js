@@ -179,12 +179,13 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
     CalcPasswordStrength() {
         const pass = this.value;
 
+        const requirements = this._fieldData?.params?.requirements || {digits: 8, strength: 40};
+
         if(this._fieldData?.params?.strengthMethod) {
             const f = this._fieldData?.params?.strengthMethod;
-            return f(pass);
+            return f(pass, requirements);
         }
 
-        const requirements = this._fieldData?.params?.requirements || {digits: 8, strength: 40};
 
         if (!pass || pass.length < requirements.digits) {
             return 0;
