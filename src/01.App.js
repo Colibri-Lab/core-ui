@@ -245,8 +245,8 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
             });
     
             this._initialized = true;
+            
         });
-
 
 
     }
