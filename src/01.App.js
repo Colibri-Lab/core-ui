@@ -236,11 +236,8 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                     reject();
                 });
     
-    
                 this._notices = new Colibri.UI.Notices('notices', document.body);
     
-                
-                
             });
 
             document.addEventListener("visibilitychange", () => {
