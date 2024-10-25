@@ -45,11 +45,14 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
                 }, 500);
             }
         });
-        this._input.addEventListener('paste', (e) => Colibri.Common.Delay(100).then(() => {
+        const onInputPasted = (e) => Colibri.Common.Delay(100).then(() => {
             this._input.emitHtmlEvents('change');
             this._original = this._input.value;
             this.Dispatch('Pasted', { domEvent: e });
-        }));
+            this.Dispatch('Changed', {domEvent: e, component: this});
+        });
+        this._input.addEventListener('paste', onInputPasted);
+        this._input.addEventListener('input', onInputPasted);
         this._input.addEventListener('keydown', (e) => this.Dispatch('KeyDown', {domEvent: e}));
         this._input.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', {domEvent: e}));
         this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', {domEvent: e}));
@@ -79,7 +82,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
             this.eyeIcon = this._fieldData?.params?.eyeicon;
         }
 
-        this.AddHandler(['KeyUp', 'Paste', 'ReceiveFocus'], (event, args) => {
+        this.AddHandler(['KeyUp', 'Pasted', 'ReceiveFocus'], (event, args) => {
             const strength = this.CalcPasswordStrength();
             this._showPasswordTip(strength);
             this.Dispatch('PasswordValidated', {strength: strength});
