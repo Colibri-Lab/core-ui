@@ -179,8 +179,8 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
     CalcPasswordStrength() {
         const pass = this.value;
 
-        if(this._fieldData?.params?.strenchMethod) {
-            const f = this._fieldData?.params?.strenchMethod;
+        if(this._fieldData?.params?.strengthMethod) {
+            const f = this._fieldData?.params?.strengthMethod;
             return f(pass);
         }
 
