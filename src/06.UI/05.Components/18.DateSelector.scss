@@ -107,11 +107,14 @@
     tfoot {
         td {
             cursor: pointer;
-            &:not(.ntm) {
+            &:not(.ntm):not(.disabled) {
                 border-radius: 3px;
             }
-            &:not(.ntm):hover {
+            &:not(.ntm):not(.disabled):hover {
                 background: #e4f4ff;
+            }
+            &.disabled {
+                color: gray;
             }
             &.current {
                 background-color: #4295fa;

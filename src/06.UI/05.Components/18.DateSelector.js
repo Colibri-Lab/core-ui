@@ -351,6 +351,66 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         this._icon.shown = value;
     }
 
+    /**
+     * Minimal date
+     * @type {Date}
+     */
+    get min() {
+        return this._min;
+    }
+    /**
+     * Minimal date
+     * @type {Date}
+     */
+    set min(value) {
+        this._min = value;
+    }
+
+    /**
+     * Maximal date
+     * @type {Date}
+     */
+    get max() {
+        return this._max;
+    }
+    /**
+     * Maximal date
+     * @type {Date}
+     */
+    set max(value) {
+        this._max = value;
+    }
+
+    /**
+     * Today date
+     * @type {Date}
+     */
+    get todayDate() {
+        return this._todayDate;
+    }
+    /**
+     * Today date
+     * @type {Date}
+     */
+    set todayDate(value) {
+        this._todayDate = value;
+    }
+
+    /**
+     * Today date title
+     * @type {String}
+     */
+    get todayString() {
+        return this._todayString;
+    }
+    /**
+     * Today date title
+     * @type {String}
+     */
+    set todayString(value) {
+        this._todayString = value;
+    }
+
 }
 
 /**
@@ -655,6 +715,9 @@ Colibri.UI.DatePicker = class extends Colibri.UI.Pane {
     /** @private */
     _renderContent() {
 
+        const min = this.parent.parent.min;
+        const max = this.parent.parent.max;
+
         this._element.html('');
         let dateformat = App.DateFormat || 'ru-RU';
         const formatter = new Intl.DateTimeFormat(dateformat, { day: '2-digit' });
@@ -671,7 +734,7 @@ Colibri.UI.DatePicker = class extends Colibri.UI.Pane {
         let dt = this.parent.value.copy();
         let checkedDate = dt.copy();
 
-        let today = new Date();
+        let today = this.parent.parent.todayDate ? this.parent.parent.todayDate : new Date();
 
         let weekday = dt.getDay();
         if (weekday == 0) {
@@ -708,19 +771,27 @@ Colibri.UI.DatePicker = class extends Colibri.UI.Pane {
                 if (checkedDate.getMonth() != dt.getMonth()) {
                     className += ' ntm';
                 }
-                tr.append(Element.fromHtml('<td class="' + className + '" data-value="' + (dt.getTime()) + '">' + formatter.format(dt) + '</td>'));
+                let cname = '';
+                if(min && dt.toShortDateString() < min.toShortDateString() || max && dt.toShortDateString() > max.toShortDateString()) {
+                    cname = 'disabled';
+                }
+                tr.append(Element.fromHtml('<td class="' + className + ' ' + cname + '" data-value="' + (dt.getTime()) + '">' + formatter.format(dt) + '</td>'));
                 dt.setTime(dt.getTime() + 86400000);
             }
         }
 
-        tfoot.append(Element.fromHtml('<td colspan="7" data-today="today" data-value="' + (today.getTime()) + '">#{ui-dateselector-today}</td>'));
+        console.log(today);
+        tfoot.append(Element.fromHtml('<td colspan="7" data-today="today" data-value="' + (today.getTime()) + '">' + (this.parent.parent.todayString || '#{ui-dateselector-today}') + '</td>'));
     }
 
     /** @private */
     _bind() {
         this._element.querySelectorAll('td').forEach((td) => {
             td.addEventListener('mousedown', (e) => {
-                if (e.target.classList.contains('ntm')) {
+                console.log(e.target.classList.contains('ntm'), e.target.classList.contains('disabled'));
+                if (e.target.classList.contains('ntm') || e.target.classList.contains('disabled')) {
+                    e.stopPropagation();
+                    e.preventDefault();
                     return false;
                 }
                 this.parent.value = Date.from(e.target.dataset.value);

@@ -52,6 +52,14 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
         }
 
         this._input.clearIcon = this._fieldData?.params?.dateselectorclear ?? false;
+        this._min = this._fieldData?.params?.min ? new Date(this._fieldData?.params?.min + ' 00:00:00') : null;
+        this._max = this._fieldData?.params?.max ? new Date(this._fieldData?.params?.max + ' 23:59:59') : null;
+        this._todayDate = this._fieldData?.params?.today ? new Date(this._fieldData?.params?.today) : null;
+        this._todayString = this._fieldData?.params?.today_title ?? null;
+        this._input.min = this._min;
+        this._input.max = this._max;
+        this._input.todayDate = this._todayDate;
+        this._input.todayString = this._todayString;
 
     }
     /**
@@ -111,6 +119,11 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
     set value(value) {
         if(typeof value == 'string') {
             value = new Date(value);
+        }
+        if(value < this._min) {
+            return;
+        } else if(value > this._max) {
+            return;
         }
         this._input.value = value;
     }
