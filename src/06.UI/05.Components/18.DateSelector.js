@@ -32,7 +32,14 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         this._hiddenElement.addEventListener('click', (e) => {this.Dispatch('Clicked', { domEvent: e }); e.preventDefault(); e.stopPropagation(); return false;});
         this._hiddenElement.addEventListener('change', (e) => {
             this._showValue();
-            this.Dispatch('Changed');
+            if(this._changeTimeout) {
+                clearTimeout(this._changeTimeout);
+                this._changeTimeout = -1;
+            }
+            this._changeTimeout = setTimeout(() => {
+                this.Dispatch('Changed');
+            }, 500);
+            
             e.preventDefault();
         });
         this._hiddenElement.addEventListener('blur', (e) => {
@@ -109,20 +116,22 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
      */
     set clearIcon(value) {
         this._showClearIcon = value;
-        this._clearIcon.shown = value;
+        this._clearIcon.shown = this._showClearIcon && this._viewElement.value !== '';
     }
 
 
     /** @protected */
     _registerEvents() {
         super._registerEvents();
-        this.RegisterEvent('Changed', false, 'Когда значение изменилось');
-        this.RegisterEvent('PopupOpened', false, 'Попап открыт');
-        this.RegisterEvent('PopupClosed', false, 'Попап закрыт');
+        this.RegisterEvent('Changed', false, 'When value is changed');
+        this.RegisterEvent('Cleared', false, 'When clear icon clicked');
+        this.RegisterEvent('PopupOpened', false, 'When popup is opened');
+        this.RegisterEvent('PopupClosed', false, 'When popup is closed');
     }
 
     __clearIconClicked(event, args) {
         this.value = '';
+        this.Dispatch('Cleared');
         args.domEvent.stopPropagation();
         args.domEvent.preventDefault();
         return false;
