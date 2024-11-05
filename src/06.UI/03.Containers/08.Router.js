@@ -57,6 +57,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
         if(struct instanceof Promise) {
             struct.then(structure => {
                 this._structure = this.toPlain(structure, '');
+                console.log(this._structure)
                 // this._initStructure();        
             });
         } else {
