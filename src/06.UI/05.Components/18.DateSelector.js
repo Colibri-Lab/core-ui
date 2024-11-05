@@ -31,6 +31,12 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
 
         this._hiddenElement.addEventListener('click', (e) => {this.Dispatch('Clicked', { domEvent: e }); e.preventDefault(); e.stopPropagation(); return false;});
         this._hiddenElement.addEventListener('change', (e) => {
+            if(this.value < this._min) {
+                this.value = this._min;
+            } else if(this.value > this._max) {
+                this.value = this._max;
+            }
+            
             this._showValue();
             if(this._changeTimeout) {
                 clearTimeout(this._changeTimeout);
