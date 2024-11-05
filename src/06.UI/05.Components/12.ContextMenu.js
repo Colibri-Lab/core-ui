@@ -15,6 +15,8 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
     /** Right top */
     static RT = 'rt'; 
 
+    _addedClasses = [];
+
     /**
      * @constructor
      * @param {string} name Coponent name
@@ -108,6 +110,9 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
                         args.domEvent && args.domEvent.stopPropagation();
                         return false;
                     });
+                    if(this._addedClasses.length > 0) {
+                        this._childContextMenu.AddClass(this._addedClasses);
+                    }
                 }
                 else {
                     this.Dispatch('Clicked', { menu: event.sender, menuData: event.sender.tag, domEvent: args.domEvent });
@@ -304,4 +309,13 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
         super.Dispose();
     }
 
+    AddClass(className) {
+        if(!this._addedClasses) {
+            this._addedClasses = [];
+        }
+        this._addedClasses.push(className);
+        super.AddClass(className);
+    }
+
+ 
 }

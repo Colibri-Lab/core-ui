@@ -16,4 +16,14 @@ Colibri.UI.OrderedList = class extends Colibri.UI.Component {
         this.AddClass('app-component-orderedlist');
     }
 
+    AddItem(value = null, name = null) {
+        const n = new Colibri.UI.ListItem(name, this);
+        n.shown = true;
+        if(value instanceof Function) {
+            value(n);
+        } else {
+            n.value = value;
+        }
+        return n;
+    }
 }
