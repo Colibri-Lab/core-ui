@@ -289,7 +289,6 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
                 }
             });
         }
-        debugger;
         this._allowedExtensions = this._allowedExtensions.filter(v => !!v);
         if (this._allowedExtensions && 
             (Array.isArray(this._allowedExtensions) ? 
