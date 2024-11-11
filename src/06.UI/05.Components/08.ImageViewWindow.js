@@ -16,8 +16,8 @@ Colibri.UI.ImageViewWindow = class extends Colibri.UI.Window {
         this.AddClass('app-component-image-view-window');
 
         this._img = this._element.querySelector('.image-container');
-        this._textDescriptionAfter = this._element.querySelector('.text-description-before');
-        this._textDescriptionBefore = this._element.querySelector('.text-description-after');
+        this._textDescriptionAfter = this._element.querySelector('.text-description-after');
+        this._textDescriptionBefore = this._element.querySelector('.text-description-before');
         this._closeButton = this._element.querySelector('.app-component-image-view-window-close-button');
 
         this._handleEvents();
