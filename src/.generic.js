@@ -2448,7 +2448,7 @@ Date.prototype.DiffFullTokens = function (
  * @param {string[][]} [tokens=null] - An array of tokens for years, months, weeks, days, hours, minutes, and seconds.
  * @returns {string} The age string.
  */
-Date.prototype.Age = function (removeNazad = false, returnFull = false, tokens = null) {
+Date.prototype.Age = function (removeNazad = false, returnFull = false, tokens = null, nazad = 'назад', day = 'день', yesterday = 'вчера') {
     let time = Math.abs((new Date()).getTime() / 1000 - this.getTime() / 1000); // to get the time since that moment
 
     tokens = tokens || [
@@ -2468,9 +2468,9 @@ Date.prototype.Age = function (removeNazad = false, returnFull = false, tokens =
 
         if (time < parseInt(unit)) continue;
         let numberOfUnits = Math.floor(time / unit);
-        let ret = (numberOfUnits > 1 ? numberOfUnits + ' ' : '') + numberOfUnits.formatSequence(labels, false) + (removeNazad ? '' : ' назад');
-        if (ret == 'день' + (removeNazad ? '' : ' назад'))
-            ret = 'вчера';
+        let ret = (numberOfUnits > 1 ? numberOfUnits + ' ' : '') + numberOfUnits.formatSequence(labels, false) + (removeNazad ? '' : ' ' + nazad);
+        if (ret == day + (removeNazad ? '' : ' ' + nazad))
+            ret = yesterday;
 
         if (returnFull) {
             retArray.push(ret);
