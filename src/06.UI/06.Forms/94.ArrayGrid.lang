@@ -25,7 +25,6 @@ ui-fields-arraygrid:
   ru: Массив в виде грида
   en: Array as Grid
   hy: Զանգվածը որպես ցանց
-ui-arraygrid-титле: {}
 ui-arraygrid-title:
   ru: Добавить/Редактировать элемент
   en: Add/Edit element
