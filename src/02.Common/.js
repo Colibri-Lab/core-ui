@@ -100,9 +100,10 @@ Colibri.Common = class {
      * Loads a script from a URL.
      * @param {string} url - The URL of the script.
      * @param {string} [id=null] - The ID to assign to the script element.
+     * @param {Object} [params] - the parameters of script object
      * @returns {Promise} - A promise that resolves with the ID of the loaded script.
      */
-    static LoadScript(url, id = null) {
+    static LoadScript(url, id = null, params = {}) {
 
         if(document.getElementById(id)) {
             return new Promise((resolve, reject) => {
@@ -121,6 +122,9 @@ Colibri.Common = class {
             script.onerror = (e) => {
                 reject(e);
             };
+            Object.forEach(params, (name, value) => {
+                script[name] = value;
+            });
             script.id = id ? id : 'script_' + (new Date()).getTime();
             document.getElementsByTagName('head')[0].appendChild(script);
         });
