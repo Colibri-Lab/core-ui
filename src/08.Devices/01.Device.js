@@ -162,7 +162,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
      * @returns {boolean} True if the device platform is Android, otherwise false.
      */
     get isAndroid() {
-        return this._platform === Colibri.Devices.Device.Android;
+        return this._platform === Colibri.Devices.Device.Platform.Android;
     }
 
     /**
@@ -170,7 +170,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
      * @returns {boolean} True if the device platform is iOS, otherwise false.
      */
     get isIOs() {
-        return this._platform === Colibri.Devices.Device.IOs;
+        return this._platform === Colibri.Devices.Device.Platform.IOs;
     }
 
     /**
@@ -178,7 +178,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
      * @returns {boolean} True if the device platform is Windows, otherwise false.
      */
     get isWindows() {
-        return this._platform === Colibri.Devices.Device.Windows;
+        return this._platform === Colibri.Devices.Device.Platform.Windows;
     }
 
     /**
@@ -186,7 +186,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
      * @returns {boolean} True if the device platform is Web, otherwise false.
      */
     get isWeb() {
-        return this._platform === Colibri.Devices.Device.Web;
+        return this._platform === Colibri.Devices.Device.Platform.Web;
     }
 
     /**
