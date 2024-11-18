@@ -31,13 +31,15 @@
     }
 }
 
-@mixin custom-scroll($width, $bc, $stc, $sthc) {
+@mixin custom-scroll($width, $bc, $stc, $sthc, $round) {
     /* width */
     &::-webkit-scrollbar {
         width: $width;
         height: $width;
         border: 0px;
-        border-radius: 2px;
+        @if $round {
+            border-radius: $round;
+        }
 
     }
 
@@ -45,16 +47,18 @@
     &::-webkit-scrollbar-track {
         background: $bc;
         border: 0px;
-        border-radius: 2px;
-
+        @if $round {
+            border-radius: $round;
+        }
     }
 
     /* Handle */
     &::-webkit-scrollbar-thumb {
         background: $stc;
         border: 0px;
-        border-radius: 2px;
-
+        @if $round {
+            border-radius: $round;
+        }
         outline: none;
     }
 
