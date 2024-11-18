@@ -29,6 +29,9 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         this._clearIcon.value = Colibri.UI.ClearIcon;
         this._clearIcon.shown = false;
 
+        this._min = new Date(-8640000000000000);
+        this._max = new Date(8640000000000000);
+
         this._hiddenElement.addEventListener('click', (e) => {this.Dispatch('Clicked', { domEvent: e }); e.preventDefault(); e.stopPropagation(); return false;});
         this._hiddenElement.addEventListener('change', (e) => {
             this._showValue();
