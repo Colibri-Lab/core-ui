@@ -37,18 +37,24 @@
         width: $width;
         height: $width;
         border: 0px;
+        border-radius: 2px;
+
     }
 
     /* Track */
     &::-webkit-scrollbar-track {
         background: $bc;
         border: 0px;
+        border-radius: 2px;
+
     }
 
     /* Handle */
     &::-webkit-scrollbar-thumb {
         background: $stc;
         border: 0px;
+        border-radius: 2px;
+
         outline: none;
     }
 
