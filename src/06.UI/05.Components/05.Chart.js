@@ -106,6 +106,24 @@ Colibri.UI.Chart.Barchart = class extends Colibri.UI.Component {
     set value(value) {
         return this._barchart._element.css(this._orientation === 'vertical' ? 'height' : 'width', value + '%');
     }
+    
+    /**
+     * Force something visible
+     * @type {Boolean}
+     */
+    get forceVisible() {
+        return this._forceVisible;
+    }
+    /**
+     * Force something visible
+     * @type {Boolean}
+     */
+    set forceVisible(value) {
+        this._forceVisible = value;
+        if(value) {
+            this._barchart._element.css('min-height', '0.5%');
+        }
+    }
 
     /**
      * Chart value
