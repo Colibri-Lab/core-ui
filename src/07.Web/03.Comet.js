@@ -28,6 +28,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     /** @type {string} */
     _clientId = null;
 
+    static Options = {
+        origin: location.domain
+    };
+
     /**
      * @constructor
      * @param {object} settings - Settings for the Comet connection.
@@ -245,7 +249,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     Command(userGuid, action, message = null) {
         try {
             if(this._ws.readyState === 1) {
-                this._ws.send(JSON.stringify({action: action, user: userGuid, message: message, domain: document.domain}));
+                this._ws.send(JSON.stringify({action: action, user: userGuid, message: message, domain: Colibri.Web.Comet.Options.origin}));
             }
             else {
                 console.log('server goes away');
@@ -267,7 +271,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         try {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
-                this._ws.send(JSON.stringify({action: action, recipient: userGuid, message: {text: message, id: id}, domain: document.domain}));
+                this._ws.send(JSON.stringify({action: action, recipient: userGuid, message: {text: message, id: id}, domain: Colibri.Web.Comet.Options.origin}));
                 return id;
             }
             else {

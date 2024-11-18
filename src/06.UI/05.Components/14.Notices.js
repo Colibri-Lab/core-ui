@@ -38,35 +38,45 @@ Colibri.UI.Notices = class extends Colibri.UI.Pane {
             console.trace();
             debugger;
         }
-        const notice = this._group.AddItem(noticeData);
-        
-        const removeNotice = () => {
-            notice.RemoveClass(noticeData.className);
-            Colibri.Common.Delay(300).then(() => {
-                notice.height = 0;
-                return Colibri.Common.Delay(100);
-            }).then(() => {
-                notice.Dispose();
-                if(this._group.children == 0) {
-                    this.shown = false;
-                }
-            });
-        };
 
-        Colibri.Common.Delay(10).then(() => {
-
-            notice.AddClass(noticeData.className);
-
-            const icon = new Colibri.UI.Icon('icon', notice);
-            icon.shown = true;
-            icon.value = Colibri.UI.CloseIcon;
-            icon.AddClass('app-notice-icon-component');
-            icon.AddHandler('Clicked', removeNotice);
-            notice.AddHandler('Clicked', removeNotice);
-
-            Colibri.Common.Delay(noticeData.timeout).then(removeNotice);
+        if(App.Device.isWeb) {
+            const notice = this._group.AddItem(noticeData);
             
-        });
+            const removeNotice = () => {
+                notice.RemoveClass(noticeData.className);
+                Colibri.Common.Delay(300).then(() => {
+                    notice.height = 0;
+                    return Colibri.Common.Delay(100);
+                }).then(() => {
+                    notice.Dispose();
+                    if(this._group.children == 0) {
+                        this.shown = false;
+                    }
+                });
+            };
+    
+            Colibri.Common.Delay(10).then(() => {
+    
+                notice.AddClass(noticeData.className);
+    
+                const icon = new Colibri.UI.Icon('icon', notice);
+                icon.shown = true;
+                icon.value = Colibri.UI.CloseIcon;
+                icon.AddClass('app-notice-icon-component');
+                icon.AddHandler('Clicked', removeNotice);
+                notice.AddHandler('Clicked', removeNotice);
+    
+                Colibri.Common.Delay(noticeData.timeout).then(removeNotice);
+                
+            });
+        } else {
+
+            App.Device.Notifications.Schedule(noticeData.title, noticeData.message, null);
+            App.Device.Dialogs.Beep(1);
+
+        }
+
+        
         return notice;
     }
 
