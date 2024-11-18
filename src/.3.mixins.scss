@@ -31,7 +31,7 @@
     }
 }
 
-@mixin custom-scroll($width, $bc, $stc, $sthc, $round) {
+@mixin custom-scroll($width, $bc, $stc, $sthc, $round: 0px) {
     /* width */
     &::-webkit-scrollbar {
         width: $width;
