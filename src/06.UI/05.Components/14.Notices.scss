@@ -5,9 +5,16 @@
     top: 20px;
 
     width: 384px;
+    @include respond-to(420px) {
+        width: calc(100% - 20px);
+        right: 10px;
+    }
 
     .app-component-list {
         padding: 0px 20px;
+        @include respond-to(420px) {
+            padding: 0px 0px;
+        }
         overflow: hidden;
         overflow-y: auto;
         max-height: calc(100vh - 20px);
@@ -27,6 +34,10 @@
             width: 100%;
             margin-bottom: 20px;
             margin-left: 100%;
+            @include respond-to(420px) {
+                margin-left: unset;
+                margin-top: -100%;
+            }
     
             border-bottom: 0px;
     
@@ -59,6 +70,11 @@
                 position: relative;
                 opacity: 1;
                 margin-left: 0px;
+                @include respond-to(420px) {
+                    margin-left: unset;
+                    margin-top: 0px;
+                }
+        
                 background: white;
                 color: black;
                 &:hover, &.app-component-selected {
@@ -70,6 +86,10 @@
                 position: relative;
                 opacity: 1;
                 margin-left: 0px;
+                @include respond-to(420px) {
+                    margin-left: unset;
+                    margin-top: 0px;
+                }
                 background: #00B333;
                 &:hover, &.app-component-selected {
                     background: #00B333;
@@ -81,6 +101,10 @@
                 opacity: 1;
                 background: #ED3545;
                 margin-left: 0px;
+                @include respond-to(420px) {
+                    margin-left: unset;
+                    margin-top: 0px;
+                }
                 &:hover, &.app-component-selected {
                     background: #ED3545;
                 }
@@ -89,6 +113,10 @@
             &.app-notice-warning-component {
                 position: relative;
                 margin-left: 0px;
+                @include respond-to(420px) {
+                    margin-left: unset;
+                    margin-top: 0px;
+                }
                 opacity: 1;
                 background: #FF6A00;
                 &:hover, &.app-component-selected {
