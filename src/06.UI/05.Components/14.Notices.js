@@ -69,6 +69,8 @@ Colibri.UI.Notices = class extends Colibri.UI.Pane {
                 Colibri.Common.Delay(noticeData.timeout).then(removeNotice);
                 
             });
+            
+            return notice;
         } else {
 
             App.Device.Notifications.Schedule(noticeData.title, noticeData.message, null);
@@ -77,7 +79,7 @@ Colibri.UI.Notices = class extends Colibri.UI.Pane {
         }
 
         
-        return notice;
+        
     }
 
 }
