@@ -29,7 +29,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     _clientId = null;
 
     static Options = {
-        origin: location.domain
+        origin: location.host
     };
 
     /**
@@ -71,7 +71,6 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             deviceId = String.MD5(Date.Mc() + '');
             App.Browser.Set('device-id', deviceId);
         }
-        alert(deviceId);
         return deviceId;
     }
 
