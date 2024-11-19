@@ -70,7 +70,7 @@ Colibri.UI.Notices = class extends Colibri.UI.Pane {
                 
             });
             
-            return notice;
+            return notice; 
         } else {
 
             App.Device.Notifications.Schedule(noticeData.title, noticeData.message, null);
