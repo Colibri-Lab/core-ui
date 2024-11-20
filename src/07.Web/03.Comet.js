@@ -118,6 +118,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         if(this._ws) {
             this._ws.close();
             this._ws = null;
+            this._connected = false;
         }
     }
 
@@ -171,7 +172,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         console.log('#{ui-comet-connection-error}');
         // App.Notices.Add(new Colibri.UI.Notice('#{ui-comet-connection-error}'));
         // Colibri.Common.StopTimer('comet-timer');
-
+        this._connected = false;
     } 
 
 
@@ -291,6 +292,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      */
     get clientId() {
         return this._clientId;
+    }
+
+    get connected() {
+        return this._connected;       
     }
 
 }
