@@ -426,4 +426,11 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return this._sim;
     }
 
+    get Vibrate() {
+        if(!this._vibrate) {
+            this._vibrate = new Colibri.Devices.Vibrate(this);
+        }
+        return this._vibrate;
+    }
+
 }
