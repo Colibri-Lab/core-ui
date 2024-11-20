@@ -139,7 +139,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      */
     set sortState(value) {
         this._sortState = value;
-        this._sortHandler && this._sortHandler.html(value ? this.sortIcons[value] : '');
+        this._sortHandler && this._sortHandler.html(this.sortIcons[value ? value : 'none'] ?? '');
     }
 
     _bindResizeEvents() {
@@ -227,6 +227,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
 
     _createSortHandler() {
         this._sortHandler = Element.create('span', {class: 'sort-handler'});
+        this._sortHandler.html(this.sortIcons['none'] ?? '');
         this._element.append(this._sortHandler);
     }
 
