@@ -226,6 +226,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
     }
 
     _createSortHandler() {
+        this.AddClass('-sortable');
         this._sortHandler = Element.create('span', {class: 'sort-handler'});
         this._sortHandler.html(this.sortIcons['none'] ?? '');
         this._element.append(this._sortHandler);
@@ -233,6 +234,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
 
     _removeSortHandler() {
         this._sortHandler && this._sortHandler.remove();
+        this.RemoveClass('-sortable');
     }
 
     /**
