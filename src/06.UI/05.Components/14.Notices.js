@@ -66,7 +66,9 @@ Colibri.UI.Notices = class extends Colibri.UI.Pane {
                 icon.AddHandler('Clicked', removeNotice);
                 notice.AddHandler('Clicked', removeNotice);
     
-                Colibri.Common.Delay(noticeData.timeout).then(removeNotice);
+                if(noticeData.timeout > 0) {
+                    Colibri.Common.Delay(noticeData.timeout).then(removeNotice);
+                }
                 
             });
             
@@ -98,6 +100,9 @@ Colibri.UI.Notice = class {
     static Warning = 'warning';
     /** White message */
     static White = 'white';
+
+    /** Permanent notice */
+    static Permanent = 0;
 
     /** @type {object} */
     _exception = null;
