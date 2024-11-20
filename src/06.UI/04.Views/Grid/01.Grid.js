@@ -975,6 +975,10 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     _setSortAndOrder(column) {
+        if(!column.sortable) {
+            return;
+        }
+        
         const check = [this._sortColumn?.name, this._sortOrder];
         if(this._sortColumn && this._sortColumn === column) {
             if(this._sortOrder === null) {
