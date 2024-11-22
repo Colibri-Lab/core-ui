@@ -243,6 +243,13 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
             document.addEventListener("visibilitychange", () => {
                 this._isActive = !document.hidden;
             });
+
+            document.addEventListener('touchstart', (event) => {
+                const focused = document.activeElement;
+                if (focused && focused.tagName === 'INPUT') {
+                    focused.blur();
+                }
+            });
     
             this._initialized = true;
             
