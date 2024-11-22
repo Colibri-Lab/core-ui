@@ -30,16 +30,16 @@ Colibri.UI.Notices = class extends Colibri.UI.Pane {
             return;
         }
 
-        this.shown = true;
-        this.BringToFront();
-
-        if(noticeData.severity === Colibri.UI.Notice.Error) {
-            console.log(noticeData);
-            console.trace();
-            debugger;
-        }
-
         if(App.Device.isWeb) {
+            this.shown = true;
+            this.BringToFront();
+
+            if(noticeData.severity === Colibri.UI.Notice.Error) {
+                console.log(noticeData);
+                console.trace();
+                debugger;
+            }
+
             const notice = this._group.AddItem(noticeData);
             
             const removeNotice = () => {
