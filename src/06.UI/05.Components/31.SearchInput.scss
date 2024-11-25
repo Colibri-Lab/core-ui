@@ -1,0 +1,28 @@
+.colibri-ui-searchinput {
+ 
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: stretch;
+    gap: 5px;
+
+    [data-object-name="input"] {
+        flex: 1 1 100%;
+        border: 0px;
+        padding: 5px 0px;
+    }
+    [data-object-name="search"] {
+        flex: 0 0 14px !important;
+        width: 14px !important;
+        height: 14px !important;
+        cursor: pointer;
+        opacity: .5;
+    }
+
+    
+    background: #FFFFFF;
+    border: 1px solid #D1D7E9;
+    box-sizing: border-box;
+    border-radius: 3px;
+    padding: 0px 12px;
+
+}

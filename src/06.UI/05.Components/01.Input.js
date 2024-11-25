@@ -59,7 +59,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
                     this.Children('clear').shown = this._hasClearIcon && this._input.value.length > 0;
                 } 
             } else {
-                this.Children('clear').shown = true;
+                this.Children('clear').shown = this._input.value.length > 0;
             }
 
             this.Dispatch('KeyUp', { value: this.value, domEvent: e });
@@ -98,7 +98,6 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         };
 
         this._input.addEventListener('paste', pasteEventHandler);
-        this._input.addEventListener('input', pasteEventHandler);
 
         this.Children('clear').AddHandler('Clicked', (event, args) => {
             if(!this.enabled) {
@@ -111,7 +110,6 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
 
             this._input.value = '';
             this._input.focus();
-            // this._input.select();
             this.Children('clear').shown = this._showClearIconAllways;
             this.loading = false;
             this.Dispatch('Cleared', args);
