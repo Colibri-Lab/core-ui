@@ -1814,6 +1814,26 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
+     * Left of the scroll
+     * @type {Number}
+     */
+    get scrollLeft() {
+        return this._element.scrollLeft;
+    }
+    /**
+     * Left of the scroll
+     * @type {Number}
+     */
+    set scrollLeft(value) {
+        if(this._animateScroll) {
+            this._element.animateScrollLeft(value, 300);
+        }
+        else {
+            this._element.scrollLeft = value;
+        }
+    }
+
+    /**
      * Is scrolling must be animated
      * @type {boolean}
      */

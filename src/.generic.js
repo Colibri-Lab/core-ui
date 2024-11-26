@@ -2652,6 +2652,28 @@ Element.prototype.animateScrollTop = function (to, duration) {
     animateScroll();
 };
 
+/**
+ * Animates scrolling to a specified scrollTop value within a specified duration.
+ * @param {number} to - The target scrollTop value to scroll to.
+ * @param {number} duration - The duration of the animation in milliseconds.
+ */
+Element.prototype.animateScrollLeft = function (to, duration) {
+    let start = this.scrollLeft,
+        change = to - start,
+        currentTime = 0,
+        increment = 20;
+
+    const animateScroll = () => {
+        currentTime += increment;
+        let val = Math.easeInOutQuad(currentTime, start, change, duration);
+        this.scrollLeft = val;
+        if (currentTime < duration) {
+            setTimeout(animateScroll, increment);
+        }
+    };
+    animateScroll();
+};
+
 
 /**
  * Ensures that the element is visible within its parent container.
