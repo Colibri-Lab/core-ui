@@ -19,7 +19,7 @@ Colibri.UI.SearchInput = class extends Colibri.UI.FlexBox {
         this._input = this.Children('input');
         this._search = this.Children('search');
 
-        this._input.AddHandler(['KeyDown','Pasted'], (event, args) => this.__inputSearch(event, args));
+        this._input.AddHandler(['KeyDown','Pasted','Cleared'], (event, args) => this.__inputSearch(event, args));
         this._search.AddHandler('Clicked', (event, args) => this.Dispatch('Search', {value: this.value}));
 
     }
