@@ -250,7 +250,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      * @type {Colibri.UI.Header}
      */
     get header() {
-        return this.parent.parent;
+        return this?.parent?.parent;
     }
 
     /**

@@ -42,8 +42,8 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
         this._checkboxContainer = new Colibri.UI.Component('button-container-for-row-selection', this._title, Element.create('td'));
         this._checkboxContainer.AddClass('app-ui-row-cell');
-        this._checkboxContainer.shown = this.grid.showCheckboxes;
-        if (this.grid.showCheckboxes) {
+        this._checkboxContainer.shown = this.grid?.showCheckboxes ?? false;
+        if (this.grid?.showCheckboxes) {
             this._checkboxContainer.AddClass('input-checkbox-shown');
         }
 
@@ -86,7 +86,7 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         this.shown = true;
         let newRow = new Colibri.UI.Grid.Row(name, this);
         newRow.value = value;
-        newRow.hasContextMenu = this.grid.hasContextMenu;
+        newRow.hasContextMenu = this.grid?.hasContextMenu ?? false;
 
         // добавили, смотрим есть ли сортировка
         if(this.grid?.tag?.params?.sort) {
@@ -120,7 +120,7 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         });
 
         newRow.AddHandler('RowSelected', (event, args) => {
-            if (this.grid.selectionMode === Colibri.UI.Grid.FullRow) {
+            if (this.grid?.selectionMode === Colibri.UI.Grid.FullRow) {
                 if (!this.grid.multiple) { 
                     this.grid.UnselectAllRows();
                 }
@@ -220,7 +220,7 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
      * @readonly
      */
     get grid() {
-        return this.parent.parent;
+        return this?.parent?.parent;
     }
 
     /**
