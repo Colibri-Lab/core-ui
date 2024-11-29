@@ -131,7 +131,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
 
         if(currentSelection != index) {
             
-            this.Dispatch('Changed', {newIndex: index, oldIndex: currentSelection, tab: button, container: container});
+            this.Dispatch('Changed', {manual: false, newIndex: index, oldIndex: currentSelection, tab: button, container: container});
             // @deprecation warning !!
             this.Dispatch('SelectionChanged', {newIndex: index, oldIndex: currentSelection, tab: button, container: container});
             
@@ -140,7 +140,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     }
 
     DispatchChanged(){
-        this.Dispatch('Changed', {newIndex: this.selectedIndex, oldIndex: this.selectedIndex, tab: this.buttonsByIndex[this.selectedIndex], container: this.componentsByIndex[this.selectedIndex]});
+        this.Dispatch('Changed', {manual: true, newIndex: this.selectedIndex, oldIndex: this.selectedIndex, tab: this.buttonsByIndex[this.selectedIndex], container: this.componentsByIndex[this.selectedIndex]});
     }
 
     /**
