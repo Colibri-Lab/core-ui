@@ -31,6 +31,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
 
         this.GenerateChildren(element);
 
+
     }
 
     /** @protected */

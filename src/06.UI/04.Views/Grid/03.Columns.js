@@ -10,6 +10,8 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
         super(name, container, Element.create('tr'));
         this.AddClass('app-ui-header-columns');
         this.AddHandler('ChildAdded', (event, args) => this.__thisChildAdded(event, args));
+
+        this._columnsAddedEventSent = false;
     }
 
     /**
@@ -77,4 +79,5 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
     get count() {
         return this.children - 1;
     }
+
 }

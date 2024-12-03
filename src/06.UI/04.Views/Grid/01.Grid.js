@@ -1189,6 +1189,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             this._massActionsMenuObject.actions = this._massActionsMenu;
             this._massActionsMenuObject.selectedItems = this.checked;
             this._massActionsMenuObject.shown = true;
+            this._massActionsMenuObject.styles = {'max-width': container.container.bounds().outerWidth + 'px'};
 
         }
     }

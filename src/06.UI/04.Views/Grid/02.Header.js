@@ -25,28 +25,19 @@ Colibri.UI.Grid.Header = class extends Colibri.UI.Component {
     /** @protected */
     _registerEvents() {
         super._registerEvents();
-        this.RegisterEvent('ColumnAdded', false, 'Поднимается, когда добавляется колонка');
-        this.RegisterEvent('ColumnStickyChange', false, 'Поднимается, когда колонка меняет липкость');
-        this.RegisterEvent('ColumnClicked', false, 'Поднимается, когда щелкнули по колонке в заголовке');
-        this.RegisterEvent('ColumnDisposed', false, 'Поднимается, когда удалили колонку');
+        this.RegisterEvent('ColumnAdded', false, 'When column was added');
+        this.RegisterEvent('ColumnStickyChange', false, 'When sticky of column was changed');
+        this.RegisterEvent('ColumnClicked', false, 'When column was clicked');
+        this.RegisterEvent('ColumnDisposed', false, 'When column was deleted');
     }
 
     _handleEvents(columns, checkbox) {
-        columns.AddHandler('ColumnAdded', (event, args) => {
-            this.Dispatch('ColumnAdded', Object.assign(args, {columns: columns}));
-        });
 
-        columns.AddHandler('ColumnStickyChange', (event, args) => {
-            this.Dispatch('ColumnStickyChange', Object.assign(args, {columns: columns}));
-        });
-
-        columns.AddHandler('ColumnClicked', (event, args) => {
-            this.Dispatch('ColumnClicked', Object.assign(args, {columns: columns}));
-        });
-
-        columns.AddHandler('ColumnDisposed', (event, args) => {
-            this.Dispatch('ColumnDisposed', Object.assign(args, {columns: columns}));
-        });
+        columns.AddHandler('ColumnAdded', (event, args) => this.Dispatch('ColumnAdded', Object.assign(args, {columns: columns})));
+        columns.AddHandler('ColumnStickyChange', (event, args) => this.Dispatch('ColumnStickyChange', Object.assign(args, {columns: columns})));
+        columns.AddHandler('ColumnClicked', (event, args) => this.Dispatch('ColumnClicked', Object.assign(args, {columns: columns})));
+        columns.AddHandler('ColumnDisposed', (event, args) => this.Dispatch('ColumnDisposed', Object.assign(args, {columns: columns})));
+        
         checkbox.AddHandler('Changed', (event, args) => {
             Object.forEach(this.grid.groups, (name, group) => {
                 group.ForEach((name, row) => {
@@ -88,6 +79,7 @@ Colibri.UI.Grid.Header = class extends Colibri.UI.Component {
 
 
         this._handleEvents(columns, checkbox);
+
         return [columns, checkbox];
     }
 
