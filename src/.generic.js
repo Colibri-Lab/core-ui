@@ -1079,6 +1079,14 @@ String.prototype.rtrim = function (c) { return this.replace(new RegExp((c != und
 String.prototype.trimString = function (c) {
     return this.replace(new RegExp('^' + (c != undefined ? RegExp.quote(c) : '\\s') + '*(.*?)' + (c != undefined ? RegExp.quote(c) : '\\s') + '*$'), '$1');
 }
+String.prototype.containsSymbols = function(arr) {
+    for(const s of arr) {
+        if(this.indexOf(s) === false) {
+            return false;
+        }
+    }
+    return true;
+};
 /**
  * Splits the string into an array of substrings using the specified separator.
  * @param {string} separator - The string or regular expression used to separate the string.
