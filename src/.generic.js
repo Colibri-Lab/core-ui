@@ -1081,7 +1081,7 @@ String.prototype.trimString = function (c) {
 }
 String.prototype.containsSymbols = function(arr) {
     for(const s of arr) {
-        if(this.indexOf(s) === false) {
+        if(this.indexOf(s) === -1) {
             return false;
         }
     }
