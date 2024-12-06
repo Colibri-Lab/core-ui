@@ -157,7 +157,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
                 component.ForEveryField((name, field) => {
                     let def = field?.field?.default;
                     if(field?.field?.params?.generator) {
-                        const gen = eval(component.field.params.generator);
+                        const gen = typeof field?.field?.params?.generator === 'string' ? eval(field.field.params.generator) : field.field.params.generator;
                         def = gen(value, component, this);
                     }    
                     if(!this._value) {
@@ -171,7 +171,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
             else {
                 let def = component?.field?.default;
                 if(component?.field?.params?.generator) {
-                    const gen = eval(component.field.params.generator);
+                    const gen = typeof component?.field?.params?.generator === 'string' ? eval(component.field.params.generator) : component?.field?.params?.generator;
                     def = gen(value, component, this);
                 }
                 if(!value) {
@@ -299,7 +299,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
                 fieldComponent._calcRuntimeValues();
             } else {
                 if(fieldData?.params?.valuegenerator) {
-                    const f = eval(fieldData?.params?.valuegenerator);
+                    const f = typeof fieldData?.params?.valuegenerator === 'string' ? eval(fieldData?.params?.valuegenerator) : fieldData?.params?.valuegenerator;
                     const v = f(this.value, this.root?.value, fieldComponent, this.root);
                     fieldComponent.value = v;
                 }

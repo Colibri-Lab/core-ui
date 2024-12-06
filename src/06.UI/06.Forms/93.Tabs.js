@@ -337,7 +337,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
                 fieldComponent._calcRuntimeValues();
             } else {
                 if(fieldData?.params?.valuegenerator) {
-                    const f = eval(fieldData?.params?.valuegenerator);
+                    const f = typeof fieldData?.params?.valuegenerator === 'string' ? eval(fieldData?.params?.valuegenerator) : fieldData?.params?.valuegenerator;
                     const v = f(this.value, this.root?.value, fieldComponent, this.root);
                     fieldComponent.value = v;
                 }
