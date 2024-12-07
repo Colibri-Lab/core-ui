@@ -43,7 +43,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     _registerEventHandlers() {
         this.AddHandler('Changed', (event, args) => {
             this._hideAndShow();
-            this._calcRuntimeValues();
+            this._calcRuntimeValues(args.component);
         });
     }
 
@@ -56,7 +56,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     }
 
     /** @protected */
-    _calcRuntimeValues(rootValue = null) {
+    _calcRuntimeValues(changedComponent = null) {
         if(this._calculating || !this.needRecalc) {
             return;
         }
@@ -71,11 +71,11 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                 } 
 
                 if(fieldComponent instanceof Colibri.UI.Forms.Object || fieldComponent instanceof Colibri.UI.Forms.Array || fieldComponent instanceof Colibri.UI.Forms.Tabs) {
-                    fieldComponent._calcRuntimeValues();
+                    fieldComponent._calcRuntimeValues(changedComponent);
                 } else {
                     if(fieldData?.params?.valuegenerator) {
                         const f = typeof fieldData?.params?.valuegenerator === 'string' ? eval(fieldData?.params?.valuegenerator) : fieldData?.params?.valuegenerator;
-                        const v = f(fieldComponent.value, this.value, fieldComponent, this);
+                        const v = f(fieldComponent.value, this.value, fieldComponent, this, changedComponent);
                         fieldComponent.value = v;
                     }
                 }

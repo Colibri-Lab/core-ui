@@ -284,7 +284,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
     }
 
     /** @protected */
-    _calcRuntimeValues(rootValue = null) {
+    _calcRuntimeValues(changedComponent = null) {
         if(!this.needRecalc) {
             return;
         }
@@ -296,11 +296,11 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
             const fieldData = fieldComponent.field;
             if(fieldComponent instanceof Colibri.UI.Forms.Object || fieldComponent instanceof Colibri.UI.Forms.Array || fieldComponent instanceof Colibri.UI.Forms.Tabs) {
-                fieldComponent._calcRuntimeValues();
+                fieldComponent._calcRuntimeValues(changedComponent);
             } else {
                 if(fieldData?.params?.valuegenerator) {
                     const f = typeof fieldData?.params?.valuegenerator === 'string' ? eval(fieldData?.params?.valuegenerator) : fieldData?.params?.valuegenerator;
-                    const v = f(this.value, this.root?.value, fieldComponent, this.root);
+                    const v = f(this.value, this.root?.value, fieldComponent, this.root, changedComponent);
                     fieldComponent.value = v;
                 }
             }
