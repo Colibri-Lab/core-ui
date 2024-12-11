@@ -37,11 +37,10 @@ Colibri.UI.DateTimeViewer = class extends Colibri.UI.Viewer {
      */
     set value(value) {
         value = this._convertValue(value);
-        if(typeof value === 'string') {
+        if(value && value.isNumeric()) {
+            value = value > 0 ? parseInt(value).toDateFromUnixTime() : null;
+        } else if(value && typeof value === 'string') {
             value = value.toDate();
-        }
-        else if(typeof value === 'number') {
-            value = value.toDateFromUnixTime();
         }
         this._value = value;
     
