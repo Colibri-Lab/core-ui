@@ -386,6 +386,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     /** @private */
     _renderField(name, fieldData, value, shown = true) {
+        
         const root = this.root || this;
         const component = Colibri.UI.Forms.Field.Create(name, this, fieldData, null, root);
         if(!component) {
@@ -433,6 +434,9 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         let hasGroups = false;
         Object.forEach(this._fields, (name, fieldData) => {
             fieldData = Object.cloneRecursive(fieldData);
+            if(fieldData.virtual) {
+                return true;
+            }
             fieldData.group && (fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group);
             if(!fieldData.group || fieldData.group === 'window') {
                 this._renderField(name, fieldData, value, true);
