@@ -1589,6 +1589,9 @@ String.prototype.fromCamelCase = function (splitter) {
     return this.replaceAll(new RegExp('([A-Z])'), (v) => { return splitter + v.toLowerCase(); }).rtrim('-').ltrim('-');
 
 };
+String.prototype.countCharIn = function(c) {
+    return (this.match(new RegExp(c, "g")) || []).length;
+};
 /**
  * Retrieves the first character of each word in the string.
  * @returns {string} The concatenated first characters of words.
