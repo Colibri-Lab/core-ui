@@ -550,14 +550,14 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
     /**
      * Can search in items
-     * @type {boolean}
+     * @type {Boolean}
      */
     get searchable() {
         return this._searchable;
     }
     /**
      * Can search in items
-     * @type {boolean}
+     * @type {Boolean}
      */
     set searchable(value) {
         this._searchable = value === true || value === 'true';

@@ -2220,6 +2220,7 @@ Date.prototype.toUnixTime = function () { return this.getTime() / 1000; };
  * @returns {string} The formatted short date string.
  */
 Date.prototype.toShortDateString = function () { return this.getFullYear() + '-' + ((this.getMonth() + 1) + '').expand('0', 2) + '-' + (this.getDate() + '').expand('0', 2); };
+Date.prototype.toDatePeriodString = function () { return this.getFullYear() + '-' + ((this.getMonth() + 1) + '').expand('0', 2); };
 /**
  * Formats the time part of the date as a string in the 'HH:mm:ss' format.
  * @param {boolean} [hasSeconds=true] - Whether to include seconds in the output.
