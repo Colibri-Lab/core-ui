@@ -2520,6 +2520,9 @@ Date.prototype.intlFormat = function (withTime = false, withoutDay = false) {
         delete params.day;
     }
     const format = new Intl.DateTimeFormat(dateformat, params);
+    if((this + '') === 'Invalid Date') {
+        return '';
+    }
     return format.format(this);
 };
 /**
@@ -3171,6 +3174,14 @@ Element.prototype.html = function (value) {
         this.innerHTML = value;
         return this;
     }
+};
+
+/**
+ * Retrieves the ouer HTML content of the element.
+ * @returns {Element|string} The element itself or the HTML content.
+ */
+Element.prototype.outerHtml = function () {
+    return this.outerHTML;
 };
 
 /**
