@@ -42,9 +42,9 @@
 
     }
 
-    &.-has-icon {
+    &.-has-icon [data-object-name$=-content] > [data-object-name$=-container] {
         input {
-            padding: 5px 12px 5px 24px;
+            padding: 5px 12px 5px 40px;
         }
     }
     

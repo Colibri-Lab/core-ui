@@ -15,6 +15,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     static __nullHandler = (event, args) => {};
     static __disableHandler = (event, args) => { args.domEvent?.stopPropagation(); args.domEvent?.preventDefault(); return false; };
+    __containerScrollHandler = (e) => {
+        console.log('scrolled'); 
+        this.Dispatch('ScrolledIn', {domEvent: e}); 
+    }
 
     /**
      * Dom events map to Colibri events
@@ -550,6 +554,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.RegisterEvent('Drag', false, 'When the drag and drop process occurs');
         this.RegisterEvent('ContextMenu', false, 'Context menu');
         this.RegisterEvent('Scrolled', false, 'When scrolled');
+        this.RegisterEvent('ScrolledIn', false, 'When component moved in scroll container');
         this.RegisterEvent('VisibilityChanged', false, 'When the display state changed');
         this.RegisterEvent('SwipedToLeft', false, 'When the user swiped left with their finger/mouse');
         this.RegisterEvent('SwipedToRight', false, 'When the user swiped/mouse to the right');
@@ -2554,5 +2559,27 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return this._element.isValueExceeded();
     }
 
+    /**
+     * Handle container scroll
+     * @type {Boolean}
+     */
+    get handleContainerScroll() {
+        return this._handleContainerScroll;
+    }
+    /**
+     * Handle container scroll
+     * @type {Boolean}
+     */
+    set handleContainerScroll(value) {
+        this._handleContainerScroll = value;
+        this._showHandleContainerScroll();
+    }
+    _showHandleContainerScroll() {
+        if(this._handleContainerScroll) {
+            document.addEventListener('scroll', this.__containerScrollHandler, true);
+        } else {
+            document.removeEventListener('scroll', this.__containerScrollHandler, true);
+        }
+    }
 
 }

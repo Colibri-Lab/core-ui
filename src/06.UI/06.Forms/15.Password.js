@@ -88,6 +88,12 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
             this.Dispatch('PasswordValidated', {strength: strength});
         });
 
+        this.AddHandler('ScrolledIn', (event, args) => {
+            console.log(this._passwordTip.shown);
+            if(this._passwordTip.shown) {
+                this._passwordTip._setPosition();
+            }
+        });
 
     }
 
@@ -96,6 +102,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         if(this._passwordTip) {
             Colibri.Common.Delay(2000).then(() => {
                 this._passwordTip.Hide();
+                this.handleContainerScroll = false;
             })
         }
     }
@@ -151,6 +158,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
                 this._hidePasswordTip();
             } else if(this.value.length > 0 && this.elementIsInOffset) {
                 this._passwordTip.Show(this.contentContainer, true);
+                this.handleContainerScroll = true;
             }     
             
         }
