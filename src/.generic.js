@@ -948,6 +948,14 @@ Object.filter = function (obj, func) {
     return newObject;
 };
 
+Object.pluck = function(obj, keys) {
+    const nobj = {};
+    for(const key of keys) {
+        nobj[key] = obj[key];
+    }
+    return nobj;
+}
+
 /**
  * 
  * @param {object} textAsObject object to render

@@ -104,6 +104,23 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
      * Makes a remote procedure call.
      * @param {string} controller - The controller name.
      * @param {string} method - The method to execute.
+     * @returns {string}
+     */
+    GetEntryPoint(controller, method, params = null) {
+        const requestType = params && params._requestType ? params._requestType : this._requestType;
+        let url = null;
+        if (!this._urlResolver || typeof this._urlResolver !== 'function') {
+            url = this._prepareStrings((this._moduleEntry ? '\\Modules\\' + this._moduleEntry : '') + '\\' + controller + '\\' + method + '.' + requestType);
+        } else {
+            url = this._urlResolver(this._moduleEntry, controller, method, requestType, params, headers, withCredentials);
+        }
+        return url;
+    }
+
+    /**
+     * Makes a remote procedure call.
+     * @param {string} controller - The controller name.
+     * @param {string} method - The method to execute.
      * @param {Object} [params=null] - The parameters to pass.
      * @param {Object} [headers={}] - The headers.
      * @param {boolean} [withCredentials=true] - Whether to include credentials.
@@ -114,8 +131,8 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
 
         const request = new Colibri.IO.Request();
         this._workingRequests[requestKeyword] = request;
-        
-        const requestMethod = params && params._requestMethod && params._requestMethod === 'get' ? 'Get' : 'Post'; 
+
+        const requestMethod = params && params._requestMethod && params._requestMethod === 'get' ? 'Get' : 'Post';
         const requestType = params && params._requestType ? params._requestType : this._requestType;
         const requestCache = params && params._requestCache ? params._requestCache : false;
         const uploadProgress = params && params._uploadProgress ? params._uploadProgress : false;
@@ -124,56 +141,56 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
         headers.requester = location.hostname;
 
         return new Promise((resolve, reject) => {
-            
+
             let url = null;
-            
+
             // if url resolver is not set
-            if(!this._urlResolver || typeof this._urlResolver !== 'function') {
-                url = this._prepareStrings((this._moduleEntry ? '\\Modules\\' + this._moduleEntry : '') + '\\' +  controller + '\\' + method + '.' + requestType);
+            if (!this._urlResolver || typeof this._urlResolver !== 'function') {
+                url = this._prepareStrings((this._moduleEntry ? '\\Modules\\' + this._moduleEntry : '') + '\\' + controller + '\\' + method + '.' + requestType);
             } else {
                 url = this._urlResolver(this._moduleEntry, controller, method, requestType, params, headers, withCredentials);
             }
 
-            if(this._remoteDomain) {
+            if (this._remoteDomain) {
                 url = this._remoteDomain + url;
             }
 
-            const requestUnique = String.MD5(JSON.stringify(Object.sortPropertiesRecursive({url: url, params: params, headers: headers})));
-            if(requestCache && this._requestsCache['cache' + requestUnique]) {
+            const requestUnique = String.MD5(JSON.stringify(Object.sortPropertiesRecursive({ url: url, params: params, headers: headers })));
+            if (requestCache && this._requestsCache['cache' + requestUnique]) {
                 Colibri.Common.Wait(() => this._requestsCache['cache' + requestUnique].working !== true).then(() => {
                     const data = this._requestsCache['cache' + requestUnique];
                     delete this._workingRequests[requestKeyword];
-                    this.Dispatch('CallCompleted', {result: data.result, request: requestKeyword});
-                    this.Dispatch('ResultsProcessed', {result: data.result});
-                    resolve(data);    
+                    this.Dispatch('CallCompleted', { result: data.result, request: requestKeyword });
+                    this.Dispatch('ResultsProcessed', { result: data.result });
+                    resolve(data);
                 });
                 return;
             } else {
-                this._requestsCache['cache' + requestUnique] = {working: true};
+                this._requestsCache['cache' + requestUnique] = { working: true };
             }
 
             request.AddHeaders(headers);
             request[requestMethod](url, params, withCredentials, (progressEvent) => {
-                if(uploadProgress) {
+                if (uploadProgress) {
                     uploadProgress(progressEvent, requestKeyword);
                 }
-                this.Dispatch('CallProgress', {event: progressEvent, request: requestKeyword});
+                this.Dispatch('CallProgress', { event: progressEvent, request: requestKeyword });
             }).then((data) => {
-                
+
                 delete this._workingRequests[requestKeyword];
 
-                this.Dispatch('CallCompleted', {result: data.result, request: requestKeyword});
+                this.Dispatch('CallCompleted', { result: data.result, request: requestKeyword });
 
                 try {
-                    if(requestType == 'json') {
+                    if (requestType == 'json') {
                         data.result = JSON.parse(data.result);
-                    } else if(requestType == 'xml') {
+                    } else if (requestType == 'xml') {
                         data.result = new DOMParser().parseFromString(data.result, "text/xml");
-                    } else if(requestType == 'stream') {
+                    } else if (requestType == 'stream') {
                         const disposition = data.headers['content-disposition'];
                         let name = '';
                         let ext = '';
-                        if(disposition) {
+                        if (disposition) {
                             name = disposition.split('filename=')[1].replaceAll('"', '');
                             ext = name.split('.').pop();
                         }
@@ -185,7 +202,7 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
                         };
                     }
                 }
-                catch(e) {
+                catch (e) {
                     console.log(url, params, withCredentials, e);
                     data.result = {};
                 }
@@ -193,20 +210,20 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
                 // ! для конвертации 
                 // data.result = Object.cloneRecursive(data.result, Object.convertToExtended);
 
-                this.Dispatch('ResultsProcessed', {result: data.result});
+                this.Dispatch('ResultsProcessed', { result: data.result });
 
-                if(requestCache) {
+                if (requestCache) {
                     this._requestsCache['cache' + requestUnique] = Object.cloneRecursive(data);
                 }
 
-                resolve(data); 
+                resolve(data);
 
             }).catch((data) => {
                 delete this._workingRequests[requestKeyword];
                 try {
                     data.result = JSON.parse(data?.result || '{}');
-                } catch(e) {}
-                this.Dispatch('CallError', {error: data.result, status: data.status});
+                } catch (e) { }
+                this.Dispatch('CallError', { error: data.result, status: data.status });
                 reject(data);
 
             });
