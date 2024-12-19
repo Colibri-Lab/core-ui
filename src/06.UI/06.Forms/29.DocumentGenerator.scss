@@ -1,3 +1,39 @@
-.colibri-ui-forms-documentgenerator {
-    
+.app-component-documentgenerator-field {
+
+    [data-object-name$="-container"] {
+        &.app-component-shown {
+            display: flex;
+        }
+        flex-direction: column;      
+        gap: 20px;     
+        
+        [data-object-name="generated-flex"] {
+            align-items: center;
+            justify-content: flex-start;
+            [data-object-name="generated-icon"] {
+                width: 40px;
+                height: 40px;
+            }
+            [data-object-name="generated"] {
+                font-size: 24px;
+            }
+        }
+        [data-object-name="note"] {
+            font-size: 18px;
+            line-height: 22px;
+        }
+        [data-object-name="loading-flex"] {
+            align-items: center;
+            justify-content: center;
+            [data-object-name="loading"] {
+                background: transparent;
+                align-items: center;
+                justify-content: flex-start;
+                height: auto;
+                svg path {
+                    stroke: black;
+                }
+            }
+        }
+    }
 }

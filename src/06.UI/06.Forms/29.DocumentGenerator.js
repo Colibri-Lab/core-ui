@@ -10,7 +10,7 @@ Colibri.UI.Forms.DocumentGenerator = class extends Colibri.UI.Forms.Field {
      * Render field component
      */
     RenderFieldContainer() {
-        this.AddClass('colibri-ui-forms-documentgenerator');
+        this.AddClass('app-component-documentgenerator-field');
 
         
         if(this._fieldData?.params?.readonly === undefined) {
