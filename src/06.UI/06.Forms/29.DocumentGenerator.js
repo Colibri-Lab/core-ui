@@ -55,16 +55,21 @@ Colibri.UI.Forms.DocumentGenerator = class extends Colibri.UI.Forms.Field {
      * 
      */
     __generatedFileLinkClicked(event, args) {
-        Colibri.IO.Request.Post(this._generatorOptions.fileLink, {guid: this._value.guid}).then((result) => {
-            console.log(result);
+        const module = typeof this._generatorOptions.fileLink.module === 'string' ? eval(this._generatorOptions.fileLink.module) : this._generatorOptions.fileLink.module;
+        module.Call(
+            this._generatorOptions.fileLink.controller, 
+            this._generatorOptions.fileLink.method, 
+            {guid: this._value.guid, _requestType: 'stream'}
+        ).then((response) => {
+            DownloadFile(response.result.content, response.result.name, response.result.mimetype, true);    
         });
     }
 
     _startGeneratedProcess() {
         
         const gen = this._generatorOptions.method;
-        gen(this).then((result) => {
-            console.log(result);
+        gen(this).then((fileStat) => {
+            this.value = fileStat;
         });
     }
 

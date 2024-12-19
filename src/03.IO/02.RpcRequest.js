@@ -106,8 +106,7 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
      * @param {string} method - The method to execute.
      * @returns {string}
      */
-    GetEntryPoint(controller, method, params = null) {
-        const requestType = params && params._requestType ? params._requestType : this._requestType;
+    GetEntryPoint(controller, method, requestType = 'json') {
         let url = null;
         if (!this._urlResolver || typeof this._urlResolver !== 'function') {
             url = this._prepareStrings((this._moduleEntry ? '\\Modules\\' + this._moduleEntry : '') + '\\' + controller + '\\' + method + '.' + requestType);
