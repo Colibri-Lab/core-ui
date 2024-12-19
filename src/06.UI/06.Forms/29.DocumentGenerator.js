@@ -92,11 +92,13 @@ Colibri.UI.Forms.DocumentGenerator = class extends Colibri.UI.Forms.Field {
         if(this._value === null || !this._value?.guid) {
             this._loadingFlexBox.shown = true;
             this._generatedFlexBox.shown = false;
+            this._note.shown = false;
             this._startGeneratedProcess();
         } else {
             this._loadingFlexBox.shown = false;
             this._generatedFlexBox.shown = true;
             this._generatedFileIcon.iconSVG = this._generatorOptions.fileIcon;
+            this._note.shown = true;
             
         }
     }
