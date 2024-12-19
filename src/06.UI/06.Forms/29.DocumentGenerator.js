@@ -61,11 +61,10 @@ Colibri.UI.Forms.DocumentGenerator = class extends Colibri.UI.Forms.Field {
     }
 
     _startGeneratedProcess() {
-        console.log(this._generatorOptions);
         
         const gen = this._generatorOptions.method;
         gen(this).then((result) => {
-
+            console.log(result);
         });
     }
 
