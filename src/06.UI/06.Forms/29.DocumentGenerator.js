@@ -26,7 +26,7 @@ Colibri.UI.Forms.DocumentGenerator = class extends Colibri.UI.Forms.Field {
             this.enabled = this._fieldData.params.enabled;
         }
 
-        this._generatorOptions = this._fieldData?.params?.documentGenerator ?? {};
+        this._generatorOptions = Object.assign({changeOnDownload: false, changeOnGenerate: true}, this._fieldData?.params?.documentGenerator ?? {});
         
         this._loadingFlexBox = new Colibri.UI.FlexBox('loading-flex', this.contentContainer);
         this._loading = new Colibri.UI.Loading('loading', this._loadingFlexBox);
@@ -62,6 +62,9 @@ Colibri.UI.Forms.DocumentGenerator = class extends Colibri.UI.Forms.Field {
             {guid: this._value.guid, _requestType: 'stream'}
         ).then((response) => {
             DownloadFile(response.result.content, response.result.name, response.result.mimetype, true);    
+            if(this._generatorOptions.changeOnDownload) {
+                this.Dispatch('Changed', {component: this});
+            }
         });
     }
 
@@ -70,6 +73,9 @@ Colibri.UI.Forms.DocumentGenerator = class extends Colibri.UI.Forms.Field {
         const gen = this._generatorOptions.method;
         gen(this).then((fileStat) => {
             this.value = fileStat;
+            if(this._generatorOptions.changeOnGenerate) {
+                this.Dispatch('Changed', {component: this});
+            }
         });
     }
 
