@@ -203,7 +203,6 @@ Colibri.UI.DeferredFormValidator = class {
         }
 
         for(const field of fields) {
-            console.log(field.__validating, field);
             if(field.__validating) {
                 return true;
             }
