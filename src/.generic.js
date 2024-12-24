@@ -281,6 +281,14 @@ Array.prototype.part = function (l) {
     return ret;
 }
 
+Array.prototype.toObjectFromKeys = function () {
+    const ret = {};
+    for (const k of this) {
+        ret[k] = null;
+    }
+    return ret;
+}
+
 /**
  * Returns the last 'n' elements of the array and removes them from the original array.
  * @param {number} n - The number of elements to return.
@@ -533,6 +541,10 @@ Object.fromObjectAsTrue = function (object) {
 Object.isObject = function (o) {
     return o instanceof Object && !Array.isArray(o);
 }
+
+Object.isEmpty = function(o) {
+    return Object.values(o).filter(v => v !== '' && v !== null).length === 0;
+};
 
 /**
  * Converts an object to an extended object (not implemented).

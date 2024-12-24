@@ -22,7 +22,9 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
 
         this._link = new Colibri.UI.Link('link', contentContainer);
         this._link.shown = true;
-        this._link.value = '#{ui-fields-keyvalueobject-add}'
+        this._link.value = this._fieldData?.params?.addlink && !Object.isEmpty(this._fieldData?.params?.addlink) ? 
+            Lang.Translate(this._fieldData?.params?.addlink) : 
+            '#{ui-fields-keyvalueobject-add}'
 
         if(this._fieldData?.params?.readonly === undefined) {
             this.readonly = false;    
@@ -189,6 +191,21 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
      */
     set height(value) {
         this._grid.height = value;
+    }
+
+    /**
+     * Can add new rows
+     * @type {Boolean}
+     */
+    get canAddNew() {
+        return this._link.shown;
+    }
+    /**
+     * Can add new rows
+     * @type {Boolean}
+     */
+    set canAddNew(value) {
+        this._link.shown = value;
     }
     
 
