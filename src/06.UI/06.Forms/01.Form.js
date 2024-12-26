@@ -76,7 +76,9 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                     if(fieldData?.params?.valuegenerator) {
                         const f = typeof fieldData?.params?.valuegenerator === 'string' ? eval(fieldData?.params?.valuegenerator) : fieldData?.params?.valuegenerator;
                         const v = f(fieldComponent.value, this.value, fieldComponent, this, changedComponent);
-                        fieldComponent.value = v;
+                        if(v !== undefined) {
+                            fieldComponent.value = v;
+                        }
                     }
                 }
             });
