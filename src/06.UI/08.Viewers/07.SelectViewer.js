@@ -132,7 +132,8 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
             else {
                 if(Object.isObject(value)) {
                     try {
-                        super.value = value[this._field?.selector?.title ?? 'title'][Lang.Current] ?? value[this._field?.selector?.title ?? 'title'];
+                        
+                        super.value = Lang.Translate(value[this._field?.selector?.title ?? 'title']) ?? value[this._field?.selector?.title ?? 'title'];
                     } catch(e) {}
                 }
                 else if (this._field?.lookup) {
