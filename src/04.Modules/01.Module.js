@@ -44,6 +44,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
         }
 
         this.Dispatch('ModuleInitialized');
+        this._startDeferedTimer(500, 'Defered', 'Execute');
 
     }
 

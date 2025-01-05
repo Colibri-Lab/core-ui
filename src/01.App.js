@@ -61,13 +61,14 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
      */
     RegisterEvents() { 
         this.RegisterEvent('Event', false, 'When any event dispatched');
-        this.RegisterEvent('DocumentReady', false, 'Когда DOM готов');
-        this.RegisterEvent('DocumentChanged', false, 'Когда DOM изменился'); 
-        this.RegisterEvent('ApplicationReady', false, 'Приложение загружено');
-        this.RegisterEvent('UserAuthorized', false, 'Пользователь вошел'); 
-        this.RegisterEvent('UserUnauthorized', false, 'Пользователь вышел');
-        this.RegisterEvent('DocumentShown', false, 'Документ отображен');
-        this.RegisterEvent('DocumentHidden', false, 'Документ скрыт');
+        this.RegisterEvent('DocumentReady', false, 'When document is ready');
+        this.RegisterEvent('DocumentChanged', false, 'When document changed'); 
+        this.RegisterEvent('ApplicationReady', false, 'Application is ready for use');
+        this.RegisterEvent('UserAuthorized', false, 'User is logged'); 
+        this.RegisterEvent('UserUnauthorized', false, 'User is unlogged');
+        this.RegisterEvent('DocumentShown', false, 'Document shown');
+        this.RegisterEvent('DocumentHidden', false, 'Document hidden');
+        this.RegisterEvent('DocumentUnloaded', false, 'Document well be unloaded');
     }
 
     /**
@@ -201,6 +202,11 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                             else {
                                 this.Dispatch('DocumentShown', {});
                             }
+                        });
+
+                        window.addEventListener('beforeunload', (e) => {
+                            this._initialized = false;
+                            this.Dispatch('DocumentUnloaded', {});  
                         });
     
                         if(settings?.screen?.theme === 'follow-device') {

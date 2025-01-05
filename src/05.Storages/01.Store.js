@@ -546,7 +546,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         }
 
         let realpath = 'this._data';
-        let data = this._data;
+        let data = this._data || {};
         for(let i=0; i<p.length; i++) {
             if((data[p[i]] ?? undefined) === undefined) {
                 data[p[i]] = {};
@@ -559,6 +559,9 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         }
 
         if(d !== null) {
+            if(this._data === null) {
+                this._data = {};
+            }
             eval(realpath + ' = d;');
         }
         else {
