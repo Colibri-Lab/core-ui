@@ -71,11 +71,11 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
      * @param {string} title title of button
      * @returns {Colibri.UI.Button}
      */
-    AddButton(name, title, tag = {}) {
+    AddButton(name, title, tag = {}, buttonClass = null) {
         if(this.Children(name)) {
             return this.Children(name);
         }
-        const button = new Colibri.UI.Button(name, this);
+        const button = new (!buttonClass ? Colibri.UI.Button : buttonClass)(name, this);
         button.value = (Lang ? Lang.Translate(title) : title);
         button.shown = true;
         button.tag = tag;

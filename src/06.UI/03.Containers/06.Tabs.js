@@ -341,15 +341,15 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     }
 
     /**
-     * 
-     * @type {}
+     * Show all tabs in document DOM
+     * @type {Boolean}
      */
     get allTabsInDoc() {
         return this._allTabsInDoc;
     }
     /**
-     * 
-     * @type {}
+     * Show all tabs in document DOM
+     * @type {Boolean}
      */
     set allTabsInDoc(value) {
         this._allTabsInDoc = value;
