@@ -89,7 +89,6 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         });
 
         this.AddHandler('ScrolledIn', (event, args) => {
-            console.log(this._passwordTip.shown);
             if(this._passwordTip.shown) {
                 this._passwordTip._setPosition();
             }
