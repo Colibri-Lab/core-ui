@@ -150,6 +150,14 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
     get right() {
         return this._element.querySelector(':scope > .app-component-split-right');
     }
+
+    /**
+     * Resize handle
+     * @type {Element}
+     */
+    get handle() {
+        return this._element.querySelector(':scope > .app-component-split-handler');
+    }
     
     /**
      * Is split has resize handle
@@ -210,6 +218,16 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
      */
     set leftWidth(value) {
         this._left.css('flex', '0 0 ' + value);
+    }
+
+    CollapseLeft() {
+        this.handle.attr('style', 'width: 0px; flex: 0 0 0px');
+        this.left.hideElement();
+    }
+
+    ExpandLeft() {
+        this.handle.attr('style', null);
+        this.left.showElement();
     }
 
 }
