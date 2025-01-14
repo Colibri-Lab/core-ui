@@ -423,4 +423,29 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
     }
 
+    set value(value) {
+
+        if(!value) {
+            value = [];
+        }
+
+        if(Object.isObject(value)) {
+            value = Object.values(value);
+        }
+
+        this.Clear()
+        value.forEach((d) => {
+            this.Add('data' + (d.id ?? Date.Mc()), d);
+        });
+
+    }
+
+    get value() {
+        const ret = [];
+        this.ForEveryRow((name, row) => {
+            ret.push(row.value);
+        });
+        return ret;
+    }
+
 }

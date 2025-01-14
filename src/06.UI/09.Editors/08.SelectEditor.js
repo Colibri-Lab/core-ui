@@ -123,51 +123,62 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
     }
     /** @private */
     _showField() {
-        this._input = this._createSelector();
-        this._input.shown = true;
-        this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', args));
-        this._input.AddHandler('ReceiveFocus', (event, args) => {
-            this.parent.parent.AddClass('-focused');
-        });
-        this._input.AddHandler('LoosedFocus', (event, args) => this.parent.parent.RemoveClass('-focused'));
-        this._initializeValues();
-        if(this.field?.params?.readonly === undefined) {
-            this.readonly = false;    
-        }
-        else {
-            this.readonly = this.field?.params?.readonly;
-        }
-        if(this.field?.params?.searchable === undefined) {
-            this.searchable = false;    
-        }
-        else {
-            this.searchable = this.field?.params?.searchable;
-        }
-        if(this.field?.params?.enabled === undefined) {
-            this.enabled = true;
-        }
-        else {
-            this.enabled = this.field.params.enabled;
-        }
+        if(!this._input) {
+            this._input = this._createSelector();
+            this._input.shown = true;
+            this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', args));
+            this._input.AddHandler('ReceiveFocus', (event, args) => {
+                this.parent.parent.AddClass('-focused');
+            });
+            this._input.AddHandler('LoosedFocus', (event, args) => this.parent.parent.RemoveClass('-focused'));
+            this._initializeValues();
+            if(this.field?.params?.readonly === undefined) {
+                this.readonly = false;    
+            }
+            else {
+                this.readonly = this.field?.params?.readonly;
+            }
+            if(this.field?.params?.searchable === undefined) {
+                this.searchable = false;    
+            }
+            else {
+                this.searchable = this.field?.params?.searchable;
+            }
+            if(this.field?.params?.enabled === undefined) {
+                this.enabled = true;
+            }
+            else {
+                this.enabled = this.field.params.enabled;
+            }
 
-        if(this.field?.selector?.ondemand) {
-            this._input.__BeforeFilled = () => {
-                return new Promise((resolve, reject) => {
-                    if (this.field.lookup) {
-                        this.loading = true;
-                        this.AddClass('app-select-loading');
-                        this._setLookup(this.field.lookup).then((response) => {
-                            this.values = response.result || response;
-                        }).finally(() => {
-                            this.loading = false;                        
-                            this.RemoveClass('app-select-loading');
-                            this._setEnabled();
-                            resolve(true);
-                        });
-                    }
-                });
-            };
+            if(this.field?.params?.values !== undefined) {
+                this.values = this.field?.params?.values;
+            }
+
+            if(this.field?.params?.value !== undefined) {
+                this.value = this.field?.params?.value;
+            }
+
+            if(this.field?.selector?.ondemand) {
+                this._input.__BeforeFilled = () => {
+                    return new Promise((resolve, reject) => {
+                        if (this.field.lookup) {
+                            this.loading = true;
+                            this.AddClass('app-select-loading');
+                            this._setLookup(this.field.lookup).then((response) => {
+                                this.values = response.result || response;
+                            }).finally(() => {
+                                this.loading = false;                        
+                                this.RemoveClass('app-select-loading');
+                                this._setEnabled();
+                                resolve(true);
+                            });
+                        }
+                    });
+                };
+            }
         }
+        
     }
 
     /** @private */
@@ -238,7 +249,7 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
     _setLookup(value) {
         let lookupPromise;
         this._lookup = value;
-
+        
         if (typeof this._lookup == 'function' || typeof this._lookup == 'string') {
             if(typeof this._lookup == 'string') {
                 this._lookup = eval(this._lookup);

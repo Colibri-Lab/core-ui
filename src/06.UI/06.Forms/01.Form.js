@@ -461,7 +461,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             });
             groups.AddHandler('Changed', (event, args) => {
                 const groupName = args.button.name;
-                Object.forEach(this._fields, (name, fieldData) => {
+                Object.forReverseEach(this._fields, (name, fieldData) => {
                     fieldData = Object.cloneRecursive(fieldData);
                     fieldData.group && (fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group);
                     if(fieldData.group !== 'window') {

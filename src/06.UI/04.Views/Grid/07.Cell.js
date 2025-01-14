@@ -439,10 +439,19 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
 
     _createEditor() {
         if(this._editor && !this._editorObject) {
-            const editor = eval(this._editor);
+            let editor = this._editor;
+            let tag = this.parentColumn.tag;
+            let download = this.parentColumn.download;
+            if(typeof editor === 'string') {
+                editor = eval(editor);
+            } else if(editor instanceof Function && (!(editor instanceof Colibri.UI.Editor) && !(editor.prototype instanceof Colibri.UI.Editor))) {
+                const returns = editor(this, this.parentRow, this.parentColumn, this.grid);
+                editor = returns.editor;
+                tag = returns.tag;
+            }
             this._editorObject = new editor(this.name + '_editor', this);
-            this._editorObject.field = this.parentColumn.tag;
-            this._editorObject.download = this.parentColumn.download;  
+            this._editorObject.field = tag;
+            this._editorObject.download = download;  
             this._editorObject.tag = {column: this.parentColumn, row: this.parentRow, cell: this};
             this._editorObject.AddHandler('KeyDown', (event, args) => {
                 if(args.domEvent.keyCode == 13 && !this._editorObject.invalid) {

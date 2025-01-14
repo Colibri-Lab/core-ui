@@ -2,19 +2,24 @@ ui-fields-keyvalueobject-add:
   ru: Добавить
   en: Add
   hy: Ավելացնել
+  it: Aggiungi
 ui-fields-keyvalueobject:
   ru: Обьект (ключ/значение)
   en: Object (key/value)
   hy: Օբյեկտ (բանալին/արժեք)
+  it: Oggetto (chiave/valore)
 ui-fields-keyvalueobject-key:
   ru: Ключ
   en: Key
-  hy: Բանալի
+  hy: Անվանում
+  it: Chiave
 ui-fields-keyvalueobject-value:
   ru: Значение
   en: Value
   hy: Արժեք
+  it: Valore
 ui-fields-keyvalueobject-remove:
   ru: Удалить
   en: Delete
   hy: Ջնջել
+  it: Elimina

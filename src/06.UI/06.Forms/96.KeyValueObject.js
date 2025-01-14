@@ -50,14 +50,14 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
         column1.editor = Colibri.UI.TextEditor;
         column1.editorAllways = true;
         column1.resizable = true;
-        column1.value = '#{ui-fields-keyvalueobject-key}';
+        column1.value = this._fieldData?.params?.keyTitle || '#{ui-fields-keyvalueobject-key}';
 
         const column2 = this._grid.header.columns.Add('value', '');
         column2.width = '50%';
         column2.align = 'left';
         column2.editorAllways = true;
-        column2.editor = Colibri.UI.TextEditor;
-        column2.value = '#{ui-fields-keyvalueobject-value}';
+        column2.editor = this._fieldData?.params?.valueEditor || Colibri.UI.TextEditor;
+        column2.value = this._fieldData?.params?.valueTitle || '#{ui-fields-keyvalueobject-value}';
 
         this._grid.AddHandler('ContextMenuIconClicked', (event, args) => this.__gridContextMenuIconClicked(event, args));
         this._grid.AddHandler('ContextMenuItemClicked', (event, args) => this.__gridContextMenuItemClicked(event, args));
@@ -206,6 +206,51 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
      */
     set canAddNew(value) {
         this._link.shown = value;
+    }
+
+    /**
+     * Can user remove rows
+     * @type {Boolean}
+     */
+    get canRemoveRows() {
+        return this._grid.hasContextMenu;
+    }
+    /**
+     * Can user remove rows
+     * @type {Boolean}
+     */
+    set canRemoveRows(value) {
+        this._grid.hasContextMenu = value;
+    }
+
+    /**
+     * Can the user change keys
+     * @type {Boolean}
+     */
+    get canEditKey() {
+        return this._grid.header.columns.Children('key').editor != null;
+    }
+    /**
+     * Can the user change keys
+     * @type {Boolean}
+     */
+    set canEditKey(value) {
+        this._grid.header.columns.Children('key').editor = !value ? null : Colibri.UI.TextEditor;
+    }
+
+    /**
+     * Editor for value field
+     * @type {Colibri.UI.Editor}
+     */
+    get valueEditor() {
+        return this._grid.header.columns.Children('value').editor;
+    }
+    /**
+     * Editor for value field
+     * @type {Colibri.UI.Editor}
+     */
+    set valueEditor(value) {
+        this._grid.header.columns.Children('value').editor = value;
     }
     
 

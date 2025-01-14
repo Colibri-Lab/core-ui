@@ -395,6 +395,14 @@ Array.prototype.stanDeviate = function () {
 Array.prototype.intersect = function (arr) {
     return this.filter(value => arr.includes(value));
 };
+/**
+ * Returns an array containing elements that are not present in second arrays.
+ * @param {Array} arr - The array to intersect with.
+ * @returns {Array} Returns the intersected array.
+ */
+Array.prototype.diference = function (arr) {
+    return this.filter(value => !arr.includes(value)).concat(arr.filter(value => !this.includes(value)));
+};
 
 /**
  * Converts the array elements into an object with each element as a key, and the value set to true.
