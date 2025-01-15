@@ -112,7 +112,6 @@ Colibri.UI.Forms.DateTime = class extends Colibri.UI.Forms.Field {
      * @type {Date|string}
      */
     set value(value) {
-        debugger;
         // may be this is a timestamp value
         if (value && value.isNumeric()) {
             value = new Date(value * 1000);

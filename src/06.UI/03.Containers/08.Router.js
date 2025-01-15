@@ -115,6 +115,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
             }
         } else {
             const route = this._structure[pattern];
+            this._currentRoute = route;
             return this._createComponent(pattern, route);
         }
     }
@@ -152,6 +153,10 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
      */
     set basePattern(value) {
         this._current = value;
+    }
+
+    GetCurrentRoute() {
+        return this._currentRoute;
     }
 
     /**
