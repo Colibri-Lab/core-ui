@@ -64,6 +64,10 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
         this._grid.AddHandler('CellEditorChanged', (event, args) => this.Dispatch('Changed', {component: this}));
         this._link.AddHandler('Clicked', (event, args) => this._grid.rows.Add('row' + Date.Mc(), {key: 'new-key-' + (this._grid.rows.children - 1), value: ''}));
 
+        this.canEditKey = this._fieldData?.params?.canEditKey ?? true;
+        this.canAddNew = this._fieldData?.params?.canAddNew ?? true;
+        this.canRemoveRows = this._fieldData?.params?.canRemoveRows ?? true;
+
     }
     
     __gridContextMenuIconClicked(event, args) {
