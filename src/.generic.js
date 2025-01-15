@@ -489,6 +489,17 @@ Array.toObjectWithKeys = function (array, fieldKey, fieldValue) {
     return ret;
 };
 
+Array.calculateCountByKey = function (array, fieldKey) {
+    let ret = {};
+    array.forEach((item) => {
+        if(!ret[item[fieldKey]]) {
+            ret[item[fieldKey]] = 0;
+        }
+        ret[item[fieldKey]] = ret[item[fieldKey]] + 1;
+    });
+    return ret;
+};
+
 /**
  * Calculates the sum of all elements in the given array.
  * @param {Array} ar - The array to calculate the sum.
