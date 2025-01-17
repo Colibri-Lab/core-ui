@@ -243,8 +243,8 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         }
         if(!required && !multiple) {
             const o = {};
-            o[this._fieldData?.selector?.title ?? 'title'] = '---';
-            o[this._fieldData?.selector?.value ?? 'value'] = 0;
+            o[this._fieldData?.selector?.title ?? 'title'] = Lang.Translate(this._fieldData?.selector?.emptytitle) ?? '---';
+            o[this._fieldData?.selector?.value ?? 'value'] = this._fieldData?.selector?.emptyvalue ?? 0;
             value = isIterable(value) ? [o, ...value] : [o];
         }
         this._input.values = value;
