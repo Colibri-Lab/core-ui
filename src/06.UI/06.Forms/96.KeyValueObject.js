@@ -141,7 +141,6 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
      * @type {Array}
      */
     get value() {
-
         let val = {};
         this._grid.ForEveryRow((name, row) => {
             val[row.value.key] = row.value.value;

@@ -455,7 +455,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
             this._editorObject.tag = {column: this.parentColumn, row: this.parentRow, cell: this};
             this._editorObject.AddHandler('KeyDown', (event, args) => {
                 if(args.domEvent.keyCode == 13 && !this._editorObject.invalid) {
-                    this.Dispatch('EditorChanged', {value: event.sender.value});
+                    this.Dispatch('EditorChanged', {value: this._editorObject.value});
                     this.EndEdit();
                 }
                 else if(args.domEvent.keyCode == 27) {
@@ -465,7 +465,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
             });
             this._editorObject.AddHandler('Changed', (event, args) => {
                 if(!this._editorObject.invalid) {
-                    this.Dispatch('EditorChanged', {value: event.sender.value});
+                    this.Dispatch('EditorChanged', {value: this._editorObject.value});
                 }
             });
             this._editorObject.AddHandler('LoosedFocus', (event, args) => {

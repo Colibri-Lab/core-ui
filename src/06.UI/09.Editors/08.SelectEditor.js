@@ -63,7 +63,11 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
      * @type {string}
      */
     get value() {
-        return this._input.value?.value;
+        try {
+            return this._input?.value[this._input._valueField ?? 'value'];
+        } catch(e) {
+            return null;
+        }
     }
 
     /**
