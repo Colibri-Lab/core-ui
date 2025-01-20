@@ -193,6 +193,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
                             }
                             component.__processChangeOnRouteSwitch(match);
                             break;
+
                         }
                     } 
                 }    
