@@ -203,58 +203,9 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
      * @param {object|string} value
      */
      _setLookup(value) {
-        let lookupPromise;
-        let dependsValue = this._getDependsValue();
-
-        if(dependsValue !== undefined && !dependsValue) {
-            return new Promise((resolve, reject) => {
-                resolve({});
-            });
-        }
-
-        if (typeof this._field.lookup == 'function' || typeof this._field.lookup == 'string') {
-            if(typeof this._field.lookup == 'string') {
-                this._field.lookup = eval(this._field.lookup);
-            }
-            const lookupMethodRun = this._field.lookup();
-            lookupPromise = lookupMethodRun instanceof Promise ? lookupMethodRun : new Promise((resolve, reject) => {
-                resolve({
-                    result: this._field.lookup()
-                });
-            });
-        }
-        else if (typeof this._field.lookup == 'object') {
-
-            if(this._field.lookup?.method) {
-                let lookupMethod = this._field.lookup.method;
-                if (typeof lookupMethod == 'string') {
-                    lookupMethod = eval(this._field.lookup.method);
-                }
-                lookupPromise = lookupMethod('', dependsValue);
-            }
-            else if(this._field.lookup?.binding) {
-                let binding = this._field.lookup.binding;
-                if (typeof binding == 'string') {
-                    lookupPromise = App.Store.AsyncQuery(binding, dependsValue);
-                }
-            }
-            else if(this._field.lookup?.controller) {
-                let controller = this._field.lookup.controller;
-                let module = eval(controller.module);
-                lookupPromise = module.Call(controller.class, controller.method, {term: '', param: dependsValue, lookup: this._field.lookup});
-            }
-            else if(this._field.lookup?.storage) {
-                let controller = this._field.lookup?.storage?.controller;
-                let module = eval(controller?.module);
-                lookupPromise = module.Call(controller.class, controller.method, {term: '', param: dependsValue, lookup: this._field.lookup});
-            }
-            else {
-                lookupPromise = new Promise((resolve, reject) => { resolve({result: ''}); })
-            }
-        }
-
-        // каждый метод должен возвращать промис
-        return lookupPromise;
+        return Colibri.UI.GetLookupPromise(this, this._lookup, '', (type = null) => {
+            return this._getDependsValue(type);
+        });
     }
     
 }

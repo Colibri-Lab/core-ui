@@ -43,7 +43,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     _registerEventHandlers() {
         this.AddHandler('Changed', (event, args) => {
             this._hideAndShow();
-            this._calcRuntimeValues(args.component);
+            this._calcRuntimeValues(args?.component ?? null);
         });
     }
 

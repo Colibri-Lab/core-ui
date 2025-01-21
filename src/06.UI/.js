@@ -163,7 +163,101 @@ Colibri.UI = class {
 
     }
 
+    static GetLookupPromise(component, value, term, getDependsValueMethod) {
+        let lookupPromise;
+        
+        if (typeof value == 'function' || typeof value == 'string') {
+            if(typeof value == 'string') {
+                value = eval(value);
+            }
 
+            let dependsValue = getDependsValueMethod();
+            let dependsField = value.depends ?? null;
+    
+            const lookupMethodRun = value(term, dependsValue, dependsField, component);
+            lookupPromise = lookupMethodRun instanceof Promise ? lookupMethodRun : new Promise((resolve, reject) => {
+                resolve({
+                    result: value()
+                });
+            });
+        }
+        else if (typeof value == 'object') {
+
+            if(value?.method) {
+                let lookupMethod = value.method;
+                if (typeof lookupMethod == 'string') {
+                    lookupMethod = eval(value.method);
+                }
+
+                if(typeof lookupMethod !== 'function') {
+                    lookupPromise = new Promise((resolve, reject) => { resolve({result: ''}); })
+                }
+                else {
+                    let dependsValue = getDependsValueMethod();
+                    let dependsField = value.depends ?? null;   
+                    lookupPromise = lookupMethod(term, dependsValue, dependsField, component);
+                    if(!(lookupPromise instanceof Promise)) {
+                        lookupPromise = Promise.resolve(lookupPromise);
+                    }
+                }
+            }
+            else if(value?.binding) {
+                let binding = value.binding;
+                let dependsField = '';
+                if(typeof binding == 'object') {
+                    dependsField = binding.depends;
+                    binding = binding.query;
+                }
+                if (typeof binding == 'string') {
+                    let dependsValue = getDependsValueMethod('binding');
+                    lookupPromise = new Promise((resolve, reject) => {
+                        App.Store.AsyncQuery(binding).then((results) => {
+                            if(!Array.isArray(results)) {
+                                results = [results];
+                            }
+                            let ret = [];
+                            for(const result of results) {
+                                if(!dependsField || result[dependsField] == dependsValue) {
+                                    ret.push(result);
+                                }
+                            }
+                            resolve(ret);
+                        });
+                    });
+                }
+            }
+            else if(value?.controller) {
+                let controller = value.controller;
+                let module = eval(controller.module);
+                let dependsValue = getDependsValueMethod('controller');
+                let dependsField = value.controller.depends ?? null;
+                let cacheResults = value.controller?.cache ?? false;
+                lookupPromise = module.Call(controller.class, controller.method, {term: term, param: dependsValue, depends: dependsField, lookup: value, _requestCache: cacheResults});
+            }
+            else if(value?.storage) {
+                let controller = value?.storage?.controller;
+                let module = eval(controller?.module);
+                let dependsValue = getDependsValueMethod('storage');
+                let dependsField = value?.storage?.depends ?? null;
+                let cacheResults = value?.storage?.cache ?? false;
+                lookupPromise = module.Call(controller.class, controller.method, {term: term, param: dependsValue, depends: dependsField, lookup: value, _requestCache: cacheResults});
+            }
+            else if(value?.accesspoint) {
+                let controller = value?.accesspoint?.controller;
+                let module = eval(controller?.module);
+                let dependsValue = getDependsValueMethod('accesspoint');
+                let dependsField = value?.storage?.depends ?? null;
+                let cacheResults = value?.storage?.cache ?? false;
+                lookupPromise = module.Call(controller.class, controller.method, {term: term, param: dependsValue, depends: dependsField, lookup: value, _requestCache: cacheResults});
+            }
+            else {
+                lookupPromise = new Promise((resolve, reject) => { resolve({result: ''}); })
+            }
+        }
+
+        // каждый метод должен возвращать промис
+        return lookupPromise;
+    }
 
 }
 Colibri.Common.Wait(() => !!document.body).then(() => {
