@@ -100,6 +100,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
         this._options = App.Request.query;
         this._history.push({url: this._url, options: this._options});
         this._processRoutePatterns();
+        this.Dispatch('RouterReady', {});
         this.Dispatch('RouteChanged', {url: this._url, options: this._options});
     }
 
@@ -109,7 +110,8 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
      */
     /** @protected */
     _registerEvents() {
-        this.RegisterEvent('RouteChanged', false, 'При изменении раута');
+        this.RegisterEvent('RouterReady', false, 'When the router is ready.');
+        this.RegisterEvent('RouteChanged', false, 'When the route changes.');
     }
 
     /**
