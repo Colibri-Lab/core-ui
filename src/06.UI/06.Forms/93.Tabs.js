@@ -338,7 +338,8 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
             } else {
                 if(fieldData?.params?.valuegenerator) {
                     const f = typeof fieldData?.params?.valuegenerator === 'string' ? eval(fieldData?.params?.valuegenerator) : fieldData?.params?.valuegenerator;
-                    const v = f(this.value, this.root?.value, fieldComponent, this.root, changedComponent);
+                    const isOldVersion = typeof fieldData?.params?.valuegenerator === 'string' && fieldData?.params?.valuegenerator.indexOf('(parentValue, formValue') !== -1;
+                    const v = isOldVersion ? f(this.value, this.root?.value, fieldComponent, this) : f(this.value, this.root?.value, fieldComponent, this.root, changedComponent);
                     if(v !== undefined) {
                         fieldComponent.value = v;
                     }

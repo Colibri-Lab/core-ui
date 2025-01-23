@@ -75,7 +75,8 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                 } else {
                     if(fieldData?.params?.valuegenerator) {
                         const f = typeof fieldData?.params?.valuegenerator === 'string' ? eval(fieldData?.params?.valuegenerator) : fieldData?.params?.valuegenerator;
-                        const v = f(fieldComponent.value, this.value, fieldComponent, this, changedComponent);
+                        const isOldVersion = typeof fieldData?.params?.valuegenerator === 'string' && fieldData?.params?.valuegenerator.indexOf('(parentValue, formValue') !== -1;
+                        const v = isOldVersion ? f(this.value, this.value, fieldComponent, this) : f(fieldComponent.value, this.value, fieldComponent, this, changedComponent);
                         if(v !== undefined) {
                             fieldComponent.value = v;
                         }
@@ -83,7 +84,8 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                 }
             });
         } catch(e) {
-                
+            console.log(e);
+            console.trace();
         } finally {
             this._calculating = false;
         }
