@@ -203,7 +203,7 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
      * @param {object|string} value
      */
      _setLookup(value) {
-        return Colibri.UI.GetLookupPromise(this, this._lookup, '', (type = null) => {
+        return Colibri.UI.GetLookupPromise(this, value, '', (type = null) => {
             return this._getDependsValue(type);
         });
     }
