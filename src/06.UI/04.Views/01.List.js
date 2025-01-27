@@ -192,14 +192,28 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         return this._multiple ? indices : indices.pop();
 
     }
+
+    get selectedItemGroupIndex() {
+        if(this._selected.length == 0) {
+            return null;
+        }
+
+        if(this._multiple) {
+            return this._selected.map(v => v.parent.parent.childIndex)
+        } 
+
+        return this._selected[0].parent.parent.childIndex;
+
+    }
     
     /**
      * Selected index
      * @type {number}
      */
     set selectedIndex(value) {
-
+        
         const currentSelection = JSON.stringify(this.selectedIndex);
+        const currentGroupSelection = JSON.stringify(this.selectedItemGroupIndex);
 
         let index = 0;
         let selected = null;
@@ -224,7 +238,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
         this.SelectItem(selected);
 
-        if(JSON.stringify(this.selectedIndex) != currentSelection) {
+        if(JSON.stringify(this.selectedIndex) != currentSelection || JSON.stringify(this.selectedItemGroupIndex) != currentGroupSelection) {
             this.Dispatch('SelectionChanged', {selected: this.selected});
         }
 
@@ -249,6 +263,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
     set selectedValue(value) {
 
         const currentSelection = JSON.stringify(this.selectedIndex);
+        const currentGroupSelection = JSON.stringify(this.selectedItemGroupIndex);
 
         // value обьект значения
         let selected = null;
@@ -267,7 +282,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
         this.SelectItem(selected);
 
-        if(JSON.stringify(this.selectedIndex) != currentSelection) {
+        if(JSON.stringify(this.selectedIndex) != currentSelection || JSON.stringify(this.selectedItemGroupIndex) != currentGroupSelection) {
             this.Dispatch('SelectionChanged', {selected: this.selected});
         }
 
@@ -291,10 +306,11 @@ Colibri.UI.List = class extends Colibri.UI.Component {
     set selected(value) {
         // value - Colibri.UI.Item
         const currentSelection = JSON.stringify(this.selectedIndex);
+        const currentGroupSelection = JSON.stringify(this.selectedItemGroupIndex);
         
         this.SelectItem(value);
         
-        if(JSON.stringify(this.selectedIndex) != currentSelection) {
+        if(JSON.stringify(this.selectedIndex) != currentSelection || JSON.stringify(this.selectedItemGroupIndex) != currentGroupSelection) {
             this.Dispatch('SelectionChanged', {selected: this.selected});
         }
     }
