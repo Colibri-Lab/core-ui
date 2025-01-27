@@ -2183,7 +2183,7 @@ Number.prototype.toTimeString = function (daySplitter, trim00 = true) {
  * @param {boolean} [shownumber=true] - Whether to include the number in the output.
  * @returns {string} The formatted size string.
  */
-Number.prototype.toSizeString = function (postfixes, range, remove0s = false, approximate = false, shownumber = true) {
+Number.prototype.toSizeString = function (postfixes = ['bytes','Kb','Mb','Gb','Tb'], range = 1024, remove0s = false, approximate = false, shownumber = true) {
     let number = this;
     let isMinus = number < 0;
     if (isMinus) {
