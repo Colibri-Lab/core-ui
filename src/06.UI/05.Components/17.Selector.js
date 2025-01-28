@@ -653,6 +653,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * @type {Array}
      */
     set values(value) {
+        value = this._convertProperty('Array', value);
         this._values = value;
         this._renderValue(false);
     }
