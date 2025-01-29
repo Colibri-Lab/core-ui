@@ -18,6 +18,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         this.GenerateChildren(element, this._element);
 
         this._hasClearIcon = true;
+        this._changeOnKeyUpTimeout = 3000;
 
         this.AddClass('app-input-component');
 
@@ -64,6 +65,13 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
 
             this.Dispatch('KeyUp', { value: this.value, domEvent: e });
 
+            if(this._changeOnKeyUp) {
+                if(this._changeOnKeyUpTimeoutId) {
+                    clearTimeout(this._changeOnKeyUpTimeoutId);
+                }
+                this._changeOnKeyUpTimeoutId = setTimeout(() => this.Dispatch('Changed', { value: this.value, domEvent: e }), this._changeOnKeyUpTimeout);
+            }
+
             if(this._fillTimeout) {
                 clearTimeout(this._fillTimeout);
                 this._fillTimeout = null;
@@ -72,6 +80,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
             this._fillTimeout = setTimeout(() => {
                 this.Dispatch('Filled', { value: this.value });
             }, this._fillTimeoutValue);
+
 
         });
 
@@ -487,6 +496,37 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         if(value) {
             this.Children('clear').shown = true;
         }
+    }
+
+    
+    /**
+     * Change on key up event
+     * @type {Boolean}
+     */
+    get changeOnKeyUp() {
+        return this._changeOnKeyUp;
+    }
+    /**
+     * Change on key up event
+     * @type {Boolean}
+     */
+    set changeOnKeyUp(value) {
+        this._changeOnKeyUp = value;
+    }
+
+    /**
+     * Timeout for Change event on KeyUp
+     * @type {Number}
+     */
+    get changeOnKeyUpTimeout() {
+        return this._changeOnKeyUpTimeout;
+    }
+    /**
+     * Timeout for Change event on KeyUp
+     * @type {Number}
+     */
+    set changeOnKeyUpTimeout(value) {
+        this._changeOnKeyUpTimeout = value;
     }
 
 }
