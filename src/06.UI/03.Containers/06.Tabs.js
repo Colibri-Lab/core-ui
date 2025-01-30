@@ -235,6 +235,15 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     }
 
     /**
+     * Selected container component
+     * @type {Colibri.UI.Component}
+     * @readonly
+     */
+    get selectedButton() {
+        return this.header.querySelector('.tab-selected') ? this.header.querySelector('.tab-selected').tag('component') : null;
+    }
+
+    /**
      * Count of tabs
      * @type {Number}
      * @readonly

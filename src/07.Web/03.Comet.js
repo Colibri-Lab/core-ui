@@ -148,18 +148,22 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             console.log('User registration error');
         }
         else if(message.action == 'message') {
-            message.id = message.id ?? Number.Rnd4();
-            message.date = new Date();
-            message.read = false;
-            var messages = this._getStoredMessages();
-            messages.push(message);
-            this._setStoredMessages(messages);
-            this._saveToStore();
+            this._addMessage(message);
             this.Dispatch('MessageReceived', {message: message});
         }
         else {
             this.Dispatch('EventReceived', {event: message});
         }
+    }
+
+    _addMessage(message) {
+        message.id = message.id ?? Number.Rnd4();
+        message.date = new Date();
+        message.read = false;
+        var messages = this._getStoredMessages();
+        messages.push(message);
+        this._setStoredMessages(messages);
+        this._saveToStore();
     }
 
     /**
@@ -272,7 +276,33 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         try {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
-                this._ws.send(JSON.stringify({action: action, recipient: userGuid, message: {text: message, id: id}, domain: Colibri.Web.Comet.Options.origin}));
+                const msg = {action: action, recipient: userGuid, message: {text: message, id: id}, domain: Colibri.Web.Comet.Options.origin};
+                this._ws.send(JSON.stringify(msg));
+                this._addMessage(Object.assign({}, msg, {from: this._user}));
+                return id;
+            }
+            else {
+                console.log('server goes away');
+            }
+        }
+        catch(e) {
+            console.log(e);
+        }
+        return null;
+    }
+
+    /**
+     * Sends a broadcast message.
+     * @param {string} action - The action to be performed.
+     * @param {string} message - The message content.
+     * @returns {string|null} - The ID of the sent message. 
+     */
+    SendBroadcast(action, message = null) {
+        try {
+            const id = Date.Mc();
+            if(this._ws.readyState === 1) {
+                const msg = {action: action, recipient: '*', message: {text: message, id: id, broadcast: true}, domain: Colibri.Web.Comet.Options.origin};
+                this._ws.send(JSON.stringify(msg));
                 return id;
             }
             else {

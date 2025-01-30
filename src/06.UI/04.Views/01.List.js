@@ -1006,6 +1006,13 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         return this.value;
     }
 
+    ShowLastMessage() {
+        const last = this.Items('lastChild');
+        if(last) {
+            this._div.ScrollTo(10000000);
+        }
+    }
+
 }
 
 /**
