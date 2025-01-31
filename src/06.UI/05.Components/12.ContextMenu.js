@@ -256,6 +256,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
      * @type {Array}
      */
     set value(items) {
+        items = this._convertProperty('Array', items);
         this._items = items;
         this._renderItems();
     }
