@@ -80,7 +80,7 @@
     }
 
     &.-stick-to-x-right {
-        left: calc(100% - var(--windowWidth));
+        right: 0px;
     }
 
     &.-stick-to-x-center {
@@ -92,7 +92,7 @@
     }
 
     &.-stick-to-y-bottom {
-        top: calc(100% - var(--windowHeight));
+        bottom: 0px;
     }
 
     &.-stick-to-y-center {

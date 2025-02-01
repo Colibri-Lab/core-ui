@@ -41,7 +41,7 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
      * Select the button by index or name
      * @param {string|number} button button index or name
      */
-    SelectButton(button) {
+    SelectButton(button, dontSendEvent = false) {
         if(typeof button == 'string' || typeof button == 'number') {
             button = this.Children(button);
         }
@@ -57,7 +57,7 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
         this._selectedButton = button;
         this._selectedButton.AddClass('-selected');
 
-        if(!isSelected) {
+        if(!isSelected && !dontSendEvent) {
             Colibri.Common.Delay(10).then(() => {
                 this.Dispatch('Changed', {button: this._selectedButton, index: this.selectedIndex});
             });

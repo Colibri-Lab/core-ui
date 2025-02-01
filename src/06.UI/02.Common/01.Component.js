@@ -2582,4 +2582,26 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
+    StartBlink(name, styles, timeout) {
+        Colibri.Common.StartTimer(name, timeout, () => {
+            if(this._blinkSet) {
+                Object.forEach(styles, (style, value) => {
+                    this._element.css(style, null);;
+                });
+                this._blinkSet = false;                    
+            } else {
+                Object.forEach(styles, (style, value) => {
+                    this._element.css(style, value);
+                });
+                this._blinkSet = true;
+
+            }
+        });
+    }
+
+    StopBlink(name) {
+        console.log(name);
+        Colibri.Common.StopTimer(name);
+    }
+
 }

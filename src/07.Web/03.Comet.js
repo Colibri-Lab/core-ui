@@ -156,10 +156,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         }
     }
 
-    _addMessage(message) {
+    _addMessage(message, read = false) {
         message.id = message.id ?? Number.Rnd4();
         message.date = new Date();
-        message.read = false;
+        message.read = read;
         var messages = this._getStoredMessages();
         messages.push(message);
         this._setStoredMessages(messages);
@@ -217,17 +217,27 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     /**
      * Clears stored messages.
      */
-    ClearMessages() {
-        this._setStoredMessages([]);
+    ClearMessages(date = null) {
+        if(date === null) {
+            this._setStoredMessages([]);
+        } else {
+            let messages = this._getStoredMessages();
+            messages = messages.filter(v => v.date > date);
+            this._setStoredMessages(messages);    
+        }
         this._saveToStore();
     }
 
     /**
      * Marks all messages as read.
      */
-    MarkAsRead() {
+    MarkAsRead(ids = null) {
         let messages = this._getStoredMessages();
-        messages.forEach(message => message.read = true);
+        if(ids.length > 0) {
+            messages.filter(v => ids.indexOf(v.id) !== -1).forEach(message => message.read = true);
+        } else {
+            messages.forEach(message => message.read = true);
+        }
         this._setStoredMessages(messages);
         this._saveToStore();
         this.Dispatch('MessagesMarkedAsRead', {});
@@ -278,7 +288,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             if(this._ws.readyState === 1) {
                 const msg = {action: action, recipient: userGuid, message: {text: message, id: id}, domain: Colibri.Web.Comet.Options.origin};
                 this._ws.send(JSON.stringify(msg));
-                this._addMessage(Object.assign({}, msg, {from: this._user}));
+                this._addMessage(Object.assign({}, msg, {from: this._user}), true);
                 return id;
             }
             else {
