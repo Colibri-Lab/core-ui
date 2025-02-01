@@ -2757,6 +2757,32 @@ Element.prototype.ensureInViewport = function (container, top = null) {
 };
 
 /**
+ * Ensures that the element is visible within its parent container.
+ * Scrolls the container to bring the element into view if necessary.
+ * @param {Element} container The parent container element.
+ * @param {number} [top=null] Additional offset from the top of the container.
+ */
+Element.prototype.ensureInViewportHr = function (container, left = null) {
+    //Determine container top and bottom
+    let cLeft = container.scrollLeft;
+    let cRight = cLeft + container.clientWidth;
+
+    //Determine element top and bottom
+    let eLeft = this.offsetLeft;
+    let eRight = eLeft + this.clientWidth;
+
+    //Check if out of view
+    if (eLeft - this.clientWidth < cLeft) {
+        container.scrollLeft -= (cLeft - eLeft) + this.clientWidth;
+    } else if (eRight > cRight) {
+        container.scrollLeft += (eRight - cRight);
+    }
+    if (left) {
+        container.scrollLeft -= left;
+    }
+};
+
+/**
  * Checks if the element is fully visible within its parent container.
  * @param {Element} container The parent container element.
  * @returns {boolean} True if the element is fully visible, false otherwise.

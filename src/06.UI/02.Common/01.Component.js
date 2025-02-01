@@ -2231,13 +2231,17 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @param {(Colibri.UI.Component|HTMLElement)} [parent] parent component
      * @returns {void}
      */
-    EnsureVisible(parent, top = null) {
+    EnsureVisible(parent, top = null, hr = false) {
         let parentEl = parent;
         if (parent && parent.container) {
             parentEl = parent.container;
         }
         if (parentEl) {
-            this._element.ensureInViewport(parentEl, top);
+            if(!hr) {
+                this._element.ensureInViewport(parentEl, top);
+            } else {
+                this._element.ensureInViewportHr(parentEl, top);
+            }
         } else {
             this._element.scrollIntoView(false);
         }
