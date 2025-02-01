@@ -54,6 +54,7 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     _handleEvents() {
         this._getCloseButton().AddHandler('Clicked', (event, args) => this.__close(event, args));
 
+        this._element.querySelector('.modeless-window-header-container').addEventListener('contextmenu', this.__dragStop.bind(this));
         this._element.querySelector('.modeless-window-header-container').addEventListener('mousedown', this.__dragStart.bind(this));
         this._container.addEventListener('mousemove', this.__move.bind(this));
         document.addEventListener('mouseup', this.__dragStop.bind(this));
