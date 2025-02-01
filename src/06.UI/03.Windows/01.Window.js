@@ -92,6 +92,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         const windowElement = e.currentTarget.closest('.app-component-window');
         const windowComponent = windowElement.tag('component');
         windowComponent.moving = true;
+        windowElement.addEventListener('contextmenu', windowComponent._movingStopHandler, true);
         windowElement.addEventListener('mousemove', windowComponent._movingHandler, true);
         windowElement.addEventListener('mouseup', windowComponent._movingStopHandler, true);
         windowElement.tag('movingPoint', {left: e.layerX, top: e.layerY});
