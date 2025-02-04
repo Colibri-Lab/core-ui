@@ -2604,7 +2604,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     StopBlink(name) {
-        console.log(name);
         Colibri.Common.StopTimer(name);
     }
 
