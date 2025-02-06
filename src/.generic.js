@@ -421,11 +421,15 @@ Array.prototype.toObjectAsTrue = function () {
  * @param {(string|Function)} field - Optional field to specify which values to sum.
  * @returns {number} Returns the sum of values.
  */
-Array.prototype.sum = function (field = null) {
+Array.prototype.sum = function (field = null, maxRows = null) {
+    let arr = [].concat(this);
+    if(maxRows !== null) {
+        arr = arr.splice(0, maxRows);
+    }
     if (!field) {
-        return this.reduce((partialSum, a) => partialSum + a, 0);
+        return arr.reduce((partialSum, a) => partialSum + a, 0);
     } else {
-        return this.map(typeof field == 'function' ? field : v => v[field]).reduce((partialSum, a) => partialSum + a, 0);
+        return arr.map(typeof field == 'function' ? field : v => v[field]).reduce((partialSum, a) => partialSum + a, 0);
     }
 }
 
