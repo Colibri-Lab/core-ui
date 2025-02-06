@@ -23,7 +23,6 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         }
 
         this._createAddNewLink();
-        
 
         if(this._fieldData?.params?.readonly === undefined) {
             this.readonly = false;    
