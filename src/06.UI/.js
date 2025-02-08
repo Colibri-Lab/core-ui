@@ -217,7 +217,7 @@ Colibri.UI = class {
                             }
                             let ret = [];
                             for(const result of results) {
-                                if(!dependsField || result[dependsField] == dependsValue) {
+                                if(!dependsField || !dependsValue || (Array.isArray(result[dependsField]) ? result[dependsField].indexOf(dependsValue) !== -1 : result[dependsField] == dependsValue)) {
                                     ret.push(result);
                                 }
                             }
