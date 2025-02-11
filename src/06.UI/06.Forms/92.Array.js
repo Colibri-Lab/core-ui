@@ -228,8 +228,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
      * @type {boolean}
      */
     get readonly() {
-        const first = this._itemsContainer.Children('firstChild');
-        return first?.readonly ?? false;
+        return this._readonly;
     }
 
     /**
@@ -238,7 +237,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
      */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
-        super.readonly = true;
+        this._readonly = value;
         this._itemsContainer.ForEach((name, component) => {
             component.readonly = value; 
         });
