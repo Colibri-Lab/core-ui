@@ -493,6 +493,17 @@ Array.toObjectWithKeys = function (array, fieldKey, fieldValue) {
     return ret;
 };
 
+Array.fromObjectWithKeys = function (object, fieldKey, fieldValue) {
+    let ret = [];
+    Object.forEach(object, (key, value) => {
+        const item = {};
+        item[fieldKey] = key;
+        item[fieldValue] = value;
+        ret.push(item);
+    });
+    return ret;
+};
+
 Array.calculateCountByKey = function (array, fieldKey) {
     let ret = {};
     array.forEach((item) => {
