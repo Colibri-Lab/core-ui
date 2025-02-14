@@ -507,10 +507,16 @@ Array.fromObjectWithKeys = function (object, fieldKey, fieldValue) {
 Array.calculateCountByKey = function (array, fieldKey) {
     let ret = {};
     array.forEach((item) => {
-        if(!ret[item[fieldKey]]) {
-            ret[item[fieldKey]] = 0;
+        let key = fieldKey;
+        if(typeof fieldKey === 'function') {
+            key = fieldKey(item);
+        } else {
+            key = item[key];
         }
-        ret[item[fieldKey]] = ret[item[fieldKey]] + 1;
+        if(!ret[key]) {
+            ret[key] = 0;
+        }
+        ret[key]++;
     });
     return ret;
 };

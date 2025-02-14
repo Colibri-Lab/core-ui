@@ -219,7 +219,12 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     __newCell(value, column) {
 
-        const val = column.name.indexOf('.') === -1 ? value[column.name] : eval(`value.${column.name}`);
+        let val = '';
+        try {
+            val = column.name.indexOf('.') === -1 ? value[column.name] : eval(`value.${column.name}`);
+        } catch(e) {
+            // 
+        }
         if(column.colspan && column.colspan > 1 && !val) {
             return null;
         }

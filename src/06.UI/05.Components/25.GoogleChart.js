@@ -72,6 +72,10 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
             return;
         }
 
+        if(!this._value) {
+            this._value = [];
+        }
+
         // this._element.html('');
         if(!this._chart) {
             this._chart = new google.visualization[this._type](this._element);
