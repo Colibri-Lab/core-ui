@@ -120,9 +120,13 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
             let dependsField = type ? this._fieldData.lookup[type]['depends'] : this._fieldData.lookup['depends'];
             if (dependsField) {
                 dependsField = dependsField.replaceAll('{', '').replaceAll('}', '');
-                const rootValues = this.root?.value;
+                let rootValues = this.root?.value;
                 if(eval(`typeof rootValues?.${dependsField}`) !== 'undefined') {
                     return eval(`rootValues.${dependsField}`);
+                }
+                const parentValues = this.parentField?.value;
+                if(eval(`typeof parentValues?.${dependsField}`) !== 'undefined') {
+                    return eval(`parentValues.${dependsField}`);
                 }
                 return null;
             }

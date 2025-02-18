@@ -256,6 +256,10 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
                 if(eval(`typeof rootValues?.${dependsField}`) !== 'undefined') {
                     return eval(`rootValues.${dependsField}`);
                 }
+                const parentValues = this.parentField?.value;
+                if(eval(`typeof parentValues?.${dependsField}`) !== 'undefined') {
+                    return eval(`parentValues.${dependsField}`);
+                }
                 return null;
             }
         }
