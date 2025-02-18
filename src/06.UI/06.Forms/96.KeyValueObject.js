@@ -72,7 +72,7 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
     
     __gridContextMenuIconClicked(event, args) {
         args.item.contextmenu = [{name: 'remove', title: '#{ui-fields-keyvalueobject-remove}'}];
-        args.item.ShowContextMenu(args.isContextMenuEvent ? [Colibri.UI.ContextMenu.RB, Colibri.UI.ContextMenu.RB] : [Colibri.UI.ContextMenu.RB, Colibri.UI.ContextMenu.LB], '', args.isContextMenuEvent ? {left: args.domEvent.clientX, top: args.domEvent.clientY} : null);
+        args.item.ShowContextMenu(args.isContextMenuEvent ? [Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT] : [Colibri.UI.ContextMenu.RB, Colibri.UI.ContextMenu.RT], '', args.isContextMenuEvent ? {left: args.domEvent.clientX, top: args.domEvent.clientY} : null);
     }
 
     __gridContextMenuItemClicked(event, args) {

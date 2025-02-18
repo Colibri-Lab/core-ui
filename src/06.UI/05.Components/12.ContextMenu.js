@@ -24,7 +24,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
      * @param {Array} orientation coords on container to point to, and orientation around the container, example: rt, rb; rt - container coords, rb - orientation
      * @param {Array<{title,name,icon}>} items context menu items
      */
-    constructor(name, container, orientation = [Colibri.UI.ContextMenu.RT, Colibri.UI.ContextMenu.RB], point = null, items = []) {
+    constructor(name, container, orientation = [Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT], point = null, items = []) {
         super(name, container, Element.create('div'));
 
         this.AddClass('app-contextmenu-component');
@@ -149,7 +149,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
         const ori = this._orientation[0];
         const parentBounds = parent.container.bounds(true, true);
         switch(ori) {
-            default:
+            default:s
             case Colibri.UI.ContextMenu.RB: {
                 return {
                     left: parentBounds.left + parentBounds.outerWidth, 
@@ -185,26 +185,26 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
             default: 
             case Colibri.UI.ContextMenu.RB: {
                 return {
-                    left: pointOnParent.left, 
-                    top: pointOnParent.top
+                    left: pointOnParent.left - thisBounds.outerWidth, 
+                    top: pointOnParent.top - thisBounds.outerHeight
                 };
             }
             case Colibri.UI.ContextMenu.LB: {
                 return {
-                    left: pointOnParent.left - thisBounds.outerWidth, 
-                    top: pointOnParent.top
+                    left: pointOnParent.left, 
+                    top: pointOnParent.top - thisBounds.outerHeight
                 };
             }
             case Colibri.UI.ContextMenu.LT: {
                 return {
                     left: pointOnParent.left, 
-                    top: pointOnParent.top - thisBounds.outerHeight
+                    top: pointOnParent.top
                 };
             }
             case Colibri.UI.ContextMenu.RT: {
                 return {
                     left: pointOnParent.left - thisBounds.outerWidth, 
-                    top: pointOnParent.top - thisBounds.outerHeight
+                    top: pointOnParent.top
                 };
             }
         }
@@ -216,6 +216,8 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
         const pointOnParent = this._point || this._findPointOnParent();
         const point = this._getOrientationPoint(pointOnParent);
         this.styles = {left: point.left + 'px', top: point.top + 'px'};
+        this.RemoveClass('-rt', '-rb', '-lt', '-lb');
+        this.AddClass('-' + this._orientation[0] + this._orientation[1]);
 
     }
 

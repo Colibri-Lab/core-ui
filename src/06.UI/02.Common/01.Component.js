@@ -622,7 +622,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @param {string} className class name for context menu
      * @param {{top, left}} point point to show contextmenu on
      */
-    ShowContextMenu(orientation = [Colibri.UI.ContextMenu.RT, Colibri.UI.ContextMenu.RB], className = '', point = null) {
+    ShowContextMenu(orientation = [Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT], className = '', point = null) {
 
 
         this.Children(this._name + '-contextmenu-icon-parent') && this.Children(this._name + '-contextmenu-icon-parent').AddClass('-selected');

@@ -23,7 +23,30 @@
     border-radius: 5px;
 
     padding: 10px 0 10px 0;
-    margin-top: 5px;
+
+    &.-ltrt {
+        margin-right: 2px;
+    } 
+    &.-rtlt {
+        margin-left: 2px;
+    } 
+    &.-rbrt {
+        margin-top: 2px;
+    }
+    &.-lblt {
+        margin-top: 2px;
+    } 
+    &.-rblt {
+        margin-top: 1px;
+        margin-left: 1px;
+    }
+    &.-lbrt {
+        margin-bottom: 1px;
+        margin-right: 1px;
+    }
+    &.-lbrb {
+        margin-right: 2px;
+    }
 
     .app-contextmenu-item-component {
 
