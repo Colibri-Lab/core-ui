@@ -469,10 +469,8 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                     if(fieldData.group !== 'window') {
                         if(fieldData.group === groupName) {
                             this.Children(name).Retreive();
-                            this.Children(name).shown = true;
                         }
                         else {
-                            this.Children(name).shown = false;
                             this.Children(name).KeepInMind();
                         }
                     }
@@ -484,7 +482,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             fieldData = Object.cloneRecursive(fieldData);
             fieldData.group && (fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group);
             if(fieldData.group && fieldData.group !== 'window') {
-                this._renderField(name, fieldData, value, false);
+                this._renderField(name, fieldData, value, true);
             }
         });
 

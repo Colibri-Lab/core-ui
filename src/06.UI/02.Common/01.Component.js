@@ -142,6 +142,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         /** @type {string} */
         this._binding = '';
+
+        this._renderedIndex = 0;
         
         this._clickToCopyHandler = (e) => this.value.copyToClipboard() && App.Notices.Add(new Colibri.UI.Notice('#{ui-copy-info}', Colibri.UI.Notice.Success));
 
@@ -211,6 +213,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.AddHandler('MouseLeave', this._mouseLeaveHandler);
 
         element = null;
+        this._renderedIndex = this.index;
 
     }
 
@@ -1511,6 +1514,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     _moveInDom(insertedElement, parentElement, index) {
         insertedElement.remove();
         parentElement.insertBefore(insertedElement, parentElement.children[index]);
+        this._renderedIndex = this.index;
     }
 
     /**
@@ -1994,7 +1998,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     KeepInMind() {
         if(this._container) {
-            this._hideData = {index: this.index, parent: this._element.parentElement};
+            this._hideData = {index: this.renderedIndex, parent: this._element.parentElement};
             this._element.tag('containedAt', this._element.parentElement);
             this.Disconnect();
             this.Dispatch('Hidden', {});
@@ -2605,6 +2609,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     StopBlink(name) {
         Colibri.Common.StopTimer(name);
+    }
+
+    get renderedIndex() {
+        return this._renderedIndex;
     }
 
 }
