@@ -123,7 +123,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
             }
             const size = new Colibri.UI.TextSpan('size', container);
             size.shown = true;
-            size.value = itemData.file.size.toSizeString(['bytes', 'Kb', 'Mb', 'Gb'], 1024);
+            size.value = itemData.file.size > 0 ? itemData.file.size.toSizeString(['bytes', 'Kb', 'Mb', 'Gb'], 1024) : '';
             const deleteIcon = new Colibri.UI.TextSpan('delete', container);
 
             filename.AddClass('files-file-name');
