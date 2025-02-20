@@ -2159,6 +2159,18 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
+     * Toggles a class name in classList of element
+     * @param {string} val name of class
+     */
+    ToggleClass(val) {
+        if(this.ContainsClass(val)) {
+            this.RemoveClass(val);
+        } else {
+            this.AddClass(val);
+        }
+    }
+
+    /**
      * Puts a focus to the component
      * @returns {Colibri.UI.Component}
      */
