@@ -229,8 +229,8 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
         if(thisBounds.top + thisBounds.outerHeight > window.innerHeight) {
             // надо двинуть точку на паренте и относительную ориентацию
             // справа на лево, или слева на право
-            orientation[0] = orientation[0].replaceAll('t', 'b');
-            orientation[1] = orientation[1].replaceAll('b', 't');
+            orientation[0] = orientation[0].replaceAll('b', 't');
+            orientation[1] = orientation[1].replaceAll('t', 'b');
             
         }
         if(thisBounds.left + thisBounds.outerWidth > window.innerWidth) {

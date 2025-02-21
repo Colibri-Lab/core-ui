@@ -30,7 +30,6 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
      * @type {string|object}
      */
     set value(value) {
-        console.log(this._field)
         this._value = value;
         if(value !== null && value !== undefined && value !== '') {
             if((this._field?.multiple ?? this._field?.params?.multiple)) {
