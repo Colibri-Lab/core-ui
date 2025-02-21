@@ -1307,6 +1307,10 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      */
     set columnSortIcons(value) {
         this._columnSortIcons = value;
+        const columns = this.header.FindAllColumns();
+        Object.forEach(columns, (name, column) => {
+            column.sortIcons = this._columnSortIcons;
+        });
     }
 
 }

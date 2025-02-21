@@ -29,6 +29,9 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
             desc: Colibri.UI.SortDescIcon
         };
 
+        this._valueContainer = Element.create('span', {class: 'value-container'});
+        this._element.append(this._valueContainer);
+
         this.GenerateChildren(element);
 
 
@@ -414,6 +417,8 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
             value = eval(value);
         }
         this._sortIcons = value;
+        this._sortHandler && this._sortHandler.html(this.sortIcons['none'] ?? '');
+
     }
 
     /**
@@ -446,5 +451,22 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
     set canCopy(value) {
         this._canCopy = value;
     }
+
+    /**
+     * Value String
+     * @type {String}
+     */
+    get value() {
+        return this._valueContainer.html();
+    }
+    /**
+     * Value String
+     * @type {String}
+     */
+    set value(value) {
+        this._valueContainer.html(value);
+    }
+
+
 
 }
