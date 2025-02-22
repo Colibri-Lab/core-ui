@@ -66,6 +66,11 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
 
     }
 
+    Clear() {
+        this._element.html('');
+        this._chart = null;
+    }
+
     /** @private */
     _generateChart() {
         if(!this._chartsIsLoaded) {

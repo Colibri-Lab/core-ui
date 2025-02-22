@@ -856,7 +856,7 @@ Object.cloneRecursive = function (object, callback = null, excludeKeys = []) {
     if (Array.isArray(object)) {
         let ret = [];
         for (const o of object) {
-            if (o instanceof Object) {
+            if (o instanceof Object && !(o instanceof Date) && !(o instanceof File)) {
                 ret.push(Object.cloneRecursive(o, callback, excludeKeys));
             } else {
                 ret.push(o);
@@ -876,10 +876,10 @@ Object.cloneRecursive = function (object, callback = null, excludeKeys = []) {
         }
         else if (Array.isArray(value)) {
             ret[prop] = value.map((v) => {
-                return v instanceof Object && !(v instanceof File) ? Object.cloneRecursive(v) : v;
+                return v instanceof Object && !(v instanceof Date) && !(v instanceof File) ? Object.cloneRecursive(v) : v;
             });
         }
-        else if (value instanceof Object && !(value instanceof File)) {
+        else if (value instanceof Object && !(value instanceof Date) && !(value instanceof File)) {
             ret[prop] = Object.cloneRecursive(value, callback, excludeKeys);
         }
         else {
@@ -2270,7 +2270,7 @@ Number.unique = function () { return (window.performance.getEntries()[0].duratio
  * Formats the date as a string in the 'YYYY-MM-DD HH:mm:ss' format.
  * @returns {string} The formatted date string.
  */
-Date.prototype.toDbDate = function () { return this.getFullYear() + '-' + ((this.getMonth() + 1) + '').expand('0', 2) + '-' + (this.getDate() + '').expand('0', 2) + ' ' + (this.getHours() + '').expand('0', 2) + ':' + (this.getMinutes() + '').expand('0', 2) + ':' + (this.getSeconds() + '').expand('0', 2); };
+Date.prototype.toDbDate = function () { if(this.toString() === 'Invalid Date') {return null;} return this.getFullYear() + '-' + ((this.getMonth() + 1) + '').expand('0', 2) + '-' + (this.getDate() + '').expand('0', 2) + ' ' + (this.getHours() + '').expand('0', 2) + ':' + (this.getMinutes() + '').expand('0', 2) + ':' + (this.getSeconds() + '').expand('0', 2); };
 /**
  * Converts the date to Unix timestamp (seconds since January 1, 1970).
  * @returns {number} The Unix timestamp.
