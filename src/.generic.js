@@ -3463,6 +3463,20 @@ function DownloadFile(data, filename, mime, isBase = true) {
     document.body.removeChild(a);
 };
 /**
+ * Print a file using provided data.
+ * @param {string} data The file data.
+ * @param {string} filename The filename.
+ * @param {string} mime The MIME type.
+ * @param {boolean} [isBase=true] Indicates if the data is base64 encoded.
+ */
+function PrintFile(data, filename, mime, isBase = true) {
+    window.open(window.URL.createObjectURL(Base2File(data, filename, mime, isBase), { type: mime })).print();
+    // var a = Element.create('a', { href: window.URL.createObjectURL(Base2File(data, filename, mime, isBase), { type: mime }), download: filename });
+    // document.body.append(a);
+    // a.click();
+    // document.body.removeChild(a);
+};
+/**
  * Downloads a file from a URL.
  * @param {string} url The URL of the file.
  * @param {string} [filename=null] The filename.
