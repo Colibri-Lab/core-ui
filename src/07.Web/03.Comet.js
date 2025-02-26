@@ -148,6 +148,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             console.log('User registration error');
         }
         else if(message.action == 'message') {
+            console.log(message);
             this._addMessage(message);
             this.Dispatch('MessageReceived', {message: message});
         }
