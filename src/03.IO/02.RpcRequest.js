@@ -127,7 +127,6 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} The result of the RPC call.
      */
     Call(controller, method, params = null, headers = {}, withCredentials = true, requestKeyword = Date.Mc()) {
-
         const request = new Colibri.IO.Request();
         this._workingRequests[requestKeyword] = request;
 
@@ -139,6 +138,9 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
         params && delete params._requestCache;
         headers.requester = location.hostname;
 
+        if (App.CsrfToken && location.hostname === new URL(this._remoteDomain).hostname) {
+            headers['X-CSRF-TOKEN'] = App.CsrfToken;
+        }
         return new Promise((resolve, reject) => {
 
             let url = null;
