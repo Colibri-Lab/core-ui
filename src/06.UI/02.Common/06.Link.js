@@ -134,8 +134,8 @@ Colibri.UI.Link = class extends Colibri.UI.Component {
         __thisMouseDown(event, args) {
             
             const contextmenu = [];
-            contextmenu.push({title: 'Open in new tab', name: 'openblank'});
-            contextmenu.push({title: 'Open', name: 'open'});
+            contextmenu.push({title: '#{ui-link-opennewtab}', name: 'openblank'});
+            contextmenu.push({title: '#{ui-link-open}', name: 'open'});
             this.contextmenu = contextmenu;
             this.ShowContextMenu([Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT]);
             args.domEvent.preventDefault();
