@@ -68,6 +68,8 @@ Intl.NumberFormat.prototype.unformat = function (stringNumber) {
     );
 }
 
+Array.coalesce = (v) => Array.isArray(v) ? v : [v];
+
 /**
  * Returns a new array containing only unique elements from the original array.
  * @param {Array} a - The original array.
