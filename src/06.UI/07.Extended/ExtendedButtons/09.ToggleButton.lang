@@ -2,7 +2,11 @@ ui-toggle-button-expand:
   ru: Развернуть
   en: Expand
   hy: Բացել
+  it: Espandi
+  es: Expandir
 ui-toggle-button-collapse:
   ru: Свернуть
   en: Collapse
   hy: Փակել
+  it: Comprimere
+  es: Colapsar

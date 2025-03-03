@@ -2,7 +2,11 @@ ui-email-validation-message:
   ru: Пожалуйста, введите корректный email
   en: Please enter a valid email
   hy: Խնդրում ենք մուտքագրել վավեր էլ
+  it: Inserisci un'email valida
+  es: Por favor, introduzca un correo electrónico válido
 ui-fields-email:
   ru: Эл. адрес
   en: Email
   hy: Էլ հասցե
+  it: Email
+  es: Correo electrónico

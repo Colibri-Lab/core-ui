@@ -1,6 +1,12 @@
 ui-selector-nothingchoosed:
   ru: Ничего не выбрано
   en: Nothing selected
+  it: Non è stato selezionato nulla
+  es: Nada seleccionado
+  hy: Նոյինգ սելեկտեդ
 ui-selector-choosed:
   ru: Выбрано %s1 %s2
   en: Selected %s1 items of %s2
+  it: Selezionati %s1 elementi di %s2
+  es: Seleccionados %s1 elementos de %s2
+  hy: Սելեկտեդ %s1 %s2

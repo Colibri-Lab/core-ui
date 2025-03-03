@@ -2,11 +2,17 @@ ui-fields-datetimerage:
   ru: Поле дата и время (от/до)
   en: Date and time (from/to)
   hy: Ամսաթիվ և ժամ (սկսած/մինչև)
+  it: Data e ora (da/a)
+  es: Fecha y hora (de/a)
 ui-fields-datetimerage-from:
   ru: от
   en: from
   hy: -ից
+  it: da
+  es: de
 ui-fields-datetimerage-to:
   ru: до
   en: to
   hy: դեպի
+  it: a
+  es: a

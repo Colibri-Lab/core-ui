@@ -2,3 +2,5 @@ ui-massactions-choosed:
   ru: Выбрано %s
   en: "%s selected"
   hy: Ընտրված է %s
+  it: "%s selezionati"
+  es: "%s seleccionados"

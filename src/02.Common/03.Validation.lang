@@ -1,89 +1,174 @@
 ui-validation-bik-error1:
   ru: БИК может состоять только из цифр
   en: BIC can only consist of numbers
+  it: Il BIC può contenere solo numeri
+  hy: ԲԻԿ-ը կարող է բաղկացած լինել միայն թվերից
+  es: El BIC solo puede consistir en números
 ui-validation-bik-error2:
   ru: БИК может состоять только из 9 цифр
   en: BIC can only consist of 9 digits
+  it: Il BIC può contenere solo 9 cifre
+  hy: ԲԻԿ-ը կարող է բաղկացած լինել միայն 9 թվերից
+  es: El BIC solo puede consistir en 9 dígitos
 ui-validation-inn-error1:
   ru: ИНН пуст
   en: TIN is empty
+  it: Il TIN è vuoto
+  hy: ՀՎՀՀ-ն դատարկ է
+  es: El TIN está vacío
 ui-validation-inn-error2:
   ru: ИНН может состоять только из цифр
   en: TIN can only consist of numbers
+  it: Il TIN può contenere solo numeri
+  hy: ՀՎՀՀ-ն կարող է բաղկացած լինել միայն թվերից
+  es: El TIN solo puede consistir en números
 ui-validation-inn-error3:
   ru: ИНН может состоять только из 10 или 12 цифр
   en: TIN can only consist of 10 or 12 digits
+  it: Il TIN può contenere solo 10 o 12 cifre
+  hy: ՀՎՀՀ-ն կարող է բաղկացած լինել միայն 10 կամ 12 թվերից
+  es: El TIN solo puede consistir en 10 o 12 dígitos
 ui-validation-inn-error4:
   ru: Неправильное контрольное число
   en: Wrong check digit
+  it: Numero di controllo errato
+  hy: Սխալ ստուգիչ թիվ
+  es: Dígito de control incorrecto
 ui-validation-kpp-error1:
   ru: КПП пуст
   en: KPP is empty
+  it: Il KPP è vuoto
+  hy: ՀՎՀՀ-ն դատարկ է
+  es: El KPP está vacío
 ui-validation-kpp-error2:
-  ru: КПП может состоять только из 9 знаков (цифр или заглавных букв латинского
-    алфавита от A до Z)
-  en: The KPP can only consist of 9 characters (numbers or capital letters of the
-    Latin alphabet from A to Z)
+  ru: КПП может состоять только из 9 знаков (цифр или заглавных букв латинского алфавита от A до Z)
+  en: The KPP can only consist of 9 characters (numbers or capital letters of the Latin alphabet from A to Z)
+  it: Il KPP può contenere solo 9 caratteri (numeri o lettere maiuscole dell'alfabeto latino da A a Z)
+  hy: ՀՎՀՀ-ն կարող է բաղկացած լինել միայն 9 նիշերից (թվեր կամ լատինական այբուբենի մեծատառեր A-ից Z)
+  es: El KPP solo puede consistir en 9 caracteres (números o letras mayúsculas del alfabeto latino de la A a la Z)
 ui-validation-kpp-error3:
   ru: Неправильный формат КПП
   en: Wrong KPP format
+  it: Formato KPP errato
+  hy: Սխալ ՀՎՀՀ ձևաչափ
+  es: Formato KPP incorrecto
 ui-validation-ks-error1:
   ru: Корреспондентский счет может состоять только из цифр
   en: Correspondent account can only consist of numbers
+  it: Il conto corrispondente può contenere solo numeri
+  hy: Համապատասխան հաշիվը կարող է բաղկացած լինել միայն թվերից
+  es: La cuenta de corresponsalía solo puede consistir en números
 ui-validation-ks-error2:
   ru: Корреспондентский счет может состоять только из 20 цифр
   en: Correspondent account can only consist of 20 digits
+  it: Il conto corrispondente può contenere solo 20 cifre
+  hy: Համապատասխան հաշիվը կարող է բաղկացած լինել միայն 20 թվերից
+  es: La cuenta de corresponsalía solo puede consistir en 20 dígitos
 ui-validation-ks-error3:
   ru: Неправильное контрольное число
   en: Wrong check digit
+  it: Numero di controllo errato
+  hy: Սխալ ստուգիչ թիվ
+  es: Dígito de control incorrecto
 ui-validation-ogrn-error1:
   ru: ОГРН пуст
   en: OGRN is empty
+  it: L'OGRN è vuoto
+  hy: ՀՎՀՀ-ն դատարկ է
+  es: El OGRN está vacío
 ui-validation-ogrn-error2:
   ru: ОГРН может состоять только из цифр
   en: OGRN can only consist of numbers
+  it: L'OGRN può contenere solo numeri
+  hy: ՀՎՀՀ-ն կարող է բաղկացած լինել միայն թվերից
+  es: El OGRN solo puede consistir en números
 ui-validation-ogrn-error3:
   ru: ОГРН может состоять только из 13 цифр
   en: OGRN can only consist of 13 digits
+  it: L'OGRN può contenere solo 13 cifre
+  hy: ՀՎՀՀ-ն կարող է բաղկացած լինել միայն 13 թվերից
+  es: El OGRN solo puede consistir en 13 dígitos
 ui-validation-ogrn-error4:
   ru: Неправильное контрольное число
   en: Wrong check digit
+  it: Numero di controllo errato
+  hy: Սխալ ստուգիչ թիվ
+  es: Dígito de control incorrecto
 ui-validation-ogrnip-error1:
   ru: ОГРНИП пуст
   en: OGRNIP is empty
+  it: L'OGRNIP è vuoto
+  hy: ՀՎՀՀ-ն դատարկ է
+  es: El OGRNIP está vacío
 ui-validation-ogrnip-error2:
   ru: ОГРНИП может состоять только из цифр
   en: OGRNIP can only consist of numbers
+  it: L'OGRNIP può contenere solo numeri
+  hy: ՀՎՀՀ-ն կարող է բաղկացած լինել միայն թվերից
+  es: El OGRNIP solo puede consistir en números
 ui-validation-ogrnip-error3:
   ru: ОГРНИП может состоять только из 15 цифр
   en: OGRNIP can only consist of 15 digits
+  it: L'OGRNIP può contenere solo 15 cifre
+  hy: ՀՎՀՀ-ն կարող է բաղկացած լինել միայն 15 թվերից
+  es: El OGRNIP solo puede consistir en 15 dígitos
 ui-validation-ogrnip-error4:
   ru: Неправильное контрольное число
   en: Wrong check digit
+  it: Numero di controllo errato
+  hy: Սխալ ստուգիչ թիվ
+  es: Dígito de control incorrecto
 ui-validation-rs-error1:
   ru: Расчетный счет пуст
   en: Current account is empty
+  it: Il conto corrente è vuoto
+  hy: Հաշվարկային հաշիվը դատարկ է
+  es: La cuenta corriente está vacía
 ui-validation-rs-error2:
   ru: Расчетный счет может состоять только из цифр
   en: Current account can only consist of numbers
+  it: Il conto corrente può contenere solo numeri
+  hy: Հաշվարկային հաշիվը կարող է բաղկացած լինել միայն թվերից
+  es: La cuenta corriente solo puede consistir en números
 ui-validation-rs-error3:
   ru: Расчетный счет может состоять только из 20 цифр
   en: Current account can only consist of 20 digits
+  it: Il conto corrente può contenere solo 20 cifre
+  hy: Հաշվարկային հաշիվը կարող է բաղկացած լինել միայն 20 թվերից
+  es: La cuenta corriente solo puede consistir en 20 dígitos
 ui-validation-rs-error4:
   ru: Неправильное контрольное число
   en: Wrong check digit
+  it: Numero di controllo errato
+  hy: Սխալ ստուգիչ թիվ
+  es: Dígito de control incorrecto
 ui-validation-snils-error1:
   ru: СНИЛС пуст
   en: SNILS is empty
+  it: Il SNILS è vuoto
+  hy: ՍՆԻԼՍ-ը դատարկ է
+  es: El SNILS está vacío
 ui-validation-snils-error2:
   ru: СНИЛС может состоять только из цифр
   en: SNILS can only consist of numbers
+  it: Il SNILS può contenere solo numeri
+  hy: ՍՆԻԼՍ-ը կարող է բաղկացած լինել միայն թվերից
+  es: El SNILS solo puede consistir en números
 ui-validation-snils-error3:
   ru: СНИЛС может состоять только из 11 цифр
   en: SNILS can only consist of 11 digits
+  it: Il SNILS può contenere solo 11 cifre
+  hy: ՍՆԻԼՍ-ը կարող է բաղկացած լինել միայն 11 թվերից
+  es: El SNILS solo puede consistir en 11 dígitos
 ui-validation-snils-error4:
   ru: Неправильное контрольное число
   en: Wrong check digit
+  it: Numero di controllo errato
+  hy: Սխալ ստուգիչ թիվ
+  es: Dígito de control incorrecto
 ui-validation-ks-error0:
   ru: Корреспондентский счет пуст
   en: Correspondent account empty
+  it: Il conto corrispondente è vuoto
+  hy: Համապատասխան հաշիվը դատարկ է
+  es: La cuenta de corresponsalía está vacía

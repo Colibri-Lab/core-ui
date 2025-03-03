@@ -2,47 +2,71 @@ ui-monthselector-yanuary:
   ru: Январь
   en: January
   hy: Հունվար
+  it: Gennaio
+  es: Enero
 ui-monthselector-february:
   ru: Февраль
   en: February
   hy: Փետրվար
+  it: Febbraio
+  es: Febrero
 ui-monthselector-march:
   ru: Март
   en: March
   hy: Մարտ
+  it: Marzo
+  es: Marzo
 ui-monthselector-april:
   ru: Апрель
   en: April
   hy: Ապրիլ
+  it: Aprile
+  es: Abril
 ui-monthselector-may:
   ru: Май
   en: May
   hy: Մայիս
+  it: Maggio
+  es: Mayo
 ui-monthselector-jun:
   ru: Июнь
   en: June
   hy: Հունիս
+  it: Giugno
+  es: Junio
 ui-monthselector-july:
   ru: Июль
   en: July
   hy: Հուլիս
+  it: Luglio
+  es: Julio
 ui-monthselector-august:
   ru: Август
   en: August
   hy: Օգոստոս
+  it: Agosto
+  es: Agosto
 ui-monthselector-september:
   ru: Сентябрь
   en: September
   hy: Սեպտեմբեր
+  it: Settembre
+  es: Septiembre
 ui-monthselector-october:
   ru: Октябрь
   en: October
   hy: Հոկտեմբեր
+  it: Ottobre
+  es: Octubre
 ui-monthselector-november:
   ru: Ноябрь
   en: November
   hy: Նոյեմբեր
+  it: Novembre
+  es: Noviembre
 ui-monthselector-december:
   ru: Декабрь
   en: December
   hy: Դեկտեմբեր
+  it: Dicembre
+  es: Diciembre

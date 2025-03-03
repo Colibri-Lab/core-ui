@@ -2,9 +2,10 @@ ui-link-opennewtab:
   ru: Открыть в новой вкладке
   en: Open in new tab
   it: Apri in una nuova scheda
-  am: Բացել նոր ներքին էջում
+  hy: Բացել նոր ներքին էջում
   kz: Жаңа тақтада ашу
   uz: Yangi oynada ochish
+  es: Abrir en una nueva pestaña
 ui-link-open:
   ru: Открыть
   en: Open
@@ -12,3 +13,4 @@ ui-link-open:
   am: Բացել
   kz: Ашу
   uz: Ochish
+  es: Abrir

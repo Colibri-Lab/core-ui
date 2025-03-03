@@ -2,11 +2,17 @@ ui-viewers-fields:
   ru: Поля (JSON)
   en: Fields viewer
   hy: Դաշտերի դիտող
+  it: Visualizzatore di campi
+  es: Visor de campos
 ui-viewers-fields-expand:
   ru: Развернуть
   en: Expand
   hy: Ընդարձակել
+  it: Espandi
+  es: Expandir
 ui-viewers-fields-collapse:
   ru: Свернуть
   en: Collapse
   hy: Փլուզում
+  it: Comprimere
+  es: Colapsar

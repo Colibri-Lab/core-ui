@@ -2,7 +2,11 @@ ui-fields-radio:
   ru: Радио кнопки
   en: Radio buttons
   hy: Ռադիո կոճակներ
+  it: Pulsanti radio
+  es: Botones de radio
 ui-fields-radio-clear:
   ru: Очистить
   en: Clear
   hy: Պարզ
+  it: Chiaro
+  es: Claro

@@ -2,38 +2,58 @@ ui-arraygrid-add:
   ru: Добавить
   en: Add
   hy: Ավելացնել
+  it: Aggiungere
+  es: Añadir
 ui-arraygrid-contextmenu-edit:
   ru: Редактировать
   en: Edit
   hy: Խմբագրել
+  it: Modificare
+  es: Editar
 ui-arraygrid-contextmenu-remove:
   ru: Удалить
   en: Delete
   hy: Ջնջել
+  it: Eliminare
+  es: Eliminar
 ui-arraygrid-massactions-remove:
   ru: удалить
   en: remove
+  it: rimuovere
+  es: eliminar
 ui-arraygrid-errors:
   ru: Передайте массив
   en: Pass an array
   hy: Անցնել զանգված
+  it: Passare un array
+  es: Pasar una matriz
 ui-arraygrid-save:
   ru: Сохранить
   en: Save
   hy: Պահպանել
+  it: Salvare
+  es: Guardar
 ui-fields-arraygrid:
   ru: Массив в виде грида
   en: Array as Grid
   hy: Զանգվածը որպես ցանց
+  it: Array come griglia
+  es: Matriz como cuadrícula
 ui-arraygrid-title:
   ru: Добавить/Редактировать элемент
   en: Add/Edit element
   hy: Ավելացնել/Խմբագրել տարր
+  it: Aggiungi/Modifica elemento
+  es: Añadir/Editar elemento
 ui-arraygrid-contextmenu-up:
   ru: Вверх
   en: Up
   hy: Վերև
+  it: Su
+  es: Arriba
 ui-arraygrid-contextmenu-down:
   ru: Вниз
   en: Down
   hy: Ներքև
+  it: Giù
+  es: Abajo

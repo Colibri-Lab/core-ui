@@ -2,7 +2,11 @@ ui-editors-email-message:
   ru: Пожалуйста, введите корректный email
   en: Please enter a valid email
   hy: Խնդրում ենք մուտքագրել վավեր էլ
+  it: Inserisci un'email valida
+  es: Por favor, introduzca un correo electrónico válido
 ui-editors-email:
   ru: Эл. почта
   en: Email
   hy: Էլ՝ հասցե
+  it: Email
+  es: Correo electrónico

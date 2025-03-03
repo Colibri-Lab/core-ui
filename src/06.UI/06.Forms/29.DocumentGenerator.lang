@@ -1,6 +1,6 @@
-ui-fields-checkboxlist: {}
 ui-fields-documentgenerator:
   ru: Генератор документов
   en: Document generator
   it: Generatore di documenti
   hy: Փաստաթղթերի գեներատոր
+  es: Generador de documentos

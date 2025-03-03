@@ -2,7 +2,11 @@ ui-filesdragdrop-choosefiles:
   ru: Выберите или перетащите файлы
   en: Select or drag files
   hy: Ընտրեք կամ քաշեք ֆայլեր
+  it: Seleziona o trascina i file
+  es: Selecciona o arrastra los archivos
 ui-filesdragdrop-choosefile:
   ru: Выберите или перетащите файл
   en: Select or drag a file
   hy: Ընտրեք կամ քաշեք ֆայլ
+  it: Seleziona o trascina un file
+  es: Selecciona o arrastra un archivo

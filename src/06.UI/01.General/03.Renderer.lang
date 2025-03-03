@@ -2,15 +2,23 @@ ui-renderer-error1:
   ru: Передайте в конструктор обьект для рендеринга
   en: Pass an object to the constructor to render
   hy: Օբյեկտ փոխանցեք կոնստրուկտորին, որպեսզի այն ցուցադրվի
+  it: Passa un oggetto al costruttore per renderizzare
+  es: Pasa un objeto al constructor para renderizar
 ui-renderer-error2:
   ru: Передайнный обьект не компонент
   en: The passed object is not a component
   hy: Անցած օբյեկտը բաղադրիչ չէ
+  it: L'oggetto passato non è un componente
+  es: El objeto pasado no es un componente
 ui-renderer-error3:
   ru: Передайте данные для отображения
   en: Pass data to display
   hy: Տվյալները փոխանցեք ցուցադրման համար
+  it: Passa i dati da visualizzare
+  es: Pasa los datos para mostrar
 ui-renderer-error4:
   ru: Необходимо переопределить этот метод
   en: You need to override this method
   hy: Դուք պետք է անտեսեք այս մեթոդը
+  it: Devi sovrascrivere questo metodo
+  es: Necesitas sobrescribir este método

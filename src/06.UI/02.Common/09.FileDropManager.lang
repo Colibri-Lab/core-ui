@@ -5,15 +5,25 @@ ui-filedropmanager-message:
     folder
   hy: "Խնդրում ենք թողարկել այս տարածքում գտնվող ֆայլերը: Ներբեռնումը կկատարվի
     ընտրված պանակում"
+  it: Per favore rilascia i file in questa area. Il download verrà effettuato nella
+    cartella selezionata
+  es: Por favor, suelta los archivos en esta área. La descarga se realizará en la
+    carpeta seleccionada
 ui-filedropmanager-error1:
   ru: Файл слишком большой или не подходящего типа.
   en: The file is too large or of the wrong type.
   hy: "Ֆայլը չափազանց մեծ է կամ սխալ տեսակի է:"
+  it: Il file è troppo grande o del tipo sbagliato.
+  es: El archivo es demasiado grande o del tipo incorrecto.
 ui-renderer-allowed:
   ru: "Разрешено: %s"
   en: "Allowed: %s"
   hy: Թույլատրված է՝ %s
+  it: "Consentito: %s"
+  es: "Permitido: %s"
 ui-renderer-max:
   ru: максимум %s
   en: "%s maximum"
   hy: "%s առավելագույնը"
+  it: massimo %s
+  es: máximo %s
