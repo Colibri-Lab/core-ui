@@ -4,15 +4,23 @@ ui-viewers-fields:
   hy: Դաշտերի դիտող
   it: Visualizzatore di campi
   es: Visor de campos
+  kk: Өрістер көрермені
+  uz: Maydonlar ko'rish
+
 ui-viewers-fields-expand:
   ru: Развернуть
   en: Expand
   hy: Ընդարձակել
   it: Espandi
   es: Expandir
+  kk: Кеңейту
+  uz: Kengaytirish
+
 ui-viewers-fields-collapse:
   ru: Свернуть
   en: Collapse
   hy: Փլուզում
   it: Comprimere
   es: Colapsar
+  kk: Қысқарту
+  uz: Yig'ish

@@ -4,9 +4,13 @@ ui-viewers-document:
   hy: Փաստաթուղթ
   it: Documento
   es: Documento
+  kk: Құжат
+  uz: Hujjat
 ui-viewers-document-unknownformat:
   ru: Неизвестный формат документа
   en: Unknown format
   hy: Անհայտ ձևաչափ
   it: Formato sconosciuto
   es: Formato desconocido
+  kk: Белгісіз формат
+  uz: Noma'lum format

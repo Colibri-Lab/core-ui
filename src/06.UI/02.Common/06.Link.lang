@@ -3,14 +3,14 @@ ui-link-opennewtab:
   en: Open in new tab
   it: Apri in una nuova scheda
   hy: Բացել նոր ներքին էջում
-  kz: Жаңа тақтада ашу
+  kk: Жаңа тақтада ашу
   uz: Yangi oynada ochish
   es: Abrir en una nueva pestaña
 ui-link-open:
   ru: Открыть
   en: Open
   it: Apri
-  am: Բացել
-  kz: Ашу
+  hy: Բացել
+  kk: Ашу
   uz: Ochish
   es: Abrir

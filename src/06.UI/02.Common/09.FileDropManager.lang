@@ -1,29 +1,32 @@
 ui-filedropmanager-message:
-  ru: Пожалуйста, отпустите файлы в этой области. Загрузка будет произведена в
-    выбранную папку
-  en: Please release files in this area. The download will be made in the selected
-    folder
-  hy: "Խնդրում ենք թողարկել այս տարածքում գտնվող ֆայլերը: Ներբեռնումը կկատարվի
-    ընտրված պանակում"
-  it: Per favore rilascia i file in questa area. Il download verrà effettuato nella
-    cartella selezionata
-  es: Por favor, suelta los archivos en esta área. La descarga se realizará en la
-    carpeta seleccionada
+  ru: Пожалуйста, отпустите файлы в этой области. Загрузка будет произведена в выбранную папку
+  en: Please release files in this area. The download will be made in the selected folder
+  hy: "Խնդրում ենք թողարկել այս տարածքում գտնվող ֆայլերը: Ներբեռնումը կկատարվի ընտրված պանակում"
+  it: Per favore rilascia i file in questa area. Il download verrà effettuato nella cartella selezionata
+  es: Por favor, suelta los archivos en esta área. La descarga se realizará en la carpeta seleccionada
+  kk: Файлдарды осы аймаққа тастаңыз. Жүктеу таңдалған қалтаға жасалады
+  uz: Fayllarni ushbu hududga tashlang. Yuklab olish tanlangan papkaga amalga oshiriladi
 ui-filedropmanager-error1:
   ru: Файл слишком большой или не подходящего типа.
   en: The file is too large or of the wrong type.
   hy: "Ֆայլը չափազանց մեծ է կամ սխալ տեսակի է:"
   it: Il file è troppo grande o del tipo sbagliato.
   es: El archivo es demasiado grande o del tipo incorrecto.
+  kk: Файл тым үлкен немесе дұрыс емес түрі.
+  uz: Fayl juda katta yoki noto'g'ri turdagi.
 ui-renderer-allowed:
   ru: "Разрешено: %s"
   en: "Allowed: %s"
   hy: Թույլատրված է՝ %s
   it: "Consentito: %s"
   es: "Permitido: %s"
+  kk: "Рұқсат етілген: %s"
+  uz: "Ruxsat etilgan: %s"
 ui-renderer-max:
   ru: максимум %s
   en: "%s maximum"
   hy: "%s առավելագույնը"
   it: massimo %s
   es: máximo %s
+  kk: максимум %s
+  uz: maksimum %s

@@ -4,9 +4,13 @@ ui-files-choosefiles:
   hy: Ընտրեք ֆայլեր
   it: Seleziona i file
   es: Seleccionar archivos
+  kk: Файлдарды таңдау
+  uz: Fayllarni tanlash
 ui-files-choosefile:
   ru: Выбрать файл
   en: Select a file
   hy: Ընտրեք ֆայլ
   it: Seleziona un file
   es: Seleccionar un archivo
+  kk: Файлды таңдау
+  uz: Faylni tanlash

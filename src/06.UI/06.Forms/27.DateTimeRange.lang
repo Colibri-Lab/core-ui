@@ -4,15 +4,21 @@ ui-fields-datetimerage:
   hy: Ամսաթիվ և ժամ (սկսած/մինչև)
   it: Data e ora (da/a)
   es: Fecha y hora (de/a)
+  kk: Күні мен уақыты (бастап/дейін)
+  uz: Sana va vaqt (dan/gacha)
 ui-fields-datetimerage-from:
   ru: от
   en: from
   hy: -ից
   it: da
   es: de
+  kk: бастап
+  uz: dan
 ui-fields-datetimerage-to:
   ru: до
   en: to
   hy: դեպի
   it: a
   es: a
+  kk: дейін
+  uz: gacha

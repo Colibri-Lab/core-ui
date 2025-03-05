@@ -4,21 +4,29 @@ ui-period-day1:
   hy: օր
   it: giorno
   es: día
+  kk: күн
+  uz: kun
 ui-period-day2:
   ru: дня
   en: days
   hy: օրեր
   it: giorni
   es: días
+  kk: күндер
+  uz: kunlar
 ui-period-day3:
   ru: дней
   en: days
   hy: օրեր
   it: giorni
   es: días
+  kk: күндер
+  uz: kunlar
 ui-fields-period:
   ru: Период
   en: Period
   hy: Ժամանակաշրջան
   it: Periodo
   es: Período
+  kk: Период
+  uz: Davr

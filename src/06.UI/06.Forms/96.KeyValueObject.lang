@@ -4,27 +4,37 @@ ui-fields-keyvalueobject-add:
   hy: Ավելացնել
   it: Aggiungi
   es: Añadir
+  kk: Қосу
+  uz: Qo'shish
 ui-fields-keyvalueobject:
   ru: Обьект (ключ/значение)
   en: Object (key/value)
   hy: Օբյեկտ (բանալին/արժեք)
   it: Oggetto (chiave/valore)
   es: Objeto (clave/valor)
+  kk: Объект (кілт/мән)
+  uz: Ob'ekt (kalit/qiymat)
 ui-fields-keyvalueobject-key:
   ru: Ключ
   en: Key
   hy: Անվանում
   it: Chiave
   es: Clave
+  kk: Кілт
+  uz: Kalit
 ui-fields-keyvalueobject-value:
   ru: Значение
   en: Value
   hy: Արժեք
   it: Valore
   es: Valor
+  kk: Мән
+  uz: Qiymat
 ui-fields-keyvalueobject-remove:
   ru: Удалить
   en: Delete
   hy: Ջնջել
   it: Elimina
   es: Borrar
+  kk: Жою
+  uz: O'chirish

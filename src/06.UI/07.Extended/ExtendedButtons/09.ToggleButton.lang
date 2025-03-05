@@ -4,9 +4,13 @@ ui-toggle-button-expand:
   hy: Բացել
   it: Espandi
   es: Expandir
+  kk: Кеңейту
+  uz: Kengaytirish
 ui-toggle-button-collapse:
   ru: Свернуть
   en: Collapse
   hy: Փակել
   it: Comprimere
   es: Colapsar
+  kk: Қысқарту
+  uz: Qisqartirish

@@ -4,9 +4,13 @@ ui-editors-email-message:
   hy: Խնդրում ենք մուտքագրել վավեր էլ
   it: Inserisci un'email valida
   es: Por favor, introduzca un correo electrónico válido
+  kk: Дұрыс email енгізіңіз
+  uz: Iltimos, to'g'ri email kiriting
 ui-editors-email:
   ru: Эл. почта
   en: Email
   hy: Էլ՝ հասցե
   it: Email
   es: Correo electrónico
+  kk: Электрондық пошта
+  uz: Elektron pochta

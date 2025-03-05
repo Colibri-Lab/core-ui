@@ -4,56 +4,76 @@ ui-arraygrid-add:
   hy: Ավելացնել
   it: Aggiungere
   es: Añadir
+  kk: Қосу
+  uz: Qo'shish
 ui-arraygrid-contextmenu-edit:
   ru: Редактировать
   en: Edit
   hy: Խմբագրել
   it: Modificare
   es: Editar
+  kk: Өңдеу
+  uz: Tahrirlash
 ui-arraygrid-contextmenu-remove:
   ru: Удалить
   en: Delete
   hy: Ջնջել
   it: Eliminare
   es: Eliminar
+  kk: Жою
+  uz: O'chirish
 ui-arraygrid-massactions-remove:
   ru: удалить
   en: remove
   it: rimuovere
   es: eliminar
+  kk: жою
+  uz: o'chirish
 ui-arraygrid-errors:
   ru: Передайте массив
   en: Pass an array
   hy: Անցնել զանգված
   it: Passare un array
   es: Pasar una matriz
+  kk: Массивты өткізіңіз
+  uz: Massivni o'tkazing
 ui-arraygrid-save:
   ru: Сохранить
   en: Save
   hy: Պահպանել
   it: Salvare
   es: Guardar
+  kk: Сақтау
+  uz: Saqlash
 ui-fields-arraygrid:
   ru: Массив в виде грида
   en: Array as Grid
   hy: Զանգվածը որպես ցանց
   it: Array come griglia
   es: Matriz como cuadrícula
+  kk: Тор ретінде массив
+  uz: Panjara sifatida massiv
 ui-arraygrid-title:
   ru: Добавить/Редактировать элемент
   en: Add/Edit element
   hy: Ավելացնել/Խմբագրել տարր
   it: Aggiungi/Modifica elemento
   es: Añadir/Editar elemento
+  kk: Элементті қосу/өңдеу
+  uz: Element qo'shish/tahrirlash
 ui-arraygrid-contextmenu-up:
   ru: Вверх
   en: Up
   hy: Վերև
   it: Su
   es: Arriba
+  kk: Жоғары
+  uz: Yuqoriga
 ui-arraygrid-contextmenu-down:
   ru: Вниз
   en: Down
   hy: Ներքև
   it: Giù
   es: Abajo
+  kk: Төмен
+  uz: Pastga

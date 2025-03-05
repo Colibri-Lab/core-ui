@@ -4,9 +4,13 @@ ui-selector-nothingchoosed:
   it: Non è stato selezionato nulla
   es: Nada seleccionado
   hy: Նոյինգ սելեկտեդ
+  kk: Ештеңе таңдалмады
+  uz: Hech narsa tanlanmadi
 ui-selector-choosed:
   ru: Выбрано %s1 %s2
   en: Selected %s1 items of %s2
   it: Selezionati %s1 elementi di %s2
   es: Seleccionados %s1 elementos de %s2
   hy: Սելեկտեդ %s1 %s2
+  kk: Таңдалған %s1 элемент %s2
+  uz: Tanlangan %s1 element %s2

@@ -4,81 +4,109 @@ ui-files-sign:
   hy: Նշան
   it: Firma
   es: Firmar
+  kk: Қол қою
+  uz: Imzo qo'yish
 ui-files-about:
   ru: до
   en: up to
   hy: մինչև
   it: fino a
   es: hasta
+  kk: дейін
+  uz: gacha
 ui-files-files:
   ru: файлов
   en: files
   hy: ֆայլեր
   it: file
   es: archivos
+  kk: файлдар
+  uz: fayllar
 ui-files-more:
   ru: не больше
   it: non più di
   es: no más de
   en: no more than
   hy: ոչ ավելի
+  kk: артық емес
+  uz: ko'proq emas
 ui-files-everyone:
   ru: каждый
   en: each
   hy: յուրաքանչյուր
   it: ciascuno
   es: cada
+  kk: әрқайсысы
+  uz: har biri
 ui-files-choosenomore:
   ru: Можно выбрать не более
   en: You can select no more than
   hy: Դուք կարող եք ընտրել ոչ ավելի, քան
   it: Puoi selezionare fino a
   es: Puede seleccionar hasta
+  kk: Сіз ең көбі таңдай аласыз
+  uz: Siz ko'pi bilan tanlashingiz mumkin
 ui-files-file:
   ru: Файл
   en: File
   hy: Ֆայլ
   it: File
   es: Archivo
+  kk: Файл
+  uz: Fayl
 ui-files-verybig:
   ru: слишком большой
   en: is too large
   hy: չափազանց մեծ է
   it: è troppo grande
   es: es demasiado grande
+  kk: тым үлкен
+  uz: juda katta
 ui-files-format:
   ru: Недопустимый формат файла
   en: Invalid file format
   hy: Ֆայլի անվավեր ձևաչափ
   it: Formato file non valido
   es: Formato de archivo no válido
+  kk: Жарамсыз файл форматы
+  uz: Noto'g'ri fayl formati
 ui-fields-files:
   ru: Список файлов
   en: Files list
   hy: Ֆայլերի ցուցակ
   it: Elenco file
   es: Lista de archivos
+  kk: Файлдар тізімі
+  uz: Fayllar ro'yxati
 ui-files-filescount:
   ru: до %s файлов
   en: up to %s files
   hy: մինչև %s ֆայլ
   it: fino a %s file
   es: hasta %s archivos
+  kk: %s файлға дейін
+  uz: %s faylgacha
 ui-files-size:
   ru: не больше %s
   en: no more than %s
   hy: "%s-ից ոչ ավելի"
   it: non più di %s
   es: no más de %s
+  kk: %s артық емес
+  uz: %s ko'proq emas
 ui-files-filescount2:
   ru: Можно выбрать не больше %s файлов
   en: You can select no more than %s files
   hy: Դուք կարող եք ընտրել ոչ ավելի, քան %s ֆայլ
   it: Puoi selezionare fino a %s file
   es: Puede seleccionar hasta %s archivos
+  kk: Сіз ең көбі %s файл таңдай аласыз
+  uz: Siz ko'pi bilan %s fayl tanlashingiz mumkin
 ui-files-filehuge:
   ru: Файл %s слишком большой
   en: File %s is too large
   hy: "%s ֆայլը չափազանց մեծ է"
   it: Il file %s è troppo grande
   es: El archivo %s es demasiado grande
+  kk: %s файлы тым үлкен
+  uz: %s fayli juda katta

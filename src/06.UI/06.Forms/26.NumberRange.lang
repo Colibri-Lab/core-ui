@@ -4,15 +4,21 @@ ui-fields-numberrange:
   hy: Համարը/ից
   it: Numero da/a
   es: Número de/a
+  kk: Саннан/дейін
+  uz: Raqam dan/gacha
 ui-fields-numberrange-from:
   ru: от
   en: from
   hy: -ից
   it: da
   es: de
+  kk: бастап
+  uz: dan
 ui-fields-numberrange-to:
   ru: до
   en: to
   hy: դեպի
   it: a
   es: a
+  kk: дейін
+  uz: gacha

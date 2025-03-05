@@ -4,9 +4,13 @@ ui-filelabel-download:
   hy: Բեռնել
   it: Scaricare
   es: Descargar
+  kk: Жүктеу
+  uz: Yuklab olish
 ui-fields-filelabel:
   ru: Ссылка на файл
   en: Link to file
   hy: Հղում դեպի ֆայլ
   it: Collegamento al file
   es: Enlace al archivo
+  kk: Файлға сілтеме
+  uz: Faylga havola

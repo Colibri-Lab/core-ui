@@ -4,9 +4,13 @@ ui-editors-link-download:
   hy: (ներբեռնել)
   it: (scaricare)
   es: (descargar)
+  kk: (жүктеу)
+  uz: (yuklab olish)
 ui-editors-link:
   ru: Ссылка
   en: Link
   hy: Հղում
   it: Collegamento
   es: Enlace
+  kk: Сілтеме
+  uz: Havola

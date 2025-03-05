@@ -4,15 +4,21 @@ ui-uploadbutton-error1:
   hy: "Ֆայլը չափազանց մեծ է կամ սխալ տեսակի է:"
   it: Il file è troppo grande o del tipo sbagliato.
   es: El archivo es demasiado grande o del tipo incorrecto.
+  kk: Файл тым үлкен немесе дұрыс емес түрі.
+  uz: Fayl juda katta yoki noto'g'ri turi.
 ui-uploadbutton-allow:
   ru: Разрешены %s
   en: Allowed %s
   hy: Թույլատրված է %s
   it: Consentito %s
   es: Permitido %s
+  kk: Рұқсат етілген %s
+  uz: Ruxsat etilgan %s
 ui-uploadbutton-max:
   ru: максимум %s
   en: "%s maximum"
   hy: "%s առավելագույնը"
   it: "%s massimo"
   es: "%s máximo"
+  kk: "%s максимум"
+  uz: "%s maksimal"

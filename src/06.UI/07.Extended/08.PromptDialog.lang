@@ -4,9 +4,13 @@ ui-prompt-ok:
   hy: Շարունակել
   it: Continua
   es: Continuar
+  kk: Жалғастыру
+  uz: Davom etish
 ui-prompt-cancel:
   ru: Отмена
   en: Cancel
   hy: Չեղարկել
   it: Annulla
   es: Cancelar
+  kk: Болдырмау
+  uz: Bekor qilish

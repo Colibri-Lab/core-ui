@@ -4,21 +4,29 @@ ui-files-error-max:
   hy: Դուք կարող եք ընտրել մինչև %s ֆայլ
   it: Puoi selezionare fino a %s file
   es: Puede seleccionar hasta %s archivos
+  kk: Сіз %s файлға дейін таңдай аласыз
+  uz: Siz %s tagacha fayl tanlashingiz mumkin
 ui-files-error-format:
   ru: Недопустимый формат файла
   en: Invalid file format
   hy: Ֆայլի անվավեր ձևաչափ
   it: Formato file non valido
   es: Formato de archivo no válido
+  kk: Жарамсыз файл форматы
+  uz: Noto'g'ri fayl formati
 ui-files-error-size:
   ru: Выбранный файл слишком большой
   en: Selected file is too large
   hy: Ընտրված ֆայլը չափազանց մեծ է
   it: Il file selezionato è troppo grande
   es: El archivo seleccionado es demasiado grande
+  kk: Таңдалған файл тым үлкен
+  uz: Tanlangan fayl juda katta
 ui-fields-file:
   ru: Файл
   en: File
   hy: Ֆայլ
   it: File
   es: Archivo
+  kk: Файл
+  uz: Fayl

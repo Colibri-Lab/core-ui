@@ -4,9 +4,13 @@ ui-fields-radio:
   hy: Ռադիո կոճակներ
   it: Pulsanti radio
   es: Botones de radio
+  kk: Радио түймелері
+  uz: Radio tugmalari
 ui-fields-radio-clear:
   ru: Очистить
   en: Clear
   hy: Պարզ
   it: Chiaro
   es: Claro
+  kk: Тазалау
+  uz: Tozalash
