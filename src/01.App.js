@@ -206,7 +206,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
                         window.addEventListener('beforeunload', (e) => {
                             this._initialized = false;
-                            this.Dispatch('DocumentUnloaded', {});  
+                            this.Dispatch('DocumentUnloaded', {domEvent: e});  
                         });
     
                         if(settings?.screen?.theme === 'follow-device') {
