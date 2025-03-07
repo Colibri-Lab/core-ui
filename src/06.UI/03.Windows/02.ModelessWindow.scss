@@ -8,7 +8,7 @@
     overflow: hidden;
     padding: 0;
     contain: strict;
-    
+
     flex-direction: column;
 
     &.app-component-shown {
@@ -35,27 +35,27 @@
         }
 
         .close-button-container {
-             margin: 0 0 0 auto;
-             padding: 0;
+                margin: 0 0 0 auto;
+                padding: 0;
 
-             .close-button {
-                 cursor: pointer;
-                 padding: 20px;
-                 margin-left: auto;
+                .close-button {
+                    cursor: pointer;
+                    padding: 20px;
+                    margin-left: auto;
 
-                 svg {
-                     display: block;
-                     width: 12px;
-                     height: 12px;
+                    svg {
+                        display: block;
+                        width: 12px;
+                        height: 12px;
 
-                     path {
-                         stroke: #14151A;
-                         fill: #14151A;
-                     }
-                 }
+                        path {
+                            stroke: #14151A;
+                            fill: #14151A;
+                        }
+                    }
 
-             }
-         }
+                }
+            }
     }
 
     .modeless-window-container {

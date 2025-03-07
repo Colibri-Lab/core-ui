@@ -58,6 +58,10 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         this.Children('closebutton').shown = this._closable;
         this.Children('closebutton').AddHandler('Clicked', (event, args) => this.__CloseClicked(event, args));
 
+        const closeIcon = new Colibri.UI.Icon('close-icon', this.Children('closebutton'));
+        closeIcon.iconSVG = 'Colibri.UI.ClearIcon';
+        closeIcon.shown = true;
+
         this.Children('minimizebutton', new Colibri.UI.Button('minimizebutton', minimizeButtonContainer));
         this.Children('minimizebutton').AddClass('s-minimize');
         this.Children('minimizebutton').shown = this._minimizable;

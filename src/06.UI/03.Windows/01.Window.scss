@@ -119,9 +119,19 @@
         height: 24px;
         padding: 0px;
         background-color: transparent;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M6 18L18 6' stroke='%23444855' stroke-width='1.85' stroke-linecap='round'/%3E%3Cpath d='M18 18L6 6' stroke='%23444855' stroke-width='1.85' stroke-linecap='round'/%3E%3C/svg%3E");
         border: 0;
         cursor: pointer;
+        .app-component-icon {
+            &.app-component-shown {
+                display: block !important;
+            }
+            width: 12px;
+            height: 12px;
+            path {
+                stroke: #14151A;
+                fill: #14151A;
+            }
+        }
     }
 
     button.s-minimize {
