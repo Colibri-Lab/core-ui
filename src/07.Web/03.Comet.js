@@ -325,6 +325,56 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         }
         return null;
     }
+    
+    /**
+     * Sends a message to a specific user.
+     * @param {string} userGuid - The GUID of the recipient user.
+     * @param {string} action - The action to be performed.
+     * @param {Array} message - The message content.
+     * @returns {string|null} - The ID of the sent message.
+     */
+    SendFilesTo(userGuid, action, files = null) {
+        try {
+            const id = Date.Mc();
+            if(this._ws.readyState === 1) {
+                const msg = {action: action, recipient: userGuid, message: {files: files, id: id}, domain: Colibri.Web.Comet.Options.origin};
+                this._ws.send(JSON.stringify(msg));
+                this._addMessage(Object.assign({}, msg, {from: this._user}), true);
+                return id;
+            }
+            else {
+                console.log('server goes away');
+            }
+        }
+        catch(e) {
+            console.log(e);
+        }
+        return null;
+    }
+
+    /**
+     * Sends a broadcast message.
+     * @param {string} action - The action to be performed.
+     * @param {Array} files - The message content.
+     * @returns {string|null} - The ID of the sent message. 
+     */
+    SendFilesBroadcast(action, files = null) {
+        try {
+            const id = Date.Mc();
+            if(this._ws.readyState === 1) {
+                const msg = {action: action, recipient: '*', message: {files: files, id: id, broadcast: true}, domain: Colibri.Web.Comet.Options.origin};
+                this._ws.send(JSON.stringify(msg));
+                return id;
+            }
+            else {
+                console.log('server goes away');
+            }
+        }
+        catch(e) {
+            console.log(e);
+        }
+        return null;
+    }
 
     /**
      * Gets the client ID for the Comet connection.
