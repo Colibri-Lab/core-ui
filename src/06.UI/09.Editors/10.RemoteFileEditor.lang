@@ -1,0 +1,14 @@
+ui-editors-remotefile:
+  ru: Выбрать файл
+  en: Select file
+  hy: Ընտրել ֆայլը
+  es: Seleccionar archivo
+  kk: Файлды таңдау
+  uz: Faylni tanlash
+ui-editors-remotefile-text:
+  ru: Выбор файла
+  en: File selection
+  hy: Ֆայլի ընտրում
+  es: Selección de archivo
+  kk: Файлды таңдау
+  uz: Faylni tanlash

@@ -1,0 +1,29 @@
+.app-remotefile-editor-component {
+
+    input[type=file] {
+        visibility: hidden; 
+        width: 1px; 
+        height: 1px; 
+        outline: none;
+    }
+
+    &.app-component-shown {
+        display: flex;
+    }
+
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+    gap: 10px;
+
+    [data-object-name="url"] {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    [data-object-name="link-choose"] {
+        white-space: nowrap;
+    }
+
+}

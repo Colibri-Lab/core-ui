@@ -705,7 +705,6 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             return false;
         }
         else if(e.code === 'Space' && !(e.target.is('input') || e.target.is('textarea'))) {
-            debugger;
             this.selected = null;
             this.activeRow.checked = !this.activeRow.checked;
             this.Dispatch('CheckChanged');

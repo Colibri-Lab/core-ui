@@ -449,6 +449,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
                 editor = returns.editor;
                 tag = returns.tag;
             }
+
             this._editorObject = new editor(this.name + '_editor', this);
             this._editorObject.field = tag;
             this._editorObject.download = download;  
@@ -484,7 +485,9 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
                 this.parentRow && this.parentRow.AddClass('-editing');
                 this._valueContainer && this._valueContainer.Hide();
                 this._viewerObject && this._viewerObject.Hide();
-                this._editorObject.field = this._parentColumn.tag;
+                if(!this._editorObject.field) {
+                    this._editorObject.field = this._parentColumn.tag;
+                }
                 this._editorObject.Show();
                 if(setFocus) {
                     this._editorObject.Focus();
