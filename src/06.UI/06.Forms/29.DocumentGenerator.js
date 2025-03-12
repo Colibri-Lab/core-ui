@@ -59,7 +59,7 @@ Colibri.UI.Forms.DocumentGenerator = class extends Colibri.UI.Forms.Field {
         module.Call(
             this._generatorOptions.fileLink.controller, 
             this._generatorOptions.fileLink.method, 
-            {guid: this._value.guid, _requestType: 'stream'}
+            Object.assign({}, this._generatorOptions.fileLink.params, {guid: this._value.guid, _requestType: 'stream'})
         ).then((response) => {
             DownloadFile(response.result.content, response.result.name, response.result.mimetype, true);    
             if(this._generatorOptions.changeOnDownload) {
