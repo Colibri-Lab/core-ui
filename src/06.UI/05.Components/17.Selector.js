@@ -285,23 +285,36 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
             return;
         }
 
-        if(!this._popup) {
-            this._popup = this._createPopup(values);
-            this._registerPopupEventHandlers(this._popup);
-        }
-        else {
-            this._popup.FillItems(values, this._lastValue);
+        let promise = null;
+        if(this.beforePopupHandler) {
+            const f = this.beforePopupHandler;
+            promise = f(this);
+        } else {
+            promise = Promise.resolve({values: values});
         }
 
-        if(!this._popup.shown) {
-            this._popup.Show();
-            if(this._popupconfig) {
-                Object.assign(this._popup, this._popupconfig);
+        promise.then((response) => {
+            values = response.values;
+
+            if(!this._popup) {
+                this._popup = this._createPopup(values);
+                this._registerPopupEventHandlers(this._popup);
             }
-            this._input.BringToFront();
-        }
-
-        this._changeBodyScroll();
+            else {
+                this._popup.FillItems(values, this._lastValue);
+            }
+    
+            if(!this._popup.shown) {
+                this._popup.Show();
+                if(this._popupconfig) {
+                    Object.assign(this._popup, this._popupconfig);
+                }
+                this._input.BringToFront();
+            }
+    
+            this._changeBodyScroll();
+    
+        });
 
     }
 
@@ -849,6 +862,22 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     set showToolTip(value) {
         this._showToolTip = value === true || value === 'true';
         this._renderValue();
+    }
+
+    /**
+     * Before popup shown handler
+     * @type {Function|string}
+     */
+    get beforePopupHandler() {
+        return this._beforePopupHandler;
+    }
+    /**
+     * Before popup shown handler
+     * @type {Function|string}
+     */
+    set beforePopupHandler(value) {
+        value = this._convertProperty('Function', value);   
+        this._beforePopupHandler = value;
     }
 
 }
