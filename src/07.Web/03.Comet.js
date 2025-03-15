@@ -234,7 +234,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      */
     MarkAsRead(ids = null) {
         let messages = this._getStoredMessages();
-        if(ids.length > 0) {
+        if(ids && ids.length > 0) {
             messages.filter(v => ids.indexOf(v.id) !== -1).forEach(message => message.read = true);
         } else {
             messages.forEach(message => message.read = true);
