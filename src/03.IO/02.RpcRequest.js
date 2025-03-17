@@ -138,7 +138,7 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
         params && delete params._requestCache;
         headers.requester = location.hostname;
 
-        if (App.CsrfToken && location.hostname === new URL(this._remoteDomain).hostname) {
+        if (App.CsrfToken && (this._urlResolver || location.hostname === new URL(this._remoteDomain).hostname)) {
             headers['X-CSRF-TOKEN'] = App.CsrfToken;
         }
         return new Promise((resolve, reject) => {
