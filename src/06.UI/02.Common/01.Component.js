@@ -145,7 +145,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         this._renderedIndex = 0;
         
-        this._clickToCopyHandler = (e) => this.value.copyToClipboard() && App.Notices.Add(new Colibri.UI.Notice('#{ui-copy-info}', Colibri.UI.Notice.Success));
+        this._clickToCopyHandler = (e) => (this._copyStyle === 'text' ? this.container.text() : this.value).copyToClipboard() && App.Notices.Add(new Colibri.UI.Notice('#{ui-copy-info}', Colibri.UI.Notice.Success));
 
         Object.forEach(createEvents, (event, handler) => {
             this.AddHandler(event, handler);
@@ -2409,6 +2409,21 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     __processChangeOnRouteSwitch(patternMatches) {
         this.ReloadBinding();
+    }
+
+    /**
+     * Copy style
+     * @type {html,text}
+     */
+    get copyStyle() {
+        return this._copyStyle;
+    }
+    /**
+     * Copy style
+     * @type {html,text}
+     */
+    set copyStyle(value) {
+        this._copyStyle = value;
     }
 
     /**
