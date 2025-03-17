@@ -593,6 +593,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
     set idField(value) {
         this._idField = value;
     }
+    
 
 }
 
