@@ -53,4 +53,4 @@ Colibri.UI.Forms.Token = class extends Colibri.UI.Forms.Field {
 
 }
 
-Colibri.UI.Forms.Field.RegisterFieldComponent('Token', 'Colibri.UI.Forms.Token', '#{ui-fields-token}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('Token', 'Colibri.UI.Forms.Token', '#{ui-fields-token}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler'])

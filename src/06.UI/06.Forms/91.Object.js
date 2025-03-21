@@ -403,4 +403,4 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
     }
     
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Object', 'Colibri.UI.Forms.Object', '#{ui-fields-object}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('Object', 'Colibri.UI.Forms.Object', '#{ui-fields-object}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler','vertical','removedesc']);

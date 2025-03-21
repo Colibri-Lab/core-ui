@@ -251,4 +251,4 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
     }
 }
 
-Colibri.UI.Forms.Field.RegisterFieldComponent('Text', 'Colibri.UI.Forms.Text', '#{ui-fields-text}');
+Colibri.UI.Forms.Field.RegisterFieldComponent('Text', 'Colibri.UI.Forms.Text', '#{ui-fields-text}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','mask','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler']);

@@ -369,4 +369,4 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         }
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('File', 'Colibri.UI.Forms.File', '#{ui-fields-file}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('File', 'Colibri.UI.Forms.File', '#{ui-fields-file}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler','allow','size'])

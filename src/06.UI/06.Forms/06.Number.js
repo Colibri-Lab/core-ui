@@ -267,4 +267,4 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
 
 
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Number', 'Colibri.UI.Forms.Number', '#{ui-fields-number}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('Number', 'Colibri.UI.Forms.Number', '#{ui-fields-number}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler'])

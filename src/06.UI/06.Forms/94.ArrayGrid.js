@@ -466,4 +466,4 @@ Colibri.UI.Forms.ArrayGrid.ObjectWindow = class extends Colibri.UI.Window {
 
 }
 
-Colibri.UI.Forms.Field.RegisterFieldComponent('ArrayGrid', 'Colibri.UI.Forms.ArrayGrid', '#{ui-fields-arraygrid}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('ArrayGrid', 'Colibri.UI.Forms.ArrayGrid', '#{ui-fields-arraygrid}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler','vertical','addlink','removelink','updownlink','hasscroll','initempty','maxadd','title','removedesc','displayed_columns'])

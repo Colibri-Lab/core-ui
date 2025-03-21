@@ -39,9 +39,6 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
             this.enabled = this._fieldData.params.enabled;
         }
 
-        this._fieldData.params.simplearraywidth = (this._fieldData.params?.simplearraywidth ?? 1);
-        this._fieldData.params.simplearrayheight = (this._fieldData.params?.simplearrayheight ?? 1);
-
         this._grid.hasContextMenu = true;
 
         const column1 = this._grid.header.columns.Add('key', '');
@@ -258,4 +255,4 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
     
 
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('KeyValueObject', 'Colibri.UI.Forms.KeyValueObject', '#{ui-fields-keyvalueobject}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('KeyValueObject', 'Colibri.UI.Forms.KeyValueObject', '#{ui-fields-keyvalueobject}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler','addlink','keyTitle','valueTitle','canEditKey','canAddNew','canRemoveRows'])

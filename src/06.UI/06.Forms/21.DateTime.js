@@ -156,4 +156,4 @@ Colibri.UI.Forms.DateTime = class extends Colibri.UI.Forms.Field {
         }
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('DateTime', 'Colibri.UI.Forms.DateTime', '#{ui-fields-datetime}');
+Colibri.UI.Forms.Field.RegisterFieldComponent('DateTime', 'Colibri.UI.Forms.DateTime', '#{ui-fields-datetime}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler']);

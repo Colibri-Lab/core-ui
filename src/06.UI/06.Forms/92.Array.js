@@ -409,4 +409,4 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
 
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Array', 'Colibri.UI.Forms.Array', '#{ui-fields-array}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('Array', 'Colibri.UI.Forms.Array', '#{ui-fields-array}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler','vertical','addlink','removelink','updownlink','hasscroll','initempty','maxadd','title','removedesc'])

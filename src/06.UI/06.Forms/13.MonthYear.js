@@ -111,4 +111,4 @@ Colibri.UI.Forms.MonthYear = class extends Colibri.UI.Forms.Field {
         }
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('MonthYear', 'Colibri.UI.Forms.MonthYear', '#{ui-fields-monthyear}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('MonthYear', 'Colibri.UI.Forms.MonthYear', '#{ui-fields-monthyear}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler'])

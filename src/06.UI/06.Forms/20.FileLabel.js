@@ -105,4 +105,4 @@ Colibri.UI.Forms.FileLabel = class extends Colibri.UI.Forms.Field {
     
 
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('FileLabel', 'Colibri.UI.Forms.FileLabel', '#{ui-fields-filelabel}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('FileLabel', 'Colibri.UI.Forms.FileLabel', '#{ui-fields-filelabel}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler'])

@@ -111,4 +111,4 @@ Colibri.UI.Forms.DocumentGenerator = class extends Colibri.UI.Forms.Field {
 
 }
 
-Colibri.UI.Forms.Field.RegisterFieldComponent('DocumentGenerator', 'Colibri.UI.Forms.DocumentGenerator', '#{ui-fields-documentgenerator}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('DocumentGenerator', 'Colibri.UI.Forms.DocumentGenerator', '#{ui-fields-documentgenerator}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler'])

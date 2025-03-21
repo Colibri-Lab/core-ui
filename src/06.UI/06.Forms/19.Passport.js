@@ -229,6 +229,6 @@ Colibri.UI.Forms.Passport = class extends Colibri.UI.Forms.Field {
 	
 
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Passport', 'Colibri.UI.Forms.Passport', '#{ui-fields-passport}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('Passport', 'Colibri.UI.Forms.Passport', '#{ui-fields-passport}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler'])
 
 

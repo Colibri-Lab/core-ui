@@ -87,4 +87,4 @@ Colibri.UI.Forms.DateRange = class extends Colibri.UI.Forms.Field {
 
 }
 
-Colibri.UI.Forms.Field.RegisterFieldComponent('DateRange', 'Colibri.UI.Forms.DateRange', '#{ui-fields-daterange}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('DateRange', 'Colibri.UI.Forms.DateRange', '#{ui-fields-daterange}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler'])

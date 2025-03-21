@@ -167,4 +167,4 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
     
 }
 
-Colibri.UI.Forms.Field.RegisterFieldComponent('Radio', 'Colibri.UI.Forms.Radio', '#{ui-fields-radio}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('Radio', 'Colibri.UI.Forms.Radio', '#{ui-fields-radio}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler'])

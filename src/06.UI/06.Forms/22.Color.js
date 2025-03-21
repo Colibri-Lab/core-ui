@@ -194,4 +194,4 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
 
 }
 
-Colibri.UI.Forms.Field.RegisterFieldComponent('Color', 'Colibri.UI.Forms.Color', '#{ui-fields-color}');
+Colibri.UI.Forms.Field.RegisterFieldComponent('Color', 'Colibri.UI.Forms.Color', '#{ui-fields-color}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler']);

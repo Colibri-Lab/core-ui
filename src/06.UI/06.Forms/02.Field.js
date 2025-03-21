@@ -16,12 +16,13 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      * @param {string} className class name of component
      * @param {string} description component description
      * @param {string} icon icon of component
+     * @param {Array} params params of component
      */
-    static RegisterFieldComponent(name, className, description, icon) {
+    static RegisterFieldComponent(name, className, description, icon, params) {
         if(!icon) {
             icon = Colibri.UI.FieldIcons[className];
         }
-        Colibri.UI.Forms.Field.Components[name] = {className, description, icon};
+        Colibri.UI.Forms.Field.Components[name] = {className, description, icon, params};
     }
     /**
      * Unregisters a field from backend list
@@ -29,6 +30,29 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      */
     static UnregisterFieldComponent(name) {
         delete Colibri.UI.Forms.Field.Components[name];
+    }
+
+    static FindFieldComponent(nameOrClassName) {
+        if(Colibri.UI.Forms.Field.Components[nameOrClassName]) {
+            return Colibri.UI.Forms.Field.Components[nameOrClassName];
+        } else {
+            let found = null;
+            Object.forEach(Colibri.UI.Forms.Field.Components, (name, componentData) => {
+                if(componentData.className === nameOrClassName) {
+                    found = componentData;
+                    return false;
+                }
+            });
+            return found;
+        }
+    }
+
+    static HasParam(nameOrClassName, paramName) {
+        const paramData = Colibri.UI.Forms.Field.FindFieldComponent(nameOrClassName);
+        if(!paramData) {
+            return true;
+        }
+        return paramData.params.indexOf(paramName) !== -1;
     }
 
     /**

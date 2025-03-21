@@ -192,4 +192,4 @@ Colibri.UI.Forms.DateTimeRange = class extends Colibri.UI.Forms.Field {
         }
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('DateTimeRange', 'Colibri.UI.Forms.DateTimeRange', '#{ui-fields-datetimerage}');
+Colibri.UI.Forms.Field.RegisterFieldComponent('DateTimeRange', 'Colibri.UI.Forms.DateTimeRange', '#{ui-fields-datetimerage}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler']);

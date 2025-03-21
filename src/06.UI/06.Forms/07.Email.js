@@ -207,4 +207,4 @@ Colibri.UI.Forms.Email = class extends Colibri.UI.Forms.Field {
         this._input && this._input.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Email', 'Colibri.UI.Forms.Email', '#{ui-fields-email}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('Email', 'Colibri.UI.Forms.Email', '#{ui-fields-email}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler'])

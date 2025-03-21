@@ -349,4 +349,4 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
     }
     
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Tabs', 'Colibri.UI.Forms.Tabs', '#{ui-fields-tabs}')
+Colibri.UI.Forms.Field.RegisterFieldComponent('Tabs', 'Colibri.UI.Forms.Tabs', '#{ui-fields-tabs}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler','vertical','removedesc'])
