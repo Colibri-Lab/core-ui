@@ -100,7 +100,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
             itemObject.AddHandler('Clicked', (event, args) => {
                 if(item.children) {
                     // показываем дочернее меню
-                    this._childContextMenu = new Colibri.UI.ContextMenu(itemObject.name + '_contextmenu', document.body, [Colibri.UI.ContextMenu.RT, Colibri.UI.ContextMenu.RB]);
+                    this._childContextMenu = new Colibri.UI.ContextMenu(itemObject.name + '_contextmenu', document.body, [Colibri.UI.ContextMenu.RT, Colibri.UI.ContextMenu.LT]);
                     this._childContextMenu.Show(item.children, itemObject);
                     this._childContextMenu.AddHandler('Clicked', (event, args) => {
                         this.Dispatch('Clicked', args);
