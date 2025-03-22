@@ -265,7 +265,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     Command(userGuid, action, message = null) {
         try {
             if(this._ws.readyState === 1) {
-                this._ws.send(JSON.stringify({action: action, user: userGuid, message: message, domain: Colibri.Web.Comet.Options.origin}));
+                this._ws.send(JSON.stringify({action: action, user: userGuid, message: message, domain: Colibri.Web.Comet.Options.origin, delivery: 'untrusted'}));
             }
             else {
                 console.log('server goes away');
@@ -287,7 +287,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         try {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
-                const msg = {action: action, recipient: userGuid, message: {text: message, id: id}, domain: Colibri.Web.Comet.Options.origin};
+                const msg = {action: action, recipient: userGuid, message: {text: message, id: id}, domain: Colibri.Web.Comet.Options.origin, delivery: 'trusted'};
                 this._ws.send(JSON.stringify(msg));
                 this._addMessage(Object.assign({}, msg, {from: this._user}), true);
                 return id;
@@ -312,7 +312,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         try {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
-                const msg = {action: action, recipient: '*', message: {text: message, id: id, broadcast: true}, domain: Colibri.Web.Comet.Options.origin};
+                const msg = {action: action, recipient: '*', message: {text: message, id: id, broadcast: true}, domain: Colibri.Web.Comet.Options.origin, delivery: 'trusted'};
                 this._ws.send(JSON.stringify(msg));
                 return id;
             }
@@ -337,7 +337,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         try {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
-                const msg = {action: action, recipient: userGuid, message: {files: files, id: id}, domain: Colibri.Web.Comet.Options.origin};
+                const msg = {action: action, recipient: userGuid, message: {files: files, id: id}, domain: Colibri.Web.Comet.Options.origin, delivery: 'trusted'};
                 this._ws.send(JSON.stringify(msg));
                 this._addMessage(Object.assign({}, msg, {from: this._user}), true);
                 return id;
@@ -362,7 +362,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         try {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
-                const msg = {action: action, recipient: '*', message: {files: files, id: id, broadcast: true}, domain: Colibri.Web.Comet.Options.origin};
+                const msg = {action: action, recipient: '*', message: {files: files, id: id, broadcast: true}, domain: Colibri.Web.Comet.Options.origin, delivery: 'trusted'};
                 this._ws.send(JSON.stringify(msg));
                 return id;
             }
