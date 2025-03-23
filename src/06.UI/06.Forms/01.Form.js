@@ -73,13 +73,17 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                 if(fieldComponent instanceof Colibri.UI.Forms.Object || fieldComponent instanceof Colibri.UI.Forms.Array || fieldComponent instanceof Colibri.UI.Forms.Tabs) {
                     fieldComponent._calcRuntimeValues(changedComponent);
                 } else {
-                    if(fieldData?.params?.valuegenerator) {
-                        const f = typeof fieldData?.params?.valuegenerator === 'string' ? eval(fieldData?.params?.valuegenerator) : fieldData?.params?.valuegenerator;
-                        const isOldVersion = typeof fieldData?.params?.valuegenerator === 'string' && fieldData?.params?.valuegenerator.indexOf('(parentValue, formValue') !== -1;
-                        const v = isOldVersion ? f(this.value, this.value, fieldComponent, this) : f(this.value, this.value, fieldComponent, this, changedComponent);
-                        if(v !== undefined) {
-                            fieldComponent.value = v;
+                    try {                        
+                        if(fieldData?.params?.valuegenerator) {
+                            const f = typeof fieldData?.params?.valuegenerator === 'string' ? eval(fieldData?.params?.valuegenerator) : fieldData?.params?.valuegenerator;
+                            const isOldVersion = typeof fieldData?.params?.valuegenerator === 'string' && fieldData?.params?.valuegenerator.indexOf('(parentValue, formValue') !== -1;
+                            const v = isOldVersion ? f(this.value, this.value, fieldComponent, this) : f(this.value, this.value, fieldComponent, this, changedComponent);
+                            if(v !== undefined) {
+                                fieldComponent.value = v;
+                            }
                         }
+                    } catch(e) {
+                        console.log('Error in ValueGenerator', name, fieldData, fieldData?.params?.valuegenerator, e);
                     }
                 }
             });

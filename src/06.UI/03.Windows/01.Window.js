@@ -363,8 +363,12 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         else {
             const style = this._element.querySelector('.app-component-window-content').css();
             if((value + '').isNumeric()) {
+                this._element.querySelector('.app-component-window-title').css('width', (value - (parseInt(style.paddingLeft) || 0) - (parseInt(style.paddingRight) || 0)) + 'px');
+                this._element.querySelector('.app-component-window-footer').css('width', (value - (parseInt(style.paddingLeft) || 0) - (parseInt(style.paddingRight) || 0)) + 'px');
                 this._element.querySelector('.app-component-window-content').css('width', (value - (parseInt(style.paddingLeft) || 0) - (parseInt(style.paddingRight) || 0)) + 'px');
             } else {
+                this._element.querySelector('.app-component-window-title').css('width', value);
+                this._element.querySelector('.app-component-window-footer').css('width', value);
                 this._element.querySelector('.app-component-window-content').css('width', value);
             }
         }
