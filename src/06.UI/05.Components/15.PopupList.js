@@ -153,6 +153,9 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
             else {
                 const groups = {};
                 for(let val of values) {
+                    if(!val) {
+                        continue;
+                    }
                     if(!groups[String.MD5(val[this._groupField])]) {
                         groups[String.MD5(val[this._groupField])] = this.AddGroup(String.MD5(val[this._groupField]), val[this._groupField]);
                     }
