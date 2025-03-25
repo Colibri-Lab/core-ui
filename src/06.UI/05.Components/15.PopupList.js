@@ -127,8 +127,6 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
         const values = Object.values(value);
         if(this._groupField) {
 
-            
-
             const selectedKeys = [];
     
             if(selectedValues !== undefined && selectedValues !== null && selectedValues !== '') {
@@ -184,11 +182,16 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
                     selectedValues = [selectedValues];
                 }
                 selectedValues.forEach((val) => {
-                    selectedKeys.push(String(val[this._valueField] ?? val));
+                    if(val) {     
+                        selectedKeys.push(String(val[this._valueField] ?? val));
+                    }
                 });
             }
 
             for(let val of values) {
+                if(!val) {
+                    continue;
+                }
                 if(selectedKeys.includes(String(val[this._valueField] ?? val))) {
                     group.AddItem(val, null, true);
                 }
