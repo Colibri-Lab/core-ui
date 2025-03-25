@@ -136,7 +136,9 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
                     selectedValues = [selectedValues];
                 }
                 selectedValues.forEach((val) => {
-                    selectedKeys.push(String(val[this._valueField] ?? val));
+                    if(val) {
+                        selectedKeys.push(String(val[this._valueField] ?? val));
+                    }
                 });
             }
 
