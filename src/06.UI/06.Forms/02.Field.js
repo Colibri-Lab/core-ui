@@ -549,6 +549,21 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     }
 
     /**
+     * Height of input
+     * @type {number}
+     */
+    get inputHeight() {
+        return this._content.Children(this._name + '-container').height;
+    }
+    /**
+     * Height of input
+     * @type {number}
+     */
+    set inputHeight(value) {
+        this._content.Children(this._name + '-container').height = value;
+    }
+
+    /**
      * Field root parent
      * @type {Colibri.UI.Forms.Field|Colibri.UI.Forms.Form}
      */
