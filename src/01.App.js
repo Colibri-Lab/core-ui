@@ -122,6 +122,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     
             this._name = name;
             this._version = version;
+            this._isActive = true;
     
             Colibri.IO.Request.type = requestType;
             if(remoteDomain) {
