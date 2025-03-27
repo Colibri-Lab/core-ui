@@ -74,7 +74,7 @@ Colibri.UI.NumberViewer = class extends Colibri.UI.Viewer {
 
 
         // check if the result number is negative zero
-        if(parseInt(v) === 0 && v.substring(0, 1) === '-') {
+        if(parseFloat(v) === 0 && v.substring(0, 1) === '-') {
             // remove leading negative sign if the number is zero
             v = v.substring(1);
         }
