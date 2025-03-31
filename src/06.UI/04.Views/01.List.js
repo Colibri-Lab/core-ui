@@ -1145,6 +1145,10 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
             } else {
                 content.value = this._itemData;
             }
+            if(this.hasContextMenu) {
+                this._removeContextMenuButton();
+                this._createContextMenuButton();
+            }
             html = null;
         } else if(this.list?.__renderItemContent) {
             html = this.list.__renderItemContent(this._itemData, this);
