@@ -1345,7 +1345,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             }
         }
 
-        let css = {zIndex: Colibri.UI.maxZIndex};
+        let css = {zIndex: Colibri.UI.maxZIndex + 1};
         if(left > 0) {
             css.left = left + 'px';
         } else if(right > 0) {
