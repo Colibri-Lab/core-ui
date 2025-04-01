@@ -41,12 +41,13 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         
         this._clientId = this._generateDeviceId();
         this._settings = settings;
-        this.RegisterEvent('MessageReceived', false, 'Когда получили новое сообщение');
-        this.RegisterEvent('MessagesMarkedAsRead', false, 'Когда сообщения помечены как прочтенные');
-        this.RegisterEvent('MessageRemoved', false, 'Когда сообщение удалено');
-        this.RegisterEvent('EventReceived', false, 'Когда произошло событие');
-        this.RegisterEvent('ConnectionError', false, 'Не смогли подключиться');
-        this.RegisterEvent('Connected', false, 'Успешно подключились');
+        this.RegisterEvent('MessageReceived', false, 'When a new message is received');
+        this.RegisterEvent('MessagesMarkedAsRead', false, 'When all messages marked as read');
+        this.RegisterEvent('MessageRemoved', false, 'When message is removed');
+        this.RegisterEvent('ChatCleared', false, 'When chat with user is removed');
+        this.RegisterEvent('EventReceived', false, 'When event is received');
+        this.RegisterEvent('ConnectionError', false, 'When we can not connect to server');
+        this.RegisterEvent('Connected', false, 'When we connected to server');
         
     }
 
@@ -148,7 +149,6 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             console.log('User registration error');
         }
         else if(message.action == 'message') {
-            console.log(message);
             this._addMessage(message);
             this.Dispatch('MessageReceived', {message: message});
         }
@@ -254,6 +254,18 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this._setStoredMessages(messages);
         this._saveToStore();
         this.Dispatch('MessageRemoved', {});
+    }
+
+    /**
+     * Removes a message from or to member.
+     * @param {string} user - The message to be removed.
+     */
+    ClearConversationWith(user) {
+        let messages = this._getStoredMessages();
+        messages = messages.filter(m => m.from != user && m?.recipient != user);
+        this._setStoredMessages(messages);
+        this._saveToStore();
+        this.Dispatch('ChatCleared', {});
     }
 
     /**
