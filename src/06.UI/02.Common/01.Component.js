@@ -16,7 +16,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     static __nullHandler = (event, args) => {};
     static __disableHandler = (event, args) => { args.domEvent?.stopPropagation(); args.domEvent?.preventDefault(); return false; };
     __containerScrollHandler = (e) => {
-        console.log('scrolled'); 
         this.Dispatch('ScrolledIn', {domEvent: e}); 
     }
 

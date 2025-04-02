@@ -268,6 +268,13 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this.Dispatch('ChatCleared', {});
     }
 
+    UpdateMessage(id, text) {
+        let messages = this._getStoredMessages();
+        messages.filter(m => m.id == id).forEach(message => message.message.text = text);
+        this._setStoredMessages(messages);
+        this._saveToStore();
+    }
+
     /**
      * Sends a command to the Comet server.
      * @param {string} userGuid - The GUID of the user.
