@@ -177,4 +177,21 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
         this._changeOnKeyUpTimeout = value;
     }
 
+    /** 
+     * Enable/disable input
+     * @type {Boolean} 
+     */
+    get enabled() {
+        return super.enabled;
+    }
+    /** 
+     * Enable/disable input
+     * @type {Boolean} 
+     */
+    set enabled(val) {
+        val = this._convertProperty('Boolean', val);
+        super.enabled = val;
+        this._input.attr('disabled', val === true || val === 'true' ? null : 'disabled');
+    }
+
 }

@@ -3612,3 +3612,31 @@ Math.easeInOutQuad = function (t, b, c, d) {
     t--;
     return -c / 2 * (t * (t - 2) - 1) + b;
 };
+
+
+
+//
+// Helper
+//
+
+// https://stackoverflow.com/a/11058858
+String.prototype.toArrayBuffer = function() {
+    const buf = new ArrayBuffer(this.length);
+    const bufView = new Uint8Array(buf);
+    for (let i = 0, strLen = this.length; i < strLen; i++) {
+        bufView[i] = this.charCodeAt(i);
+    }
+    return buf;
+}
+
+ArrayBuffer.prototype.toString = function() {
+    return String.fromCharCode.apply(null, new Uint8Array(this));
+}
+    
+String.prototype.spkiPem2spkiDer = function(){
+    const pemHeader = "-----BEGIN PUBLIC KEY-----";
+    const pemFooter = "-----END PUBLIC KEY-----";
+    var pemContents = this.substring(pemHeader.length, this.length - pemFooter.length);
+    var binaryDerString = window.atob(pemContents);
+    return binaryDerString.toArrayBuffer(); 
+}  

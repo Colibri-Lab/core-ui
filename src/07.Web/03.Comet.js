@@ -41,6 +41,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         
         this._clientId = this._generateDeviceId();
         this._settings = settings;
+        this.__specificHandlers = {};
+        this.RegisterEvent('MessageReceivng', false, 'Before message received');
         this.RegisterEvent('MessageReceived', false, 'When a new message is received');
         this.RegisterEvent('MessagesMarkedAsRead', false, 'When all messages marked as read');
         this.RegisterEvent('MessageRemoved', false, 'When message is removed');
@@ -113,6 +115,36 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     }
 
     /**
+     * Registers a handler for specific events.
+     * @param {String} handlerName 
+     * @param {Function} handler 
+     */
+    RegisterHandler(handlerName, handler) {
+        if(!this.__specificHandlers[handlerName]) {
+            this.__specificHandlers[handlerName] = [];
+        }
+        this.__specificHandlers[handlerName].push(handler);
+    }
+
+    DispatchHandlers(handlerName, args) {
+        return new Promise((resolve, reject) => {
+            const promises = [];
+            if(this.__specificHandlers[handlerName] && isIterable(this.__specificHandlers[handlerName])) {
+                for(const handler of this.__specificHandlers[handlerName]) {
+                    promises.push(handler(args));
+                }
+            }
+            if(promises.length === 0) {
+                resolve([]);
+            } else {
+                Promise.all(promises).then((responses) => {
+                    resolve(responses);
+                });
+            }
+        });
+    }
+
+    /**
      * Disconnects from the Comet server.
      */
     Disconnect() {
@@ -149,11 +181,15 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             console.log('User registration error');
         }
         else if(message.action == 'message') {
-            this._addMessage(message);
-            this.Dispatch('MessageReceived', {message: message});
+            this.DispatchHandlers('MessageReceiving', {message: message}).then((responses) => {
+                this._addMessage(message);
+                this.Dispatch('MessageReceived', {message: message});
+            });
         }
         else {
-            this.Dispatch('EventReceived', {event: message});
+            this.DispatchHandlers('EventReceiving', {message: message}).then((responses) => {
+                this.Dispatch('EventReceived', {event: message});
+            });
         }
     }
 
@@ -307,8 +343,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
                 const msg = {action: action, recipient: userGuid, message: {text: message, id: id}, domain: Colibri.Web.Comet.Options.origin, delivery: 'trusted'};
-                this._ws.send(JSON.stringify(msg));
                 this._addMessage(Object.assign({}, msg, {from: this._user}), true);
+                this.DispatchHandlers('MessageSending', {message: msg}).then((responses) => {
+                    this._ws.send(JSON.stringify(msg));
+                });
                 return id;
             }
             else {
