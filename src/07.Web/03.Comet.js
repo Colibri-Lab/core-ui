@@ -95,7 +95,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {Colibri.Storages.Store} store - Storage object.
      * @param {string} storeMessages - Key where messages will be stored.
      */
-    Init(userData, store, storeMessages, storeHandler) {
+    Init(userData, store, storeMessages, storeHandler = null) {
 
         this._user = userData.guid;
         this._userName = userData.name;
