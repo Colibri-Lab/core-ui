@@ -95,12 +95,13 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {Colibri.Storages.Store} store - Storage object.
      * @param {string} storeMessages - Key where messages will be stored.
      */
-    Init(userData, store, storeMessages) {
+    Init(userData, store, storeMessages, storeHandler) {
 
         this._user = userData.guid;
         this._userName = userData.name;
         this._store = store;
         this._storeMessages = storeMessages;
+        this._storeHandler = storeHandler;
         
         this._initConnection();
         this._saveToStore();
@@ -161,7 +162,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      */
     __onCometOpened() {
         this._connected = true;
-        this.Command(this._user, 'register', {name: this._userName});
+        this.Command(this._user, 'register', {name: this._userName, storeHandler: this._storeHandler});
     }
 
     /**
