@@ -5,6 +5,10 @@
     margin: 1px;
     cursor: default;
 
+    max-height: 100%;
+    max-width: 100%;
+    overflow: auto;
+
     &.app-component-shown {
         display: flex;
 

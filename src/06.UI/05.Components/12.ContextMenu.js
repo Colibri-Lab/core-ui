@@ -32,8 +32,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
         this._orientation = orientation;
         this._point = point;
 
-        this.handleVisibilityChange = true;
-        this.AddHandler('VisibilityChanged', (event, args) => {
+        this.AddHandler(['VisibilityChanged', 'Resized'], (event, args) => {
             this._checkPosition();
         });
 
@@ -211,10 +210,9 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
     }
 
     /** @private */
-    _setPosition() {
-
+    _setPosition(selectedBounds = null) {
         const pointOnParent = this._point || this._findPointOnParent();
-        const point = this._getOrientationPoint(pointOnParent);
+        const point = selectedBounds ?? this._getOrientationPoint(pointOnParent);
         this.styles = {left: point.left + 'px', top: point.top + 'px'};
         this.RemoveClass('-rt', '-rb', '-lt', '-lb');
         this.AddClass('-' + this._orientation[0] + this._orientation[1]);
@@ -224,24 +222,24 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
     /** @private */
     _checkPosition() {
         const thisBounds = this.container.bounds(true, true);
-
-        let orientation = [].concat(this._orientation);
         if(thisBounds.top + thisBounds.outerHeight > window.innerHeight) {
             // надо двинуть точку на паренте и относительную ориентацию
             // справа на лево, или слева на право
-            orientation[0] = orientation[0].replaceAll('b', 't');
-            orientation[1] = orientation[1].replaceAll('t', 'b');
-            
+            thisBounds.top = window.innerHeight - thisBounds.outerHeight;
         }
         if(thisBounds.left + thisBounds.outerWidth > window.innerWidth) {
-            orientation[0] = orientation[0].replaceAll('r', 'l');
-            orientation[1] = orientation[1].replaceAll('r', 'l');
+            debugger;
+            thisBounds.left = window.innerWidth - thisBounds.outerWidth;
         }
 
-        if(this._orientation != orientation) {
-            this._orientation = orientation;
-            this._setPosition();
+        if(thisBounds.top < 0) {
+            thisBounds.top = 0;
         }
+        if(thisBounds.left < 0) {
+            thisBounds.left = 0;
+        }
+
+        this._setPosition(thisBounds);
 
     }
 
@@ -284,6 +282,8 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
             Colibri.Common.Delay(10).then(() => {
                 this._setPosition();
                 this._element.css('visibility', 'visible');
+                this.handleVisibilityChange = true;
+                this.handleResize = true;
             });    
         }
     }
