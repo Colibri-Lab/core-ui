@@ -84,16 +84,16 @@ ui-files-filescount:
   hy: մինչև %s ֆայլ
   it: fino a %s file
   es: hasta %s archivos
-  kk: %s файлға дейін
-  uz: %s faylgacha
+  kk: "%s файлға дейін"
+  uz: "%s faylgacha"
 ui-files-size:
   ru: не больше %s
   en: no more than %s
   hy: "%s-ից ոչ ավելի"
   it: non più di %s
   es: no más de %s
-  kk: %s артық емес
-  uz: %s ko'proq emas
+  kk: "%s артық емес"
+  uz: "%s ko'proq emas"
 ui-files-filescount2:
   ru: Можно выбрать не больше %s файлов
   en: You can select no more than %s files
@@ -108,5 +108,5 @@ ui-files-filehuge:
   hy: "%s ֆայլը չափազանց մեծ է"
   it: Il file %s è troppo grande
   es: El archivo %s es demasiado grande
-  kk: %s файлы тым үлкен
-  uz: %s fayli juda katta
+  kk: "%s файлы тым үлкен"
+  uz: "%s fayli juda katta"

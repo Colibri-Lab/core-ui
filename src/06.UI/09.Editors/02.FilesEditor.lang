@@ -4,8 +4,8 @@ ui-editors-files-message:
   hy: Դուք կարող եք ընտրել մինչև %s ֆայլ
   it: Puoi selezionare fino a %s file
   es: Puede seleccionar hasta %s archivos
-  kk: Сіз %s файлға дейін таңдай аласыз
-  uz: Siz %s tagacha fayl tanlashingiz mumkin
+  kk: "Сіз %s файлға дейін таңдай аласыз"
+  uz: "Siz %s tagacha fayl tanlashingiz mumkin"
 ui-editors-files-message3:
   ru: Файл %s слишком большой
   en: File %s is too large
