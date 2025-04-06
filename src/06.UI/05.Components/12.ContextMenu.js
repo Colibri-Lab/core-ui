@@ -98,9 +98,15 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
 
             itemObject.AddHandler('Clicked', (event, args) => {
                 if(item.children) {
+                    if(this._childContextMenu) {
+                        this._childContextMenu.Dispose();
+                        this._childContextMenu = null;
+                    }
+
                     // показываем дочернее меню
                     this._childContextMenu = new Colibri.UI.ContextMenu(itemObject.name + '_contextmenu', document.body, [Colibri.UI.ContextMenu.RT, Colibri.UI.ContextMenu.LT]);
                     this._childContextMenu.Show(item.children, itemObject);
+                    this._childContextMenu.hasShadow = false;
                     this._childContextMenu.AddHandler('Clicked', (event, args) => {
                         this.Dispatch('Clicked', args);
                         this._childContextMenu.Dispose();
@@ -308,6 +314,10 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
         const shadow = this._element.next();
         if(shadow && shadow.classList.contains('app-component-shadow-div')) {
             shadow.remove();
+        }
+        if(this._childContextMenu) {
+            this._childContextMenu.Dispose();
+            this._childContextMenu = null;
         }
         super.Dispose();
     }
