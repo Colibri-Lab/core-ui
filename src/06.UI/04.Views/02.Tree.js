@@ -490,7 +490,8 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
             if(this._element.querySelector('div>em.expander') === args.domEvent.target) {
                 this.expanded = !this.expanded;
             } else {
-                if(this._nodes.tree.Dispatch('NodeClicked', Object.assign({item: this}, args)) !== false) {
+                const isIconClicked = args.domEvent.target.closest('em.icon') != null
+                if(this._nodes.tree.Dispatch('NodeClicked', Object.assign({item: this, clickedOnIcon: isIconClicked}, args)) !== false) {
                     this._nodes.tree.Select(this);
                 }
                 if(this.tree.expandOnClick) {
@@ -501,8 +502,9 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
             return false;
         });
         this.AddHandler('DoubleClicked', (sender, args) => {
+            const isIconClicked = args.domEvent.target.closest('em.icon') != null
             if(this._element.querySelector('div>em.expander') !== args.domEvent.target) {
-                this._nodes.tree.Dispatch('NodeDoubleClicked', Object.assign({item: this}, args));
+                this._nodes.tree.Dispatch('NodeDoubleClicked', Object.assign({item: this, clickedOnIcon: isIconClicked}, args));
             }
             args.domEvent.stopPropagation();
             return false;
@@ -673,6 +675,10 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
      */
     set icon(value) {
         this._element.querySelector('div em.icon').html(value);
+    }
+
+    get iconElement() {
+        return this._element.querySelector('div em.icon');
     }
 
     /**
