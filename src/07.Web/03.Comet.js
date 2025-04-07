@@ -183,6 +183,9 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         }
         else if(message.action == 'message') {
             this.DispatchHandlers('MessageReceiving', {message: message}).then((responses) => {
+                if(responses.filter(v => v === false).length > 0) {
+                    return;
+                }
                 this._addMessage(message);
                 this.Dispatch('MessageReceived', {message: message});
             });
