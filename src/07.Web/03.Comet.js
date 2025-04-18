@@ -42,6 +42,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this._clientId = this._generateDeviceId();
         this._settings = settings;
         this.__specificHandlers = {};
+        this._registeredSuccess = false;
         this.RegisterEvent('MessageReceivng', false, 'Before message received');
         this.RegisterEvent('MessageReceived', false, 'When a new message is received');
         this.RegisterEvent('MessagesMarkedAsRead', false, 'When all messages marked as read');
@@ -61,6 +62,18 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         if(this._ws) {
             this._ws.close();
         }
+    }
+
+    get User() {
+        return this._user;
+    }
+
+    get isReady() {
+        return this._ws.readyState === 1;
+    }
+
+    get isRegistered() {
+        return this._registeredSuccess;
     }
 
     /**
@@ -176,9 +189,11 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             console.log('Connection to Comet Server ok');
         }
         else if(message.action == 'register-success') {
+            this._registeredSuccess = true;
             console.log('User registered successfuly');
         }
         else if(message.action == 'register-error') {
+            this._registeredSuccess = false;
             console.log('User registration error');
         }
         else if(message.action == 'message') {
@@ -324,7 +339,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     Command(userGuid, action, message = null) {
         try {
             if(this._ws.readyState === 1) {
-                this._ws.send(JSON.stringify({action: action, user: userGuid, message: message, domain: Colibri.Web.Comet.Options.origin, delivery: 'untrusted'}));
+                const msg = {action: action, recipient: userGuid, message: message, domain: Colibri.Web.Comet.Options.origin, delivery: 'untrusted'};
+                this._ws.send(JSON.stringify(msg));
             }
             else {
                 console.log('server goes away');
