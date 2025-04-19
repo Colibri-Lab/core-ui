@@ -51,6 +51,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('EventReceived', false, 'When event is received');
         this.RegisterEvent('ConnectionError', false, 'When we can not connect to server');
         this.RegisterEvent('Connected', false, 'When we connected to server');
+        this.RegisterEvent('MessageError', false, 'When can not send message, or message sending error');
         
     }
 
@@ -366,6 +367,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                 this._addMessage(Object.assign({}, msg, {from: this._user}), true);
                 this.DispatchHandlers('MessageSending', {message: msg}).then((responses) => {
                     this._ws.send(JSON.stringify(msg));
+                }).catch(error => {
+                    this.Dispatch('MessageError', {error: error});
                 });
                 return id;
             }
