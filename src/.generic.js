@@ -1,3 +1,6 @@
+String.SpecialChars = '[!\"#\$%&\'\(\)\*\+,-\.\/:;<=>\?@\[\\\\^\\]_`{\|}~]';
+RegExp.SpecialChars = /(?![a-zA-Z0-9!"#\$%&'\(\)\*\+,-\.\/:;<=>\?@\[\\^\]_`{\|}~])./;
+
 /**
  * Prevents the default behavior of an event and stops its propagation.
  * @param {Event} e - The event object.
