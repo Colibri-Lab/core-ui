@@ -74,7 +74,6 @@ Colibri.UI.Notices = class extends Colibri.UI.Pane {
             
             return notice; 
         } else {
-
             App.Device.Notifications.Schedule(noticeData.title, noticeData.message, null);
             App.Device.Dialogs.Beep(1);
             App.Device.Vibrate.Vibrate([100, 100, 400, 400, 1000]);

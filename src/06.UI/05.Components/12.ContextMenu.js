@@ -229,22 +229,17 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
     _checkPosition() {
         const thisBounds = this.container.bounds(true, true);
         if(thisBounds.top + thisBounds.outerHeight > window.innerHeight) {
-            // надо двинуть точку на паренте и относительную ориентацию
-            // справа на лево, или слева на право
             thisBounds.top = window.innerHeight - thisBounds.outerHeight;
         }
-        if(thisBounds.left + thisBounds.outerWidth > window.innerWidth) {
-            debugger;
-            thisBounds.left = window.innerWidth - thisBounds.outerWidth;
+        if(thisBounds.left + thisBounds.outerWidth > document.body.offsetWidth) {
+            thisBounds.left = document.body.offsetWidth - thisBounds.outerWidth;
         }
-
         if(thisBounds.top < 0) {
             thisBounds.top = 0;
         }
         if(thisBounds.left < 0) {
             thisBounds.left = 0;
         }
-
         this._setPosition(thisBounds);
 
     }

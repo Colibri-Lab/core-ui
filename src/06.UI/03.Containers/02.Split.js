@@ -35,8 +35,17 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
         this._orientation = orientation || Colibri.UI.Split.OrientationHorizontal;
         this.AddClass('app-component-split-' + this._orientation);
 
+        this.handleResize = true;
+        this.AddHandler('Resize', (event, args) => this.__thisResize(event, args));
+        Colibri.Common.Delay(100).then(() => this.__thisResize(null, null));
         
         const startResize = (e) => {
+
+            if(this._isMobile) {
+                this.viewedSide = this.viewedSide === 'left' ? 'right' : 'left';
+                return false;
+            }
+
             this._resizing = true;
             Colibri.UI.Resizing = true;
             this._resizeData = this._left.bounds();
@@ -96,6 +105,15 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
         this._handler.addEventListener("touchstart", startResize, false);
         this._handler.addEventListener("mousedown", startResize, false);
 
+    }
+
+    __thisResize(event, args) {
+        if(window.innerWidth > window.innerHeight) {
+            this.isMobile = window.innerHeight < 500;
+        } else {
+            this.isMobile = window.innerWidth < 500;
+        }
+        this._showViewedSide();
     }
 
     /** @protected */
@@ -228,6 +246,58 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
     ExpandLeft() {
         this.handle.attr('style', null);
         this.left.showElement();
+    }
+
+    /**
+     * Is mobile
+     * @type {Boolean}
+     */
+    get isMobile() {
+        return this._isMobile;
+    }
+    /**
+     * Is mobile
+     * @type {Boolean}
+     */
+    set isMobile(value) {
+        value = this._convertProperty('Boolean', value);
+        this._isMobile = value;
+    }
+
+    /**
+     * Viewed side in mobile mode
+     * @type {left,right}
+     */
+    get viewedSide() {
+        return this._viewedSide;
+    }
+    /**
+     * Viewed side in mobile mode
+     * @type {left,right}
+     */
+    set viewedSide(value) {
+        this._viewedSide = value;
+        this._showViewedSide();
+    }
+    _showViewedSide() {
+        if(this._isMobile) {
+            if(this._viewedSide == 'left') {
+                this.RemoveClass('-mobile-right');
+                this.AddClass('-mobile-left');
+                this.left.showElement();
+                this.right.hideElement();
+            } else {
+                this.RemoveClass('-mobile-left');
+                this.AddClass('-mobile-right');
+                this.left.hideElement();
+                this.right.showElement();
+            }
+        } else {
+            this.RemoveClass('-mobile-right');
+            this.RemoveClass('-mobile-left');
+            this.left.showElement();
+            this.right.showElement();
+    }
     }
 
 }
