@@ -277,23 +277,28 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
      * @returns {*} The plugin object if found, otherwise undefined.
      */
     Plugin(query) {
-        let plugin = eval('cordova.' + query);
-        if(!plugin) {
-            plugin = eval('navigator.' + query);
+        try {
+            let plugin = eval('cordova.' + query);
+            if(!plugin) {
+                plugin = eval('navigator.' + query);
+            }
+            if(!plugin) {
+                plugin = eval('cordova.plugins.' + query);
+            }
+            if(!plugin) {
+                plugin = eval('window.plugins.' + query);
+            }
+            if(!plugin) {
+                plugin = eval('window.' + query);
+            }
+            if(!plugin) {
+                plugin = eval(query);
+            }
+            return plugin;
+        } catch(e) {
+            console.log(e);
+            return null;
         }
-        if(!plugin) {
-            plugin = eval('cordova.plugins.' + query);
-        }
-        if(!plugin) {
-            plugin = eval('window.plugins.' + query);
-        }
-        if(!plugin) {
-            plugin = eval('window.' + query);
-        }
-        if(!plugin) {
-            plugin = eval(query);
-        }
-        return plugin;
     } 
 
     /**

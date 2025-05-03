@@ -31,15 +31,17 @@
         border-radius: 10px;
         position: absolute;
 
-        @include respond-to(500px) {
-            width: 100%;
-            min-height: 100%;
-            margin: 0px;
-            border-radius: 0px;
-
-            display: flex;
-            flex-direction: column;
-            height: 100%;
+        & {
+            @include respond-to(500px) {
+                width: 100%;
+                min-height: 100%;
+                margin: 0px;
+                border-radius: 0px;
+    
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
         }
 
         .tabs-header-container {
@@ -82,11 +84,13 @@
     }
     .app-component-window-content {
         padding: 20px 30px;
-        @include respond-to(500px) {
-            width: 100% !important;
-            height: 100%;
-            flex: 1 1 100%;
-            overflow: auto;
+        & {
+            @include respond-to(500px) {
+                width: 100% !important;
+                height: 100%;
+                flex: 1 1 100%;
+                overflow: auto;
+            }
         }
     }
 

@@ -102,7 +102,7 @@ Colibri.Devices.Dialogs = class extends Destructable {
      * @param {number} times - The number of times to beep.
      */
     Beep(times) {
-        this._plugin.beep(times);
+        this._plugin && this._plugin.beep(times);
     }
 
     /**

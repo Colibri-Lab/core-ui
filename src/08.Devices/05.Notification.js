@@ -192,9 +192,10 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
         } else {
             this._plugin = this._device.Plugin('plugins.notification');
         }
-        this._plugin.local.setDummyNotifications();
-        this._plugin.local.fireQueuedEvents();
-
+        if(this._plugin && this._plugin.local) {
+            this._plugin.local.setDummyNotifications();
+            this._plugin.local.fireQueuedEvents();
+        }
     }
 
     /**
