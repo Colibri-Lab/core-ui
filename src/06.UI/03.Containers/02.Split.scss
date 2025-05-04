@@ -52,48 +52,5 @@
             height: 100%;
         }
     }
-    & {
-        @include respond-to(500px) {
-    
-            > .app-component-split-left {
-                flex: 0 0 calc(100% - 20px);
-                >* {
-                    width: 100%;
-                    height: 100%;
-                }
-            }
-            > .app-component-split-right {
-                flex: 0 0 calc(100% - 20px);
-                >* {
-                    width: 100%;
-                    height: 100%;
-                }
-            }
-    
-            &.app-component-split-horizontal {
-                > .app-component-split-handler {
-                    width: 20px;
-                    flex: 0 0 20px;
-                    background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1.38063' height='7.59346' transform='matrix(0.612908 0.790154 -0.612908 0.790154 11.6541 4)' fill='black'/%3E%3Crect width='1.38063' height='7.59346' transform='matrix(-0.612908 0.790154 -0.612908 -0.790154 12.5002 14.9091)' fill='black'/%3E%3C/svg%3E%0A");                background-position: center center;
-                    background-repeat: no-repeat;
-                }    
-            }
-            &.app-component-split-vertical {
-                > .app-component-split-handler {
-                    height: 20px;
-                    flex: 0 0 20px;
-                    background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1.38063' height='7.59346' transform='matrix(-0.612908 -0.790154 0.612908 -0.790154 7.84619 15.9999)' fill='black'/%3E%3Crect width='1.38063' height='7.59346' transform='matrix(0.612908 -0.790154 0.612908 0.790154 7 5.09088)' fill='black'/%3E%3C/svg%3E%0A");
-                    background-position: center center;
-                    background-repeat: no-repeat;
-                }    
-            }
-            &.-mobile-right {
-                > .app-component-split-handler {
-                    transform: rotate(180deg);
-                }
-            }
-    
-        }
-    }
-
+   
 }

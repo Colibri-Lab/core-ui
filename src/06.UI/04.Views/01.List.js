@@ -1034,11 +1034,10 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
         this.AddClass('app-component-list-item');
 
         this.handleSwipe = true;
-        this.AddHandler('Clicked', this.__ItemSelected);
-        this.AddHandler('DoubleClicked', this.__ItemDblSelected);
-        this.AddHandler('MouseDown', this.__ItemMouseDown);
-        this.AddHandler('TouchStarted', this.__ItemMouseDown);
-        this.AddHandler('MouseUp', (event, args) => this.list?.Dispatch('ItemMouseUp', args));
+        this.AddHandler('Clicked', (event, args) => this.__ItemSelected(event, args));
+        this.AddHandler('DoubleClicked', (event, args) => this.__ItemDblSelected(event, args));
+        this.AddHandler(['MouseDown', 'TouchStarted'], (event, args) => this.__ItemMouseDown(event, args));
+        this.AddHandler(['MouseUp', 'TouchEnded'], (event, args) => this.list?.Dispatch('ItemMouseUp', args));
 
         this.AddHandler('ContextMenuIconClicked', (event, args) => this.group.Dispatch('ContextMenuIconClicked', Object.assign({item: this}, args)));
         this.AddHandler('ContextMenuItemClicked', (event, args) => this.group.Dispatch('ContextMenuItemClicked', Object.assign({item: this}, args)));

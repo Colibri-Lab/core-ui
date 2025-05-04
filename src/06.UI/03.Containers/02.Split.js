@@ -40,12 +40,7 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
         Colibri.Common.Delay(100).then(() => this.__thisResize(null, null));
         
         const startResize = (e) => {
-
-            if(this._isMobile) {
-                this.viewedSide = this.viewedSide === 'left' ? 'right' : 'left';
-                return false;
-            }
-
+            
             this._resizing = true;
             Colibri.UI.Resizing = true;
             this._resizeData = this._left.bounds();
@@ -108,7 +103,8 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
     }
 
     __thisResize(event, args) {
-        if(window.innerWidth > window.innerHeight) {
+        const portrait = window.matchMedia("(orientation: portrait)").matches;
+        if(!portrait) {
             this.isMobile = window.innerHeight < 500;
         } else {
             this.isMobile = window.innerWidth < 500;
@@ -281,6 +277,7 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
     }
     _showViewedSide() {
         if(this._isMobile) {
+            console.log(this._viewedSide);
             if(this._viewedSide == 'left') {
                 this.RemoveClass('-mobile-right');
                 this.AddClass('-mobile-left');
