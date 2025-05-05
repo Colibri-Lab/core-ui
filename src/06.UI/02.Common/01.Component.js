@@ -615,7 +615,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     /**
      * @private
-     */
+     */s
     _removeContextMenuButton() {
         if(this._hasContextMenu && this.Children(this._name + '-contextmenu-icon-parent')) {
             this.Children(this._name + '-contextmenu-icon-parent').Dispose();
