@@ -74,12 +74,12 @@ Colibri.Common.MimeType = class {
         "ins" :  "application/x-internet-signup",
         "isp" :  "application/x-internet-signup",
         "jfif" :  "image/pipeg",
-        "jpe" :  "image/jpeg",
-        "jpeg" :  "image/jpeg",
         "jpg" :  "image/jpeg",
+        "jpe" :  "image/jpeg",
+        "jpeg" : "image/jpeg",
         "png" :  "image/png",
-        "js" :  "text/javascript",
-        "latex" :  "application/x-latex",
+        "js" :   "text/javascript",
+        "latex" : "application/x-latex",
         "lha" :  "application/octet-stream",
         "lsf" :  "video/x-la-asf",
         "lsx" :  "video/x-la-asf",
@@ -98,6 +98,7 @@ Colibri.Common.MimeType = class {
         "movie" :  "video/x-sgi-movie",
         "mp2" :  "video/mpeg",
         "mp3" :  "audio/mpeg",
+        "wav" :  "audio/wav",
         "mpa" :  "video/mpeg",
         "mpe" :  "video/mpeg",
         "mpeg" :  "video/mpeg",
@@ -175,7 +176,6 @@ Colibri.Common.MimeType = class {
         "ustar" :  "application/x-ustar",
         "vcf" :  "text/x-vcard",
         "vrml" :  "x-world/x-vrml",
-        "wav" :  "audio/x-wav",
         "wcm" :  "application/vnd.ms-works",
         "wdb" :  "application/vnd.ms-works",
         "wks" :  "application/vnd.ms-works",
@@ -220,12 +220,12 @@ Colibri.Common.MimeType = class {
      * @returns {string|false} The file extension, or false if not found.
      */
     static type2ext(type) {
-        var ret = false;
-        Object.keys(Colibri.Common.MimeType.types).forEach(key => {
-            if(type == Colibri.Common.MimeType.types[key]) { ret = key; return false; }
-            return true;
-        });
-        return ret;
+        for(const key of Object.keys(Colibri.Common.MimeType.types)) {
+            if(type == Colibri.Common.MimeType.types[key]) { 
+                return key;
+             }
+        }
+        return false;
     }
 
     /**

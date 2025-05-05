@@ -210,7 +210,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         this._backgroundMode = value;
         cordova.plugins.backgroundMode.setEnabled(value);
         if(value) {
-            cordova.plugins.backgroundMode.setDefaults({ silent: false });
+            cordova.plugins.backgroundMode.setDefaults({ silent: true, resume: true });
             cordova.plugins.backgroundMode.on('activate', function () {
                 cordova.plugins.backgroundMode.disableWebViewOptimizations();
             });

@@ -52,8 +52,9 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
      * @constructor
      * @param {string} src - The source of the media.
      */
-    constructor(src) {
+    constructor(src, isBase64Encoded = false) {
         super();
+        this._isBase64Encoded = isBase64Encoded;
         this._src = src;
         this._registerEvents();
         this._check();
@@ -66,9 +67,10 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
      */
     /** @protected */
     _registerEvents() {
-        this.RegisterEvent('Stopped', false, 'Когда медия остановлено');
-        this.RegisterEvent('ErrorOccurred', false, 'Когда произошла ошибка');
-        this.RegisterEvent('StatusChanged', false, 'Когда получили статус');
+        this.RegisterEvent('Started', false, 'When media is started');
+        this.RegisterEvent('Stopped', false, 'When media is stopped');
+        this.RegisterEvent('ErrorOccurred', false, 'When error occurred');
+        this.RegisterEvent('StatusChanged', false, 'When status is changed');
     }
 
     /**
@@ -81,17 +83,79 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    _b64toBlob(b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+      var blob = new Blob(byteArrays, {type: contentType});
+      return blob;
+    }
+
+    _saveBase64AsAudioFile(folderpath, filename, content, contentType) {
+        return new Promise((resolve, reject) => {
+            // Convert the base64 string in a Blob
+            var DataBlob = this._b64toBlob(content,contentType);    
+            window.resolveLocalFileSystemURL(folderpath, function(dir) {
+                dir.getFile(filename, {
+                    create: true
+                }, (file) => {
+                    file.createWriter(function(fileWriter) {
+                        fileWriter.write(DataBlob);
+                        resolve();
+                    }, () => {
+                        alert('Unable to save file in path '+ folderpath);
+                    });
+                });
+            });
+        });
+        
+    }
+
+    _saveBase64IfNeeded() {
+        return new Promise((resolve, reject) => {
+            if(this._isBase64Encoded) {
+                let type = this._src.replaceAll('data:', '').split(';')[0];
+                let data = this._src.split(';')[1].replaceAll('base64,', '');
+                let src = Date.Mc() + '.' + Colibri.Common.MimeType.type2ext(type);
+                this._saveBase64AsAudioFile(cordova.file.cacheDirectory, src, data, type).then(() => {  
+                    this._src = cordova.file.cacheDirectory + src;
+                    resolve();
+                });
+            } else {
+                resolve();
+            }
+        });
+    }
+
     /**
      * Creates the media object.
      * @private
      */
     _create() {
-        this._object = new Media(this._src, () => {
-            this.Dispatch('Stopped', {});
-        }, (status) => {
-            this.Dispatch('ErrorOccurred', {status: status});
-        }, (status) => {
-            this.Dispatch('StatusChanged', {status: status});
+        this._saveBase64IfNeeded().then(() => {
+            this._object = new Media(this._src, () => {
+                this.Dispatch('Started', {});
+            }, (status) => {
+                this.Dispatch('ErrorOccurred', {status: status});
+            }, (status) => {
+                this.Dispatch('StatusChanged', {status: status});
+            });
         });
     }
 
@@ -132,35 +196,45 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
      * Start or resume playing an audio file.
      */
     Play() {
-        return this._object.play();
+        Colibri.Common.Wait(() => !!this._object).then(() => {
+            this._object.play();
+        });
     }
 
     /**
      * Pause playback of an audio file.
      */
     Pause() {
-        return this._object.pause();
+        Colibri.Common.Wait(() => !!this._object).then(() => {
+            this._object.pause();
+        });
     }
 
     /**
      * Pause recording of an audio file.
      */
     PauseRecording() {
-        return this._object.pauseRecord();
+        Colibri.Common.Wait(() => !!this._object).then(() => {
+            this._object.pauseRecord();
+        });
     }
 
     /**
      * Releases the underlying operating system's audio resources.
      */
     Release() {
-        return this._object.release();
+        Colibri.Common.Wait(() => !!this._object).then(() => {
+            this._object.release();
+        });
     }
 
     /**
      * Resume recording of an audio file.
      */
     ResumeRecording() {
-        return this._object.resumeRecord();
+        Colibri.Common.Wait(() => !!this._object).then(() => {
+            this._object.resumeRecord();
+        });
     }
 
     /**
@@ -168,7 +242,9 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
      * @param {number} ms - The position in milliseconds.
      */
     SeekTo(ms = 10000) {
-        return this._object.seekTo(ms);
+        Colibri.Common.Wait(() => !!this._object).then(() => {
+            this._object.seekTo(ms);
+        });
     }
 
     /**
@@ -176,28 +252,36 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
      * @param {string} volume - The volume level.
      */
     SetVolume(volume = '0.5') {
-        return this._object.setVolume(volume);
+        Colibri.Common.Wait(() => !!this._object).then(() => {
+            this._object.setVolume(volume);
+        });
     }
 
     /**
      * Start recording an audio file.
      */
     StartRecording() {
-        return this._object.startRecord();
+        Colibri.Common.Wait(() => !!this._object).then(() => {
+            this._object.startRecord();
+        });
     }
 
     /**
      * Stop recording an audio file.
      */
     StopRecording() {
-        return this._object.stopRecord();
+        Colibri.Common.Wait(() => !!this._object).then(() => {
+            this._object.stopRecord();
+        });
     }
 
     /**
      * Stop playing an audio file.
      */
     Stop() {
-        return this._object.stop();
+        Colibri.Common.Wait(() => !!this._object).then(() => {
+            this._object.stop();
+        });
     }
 
     /**
@@ -205,7 +289,9 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
      * @param {number} rate - The playback rate.
      */
     SetRate(rate = 2.0) {
-        return this._object.setRate(rate);
+        Colibri.Common.Wait(() => !!this._object).then(() => {
+            this._object.setRate(rate);
+        });
     }
 
 }
@@ -216,9 +302,13 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
  * @returns {*} - The media object.
  */
 Colibri.Devices.Media.StartRecording = function(mediaFile) {
-    const media = new Colibri.Devices.Media(mediaFile);
-    media.StartRecording();
-    return media;
+    try {
+        const media = new Colibri.Devices.Media(mediaFile);
+        media.StartRecording();
+        return media;
+    } catch (e) {
+        alert(e);
+    }
 }
 
 /**
@@ -226,8 +316,12 @@ Colibri.Devices.Media.StartRecording = function(mediaFile) {
  * @param {string} mediaFile - The media file to play.
  * @returns {*} - The media object.
  */
-Colibri.Devices.Media.Play = function(mediaFile) {
-    const media = new Colibri.Devices.Media(mediaFile);
-    media.play();
-    return media;
+Colibri.Devices.Media.Play = function(mediaFile, isBase64Encoded = false) {
+    try {
+        const media = new Colibri.Devices.Media(mediaFile, isBase64Encoded);
+        media.Play();
+        return media;
+    } catch (e) {
+        alert(e);
+    }
 }

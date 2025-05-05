@@ -30,54 +30,54 @@ Colibri.UI.Notices = class extends Colibri.UI.Pane {
             return;
         }
 
-        if(App.Device.isWeb) {
-            this.shown = true;
-            this.BringToFront();
+        this.shown = true;
+        this.BringToFront();
 
-            if(noticeData.severity === Colibri.UI.Notice.Error) {
-                console.log(noticeData);
-                console.trace();
-                debugger;
-            }
+        if(noticeData.severity === Colibri.UI.Notice.Error) {
+            console.log(noticeData);
+            console.trace();
+            debugger;
+        }
 
-            const notice = this._group.AddItem(noticeData);
-            
-            const removeNotice = () => {
-                notice.RemoveClass(noticeData.className);
-                Colibri.Common.Delay(300).then(() => {
-                    notice.height = 0;
-                    return Colibri.Common.Delay(100);
-                }).then(() => {
-                    notice.Dispose();
-                    if(this._group.children == 0) {
-                        this.shown = false;
-                    }
-                });
-            };
-    
-            Colibri.Common.Delay(10).then(() => {
-    
-                notice.AddClass(noticeData.className);
-    
-                const icon = new Colibri.UI.Icon('icon', notice);
-                icon.shown = true;
-                icon.value = Colibri.UI.CloseIcon;
-                icon.AddClass('app-notice-icon-component');
-                icon.AddHandler('Clicked', removeNotice);
-                notice.AddHandler('Clicked', removeNotice);
-    
-                if(noticeData.timeout > 0) {
-                    Colibri.Common.Delay(noticeData.timeout).then(removeNotice);
+        const notice = this._group.AddItem(noticeData);
+        
+        const removeNotice = () => {
+            notice.RemoveClass(noticeData.className);
+            Colibri.Common.Delay(300).then(() => {
+                notice.height = 0;
+                return Colibri.Common.Delay(100);
+            }).then(() => {
+                notice.Dispose();
+                if(this._group.children == 0) {
+                    this.shown = false;
                 }
-                
             });
+        };
+
+        Colibri.Common.Delay(10).then(() => {
+
+            notice.AddClass(noticeData.className);
+
+            const icon = new Colibri.UI.Icon('icon', notice);
+            icon.shown = true;
+            icon.value = Colibri.UI.CloseIcon;
+            icon.AddClass('app-notice-icon-component');
+            icon.AddHandler('Clicked', removeNotice);
+            notice.AddHandler('Clicked', removeNotice);
+
+            if(noticeData.timeout > 0) {
+                Colibri.Common.Delay(noticeData.timeout).then(removeNotice);
+            }
             
-            return notice; 
-        } else {
-            App.Device.Notifications.Schedule(noticeData.title, noticeData.message, null);
+        });
+        
+        if(!App.Device.isWeb) {
+            App.Device.Notifications.Schedule('Error', noticeData.title, null);
             App.Device.Dialogs.Beep(1);
             App.Device.Vibrate.Vibrate([100, 100, 400, 400, 1000]);
         }
+
+        return notice; 
 
         
         

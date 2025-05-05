@@ -82,7 +82,7 @@ Colibri.IO.Request = class extends Destructable {
 
         if(Array.isArray(params)) {
             params.forEach((param, index) => {
-                if(param instanceof File) {
+                if(param instanceof File || param instanceof Blob) {
                     // если это файл тогда нужно пихнуть обязательнов в первый уровень
                     const fileKey = 'file' + String.MD5(param.name);
                     if(fd._files[fileKey] === undefined) {
@@ -99,7 +99,7 @@ Colibri.IO.Request = class extends Destructable {
                 fd.append(keyBefore, params);
             } else {
                 Object.forEach(params, (key, value) => {
-                    if(Array.isArray(value) || (value instanceof Object && !(value instanceof File))) {
+                    if(Array.isArray(value) || (value instanceof Object && !(value instanceof File || value instanceof Blob))) {
                         this._createFormData(value, keyBefore ? keyBefore + '[' + key + ']' : key, fd);
                     }
                     else if(params[key] !== null) {
@@ -112,7 +112,12 @@ Colibri.IO.Request = class extends Destructable {
 
         if(mainThread) {
             Object.forEach(fd._files, (name, file) => {
-                fd.append(name, file);
+                if(file instanceof Blob) {
+                    const ext = Colibri.Common.MimeType.type2ext(file.type);
+                    fd.append(name, file, Date.Mc() + '.' + ext);
+                } else {
+                    fd.append(name, file);
+                }
             }); 
         }
 
@@ -129,7 +134,7 @@ Colibri.IO.Request = class extends Destructable {
 
         if(Array.isArray(params)) {
             params.forEach((param, index) => {
-                if(param instanceof File) {
+                if(param instanceof File || param instanceof Blob) {
                     // если это файл тогда нужно пихнуть обязательнов в первый уровень
                     const fileKey = 'file' + String.MD5(param.name);
                     files[fileKey] = param;
@@ -142,7 +147,7 @@ Colibri.IO.Request = class extends Destructable {
         }
         else if(Object.isObject(params)) {
             Object.forEach(params, (key, param) => {
-                if(param instanceof File) {
+                if(param instanceof File || param instanceof Blob) {
                     // если это файл тогда нужно пихнуть обязательнов в первый уровень
                     const fileKey = 'file' + String.MD5(param.name);
                     files[fileKey] = param;
@@ -170,7 +175,12 @@ Colibri.IO.Request = class extends Destructable {
             fd.append('json_encoded_data', Colibri.Common.Base64.encode(JSON.stringify(params)));
         }
         Object.forEach(files, (name, file) => {
-            fd.append(name, file);
+            if(file instanceof Blob) {
+                const ext = Colibri.Common.MimeType.type2ext(file.type);
+                fd.append(name, file, Date.Mc() + '.' + ext);
+            } else {
+                fd.append(name, file);
+            }
         });
         return fd;
     }
@@ -264,7 +274,12 @@ Colibri.IO.Request = class extends Destructable {
             Object.keys(this._headers).forEach((name) => {
                 req.setRequestHeader(name, this._headers[name]);
             });
-            req.send();
+            try {
+                req.send(data);
+            } catch(e) {
+                reject({status: 500, result: e, headers: this._getResponseHeaders(req)});
+                return;
+            }
             this._currentRequest = req;
         });
         
@@ -324,7 +339,12 @@ Colibri.IO.Request = class extends Destructable {
                     data = this._createFormData(params);
                 }
             }
-            req.send(data);
+            try {
+                req.send(data);
+            } catch(e) {
+                reject({status: 500, result: e, headers: this._getResponseHeaders(req)});
+                return;
+            }
             this._currentRequest = req;
         });
         

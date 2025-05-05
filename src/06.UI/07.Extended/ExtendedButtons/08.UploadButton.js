@@ -20,6 +20,7 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
         this._allowTypes = '*';
         
         this._uniqueString = Number.unique();
+        
         this._input = Element.create('input', {type:'file', id: 'component-' + name + '-' + this._uniqueString});
         this._element.append(this._input);
 
@@ -107,12 +108,38 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
     __clicked(event, args) {
         this.ClickOnButton();
     }
+
+    _loadOnDevice() {
+        return new Promise((resolve, reject) => {
+            const errorHandler = (error) => {
+                reject();
+            };
+            window.fileChooser.open((uri) => {
+                window.resolveLocalFileSystemURL(uri, (fileEntry) => {
+                    fileEntry.file((file) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                            const blob = new Blob([new Uint8Array(reader.result)], { type: file.type });
+                            resolve({errors: [], success: [blob]});
+                        };
+                        reader.readAsArrayBuffer(file);
+                    }, errorHandler);
+                }, errorHandler);    
+            }, errorHandler);
+        });
+    }
     
     /**
      * Perform click on button
      */
     ClickOnButton() {
-        this._input.click();
+        if(App.Device.isWeb) {
+            this._input.click();
+        } else if (App.Device.isAndroid) {
+            this._loadOnDevice().then((result) => {
+                this.Dispatch('Changed', result);
+            });
+        }
     }
 
     /** @private */
@@ -128,6 +155,7 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
                 success.push(file);
             }
         }
+
         this.Dispatch('Changed', {errors: errors, success: success});
     }
     
