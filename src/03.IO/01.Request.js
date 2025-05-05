@@ -275,7 +275,7 @@ Colibri.IO.Request = class extends Destructable {
                 req.setRequestHeader(name, this._headers[name]);
             });
             try {
-                req.send(data);
+                req.send();
             } catch(e) {
                 reject({status: 500, result: e, headers: this._getResponseHeaders(req)});
                 return;
