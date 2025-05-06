@@ -112,7 +112,7 @@ Colibri.IO.Request = class extends Destructable {
 
         if(mainThread) {
             Object.forEach(fd._files, (name, file) => {
-                if(file instanceof Blob) {
+                if(file instanceof Blob && !(file instanceof File)) {
                     const ext = Colibri.Common.MimeType.type2ext(file.type);
                     fd.append(name, file, Date.Mc() + '.' + ext);
                 } else {
@@ -175,7 +175,7 @@ Colibri.IO.Request = class extends Destructable {
             fd.append('json_encoded_data', Colibri.Common.Base64.encode(JSON.stringify(params)));
         }
         Object.forEach(files, (name, file) => {
-            if(file instanceof Blob) {
+            if(file instanceof Blob && !(file instanceof File)) {
                 const ext = Colibri.Common.MimeType.type2ext(file.type);
                 fd.append(name, file, Date.Mc() + '.' + ext);
             } else {

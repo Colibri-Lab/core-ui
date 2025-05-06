@@ -144,6 +144,9 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
             this._numberformat = numberformat;
             this._currency = currency;
             this._csrfToken = csrfToken;
+
+            // reload mimetypes database
+            Colibri.Common.MimeType.Reload();
     
             Colibri.Common.WaitForBody().then(() => {
                 this.InitializeModules();

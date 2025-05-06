@@ -205,12 +205,26 @@ Colibri.Common.MimeType = class {
         
     }
 
+    static externalTypes = {};
+
     /**
      * Returns the MIME type associated with the given file extension.
      * @param {string} ext - The file extension.
      * @returns {string|undefined} The MIME type, or undefined if not found.
      */
     static ext2type(ext) {
+        if(Colibri.Common.MimeType.externalTypes) {
+            let founded = null;
+            Object.forEach(Colibri.Common.MimeType.externalTypes, (mimetype, value) => {
+                const found = value.extensions ? value.extensions.filter(v => ext === v) : [];
+                if(found.length > 0) {
+                    founded = mimetype;
+                    return false;
+                }
+                return true;
+            });
+            return founded;
+        }
         return Colibri.Common.MimeType.types[ext];
     }
 
@@ -220,10 +234,18 @@ Colibri.Common.MimeType = class {
      * @returns {string|false} The file extension, or false if not found.
      */
     static type2ext(type) {
-        for(const key of Object.keys(Colibri.Common.MimeType.types)) {
-            if(type == Colibri.Common.MimeType.types[key]) { 
-                return key;
-             }
+        if(Colibri.Common.MimeType.externalTypes) {
+            if(Colibri.Common.MimeType.externalTypes[type]) {
+                return Colibri.Common.MimeType.externalTypes[type].extensions[0];
+            } else {
+                return null;
+            }
+        } else {
+            for(const key of Object.keys(Colibri.Common.MimeType.types)) {
+                if(type == Colibri.Common.MimeType.types[key]) { 
+                    return key;
+                 }
+            }
         }
         return false;
     }
@@ -346,3 +368,16 @@ Colibri.Common.MimeType = class {
 
 
 }
+
+Colibri.Common.MimeType.Reload = () => {
+    return new Promise((resolve, reject) => {        
+        Colibri.IO.Request.Get('https://cdn.jsdelivr.net/gh/jshttp/mime-db@master/db.json', {}, {}, false).then((response) => {
+            Colibri.Common.MimeType.externalTypes = JSON.parse(response.result);
+            resolve();
+        }).catch((error) => {
+            console.log(error);
+            reject(error);
+        });
+    });
+}
+
