@@ -1929,7 +1929,7 @@ String.Password = function (l) {
     }
     for (let i = 0, n2 = charset3.length, n = retVal.length; i < retVal.length / 4; i++) {
         const index = Math.floor(Math.random() * n);
-        retVal = retVal.substring(0, index - 1) + charset2.charAt(Math.floor(Math.random() * n2)) + retVal.substring(index);
+        retVal = retVal.substring(0, index - 1) + charset3.charAt(Math.floor(Math.random() * n2)) + retVal.substring(index);
     }
     return retVal;
 };
