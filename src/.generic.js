@@ -1916,13 +1916,18 @@ String.GUID = function () {
  * @returns {string} The generated password.
  */
 String.Password = function (l) {
-    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const charset2 = '!@#%^&*()';
+    const charset3 = '0123456789';
     let retVal = "";
     for (let i = 0, n = charset.length; i < l; ++i) {
         retVal += charset.charAt(Math.floor(Math.random() * n));
     }
     for (let i = 0, n2 = charset2.length, n = retVal.length; i < retVal.length / 4; i++) {
+        const index = Math.floor(Math.random() * n);
+        retVal = retVal.substring(0, index - 1) + charset2.charAt(Math.floor(Math.random() * n2)) + retVal.substring(index);
+    }
+    for (let i = 0, n2 = charset3.length, n = retVal.length; i < retVal.length / 4; i++) {
         const index = Math.floor(Math.random() * n);
         retVal = retVal.substring(0, index - 1) + charset2.charAt(Math.floor(Math.random() * n2)) + retVal.substring(index);
     }
