@@ -180,6 +180,8 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      */
     _permited = false;
 
+    _customData = {};
+
     /**
      * Creates an instance of LocalNotifications.
      * @param {*} device - The device object.
@@ -271,7 +273,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      * @param {*} progressBar - Progress bar configuration.
      * @param {boolean} sound - Flag indicating whether to include sound with the notification.
      */
-    Schedule(title, message, actions = null, trigger = null, isForeground = true, isLaunch = true, priority = 2, id = null, progressBar = null, sound = true) {
+    Schedule(title, message, actions = null, trigger = null, isForeground = true, isLaunch = true, priority = 2, id = null, progressBar = null, sound = true, data = null, callback = bull) {
         // trigger = { in: 1, unit: 'second' }, { in: 15, unit: 'minutes' }
         this.RequestPermission().then(() => {
             const params = {
@@ -281,11 +283,16 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
                 launch: isLaunch,
                 priority: priority,
                 sticky: true,
-                sound: sound
+                sound: sound,
             }
             if(id) {
                 params.id = id;
             }
+
+            if(id && data) {
+                App.Browser.Set('custom-data-' + id, JSON.stringify(data));
+            }
+
             if(trigger) {
                 params.trigger = trigger;
             }
@@ -295,8 +302,8 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
             if(progressBar) {
                 params.progressBar = progressBar;
             }
-            
-            this._plugin.local.schedule(params);
+
+            this._plugin.local.schedule(params, callback);
 
         });
     }
@@ -314,11 +321,16 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
     /**
      * Registers an event listener.
      * @param {string} event - The event to listen for.
-     * @param {function} callback - The callback function.
+     * @param {function(notification, eopts)} callback - The callback function.
      * @param {*} scope - The scope of the callback.
      */
     On(event, callback, scope) {
-        this._plugin.local.on(event, callback, scope);
+        this._plugin.local.on(event, (notification, eopts) => {
+            const data = App.Browser.Get('custom-data-' + notification.id);
+            notification.data = typeof data === 'string' ? JSON.parse(data) : data;
+            App.Browser.Delete('custom-data-' + notification.id)
+            return callback(notification, eopts);
+        }, scope);
     }
 
     /**
