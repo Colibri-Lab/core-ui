@@ -104,6 +104,12 @@
     }
 }
 
+@mixin respond-toh($height) {
+    @media only screen and (max-height: $height) {
+        @content;
+    }
+}
+
 @keyframes fadein {
     from {
         opacity: 0;

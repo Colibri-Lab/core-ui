@@ -1013,6 +1013,19 @@ Object.pluck = function(obj, keys) {
     return nobj;
 }
 
+Object.assignRecursive = function(source, target) {
+    if (source instanceof Object && target instanceof Object) {
+        for (const key in source) {
+            if (source[key] instanceof Object && target[key] instanceof Object) {
+                Object.assignRecursive(source[key], target[key]);
+            } else {
+                target[key] = source[key];
+            }
+        }
+    }
+    return target;
+}
+
 /**
  * 
  * @param {object} textAsObject object to render
@@ -3648,3 +3661,46 @@ String.prototype.spkiPem2spkiDer = function(){
     var binaryDerString = window.atob(pemContents);
     return binaryDerString.toArrayBuffer(); 
 }  
+
+window.convertFilterToString = function(filter) {
+        
+    if(Array.isArray(filter)) {
+        // or
+        const orArray = [];
+        for(const f of filter) {
+            orArray.push(window.convertFilterToString(f));
+        }
+        return '((' + orArray.join(') || (') + '))';
+    } else {
+
+        let andConditions = [];
+        Object.forEach(filter, (key, value) => {
+    
+            let condition = '==';
+            if(Array.isArray(value)) {
+                condition = value[0];
+                value = value[1];
+                if((value + '').isDate()) {
+                    andConditions.push('(new Date(row[\'' + key + '\']) ' + condition + ' new Date(\'' + value + '\'))'); 
+                } else if(typeof value === 'boolean') {
+                    andConditions.push('(row[\'' + key + '\'] ' + condition + ' ' + value + ')'); 
+                } else {
+                    andConditions.push('(row[\'' + key + '\'] ' + condition + ' \'' + value + '\')'); 
+                }
+            } else {
+                if((value + '').isDate()) {
+                    andConditions.push('(new Date(row[\'' + key + '\']) ' + condition + ' new Date(\'' + value + '\'))'); 
+                } else if(typeof value === 'boolean') {
+                    andConditions.push('(row[\'' + key + '\'] ' + condition + ' ' + value + ')'); 
+                } else {
+                    andConditions.push('(row[\'' + key + '\'] ' + condition + ' \'' + value + '\')'); 
+                }
+            }
+
+
+        });
+        return '(' + andConditions.join(') && (') + ')';
+
+    }
+
+}

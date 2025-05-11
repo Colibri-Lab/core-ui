@@ -115,9 +115,10 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
     /** @protected */
     _registerEvents() {
         super._registerEvents();
-        this.RegisterEvent('SplitResizeStart', false, 'Когда начинаем изменять размер');
-        this.RegisterEvent('SplitResizing', false, 'В процессе изменения размера');
-        this.RegisterEvent('SplitResizeStop', false, 'Когда закончили изменять размер');
+        this.RegisterEvent('SplitResizeStart', false, 'When resize started');
+        this.RegisterEvent('SplitResizing', false, 'When resizing process');
+        this.RegisterEvent('SplitResizeStop', false, 'When resize ended');
+        this.RegisterEvent('ViewSideChanged', false, 'When changed view side on mobile device');
     }
 
     /**
@@ -277,23 +278,25 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
     }
     _showViewedSide() {
         if(this._isMobile) {
-            console.log(this._viewedSide);
             if(this._viewedSide == 'left') {
                 this.RemoveClass('-mobile-right');
                 this.AddClass('-mobile-left');
-                this.left.showElement();
-                this.right.hideElement();
+                this.Dispatch('ViewSideChanged', {side: 'left'});
+                // this.left.showElement();
+                // this.right.hideElement();
             } else {
                 this.RemoveClass('-mobile-left');
                 this.AddClass('-mobile-right');
-                this.left.hideElement();
-                this.right.showElement();
+                this.Dispatch('ViewSideChanged', {side: 'right'});
+                // this.left.hideElement();
+                // this.right.showElement();
             }
         } else {
             this.RemoveClass('-mobile-right');
             this.RemoveClass('-mobile-left');
-            this.left.showElement();
-            this.right.showElement();
+            this.Dispatch('ViewSideChanged', {side: 'none'});
+            // this.left.showElement();
+            // this.right.showElement();
     }
     }
 

@@ -72,9 +72,9 @@ Colibri.UI.Notices = class extends Colibri.UI.Pane {
         });
         
         if(!App.Device.isWeb) {
-            App.Device.Notifications.Schedule('Error', noticeData.title, null);
+            App.Device.Notifications.Schedule(Date.Mc(), 'Error', noticeData.title, null, { in: 1, unit: 'second' }, null, {launch: true, foregreound: true, sticky: true});
             App.Device.Dialogs.Beep(1);
-            App.Device.Vibrate.Vibrate([100, 100, 400, 400, 1000]);
+            App.Device.Vibrate.Vibrate(1000);
         }
 
         return notice; 

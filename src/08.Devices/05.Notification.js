@@ -180,7 +180,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      */
     _permited = false;
 
-    _customData = {};
+    _notifications = {};
 
     /**
      * Creates an instance of LocalNotifications.
@@ -262,37 +262,23 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
 
     /**
      * Schedules a notification with given parameters.
+     * @param {number} id - The id of the notification.
      * @param {string} title - The title of the notification.
      * @param {string} message - The message of the notification.
      * @param {*} actions - Actions to attach to the notification.
      * @param {*} trigger - Trigger for the notification.
-     * @param {boolean} isForeground - Flag indicating whether the notification should appear in foreground.
-     * @param {boolean} isLaunch - Flag indicating whether the notification should launch the app.
-     * @param {number} priority - Priority of the notification.
-     * @param {number} id - The id of the notification.
+     * @param {{launch,foreground,priority,sticky,sound}} options - Additional options for the notification.
      * @param {*} progressBar - Progress bar configuration.
-     * @param {boolean} sound - Flag indicating whether to include sound with the notification.
+     * @param {Function} callback - Callback function to execute after scheduling.
      */
-    Schedule(title, message, actions = null, trigger = null, isForeground = true, isLaunch = true, priority = 2, id = null, progressBar = null, sound = true, data = null, callback = bull) {
-        // trigger = { in: 1, unit: 'second' }, { in: 15, unit: 'minutes' }
+    Schedule(id, title, message, actions = null, trigger = null, data = null, options = {}, progressBar = null, callback = null) {
         this.RequestPermission().then(() => {
-            const params = {
+            const params = Object.assign(options, {
+                id: id,
                 title: title,
-                text: message,
-                foreground: isForeground,
-                launch: isLaunch,
-                priority: priority,
-                sticky: true,
-                sound: sound,
-            }
-            if(id) {
-                params.id = id;
-            }
-
-            if(id && data) {
-                App.Browser.Set('custom-data-' + id, JSON.stringify(data));
-            }
-
+                text: [{message: message}],
+                data: data
+            });
             if(trigger) {
                 params.trigger = trigger;
             }
@@ -302,9 +288,12 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
             if(progressBar) {
                 params.progressBar = progressBar;
             }
-
-            this._plugin.local.schedule(params, callback);
-
+            if(this._notifications[id])  {
+                this._plugin.local.update(params, callback);
+            } else {
+                this._plugin.local.schedule(params, callback);
+                this._notifications[id] = params;
+            }
         });
     }
 
@@ -314,7 +303,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      */
     Cancel(id) {
         this.RequestPermission().then(() => {
-            this._plugin.local.cancel(id);    
+            this._plugin.local.cancel(id);
         });
     }
 
@@ -325,12 +314,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      * @param {*} scope - The scope of the callback.
      */
     On(event, callback, scope) {
-        this._plugin.local.on(event, (notification, eopts) => {
-            const data = App.Browser.Get('custom-data-' + notification.id);
-            notification.data = typeof data === 'string' ? JSON.parse(data) : data;
-            App.Browser.Delete('custom-data-' + notification.id)
-            return callback(notification, eopts);
-        }, scope);
+        this._plugin.local.on(event, callback, scope);
     }
 
     /**

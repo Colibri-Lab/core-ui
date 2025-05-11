@@ -9,7 +9,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     /** @type {string} */
     _url = '';
     /** @type {object} */
-    _storage = window.localStorage;
+    _storage = null;
     /** @type {Colibri.Storages.Store} */
     _store = null;
     /** @type {string} */
@@ -43,6 +43,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this._settings = settings;
         this.__specificHandlers = {};
         this._registeredSuccess = false;
+        
         this.RegisterEvent('MessageReceivng', false, 'Before message received');
         this.RegisterEvent('MessageReceived', false, 'When a new message is received');
         this.RegisterEvent('MessagesMarkedAsRead', false, 'When all messages marked as read');
@@ -53,6 +54,13 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('Connected', false, 'When we connected to server');
         this.RegisterEvent('MessageError', false, 'When can not send message, or message sending error');
         
+    }
+
+    _transferToModuleStore(messages) {
+        this._storage.Get().then(messages => {
+            const unreadCount = messages.filter(v => v.read === false).length;
+            this._store.Set(this._storeMessages, {messages: messages, unread: unreadCount});
+        });
     }
 
     /**
@@ -75,6 +83,19 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     get isRegistered() {
         return this._registeredSuccess;
+    }
+
+    /**
+     * Gets the client ID for the Comet connection.
+     * @type {string}
+     * @readonly
+     */
+    get clientId() {
+        return this._clientId;
+    }
+
+    get connected() {
+        return this._connected;       
     }
 
     /**
@@ -116,9 +137,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this._store = store;
         this._storeMessages = storeMessages;
         this._storeHandler = storeHandler;
+        this._storage = new Colibri.Web.InternalStore();
         
         this._initConnection();
-        this._saveToStore();
+        this._transferToModuleStore();
 
         Colibri.Common.StartTimer('comet-timer', 5000, () => {
             if(this._ws && this._ws.readyState !== 1) {
@@ -202,25 +224,27 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                 if(responses.filter(v => v === false).length > 0) {
                     return;
                 }
-                this._addMessage(message);
-                this.Dispatch('MessageReceived', {message: message});
+                const msg = Colibri.Common.CometMessage.FromReceivedObject(message.domain, message.from, message.message.text, message.broadcast);
+                this._addMessage(msg).then(() => {
+                    this.Dispatch('MessageReceived', {message: msg});
+                });
             });
         }
         else {
-            this.DispatchHandlers('EventReceiving', {message: message}).then((responses) => {
-                this.Dispatch('EventReceived', {event: message});
+            const msg = Colibri.Common.CometEvent.FromReceivedObject(message.action, message.domain, message.from, message.message, message.delivery, message.broadcast);
+            this.DispatchHandlers('EventReceiving', {message: msg}).then((responses) => {
+                this.Dispatch('EventReceived', {event: msg});
             });
         }
     }
 
-    _addMessage(message, read = false) {
-        message.id = message.id ?? Number.Rnd4();
-        message.date = new Date();
-        message.read = read;
-        var messages = this._getStoredMessages();
-        messages.push(message);
-        this._setStoredMessages(messages);
-        this._saveToStore();
+    _addMessage(message) {
+        return new Promise((resolve, reject) => {            
+            this._storage.Add(message).then((message) => {
+                this._transferToModuleStore();
+                resolve();
+            }).catch(error => reject(error));
+        });
     }
 
     /**
@@ -236,80 +260,59 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this._connected = false;
     } 
 
-
-    /**
-     * Retrieves stored messages from local storage.
-     * @private
-     * @returns {array} - Array of stored messages.
-     */
-    _getStoredMessages() {
-        let messages = this._storage.getItem('comet.messages');
-        if (!messages)
-            messages = [];
-        else
-            messages = JSON.parse(messages);
-        return messages;
+    GetMessages(options = {}) {
+        return this._storage.Get(options);
     }
 
-    /**
-     * Saves messages to local storage.
-     * @private
-     * @param {array} messages - Array of messages to be stored.
-     */
-    _setStoredMessages(messages) {
-        this._storage.setItem('comet.messages', JSON.stringify(messages));
-    }
-
-    /**
-     * Saves messages to the application store.
-     * @private
-     */
-    _saveToStore() {
-        let messages = this._getStoredMessages();
-        let unreadCount = 0;
-        messages.forEach(message => unreadCount += (message.read !== true ? 1 : 0));
-        this._store.Set(this._storeMessages, {messages: messages, unread: unreadCount});
-    }
+    GetBroadcast
 
     /**
      * Clears stored messages.
      */
     ClearMessages(date = null) {
-        if(date === null) {
-            this._setStoredMessages([]);
-        } else {
-            let messages = this._getStoredMessages();
-            messages = messages.filter(v => v.date > date);
-            this._setStoredMessages(messages);    
-        }
-        this._saveToStore();
+        return new Promise((resolve, reject) => {
+            const res = () => {
+                resolve();
+            };
+            if(!date) {
+                this._storage.Clear().then(res).catch(error => reject(error));
+            } else {
+                this._storage.Delete({filter: {date: ['>', date]}}).then(res).catch(error => reject(error));
+            }
+        });
     }
 
     /**
      * Marks all messages as read.
      */
     MarkAsRead(ids = null) {
-        let messages = this._getStoredMessages();
-        if(ids && ids.length > 0) {
-            messages.filter(v => ids.indexOf(v.id) !== -1).forEach(message => message.read = true);
-        } else {
-            messages.forEach(message => message.read = true);
+        if(!Array.isArray(ids)) {
+            ids = [ids];
         }
-        this._setStoredMessages(messages);
-        this._saveToStore();
-        this.Dispatch('MessagesMarkedAsRead', {});
+        return new Promise((resolve, reject) => {
+            const promises = [];
+            for(const id of ids) {
+                promises.push(this._storage.Update({read: true}, id));
+            }
+            Promise.all(promises).then(() => {
+                this._transferToModuleStore();
+                this.Dispatch('MessagesMarkedAsRead', {});
+                resolve();            
+            }).catch(error => reject(error));
+        });
     }
 
     /**
      * Removes a message from storage.
-     * @param {object} message - The message to be removed.
+     * @param {object|number} message - The message to be removed.
      */
     RemoveMessage(message) {
-        let messages = this._getStoredMessages();
-        messages = messages.filter(m => m.id != message.id);
-        this._setStoredMessages(messages);
-        this._saveToStore();
-        this.Dispatch('MessageRemoved', {});
+        return new Promise((resolve, reject) => {
+            this._storage.Delete({filter: {id: Object.isObject(message) ? message.id : message}}).then(() => {
+                this._transferToModuleStore();
+                this.Dispatch('MessagesMarkedAsRead', {});            
+            }).catch(error => reject(error));
+        });
     }
 
     /**
@@ -317,18 +320,21 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {string} user - The message to be removed.
      */
     ClearConversationWith(user) {
-        let messages = this._getStoredMessages();
-        messages = messages.filter(m => m.from != user && m?.recipient != user);
-        this._setStoredMessages(messages);
-        this._saveToStore();
-        this.Dispatch('ChatCleared', {});
+        return new Promise((resolve, reject) => {
+            this._storage.Delete({filter: [{from: user}, {recipient: user}]}).then(() => {
+                this._transferToModuleStore();
+                this.Dispatch('ChatCleared', {});
+            }).catch(error => reject(error));
+        });
     }
 
     UpdateMessage(id, text) {
-        let messages = this._getStoredMessages();
-        messages.filter(m => m.id == id).forEach(message => message.message.text = text);
-        this._setStoredMessages(messages);
-        this._saveToStore();
+        return new Promise((resolve, reject) => {
+            this._storage.Update({message: {text: text}}, id).then(() => {
+                this._transferToModuleStore();
+                this.Dispatch('ChatCleared', {});
+            }).catch(error => reject(error));
+        });
     }
 
     /**
@@ -340,8 +346,9 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     Command(userGuid, action, message = null) {
         try {
             if(this._ws.readyState === 1) {
-                const msg = {action: action, recipient: userGuid, message: message, domain: Colibri.Web.Comet.Options.origin, delivery: 'untrusted'};
-                this._ws.send(JSON.stringify(msg));
+                const msg = Colibri.Common.CometEvent.CreateForSend(action, Colibri.Web.Comet.Options.origin, this._user, userGuid, message);
+                // const msg = {action: action, recipient: userGuid, message: message, domain: Colibri.Web.Comet.Options.origin, delivery: 'untrusted'};
+                this._ws.send(msg.toJson());
             }
             else {
                 console.log('server goes away');
@@ -355,18 +362,20 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     /**
      * Sends a message to a specific user.
      * @param {string} userGuid - The GUID of the recipient user.
-     * @param {string} action - The action to be performed.
      * @param {string} message - The message content.
      * @returns {string|null} - The ID of the sent message.
      */
-    SendTo(userGuid, action, message = null) {
+    SendTo(userGuid, message = null) {
         try {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
-                const msg = {action: action, recipient: userGuid, message: {text: message, id: id}, domain: Colibri.Web.Comet.Options.origin, delivery: 'trusted'};
-                this._addMessage(Object.assign({}, msg, {from: this._user}), true);
+                const msg = Colibri.Common.CometMessage.CreateForSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, message);
+                msg.MarkAsRead();
+                // const msg = {action: action, recipient: userGuid, message: {text: message}, domain: Colibri.Web.Comet.Options.origin, delivery: 'trusted'};
+                // this._addMessage(Object.assign({}, msg, {from: this._user}), true);
+                this._addMessage(msg);
                 this.DispatchHandlers('MessageSending', {message: msg}).then((responses) => {
-                    this._ws.send(JSON.stringify(msg));
+                    this._ws.send(msg.toJson());
                 }).catch(error => {
                     this.Dispatch('MessageError', {error: error});
                 });
@@ -388,12 +397,37 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {string} message - The message content.
      * @returns {string|null} - The ID of the sent message. 
      */
-    SendBroadcast(action, message = null) {
+    CommandBroadcast(action, message = null) {
         try {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
-                const msg = {action: action, recipient: '*', message: {text: message, id: id, broadcast: true}, domain: Colibri.Web.Comet.Options.origin, delivery: 'trusted'};
-                this._ws.send(JSON.stringify(msg));
+                const msg = Colibri.Common.CometEvent.CreateForSendBroadcast(action, Colibri.Web.Comet.Options.origin, this._user, message);
+                // const msg = {action: action, recipient: '*', message: {text: message, id: id, broadcast: true}, domain: Colibri.Web.Comet.Options.origin, delivery: 'trusted'};
+                this._ws.send(msg.toJson());
+                return id;
+            }
+            else {
+                console.log('server goes away');
+            }
+        }
+        catch(e) {
+            console.log(e);
+        }
+        return null;
+    }
+
+    /**
+     * Sends a broadcast message.
+     * @param {string} action - The action to be performed.
+     * @param {string} message - The message content.
+     * @returns {string|null} - The ID of the sent message. 
+     */
+    SendBroadcast(text = null) {
+        try {
+            const id = Date.Mc();
+            if(this._ws.readyState === 1) {
+                const msg = Colibri.Common.CometMessage.CreateForSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, text);
+                this._ws.send(msg.toJson());
                 return id;
             }
             else {
@@ -417,9 +451,11 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         try {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
-                const msg = {action: action, recipient: userGuid, message: {files: files, id: id}, domain: Colibri.Web.Comet.Options.origin, delivery: 'trusted'};
-                this._ws.send(JSON.stringify(msg));
-                this._addMessage(Object.assign({}, msg, {from: this._user}), true);
+                const msg = Colibri.Common.CometMessage.CreateForFilesSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, files);
+                msg.MarkAsRead();
+                // const msg = {action: action, recipient: userGuid, message: {files: files, id: id}, domain: Colibri.Web.Comet.Options.origin, delivery: 'trusted'};
+                this._ws.send(msg.toJson());
+                this._addMessage(msg);
                 return id;
             }
             else {
@@ -442,7 +478,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         try {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
-                const msg = {action: action, recipient: '*', message: {files: files, id: id, broadcast: true}, domain: Colibri.Web.Comet.Options.origin, delivery: 'trusted'};
+                const msg = Colibri.Common.CometMessage.CreateForFilesSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, files);
+                // const msg = {action: action, recipient: '*', message: {files: files, id: id, broadcast: true}, domain: Colibri.Web.Comet.Options.origin, delivery: 'trusted'};
                 this._ws.send(JSON.stringify(msg));
                 return id;
             }
@@ -456,17 +493,145 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         return null;
     }
 
+
+}
+
+Colibri.Web.InternalStore = class extends Colibri.Common.AbstractMessageStore {
+
     /**
-     * Gets the client ID for the Comet connection.
-     * @type {string}
-     * @readonly
+     * Add the message to the storage
+     * @param {Object} message - The message to add.
+     * @returns {Promise} A promise that resolves when the message is added.
      */
-    get clientId() {
-        return this._clientId;
+    Add(message) {
+        let messages = App.Browser.Get('comet.messages');
+        if(!messages) {
+            messages = [];
+        } else {
+            messages = JSON.parse(messages);
+        }
+        messages.push(message);
+        App.Browser.Set('comet.messages', JSON.stringify(messages));
+        return Promise.resolve(message);
     }
 
-    get connected() {
-        return this._connected;       
+    /**
+     * Updates a message in the store.
+     * @param {Object} message - The message to update.
+     * @param {number} id - The ID of the message to update.
+     * @returns {Promise} A promise that resolves when the message is updated.
+     */
+    Update(message, id) {
+        let messages = App.Browser.Get('comet.messages');
+        if(!messages) {
+            messages = [];
+        } else {
+            messages = JSON.parse(messages);
+        }
+        const messageIndex = Array.findIndex(messages, (v, i, l) => v.id === id);
+        messages[messageIndex] = Object.assignRecursive(message, messages[messageIndex]);
+        // messages[messageIndex] = Object.assign({}, messages[messageIndex], message);
+        App.Browser.Set('comet.messages', JSON.stringify(messages));
+        return Promise.resolve(message);
     }
 
+     /**
+     * Store messages in the store.
+     * @param {Array} messages - The messages to store.
+     * @returns {Promise} A promise that resolves when the messages are stored.
+     */
+    Store(messages) {
+        App.Browser.Set('comet.messages', JSON.stringify(messages));
+        return Promise.resolve(messages);
+    }
+
+    /**
+     * Retrieves messages from the store.
+     * @param {Object} options - Options for retrieving messages.
+     * @param {string} options.fields - The fields to retrieve.
+     * @param {number} options.filter - The filter to apply to the messages.
+     * @param {number} options.order - The order in which to retrieve messages.
+     * @param {number} options.page - The page number for pagination.
+     * @param {number} options.pagesize - The number of messages per page.
+     * @returns {Promise} A promise that resolves with the retrieved messages.
+     */
+    Get(options = {}) {
+
+        return new Promise((resolve, reject) => {
+            let messages = App.Browser.Get('comet.messages');
+            if(!messages) {
+                messages = [];
+            } else {
+                messages = JSON.parse(messages);
+            }
+
+            options.order = options.order ?? ['date'];
+            options.direction = options.direction ?? 'asc';
+            options.filter = options.filter ?? {};
+            options.page = options.page ?? 0;
+            options.pagesize = options.pagesize ?? 100;
+
+            messages.sort((a, b) => {
+                const akey = options.order.map(v => a[v]).join('');
+                const bkey = options.order.map(v => b[v]).join('');
+                if(options.direction === 'desc') {
+                    return akey < bkey ? 1 : (akey > bkey ? -1 : 0);
+                } else {
+                    return akey < bkey ? -1 : (akey > bkey ? 1 : 0);
+                }
+            });
+
+            if(options.filter && (Object.isObject(options.filter) && Object.countKeys(options.filter) > 0 || Array.isArray(options.filter) && options.filter.length > 0)) {
+                const filterString = window.convertFilterToString(options.filter);
+                messages = messages.filter(row => {
+                    let result = false;
+                    eval('result = ' + filterString + ';');
+                    return result;
+                });
+            }
+
+            if(options.page > 0) {
+                messages = messages.splice((options.page - 1) * options.pagesize, options.pagesize);
+            }
+
+            resolve(messages);
+        });
+    }
+
+    /**
+     * Deletes messages from the store.
+     * @returns {Promise} A promise that resolves when the messages are deleted.
+     */
+    Clear() {
+        App.Browser.Set('comet.messages', JSON.stringify([]));
+        return Promise.resolve([]);
+    }
+
+    /**
+     * Deletes a message from the store.
+     * @param {Object} options - Options for deleting the message.
+     * @param {number} options.filter - The filter to apply to the messages.
+     * @returns {Promise} A promise that resolves when the message is deleted.
+     */
+    Delete(options) {
+        let messages = App.Browser.Get('comet.messages');
+        if(!messages) {
+            messages = [];
+        } else {
+            messages = JSON.parse(messages);
+        }
+
+        options.filter = options.filter ?? [];
+        if(options.filter) {
+            const filterString = window.convertFilterToString(options.filter);
+            messages = messages.filter(row => {
+                let result = false;
+                eval('result = ' + filterString + ';');
+                return !result;
+            });
+        }
+
+        App.Browser.Set('comet.messages', JSON.stringify(messages));
+        return Promise.resolve();
+    }
 }
