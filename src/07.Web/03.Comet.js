@@ -635,3 +635,177 @@ Colibri.Web.InternalStore = class extends Colibri.Common.AbstractMessageStore {
         return Promise.resolve();
     }
 }
+
+Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
+
+    constructor() {
+        if(!App.Device.isAndroid && !App.Device.isIOs) {
+            throw new Exception('Can not use SQLite store on this device');
+        }
+
+        this._db = App.Device.SqLite.Open('comet', 'default');
+        this._fields = [
+            'id UNSIGNED BIG INT',
+            'action VARCHAR(255)',
+            'domain VARCHAR(255)',
+            'date BIGINT', 
+            'from VARCHAR(255)', 
+            'recipient VARCHAR(255)', 
+            'read BOOLEAN', 
+            'message TEXT', 
+            'delivery VARCHAR(50)', 
+            'broadcast BOOLEAN'
+        ];
+
+    }
+
+    /**
+     * Add the message to the storage
+     * @param {Object} message - The message to add.
+     * @returns {Promise} A promise that resolves when the message is added.
+     */
+    Add(message) {
+        return new Promise((resolve, reject) => {
+            App.Device.SqLite.CreateTable(
+                this._db,
+                'messages',
+                this._fields,
+                [message.toJson()]
+            ).then(() => {
+                resolve(message);
+            }).catch(error => reject(error));
+        });
+    }
+
+    /**
+     * Updates a message in the store.
+     * @param {Object} message - The message to update.
+     * @param {number} id - The ID of the message to update.
+     * @returns {Promise} A promise that resolves when the message is updated.
+     */
+    Update(message, id) {
+        return new Promise((resolve, reject) => {
+            App.Device.SqLite.CreateTable(
+                this._db,
+                'messages',
+                this._fields,
+            ).then(() => App.Device.SqLite.Update(
+                this._db,
+                'messages',
+                [Object.assign({}, message, {id: id})]
+            )).then(() => {
+                resolve(message);
+            }).catch(error => reject(error));
+        });
+    }
+
+     /**
+     * Store messages in the store.
+     * @param {Array} messages - The messages to store.
+     * @returns {Promise} A promise that resolves when the messages are stored.
+     */
+    Store(messages) {
+        return new Promise((resolve, reject) => {
+            App.Device.SqLite.CreateTable(
+                this._db,
+                'messages',
+                this._fields,
+                messages
+            ).then(() => {
+                resolve(messages);
+            }).catch(error => reject(error));
+        });
+    }
+
+    /**
+     * Retrieves messages from the store.
+     * @param {Object} options - Options for retrieving messages.
+     * @param {string} options.fields - The fields to retrieve.
+     * @param {number} options.filter - The filter to apply to the messages.
+     * @param {number} options.order - The order in which to retrieve messages.
+     * @param {number} options.page - The page number for pagination.
+     * @param {number} options.pagesize - The number of messages per page.
+     * @returns {Promise} A promise that resolves with the retrieved messages.
+     */
+    Get(options = {}) {
+
+        return new Promise((resolve, reject) => {
+            let messages = App.Browser.Get('comet.messages');
+            if(!messages) {
+                messages = [];
+            } else {
+                messages = JSON.parse(messages);
+            }
+
+            options.order = options.order ?? ['date'];
+            options.direction = options.direction ?? 'asc';
+            options.filter = options.filter ?? {};
+            options.page = options.page ?? 0;
+            options.pagesize = options.pagesize ?? 100;
+
+            const limit = pagesize + ' offset ' + ((page - 1) * pagesize);
+            const orderby = options.order.map(v => v + ' ' + options.direction).join(',');
+            const filter = window.convertFilterToStringForSql(options.filter);
+            
+            App.Device.SqLite.CreateTable(
+                this._db,
+                'messages',
+                this._fields,
+            ).then(() => App.Device.SqLite.Select(
+                this._db,
+                'messages',
+                '*',
+                filter,
+                orderby,
+                limit
+            )).then((messages) => {
+                resolve(messages);
+            }).catch(error => reject(error));
+
+        });
+    }
+
+    /**
+     * Deletes messages from the store.
+     * @returns {Promise} A promise that resolves when the messages are deleted.
+     */
+    Clear() {
+        return new Promise((resolve, reject) => {
+            App.Device.SqLite.CreateTable(
+                this._db,
+                'messages',
+                this._fields,
+            ).then(() => App.Device.SqLite.Delete(this._db, 'messages', 'true'))
+            .then(() => {
+                resolve()
+            }).catch(error => reject(error));
+        });
+    }
+
+    /**
+     * Deletes a message from the store.
+     * @param {Object} options - Options for deleting the message.
+     * @param {number} options.filter - The filter to apply to the messages.
+     * @returns {Promise} A promise that resolves when the message is deleted.
+     */
+    Delete(options) {
+        let messages = App.Browser.Get('comet.messages');
+        if(!messages) {
+            messages = [];
+        } else {
+            messages = JSON.parse(messages);
+        }
+        
+        const filterString = window.convertFilterToStringForSql(options.filter);
+        return new Promise((resolve, reject) => {
+            App.Device.SqLite.CreateTable(
+                this._db,
+                'messages',
+                this._fields,
+            ).then(() => App.Device.SqLite.Delete(this._db, 'messages', filterString))
+            .then(() => {
+                resolve()
+            }).catch(error => reject(error));
+        });
+    }
+}

@@ -3704,3 +3704,46 @@ window.convertFilterToString = function(filter) {
     }
 
 }
+
+window.convertFilterToStringForSql = function(filter) {
+        
+    if(Array.isArray(filter)) {
+        // or
+        const orArray = [];
+        for(const f of filter) {
+            orArray.push(window.convertFilterToString(f));
+        }
+        return '((' + orArray.join(') or (') + '))';
+    } else {
+
+        let andConditions = [];
+        Object.forEach(filter, (key, value) => {
+    
+            let condition = '==';
+            if(Array.isArray(value)) {
+                condition = value[0];
+                value = value[1];
+                if((value + '').isDate()) {
+                    andConditions.push('(' + key + ' ' + condition + ' ' + value.toDate().toUnixTime() + ')'); 
+                } else if(typeof value === 'boolean') {
+                    andConditions.push('(' + key + ' ' + condition + ' ' + value + ')'); 
+                } else {
+                    andConditions.push('(' + key + ' ' + condition + ' \'' + value + '\')'); 
+                }
+            } else {
+                if((value + '').isDate()) {
+                    andConditions.push('(' + key + ' ' + condition + ' ' + value.toDate().toUnixTime() + ')'); 
+                } else if(typeof value === 'boolean') {
+                    andConditions.push('(' + key + ' ' + condition + ' ' + value + ')'); 
+                } else {
+                    andConditions.push('(' + key + ' ' + condition + ' \'' + value + '\')'); 
+                }
+            }
+
+
+        });
+        return '(' + andConditions.join(') and (') + ')';
+
+    }
+
+}

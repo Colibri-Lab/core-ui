@@ -70,7 +70,7 @@ Colibri.Devices.SqLite = class extends Destructable {
                     for(let i = 0; i < rows.length; i++) {
                         const row = rows[i];
                         const sqlInsert = 'INSERT INTO ' + name + ' VALUES (' + Object.keys(row).map((key) => key + ' = ?').join(',') + ')';
-                        tx.executeSql(sqlInsert, Object.values(row));
+                        tx.executeSql(sqlInsert, Object.values(row).map(v => Object.isObject(v) || Object.isArray(v) ? JSON.stringify(v) : v));
                     }
                 }
             }, function(error) {
@@ -88,7 +88,7 @@ Colibri.Devices.SqLite = class extends Destructable {
                     for(let i = 0; i < rows.length; i++) {
                         const row = rows[i];
                         const sqlUpdate = 'UPDATE ' + name + ' SET ' + Object.keys(row).map((key) => key + ' = ?').join(',') + ' WHERE id = ?';
-                        tx.executeSql(sqlUpdate, [...Object.values(row), row.id]);
+                        tx.executeSql(sqlUpdate, [...Object.values(row).map(v => Object.isObject(v) || Object.isArray(v) ? JSON.stringify(v) : v), row.id]);
                     }
                 }
             }, function(error) {
