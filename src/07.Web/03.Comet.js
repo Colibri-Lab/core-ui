@@ -267,8 +267,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     GetConversation(userGuid, options = {}) {
         return this._storage.Get(Object.assignRecursive(options, {
             filter: [
-                {from: this._value.to, broadcast: false}, 
-                {recipient: this._value.to, broadcast: false}
+                {from: userGuid, broadcast: false}, 
+                {recipient: userGuid, broadcast: false}
             ],
         }))
     }
