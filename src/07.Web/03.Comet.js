@@ -272,10 +272,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                     Object.forEach(message, (k, v) => {
                         msg[k] = v;
                     });
-                    msg.date = msg.date.toDateFromUnixTime();
+                    msg.date = typeof msg.date === 'string' ? msg.date : msg.date.toDateFromUnixTime();
                     msg.broadcast = (msg.broadcast === 'true' || msg.broadcast === true || msg.broadcast === 1);
                     msg.read = (msg.read === 'true' || msg.read === true || msg.read === 1);
-                    msg.message = JSON.parse(msg.message);
+                    msg.message = typeof msg.message === 'string' ? JSON.parse(msg.message) : msg.message;
                     return msg;
                 }));
             }).catch(error => reject(error));

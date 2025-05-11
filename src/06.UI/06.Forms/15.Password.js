@@ -118,7 +118,6 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
                 );
             }
 
-
             if(tipData.className) {
                 this._passwordTip.AddClass(tipData.className);
             }

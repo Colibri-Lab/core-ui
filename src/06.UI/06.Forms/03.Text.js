@@ -42,6 +42,14 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
             this._masker.maskPattern(mask);
         } 
 
+        if(this._fieldData?.params?.pattern) {
+            this._input.attr('pattern', this._fieldData?.params?.pattern);
+        }
+
+        if(this._fieldData?.params?.inputmode) {
+            this._input.attr('inputmode', this._fieldData?.params?.inputmode);
+        }
+
         if(this._fieldData?.params?.icon) {
             this.icon = this._fieldData?.params?.icon;
         }
@@ -249,6 +257,37 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
         this.AddClass('-has-icon');
 
     }
+
+    /**
+     * Pattern string for input
+     * @type {String}
+     */
+    get pattern() {
+        return this._input.attr('pattern');
+    }
+    /**
+     * Pattern string for input
+     * @type {String}
+     */
+    set pattern(value) {
+        this._input.attr('pattern', value);
+    }
+
+    /**
+     * Input mode for input
+     * @type {String}
+     */
+    get inputmode() {
+        return this._input.attr('inputmode');
+    }
+    /**
+     * Input mode for input
+     * @type {String}
+     */
+    set inputmode(value) {
+        this._input.attr('inputmode', value);
+    }
+
 }
 
 Colibri.UI.Forms.Field.RegisterFieldComponent('Text', 'Colibri.UI.Forms.Text', '#{ui-fields-text}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','mask','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler']);

@@ -62,7 +62,7 @@ Colibri.Common.CometMessage = class {
 
     /** 
      * Delivery type
-     * @type {string}
+     * @type {string} 
      */
     delivery = 'trusted';
 

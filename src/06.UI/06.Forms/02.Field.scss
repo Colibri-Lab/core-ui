@@ -12,7 +12,7 @@
     }
 
     > [data-object-name$="-title"] {
-        padding-bottom: 0px;
+        padding-bottom: 10px;
         font-style: normal;
         font-weight: normal;
         font-size: 14px;
@@ -22,7 +22,7 @@
         &.app-component-shown {
             display: block;
         }
-        min-height: 32px;
+        min-height: 42px;
         &:empty {
             display: none;
         }
