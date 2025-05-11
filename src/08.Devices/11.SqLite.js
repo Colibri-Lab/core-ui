@@ -34,6 +34,10 @@ Colibri.Devices.SqLite = class extends Destructable {
 
     }
 
+    get isAvailable() {
+        return !!this._plugin;
+    }
+
     Open(name, location = 'default') {
         return this._plugin.openDatabase({
             name,
@@ -51,8 +55,19 @@ Colibri.Devices.SqLite = class extends Destructable {
                 if(rows.length > 0) {
                     for(let i = 0; i < rows.length; i++) {
                         const row = rows[i];
-                        const sqlInsert = 'INSERT INTO ' + name + ' VALUES (' + Array.enumerate(0, Object.keys(row).length, (i) => '?') + ')';
-                        tx.executeSql(sqlInsert, Object.values(row));
+
+                        const sqlInsert = 'INSERT INTO ' + name + '("' + Object.keys(row).join('","') + '") VALUES (' + Array.enumerate(0, Object.keys(row).length - 1, (i) => '?') + ')';
+                        tx.executeSql(sqlInsert, Object.values(row).map(v => {
+                            if(!(v instanceof Date) && (Object.isObject(v) || Array.isArray(v))) {
+                                return JSON.stringify(v);
+                            } else if((v + '').isDate()) {
+                                return new Date(v).toUnixTime();
+                            } else if(v === true || v === false) {
+                                return v ? 1 : 0;
+                            }
+                            return v;
+                        }));
+
                     }
                 }
             }, function(error) {
@@ -69,8 +84,17 @@ Colibri.Devices.SqLite = class extends Destructable {
                 if(rows.length > 0) {
                     for(let i = 0; i < rows.length; i++) {
                         const row = rows[i];
-                        const sqlInsert = 'INSERT INTO ' + name + ' VALUES (' + Object.keys(row).map((key) => key + ' = ?').join(',') + ')';
-                        tx.executeSql(sqlInsert, Object.values(row).map(v => Object.isObject(v) || Object.isArray(v) ? JSON.stringify(v) : v));
+                        const sqlInsert = 'INSERT INTO ' + name + '("' + Object.keys(row).join('","') + '") VALUES (' + Array.enumerate(0, Object.keys(row).length - 1, (i) => '?') + ')';
+                        tx.executeSql(sqlInsert, Object.values(row).map(v => {
+                            if(!(v instanceof Date) && (Object.isObject(v) || Array.isArray(v))) {
+                                return JSON.stringify(v);
+                            } else if((v + '').isDate()) {
+                                return new Date(v).toUnixTime();
+                            } else if(v === true || v === false) {
+                                return v ? 1 : 0;
+                            }
+                            return v;
+                        }));
                     }
                 }
             }, function(error) {
@@ -88,7 +112,14 @@ Colibri.Devices.SqLite = class extends Destructable {
                     for(let i = 0; i < rows.length; i++) {
                         const row = rows[i];
                         const sqlUpdate = 'UPDATE ' + name + ' SET ' + Object.keys(row).map((key) => key + ' = ?').join(',') + ' WHERE id = ?';
-                        tx.executeSql(sqlUpdate, [...Object.values(row).map(v => Object.isObject(v) || Object.isArray(v) ? JSON.stringify(v) : v), row.id]);
+                        tx.executeSql(sqlUpdate, [...tx.executeSql(sqlInsert, Object.values(row).map(v => {
+                            if(Object.isObject(v) || Array.isArray(v)) {
+                                return JSON.stringify(v);
+                            } else if((v + '').isDate()) {
+                                return new Date(v).toUnixTime();
+                            }
+                            return v;
+                        })), row.id]);
                     }
                 }
             }, function(error) {

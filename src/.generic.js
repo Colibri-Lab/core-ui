@@ -3664,14 +3664,14 @@ String.prototype.spkiPem2spkiDer = function(){
 
 window.convertFilterToString = function(filter) {
         
-    if(Array.isArray(filter)) {
+    if(Array.isArray(filter) && filter.length > 0) {
         // or
         const orArray = [];
         for(const f of filter) {
             orArray.push(window.convertFilterToString(f));
         }
         return '((' + orArray.join(') || (') + '))';
-    } else {
+    } else if(Object.isObject(filter) && Object.countKeys(filter) > 0) {
 
         let andConditions = [];
         Object.forEach(filter, (key, value) => {
@@ -3701,20 +3701,23 @@ window.convertFilterToString = function(filter) {
         });
         return '(' + andConditions.join(') && (') + ')';
 
+    } else {
+        return '';
     }
 
 }
 
 window.convertFilterToStringForSql = function(filter) {
         
-    if(Array.isArray(filter)) {
+    if(Array.isArray(filter) && filter.length > 0) {
         // or
         const orArray = [];
         for(const f of filter) {
-            orArray.push(window.convertFilterToString(f));
+            orArray.push(window.convertFilterToStringForSql(f));
         }
         return '((' + orArray.join(') or (') + '))';
-    } else {
+
+    } else if(Object.isObject(filter) && Object.countKeys(filter) > 0) {
 
         let andConditions = [];
         Object.forEach(filter, (key, value) => {
@@ -3724,26 +3727,28 @@ window.convertFilterToStringForSql = function(filter) {
                 condition = value[0];
                 value = value[1];
                 if((value + '').isDate()) {
-                    andConditions.push('(' + key + ' ' + condition + ' ' + value.toDate().toUnixTime() + ')'); 
+                    andConditions.push('("' + key + '" ' + condition + ' ' + value.toDate().toUnixTime() + ')'); 
                 } else if(typeof value === 'boolean') {
-                    andConditions.push('(' + key + ' ' + condition + ' ' + value + ')'); 
+                    andConditions.push('("' + key + '" ' + condition + ' ' + value + ')'); 
                 } else {
-                    andConditions.push('(' + key + ' ' + condition + ' \'' + value + '\')'); 
+                    andConditions.push('("' + key + '" ' + condition + ' \'' + value + '\')'); 
                 }
             } else {
                 if((value + '').isDate()) {
-                    andConditions.push('(' + key + ' ' + condition + ' ' + value.toDate().toUnixTime() + ')'); 
+                    andConditions.push('("' + key + '" ' + condition + ' ' + value.toDate().toUnixTime() + ')'); 
                 } else if(typeof value === 'boolean') {
-                    andConditions.push('(' + key + ' ' + condition + ' ' + value + ')'); 
+                    andConditions.push('("' + key + '" ' + condition + ' ' + value + ')'); 
                 } else {
-                    andConditions.push('(' + key + ' ' + condition + ' \'' + value + '\')'); 
+                    andConditions.push('("' + key + '" ' + condition + ' \'' + value + '\')'); 
                 }
             }
 
 
         });
-        return '(' + andConditions.join(') and (') + ')';
+        return andConditions.length > 0 ? '(' + andConditions.join(') and (') + ')' : '';
 
+    } else {
+        return '';
     }
 
 }

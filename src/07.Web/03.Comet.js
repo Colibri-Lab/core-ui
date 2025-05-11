@@ -137,8 +137,12 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this._store = store;
         this._storeMessages = storeMessages;
         this._storeHandler = storeHandler;
-        this._storage = new Colibri.Web.InternalStore();
-        
+
+        if((App.Device.isAndroid || App.Device.isIOs) && App.Device.SqLite.isAvailable) {
+            this._storage = new Colibri.Web.SqLiteStore();
+        } else {
+            this._storage = new Colibri.Web.InternalStore();
+        }
         this._initConnection();
         this._transferToModuleStore();
 
@@ -261,20 +265,34 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     } 
 
     GetMessages(options = {}) {
-        return this._storage.Get(options);
+        return new Promise((resolve, reject) => {
+            this._storage.Get(options).then(messages => {
+                resolve(messages.map(message => {
+                    const msg = new Colibri.Common.CometMessage();
+                    Object.forEach(message, (k, v) => {
+                        msg[k] = v;
+                    });
+                    msg.date = msg.date.toDateFromUnixTime();
+                    msg.broadcast = (msg.broadcast === 'true' || msg.broadcast === true || msg.broadcast === 1);
+                    msg.read = (msg.read === 'true' || msg.read === true || msg.read === 1);
+                    msg.message = JSON.parse(msg.message);
+                    return msg;
+                }));
+            }).catch(error => reject(error));
+        });
     }
 
     GetConversation(userGuid, options = {}) {
-        return this._storage.Get(Object.assignRecursive(options, {
+        return this.GetMessages(Object.assignRecursive(options, {
             filter: [
                 {from: userGuid, broadcast: false}, 
                 {recipient: userGuid, broadcast: false}
             ],
-        }))
+        }));
     }
 
     GetBroadcast(options = {}) {
-        return this._storage.Get(Object.assignRecursive(options, {
+        return this.GetMessages(Object.assignRecursive(options, {
             filter: {
                 broadcast: true
             },
@@ -654,22 +672,24 @@ Colibri.Web.InternalStore = class extends Colibri.Common.AbstractMessageStore {
 Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
 
     constructor() {
+        super();
+
         if(!App.Device.isAndroid && !App.Device.isIOs) {
             throw new Exception('Can not use SQLite store on this device');
         }
 
         this._db = App.Device.SqLite.Open('comet', 'default');
         this._fields = [
-            'id UNSIGNED BIG INT',
-            'action VARCHAR(255)',
-            'domain VARCHAR(255)',
-            'date BIGINT', 
-            'from VARCHAR(255)', 
-            'recipient VARCHAR(255)', 
-            'read BOOLEAN', 
-            'message TEXT', 
-            'delivery VARCHAR(50)', 
-            'broadcast BOOLEAN'
+            '"id" UNSIGNED BIG INT',
+            '"action" VARCHAR(255)',
+            '"domain" VARCHAR(255)',
+            '"date" BIGINT', 
+            '"from" VARCHAR(255)', 
+            '"recipient" VARCHAR(255)', 
+            '"read" BOOLEAN', 
+            '"message" TEXT', 
+            '"delivery" VARCHAR(50)', 
+            '"broadcast" BOOLEAN'
         ];
 
     }
@@ -685,7 +705,7 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
                 this._db,
                 'messages',
                 this._fields,
-                [message.toJson()]
+                [message]
             ).then(() => {
                 resolve(message);
             }).catch(error => reject(error));
@@ -745,12 +765,6 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
     Get(options = {}) {
 
         return new Promise((resolve, reject) => {
-            let messages = App.Browser.Get('comet.messages');
-            if(!messages) {
-                messages = [];
-            } else {
-                messages = JSON.parse(messages);
-            }
 
             options.order = options.order ?? ['date'];
             options.direction = options.direction ?? 'asc';
@@ -758,7 +772,7 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
             options.page = options.page ?? 0;
             options.pagesize = options.pagesize ?? 100;
 
-            const limit = pagesize + ' offset ' + ((page - 1) * pagesize);
+            const limit = options.pagesize + ' offset ' + ((options.page - 1) * options.pagesize);
             const orderby = options.order.map(v => v + ' ' + options.direction).join(',');
             const filter = window.convertFilterToStringForSql(options.filter);
             

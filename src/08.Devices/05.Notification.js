@@ -192,7 +192,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
         if(this._device.isWeb) {
             this._plugin = {local: new Colibri.Devices.LocalNotificationsEmulator()};
         } else {
-            this._plugin = this._device.Plugin('plugins.notification');
+            this._plugin = this._device.Plugin('notification');
         }
         if(this._plugin && this._plugin.local) {
             this._plugin.local.setDummyNotifications();
