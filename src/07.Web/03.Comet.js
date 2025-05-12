@@ -239,7 +239,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             this.DispatchHandlers('EventReceiving', {message: msg}).then((responses) => {
                 this.Dispatch('EventReceived', {event: msg});
             });
-        }
+        } 
     }
 
     _addMessage(message) {
