@@ -80,12 +80,12 @@ Colibri.Common.CometMessage = class {
         return msg;
     }
 
-    static CreateForSend(domain, from, recipient, text) {
+    static CreateForSend(domain, from, recipient, text, addditional = {}) {
         const message = new Colibri.Common.CometMessage();
         message.domain = domain;
         message.from = from;
         message.recipient = recipient;
-        message.message = {text, id: message.id};
+        message.message = Object.assign({text, id: message.id}, addditional);
         return message;
     }
 
@@ -98,13 +98,13 @@ Colibri.Common.CometMessage = class {
         return message;
     }
 
-    static CreateForSendBroadcast(domain, from, text) {
+    static CreateForSendBroadcast(domain, from, text, addditional = {}) {
         const message = new Colibri.Common.CometMessage();
         message.domain = domain;
         message.from = from;
         message.recipient = '*';
         message.broadcast = true;
-        message.message = {text, id: message.id};
+        message.message = Object.assign({text, id: message.id}, addditional);
         return message;
     }
 
