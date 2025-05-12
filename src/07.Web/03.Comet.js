@@ -228,7 +228,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                 if(responses.filter(v => v === false).length > 0) {
                     return;
                 }
-                const msg = Colibri.Common.CometMessage.FromReceivedObject(message.domain, message.from, message.message.text, message.broadcast);
+                const msg = Colibri.Common.CometMessage.FromReceivedObject(message.domain, message.from, message.message, message.delivery, message.broadcast);
                 this._addMessage(msg).then(() => {
                     this.Dispatch('MessageReceived', {message: msg});
                 });
