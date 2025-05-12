@@ -71,13 +71,13 @@ Colibri.Common.CometMessage = class {
     }
 
     static FromReceivedObject(domain, from, message, delivery = 'untrusted', broadcast = false) {
-        const message = new Colibri.Common.CometMessage();
-        message.domain = domain;
-        message.from = from;    
-        message.message = Object.assign(message, {id: message.id});
-        message.broadcast = broadcast;
-        message.delivery = delivery;
-        return message;
+        const msg = new Colibri.Common.CometMessage();
+        msg.domain = domain;
+        msg.from = from;    
+        msg.message = Object.assign(message, {id: message.id});
+        msg.broadcast = broadcast;
+        msg.delivery = delivery;
+        return msg;
     }
 
     static CreateForSend(domain, from, recipient, text) {
