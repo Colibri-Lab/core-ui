@@ -305,6 +305,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     ClearMessages(date = null) {
         return new Promise((resolve, reject) => {
             const res = () => {
+                this._transferToModuleStore();
                 resolve();
             };
             if(!date) {
