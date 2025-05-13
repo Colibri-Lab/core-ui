@@ -1134,6 +1134,7 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
                 }
                 content = new comp(name, this);
                 content.shown = true;
+                content.parent = this;
                 delete attrs.name;
                 Object.forEach(attrs, (key, value) => {
                     content[key] = value;
