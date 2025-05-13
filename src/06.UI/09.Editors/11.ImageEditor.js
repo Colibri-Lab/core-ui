@@ -24,14 +24,14 @@ Colibri.UI.ImageEditor = class extends Colibri.UI.Editor {
 
     /**
      * Value File
-     * @type {File}
+     * @type {String}
      */
     get value() {
         return this._value;
     }
     /**
      * Value File
-     * @type {File}
+     * @type {String}
      */
     set value(value) {
         this._value = value;
@@ -39,12 +39,17 @@ Colibri.UI.ImageEditor = class extends Colibri.UI.Editor {
     }
     _showValue() {
         
-        const fileReader = new FileReader();
-        fileReader.readAsDataURL(blob);
-        fileReader.onloadend = () => {
-            // reader result 
-            fileReader.result;
+        const image = new Image();
+        image.onload = () => {
+            this._canvas.width = image.width;
+            this._canvas.height = image.height;
+
+            
+
+            const ctx = this._canvas.getContext('2d');
+            ctx.drawImage(image, 0, 0);
         };
+        image.src = this._value;
 
 
     }
