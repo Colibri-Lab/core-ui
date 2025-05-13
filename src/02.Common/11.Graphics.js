@@ -120,8 +120,12 @@ Colibri.Common.Graphics = class {
             const ctx = canvas.getContext('2d');
             ctx.drawImage(image, 0, 0);
             canvas.toBlob(blob => {
-                const file = new File([blob], 'image.png', { type: 'image/png' });
-                resolve(file);
+                if(App.Device.isWeb) {
+                    const file = new File([blob], 'image.png', { type: 'image/png' });
+                    resolve(file);
+                } else {
+                    resolve(blob);
+                }
             }, 'image/png');
         });
     }
