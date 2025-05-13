@@ -161,7 +161,7 @@ Colibri.Common.Graphics = class {
             Colibri.Common.Graphics.ImageFromFile(file).then((image) => {
                 return Colibri.Common.Graphics.ResizeImage(image, previewWidth, previewHeight);
             }).then((image) => {
-                return Colibri.Common.Graphics.CropImage(image, 0, 0, previewWidth, previewHeight);
+                return Colibri.Common.Graphics.CropImage(image, (image.width - previewWidth) / 2, (image.height - previewHeight) / 2, previewWidth, previewHeight);
             }).then((image) => {
                 return Colibri.Common.Graphics.FileFromImage(image);
             }).then((file) => {
