@@ -192,11 +192,11 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
         if(this._device.isWeb) {
             this._plugin = {local: new Colibri.Devices.LocalNotificationsEmulator()};
         } else {
-            this._plugin = this._device.Plugin('notification');
+            this._plugin = this._device.Plugin('notification.local');
         }
-        if(this._plugin && this._plugin.local) {
-            this._plugin.local.setDummyNotifications();
-            this._plugin.local.fireQueuedEvents();
+        if(this._plugin && this._plugin) {
+            this._plugin.setDummyNotifications();
+            this._plugin.fireQueuedEvents();
         }
     }
 
@@ -209,7 +209,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
             if(this._granted) {
                 resolve();
             } else {
-                this._plugin.local.hasPermission((granted) => {
+                this._plugin.hasPermission((granted) => {
                     this._granted = granted;
                     if(granted) {
                         resolve();
@@ -231,7 +231,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
                 resolve();
             } else {
                 this.HasPermission().catch(() => {
-                    this._plugin.local.requestPermission(function (granted) {
+                    this._plugin.requestPermission(function (granted) {
                         this._granted = granted;
                         if(granted) {
                             resolve();
@@ -250,14 +250,30 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      * @param {*} actions - Actions to add.
      */
     AddActions(groupName, actions) {
-        this._plugin.local.addActions(groupName, actions);
+        this._plugin.addActions(groupName, actions);
     }
     /**
      * Removes actions from a notification group.
      * @param {string} groupName - The name of the notification group.
      */
     RemoveActions(groupName) {
-        this._plugin.local.removeActions(groupName);
+        this._plugin.removeActions(groupName);
+    }
+
+    _scheduleNotification(params, callback = null) {
+        return new Promise((resolve, reject) => {
+            this.RequestPermission().then(() => {
+                if(params?.id && this._notifications[params?.id])  {
+                    this._plugin.update(params, callback);
+                } else {
+                    this._plugin.schedule(params, callback);
+                    if(params?.id) {
+                        this._notifications[params?.id] = params;
+                    }
+                }
+                resolve();
+            });        
+        })
     }
 
     /**
@@ -271,30 +287,41 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      * @param {*} progressBar - Progress bar configuration.
      * @param {Function} callback - Callback function to execute after scheduling.
      */
-    Schedule(id, title, message, actions = null, trigger = null, data = null, options = {}, progressBar = null, callback = null) {
-        this.RequestPermission().then(() => {
-            const params = Object.assign(options, {
-                id: id,
-                title: title,
-                text: [{message: message}],
-                data: data
-            });
-            if(trigger) {
-                params.trigger = trigger;
-            }
-            if(actions && actions.length > 0) {
-                params.actions = actions;
-            }
-            if(progressBar) {
-                params.progressBar = progressBar;
-            }
-            if(this._notifications[id])  {
-                this._plugin.local.update(params, callback);
-            } else {
-                this._plugin.local.schedule(params, callback);
-                this._notifications[id] = params;
-            }
+    SchedulePermanent(id, title, message, actions = null, trigger = null, data = null, options = {}, progressBar = null, callback = null) {
+        const params = Object.assign(options, {
+            id: id,
+            title: title,
+            text: [{message: message}],
+            data: data
         });
+        if(trigger) {
+            params.trigger = trigger;
+        }
+        if(actions && actions.length > 0) {
+            params.actions = actions;
+        }
+        if(progressBar) {
+            params.progressBar = progressBar;
+        }
+        return this._scheduleNotification(params, callback);
+    }
+
+    Schedule(title, message, actions = null, trigger = null, data = null, options = {}, progressBar = null, callback = null) {
+        const params = Object.assign(options, {
+            title: title,
+            text: [{message: message}],
+            data: data
+        });
+        if(trigger) {
+            params.trigger = trigger;
+        }
+        if(actions && actions.length > 0) {
+            params.actions = actions;
+        }
+        if(progressBar) {
+            params.progressBar = progressBar;
+        }
+        return this._scheduleNotification(params, callback);
     }
 
     /**
@@ -303,7 +330,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      */
     Cancel(id) {
         this.RequestPermission().then(() => {
-            this._plugin.local.cancel(id);
+            this._plugin.cancel(id);
         });
     }
 
@@ -314,7 +341,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      * @param {*} scope - The scope of the callback.
      */
     On(event, callback, scope) {
-        this._plugin.local.on(event, callback, scope);
+        this._plugin.on(event, callback, scope);
     }
 
     /**
@@ -324,7 +351,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      * @param {*} scope - The scope of the callback.
      */
     Off(event, callback, scope) {
-        this._plugin.local.un(event, callback, scope);
+        this._plugin.un(event, callback, scope);
     }
 
 }

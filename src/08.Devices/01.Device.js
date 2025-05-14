@@ -271,6 +271,18 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    _searchInObject(object, query) {
+        let ret = null;
+        try {
+            const searchQuery = 'ret = object.' + query + ';';
+            eval(searchQuery);
+        } catch(e) {
+            console.log(e);
+            ret = null;
+        }
+        return ret;
+    }
+
     /**
      * Retrieves a plugin based on the provided query.
      * @param {string} query - The query string to retrieve the plugin.
@@ -279,20 +291,20 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     Plugin(query) {
         try {
             let plugin = null;
-            if(cordova && cordova[query]) {
-                plugin = cordova[query];
+            if(cordova) {
+                plugin = this._searchInObject(cordova, query);
             }
-            if(!plugin && navigator && navigator[query]) {
-                plugin = navigator[query];
+            if(!plugin && cordova && cordova.plugins) {
+                plugin = this._searchInObject(cordova.plugins, query);
             }
-            if(!plugin && cordova && cordova.plugins && cordova.plugins[query]) {
-                plugin = cordova.plugins[query];
+            if(!plugin && navigator) {
+                plugin = this._searchInObject(navigator, query);
             }
-            if(!plugin && window && window.plugins && window.plugins[query]) {
-                plugin = window.plugins[query];
+            if(!plugin && window && window.plugins) {
+                plugin = this._searchInObject(window.plugins, query);
             }
-            if(!plugin && window && window[query]) {
-                plugin = window[query];
+            if(!plugin && window) {
+                plugin = this._searchInObject(window, query);
             }
             if(!plugin) {
                 plugin = eval(query);
