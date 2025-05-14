@@ -291,7 +291,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
         const params = Object.assign(options, {
             id: id,
             title: title,
-            text: [{message: message}],
+            text: message,
             data: data
         });
         if(trigger) {
@@ -309,7 +309,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
     Schedule(title, message, actions = null, trigger = null, data = null, options = {}, progressBar = null, callback = null) {
         const params = Object.assign(options, {
             title: title,
-            text: [{message: message}],
+            text: message,
             data: data
         });
         if(trigger) {
