@@ -260,17 +260,11 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
         this._plugin.removeActions(groupName);
     }
 
-    _scheduleNotification(params, callback = null) {
+    _scheduleNotification(params, successCallback = null, errorCallback = null) {
         return new Promise((resolve, reject) => {
             this.RequestPermission().then(() => {
-                if(params?.id && this._notifications[params?.id])  {
-                    this._plugin.update(params, callback);
-                } else {
-                    this._plugin.schedule(params, callback);
-                    if(params?.id) {
-                        this._notifications[params?.id] = params;
-                    }
-                }
+                this._plugin.cancelAll();
+                this._plugin.schedule(params, successCallback, errorCallback);
                 resolve();
             });        
         })
@@ -287,41 +281,23 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      * @param {*} progressBar - Progress bar configuration.
      * @param {Function} callback - Callback function to execute after scheduling.
      */
-    SchedulePermanent(id, title, message, actions = null, trigger = null, data = null, options = {}, progressBar = null, callback = null) {
+    Schedule(title, message, actions = null, trigger = null, data = null, options = {}, progressBar = null, successCallback = null, errorCallback = null) {
         const params = Object.assign(options, {
-            id: id,
             title: title,
             text: message,
-            data: data
+            data: data,
+            launch: true
         });
         if(trigger) {
             params.trigger = trigger;
-        }
+        } 
         if(actions && actions.length > 0) {
             params.actions = actions;
         }
         if(progressBar) {
             params.progressBar = progressBar;
         }
-        return this._scheduleNotification(params, callback);
-    }
-
-    Schedule(title, message, actions = null, trigger = null, data = null, options = {}, progressBar = null, callback = null) {
-        const params = Object.assign(options, {
-            title: title,
-            text: message,
-            data: data
-        });
-        if(trigger) {
-            params.trigger = trigger;
-        }
-        if(actions && actions.length > 0) {
-            params.actions = actions;
-        }
-        if(progressBar) {
-            params.progressBar = progressBar;
-        }
-        return this._scheduleNotification(params, callback);
+        return this._scheduleNotification(params, successCallback, errorCallback);
     }
 
     /**

@@ -112,14 +112,14 @@ Colibri.Devices.SqLite = class extends Destructable {
                     for(let i = 0; i < rows.length; i++) {
                         const row = rows[i];
                         const sqlUpdate = 'UPDATE ' + name + ' SET ' + Object.keys(row).map((key) => key + ' = ?').join(',') + ' WHERE id = ?';
-                        tx.executeSql(sqlUpdate, [...tx.executeSql(sqlInsert, Object.values(row).map(v => {
+                        tx.executeSql(sqlUpdate, [...Object.values(row).map(v => {
                             if(Object.isObject(v) || Array.isArray(v)) {
                                 return JSON.stringify(v);
                             } else if((v + '').isDate()) {
                                 return new Date(v).toUnixTime();
                             }
                             return v;
-                        })), row.id]);
+                        }), row.id]);
                     }
                 }
             }, function(error) {

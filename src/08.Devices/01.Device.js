@@ -149,6 +149,24 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         
     }
 
+    RequestPermissions(perms) {
+        if(!cordova.plugins.permissions) {
+            return Promise.resolve();
+        }
+        return new Promise((resolve, reject) => {
+            var permissions = cordova.plugins.permissions;
+            const list = perms.map(v => permissions[v]);
+            permissions.requestPermissions(list, (status) => {
+                if( !status.hasPermission ) {
+                    reject();
+                }
+                resolve();
+            }, () => {
+                reject();
+            });
+        })
+    }
+
     /**
      * Gets the platform type of the device.
      * @returns {string} The platform type.
@@ -208,9 +226,13 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         }
 
         this._backgroundMode = value;
-        cordova.plugins.backgroundMode.setEnabled(value);
         if(value) {
-            cordova.plugins.backgroundMode.setDefaults({ silent: false, resume: true });
+            cordova.plugins.backgroundMode.enable();
+        } else {
+            cordova.plugins.backgroundMode.disable();
+        }
+        if(value) {
+            // cordova.plugins.backgroundMode.setDefaults({ silent: false, resume: true });
             cordova.plugins.backgroundMode.on('activate', function () {
                 cordova.plugins.backgroundMode.disableWebViewOptimizations();
             });
@@ -248,6 +270,14 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             throw 'Please enable \'cordova-plugin-background-mode\' plugin';
         }
         cordova.plugins.backgroundMode.unlock();
+    }
+
+    Foreground() {
+        cordova.plugins.backgroundMode.moveToForeground();
+    }
+    
+    Background() {
+        cordova.plugins.backgroundMode.moveToBackground();
     }
 
     /**
