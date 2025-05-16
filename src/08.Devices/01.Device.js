@@ -53,6 +53,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
      * @private
      */
     _pushNotifications = null;
+    _pushToken = null;
     
     /**
      * Creates an instance of Device.
@@ -80,6 +81,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('OrientationChanged', false, 'Когда ориентация была изменена');
         this.RegisterEvent('ThemeChanged', false, 'Когда тема изменена');
         this.RegisterEvent('NotificationTapped', false, 'When push notification is tapped');
+        this.RegisterEvent('NotificationToken', false, 'When push notification token is changed');
     }
 
     /**
@@ -111,11 +113,17 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             this._pushNotifications = this.Plugin('pushNotification');
             if(this._pushNotifications) {
                 this._pushNotifications.registration((token) => {
-                    console.log(token);
+                    this._pushToken = token;
+                    this.Dispatch('NotificationToken', {token: token});
                 }, e => console.log(e));
                 this._pushNotifications.tapped((payload) => {
-                    this.Dispatch('NotificationTapped', {payload: payload})
+                    this.Dispatch('NotificationTapped', {payload: payload});
                 }, e => console.log(e));
+                document.addEventListener('resume', () => {
+                    window.pushNotification.tapped((payload) => {
+                        this.Dispatch('NotificationTapped', {payload: payload});
+                    }, e => console.log(e));
+                }, false);
             }    
 
             this._localNotifications = new Colibri.Devices.LocalNotifications(this);
@@ -488,6 +496,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             this._sqLite = new Colibri.Devices.SqLite(this);
         }
         return this._sqLite;
+    }
+
+    get pushToken() {
+        return this._pushToken;
     }
 
 
