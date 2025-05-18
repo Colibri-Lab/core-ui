@@ -64,6 +64,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('DocumentReady', false, 'When document is ready');
         this.RegisterEvent('DocumentChanged', false, 'When document changed'); 
         this.RegisterEvent('ApplicationReady', false, 'Application is ready for use');
+        this.RegisterEvent('ApplicationInitialized', false, 'When application is initialized completetly with modules');
         this.RegisterEvent('UserAuthorized', false, 'User is logged'); 
         this.RegisterEvent('UserUnauthorized', false, 'User is unlogged');
         this.RegisterEvent('DocumentShown', false, 'Document shown');
@@ -164,6 +165,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                 this._alertDialog = new Colibri.UI.AlertDialog('alert', document.body, 600);
                 this._customToolTip = new Colibri.UI.ToolTip('tooltip', document.body);
                 this._loadingBallun = new Colibri.UI.LoadingBallun('ballun', document.body);
+                this.Dispatch('ApplicationInitialized', {});
             });
                 
             

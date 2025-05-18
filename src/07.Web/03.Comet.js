@@ -130,7 +130,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {Colibri.Storages.Store} store - Storage object.
      * @param {string} storeMessages - Key where messages will be stored.
      */
-    Init(userData, store, storeMessages, storeHandler = null, firebaseServiceJson = null) {
+    Init(userData, store, storeMessages, storeHandler = null, firebaseServiceJson = null, pushToken = null, pushFunction = null) {
 
         this._user = userData.guid;
         this._userName = userData.name;
@@ -138,6 +138,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this._storeMessages = storeMessages;
         this._storeHandler = storeHandler;
         this._firebaseServiceJson = firebaseServiceJson;
+        this._pushToken = pushToken;
+        this._pushFunction = pushFunction;
 
         if((App.Device.isAndroid || App.Device.isIOs) && App.Device.SqLite.isAvailable) {
             this._storage = new Colibri.Web.SqLiteStore();
@@ -157,9 +159,11 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     }
 
     SetPushToken(token, f) {
-        this.Command(this._user, 'register', {name: this._userName, storeHandler: this._storeHandler, firebase: {json: this._firebaseServiceJson, token: token, f: f}});
+        this._pushToken = token;
+        this._pushFunction = f; 
+        this.Command(this._user, 'register', {name: this._userName, storeHandler: this._storeHandler, firebase: {json: JSON.stringify(this._firebaseServiceJson), token: this._pushToken, f: this._pushFunction}});
     }
-
+  
     /**
      * Registers a handler for specific events.
      * @param {String} handlerName 
@@ -207,7 +211,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      */
     __onCometOpened() {
         this._connected = true;
-        this.Command(this._user, 'register', {name: this._userName, storeHandler: this._storeHandler, firebase: {json: this._firebaseServiceJson, token: null, f: null}});
+        this.Command(this._user, 'register', {name: this._userName, storeHandler: this._storeHandler, firebase: {json: JSON.stringify(this._firebaseServiceJson), token: this._pushToken, f: this._pushFunction}});
     }
 
     /**

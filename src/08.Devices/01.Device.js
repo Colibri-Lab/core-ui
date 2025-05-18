@@ -110,20 +110,21 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
                     });
                 }
             }
-            this._pushNotifications = this.Plugin('pushNotification');
+            this._pushNotifications = this.Plugin('firebase.messaging');
             if(this._pushNotifications) {
-                this._pushNotifications.registration((token) => {
-                    this._pushToken = token;
-                    this.Dispatch('NotificationToken', {token: token});
-                }, e => console.log(e));
-                this._pushNotifications.tapped((payload) => {
-                    this.Dispatch('NotificationTapped', {payload: payload});
-                }, e => console.log(e));
-                document.addEventListener('resume', () => {
-                    window.pushNotification.tapped((payload) => {
-                        this.Dispatch('NotificationTapped', {payload: payload});
+                App.AddHandler('ApplicationInitialized', () => {
+                    this._pushNotifications.getToken().then((token) => {
+                        this._pushToken = token;
+                        this.Dispatch('NotificationToken', {token: token});
                     }, e => console.log(e));
-                }, false);
+                    this._pushNotifications.onMessage((notification) => {
+                        this.Dispatch('NotificationTapped', notification);
+                    }, e => console.log(e));
+                    this._pushNotifications.onBackgroundMessage((notification) => {
+                        console.log(this.__handlers);
+                        this.Dispatch('NotificationTapped', notification);
+                    });
+                });
             }    
 
             this._localNotifications = new Colibri.Devices.LocalNotifications(this);
@@ -500,6 +501,17 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     get pushToken() {
         return this._pushToken;
+    }
+
+    set pushFunction(value) {
+        this._pushFunction = value;
+    }
+    get pushFunction() { 
+        return this._pushFunction;
+    }
+
+    get isInBackgroundMode() {
+        return cordova.plugins.backgroundMode.isActive();
     }
 
 
