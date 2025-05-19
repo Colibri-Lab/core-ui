@@ -438,7 +438,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     /**
      * Sends a broadcast message.
      * @param {string} action - The action to be performed.
-     * @param {string} message - The message content.
+     * @param {object} message - The message content.
      * @returns {string|null} - The ID of the sent message. 
      */
     CommandBroadcast(action, message = null) {
