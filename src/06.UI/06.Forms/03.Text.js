@@ -103,8 +103,12 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
      */
     Focus() {
         this._input.focus();
-        //this._input.select();
     }
+
+    Select() {
+        this._input.select();
+    }
+
 
     /**
      * Maximum length of value

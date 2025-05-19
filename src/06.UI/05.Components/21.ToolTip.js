@@ -9,14 +9,10 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
     static LB = 'lb';
     /** Left top */
     static LT = 'lt';
-    /** Left middle */
-    static LM = 'lm';
     /** Right bottom */
     static RB = 'rb';
     /** Right top */
     static RT = 'rt';
-    /** Right middle */
-    static RM = 'rm';
 
     /**
      * @constructor
@@ -90,58 +86,36 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
 
     /** @private */
     _findPointOnParent() {
-        try {
-            const parent = this._findParent();
-            const ori = this._orientation[0];
-            const parentBounds = parent.container ? parent.container.bounds(true, true) : {top: 0, left: 0, width: 0, height: 0};
-            if(parent?.container?.contains(this._element)) {
-                parentBounds.left = 0;
-                parentBounds.top = 0;
+        const parent = this._findParent();
+        const ori = this._orientation[0];
+        const parentBounds = parent.container.bounds(true, true);
+        switch(ori) {
+            default:s
+            case Colibri.UI.ContextMenu.RB: {
+                return {
+                    left: parentBounds.left + parentBounds.outerWidth, 
+                    top: parentBounds.top + parentBounds.outerHeight
+                };
             }
-            switch(ori) {
-                default:
-                case Colibri.UI.ToolTip.RB: {
-                    return {
-                        left: parentBounds.left + parentBounds.outerWidth, 
-                        top: parentBounds.top + parentBounds.outerHeight
-                    };
-                }
-                case Colibri.UI.ToolTip.LB: {
-                    return {
-                        left: parentBounds.left, 
-                        top: parentBounds.top + parentBounds.outerHeight
-                    };
-                }
-                case Colibri.UI.ToolTip.LM: {
-                    return {
-                        left: parentBounds.left, 
-                        top: parentBounds.top + (parentBounds.outerHeight / 2)
-                    };
-                }
-                case Colibri.UI.ToolTip.LT: {
-                    return {
-                        left: parentBounds.left, 
-                        top: parentBounds.top
-                    };
-                }
-                case Colibri.UI.ToolTip.RT: {
-                    return {
-                        left: parentBounds.left + parentBounds.outerWidth, 
-                        top: parentBounds.top
-                    };
-                }
-                case Colibri.UI.ToolTip.RM: {
-                    return {
-                        left: parentBounds.left + parentBounds.outerWidth, 
-                        top: parentBounds.top + (parentBounds.outerHeight / 2)
-                    };
-                }
+            case Colibri.UI.ContextMenu.LB: {
+                return {
+                    left: parentBounds.left, 
+                    top: parentBounds.top + parentBounds.outerHeight
+                };
             }
-        } catch(e) {
-
+            case Colibri.UI.ContextMenu.LT: {
+                return {
+                    left: parentBounds.left, 
+                    top: parentBounds.top
+                };
+            }
+            case Colibri.UI.ContextMenu.RT: {
+                return {
+                    left: parentBounds.left + parentBounds.outerWidth, 
+                    top: parentBounds.top
+                };
+            }
         }
-        
-        return {left: 0, top: 0};    
     }
 
     /** @private */
@@ -149,52 +123,42 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
         const ori = this._orientation[1];
         const thisBounds = this._element.bounds(true, true);
         switch(ori) {
-            default:
-            case Colibri.UI.ToolTip.LB: {
+            default: 
+            case Colibri.UI.ContextMenu.RB: {
+                return {
+                    left: pointOnParent.left - thisBounds.outerWidth, 
+                    top: pointOnParent.top - thisBounds.outerHeight
+                };
+            }
+            case Colibri.UI.ContextMenu.LB: {
                 return {
                     left: pointOnParent.left, 
                     top: pointOnParent.top - thisBounds.outerHeight
                 };
             }
-            case Colibri.UI.ToolTip.LM: {
+            case Colibri.UI.ContextMenu.LT: {
                 return {
                     left: pointOnParent.left, 
-                    top: pointOnParent.top - (thisBounds.outerHeight / 2) - 10
+                    top: pointOnParent.top
                 };
             }
-            case Colibri.UI.ToolTip.LT: {
-                return {
-                    left: pointOnParent.left, 
-                    top: pointOnParent.top  - 10
-                };
-            }
-            case Colibri.UI.ToolTip.RB: {
+            case Colibri.UI.ContextMenu.RT: {
                 return {
                     left: pointOnParent.left - thisBounds.outerWidth, 
-                    top: pointOnParent.top - thisBounds.outerHeight - 10
-                };
-            }
-            case Colibri.UI.ToolTip.RT: {
-                return {
-                    left: pointOnParent.left - thisBounds.outerWidth, 
-                    top: pointOnParent.top - 10
-                };
-            }
-            case Colibri.UI.ToolTip.RM: {
-                return {
-                    left: pointOnParent.left - thisBounds.outerWidth, 
-                    top: pointOnParent.top - (thisBounds.outerHeight / 2) - 10
+                    top: pointOnParent.top
                 };
             }
         }
     }
 
     /** @private */
-    _setPosition() {
+    _setPosition(selectedBounds = null) {
 
         const pointOnParent = this._point || this._findPointOnParent();
-        const point = this._getOrientationPoint(pointOnParent);
+        const point = selectedBounds ?? this._getOrientationPoint(pointOnParent);
         this.styles = {left: point.left + 'px', top: point.top + 'px'};
+        this.RemoveClass('-rt', '-rb', '-lt', '-lb');
+        this.AddClass('-' + this._orientation[0] + this._orientation[1]);
 
     }
 

@@ -32,10 +32,10 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
             if(this.min !== null && parseFloat(this._input.value) < this.min) {
                 this._input.value = this.min;
             }
-            if(this._original != this._input.value) {
+            if(this._original != this._convertValue(this._input.value, false)) {
                 this.Dispatch('Changed', {domEvent: e, component: this, original: this._original});
             }
-            this._original = this._input.value;
+            this._original = this._convertValue(this._input.value, false);
         });
         this._input.addEventListener('keyup', (e) => {
             this.Dispatch('KeyUp', {domEvent: e});
@@ -63,7 +63,7 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
         this._input.addEventListener('paste', (e) => {
             Colibri.Common.Delay(100).then(() => {
                 this._input.emitHtmlEvents('change');
-                this._original = this._input.value;
+                this._original = this._convertValue(this._input.value, false);
                 this.Dispatch('Pasted', { domEvent: e });
             });
             e.stopPropagation();
@@ -102,7 +102,10 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
      */
     Focus() {
         this._input.focus();
-        // this._input.select();
+    }
+    
+    Select() {
+        this._input.select();
     }
 
     /**
