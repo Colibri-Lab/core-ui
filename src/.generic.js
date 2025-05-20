@@ -1839,7 +1839,6 @@ String.prototype.copyToClipboard = function () {
             reject('can not copy');
         });
     });
-
 };
 /**
  * Calculates the MD5 hash of the string.
