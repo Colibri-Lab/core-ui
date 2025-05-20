@@ -35,8 +35,8 @@ Colibri.UI.Viewer = class extends Colibri.UI.Component {
         if(this._field?.params?.copy) {
             this.copy = this._field?.params?.copy;
         }        
-        if(this._field?.params?.copyState) {
-            this.copy = this._field?.params?.copyState ?? 'value';
+        if(this._field?.params?.copyStyle) {
+            this.copy = this._field?.params?.copyStyle ?? 'value';
         }        
 
     }
