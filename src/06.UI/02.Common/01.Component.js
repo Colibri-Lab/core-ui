@@ -144,7 +144,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         this._renderedIndex = 0;
         
-        this._clickToCopyHandler = (e) => (this._copyStyle === 'text' ? this.container.text() : this.value).copyToClipboard() && App.Notices.Add(new Colibri.UI.Notice('#{ui-copy-info}', Colibri.UI.Notice.Success));
+        this._clickToCopyHandler = (e) => (this._copyStyle === 'text' ? this.container.text() : this.value + '').copyToClipboard() && App.Notices.Add(new Colibri.UI.Notice('#{ui-copy-info}', Colibri.UI.Notice.Success));
 
         Object.forEach(createEvents, (event, handler) => {
             this.AddHandler(event, handler);
