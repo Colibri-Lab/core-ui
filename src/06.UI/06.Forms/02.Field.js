@@ -205,6 +205,12 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             }
         });
 
+        if(this._fieldData?.params?.copyTitle) {
+            this._title.copy = this._fieldData?.params?.copyTitle;
+            if(this._fieldData?.params?.copyTitleStyle) {
+                this._title.copyStyle = this._fieldData?.params?.copyTitleStyle ?? 'text';
+            }
+        }
 
         this.AddHandler(['Changed', 'KeyUp', 'KeyDown'], (event, args) => {
             if(event.name == 'Changed') {
