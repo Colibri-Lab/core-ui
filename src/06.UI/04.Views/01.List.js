@@ -754,7 +754,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         if(foundItem !== -1) {
             control = this._div.Children(foundItem);
             control.value = itemData;
-            if(index) {
+            if(index !== null) {
                 this._div.Children(control.name, control, index);
             }
         } else {
@@ -769,6 +769,10 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
             if(this.parent?.tag && this.parent?.tag?.params && this.parent?.tag?.params?.sort) {
                 const foundIndex = this.parent.tag.params.sort(control, this);
                 this._div.Children(name, control, foundIndex);
+            }
+
+            if(index !== null) {
+                this._div.Children(control.name, control, index);
             }
 
         }
