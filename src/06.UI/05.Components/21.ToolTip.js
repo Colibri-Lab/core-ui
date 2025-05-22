@@ -90,7 +90,7 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
         const ori = this._orientation[0];
         const parentBounds = parent.container.bounds(true, true);
         switch(ori) {
-            default:s
+            default:
             case Colibri.UI.ContextMenu.RB: {
                 return {
                     left: parentBounds.left + parentBounds.outerWidth, 
