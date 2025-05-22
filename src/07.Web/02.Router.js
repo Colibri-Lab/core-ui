@@ -36,7 +36,6 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
                 
                 const args = this.ProcessUrlToOptionsHandlers('forward', this._url, this._options);
                 this._url = args.url;
-                this._path = args.path;
                 this._options = args.options;
 
                 this._history.push({url: this._url, options: this._options});
@@ -55,7 +54,6 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
                 this._options = App.Request.query;
                 const args = this.ProcessUrlToOptionsHandlers('forward', this._url, this._options);
                 this._url = args.url;
-                this._path = args.path;
                 this._options = args.options;
 
 
@@ -85,7 +83,6 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
             
             const args = this.ProcessUrlToOptionsHandlers('forward', this._url, this._options);
             this._url = args.url;
-            this._path = args.path;
             this._options = args.options;
 
             this._history.push({url: this._url, options: this._options});
