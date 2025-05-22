@@ -114,7 +114,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
             if(!this._passwordTip) {
                 this._passwordTip = new Colibri.UI.ToolTip(
                     this.name + '_tip', document.body, 
-                    tipData.orientation ? tipData.orientation : [Colibri.UI.ToolTip.RB, Colibri.UI.ToolTip.LB]
+                    tipData.orientation ? tipData.orientation : [Colibri.UI.ToolTip.RB, Colibri.UI.ToolTip.LT]
                 );
             }
 
