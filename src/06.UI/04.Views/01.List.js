@@ -202,7 +202,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
             return this._selected.map(v => v.parent.parent.childIndex)
         } 
 
-        return this._selected[0].parent.parent.childIndex;
+        return this._selected[0]?.parent?.parent?.childIndex ?? 0;
 
     }
     

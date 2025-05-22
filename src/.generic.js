@@ -1216,7 +1216,7 @@ String.prototype.isFinite = function () { return isFinite(this); }
  * Checks if the string represents a numeric value.
  * @returns {boolean} Returns true if the string represents a numeric value, otherwise false.
  */
-String.prototype.isNumeric = function () { return this.isFinite((this * 1.0)); }
+String.prototype.isNumeric = function () { return this ? this.isFinite(this * 1.0) : false; }
 
 /**
  * Checks if the string represents a valid email address.

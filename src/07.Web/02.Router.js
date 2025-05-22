@@ -19,6 +19,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
         this._path = null;
         this._options = {};
         this._routeHandlers = [];
+        this._urlToOptionsHandler = [];
 
         this._registerEvents();
         this._preventNextEvent = false;
@@ -32,6 +33,12 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
                 this._url = App.Request.uri;
                 this._path = App.Request.uri.split('/').filter(v => v != '');
                 this._options = App.Request.query;
+                
+                const args = this.ProcessUrlToOptionsHandlers('forward', this._url, this._options);
+                this._url = args.url;
+                this._path = args.path;
+                this._options = args.options;
+
                 this._history.push({url: this._url, options: this._options});
                 this._processRoutePatterns();
                 this.Dispatch('RouteChanged', {url: this._url, options: this._options});
@@ -46,6 +53,12 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
                 this._url = App.Request.uri;
                 this._path = App.Request.uri.split('/').filter(v => v != '');
                 this._options = App.Request.query;
+                const args = this.ProcessUrlToOptionsHandlers('forward', this._url, this._options);
+                this._url = args.url;
+                this._path = args.path;
+                this._options = args.options;
+
+
                 this._history.push({url: this._url, options: this._options});
                 this._processRoutePatterns();
                 this.Dispatch('RouteChanged', {url: this._url, options: this._options});
@@ -69,6 +82,12 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
             }
             this._path = this._url.split('/').filter(v => v != '');
             this._options = options;
+            
+            const args = this.ProcessUrlToOptionsHandlers('forward', this._url, this._options);
+            this._url = args.url;
+            this._path = args.path;
+            this._options = args.options;
+
             this._history.push({url: this._url, options: this._options});
             
         };
@@ -95,9 +114,10 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
      * Handles the DOM ready event. Initializes the router with the current URL and query parameters.
      */
     HandleDomReady() {
-        this._url = App.Request.uri;
-        this._path = App.Request.uri.split('/').filter(v => v != '');
-        this._options = App.Request.query;
+        const args = this.ProcessUrlToOptionsHandlers('forward', App.Request.uri, App.Request.query);
+        this._url = args.url;
+        this._options = args.options;
+        this._path = args.url.split('/').filter(v => v != '');
         this._history.push({url: this._url, options: this._options});
         this._processRoutePatterns();
         this.Dispatch('RouterReady', {});
@@ -269,6 +289,10 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
      */
     Navigate(url, options = {}, replaceOnHistory = false, setOnHistory = false, target = '_self') {
 
+        const args = this.ProcessUrlToOptionsHandlers('back', url, options);
+        url = args.url;
+        options = args.options;
+
         const isChanged = this._isChanged(url, options);
 
         const u = url + (Object.countKeys(options) > 0 ? '?' + String.fromObject(options, ['&', '=']) : '');
@@ -429,6 +453,26 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
         }
         return ret;
     }
+
+    AddUrlToOptionsHandler(handlers, prepend = false) {
+        if(prepend) {
+            this._urlToOptionsHandler.splice(0, 0, handlers);;
+        } else {
+            this._urlToOptionsHandler.push(handlers);
+        }
+    }
+
+    ProcessUrlToOptionsHandlers(direction = 'forward', url, options) {
+        options = Object.cloneRecursive(options);
+        for(const handler of this._urlToOptionsHandler) {
+            const args = {url: url, options: options};
+            handler[direction == 'forward' ? 0 : 1](args);
+            url = args.url;
+            options = args.options;
+        }
+        return {url: url, options: options};
+    }
+
 }
 
 /** Routing based on hash */

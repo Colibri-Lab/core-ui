@@ -30,13 +30,14 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     /** @protected */
     _registerEvents() {
         super._registerEvents();
-        this.RegisterEvent('Validated', false, 'Когда форма полностью валидирована');
-        this.RegisterEvent('Changed', false, 'Прозошло изменение данных компонента')
-        this.RegisterEvent('KeyDown', false, 'Когда кнопка нажата');
-        this.RegisterEvent('KeyUp', false, 'Когда кнопка отжата');
-        this.RegisterEvent('Click', false, 'Когда кликнули');
-        this.RegisterEvent('FieldsRendered', false, 'Когда поля созданы');
-        this.RegisterEvent('ActiveFieldChanged', false, 'Когда активное поле изменилось');
+        this.RegisterEvent('Validated', false, 'When form validated');
+        this.RegisterEvent('Changed', false, 'When components in form are changed')
+        this.RegisterEvent('KeyDown', false, 'When key is down');
+        this.RegisterEvent('KeyUp', false, 'When key is up');
+        this.RegisterEvent('Click', false, 'When clicked on form');
+        this.RegisterEvent('FieldsRendered', false, 'When all fields are rendered');
+        this.RegisterEvent('ActiveFieldChanged', false, 'When active field changed');
+        this.RegisterEvent('GroupChanged', false, 'When group (if it exists) changed');
     }
 
     /** @protected */
@@ -231,6 +232,10 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
      * @type {object}
      */
     set value(value) {
+
+        if(!this._checkIfChanged(value)) {
+            return;
+        }
 
         this._value = Object.assign({}, value);
         if ([false, null, undefined].includes(value)) {
@@ -454,32 +459,39 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             }
         });
 
-        let groups = null;
+        const groupChanged = (event, args) => {
+            const groupName = args.button.name;
+            Object.forReverseEach(this._fields, (name, fieldData) => {
+                fieldData = Object.cloneRecursive(fieldData);
+                fieldData.group && (fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group);
+                if(fieldData.group !== 'window') {
+                    if(fieldData.group === groupName) {
+                        this.Children(name).Retreive();
+                    }
+                    else {
+                        this.Children(name).KeepInMind();
+                    }
+                }
+            });
+
+            if(args?.noevent) {
+                return;
+            }
+            this.Dispatch('GroupChanged', args);
+        };
+        
+        this._groups = null;
         if(hasGroups) {
-            groups = new Colibri.UI.ButtonGroup('groups', this);
-            groups.shown = true;
+            this._groups = new Colibri.UI.ButtonGroup('groups', this);
+            this._groups.shown = true;
             Object.forEach(this._fields,(name, fieldData) => {
                 fieldData = Object.cloneRecursive(fieldData);
                 fieldData.group && (fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group);
                 if(fieldData.group && fieldData.group !== 'window') {
-                    groups.AddButton(fieldData.group, fieldData.group);
+                    this._groups.AddButton(fieldData.group, fieldData.group);
                 }
             });
-            groups.AddHandler('Changed', (event, args) => {
-                const groupName = args.button.name;
-                Object.forReverseEach(this._fields, (name, fieldData) => {
-                    fieldData = Object.cloneRecursive(fieldData);
-                    fieldData.group && (fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group);
-                    if(fieldData.group !== 'window') {
-                        if(fieldData.group === groupName) {
-                            this.Children(name).Retreive();
-                        }
-                        else {
-                            this.Children(name).KeepInMind();
-                        }
-                    }
-                });
-            });
+            this._groups.AddHandler('Changed', groupChanged);
         }
         
         Object.forEach(this._fields, (name, fieldData) => {
@@ -491,7 +503,8 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         });
 
         
-        groups && groups.SelectButton('firstChild');
+        this._groups && this._groups.SelectButton('firstChild', true);
+        this._groups && groupChanged(null, {index: 0, button: this._groups.Children('firstChild'), noevent: true});
 
         this._error = new Colibri.UI.Pane('form-message', this);
         this._error.shown = true;
@@ -580,6 +593,18 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             }
         });
         return ret;
+    }
+
+    SelectGroup(index) {
+        if(!this._groups) {
+            return ;
+        }
+
+        this._groups.SelectButton(index);
+    }
+
+    _checkIfChanged(value) {
+        return JSON.stringify(this.value) !== JSON.stringify(value);
     }
 
 } 
