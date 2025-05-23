@@ -285,7 +285,6 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
      * @returns {string} - The URL that was navigated to.
      */
     Navigate(url, options = {}, replaceOnHistory = false, setOnHistory = false, target = '_self') {
-
         const args = this.ProcessUrlToOptionsHandlers('back', url, options);
         url = args.url;
         options = args.options;
