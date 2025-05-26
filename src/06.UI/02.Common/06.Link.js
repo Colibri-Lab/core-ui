@@ -143,9 +143,9 @@ Colibri.UI.Link = class extends Colibri.UI.Component {
         }
 
         __thisContextMenuItemClicked(event, args) {
-            if(args.menuData.name === 'openblank') {
+            if(args.menuData?.name === 'openblank') {
                 this.Dispatch('Clicked', Object.assign(args, {target: '_blank'}));
-            } else if(args.menuData.name === 'open') {
+            } else if(args.menuData?.name === 'open') {
                 this.Dispatch('Clicked', args);
             }
         }
