@@ -13,42 +13,80 @@ Colibri.UI.Audio = class extends Colibri.UI.Component {
      */
     constructor(name, container) {
         /* создаем компонент и передаем шаблон */
-        super(name, container, Element.create('audio'));
+        super(name, container, Element.create('div'));
         this.AddClass('app-component-audio');
 
+        this._audio = Element.create('audio');
+        this._element.append(this._audio);
+        this._audio.addEventListener('ended', () => {
+            if(this._play) {
+                this._play.shown = true;
+                this._pause.shown = false;                
+            }
+        });
 
     }
 
     /**
      * Controls
-     * @type {Boolean}
+     * @type {playpause,full,none}
      */
     get controls() {
-        return this._element.attr('controls') === 'controls';
+        return this._audio.attr('controls') === 'controls';
     }
     /**
      * Controls
-     * @type {Boolean}
+     * @type {playpause,full,none}
      */
     set controls(value) {
-        value = this._convertProperty('Boolean', value);
-        this._element.attr('controls', value ? 'controls' : null);
+        if(value === 'playpause') {
+            this._audio.attr('controls', null);
+            this._play = new Colibri.UI.Icon('play', this);
+            this._pause = new Colibri.UI.Icon('pause', this);
+            this._play.shown = true;
+            this._pause.shown = false;
+            this._play.iconSVG = 'Colibri.UI.PlayIcon';
+            this._pause.iconSVG = 'Colibri.UI.PauseIcon';
+            this._play.AddHandler('Clicked', (event, args) => {
+                this._audio.play();
+                this._play.shown = false;
+                this._pause.shown = true;
+                args.domEvent.stopPropagation();
+                args.domEvent.preventDefault();
+                return false;
+            });
+            this._pause.AddHandler('Clicked', (event, args) => {
+                this._audio.pause();
+                this._play.shown = true;
+                this._pause.shown = false;
+                args.domEvent.stopPropagation();
+                args.domEvent.preventDefault();
+                return false;
+            });
+} else if(value === 'full') {
+            this._audio.attr('controls', true);
+            this._play?.Dispose();
+            this._pause?.Dispose();
+        } else {
+            this._audio.attr('controls', false);
+            this._play?.Dispose();
+            this._pause?.Dispose();
+        }
     }
-
 
     /**
      * 
      * @type {auto,metadata,none}
      */
     get preload() {
-        return this._element.attr('preload');
+        return this._audio.attr('preload');
     }
     /**
      * 
      * @type {auto,metadata,none}
      */
     set preload(value) {
-        this._element.attr('preload', value);
+        this._audio.attr('preload', value);
     }
 
     /**
@@ -56,7 +94,7 @@ Colibri.UI.Audio = class extends Colibri.UI.Component {
      * @type {Boolean}
      */
     get muted() {
-        return this._element.attr('muted') === 'muted';
+        return this._audio.attr('muted') === 'muted';
     }
     /**
      * Is audio muted
@@ -64,7 +102,7 @@ Colibri.UI.Audio = class extends Colibri.UI.Component {
      */
     set muted(value) {
         value = this._convertProperty('Boolean', value);
-        this._element.attr('muted', value ? 'muted' : null);
+        this._audio.attr('muted', value ? 'muted' : null);
     }
     
     /**
@@ -72,7 +110,7 @@ Colibri.UI.Audio = class extends Colibri.UI.Component {
      * @type {Boolean}
      */
     get loop() {
-        return this._element.attr('loop') === 'loop';
+        return this._audio.attr('loop') === 'loop';
     }
     /**
      * Loop the audio
@@ -80,7 +118,7 @@ Colibri.UI.Audio = class extends Colibri.UI.Component {
      */
     set loop(value) {
         value = this._convertProperty('Boolean', value);
-        this._element.attr('loop', value ? 'loop' : null);
+        this._audio.attr('loop', value ? 'loop' : null);
     }
 
     /**
@@ -88,7 +126,7 @@ Colibri.UI.Audio = class extends Colibri.UI.Component {
      * @type {Boolean}
      */
     get autoplay() {
-        return this._element.attr('autoplay') === 'autoplay';
+        return this._audio.attr('autoplay') === 'autoplay';
     }
     /**
      * Autoplay
@@ -96,7 +134,7 @@ Colibri.UI.Audio = class extends Colibri.UI.Component {
      */
     set autoplay(value) {
         value = this._convertProperty('Boolean', value);
-        this._element.attr('autoplay', value ? 'autoplay' : null);
+        this._audio.attr('autoplay', value ? 'autoplay' : null);
     }
 
     /**
@@ -104,15 +142,16 @@ Colibri.UI.Audio = class extends Colibri.UI.Component {
      * @type {String}
      */
     get src() {
-        return this._element.attr('src');
+        return this._audio.attr('src');
     }
     /**
      * Source of the audio
      * @type {String}
      */
     set src(value) {
-        this._element.attr('src', value);
+        this._audio.attr('src', value);
     }
+    
 
 
 }
