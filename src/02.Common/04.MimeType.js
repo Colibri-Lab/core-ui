@@ -277,7 +277,7 @@ Colibri.Common.MimeType = class {
      * @param {string} ext - The file extension.
      * @returns {boolean} True if the file is an audio file, otherwise false.
      */
-    static isAudio(ext) { return ["mid", "mp3", "au"].indexOf(ext.toLowerCase()) != -1; }
+    static isAudio(ext) { return ["mid", "mp3", "au","wav"].indexOf(ext.toLowerCase()) != -1; }
     /**
      * Check if a file with the given extension is a video file.
      * @param {string} ext - The file extension.
