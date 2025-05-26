@@ -256,12 +256,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                 this._isActive = !document.hidden;
             });
 
-            document.addEventListener('touchstart', (event) => {
-                const focused = document.activeElement;
-                if (focused && focused.tagName === 'INPUT') {
-                    focused.blur();
-                }
-            });
+            
     
             this._initialized = true;
             
@@ -548,7 +543,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
      * Gets the currency used by the application.
      * @type {string|null} The currency used by the application, or `null` if not set.
      */
-    get Currency() {
+    get Currency() {    
         return this._currency;
     }
     /**
@@ -581,6 +576,15 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
      */
     get isActive() {
         return this._isActive;
+    }
+
+    ResetFocusWhenTouchedApp() {
+        document.addEventListener('touchstart', (event) => {
+            const focused = document.activeElement;
+            if (focused && focused.tagName === 'INPUT') {
+                focused.blur();
+            }
+        });
     }
     
 
