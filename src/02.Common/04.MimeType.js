@@ -289,7 +289,7 @@ Colibri.Common.MimeType = class {
      * @param {string} ext - The file extension.
      * @returns {boolean} True if the file is a video file, otherwise false.
      */
-    static isVideo(ext) { return ["wmv", "mpg", "mp4"].indexOf(ext.toLowerCase()) != -1; }
+    static isVideo(ext) { return ["wmv", "mpg", "mp4", "webm"].indexOf(ext.toLowerCase()) != -1; }
     /**
      * Check if a file with the given extension is a Flash file.
      * @param {string} ext - The file extension.

@@ -33,14 +33,14 @@ Colibri.UI.Image = class extends Colibri.UI.Component {
         value = value.replaceAll(/\w+\(/, '').replaceAll(')', '');
         if(value.indexOf('data:') === -1) {
             const img = new Image();
-            /**
-             * @private
-             * @param {Event} e 
-             */
-            img.onload = (e) => {
-                this.width = img.width;
-                this.height = img.height;
-            }
+            // /**
+            //  * @private
+            //  * @param {Event} e 
+            //  */
+            // img.onload = (e) => {
+            //     this.width = img.width;
+            //     this.height = img.height;
+            // }
             img.src = value;
         } 
 
