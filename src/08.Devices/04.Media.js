@@ -296,19 +296,48 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
 
 }
 
+Colibri.Devices.Media.Recording = class extends Colibri.Events.Dispatcher {
+
+    constructor(file, recordingCompleted, recordingError) {
+        super();
+        this._mediaRec = new Media(file,
+            () => {
+                window.resolveLocalFileSystemURL(file, function(entry) {
+                    entry.file((file) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                            const blob = new Blob([new Uint8Array(reader.result)], { type: 'audio/wav' });
+                            recordingCompleted(blob);
+                        };
+                        reader.readAsArrayBuffer(file);
+                    });
+                });
+                
+            },
+            recordingError
+        );
+    }
+
+    Start() {
+        this._mediaRec.startRecord();
+    }
+
+    Stop() {
+        this._mediaRec.stopRecord();
+    }
+
+}
+
 /**
  * Static method to start recording a media file.
  * @param {string} mediaFile - The media file to record.
  * @returns {*} - The media object.
  */
-Colibri.Devices.Media.StartRecording = function(mediaFile) {
-    try {
-        const media = new Colibri.Devices.Media(mediaFile);
-        media.StartRecording();
-        return media;
-    } catch (e) {
-        alert(e);
-    }
+Colibri.Devices.Media.StartRecording = function(type = 'audio', success, error) {
+    const filePath = cordova.file.cacheDirectory + 'temp.' + (type === 'audio' ? 'wav' : 'mp4');
+    const rec = new Colibri.Devices.Media.Recording(filePath, success, error);
+    rec.Start();
+    return rec;
 }
 
 /**

@@ -514,5 +514,12 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return cordova.plugins.backgroundMode.isActive();
     }
 
+    get Capture() {
+        if(!this._capture) {
+            this._capture = new Colibri.Devices.Capture();
+        }
+        return this._capture;
+    }
+
 
 }

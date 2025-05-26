@@ -9,17 +9,20 @@ Colibri.Common.Audio = class {
 
     RecordAudio() {
         
-        if(App.Device.isWeb) {
+        // if(App.Device.isWeb) {
             return this._startRecordAudioOnWeb();
-        } else {
-            return this._startRecordAudioOnDevice();
-        }
+        // } else {
+        //     return this._startRecordAudioOnDevice();
+        // }
 
     }
 
     _startRecordAudioOnDevice() {
-        App.Device.Audio.StartRecording();
-        return Promise.resolve();
+        return new Promise((resolve, reject) => {
+            this._deviceAudio = Colibri.Devices.Media.StartRecording('audio', (blob) => {
+                resolve(blob);
+            }, (err) => reject(err));
+        });
     }
 
     _startRecordAudioOnWeb() {
@@ -36,6 +39,7 @@ Colibri.Common.Audio = class {
 
                     this._mediaRecorder.addEventListener("stop", () => {
                         const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        console.log(audioBlob);
                         resolve(audioBlob);
                     });
 
@@ -49,26 +53,37 @@ Colibri.Common.Audio = class {
     }
 
     StopRecording() {
-        if(App.Device.isWeb) {
-            if(this._animationFrame) {
-                cancelAnimationFrame(this._animationFrame);
-            }
-            if(this._audioContext) {
-                this._audioContext.close();
-            }
+        //if(App.Device.isWeb) {
             return this._stopRecordAudioOnWeb();
-        } else {
-            return this._stopRecordAudioOnDevice();
-        }
+        // } else {
+        //     return this._stopRecordAudioOnDevice();
+        // }
     }
 
     _stopRecordAudioOnDevice() {
-        App.Device.Audio.StopRecording();
+        this._deviceAudio.Stop();
         return Promise.resolve();
     }
 
     _stopRecordAudioOnWeb() {
-        this._mediaRecorder.stop();
+        if(this._animationFrame) {
+            Colibri.Common.StopTimer('audio-animation-tick');
+        }
+        if(this._audioContext) {
+            this._audioContext.close();
+        }
+        if(this._mediaRecorder) {
+            this._mediaRecorder.stop();
+            this._mediaRecorder = null;
+        }
+        if(this._stream) {
+            this._stream.getTracks().forEach((track) => {
+                if (track.readyState == 'live') {
+                    track.stop();
+                }
+            });
+            this._stream = null;
+        }
         return Promise.resolve();
     }
 
@@ -95,10 +110,9 @@ Colibri.Common.Audio = class {
                 const rms = Math.sqrt(sum / bufferLength);
                 const amplitude = Math.min(1.0, rms * 2);
                 tickMethod(amplitude);
-    
-                this._animationFrame = requestAnimationFrame(updateAmplitude);
             }
-    
+            
+            Colibri.Common.StartTimer('audio-animation-tick', 200, updateAmplitude);
             updateAmplitude();
 
         });
