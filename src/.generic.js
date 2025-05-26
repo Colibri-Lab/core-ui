@@ -1745,7 +1745,6 @@ String.prototype.pathinfo = function () {
         const fileparts = ret.basename.split('.');
         ret.ext = fileparts.length > 1 ? fileparts[fileparts.length - 1] : '';
         ret.filename = fileparts[0];
-
         ret.dirname = this.replaceAll(ret.basename, '');
 
         return ret;

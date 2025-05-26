@@ -112,7 +112,7 @@ Colibri.Common.Graphics = class {
      * const blob = Colibri.Common.Graphics.DataURLToBlob(dataURL);
      * blob is a Blob object representing the data URL
      */
-    static FileFromImage(image) {
+    static FileFromImage(image, filename = 'image.png') {
         return new Promise((resolve, reject) => {
             const canvas = document.createElement('canvas');
             canvas.width = image.width;
@@ -121,7 +121,7 @@ Colibri.Common.Graphics = class {
             ctx.drawImage(image, 0, 0);
             canvas.toBlob(blob => {
                 if(App.Device.isWeb) {
-                    const file = new File([blob], 'image.png', { type: 'image/png' });
+                    const file = new File([blob], filename, { type: Colibri.Common.MimeType.name2type(filename) });
                     resolve(file);
                 } else {
                     resolve(blob);
@@ -156,14 +156,14 @@ Colibri.Common.Graphics = class {
         });
     }
 
-    static CreatePreview(file, previewWidth, previewHeight) {
+    static CreatePreview(file, name, previewWidth, previewHeight) {
         return new Promise((resolve, reject) => {
             Colibri.Common.Graphics.ImageFromFile(file).then((image) => {
                 return Colibri.Common.Graphics.ResizeImage(image, previewWidth, previewHeight);
             }).then((image) => {
                 return Colibri.Common.Graphics.CropImage(image, (image.width - previewWidth) / 2, (image.height - previewHeight) / 2, previewWidth, previewHeight);
             }).then((image) => {
-                return Colibri.Common.Graphics.FileFromImage(image);
+                return Colibri.Common.Graphics.FileFromImage(image, name);
             }).then((file) => {
                 resolve(file);
             }).catch((error) => {

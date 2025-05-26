@@ -266,6 +266,12 @@ Colibri.Common.MimeType = class {
         return ret;
     }
 
+    static name2type(name) {
+        var parts = name.split('.');
+        var ext = parts[parts.length - 1];
+        return Colibri.Common.MimeType.ext2type(ext);
+    }
+
     /**
      * Check if a file with the given extension is an image.
      * @param {string} ext - The file extension.
