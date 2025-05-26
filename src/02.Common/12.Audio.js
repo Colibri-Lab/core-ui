@@ -70,7 +70,7 @@ Colibri.Common.Audio = class {
             Colibri.Common.StopTimer('audio-animation-tick');
         }
         if(this._audioContext) {
-            this._audioContext.close();
+            this._audioContext?.close();
         }
         if(this._mediaRecorder) {
             this._mediaRecorder.stop();
