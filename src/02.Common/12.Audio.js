@@ -7,27 +7,13 @@ Colibri.Common.Audio = class {
 
     _mediaRecorder = null;
 
-    RecordAudio() {
-        
-        // if(App.Device.isWeb) {
-            return this._startRecordAudioOnWeb();
-        // } else {
-        //     return this._startRecordAudioOnDevice();
-        // }
-
+    RecordAudio(audioSettings = null) {
+        return this._startRecordAudioOnWeb(audioSettings);
     }
 
-    _startRecordAudioOnDevice() {
+    _startRecordAudioOnWeb(audioSettings = null) {
         return new Promise((resolve, reject) => {
-            this._deviceAudio = Colibri.Devices.Media.StartRecording('audio', (blob) => {
-                resolve(blob);
-            }, (err) => reject(err));
-        });
-    }
-
-    _startRecordAudioOnWeb() {
-        return new Promise((resolve, reject) => {
-            navigator.mediaDevices.getUserMedia({ audio: true })
+            navigator.mediaDevices.getUserMedia({ audio: audioSettings ?? true })
                 .then(stream => {
                     this._stream = stream;
                     this._mediaRecorder = new MediaRecorder(stream);

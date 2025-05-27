@@ -18,10 +18,13 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
 
         this._icon = new Colibri.UI.Icon(this.name + '_icon', this);
         this._icon.shown = true;
-        this._icon.iconSVG = 'Colibri.UI.PlayIcon';
-
+        
         this._video = Element.create('video');
-        this._video.attr('autoplay', true);
+        
+        this._icon.iconSVG = 'Colibri.UI.PauseIcon';
+        this._video.autoplay = true;
+        this._plaing = true;
+        
         this._element.append(this._video);
         this._video.addEventListener('ended', () => {
             if(this._play) {
@@ -29,15 +32,7 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
             }
         });
         this.AddHandler('Clicked', (event, args) => {
-            if(this._plaing) {
-                this._video.pause();
-                this._plaing = false;
-                this._icon.iconSVG = 'Colibri.UI.PlayIcon';
-            } else {
-                this._video.play();
-                this._plaing = true;
-                this._icon.iconSVG = 'Colibri.UI.PauseIcon';
-            }
+            this.toggle(false);
             args.domEvent.preventDefault(); 
             args.domEvent.stopPropagation();
             return false;
@@ -50,7 +45,7 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
      * @type {Boolean}
      */
     get controls() {
-        return this._video.attr('controls') === 'controls';
+        return this._video.controls;
     }
     /**
      * Controls
@@ -58,7 +53,7 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
      */
     set controls(value) {
         value = this._convertProperty('Boolean', value);
-        this._video.attr('controls', value ? 'controls' : null);
+        this._video.controls = value;
     }
 
     /**
@@ -66,14 +61,14 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
      * @type {auto,metadata,none}
      */
     get preload() {
-        return this._video.attr('preload');
+        return this._video.preload;
     }
     /**
      * 
      * @type {auto,metadata,none}
      */
     set preload(value) {
-        this._video.attr('preload', value);
+        this._video.preload = value;
     }
 
     /**
@@ -81,7 +76,7 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
      * @type {Boolean}
      */
     get muted() {
-        return this._video.attr('muted') === 'muted';
+        return this._video.muted;
     }
     /**
      * Is audio muted
@@ -89,7 +84,7 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
      */
     set muted(value) {
         value = this._convertProperty('Boolean', value);
-        this._video.attr('muted', value ? 'muted' : null);
+        this._video.muted = value;
     }
     
     /**
@@ -97,7 +92,7 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
      * @type {Boolean}
      */
     get loop() {
-        return this._video.attr('loop') === 'loop';
+        return this._video.loop;
     }
     /**
      * Loop the audio
@@ -105,7 +100,7 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
      */
     set loop(value) {
         value = this._convertProperty('Boolean', value);
-        this._video.attr('loop', value ? 'loop' : null);
+        this._video.loop = value;
     }
 
     /**
@@ -113,7 +108,7 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
      * @type {Boolean}
      */
     get autoplay() {
-        return this._video.attr('autoplay') === 'autoplay';
+        return this._video.autoplay;
     }
     /**
      * Autoplay
@@ -121,7 +116,7 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
      */
     set autoplay(value) {
         value = this._convertProperty('Boolean', value);
-        this._video.attr('autoplay', value ? 'autoplay' : null);
+        this._video.autoplay = value;
     }
 
     /**
@@ -152,6 +147,26 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
      */
     set src(value) {
         this._video.src = value;
+    }
+
+    play() {
+        this._icon.iconSVG = 'Colibri.UI.PauseIcon';        
+        this._plaing = true;
+        this._video.play();
+    }
+    
+    pause() {
+        this._icon.iconSVG = 'Colibri.UI.PlayIcon';
+        this._plaing = false;
+        this._video.pause();
+    }
+
+    toggle() {
+        if(this._plaing) {
+            this.pause();
+        } else {
+            this.play();
+        }
     }
 
 }

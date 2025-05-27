@@ -7,13 +7,13 @@ Colibri.Common.Video = class {
 
     _mediaRecorder = null;
 
-    RecordVideo(videoComponent) {
-        return this._startRecordVideoOnWeb(videoComponent);
+    RecordVideo(videoComponent, videoSettings = null, audioSettings = null) {
+        return this._startRecordVideoOnWeb(videoComponent, videoSettings, audioSettings);
     }
 
-    _startRecordVideoOnWeb(videoComponent) {
+    _startRecordVideoOnWeb(videoComponent, videoSettings = null, audioSettings = null) {
         return new Promise((resolve, reject) => {
-            navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+            navigator.mediaDevices.getUserMedia({ audio: audioSettings ?? true, video: videoSettings ?? true })
                 .then(stream => {
                     videoComponent.srcObject = stream;
 
