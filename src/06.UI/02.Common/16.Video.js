@@ -72,6 +72,22 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
     }
 
     /**
+     * 
+     * @type {Boolean}
+     */
+    get playsinline() {
+        return this._video.playsinline;
+    }
+    /**
+     * 
+     * @type {Boolean}
+     */
+    set playsinline(value) {
+        value = this._convertProperty('Boolean', value);
+        this._video.playsinline = value;
+    }
+
+    /**
      * Is audio muted
      * @type {Boolean}
      */
