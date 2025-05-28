@@ -27,9 +27,8 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
         
         this._element.append(this._video);
         this._video.addEventListener('ended', () => {
-            if(this._play) {
-                this._icon.iconSVG = 'Colibri.UI.PlayIcon';
-            }
+            this._icon.iconSVG = 'Colibri.UI.PlayIcon';
+            this._plaing = false;
         });
         this._video.addEventListener('loadstart', () => {
             this._loading.shown = true;
@@ -47,6 +46,10 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
             return false;
         });
 
+    }
+
+    get videoElement() {
+        return this._video;
     }
 
     /**
@@ -172,6 +175,21 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
      */
     set src(value) {
         this._video.src = value;
+    }
+
+    /**
+     * Poster of video
+     * @type {String}
+     */
+    get poster() {
+        return this._video.poster;
+    }
+    /**
+     * Poster of video
+     * @type {String}
+     */
+    set poster(value) {
+        this._video.poster = value;
     }
 
     play() {

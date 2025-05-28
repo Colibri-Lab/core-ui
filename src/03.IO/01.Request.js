@@ -131,12 +131,13 @@ Colibri.IO.Request = class extends Destructable {
      * @param {object} files The resulting files object.
      */
     _findFiles(params, files) {
-
         if(Array.isArray(params)) {
             params.forEach((param, index) => {
                 if(param instanceof File || param instanceof Blob) {
+                    const ext = Colibri.Common.MimeType.type2ext(param.type);
+                    const name = param?.name ?? Date.Mc() + '.' + ext;
                     // если это файл тогда нужно пихнуть обязательнов в первый уровень
-                    const fileKey = 'file' + String.MD5(param.name);
+                    const fileKey = 'file' + String.MD5(name);
                     files[fileKey] = param;
                     params[index] = 'file(' + fileKey + ')';
                 }
@@ -148,8 +149,10 @@ Colibri.IO.Request = class extends Destructable {
         else if(Object.isObject(params)) {
             Object.forEach(params, (key, param) => {
                 if(param instanceof File || param instanceof Blob) {
+                    const ext = Colibri.Common.MimeType.type2ext(param.type);
+                    const name = param?.name ?? Date.Mc() + '.' + ext;
                     // если это файл тогда нужно пихнуть обязательнов в первый уровень
-                    const fileKey = 'file' + String.MD5(param.name);
+                    const fileKey = 'file' + String.MD5(name);
                     files[fileKey] = param;
                     params[key] = 'file(' + fileKey + ')';
                 } 

@@ -6,12 +6,14 @@
 Colibri.Common.Video = class {
 
     _mediaRecorder = null;
+    _videoObject = null;
 
-    RecordVideo(videoComponent, videoSettings = null, audioSettings = null) {
-        return this._startRecordVideoOnWeb(videoComponent, videoSettings, audioSettings);
+    RecordVideo(videoComponent, videoSettings = null, audioSettings = null, dataReceivedCallback = null) {
+        this._videoObject = videoComponent;
+        return this._startRecordVideoOnWeb(videoComponent, videoSettings, audioSettings, dataReceivedCallback);
     }
 
-    _startRecordVideoOnWeb(videoComponent, videoSettings = null, audioSettings = null) {
+    _startRecordVideoOnWeb(videoComponent, videoSettings = null, audioSettings = null, dataReceivedCallback = null) {
         return new Promise((resolve, reject) => {
             navigator.mediaDevices.getUserMedia({ audio: audioSettings ?? true, video: videoSettings ?? true })
                 .then(stream => {
@@ -31,6 +33,12 @@ Colibri.Common.Video = class {
                         resolve(videoBlob);
                     });
 
+                    this._mediaRecorder.addEventListener("start", () => {
+                        if(dataReceivedCallback) {
+                            dataReceivedCallback();
+                        }
+                    });
+
                     this._mediaRecorder.start();
 
                 })
@@ -42,6 +50,24 @@ Colibri.Common.Video = class {
 
     StopRecording() {
         return this._stopRecordVideooOnWeb();
+    }
+    
+    CaptureScreeshot(secondstowait = 3) {
+        return new Promise((resolve, reject) => {
+            Colibri.Common.Delay(secondstowait * 1000).then(() => {
+                const canvas = document.createElement('canvas');
+                canvas.width = this._videoObject.videoElement.videoWidth;
+                canvas.height = this._videoObject.videoElement.videoHeight;
+                
+                const context = canvas.getContext('2d');
+                context.drawImage(this._videoObject.videoElement, 0, 0, canvas.width, canvas.height);
+                canvas.toBlob((blob) => {
+                    canvas.remove();
+                    resolve(blob);
+                });
+            });
+        
+        });
     }
 
     _stopRecordVideooOnWeb() {
