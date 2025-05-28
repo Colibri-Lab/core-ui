@@ -34,13 +34,13 @@ Colibri.Devices.Auth = class extends Destructable {
 
             return new Promise((resolve, reject) => {
                 const options = {
-                    challenge: new Uint8Array(32).buffer,
+                    challenge: String.Password(32).toArrayBuffer(),
                     rp: { 
                         name: App.name,
                         id: App.AuthDomain
                     },
                     user: {
-                        id: new TextEncoder().encode(userToken), // user ID as Uint8Array
+                        id: userToken.toArrayBuffer(), // user ID as Uint8Array
                         name: userEmail,
                         displayName: userName
                     },
@@ -71,7 +71,7 @@ Colibri.Devices.Auth = class extends Destructable {
             });
         } else {
             return new Promise((resolve, reject) => {
-                const secretKey = String.fromCharCode(...new Uint8Array(128));
+                const secretKey = String.Password(128);
                 Fingerprint.registerBiometricSecret({
                     description: "Authenticate with your fingerprint",
                     secret: secretKey,
@@ -96,7 +96,7 @@ Colibri.Devices.Auth = class extends Destructable {
 
             return new Promise((resolve, reject) => {
                 const options = {
-                    challenge: new Uint8Array(32).buffer,
+                    challenge: String.Password(32).toArrayBuffer(),
                     userVerification: "required",
                     rpId: App.AuthDomain
                 };
