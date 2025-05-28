@@ -156,7 +156,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     SetPushToken(token, f) {
         this._pushToken = token;
         this._pushFunction = f; 
-        this.Command(this._user, 'register', {name: this._userName, storeHandler: this._storeHandler, firebase: {json: JSON.stringify(this._firebaseServiceJson), token: this._pushToken, f: this._pushFunction}});
+        this.Command(this._user, 'register', {name: this._userName, storeHandler: this._storeHandler});
+        if(this._pushToken) {
+            this.Command(this._user, 'firebase', {name: this._userName, json: JSON.stringify(this._firebaseServiceJson), token: this._pushToken, f: this._pushFunction});
+        }
     }
   
     /**
@@ -206,7 +209,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      */
     __onCometOpened() {
         this._connected = true;
-        this.Command(this._user, 'register', {name: this._userName, storeHandler: this._storeHandler, firebase: {json: JSON.stringify(this._firebaseServiceJson), token: this._pushToken, f: this._pushFunction}});
+        this.Command(this._user, 'register', {name: this._userName, storeHandler: this._storeHandler});
+        if(this._pushToken) {
+            this.Command(this._user, 'firebase', {name: this._userName, json: JSON.stringify(this._firebaseServiceJson), token: this._pushToken, f: this._pushFunction});
+        }
     }
 
     /**
@@ -222,6 +228,9 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         else if(message.action == 'register-success') {
             this._registeredSuccess = true;
             console.log('User registered successfuly');
+        }
+        else if(message.action == 'firebase-success') {
+            console.log('Firebase registered successfuly');
         }
         else if(message.action == 'register-error') {
             this._registeredSuccess = false;
