@@ -10,7 +10,13 @@
     }
     position: relative;
 
-    .app-component-icon {
+    [data-object-name$="_loading"] {
+        position: absolute;
+        width: 100%;
+        height: 100% !important;
+    }
+
+    [data-object-name$="_icon"] {
         position: absolute;
         width: 100%;
         height: 100%;

@@ -6,7 +6,7 @@
 Colibri.UI.Forms.TextArea = class extends Colibri.UI.Forms.Field {
     
     /**
-     * Render field component
+     * Render field component 
      */
     RenderFieldContainer() {
 

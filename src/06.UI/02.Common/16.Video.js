@@ -16,14 +16,14 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
         super(name, container, Element.create('div'));
         this.AddClass('app-component-video');
 
+        this._loading = new Colibri.UI.Loading(this.name + '_loading', this);
+        this._loading.shown = false;
+
         this._icon = new Colibri.UI.Icon(this.name + '_icon', this);
-        this._icon.shown = true;
-        
+        this._icon.shown = true;        
+        this._icon.iconSVG = 'Colibri.UI.PlayIcon';
+
         this._video = Element.create('video');
-        
-        this._icon.iconSVG = 'Colibri.UI.PauseIcon';
-        this._video.autoplay = true;
-        this._plaing = true;
         
         this._element.append(this._video);
         this._video.addEventListener('ended', () => {
@@ -31,6 +31,15 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
                 this._icon.iconSVG = 'Colibri.UI.PlayIcon';
             }
         });
+        this._video.addEventListener('loadstart', () => {
+            this._loading.shown = true;
+            this._icon.shown = false;
+        });
+        this._video.addEventListener('loadeddata', () => {
+            this._loading.shown = false;
+            this._icon.shown = true;
+        });
+
         this.AddHandler('Clicked', (event, args) => {
             this.toggle(false);
             args.domEvent.preventDefault(); 

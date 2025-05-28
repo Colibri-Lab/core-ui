@@ -16,6 +16,7 @@ Colibri.Common.Video = class {
             navigator.mediaDevices.getUserMedia({ audio: audioSettings ?? true, video: videoSettings ?? true })
                 .then(stream => {
                     videoComponent.srcObject = stream;
+                    videoComponent.play();
 
                     this._stream = stream;
                     this._mediaRecorder = new MediaRecorder(stream);
