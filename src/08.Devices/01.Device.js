@@ -142,6 +142,14 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     }
 
+    ClearNotifications() {
+        this._pushNotifications = this.Plugin('firebase.messaging');
+        if(this._pushNotifications) {
+            return this._pushNotifications.clearNotifications();
+        }
+        return Promise.reject();
+    }
+
     /**
      * Binds events related to the device.
      * @private
@@ -254,6 +262,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             // cordova.plugins.backgroundMode.setDefaults({ silent: false, resume: true });
             cordova.plugins.backgroundMode.on('activate', function () {
                 cordova.plugins.backgroundMode.disableWebViewOptimizations();
+                this.ClearNotifications();
             });
         }
     
