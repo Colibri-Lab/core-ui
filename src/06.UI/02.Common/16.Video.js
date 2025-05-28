@@ -179,7 +179,7 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
 
     /**
      * Poster of video
-     * @type {String}
+     * @type {String} 
      */
     get poster() {
         return this._video.poster;
