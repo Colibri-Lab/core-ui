@@ -71,16 +71,16 @@ Colibri.UI.Notices = class extends Colibri.UI.Pane {
             
         });
         
-        if(!App.Device.isWeb && App.Device.isInBackgroundMode) {
-            const titleparts = noticeData.title.split('<br />');
-            App.Device.Notifications.Schedule(
-                titleparts.length > 1 ? titleparts[0] : 'Error', 
-                titleparts.length > 0 ? titleparts[1] : titleparts[0], 
-                null, {type: 'calendar', at: new Date().getTime() + 2000}
-            );
-            App.Device.Dialogs.Beep(1);
-            App.Device.Vibrate.Vibrate(1000);
-        }
+        // if(!App.Device.isWeb && App.Device.isInBackgroundMode) {
+        //     const titleparts = noticeData.title.split('<br />');
+        //     App.Device.Notifications.Schedule(
+        //         titleparts.length > 1 ? titleparts[0] : 'Error', 
+        //         titleparts.length > 0 ? titleparts[1] : titleparts[0], 
+        //         null, {type: 'calendar', at: new Date().getTime() + 2000}
+        //     );
+        //     App.Device.Dialogs.Beep(1);
+        //     App.Device.Vibrate.Vibrate(1000);
+        // }
 
         return notice; 
 
