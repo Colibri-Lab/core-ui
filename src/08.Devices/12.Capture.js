@@ -1,11 +1,11 @@
 
-/**
- * Represents a utility for accessing sim information.
- * @class
- * @extends Destructable
- * @memberof Colibri.Devices
- */
-Colibri.Devices.Capture = class extends Destructable {
+    /**
+     * Represents a utility for accessing sim information.
+     * @class
+     * @extends Destructable
+     * @memberof Colibri.Devices
+     */
+    Colibri.Devices.Capture = class extends Destructable {
 
     /**
      * Instance variable representing the device.

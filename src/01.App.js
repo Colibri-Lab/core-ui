@@ -127,10 +127,17 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     
             Colibri.IO.Request.type = requestType;
             if(remoteDomain) {
-                this._remoteDomain = remoteDomain;
+                if(Array.isArray(remoteDomain)) {
+                    this._remoteDomain = remoteDomain[0];
+                    this._authDomain = remoteDomain[1] || remoteDomain[0];
+                } else {
+                    this._remoteDomain = remoteDomain;
+                    this._authDomain = remoteDomain;
+                }
             }
             else {
                 this._remoteDomain = '';
+                this._authDomain = '';
             }
     
             this._actions = new Colibri.Common.HashActions(); 
@@ -501,6 +508,15 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
      */
     get RemoteDomain() {
         return this._remoteDomain;
+    }
+
+    /**
+     * Gets the authentication domain associated with the application.
+     * @type {string} The authentication domain associated with the application.
+     * @readonly
+     */
+    get AuthDomain() {
+        return this._authDomain;
     }
     
     /**

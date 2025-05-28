@@ -72,6 +72,16 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     }
 
+    get id() {
+        let deviceId = App.Browser.Get('device-id');
+        if(!deviceId) {
+            deviceId = String.MD5(Date.Mc() + '');
+            App.Browser.Set('device-id', deviceId);
+        }
+        return deviceId;
+
+    }
+
     /**
      * Registers events for the device.
      * @private
@@ -521,5 +531,11 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return this._capture;
     }
 
+    get Auth() {
+        if(!this._auth) {
+            this._auth = new Colibri.Devices.Auth(this);
+        }
+        return this._auth;
+    }
 
 }

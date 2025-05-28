@@ -104,12 +104,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @returns {string} - The generated device ID.
      */
     _generateDeviceId() {
-        let deviceId = App.Browser.Get('device-id');
-        if(!deviceId) {
-            deviceId = String.MD5(Date.Mc() + '');
-            App.Browser.Set('device-id', deviceId);
-        }
-        return deviceId;
+        return App.Device.id;
     }
 
     /**
