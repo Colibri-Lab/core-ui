@@ -260,10 +260,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         }
         if(value) {
             // cordova.plugins.backgroundMode.setDefaults({ silent: false, resume: true });
-            cordova.plugins.backgroundMode.on('activate', function () {
+            cordova.plugins.backgroundMode.on('activate', () => {
                 cordova.plugins.backgroundMode.disableWebViewOptimizations();
             });
-            cordova.plugins.backgroundMode.on('deactivate', function () {
+            cordova.plugins.backgroundMode.on('deactivate', () => {
                 this.ClearNotifications();
             });
         }
