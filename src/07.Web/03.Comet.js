@@ -419,9 +419,9 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             if(this._ws.readyState === 1) {
                 const msg = Colibri.Common.CometMessage.CreateForSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, message, {contact: contactName});
                 msg.MarkAsRead();
-                // const msg = {action: action, recipient: userGuid, message: {text: message}, domain: Colibri.Web.Comet.Options.origin, delivery: 'trusted'};
-                // this._addMessage(Object.assign({}, msg, {from: this._user}), true);
-                this._addMessage(msg);
+                if(msg.from !== msg.recipient) {
+                    this._addMessage(msg);
+                }
                 this.DispatchHandlers('MessageSending', {message: msg}).then((responses) => {
                     this._ws.send(msg.toJson());
                 }).catch(error => {
@@ -503,7 +503,9 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             if(this._ws.readyState === 1) {
                 const msg = Colibri.Common.CometMessage.CreateForFilesSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, files, {contact: contactName});
                 msg.MarkAsRead();
-                this._addMessage(msg);
+                if(msg.from !== msg.recipient) {
+                    this._addMessage(msg);
+                }
                 this.DispatchHandlers('FilesSending', {message: msg}).then((responses) => {
                     this._ws.send(msg.toJson());
                 }).catch(error => {
