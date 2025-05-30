@@ -193,7 +193,7 @@ Colibri.UI.SimpleFormValidator = class {
             return;
         }
         f.field.params.validated = 'error';
-        f.message = message;
+        message && (f.message = message);
         f.AddClass('app-validate-error');
     }
 
