@@ -63,7 +63,7 @@ Colibri.UI.Audio = class extends Colibri.UI.Component {
                 args.domEvent.preventDefault();
                 return false;
             });
-} else if(value === 'full') {
+        } else if(value === 'full') {
             this._audio.attr('controls', true);
             this._play?.Dispose();
             this._pause?.Dispose();
@@ -151,7 +151,21 @@ Colibri.UI.Audio = class extends Colibri.UI.Component {
     set src(value) {
         this._audio.attr('src', value);
     }
-    
 
+    /**
+     * 
+     * @type {Object}
+     */
+    get srcObject() {
+        return this._audio.srcObject;
+    }
+    /**
+     * 
+     * @type {Object}
+     */
+    set srcObject(value) {
+        this._audio.srcObject = value;
+    }
+    
 
 }
