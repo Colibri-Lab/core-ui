@@ -267,7 +267,6 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                 }
                 else {
                     const componentName = field.component.replaceAll('Colibri.UI.Forms.', '');
-                    debugger;
                     const viewerComponentName = field?.viewer || field.params?.viewer || (field.params?.editor ? 'Colibri.UI.' + componentName + 'Editor' : 'Colibri.UI.' + componentName + 'Viewer');
                     let viewer = null;
                     let viewerAttrs = field.params?.viewerAttrs ?? {};
