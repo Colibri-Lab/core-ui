@@ -6,7 +6,6 @@ ui-viewers-fields:
   es: Visor de campos
   kk: Өрістер көрермені
   uz: Maydonlar ko'rish
-
 ui-viewers-fields-expand:
   ru: Развернуть
   en: Expand
@@ -15,7 +14,6 @@ ui-viewers-fields-expand:
   es: Expandir
   kk: Кеңейту
   uz: Kengaytirish
-
 ui-viewers-fields-collapse:
   ru: Свернуть
   en: Collapse
