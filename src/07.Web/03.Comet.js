@@ -154,7 +154,6 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     }
 
     SetPushToken(token, f) {
-        debugger;
         this._pushToken = token;
         this._pushFunction = f; 
         this.Command(this._user, 'register', {name: this._userName, storeHandler: this._storeHandler});
