@@ -524,6 +524,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return this._pushToken;
     }
 
+    set pushToken(value) {
+        this._pushToken = value;
+    }
+
     set pushFunction(value) {
         this._pushFunction = value;
     }
