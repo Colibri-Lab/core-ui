@@ -137,6 +137,12 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
                 });
             }    
 
+            this._availableRingtones = {};
+            this._ringtones = this.Plugin('NativeRingtones');
+            this._ringtones.getRingtone((list) => {
+                this._availableRingtones = list;
+            });
+
             this._localNotifications = new Colibri.Devices.LocalNotifications(this);
         }
 
@@ -551,6 +557,30 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             this._auth = new Colibri.Devices.Auth(this);
         }
         return this._auth;
+    }
+
+    get availableRingtones() {
+        return this._availableRingtones;
+    }
+
+    PlayRingtone(url) {
+        return new Promise((resolve, reject) => {
+            this._ringtones.playRingtone(url, () => {
+                resolve();
+            }, (e) => {
+                reject(e);
+            });
+        });
+    }
+
+    StopRingtone() {
+        return new Promise((resolve, reject) => {
+            this._ringtones.stopRingtone(() => {
+                resolve();
+            }, (e) => {
+                reject(e);
+            });
+        });
     }
 
 }

@@ -1934,6 +1934,13 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 const firstTouch = args.domEvent.touches[0];      
                 this.__touchStartedPos = {x: firstTouch.clientX, y: firstTouch.clientY};                                
             });
+            this.AddHandler('TouchEnded', (event, args) => {
+                if ( !this.__touchStartedPos ) {
+                    return;
+                }
+                this.styles = null;
+                this.__touchStartedPos = null;
+            });
             this.AddHandler('TouchMoved', (event, args) => {
                 if ( !this.__touchStartedPos ) {
                     return;
@@ -1942,25 +1949,48 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 const xUp = args.domEvent.touches[0].clientX;                                    
                 const yUp = args.domEvent.touches[0].clientY;
             
+                const sensitivity = this._swipesensitivity || 10;
+
                 const xDiff = this.__touchStartedPos.x - xUp;
                 const yDiff = this.__touchStartedPos.y - yUp;
+
+                this.styles = {marginLeft: (-1*xDiff) + 'px', marginTop: (-1*yDiff) + 'px'};
                                                                                      
                 if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
-                    if ( xDiff > 10 ) {
+                    if ( xDiff > sensitivity ) {
+                        this.styles = null;
                         this.Dispatch('SwipedToRight', args);
-                    } else if ( xDiff < -10 ) {
+                    } else if ( xDiff < -sensitivity ) {
+                        this.styles = null;
                         this.Dispatch('SwipedToLeft', args);
                     }                       
                 } else {
-                    if ( yDiff > 10 ) {
+                    if ( yDiff > sensitivity ) {
+                        this.styles = null;
                         this.Dispatch('SwipedToDown', args);
-                    } else if ( yDiff < -10 ) { 
+                    } else if ( yDiff < -sensitivity ) { 
+                        this.styles = null;
                         this.Dispatch('SwipedToUp', args);
                     }                                                                 
                 }
                 this.__touchStartedPos = null;
             });
         }
+    }
+
+    /**
+     * How sensitive is a swipe
+     * @type {Number}
+     */
+    get swipeSensitivity() {
+        return this._swipesensitivity;
+    }
+    /**
+     * How sensitive is a swipe
+     * @type {Number}
+     */
+    set swipeSensitivity(value) {
+        this._swipesensitivity = value;
     }
 
     /**

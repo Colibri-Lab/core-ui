@@ -3191,6 +3191,8 @@ Element.prototype.css = function (name, value) {
     styleObject = styleObject ? styleObject.toObject([';', ':'], null, (v) => v && v.toCamelCase()) : {};
     if (name === undefined) {
         return getComputedStyle(this);
+    } else if (name === null) {
+        this.attr('style', null);
     } else if (name instanceof Object) {
         name = Object.assign(styleObject, name);
         this.attr('style', Object.toStyles(name, [';', ':']));
