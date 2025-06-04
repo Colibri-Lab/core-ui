@@ -1952,27 +1952,20 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                     return;
                 }
             
-                const xUp = args.domEvent.touches[0].clientX;                                    
-                const yUp = args.domEvent.touches[0].clientY;
+                const xUp = e.touches[0].clientX;                                    
+                const yUp = e.touches[0].clientY;
             
                 const sensitivity = this._swipesensitivity || 10;
-    
-                const xDiff = this.__touchStartedPos.x - xUp;
-                const yDiff = this.__touchStartedPos.y - yUp;
-        
-                this.styles = {marginLeft: (-1*xDiff) + 'px', marginTop: (-1*yDiff) + 'px'};                           
-                if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
-                    if ( xDiff > sensitivity ) {
-                        this.Dispatch('SwipedToRight', args);
-                    } else if ( xDiff < -sensitivity ) {
-                        this.Dispatch('SwipedToLeft', args);
+                const orientation = this._swipeOrientation || 'hr';
+
+                const diff = orientation === 'hr' ? this.__touchStartedPos.x - xUp : this.__touchStartedPos.y - yUp;
+                if(Math.abs(diff) > 10) {
+                    this.styles = {marginLeft: (-1*xDiff) + 'px', marginTop: (-1*yDiff) + 'px'};
+                    if ( diff > sensitivity ) {
+                        this.Dispatch(orientation === 'hr' ? 'SwipedToRight' : 'SwipedToBottom', {domEvent: e});
+                    } else if ( diff < -sensitivity ) {
+                        this.Dispatch(orientation === 'hr' ? 'SwipedToLeft' : 'SwipedToTop', {domEvent: e});
                     }                       
-                } else {
-                    if ( yDiff > sensitivity ) {
-                        this.Dispatch('SwipedToDown', args);
-                    } else if ( yDiff < -sensitivity ) { 
-                        this.Dispatch('SwipedToUp', args);
-                    }                                                                 
                 }
             };
             this.AddHandler('TouchStarted', (event, args) => {
@@ -1997,6 +1990,21 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     set swipeSensitivity(value) {
         this._swipesensitivity = value;
+    }
+
+    /**
+     * Swipe orientation
+     * @type {hr,vr}
+     */
+    get swipeOrientation() {
+        return this._swipeOrientation;
+    }
+    /**
+     * Swipe orientation
+     * @type {hr,vr}
+     */
+    set swipeOrientation(value) {
+        this._swipeOrientation = value;
     }
 
     /**
