@@ -1037,7 +1037,6 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
 
         this.AddClass('app-component-list-item');
 
-        this.handleSwipe = true;
         this.AddHandler('Clicked', (event, args) => this.__ItemSelected(event, args));
         this.AddHandler('DoubleClicked', (event, args) => this.__ItemDblSelected(event, args));
         this.AddHandler(['MouseDown', 'TouchStarted'], (event, args) => this.__ItemMouseDown(event, args));

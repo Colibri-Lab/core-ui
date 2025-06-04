@@ -1939,7 +1939,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         if(value) {
             this.__touchStartedPos = null;
             this._swipeTouchEnd = (e) => {
-                if ( !this.__touchStartedPos ) {
+                if ( !this.__touchStartedPos && e.currentTarget != this._element  ) {
                     return;
                 }
                 this.styles = null;
@@ -1948,7 +1948,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 document.body.removeEventListener('touchmove', this._swipeTouchMove, true);
             };
             this._swipeTouchMove = (e) => {
-                if ( !this.__touchStartedPos ) {
+                if ( !this.__touchStartedPos && e.currentTarget != this._element ) {
                     return;
                 }
             
@@ -1960,7 +1960,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
                 const diff = orientation === 'hr' ? this.__touchStartedPos.x - xUp : this.__touchStartedPos.y - yUp;
                 if(Math.abs(diff) > 10) {
-                    this.styles = {marginLeft: (-1*xDiff) + 'px', marginTop: (-1*yDiff) + 'px'};
+                    this.styles = orientation === 'hr' ? {marginLeft: (-1*diff) + 'px'} : {marginTop: (-1*diff) + 'px'};
                     if ( diff > sensitivity ) {
                         this.Dispatch(orientation === 'hr' ? 'SwipedToRight' : 'SwipedToBottom', {domEvent: e});
                     } else if ( diff < -sensitivity ) {
