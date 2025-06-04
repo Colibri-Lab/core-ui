@@ -24,7 +24,7 @@ Colibri.UI.Img = class extends Colibri.UI.Component {
      */
     _registerEvents() {
         super._registerEvents();
-        this.Register('ImageLoaded', true, 'When image is loaded');
+        this.RegisterEvent('ImageLoaded', true, 'When image is loaded');
     }
 
     /**

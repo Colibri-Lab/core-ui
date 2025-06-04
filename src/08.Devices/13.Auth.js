@@ -15,6 +15,8 @@ Colibri.Devices.Auth = class extends Destructable {
     IsAvailable() {
         if(App.Device.isWeb) {
             return Promise.resolve(!!window.PublicKeyCredential);
+        } else if(App.Device.isWindows) {
+            return Promise.resolve(false);
         } else {
             return new Promise((resolve, reject) => {
                 Fingerprint.isAvailable((result) => {
