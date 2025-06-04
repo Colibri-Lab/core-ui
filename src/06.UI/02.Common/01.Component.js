@@ -32,6 +32,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         },
         MouseUp: {
             domEvent: 'mouseup',
+            capture: true,
         },
         MouseEnter: {
             domEvent: 'mouseenter',
@@ -81,24 +82,29 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         },
         MouseDown: {
             domEvent: 'mousedown',
+            capture: true,
         },
         ContextMenu: {
             domEvent: 'contextmenu'
         },
         MouseMove: {
-            domEvent: 'mousemove'
+            domEvent: 'mousemove',
+            capture: true,            
         },
         Scrolled: {
             domEvent: 'scroll'
         },
         TouchStarted: {
-            domEvent: 'touchstart'
+            domEvent: 'touchstart',
+            capture: true,
         },
         TouchEnded: {
-            domEvent: 'touchend'
+            domEvent: 'touchend',
+            capture: true,        
         },
         TouchMoved: {
-            domEvent: 'touchmove'
+            domEvent: 'touchmove',
+            capture: true,            
         }
     };
 
@@ -699,7 +705,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             return;
         }
 
-        let {domEvent, respondent, delay, handler} = args;
+        let {domEvent, respondent, delay, handler, capture} = args;
         respondent = respondent ? respondent : this._element;
 
         if(delay) {
@@ -713,7 +719,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             respondent,
             handler
         };
-        respondent.addEventListener(domEvent, handler);
+        if(domEvent === 'touchmove') {
+            console.log(domEvent, handler, capture || false);
+        }
+        respondent.addEventListener(domEvent, handler, capture || false);
     }
 
     /**
@@ -1929,19 +1938,16 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._handleSwipe = value;
         if(value) {
             this.__touchStartedPos = null;
-            this.AddHandler('TouchStarted', (event, args) => {
-                this.__touchStartedPos = null;
-                const firstTouch = args.domEvent.touches[0];      
-                this.__touchStartedPos = {x: firstTouch.clientX, y: firstTouch.clientY};                                
-            });
-            this.AddHandler('TouchEnded', (event, args) => {
+            this._swipeTouchEnd = (e) => {
                 if ( !this.__touchStartedPos ) {
                     return;
                 }
                 this.styles = null;
                 this.__touchStartedPos = null;
-            });
-            this.AddHandler('TouchMoved', (event, args) => {
+                document.body.removeEventListener('touchend', this._swipeTouchEnd, true);
+                document.body.removeEventListener('touchmove', this._swipeTouchMove, true);
+            };
+            this._swipeTouchMove = (e) => {
                 if ( !this.__touchStartedPos ) {
                     return;
                 }
@@ -1950,30 +1956,30 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 const yUp = args.domEvent.touches[0].clientY;
             
                 const sensitivity = this._swipesensitivity || 10;
-
+    
                 const xDiff = this.__touchStartedPos.x - xUp;
                 const yDiff = this.__touchStartedPos.y - yUp;
-
-                this.styles = {marginLeft: (-1*xDiff) + 'px', marginTop: (-1*yDiff) + 'px'};
-                                                                                     
-                if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
+        
+                this.styles = {marginLeft: (-1*xDiff) + 'px', marginTop: (-1*yDiff) + 'px'};                           
+                if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
                     if ( xDiff > sensitivity ) {
-                        this.styles = null;
                         this.Dispatch('SwipedToRight', args);
                     } else if ( xDiff < -sensitivity ) {
-                        this.styles = null;
                         this.Dispatch('SwipedToLeft', args);
                     }                       
                 } else {
                     if ( yDiff > sensitivity ) {
-                        this.styles = null;
                         this.Dispatch('SwipedToDown', args);
                     } else if ( yDiff < -sensitivity ) { 
-                        this.styles = null;
                         this.Dispatch('SwipedToUp', args);
                     }                                                                 
                 }
-                this.__touchStartedPos = null;
+            };
+            this.AddHandler('TouchStarted', (event, args) => {
+                const firstTouch = args.domEvent.touches[0];      
+                this.__touchStartedPos = {x: firstTouch.clientX, y: firstTouch.clientY};                                
+                document.body.addEventListener('touchend', this._swipeTouchEnd);
+                document.body.addEventListener('touchmove', this._swipeTouchMove);
             });
         }
     }
