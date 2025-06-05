@@ -76,7 +76,7 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
         return this._video.preload;
     }
     /**
-     * 
+     *  
      * @type {auto,metadata,none}
      */
     set preload(value) {
