@@ -139,9 +139,6 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
             this._availableRingtones = {};
             this._ringtones = this.Plugin('NativeRingtones');
-            this._ringtones.getRingtone((list) => {
-                this._availableRingtones = list;
-            });
 
             this._localNotifications = new Colibri.Devices.LocalNotifications(this);
         }
@@ -563,8 +560,18 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return !!this._ringtones;
     }
 
-    get availableRingtones() {
-        return this._availableRingtones;
+
+    /**
+     * Get the list of ringtones available on the device
+     * @param {{notification|alarm|ringtone}}} ringtoneType 
+     * @returns Promise
+     */
+    AvailableRingtones(ringtoneType = 'notification') {
+        return new Promise((resolve, reject) => {        
+            this._ringtones.getRingtone((list) => {
+                resolve(list);
+            }, (e) => {}, ringtoneType);
+        });
     }
 
     PlayRingtone(url) {
