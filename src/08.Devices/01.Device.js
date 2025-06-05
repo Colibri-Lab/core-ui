@@ -559,6 +559,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return this._auth;
     }
 
+    get hasRingtones() {
+        return !!this._ringtones;
+    }
+
     get availableRingtones() {
         return this._availableRingtones;
     }

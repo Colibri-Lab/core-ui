@@ -701,7 +701,7 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
             throw new Exception('Can not use SQLite store on this device');
         }
 
-        this._db = App.Device.SqLite.Open('comet', 'default');
+        this._db = App.Device.SqLite.Open('comet.messages', 'default');
         this._fields = [
             '"id" UNSIGNED BIG INT',
             '"action" VARCHAR(255)',
