@@ -30,6 +30,24 @@ Colibri.Common.Video = class {
 
         this._videoObject = videoComponent;
         return new Promise((resolve, reject) => {
+            
+            this._changing = true;
+            if(this._audioContext) {
+                this._audioContext?.close();
+            }
+            if(this._mediaRecorder) {
+                this._mediaRecorder.stop();
+                this._mediaRecorder = null;
+            }
+
+            if(this._stream) {
+                this._stream.getTracks().forEach((track) => {
+                    if (track.readyState == 'live') {
+                        track.stop();
+                    }
+                });
+                this._stream = null;
+            }
 
             if(selectedCamera === 'screen') {
 
@@ -54,8 +72,10 @@ Colibri.Common.Video = class {
                         });
     
                         this._mediaRecorder.addEventListener("stop", () => {
-                            const videoBlob = new Blob(audioChunks, { type: 'video/webm' });
-                            resolve(videoBlob);
+                            if(!this._changing) {
+                                const videoBlob = new Blob(audioChunks, { type: 'video/webm' });
+                                resolve(videoBlob);
+                            }
                         });
     
                         this._mediaRecorder.addEventListener("start", () => {
@@ -64,6 +84,7 @@ Colibri.Common.Video = class {
                             }
                         });
     
+                        this._changing = false;
                         this._mediaRecorder.start();
     
                     })
@@ -87,8 +108,10 @@ Colibri.Common.Video = class {
                         });
     
                         this._mediaRecorder.addEventListener("stop", () => {
-                            const videoBlob = new Blob(audioChunks, { type: 'video/webm' });
-                            resolve(videoBlob);
+                            if(!this._changing) {
+                                const videoBlob = new Blob(audioChunks, { type: 'video/webm' });
+                                resolve(videoBlob);
+                            }
                         });
     
                         this._mediaRecorder.addEventListener("start", () => {
@@ -97,6 +120,7 @@ Colibri.Common.Video = class {
                             }
                         });
     
+                        this._changing = false;
                         this._mediaRecorder.start();
     
                     })
@@ -104,6 +128,8 @@ Colibri.Common.Video = class {
                         reject(error);
                     });
             }
+
+            
 
         });
     }
