@@ -263,9 +263,10 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
     _scheduleNotification(params, successCallback = null, errorCallback = null) {
         return new Promise((resolve, reject) => {
             this.RequestPermission().then(() => {
-                this._plugin.cancelAll();
-                this._plugin.schedule(params, successCallback, errorCallback);
-                resolve();
+                this._plugin.cancelAll(() => {
+                    this._plugin.schedule(params, successCallback, errorCallback);
+                    resolve();
+                });
             });        
         })
     }

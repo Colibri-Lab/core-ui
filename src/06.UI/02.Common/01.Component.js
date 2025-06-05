@@ -611,7 +611,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         const contextMenuIcon = new Colibri.UI.Icon(this._name + '-contextmenu-icon', contextMenuParent);
         contextMenuIcon.shown = true;
         contextMenuIcon.value = Colibri.UI.ContextMenuIcon;
-        contextMenuIcon.AddHandler(['MouseDown', 'TouchStarted'], (event, args) => {
+        contextMenuIcon.AddHandler('Clicked', (event, args) => {
             this.Dispatch('ContextMenuIconClicked', args);
             args.domEvent.stopPropagation();
             args.domEvent.preventDefault();

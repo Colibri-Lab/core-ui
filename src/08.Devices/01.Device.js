@@ -306,10 +306,16 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     }
 
     Foreground() {
+        if(!cordova?.plugins?.backgroundMode) {
+            throw 'Please enable \'cordova-plugin-background-mode\' plugin';
+        }
         cordova.plugins.backgroundMode.moveToForeground();
     }
     
     Background() {
+        if(!cordova?.plugins?.backgroundMode) {
+            throw 'Please enable \'cordova-plugin-background-mode\' plugin';
+        }
         cordova.plugins.backgroundMode.moveToBackground();
     }
 

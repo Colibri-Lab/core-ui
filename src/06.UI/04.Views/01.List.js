@@ -1075,7 +1075,10 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
      * @param {*} args event arguments
      */ 
     __ItemSelected(event, args) {
-        this.list.Dispatch('ItemClicked', Object.assign(args, {item: this, domEvent: args.domEvent}));
+        if(this.list) {
+            this.list.selected = this;
+            this.list.Dispatch('ItemClicked', Object.assign(args, {item: this, domEvent: args.domEvent}));
+        }
     }
 
     /**
@@ -1084,7 +1087,9 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
      * @param {*} args event arguments
      */ 
     __ItemDblSelected(event, args) {
-        this.list.Dispatch('ItemDoubleClicked', {item: this, domEvent: args.domEvent});
+        if(this.list) {
+            this.list.Dispatch('ItemDoubleClicked', {item: this, domEvent: args.domEvent});
+        }
     }
 
     /**
@@ -1094,7 +1099,6 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
      */ 
     __ItemMouseDown(event, args) {
         if(this.list) {
-            this.list.selected = this;
             this.list?.Dispatch('ItemMouseDown', {item: this, domEvent: args.domEvent});
         }
     }
