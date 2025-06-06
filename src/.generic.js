@@ -2353,6 +2353,12 @@ Date.prototype.toLocalTime = function () { this.setTime(this.getTime() - this.ti
  */
 Date.prototype.addMinute = function (min) { this.setTime(this.getTime() + min * 60 * 1000); return this; };
 /**
+ * Adds the specified number of seconds to the current date.
+ * @param {number} sec - The number of seconds to add.
+ * @returns {Date} The updated date.
+ */
+Date.prototype.addSeconds = function (sec) { this.setTime(this.getTime() + sec * 1000); return this; };
+/**
  * Adds the specified number of hours to the current date.
  * @param {number} hours - The number of hours to add.
  * @returns {Date} The updated date.

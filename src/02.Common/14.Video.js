@@ -86,9 +86,8 @@ Colibri.Common.Video = class {
                         this._mediaRecorder.start();
     
                     })
-                    .catch((err) => {
-                        console.error(err);
-                        return null;
+                    .catch((error) => {
+                        reject(error);
                     });
             } else {
 

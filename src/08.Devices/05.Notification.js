@@ -264,6 +264,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
         return new Promise((resolve, reject) => {
             this.RequestPermission().then(() => {
                 this._plugin.cancelAll(() => {
+                    console.log(params);
                     this._plugin.schedule(params, successCallback, errorCallback);
                     resolve();
                 });

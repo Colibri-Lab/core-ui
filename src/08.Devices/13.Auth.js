@@ -13,10 +13,10 @@ Colibri.Devices.Auth = class extends Destructable {
     }
 
     IsAvailable() {
-        if(App.Device.isWeb) {
+        if(App.Device.isWeb || App.Device.isWindows) {
             return Promise.resolve(!!window.PublicKeyCredential);
-        } else if(App.Device.isWindows) {
-            return Promise.reject();
+        // } else if(App.Device.isWindows) {
+        //     return Promise.reject();
         } else {
             return new Promise((resolve, reject) => {
                 Fingerprint.isAvailable((result) => {
@@ -36,11 +36,11 @@ Colibri.Devices.Auth = class extends Destructable {
     }
 
     Create(userToken, userName, userEmail) {
-        if(App.Device.isWindows) {
-            return Promise.reject('Windows does not support biometric authentication yet.');
-        }
+        // if(App.Device.isWindows) {
+        //     return Promise.reject('Windows does not support biometric authentication yet.');
+        // }
 
-        if(App.Device.isWeb) {
+        if(App.Device.isWeb || App.Device.isWindows) {
 
             return new Promise((resolve, reject) => {
                 const options = {
@@ -102,10 +102,10 @@ Colibri.Devices.Auth = class extends Destructable {
     }
 
     Authenticate(userToken) {
-        if(App.Device.isWindows) {
-            return Promise.reject('Windows does not support biometric authentication yet.');
-        }
-        if(App.Device.isWeb) {
+        // if(App.Device.isWindows) {
+        //     return Promise.reject('Windows does not support biometric authentication yet.');
+        // }
+        if(App.Device.isWeb || App.Device.isWindows) {
 
             return new Promise((resolve, reject) => {
                 const options = {

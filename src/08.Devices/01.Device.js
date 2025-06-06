@@ -138,7 +138,11 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             }    
 
             this._availableRingtones = {};
-            this._ringtones = this.Plugin('NativeRingtones');
+            if(this.isAndroid || this.isIOs) {
+                this._ringtones = this.Plugin('NativeRingtones');
+            } else {
+                this._ringtones = null;
+            }
 
             this._localNotifications = new Colibri.Devices.LocalNotifications(this);
         }
