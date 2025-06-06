@@ -8,9 +8,7 @@ Colibri.Common.Video = class {
     _mediaRecorder = null;
     _videoObject = null;
 
-    RecordVideo(videoComponent, videoSettings = null, audioSettings = null, dataReceivedCallback = null) {
-        const selectedMic = App.Browser.Get('selected-mic-id');
-        const selectedCamera = App.Browser.Get('selected-camera-id');
+    RecordVideo(videoComponent, videoSettings = null, audioSettings = null, dataReceivedCallback = null, selectedMic = null, selectedCamera = null) {
 
         if(selectedCamera) {
             if(videoSettings) {

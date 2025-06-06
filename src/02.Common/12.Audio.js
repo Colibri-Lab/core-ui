@@ -8,10 +8,6 @@ Colibri.Common.Audio = class {
     _mediaRecorder = null;
 
     RecordAudio(audioSettings = null) {
-        return this._startRecordAudioOnWeb(audioSettings);
-    }
-
-    _startRecordAudioOnWeb(audioSettings = null) {
         return new Promise((resolve, reject) => {
             navigator.mediaDevices.getUserMedia({ audio: audioSettings ?? true })
                 .then(stream => {
@@ -38,20 +34,9 @@ Colibri.Common.Audio = class {
         });
     }
 
+
     StopRecording() {
-        //if(App.Device.isWeb) {
-            return this._stopRecordAudioOnWeb();
-        // } else {
-        //     return this._stopRecordAudioOnDevice();
-        // }
-    }
-
-    _stopRecordAudioOnDevice() {
-        this._deviceAudio.Stop();
-        return Promise.resolve();
-    }
-
-    _stopRecordAudioOnWeb() {
+        
         if(this._animationFrame) {
             Colibri.Common.StopTimer('audio-animation-tick');
         }
