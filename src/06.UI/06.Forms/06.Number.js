@@ -60,6 +60,10 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
                 return true; 
             }
 
+            if((e.key === 'Backspace' || e.key === 'Delete') && this._input.guessValue(e.key) === '-') {
+                return true;
+            }
+
             if(isNaN(this._input.guessValue(e.key))) {
                 // will error
                 return nullhandler(e);
