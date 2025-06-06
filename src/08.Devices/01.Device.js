@@ -350,7 +350,6 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             const searchQuery = 'ret = object.' + query + ';';
             eval(searchQuery);
         } catch(e) {
-            console.log(e);
             ret = null;
         }
         return ret;
@@ -384,7 +383,6 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             }
             return plugin;
         } catch(e) {
-            console.log(e);
             return null;
         }
     } 
