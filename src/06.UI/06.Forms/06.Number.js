@@ -9,38 +9,38 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
      * Render field component
      */
     RenderFieldContainer() {
-        
+
         this.AddClass('app-component-number-field');
 
         this._original = null;
 
         const contentContainer = this.contentContainer;
 
-        const params = {type: 'number', name: (this.form && this.form.shuffleFieldNames ? 'field-' + Date.Mc() : this._name + '-input')};
-        if(this.form && this.form.shuffleFieldNames) {
+        const params = { type: 'text', name: (this.form && this.form.shuffleFieldNames ? 'field-' + Date.Mc() : this._name + '-input') };
+        if (this.form && this.form.shuffleFieldNames) {
             params.autocomplete = 'off';
         }
         this._input = contentContainer.container.append(Element.create('input', params));
 
         this._input.addEventListener('mousewheel', nullhandler);
-        this._input.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', {domEvent: e}));
-        this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', {domEvent: e}));
+        this._input.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', { domEvent: e }));
+        this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', { domEvent: e }));
         this._input.addEventListener('change', (e) => {
-            if(this.max !== null && parseFloat(this._input.value) > this.max) {
+            if (this.max !== null && parseFloat(this._input.value) > this.max) {
                 this._input.value = this.max;
             }
-            if(this.min !== null && parseFloat(this._input.value) < this.min) {
+            if (this.min !== null && parseFloat(this._input.value) < this.min) {
                 this._input.value = this.min;
             }
-            if(this._original != this._convertValue(this._input.value, false)) {
-                this.Dispatch('Changed', {domEvent: e, component: this, original: this._original});
+            if (this._original != this._convertValue(this._input.value, false)) {
+                this.Dispatch('Changed', { domEvent: e, component: this, original: this._original });
             }
             this._original = this._convertValue(this._input.value, false);
         });
         this._input.addEventListener('keyup', (e) => {
-            this.Dispatch('KeyUp', {domEvent: e});
-            if( (this._fieldData?.params?.changeOnKeyPress ?? false) ) {
-                if(this._keyUpChangeTimer !== -1) {
+            this.Dispatch('KeyUp', { domEvent: e });
+            if ((this._fieldData?.params?.changeOnKeyPress ?? false)) {
+                if (this._keyUpChangeTimer !== -1) {
                     clearTimeout(this._keyUpChangeTimer);
                 }
                 this._keyUpChangeTimer = setTimeout(() => {
@@ -48,15 +48,28 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
                 }, 500);
             }
         });
+
         this._input.addEventListener('keydown', (e) => {
-            if(e.keyCode === 38 || e.keyCode === 40) {
+            if (e.keyCode === 38 || e.keyCode === 40) {
                 return nullhandler(e);
             }
-            return this.Dispatch('KeyDown', {domEvent: e});
+            if(e.key === ' ') {
+                return nullhandler(e);
+            }
+            if(e.key === '-' && this._input.value === '') {
+                return true; 
+            }
+
+            if(isNaN(this._input.guessValue(e.key))) {
+                // will error
+                return nullhandler(e);
+            }
+
+            return this.Dispatch('KeyDown', { domEvent: e });
         });
         this._input.addEventListener('click', (e) => {
             this.Focus();
-            this.Dispatch('Clicked', {domEvent: e})
+            this.Dispatch('Clicked', { domEvent: e })
             e.stopPropagation();
             return false;
         });
@@ -70,23 +83,23 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
             return false;
         });
 
-        if(this._fieldData?.params?.readonly === undefined) {
-            this.readonly = false;    
+        if (this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;
         }
         else {
             this.readonly = this._fieldData?.params?.readonly;
         }
-        if(this._fieldData?.params?.enabled === undefined) {
+        if (this._fieldData?.params?.enabled === undefined) {
             this.enabled = true;
         }
         else {
             this.enabled = this._fieldData.params.enabled;
         }
 
-        if(this._fieldData?.params?.max !== undefined) {
+        if (this._fieldData?.params?.max !== undefined) {
             this.max = this._fieldData?.params?.max;
         }
-        if(this._fieldData?.params?.min !== undefined) {
+        if (this._fieldData?.params?.min !== undefined) {
             this.min = this._fieldData?.params?.min;
         }
 
@@ -103,7 +116,7 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
     Focus() {
         this._input.focus();
     }
-    
+
     Select() {
         this._input.select();
     }
@@ -122,7 +135,7 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
      */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
-        if(value) {
+        if (value) {
             this._input.attr('readonly', 'readonly');
             this.AddClass('app-component-readonly');
         }
@@ -155,7 +168,7 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
      */
     get value() {
         let value = this._input.value;
-        if(this._fieldData?.params?.emptyAsNull && value === '') {
+        if (this._fieldData?.params?.emptyAsNull && value === '') {
             value = null;
         }
         return this._convertValue(value, false);
@@ -167,7 +180,7 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
      */
     set value(value) {
         this._original = value;
-        if(value === '' || value === null) {
+        if (value === '' || value === null) {
             this._input.value = '';
         }
         else {
@@ -178,31 +191,31 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
     /** @private */
     _convertValue(value, direction = true) {
         this._isShare = this._fieldData?.params?.isShare ?? false;
-        if(direction) {
-            if(this._fieldData?.params?.format === 'percent') {
+        if (direction) {
+            if (this._fieldData?.params?.format === 'percent') {
                 value = value * (this._isShare ? 100 : 1);
             }
-             
+
         } else {
-            if(this._isShare && value !== '') {
+            if (this._isShare && value !== '') {
                 value = value / 100;
             }
         }
-        
-        if(value !== '' && value !== null && this._fieldData?.params?.decimal !== undefined) {
+
+        if (value !== '' && value !== null && this._fieldData?.params?.decimal !== undefined) {
             try {
                 value = (value * 1.0).toFixed(this._isShare && !direction ? 2 : this._fieldData?.params?.decimal);
-            } catch(e) {
+            } catch (e) {
                 // console.log(e, value)
             }
-        } 
+        }
         return value;
     }
 
     /**
      * Enable/Disable
      * @type {boolean}
-     */ 
+     */
     get enabled() {
         return this._input.attr('disabled') != 'disabled';
     }
@@ -210,10 +223,10 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
     /**
      * Enable/Disable
      * @type {boolean}
-     */ 
+     */
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
-        if(value) {
+        if (value) {
             this.RemoveClass('app-component-disabled');
             this._input.attr('disabled', null);
         }
@@ -270,4 +283,4 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
 
 
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Number', 'Colibri.UI.Forms.Number', '#{ui-fields-number}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler'])
+Colibri.UI.Forms.Field.RegisterFieldComponent('Number', 'Colibri.UI.Forms.Number', '#{ui-fields-number}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler'])

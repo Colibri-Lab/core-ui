@@ -2733,6 +2733,35 @@ Date.QuarterToPeriod = function (quarter, year, startOrEnd = 1) {
 
 }
 
+HTMLInputElement.prototype.guessValue = function (key) {
+    const value = this.value;
+
+    const start = this.selectionStart;
+    const end = this.selectionEnd;
+
+    if (key === 'Backspace') {
+        if (start === end && start > 0) {
+            return value.slice(0, start - 1) + value.slice(end);
+        } else {
+            return value.slice(0, start) + value.slice(end);
+        }
+    }
+
+    if (key === 'Delete') {
+        if (start === end && end < value.length) {
+            return value.slice(0, start) + value.slice(end + 1);
+        } else {
+            return value.slice(0, start) + value.slice(end);
+        }
+    }
+
+    if (key.length > 1) {
+        return value;
+    }
+
+    return value.slice(0, start) + key + value.slice(end);
+} 
+
 /**
  * Animates scrolling to a specified scrollTop value within a specified duration.
  * @param {number} to - The target scrollTop value to scroll to.
