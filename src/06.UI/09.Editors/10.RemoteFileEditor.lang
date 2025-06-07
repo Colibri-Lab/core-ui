@@ -5,6 +5,7 @@ ui-editors-remotefile:
   es: Seleccionar archivo
   kk: Файлды таңдау
   uz: Faylni tanlash
+  it: Seleziona file
 ui-editors-remotefile-text:
   ru: Выбор файла
   en: File selection
@@ -12,3 +13,4 @@ ui-editors-remotefile-text:
   es: Selección de archivo
   kk: Файлды таңдау
   uz: Faylni tanlash
+  it: Selezione file
