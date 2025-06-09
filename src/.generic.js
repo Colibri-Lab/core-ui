@@ -2820,7 +2820,9 @@ Element.prototype.ensureInViewport = function (container, top = null) {
     let cBottom = cTop + container.clientHeight;
 
     //Determine element top and bottom
-    let eTop = this.offsetTop;
+    let containerTop = container.bounds().top;
+    let thisTop = this.bounds().top;
+    let eTop = thisTop - containerTop + container.scrollTop;
     let eBottom = eTop + this.clientHeight;
 
     //Check if out of view
