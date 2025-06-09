@@ -214,6 +214,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
         this.AddHandler(['Changed', 'KeyUp', 'KeyDown'], (event, args) => {
             if(event.name == 'Changed') {
+                this.note = this._fieldData?.note ? (this._fieldData.note[Lang.Current] ?? this._fieldData.note ?? '') : '';
                 this._applyRuntimes();
                 this._setFilledMark();
             }
@@ -500,6 +501,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      * @type {string}
      */
     set note(value) {
+        value = this._convertProperty('String', value);
         this._content.Children(this._name + '-note').value = value ? value[Lang.Current] ?? value : '';
     }
 

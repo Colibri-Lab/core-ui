@@ -1265,9 +1265,9 @@ String.prototype.repeat = function (n) {
  */
 String.prototype.expand = function (c, l) {
     if (this.length >= l) {
-        return this;
+        return (this + '');
     } else {
-        return c.repeat(l - this.length) + this;
+        return c.repeat(l - this.length) + (this + '');
     }
 };
 /**

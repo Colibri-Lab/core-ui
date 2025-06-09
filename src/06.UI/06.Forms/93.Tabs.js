@@ -54,7 +54,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
     _renderField(name, fieldData, value, shown = true) {
         
         const field = Object.cloneRecursive(fieldData);
-        const tabTitle = field.desc[Lang.Current] ?? field.desc ?? '';
+        const tabTitle = field.desc ? (field.desc[Lang.Current] ?? field.desc ?? '') : '';
 
         delete field.desc;
 
