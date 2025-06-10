@@ -298,11 +298,8 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                         }
                         viewer.AddClass(className);
                     }
-                    try {
-                        viewer.value = value[name][Lang.Current] ?? value[name] ?? field.default ?? '';
-                    } catch(e) {
-                        viewer.value = value ? (value[name] ?? field.default ?? '') : '';
-                    }
+                    viewer.value = this._generateValue(field, value, name, viewer);
+
                     if(field.params?.editor) {
                         viewer.AddHandler('Changed', (event, args) => this.Dispatch('EditorChanged', {domEvent: args.domEvent, editor: viewer, field: field, name: name}));
                     } else {
@@ -365,11 +362,33 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
             Object.forEach(fields, (name, field) => {
                 const component = this.FindByName(name + '-viewer');
                 if(component) {
-                    component.value = value[name] ?? null;
+                    component.value = this._generateValue(field, value, name, component);
                 }
             });
         }
 
+    }
+
+    _generateValue(field, value, name, component) {
+        let vv = null;
+        try {
+            vv = Lang.Translate(value[name] ?? field.default ?? '' ?? null);
+        } catch(e) {
+            vv = value[name] ?? field.default ?? '' ?? null;
+        }
+        if(field.params && field.params.valuegenerator) {
+            const f = typeof field?.params?.valuegenerator === 'string' ? eval(field?.params?.valuegenerator) : field?.params?.valuegenerator;
+            const isOldVersion = typeof field?.params?.valuegenerator === 'string' && field?.params?.valuegenerator.indexOf('(parentValue, formValue') !== -1;
+            const v = isOldVersion ? 
+                f(vv, value, component, this) : 
+                f(vv, value, component, this, component);
+            if(v !== undefined) {
+                console.log('generated', v);
+                return v;
+            }
+        } else {
+            return vv;
+        }
     }
 
     /**

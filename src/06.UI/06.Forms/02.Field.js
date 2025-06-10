@@ -252,7 +252,8 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         }
 
         if(this._fieldData?.params?.className) {
-            this.AddClass(this._fieldData?.params?.className);
+            const className = this._convertProperty('String', this._fieldData?.params?.className);
+            this.AddClass(className);
         }
         if(this._fieldData?.attrs?.class) {
             this.AddClass(this._fieldData?.attrs?.class);
