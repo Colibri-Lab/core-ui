@@ -253,6 +253,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    enableAutoStartService(id) {
+        cordova.plugins.autoStart.enableService(id);
+    }
+
     /**
      * Gets the background mode of the device.
      * @return {boolean} value - The value to set for background mode.
