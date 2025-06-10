@@ -142,7 +142,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                         if(typeof condition.method === 'string') {
                             conditionResult = eval(condition.method);
                         } else {
-                            conditionResult = condition.method(fieldValue, data, type, empty, inverse, fieldData);
+                            conditionResult = condition.method(fieldValue, data, type, empty, inverse, fieldData, this);
                         }
                     }
 
