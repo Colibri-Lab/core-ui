@@ -241,6 +241,18 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return this._platform === Colibri.Devices.Device.Platform.Web;
     }
 
+    get autoStart() {
+        return this._autoStart;
+    }
+
+    set autoStart(value) {
+        if(value) {
+            cordova.plugins.autoStart.enable();
+        } else {
+            cordova.plugins.autoStart.disable();
+        }
+    }
+
     /**
      * Gets the background mode of the device.
      * @return {boolean} value - The value to set for background mode.
