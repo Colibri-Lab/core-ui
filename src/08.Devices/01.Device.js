@@ -298,7 +298,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             cordova.plugins.backgroundMode.disable();
         }
         if(value) {
-            // cordova.plugins.backgroundMode.setDefaults({ silent: false, resume: true });
+            cordova.plugins.backgroundMode.setDefaults({ silent: false });
             cordova.plugins.backgroundMode.on('activate', () => {
                 cordova.plugins.backgroundMode.disableWebViewOptimizations();
             });
@@ -662,4 +662,46 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    GetSystemSpeakerVolume() {
+        return new Promise((resolve, reject) => {
+            cordova.plugins.VolumeControl.getVolume(
+                volume => resolve(parseFloat(volume)), 
+                e => reject(e)
+            );
+        })
+    }
+
+    IsMuted() {
+        return new Promise((resolve, reject) => {
+            cordova.plugins.VolumeControl.isMuted(
+                muted => resolve(muted), 
+                e => reject(e)
+            );
+        })
+    }
+
+    ToggleMute() {
+        return new Promise((resolve, reject) => {
+            cordova.plugins.VolumeControl.toggleMute(
+                () => resolve(), 
+                e => reject(e)
+            );
+        })
+    }
+
+    Mute() {
+        return this.IsMuted().then(muted => {
+            if(!muted) {
+                return this.ToggleMute();
+            }
+        });
+    }
+
+    UnMute() {
+        return this.IsMuted().then(muted => {
+            if(muted) {
+                return this.ToggleMute();
+            }
+        });
+    }
 }
