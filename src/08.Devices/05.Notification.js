@@ -227,19 +227,16 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      */
     RequestPermission() {
         return new Promise((resolve, reject) => {
-            if(this._granted) {
-                resolve();
+            if(App.Device.isAndroid && App.Device.Info.version >= 13) {
+                App.Device.RequestPermission('POST_NOTIFICATIONS').then((hasPermission) => {
+                    if(!hasPermission) {
+                        reject('Can not obtain permission for notifications');
+                    } else {
+                        resolve();
+                    }
+                });
             } else {
-                this.HasPermission().catch(() => {
-                    this._plugin.requestPermission(function (granted) {
-                        this._granted = granted;
-                        if(granted) {
-                            resolve();
-                        } else {
-                            reject();
-                        }
-                    });    
-                }).then(() => resolve());
+                resolve();
             }
         });
     }

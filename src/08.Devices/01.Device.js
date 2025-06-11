@@ -183,20 +183,36 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         
     }
 
+    RequestPermission(perm) {
+        if(!cordova.plugins.permissions) {
+            return Promise.resolve();
+        }
+        return new Promise((resolve, reject) => {
+            var permissions = cordova.plugins.permissions;
+            permissions.requestPermission(permissions[perm], (status) => {
+                resolve(status.hasPermission);
+            }, (error) => reject(error));
+        })
+    }
+
     RequestPermissions(perms) {
         if(!cordova.plugins.permissions) {
             return Promise.resolve();
         }
         return new Promise((resolve, reject) => {
             var permissions = cordova.plugins.permissions;
-            const list = perms.map(v => permissions[v]);
-            permissions.requestPermissions(list, (status) => {
-                if( !status.hasPermission ) {
-                    reject();
+            const promises = [];
+            for(const perm of perms) {
+                promises.push(this.RequestPermission(perm));
+            }
+            Promise.all(promises).then((statuses) => {
+                const hasPermissions = [];
+                for(const status of statuses) {
+                    if(!status.hasPermission) {
+                        hasPermissions.push(status);
+                    }
                 }
-                resolve();
-            }, () => {
-                reject();
+                resolve(hasPermissions);
             });
         })
     }
@@ -500,8 +516,25 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             manufacturer: device.manufacturer,
             isVirtual: device.isVirtual,
             serial: device.serial,
+            sdkVersion: this._getAndroidSdkVersion()
         }
     }
+
+    _getAndroidSdkVersion() {
+        const match = navigator.userAgent.match(/Android\s+(\d+)/);
+        if (match) {
+            const versionNumber = parseInt(match[1], 10);
+            switch (versionNumber) {
+            case 13: return 33;
+            case 14: return 34;
+            case 12: return 32;
+            case 11: return 30;
+            default: return null;
+            }
+        }
+        return null;
+    }
+
 
     /**
      * Retrieves the current theme.
@@ -616,6 +649,17 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
                 reject(e);
             });
         });
+    }
+
+    SetAudioToSpeakers() {
+        if(AudioToggle !== undefined) {
+            AudioToggle.setAudioMode(AudioToggle.SPEAKER);
+        }
+    }
+    SetAudioToEarpiece() {
+        if(AudioToggle !== undefined) {
+            AudioToggle.setAudioMode(AudioToggle.EARPIECE);
+        }
     }
 
 }
