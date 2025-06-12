@@ -281,6 +281,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return this._backgroundMode;
     }
 
+    SetBackgroundModeDefaults(defaults) {
+        cordova.plugins.backgroundMode.setDefaults(defaults);
+    }
+
     /**
      * Sets the background mode of the device.
      * @param {boolean} value - The value to set for background mode.
@@ -293,12 +297,6 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
         this._backgroundMode = value;
         if(value) {
-            cordova.plugins.backgroundMode.enable();
-        } else {
-            cordova.plugins.backgroundMode.disable();
-        }
-        if(value) {
-            cordova.plugins.backgroundMode.setDefaults({ silent: false });
             cordova.plugins.backgroundMode.on('activate', () => {
                 cordova.plugins.backgroundMode.disableWebViewOptimizations();
             });
@@ -306,7 +304,27 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
                 this.ClearNotifications();
             });
         }
+        
+        if(value) {
+            cordova.plugins.backgroundMode.setDefaults({ silent: false });
+            cordova.plugins.backgroundMode.enable();
+            Colibri.Common.StartTimer('background-mode', 5000, () => {
+                console.log('Working in background mode ...');
+            });
+        } else {
+            cordova.plugins.backgroundMode.disable();
+            Colibri.Common.StopTimer('background-mode');
+        }
+
     
+    }
+
+    /**
+     * Ignore battery optimizations for the app.
+     * @type {Boolean}
+     */
+    DisableBatteryOptimizations() {
+        return cordova.plugins.backgroundMode.disableWebViewOptimizations();
     }
 
     get overrideBackButton() {
