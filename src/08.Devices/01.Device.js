@@ -92,6 +92,9 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('ThemeChanged', false, 'Когда тема изменена');
         this.RegisterEvent('NotificationTapped', false, 'When push notification is tapped');
         this.RegisterEvent('NotificationToken', false, 'When push notification token is changed');
+        this.RegisterEvent('BackgroundMode', false, 'Each 5 seconds whe background mode is active');
+        this.RegisterEvent('DeviceLocked', false, 'When user locked the device');
+        this.RegisterEvent('DeviceUnlocked', false, 'When user unlocked the device');
     }
 
     /**
@@ -145,6 +148,23 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             }
 
             this._localNotifications = new Colibri.Devices.LocalNotifications(this);
+
+            if(window?.ColibriAccessories?.DeviceLock !== undefined) {
+                window.ColibriAccessories.DeviceLock.watch((state) => {
+                    console.log('device lock state changed', state);
+                }, (e) => {
+                    console.log('device lock error', e);
+                });
+                window.addEventListener('deviceLocked', (e) => {
+                    this._deviceLocked = true;
+                    this.Dispatch('DeviceLocked', {locked: true});
+                });
+                window.addEventListener('deviceUnlocked', (e) => {
+                    this._deviceLocked = false;
+                    this.Dispatch('DeviceUnlocked', {locked: false});
+                });
+            }
+
         }
 
     }
@@ -309,6 +329,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             cordova.plugins.backgroundMode.setDefaults({ silent: false });
             cordova.plugins.backgroundMode.enable();
             Colibri.Common.StartTimer('background-mode', 5000, () => {
+                this.Dispatch('BackgroundMode', {active: true})
                 console.log('Working in background mode ...');
             });
         } else {
@@ -721,5 +742,9 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
                 return this.ToggleMute();
             }
         });
+    }
+
+    get deviceLocked() {
+        return this._deviceLocked || false;
     }
 }
