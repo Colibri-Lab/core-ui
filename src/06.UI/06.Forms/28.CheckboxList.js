@@ -96,8 +96,11 @@ Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
         }
 
         const contentContainer = this.contentContainer;
-        for(const v of value) {
+        for(let v of value) {
             try {
+                if(v?.title === undefined) {
+                    v = Array.findObject(this.values, 'value', v);
+                }
                 let input = contentContainer.Children(this._name + '-input-' + String.MD5(v.value + v.title));
                 if(!input) {
                     input = new Colibri.UI.Checkbox(this._name + '-input-' + String.MD5(v.value + v.title), contentContainer);
@@ -166,6 +169,7 @@ Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
     }
     /** @private */
     _showValues() {
+
         const contentContainer = this.contentContainer;
         contentContainer.Clear();
         for(const v of this._values) {
