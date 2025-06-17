@@ -73,6 +73,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    get settings() {
+        return this._settings;
+    }
+
     get User() {
         return this._user;
     }
