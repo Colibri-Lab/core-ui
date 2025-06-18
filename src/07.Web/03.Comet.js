@@ -744,7 +744,9 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
             '"read" BOOLEAN', 
             '"message" TEXT', 
             '"delivery" VARCHAR(50)', 
-            '"broadcast" BOOLEAN'
+            '"broadcast" BOOLEAN',
+            '"activate" BOOLEAN',
+            '"wakeup" BOOLEAN',
         ];
 
     }
