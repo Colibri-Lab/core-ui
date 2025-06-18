@@ -60,11 +60,15 @@ Colibri.Common.CometEvent = class {
      */
     broadcast = false;
 
+    activate = false;
+
+    wakeup = false;
+
     constructor() {
         // do nothing
     }
 
-    static FromReceivedObject(action, domain, from, message, delivery = 'untrusted', broadcast = false) {
+    static FromReceivedObject(action, domain, from, message, delivery = 'untrusted', broadcast = false, activate = false, wakeup = false) {
         const msg = new Colibri.Common.CometEvent();
         msg.action = action;
         msg.domain = domain;
@@ -72,10 +76,12 @@ Colibri.Common.CometEvent = class {
         msg.message = message;
         msg.broadcast = broadcast;
         msg.delivery = delivery;
+        msg.activate = activate;
+        msg.wakeup = wakeup;
         return msg;
     }
 
-    static CreateForSend(action, domain, from, recipient, message, delivery = 'untrusted') {
+    static CreateForSend(action, domain, from, recipient, message, delivery = 'untrusted', activate = false, wakeup = false) {
         const msg = new Colibri.Common.CometMessage();
         msg.action = action;
         msg.domain = domain;
@@ -83,10 +89,12 @@ Colibri.Common.CometEvent = class {
         msg.recipient = recipient;
         msg.message = message;
         msg.delivery = delivery;
+        msg.activate = activate;
+        msg.wakeup = wakeup;
         return msg;
     }
 
-    static CreateForSendBroadcast(action, domain, from, message, delivery = 'untrusted') {
+    static CreateForSendBroadcast(action, domain, from, message, delivery = 'untrusted', activate = false, wakeup = false) {
         const msg = new Colibri.Common.CometMessage();
         msg.action = action;
         msg.domain = domain;
@@ -95,6 +103,8 @@ Colibri.Common.CometEvent = class {
         msg.broadcast = true;
         msg.message = message;
         msg.delivery = delivery;
+        msg.activate = activate;
+        msg.wakeup = wakeup;
         return msg;
     }
 

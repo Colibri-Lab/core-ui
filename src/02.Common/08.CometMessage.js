@@ -66,11 +66,15 @@ Colibri.Common.CometMessage = class {
      */
     delivery = 'trusted';
 
+    activate = false;
+
+    wakeup = false;
+
     constructor() {
         // do nothing
     }
 
-    static FromReceivedObject(domain, from, message, delivery = 'untrusted', broadcast = false) {
+    static FromReceivedObject(domain, from, message, delivery = 'untrusted', broadcast = false, activate = true, wakeup = true) {
         const msg = new Colibri.Common.CometMessage();
         msg.domain = domain === 'unknown' ? Colibri.Web.Comet.Options.origin : domain;
         msg.from = from === 'unknown' ? 'system' : from;    
@@ -78,44 +82,54 @@ Colibri.Common.CometMessage = class {
         msg.broadcast = broadcast;
         msg.delivery = delivery;
         msg.recipient = App.Comet.User;
+        msg.activate = activate;
+        msg.wakeup = wakeup;
         return msg;
     }
 
-    static CreateForSend(domain, from, recipient, text, addditional = {}) {
+    static CreateForSend(domain, from, recipient, text, addditional = {}, activate = true, wakeup = true) {
         const message = new Colibri.Common.CometMessage();
         message.domain = domain;
         message.from = from;
         message.recipient = recipient;
         message.message = Object.assign({text, id: message.id}, addditional);
+        message.activate = activate;
+        message.wakeup = wakeup;
         return message;
     }
 
-    static CreateForFilesSend(domain, from, recipient, files) {
+    static CreateForFilesSend(domain, from, recipient, files, addditional = {}, activate = true, wakeup = true) {
         const message = new Colibri.Common.CometMessage();
         message.domain = domain;
         message.from = from;
         message.recipient = recipient;
         message.message = {files, id: message.id};
+        message.activate = activate;
+        message.wakeup = wakeup;
         return message;
     }
 
-    static CreateForSendBroadcast(domain, from, text, addditional = {}) {
+    static CreateForSendBroadcast(domain, from, text, addditional = {}, activate = true, wakeup = true) {
         const message = new Colibri.Common.CometMessage();
         message.domain = domain;
         message.from = from;
         message.recipient = '*';
         message.broadcast = true;
         message.message = Object.assign({text, id: message.id}, addditional);
+        message.activate = activate;
+        message.wakeup = wakeup;
         return message;
     }
 
-    static CreateForFilesSendBroadcast(domain, from, files) {
+    static CreateForFilesSendBroadcast(domain, from, files, addditional = {}, activate = true, wakeup = true) {
         const message = new Colibri.Common.CometMessage();
         message.domain = domain;
         message.from = from;
         message.recipient = '*';
         message.broadcast = true;
-        message.message = {files, id: message.id};
+        message.message = Object.assign({files, id: message.id}, addditional);
+        message.activate = activate;
+        message.wakeup = wakeup;
         return message;
     }
 
