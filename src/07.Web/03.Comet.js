@@ -123,7 +123,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                     this.__onCometOpened();
                 }, 
                 () => {
-                    // closed
+                    this._ws.readyState = 0;
                 }, 
                 (message) => {
                     this.__onCometMessage(message);
