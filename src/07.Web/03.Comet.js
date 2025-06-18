@@ -116,11 +116,34 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @private
      */
     _initConnection() {
-        this._ws && this._ws.close();
-        this._ws = new WebSocket('wss://' + this._settings.host + ':' + this._settings.port + '/client/' + this._clientId);
-        this._ws.onopen = () => this.__onCometOpened();
-        this._ws.onmessage = (message) => this.__onCometMessage(message);
-        this._ws.onerror = error => this.__onCometError(error);
+
+        if((App.Device.isAndroid || App.Device.isIOs) && window['ColibriAccessories'] && window['ColibriAccessories']['Service']) {
+            ColibriAccessories.Service.handle(() => {
+                this.__onCometOpened();
+            }, () => {
+                // closed
+            }, (message => {
+                this.__onCometMessage(message);
+            }, (log) => {
+                console.log(log);
+            }));
+            ColibriAccessories.Service.start(
+                App.Comet.settings.host, 
+                App.Comet.settings.port, 
+                App.Device.id,
+                () => {console.log('Successed !!!');},
+                (err) => {console.log('Error !!!', err);}
+            );
+            this._ws = ColibriAccessories.Service;
+            this._ws.readyState = 1; // emulate
+        } else {
+            this._ws && this._ws.close();
+            this._ws = new WebSocket('wss://' + this._settings.host + ':' + this._settings.port + '/client/' + this._clientId);
+            this._ws.onopen = () => this.__onCometOpened();
+            this._ws.onmessage = (message) => this.__onCometMessage(message);
+            this._ws.onerror = error => this.__onCometError(error);
+        }
+
     }
     
     /**
