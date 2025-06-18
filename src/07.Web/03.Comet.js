@@ -118,15 +118,20 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     _initConnection() {
 
         if((App.Device.isAndroid || App.Device.isIOs) && window['ColibriAccessories'] && window['ColibriAccessories']['Service']) {
-            ColibriAccessories.Service.handle(() => {
-                this.__onCometOpened();
-            }, () => {
-                // closed
-            }, (message => {
-                this.__onCometMessage(message);
-            }, (log) => {
-                console.log(log);
-            }));
+            ColibriAccessories.Service.handle(
+                () => {
+                    this.__onCometOpened();
+                }, 
+                () => {
+                    // closed
+                }, 
+                (message) => {
+                    this.__onCometMessage(message);
+                }, 
+                (log) => {
+                    console.log(log);
+                }
+            );
             ColibriAccessories.Service.start(
                 App.Comet.settings.host, 
                 App.Comet.settings.port, 
