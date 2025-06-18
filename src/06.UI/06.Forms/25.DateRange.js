@@ -70,7 +70,13 @@ Colibri.UI.Forms.DateRange = class extends Colibri.UI.Forms.Field {
      * @type {Array}
      */
     get value() {
-        return [this._input1.value, this._input2.value];
+        if(this._input1.value == 'Invalid Date' && this._input2.value == 'Invalid Date') {
+            return null;
+        }
+        return [
+            this._input1.value == 'Invalid Date' ? null : this._input1.value, 
+            this._input2.value == 'Invalid Date' ? null : this._input2.value
+        ];
     }
     /**
      * Array of two date items

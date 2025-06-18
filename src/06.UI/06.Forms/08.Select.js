@@ -36,6 +36,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         else {
             this.readonly = this._fieldData?.params?.readonly;
         }
+
         if(this._fieldData?.params?.searchable === undefined) {
             this.searchable = false;    
         }
@@ -53,7 +54,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
             this._input.showToolTip = this._fieldData?.params?.showToolTip;
         }
 
-        if(this._fieldData?.selector?.ondemand) {
+        if(this._fieldData?.selector?.ondemand || this.searchable) {
             this._input.__BeforeFilled = () => {
                 return new Promise((resolve, reject) => {
                     if (this._fieldData.lookup) {
@@ -65,7 +66,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
                             this.loading = false;                        
                             this.RemoveClass('app-select-loading');
                             this._setEnabled();
-                            resolve(this._fieldData?.selector?.ondemand);
+                            resolve(this._fieldData?.selector?.ondemand || this.searchable);
                         });
                     }
                 });
