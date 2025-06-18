@@ -95,16 +95,13 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             domEvent: 'scroll'
         },
         TouchStarted: {
-            domEvent: 'touchstart',
-            capture: true,
+            domEvent: 'touchstart'
         },
         TouchEnded: {
-            domEvent: 'touchend',
-            capture: true,        
+            domEvent: 'touchend'   
         },
         TouchMoved: {
-            domEvent: 'touchmove',
-            capture: true,            
+            domEvent: 'touchmove'      
         }
     };
 
