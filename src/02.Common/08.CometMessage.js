@@ -158,7 +158,9 @@ Colibri.Common.CometMessage = class {
                 recipient: this.recipient, 
                 message: this.message, 
                 delivery: this.delivery,
-                broadcast: this.broadcast
+                broadcast: this.broadcast,
+                activate: this.activate,
+                wakeup: this.wakeup,
             });
         } else {
             return JSON.stringify({
@@ -168,7 +170,9 @@ Colibri.Common.CometMessage = class {
                 from: this.from, 
                 message: this.message, 
                 delivery: this.delivery,
-                broadcast: this.broadcast
+                broadcast: this.broadcast,
+                activate: this.activate,
+                wakeup: this.wakeup,
             });
         }
     }
