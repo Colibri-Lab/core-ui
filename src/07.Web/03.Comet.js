@@ -126,7 +126,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                     this._ws.readyState = 0;
                 }, 
                 (message) => {
-                    this.__onCometMessage(message);
+                    this.__onCometMessage({data: message});
                 }, 
                 (log) => {
                     console.log(log);
