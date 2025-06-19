@@ -1,3 +1,18 @@
-.colibri-ui-forms-dayofmonth {
+.app-component-daymonth-field {
     
+    [data-object-name$="-content"] > [data-object-name$="-container"] {
+
+        background: #FFFFFF;
+        border-radius: 3px;
+ 
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+
+        [data-object-name="day"] {
+            margin-right: 10px;
+        }
+    
+    }
+
 }
