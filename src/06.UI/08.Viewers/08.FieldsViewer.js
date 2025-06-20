@@ -23,6 +23,8 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         this._showUnsetFields = true;
         this._hideFields = [];
 
+        this._viewers = [];
+
         this.RegisterEvent('FieldsToggled', false, 'Когда скрытое открыто или закрыто');
         this.RegisterEvent('EditorChanged', false, 'Когда редактор изменился');
         this.RegisterEvent('ViewerClicked', false, 'Когда вьюер нажат');
@@ -117,6 +119,10 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         return this._hidden.shown;
     }
 
+    Fields(name) {
+        return Array.findObject(this._viewers, 'name', name + '-viewer');
+    }
+
     /**
      * @private
      * @param {Colibri.Events.Event} event event object
@@ -137,6 +143,9 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
      * @param {boolean} showTitles show titles
      */
     _createFields(fields = null, value = null, contentElement = null, showTitles = true) {
+        if(fields === null) {
+            this._viewers = [];
+        }
         const root = this.root || this;
         contentElement = contentElement || this;
         fields = fields || this._fields;
@@ -179,7 +188,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                 return true;
             }
 
-            if(!this._showUnsetFields && (value[name] === undefined || value[name] === null || value[name] === '' || (Array.isArray(value[name]) && value[name].length === 0))) {
+            if(!this._showUnsetFields && !field.params?.editor && (value[name] === undefined || value[name] === null || value[name] === '' || (Array.isArray(value[name]) && value[name].length === 0))) {
                 return true;
             }
 
@@ -305,6 +314,9 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                     } else {
                         viewer.AddHandler('Clicked', (event, args) => this.Dispatch('ViewerClicked', {domEvent: args.domEvent, viewer: viewer, field: field, name: name}));
                     }
+
+                    this._viewers.push(viewer);
+
                 }
 
     

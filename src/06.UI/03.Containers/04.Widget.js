@@ -219,6 +219,10 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
         this._toggleText2.value = value[1];
     }
 
+    CheckCloseAbility() {
+        return Promise.resolve(true);
+    }
+
     
 }
 
