@@ -120,7 +120,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         if((App.Device.isAndroid || App.Device.isIOs) && window['ColibriAccessories'] && window['ColibriAccessories']['Service']) {
             ColibriAccessories.Service.handle(
                 () => {
-                    this.__onCometOpened();
+                    this.__onCometOpened(true);
                 }, 
                 () => {
                     this._ws.readyState = 0;
@@ -242,9 +242,11 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * Handles the WebSocket connection open event.
      * @private
      */
-    __onCometOpened() {
+    __onCometOpened(registered = false) {
         this._connected = true;
-        this.Command(this._user, 'register', {name: this._userName, storeHandler: this._handlers['storeHandler'] ?? null, closeHandler: this._handlers['closeHandler'] ?? null});
+        if(!registered) {
+            this.Command(this._user, 'register', {name: this._userName, storeHandler: this._handlers['storeHandler'] ?? null, closeHandler: this._handlers['closeHandler'] ?? null});
+        }
         if(this._pushToken) {
             this.Command(this._user, 'firebase', {name: this._userName, json: JSON.stringify(this._firebaseServiceJson), token: this._pushToken, f: this._pushFunction});
         }
