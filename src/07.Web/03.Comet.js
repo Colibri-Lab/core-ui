@@ -132,10 +132,13 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                     console.log(log);
                 }
             );
+
             ColibriAccessories.Service.start(
                 App.Comet.settings.host, 
                 App.Comet.settings.port, 
                 App.Device.id,
+                Colibri.Web.Comet.Options.origin,
+                this._user,
                 () => {console.log('Successed !!!');},
                 (err) => {console.log('Error !!!', err);}
             );
