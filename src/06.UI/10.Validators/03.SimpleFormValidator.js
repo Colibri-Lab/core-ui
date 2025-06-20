@@ -41,7 +41,7 @@ Colibri.UI.SimpleFormValidator = class {
      * Validate field
      * @param {object} field field object
      */
-    __validateField(field) {
+    __validateField(field, showMessages = true) {
 
         field.field.params && (field.field.params.validated = 'success');
         field.message = '';
@@ -61,8 +61,10 @@ Colibri.UI.SimpleFormValidator = class {
             const method = typeof v.method !== 'function' ? eval(v.method) : v.method;
             if(!method(field, this)) {
                 field.field.params && (field.field.params.validated = 'error');
-                field.message = message;
-                field.AddClass('app-validate-error');
+                if(showMessages) {
+                    field.message = message;
+                    field.AddClass('app-validate-error');
+                }
                 break;
             } else {
 
@@ -139,7 +141,7 @@ Colibri.UI.SimpleFormValidator = class {
      * Validate all fields
      * @param {object|null} fields fields object
      */
-    ValidateAll(fields = null) {
+    ValidateAll(fields = null, showMessages = true) {
 
         this._form.message = '';
 
@@ -156,8 +158,8 @@ Colibri.UI.SimpleFormValidator = class {
         }
 
         for(const field of fields) {
-            this.__validateField(field);
-            this.ValidateAll(field.Fields ? field.Fields() : []);
+            this.__validateField(field, showMessages);
+            this.ValidateAll(field.Fields ? field.Fields() : [], showMessages);
         }
 
         return this.Status();
