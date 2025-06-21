@@ -303,6 +303,14 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
     get contentHeight() {
         return this._input.bounds().outerHeight;
     }
+
+    InsertTextToSelection(text) {
+        if(this._visual) {
+            this._input.insertElement(Element.fromHtml(text)[0]);
+        } else {
+            this._input.insertText(text);
+        }
+    }
     
 
 }

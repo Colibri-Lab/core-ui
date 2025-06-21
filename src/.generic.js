@@ -3498,6 +3498,42 @@ HTMLDivElement.prototype.select = function() {
     }
 }
 
+Element.prototype.insertText = function(text) {
+    if (document.queryCommandSupported('insertText')) {
+        document.execCommand('insertText', false, text);
+    } else {
+        var sel, range;
+        if (window.getSelection && document.createRange) {
+            sel = window.getSelection();
+            range = sel.getRangeAt(0);
+            range.deleteContents();
+            range.insertNode(document.createTextNode(text));
+        } else if (document.body.createTextRange) {
+            range = document.body.createTextRange();
+            range.text = text;
+        }
+    }
+}
+
+Element.prototype.insertElement = function(element) {
+    if (document.queryCommandSupported('insertHTML')) {
+        document.execCommand('insertHTML', false, element.outerHtml());
+    } else {
+        var sel, range;
+        if (window.getSelection && document.createRange) {
+            sel = window.getSelection();
+            range = sel.getRangeAt(0);
+            range.deleteContents();
+            range.insertNode(element.cloneNode(true));
+        } else if (document.body.createTextRange) {
+            range = document.body.createTextRange();
+            range.pasteHTML(element.outerHtml());
+        }
+    }
+}
+
+
+
 /**
  * Clears all tokens from the DOMTokenList.
  */
