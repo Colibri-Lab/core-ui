@@ -70,6 +70,13 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         }
         catch(e) {}
 
+
+        if(window.ColibriAccessories) {
+            ColibriAccessories.Share.Handle((items) => {
+                this.Dispatch('ShareReceived', { items });
+            });
+        }
+
     }
 
     get id() {
@@ -95,6 +102,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('BackgroundMode', false, 'Each 5 seconds whe background mode is active');
         this.RegisterEvent('DeviceLocked', false, 'When user locked the device');
         this.RegisterEvent('DeviceUnlocked', false, 'When user unlocked the device');
+        this.RegisterEvent('ShareReceived', false, 'When received a share from other app');
     }
 
     /**
@@ -155,11 +163,11 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
                 }, (e) => {
                     console.log('device lock error', e);
                 });
-                window.addEventListener('deviceLocked', (e) => {
+                window.addEventListener('colibri-accessories:onDeviceLocked', (e) => {
                     this._deviceLocked = true;
                     this.Dispatch('DeviceLocked', {locked: true});
                 });
-                window.addEventListener('deviceUnlocked', (e) => {
+                window.addEventListener('colibri-accessories:onDeviceUnlocked', (e) => {
                     this._deviceLocked = false;
                     this.Dispatch('DeviceUnlocked', {locked: false});
                 });
@@ -752,4 +760,32 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     get deviceLocked() {
         return this._deviceLocked || false;
     }
+
+    Notify(title, text, contact, photo) {
+        return new Promise((resolve, reject) => {
+            if(this.isAndroid || this.isIOs) {
+                window.ColibriAccessories.UI.notifyMessage(
+                    title, 
+                    photo, 
+                    text, 
+                    contact, 
+                    (token) => {
+                        resolve(token);
+                    }
+                );
+            } else if(this.isWindows) {
+                const notification = new Notification(
+                    title, {
+                        body: text,
+                        icon: 'img/app.png',
+                        data: { contact: contact },
+                    }
+                );
+                notification.onclick = (e) => {
+                    resolve(e.target.data.contact);
+                };
+            }
+        });
+    }
+
 }

@@ -14,7 +14,7 @@ Colibri.UI.Img = class extends Colibri.UI.Component {
         super(name, container, Element.create('img'));
         this.AddClass('app-component-img');
         this._element.onload = () => {
-            this.Dispatch('ImageLoaded', {});
+            this.Dispatch('ImageLoaded', {element: this._element});
         }
     }
 
