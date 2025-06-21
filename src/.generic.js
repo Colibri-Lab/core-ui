@@ -428,7 +428,7 @@ Array.prototype.toObjectAsTrue = function () {
  */
 Array.prototype.sum = function (field = null, maxRows = null) {
     let arr = [].concat(this);
-    if(maxRows !== null) {
+    if (maxRows !== null) {
         arr = arr.splice(0, maxRows);
     }
     if (!field) {
@@ -513,12 +513,12 @@ Array.calculateCountByKey = function (array, fieldKey) {
     let ret = {};
     array.forEach((item) => {
         let key = fieldKey;
-        if(typeof fieldKey === 'function') {
+        if (typeof fieldKey === 'function') {
             key = fieldKey(item);
         } else {
             key = item[key];
         }
-        if(!ret[key]) {
+        if (!ret[key]) {
             ret[key] = 0;
         }
         ret[key]++;
@@ -587,7 +587,7 @@ Object.isObject = function (o) {
     return o instanceof Object && !Array.isArray(o);
 }
 
-Object.isEmpty = function(o) {
+Object.isEmpty = function (o) {
     return Object.values(o).filter(v => v !== '' && v !== null).length === 0;
 };
 
@@ -1005,15 +1005,15 @@ Object.filter = function (obj, func) {
     return newObject;
 };
 
-Object.pluck = function(obj, keys) {
+Object.pluck = function (obj, keys) {
     const nobj = {};
-    for(const key of keys) {
+    for (const key of keys) {
         nobj[key] = obj[key];
     }
     return nobj;
 }
 
-Object.assignRecursive = function(source, target) {
+Object.assignRecursive = function (source, target) {
     if (source instanceof Object && target instanceof Object) {
         for (const key in source) {
             if (source[key] instanceof Object && target[key] instanceof Object) {
@@ -1118,6 +1118,93 @@ RegExp.quote = function (string) {
     return string;
 }
 
+String.prototype.lzwCompress = function () {
+    const dict = new Map();
+    const data = (this + "").split("");
+    const out = [];
+    let dictSize = 256;
+
+    // initialize dictionary with single-char entries
+    for (let i = 0; i < 256; i++) {
+        dict.set(String.fromCharCode(i), i);
+    }
+
+    let w = "";
+    for (const c of data) {
+        const wc = w + c;
+        if (dict.has(wc)) {
+            w = wc;
+        } else {
+            out.push(dict.get(w));
+            dict.set(wc, dictSize++);
+            w = c;
+        }
+    }
+
+    // output the code for w.
+    if (w !== "") out.push(dict.get(w));
+    return out;
+}
+
+String.prototype.lzwDecompress = function () {
+    const dict = new Map();
+    let dictSize = 256;
+
+    // initialize dictionary
+    for (let i = 0; i < 256; i++) {
+        dict.set(i, String.fromCharCode(i));
+    }
+
+    let w = String.fromCharCode(this[0]);
+    let result = w;
+    for (let i = 1; i < this.length; i++) {
+        const k = this[i];
+        let entry;
+        if (dict.has(k)) {
+            entry = dict.get(k);
+        } else if (k === dictSize) {
+            entry = w + w.charAt(0);
+        } else {
+            throw new Error("Bad compressed k: " + k);
+        }
+
+        result += entry;
+
+        // add w+entry[0] to the dictionary.
+        dict.set(dictSize++, w + entry.charAt(0));
+
+        w = entry;
+    }
+    return result;
+}
+
+String.prototype.compressGzip = async function () {
+    try {
+        const cs = new CompressionStream('gzip');
+        const writer = cs.writable.getWriter();
+        writer.write(new TextEncoder().encode(this + ''));
+        writer.close();
+        const compressed = await new Response(cs.readable).arrayBuffer();
+        return btoa(String.fromCharCode(...new Uint8Array(compressed)));
+    } catch(e) {
+        return this + '';
+    }
+}
+
+String.prototype.decompressGzip = async function () {
+    try {
+        const bytes = Uint8Array.from(atob(this + ''), c => c.charCodeAt(0));
+        const ds = new DecompressionStream('gzip');
+        const writer = ds.writable.getWriter();
+        writer.write(bytes);
+        writer.close();
+        const decompressed = await new Response(ds.readable).text();
+        return decompressed;
+    } catch(e) {
+        return this + '';
+    }
+}
+
 /**
  * Removes formatting characters and converts the string to a number using the current locale settings.
  * @returns {number|string} Returns the unformatted number if successful, otherwise an empty string.
@@ -1157,9 +1244,9 @@ String.prototype.rtrim = function (c) { return this.replace(new RegExp((c != und
 String.prototype.trimString = function (c) {
     return this.replace(new RegExp('^' + (c != undefined ? RegExp.quote(c) : '\\s') + '*(.*?)' + (c != undefined ? RegExp.quote(c) : '\\s') + '*$'), '$1');
 }
-String.prototype.containsSymbols = function(arr) {
-    for(const s of arr) {
-        if(this.indexOf(s) === -1) {
+String.prototype.containsSymbols = function (arr) {
+    for (const s of arr) {
+        if (this.indexOf(s) === -1) {
             return false;
         }
     }
@@ -1667,7 +1754,7 @@ String.prototype.fromCamelCase = function (splitter) {
     return this.replaceAll(new RegExp('([A-Z])'), (v) => { return splitter + v.toLowerCase(); }).rtrim('-').ltrim('-');
 
 };
-String.prototype.countCharIn = function(c) {
+String.prototype.countCharIn = function (c) {
     return (this.match(new RegExp(c, "g")) || []).length;
 };
 /**
@@ -2226,7 +2313,7 @@ Number.prototype.toTimeString = function (daySplitter, trim00 = true) {
  * @param {boolean} [shownumber=true] - Whether to include the number in the output.
  * @returns {string} The formatted size string.
  */
-Number.prototype.toSizeString = function (postfixes = ['bytes','Kb','Mb','Gb','Tb'], range = 1024, remove0s = false, approximate = false, shownumber = true) {
+Number.prototype.toSizeString = function (postfixes = ['bytes', 'Kb', 'Mb', 'Gb', 'Tb'], range = 1024, remove0s = false, approximate = false, shownumber = true) {
     let number = this;
     let isMinus = number < 0;
     if (isMinus) {
@@ -2291,7 +2378,7 @@ Number.unique = function () { return (window.performance.getEntries()[0].duratio
  * Formats the date as a string in the 'YYYY-MM-DD HH:mm:ss' format.
  * @returns {string} The formatted date string.
  */
-Date.prototype.toDbDate = function () { if(this.toString() === 'Invalid Date') {return null;} return this.getFullYear() + '-' + ((this.getMonth() + 1) + '').expand('0', 2) + '-' + (this.getDate() + '').expand('0', 2) + ' ' + (this.getHours() + '').expand('0', 2) + ':' + (this.getMinutes() + '').expand('0', 2) + ':' + (this.getSeconds() + '').expand('0', 2); };
+Date.prototype.toDbDate = function () { if (this.toString() === 'Invalid Date') { return null; } return this.getFullYear() + '-' + ((this.getMonth() + 1) + '').expand('0', 2) + '-' + (this.getDate() + '').expand('0', 2) + ' ' + (this.getHours() + '').expand('0', 2) + ':' + (this.getMinutes() + '').expand('0', 2) + ':' + (this.getSeconds() + '').expand('0', 2); };
 /**
  * Converts the date to Unix timestamp (seconds since January 1, 1970).
  * @returns {number} The Unix timestamp.
@@ -2609,7 +2696,7 @@ Date.prototype.intlFormat = function (withTime = false, withoutDay = false) {
         delete params.day;
     }
     const format = new Intl.DateTimeFormat(dateformat, params);
-    if((this + '') === 'Invalid Date') {
+    if ((this + '') === 'Invalid Date') {
         return '';
     }
     return format.format(this);
@@ -2760,7 +2847,7 @@ HTMLInputElement.prototype.guessValue = function (key) {
     }
 
     return value.slice(0, start) + key + value.slice(end);
-} 
+}
 
 /**
  * Animates scrolling to a specified scrollTop value within a specified duration.
@@ -3483,7 +3570,7 @@ Element.prototype.isValueExceeded = function () {
     return result;
 }
 
-HTMLDivElement.prototype.select = function() {
+HTMLDivElement.prototype.select = function () {
     var sel, range;
     if (window.getSelection && document.createRange) {
         range = document.createRange();
@@ -3498,7 +3585,7 @@ HTMLDivElement.prototype.select = function() {
     }
 }
 
-Element.prototype.insertText = function(text) {
+Element.prototype.insertText = function (text) {
     if (document.queryCommandSupported('insertText')) {
         document.execCommand('insertText', false, text);
     } else {
@@ -3515,7 +3602,7 @@ Element.prototype.insertText = function(text) {
     }
 }
 
-Element.prototype.insertElement = function(element) {
+Element.prototype.insertElement = function (element) {
     if (document.queryCommandSupported('insertHTML')) {
         document.execCommand('insertHTML', false, element.outerHtml());
     } else {
@@ -3729,7 +3816,7 @@ Math.easeInOutQuad = function (t, b, c, d) {
 //
 
 // https://stackoverflow.com/a/11058858
-String.prototype.toArrayBuffer = function() {
+String.prototype.toArrayBuffer = function () {
     const buf = new ArrayBuffer(this.length);
     const bufView = new Uint8Array(buf);
     for (let i = 0, strLen = this.length; i < strLen; i++) {
@@ -3738,50 +3825,50 @@ String.prototype.toArrayBuffer = function() {
     return buf;
 }
 
-ArrayBuffer.prototype.toString = function() {
+ArrayBuffer.prototype.toString = function () {
     return String.fromCharCode.apply(null, new Uint8Array(this));
 }
-    
-String.prototype.spkiPem2spkiDer = function(){
+
+String.prototype.spkiPem2spkiDer = function () {
     const pemHeader = "-----BEGIN PUBLIC KEY-----";
     const pemFooter = "-----END PUBLIC KEY-----";
     var pemContents = this.substring(pemHeader.length, this.length - pemFooter.length);
     var binaryDerString = window.atob(pemContents);
-    return binaryDerString.toArrayBuffer(); 
-}  
+    return binaryDerString.toArrayBuffer();
+}
 
-window.convertFilterToString = function(filter) {
-        
-    if(Array.isArray(filter) && filter.length > 0) {
+window.convertFilterToString = function (filter) {
+
+    if (Array.isArray(filter) && filter.length > 0) {
         // or
         const orArray = [];
-        for(const f of filter) {
+        for (const f of filter) {
             orArray.push(window.convertFilterToString(f));
         }
         return '((' + orArray.join(') || (') + '))';
-    } else if(Object.isObject(filter) && Object.countKeys(filter) > 0) {
+    } else if (Object.isObject(filter) && Object.countKeys(filter) > 0) {
 
         let andConditions = [];
         Object.forEach(filter, (key, value) => {
-    
+
             let condition = '==';
-            if(Array.isArray(value)) {
+            if (Array.isArray(value)) {
                 condition = value[0];
                 value = value[1];
-                if((value + '').isDate()) {
-                    andConditions.push('(new Date(row[\'' + key + '\']) ' + condition + ' new Date(\'' + value + '\'))'); 
-                } else if(typeof value === 'boolean') {
-                    andConditions.push('(row[\'' + key + '\'] ' + condition + ' ' + value + ')'); 
+                if ((value + '').isDate()) {
+                    andConditions.push('(new Date(row[\'' + key + '\']) ' + condition + ' new Date(\'' + value + '\'))');
+                } else if (typeof value === 'boolean') {
+                    andConditions.push('(row[\'' + key + '\'] ' + condition + ' ' + value + ')');
                 } else {
-                    andConditions.push('(row[\'' + key + '\'] ' + condition + ' \'' + value + '\')'); 
+                    andConditions.push('(row[\'' + key + '\'] ' + condition + ' \'' + value + '\')');
                 }
             } else {
-                if((value + '').isDate()) {
-                    andConditions.push('(new Date(row[\'' + key + '\']) ' + condition + ' new Date(\'' + value + '\'))'); 
-                } else if(typeof value === 'boolean') {
-                    andConditions.push('(row[\'' + key + '\'] ' + condition + ' ' + value + ')'); 
+                if ((value + '').isDate()) {
+                    andConditions.push('(new Date(row[\'' + key + '\']) ' + condition + ' new Date(\'' + value + '\'))');
+                } else if (typeof value === 'boolean') {
+                    andConditions.push('(row[\'' + key + '\'] ' + condition + ' ' + value + ')');
                 } else {
-                    andConditions.push('(row[\'' + key + '\'] ' + condition + ' \'' + value + '\')'); 
+                    andConditions.push('(row[\'' + key + '\'] ' + condition + ' \'' + value + '\')');
                 }
             }
 
@@ -3795,39 +3882,39 @@ window.convertFilterToString = function(filter) {
 
 }
 
-window.convertFilterToStringForSql = function(filter) {
-        
-    if(Array.isArray(filter) && filter.length > 0) {
+window.convertFilterToStringForSql = function (filter) {
+
+    if (Array.isArray(filter) && filter.length > 0) {
         // or
         const orArray = [];
-        for(const f of filter) {
+        for (const f of filter) {
             orArray.push(window.convertFilterToStringForSql(f));
         }
         return '((' + orArray.join(') or (') + '))';
 
-    } else if(Object.isObject(filter) && Object.countKeys(filter) > 0) {
+    } else if (Object.isObject(filter) && Object.countKeys(filter) > 0) {
 
         let andConditions = [];
         Object.forEach(filter, (key, value) => {
-    
+
             let condition = '==';
-            if(Array.isArray(value)) {
+            if (Array.isArray(value)) {
                 condition = value[0];
                 value = value[1];
-                if((value + '').isDate()) {
-                    andConditions.push('("' + key + '" ' + condition + ' ' + value.toDate().toUnixTime() + ')'); 
-                } else if(typeof value === 'boolean') {
-                    andConditions.push('("' + key + '" ' + condition + ' ' + value + ')'); 
+                if ((value + '').isDate()) {
+                    andConditions.push('("' + key + '" ' + condition + ' ' + value.toDate().toUnixTime() + ')');
+                } else if (typeof value === 'boolean') {
+                    andConditions.push('("' + key + '" ' + condition + ' ' + value + ')');
                 } else {
-                    andConditions.push('("' + key + '" ' + condition + ' \'' + value + '\')'); 
+                    andConditions.push('("' + key + '" ' + condition + ' \'' + value + '\')');
                 }
             } else {
-                if((value + '').isDate()) {
-                    andConditions.push('("' + key + '" ' + condition + ' ' + value.toDate().toUnixTime() + ')'); 
-                } else if(typeof value === 'boolean') {
-                    andConditions.push('("' + key + '" ' + condition + ' ' + value + ')'); 
+                if ((value + '').isDate()) {
+                    andConditions.push('("' + key + '" ' + condition + ' ' + value.toDate().toUnixTime() + ')');
+                } else if (typeof value === 'boolean') {
+                    andConditions.push('("' + key + '" ' + condition + ' ' + value + ')');
                 } else {
-                    andConditions.push('("' + key + '" ' + condition + ' \'' + value + '\')'); 
+                    andConditions.push('("' + key + '" ' + condition + ' \'' + value + '\')');
                 }
             }
 
