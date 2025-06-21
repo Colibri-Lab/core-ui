@@ -65,6 +65,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         this._registerEvents();
         this._bindDeviceEvents();
 
+        this._deviceLocked = false;
+        this._applicationActivated = true;
+        this._proximityState = 'far';
+        
         try {
             this._currentOrientation = screen.orientation.type;
         }
@@ -190,6 +194,22 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
                 });
             }
 
+            if(window?.ColibriAccessories?.Proximity !== undefined) {
+                window.ColibriAccessories.Proximity.watch((state) => {
+                    console.log('Proximity state changed', state);
+                }, (e) => {
+                    console.log('Proximity error', e);
+                });
+                window.addEventListener('colibri-accessories:onProximityClose', (e) => {
+                    this._proximityState = 'close';
+                    this.Dispatch('DeviceProximityChanged', {state: this._proximityState});
+                });
+                window.addEventListener('colibri-accessories:onProximityFar', (e) => {
+                    this._proximityState = 'far';
+                    this.Dispatch('DeviceProximityChanged', {state: this._proximityState});
+                });
+            }
+
         }
 
     }
@@ -200,6 +220,18 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             return this._pushNotifications.clearNotifications();
         }
         return Promise.reject();
+    }
+
+    StartProximityScreenOff() {
+        if(window?.ColibriAccessories?.Proximity) {
+            window.ColibriAccessories.Proximity.screenOff();
+        }
+    }
+
+    StopProximityScreenOff() {
+        if(window?.ColibriAccessories?.Proximity) {
+            window.ColibriAccessories.Proximity.stopScreenOff();
+        }
     }
 
     /**
@@ -681,6 +713,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     get isActive() {
         return this._applicationActivated || false;
+    }
+
+    get priximityState() {
+        return this._proximityState || 'far';
     }
 
     Notify(title, text, contact, photo) {
