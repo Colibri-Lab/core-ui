@@ -36,6 +36,15 @@ Colibri.UI.ExtendedButton = class extends Colibri.UI.Button {
         this._icon.iconSVG = value;
     }
 
+    set iconAsIcon(value) {
+        this._icon.shown = true;
+        this._icon.value = value;
+    }
+    
+    get iconAsIcon() {
+        return this._icon.value;
+    }
+
     /**
      * Value 
      * @type {string}

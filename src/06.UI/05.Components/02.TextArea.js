@@ -294,5 +294,15 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
     Select() {
         this._input.select();
     }
+    
+    /**
+     * Content height
+     * @type {Number}
+     * @readonly
+     */
+    get contentHeight() {
+        return this._input.bounds().outerHeight;
+    }
+    
 
 }

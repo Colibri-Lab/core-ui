@@ -50,3 +50,4 @@ Colibri.UI.ProgressViewer = class extends Colibri.UI.Viewer {
     }
 
 }
+Colibri.UI.Viewer.Register('Colibri.UI.ProgressViewer', '#{ui-viewers-progress-viewer}');

@@ -13,7 +13,7 @@ Colibri.UI.ImagesViewer = class extends Colibri.UI.Viewer {
      */
     constructor(name, container) {
         /* создаем компонент и передаем шаблон */
-        super(name, container, Colibri.UI.Templates['Colibri.UI.ImagesViewer']);
+        super(name, container);
         this.AddClass('colibri-ui-imagesviewer');
 
         this._grid = new Colibri.UI.PaneGrid('grid', this);
@@ -59,3 +59,5 @@ Colibri.UI.ImagesViewer = class extends Colibri.UI.Viewer {
     }
 
 }
+
+Colibri.UI.Viewer.Register('Colibri.UI.ImagesViewer', '#{ui-viewers-images-viewer}');
