@@ -14,51 +14,8 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
         super(name, container, Element.create('div', {class: 'app-ui-component'}));
 
         this.AddClass('app-textarea-component');
-
-        this._input = Element.create('textarea', { placeholder: this.placeholder || '' });
-        this._element.append(this._input);
-
-        this._changeOnKeyUpTimeout = 3000;
-
-        new Colibri.UI.Pane('clear', this);
-
-        this.Children('clear').html = Colibri.UI.ClearIcon;
-
-        this._input.addEventListener('keyup', (e) => {
-            this.Children('clear').shown = this._input.value.length > 0;
-            this.Dispatch('KeyUp', { value: this.value, domEvent: e });
-            if (this._input.value.length == 0) {
-                this.Dispatch('Cleared');
-            }
-            if(this._changeOnKeyUp) {
-                if(this._changeOnKeyUpTimeoutId) {
-                    clearTimeout(this._changeOnKeyUpTimeoutId);
-                }
-                this._changeOnKeyUpTimeoutId = setTimeout(() => this.Dispatch('Changed', { value: this.value, domEvent: e }), this._changeOnKeyUpTimeout);
-            }
-        });
-
-        this._input.addEventListener('change', (e) => {
-            this.Dispatch('Changed', { value: this.value, domEvent: e });
-        });
-
-        this._input.addEventListener('keydown', (e) => {
-            this.Dispatch('KeyDown', { value: this.value, domEvent: e });
-        });
-
-        this._input.addEventListener('mousedown', (e) => {
-            e.target.focus();
-            //e.target.select();
-            return false;
-        });
-
-        this.Children('clear').AddHandler('Clicked', (event, args) => {
-            this._input.value = '';
-            this._input.focus();
-            this._input.select();
-            this.Children('clear').shown = false;
-            this.Dispatch('Cleared');
-        });
+        this._visual = false;
+        this._createTextArea();
 
     }
 
@@ -120,15 +77,23 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
      * @type {string} 
      */
     get value() {
-        return this._input.value;
+        if(this._visual) {
+            return this._input.html();
+        } else {
+            return this._input.value;
+        }
     }
     /**
      * Value string 
      * @type {string} 
      */
     set value(value) {
-        this._input.value = value;
-        this.Children('clear').shown = this._input.value.length > 0;
+        if(this._visual) {
+            this._input.html(value);
+        } else {
+            this._input.value = value;
+        }
+        this._clear.shown = value.length > 0;
     }
 
     /**
@@ -192,6 +157,142 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
         val = this._convertProperty('Boolean', val);
         super.enabled = val;
         this._input.attr('disabled', val === true || val === 'true' ? null : 'disabled');
+    }
+
+    /**
+     * Is the textarea visual (div contenteditable=true)
+     * @type {Boolean}
+     */
+    get visual() {
+        return this._visual;
+    }
+    /**
+     * Is the textarea visual (div contenteditable=true)
+     * @type {Boolean}
+     */
+    set visual(value) {
+        this._visual = value;
+        if(this._visual) {
+            this._createDivContentEditable();
+        } else {
+            this._createTextArea();
+        }
+    }
+
+    _createTextArea() {
+
+        if(this._input) {
+            this._input.remove();
+        }
+        if(this._clear) {
+            this._clear.Dispose();
+        }
+
+        this._input = Element.create('textarea', { placeholder: this.placeholder || '', autocomplete: 'on', autocorrect: 'on', autocapitalize: 'on', spellcheck: 'true' });
+        this._element.append(this._input);
+
+        this._changeOnKeyUpTimeout = 3000;
+
+        this._clear = new Colibri.UI.Pane('clear', this);
+        this._clear.html = Colibri.UI.ClearIcon;
+
+        this._input.addEventListener('keyup', (e) => {
+            this._clear.shown = this.value.length > 0;
+            this.Dispatch('KeyUp', { value: this.value, domEvent: e });
+            if (this.value.length == 0) {
+                this.Dispatch('Cleared');
+            }
+            if(this._changeOnKeyUp) {
+                if(this._changeOnKeyUpTimeoutId) {
+                    clearTimeout(this._changeOnKeyUpTimeoutId);
+                }
+                this._changeOnKeyUpTimeoutId = setTimeout(() => this.Dispatch('Changed', { value: this.value, domEvent: e }), this._changeOnKeyUpTimeout);
+            }
+        });
+
+        this._input.addEventListener('change', (e) => {
+            this.Dispatch('Changed', { value: this.value, domEvent: e });
+        });
+
+        this._input.addEventListener('keydown', (e) => {
+            this.Dispatch('KeyDown', { value: this.value, domEvent: e });
+        });
+
+        this._input.addEventListener('mousedown', (e) => {
+            e.target.focus();
+            //e.target.select();
+            return false;
+        });
+
+        this._clear.AddHandler('Clicked', (event, args) => {
+            this.value = '';
+            this.Focus();
+            this.Select();
+            this._clear.shown = false;
+            this.Dispatch('Cleared');
+        });
+    }
+
+    _createDivContentEditable() {
+
+        if(this._input) {
+            this._input.remove();
+        }
+        if(this._clear) {
+            this._clear.Dispose();
+        }
+
+        this._input = Element.create('div', { contenteditable: true, placeholder: this.placeholder || '', autocomplete: 'on', autocorrect: 'on', autocapitalize: 'on', spellcheck: 'true' });
+        this._element.append(this._input);
+
+        this._changeOnKeyUpTimeout = 3000;
+
+        this._clear = new Colibri.UI.Pane('clear', this);
+        this._clear.html = Colibri.UI.ClearIcon;
+
+        this._input.addEventListener('keyup', (e) => {
+            this._clear.shown = this.value.length > 0;
+            this.Dispatch('KeyUp', { value: this.value, domEvent: e });
+            if (this.value.length == 0) {
+                this.Dispatch('Cleared');
+            }
+            if(this._changeOnKeyUp) {
+                if(this._changeOnKeyUpTimeoutId) {
+                    clearTimeout(this._changeOnKeyUpTimeoutId);
+                }
+                this._changeOnKeyUpTimeoutId = setTimeout(() => this.Dispatch('Changed', { value: this.value, domEvent: e }), this._changeOnKeyUpTimeout);
+            }
+        });
+
+        this._input.addEventListener('change', (e) => {
+            this.Dispatch('Changed', { value: this.value, domEvent: e });
+        });
+
+        this._input.addEventListener('keydown', (e) => {
+            this.Dispatch('KeyDown', { value: this.value, domEvent: e });
+        });
+
+        this._input.addEventListener('mousedown', (e) => {
+            e.target.focus();
+            //e.target.select();
+            return false;
+        });
+
+        this._clear.AddHandler('Clicked', (event, args) => {
+            this.value = '';
+            this.Focus();
+            this.Select();
+            this._clear.shown = false;
+            this.Dispatch('Cleared');
+        });
+    }
+
+    Focus() {
+        this._input.focus();
+    }
+
+    Select() {
+        this._input.select();
     }
 
 }

@@ -3483,6 +3483,21 @@ Element.prototype.isValueExceeded = function () {
     return result;
 }
 
+HTMLDivElement.prototype.select = function() {
+    var sel, range;
+    if (window.getSelection && document.createRange) {
+        range = document.createRange();
+        range.selectNodeContents(this);
+        sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+    } else if (document.body.createTextRange) {
+        range = document.body.createTextRange();
+        range.moveToElementText(this);
+        range.select();
+    }
+}
+
 /**
  * Clears all tokens from the DOMTokenList.
  */
