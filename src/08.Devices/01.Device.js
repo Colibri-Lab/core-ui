@@ -99,9 +99,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('ThemeChanged', false, 'Когда тема изменена');
         this.RegisterEvent('NotificationTapped', false, 'When push notification is tapped');
         this.RegisterEvent('NotificationToken', false, 'When push notification token is changed');
-        this.RegisterEvent('BackgroundMode', false, 'Each 5 seconds whe background mode is active');
         this.RegisterEvent('DeviceLocked', false, 'When user locked the device');
         this.RegisterEvent('DeviceUnlocked', false, 'When user unlocked the device');
+        this.RegisterEvent('DeviceApplicationForeground', false, 'When application is in foreground');
+        this.RegisterEvent('DeviceApplicationBackground', false, 'When application is in background');
         this.RegisterEvent('ShareReceived', false, 'When received a share from other app');
     }
 
@@ -170,6 +171,22 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
                 window.addEventListener('colibri-accessories:onDeviceUnlocked', (e) => {
                     this._deviceLocked = false;
                     this.Dispatch('DeviceUnlocked', {locked: false});
+                });
+            }
+
+            if(window?.ColibriAccessories?.BackgroundMode !== undefined) {
+                window.ColibriAccessories.BackgroundMode.watch((state) => {
+                    console.log('device lock state changed', state);
+                }, (e) => {
+                    console.log('device lock error', e);
+                });
+                window.addEventListener('colibri-accessories:onAppForeground', (e) => {
+                    this._applicationActivated = true;
+                    this.Dispatch('DeviceApplicationForeground', {activated: true});
+                });
+                window.addEventListener('colibri-accessories:onAppBackground', (e) => {
+                    this._applicationActivated = false;
+                    this.Dispatch('DeviceApplicationBackground', {activated: false});
                 });
             }
 
@@ -301,105 +318,18 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         cordova.plugins.autoStart.enableService(id);
     }
 
-    /**
-     * Gets the background mode of the device.
-     * @return {boolean} value - The value to set for background mode.
-     */
-    get backgroundMode() {
-        return this._backgroundMode;
-    }
-
-    SetBackgroundModeDefaults(defaults) {
-        cordova.plugins.backgroundMode.setDefaults(defaults);
-    }
-
-    /**
-     * Sets the background mode of the device.
-     * @param {boolean} value - The value to set for background mode.
-     * @throws {string} Throws an error if the 'cordova-plugin-background-mode' plugin is not enabled.
-     */
-    set backgroundMode(value) {
-        if(!cordova?.plugins?.backgroundMode) {
-            throw 'Please enable \'cordova-plugin-background-mode\' plugin';
-        }
-
-        this._backgroundMode = value;
-        if(value) {
-            cordova.plugins.backgroundMode.on('activate', () => {
-                cordova.plugins.backgroundMode.disableWebViewOptimizations();
-            });
-            cordova.plugins.backgroundMode.on('deactivate', () => {
-                this.ClearNotifications();
-            });
-        }
-        
-        if(value) {
-            cordova.plugins.backgroundMode.setDefaults({ silent: false });
-            cordova.plugins.backgroundMode.enable();
-            Colibri.Common.StartTimer('background-mode', 5000, () => {
-                this.Dispatch('BackgroundMode', {active: true})
-                console.log('Working in background mode ...');
-            });
-        } else {
-            cordova.plugins.backgroundMode.disable();
-            Colibri.Common.StopTimer('background-mode');
-        }
-
-    
-    }
-
-    /**
-     * Ignore battery optimizations for the app.
-     * @type {Boolean}
-     */
-    DisableBatteryOptimizations() {
-        return cordova.plugins.backgroundMode.disableWebViewOptimizations();
-    }
-
-    get overrideBackButton() {
-        return this._overrideBackButton;
-    }
-    set overrideBackButton(value) {
-        this._overrideBackButton = value;
-        if(value) {
-            cordova.plugins.backgroundMode.overrideBackButton();
-        }
-    }
-
-    /**
-     * Wakes up the device.
-     * @throws {string} Throws an error if the 'cordova-plugin-background-mode' plugin is not enabled.
-     */
-    WakeUp() {
-        if(!cordova?.plugins?.backgroundMode) {
-            throw 'Please enable \'cordova-plugin-background-mode\' plugin';
-        }
-        cordova.plugins.backgroundMode.wakeUp();
-    }
-
-    /**
-     * Unlocks the device.
-     * @throws {string} Throws an error if the 'cordova-plugin-background-mode' plugin is not enabled.
-     */
-    Unlock() {
-        if(!cordova?.plugins?.backgroundMode) {
-            throw 'Please enable \'cordova-plugin-background-mode\' plugin';
-        }
-        cordova.plugins.backgroundMode.unlock();
-    }
-
     Foreground() {
-        if(!cordova?.plugins?.backgroundMode) {
-            throw 'Please enable \'cordova-plugin-background-mode\' plugin';
+        if(!window.ColibriAccessories?.App) {
+            throw 'Please enable \'cordova-plugin-colibri-accessories\' plugin';
         }
-        cordova.plugins.backgroundMode.moveToForeground();
+        window.ColibriAccessories?.App.moveForeground();
     }
     
     Background() {
-        if(!cordova?.plugins?.backgroundMode) {
-            throw 'Please enable \'cordova-plugin-background-mode\' plugin';
+        if(!window.ColibriAccessories?.App) {
+            throw 'Please enable \'cordova-plugin-colibri-accessories\' plugin';
         }
-        cordova.plugins.backgroundMode.moveToBackground();
+        window.ColibriAccessories?.App.moveBackground();
     }
 
     /**
@@ -536,14 +466,6 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     }
 
     /**
-     * Retrieves the local notifications instance.
-     * @returns {Colibri.Devices.LocalNotifications} The local notifications instance.
-     */
-    get Notifications() {
-        return this._localNotifications;
-    }
-
-    /**
      * Retrieves device information.
      * @returns {Object} The device information.
      */
@@ -640,10 +562,6 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     }
     get pushFunction() { 
         return this._pushFunction;
-    }
-
-    get isInBackgroundMode() {
-        return cordova?.plugins?.backgroundMode?.isActive() ?? false;
     }
 
     get Capture() {
@@ -757,8 +675,12 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         });
     }
 
-    get deviceLocked() {
+    get isLocked() {
         return this._deviceLocked || false;
+    }
+
+    get isActive() {
+        return this._applicationActivated || false;
     }
 
     Notify(title, text, contact, photo) {
