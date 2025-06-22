@@ -144,13 +144,19 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                 (err) => {console.log('Error !!!', err);}
             );
             this._ws = ColibriAccessories.Service;
-            this._ws.readyState = 1; // emulate
+            this._ws.readyState = 1; 
         } else {
             this._ws && this._ws.close();
             this._ws = new WebSocket('wss://' + this._settings.host + ':' + this._settings.port + '/client/' + this._clientId);
             this._ws.onopen = () => this.__onCometOpened();
             this._ws.onmessage = (message) => this.__onCometMessage(message);
             this._ws.onerror = error => this.__onCometError(error);
+            Colibri.Common.StartTimer('comet-timer', 5000, () => {
+                if(this._ws && this._ws.readyState !== 1) {
+                    console.log('connection closed, may be server down');
+                    this._initConnection();
+                }
+            });
         }
 
     }
@@ -180,12 +186,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this._initConnection();
         this._transferToModuleStore();
 
-        Colibri.Common.StartTimer('comet-timer', 5000, () => {
-            if(this._ws && this._ws.readyState !== 1) {
-                console.log('connection closed, may be server down');
-                this._initConnection();
-            }
-        });
+        
 
     }
 
@@ -236,6 +237,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             this._ws.close();
             this._ws = null;
             this._connected = false;
+            this._ws.readyState = 0;
         }
     }
 
@@ -313,6 +315,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         // App.Notices.Add(new Colibri.UI.Notice('#{ui-comet-connection-error}'));
         // Colibri.Common.StopTimer('comet-timer');
         this._connected = false;
+        this._ws.readyState = 0;
     } 
 
     GetMessages(options = {}) {
