@@ -87,7 +87,7 @@ Colibri.UI.RemoteFileEditor = class extends Colibri.UI.Editor {
      * Remove focus from editor
      */
     Blur() {
-        this.parent.parent.RemoveClass('-focused');
+        this?.parent?.parent?.RemoveClass('-focused');
     }
 
     /**
