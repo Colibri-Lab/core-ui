@@ -3401,6 +3401,8 @@ Element.prototype.bounds = function (includeBorders = false, includeMargin = fal
     let position = {
         top: rect.top + offsetY,
         left: rect.left + offsetX,
+        offsetTop: offsetY,
+        offsetLeft: offsetX
     };
 
     const style = getComputedStyle(this);
