@@ -21,6 +21,9 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
             this.Dispatch('Changed', args);
         });
 
+        this._tabs.AddHandler('TabClicked', (event, args) => this.Dispatch('TabClicked', args));
+
+
         this._renderFields();
         this._hideAndShow();
 
@@ -93,7 +96,8 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
     _registerEvents() {
         super._registerEvents();
         // если нужно добавить что то
-        this.RegisterEvent('TabChanged', false, 'Когда вкладка переключена');
+        this.RegisterEvent('TabChanged', false, 'When tab selection is changed');
+        this.RegisterEvent('TabClicked', false, 'When tab is clicked');
     }
 
     /**
