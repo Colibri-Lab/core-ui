@@ -1186,7 +1186,7 @@ String.prototype.compressGzip = async function () {
         writer.close();
         const compressed = await new Response(cs.readable).arrayBuffer();
         return btoa(String.fromCharCode(...new Uint8Array(compressed)));
-    } catch(e) {
+    } catch (e) {
         return this + '';
     }
 }
@@ -1200,7 +1200,7 @@ String.prototype.decompressGzip = async function () {
         writer.close();
         const decompressed = await new Response(ds.readable).text();
         return decompressed;
-    } catch(e) {
+    } catch (e) {
         return this + '';
     }
 }
@@ -2893,6 +2893,52 @@ Element.prototype.animateScrollLeft = function (to, duration) {
     animateScroll();
 };
 
+Element.prototype.animateHeight = function (height, duration = 1000, callback = null) {
+    const targetHeight = height;
+    const startTime = performance.now();
+
+    const tick = (now) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1); // 0 → 1 linearly
+        this.style.height = (targetHeight * progress) + 'px';
+
+        if (progress < 1) {
+            requestAnimationFrame(tick);
+        } else {
+            if(callback) {
+                callback();
+            }
+        }
+    }
+
+    this.style.height = '0px';
+    requestAnimationFrame(tick);
+
+}
+
+Element.prototype.animateHeightDown = function (height, duration = 1000, callback = null) {
+    const targetHeight = 0;
+    const startTime = performance.now();
+
+    const tick = (now) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1); // 0 → 1 linearly
+        this.style.height = (targetHeight * progress) + 'px';
+
+        if (progress < 1) {
+            requestAnimationFrame(tick);
+        } else {
+            if(callback) {
+                callback();
+            }
+        }
+    }
+
+    this.style.height = height + 'px';
+    requestAnimationFrame(tick);
+
+}
+
 
 /**
  * Ensures that the element is visible within its parent container.
@@ -3603,19 +3649,27 @@ Element.prototype.insertText = function (text) {
 }
 
 Element.prototype.insertElement = function (element) {
-    if (document.queryCommandSupported('insertHTML')) {
+    if ((App.Device.isWeb || App.Device.isWindows) && document.queryCommandSupported('insertHTML')) {
         document.execCommand('insertHTML', false, element.outerHtml());
     } else {
-        var sel, range;
-        if (window.getSelection && document.createRange) {
-            sel = window.getSelection();
-            range = sel.getRangeAt(0);
-            range.deleteContents();
-            range.insertNode(element.cloneNode(true));
-        } else if (document.body.createTextRange) {
-            range = document.body.createTextRange();
-            range.pasteHTML(element.outerHtml());
-        }
+        
+        this.preventFocusEvent = true;
+
+        const sel = window.getSelection();
+        const range = sel.getRangeAt(0);
+        const el = element.cloneNode(true);
+        
+        range.deleteContents();
+        range.insertNode(el);
+
+        const newRange = document.createRange();
+        newRange.setStartAfter(el);
+        newRange.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(newRange);
+
+        this.blur();
+        
     }
 }
 

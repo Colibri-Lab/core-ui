@@ -231,6 +231,15 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
             this._clear.shown = false;
             this.Dispatch('Cleared');
         });
+        
+        this._input.addEventListener('focus', (e) => {
+            if(!this._input.preventFocusEvent) {
+                return this.Dispatch('ReceiveFocus', { domEvent: e })
+            }
+            this._input.preventFocusEvent = false;
+            return false;
+        });
+        this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', { domEvent: e }));
     }
 
     _createDivContentEditable() {
@@ -285,6 +294,16 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
             this._clear.shown = false;
             this.Dispatch('Cleared');
         });
+
+        this._input.addEventListener('focus', (e) => {
+            if(!this._input.preventFocusEvent) {
+                return this.Dispatch('ReceiveFocus', { domEvent: e })
+            }
+            this._input.preventFocusEvent = false;
+            return false;
+        });
+        this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', { domEvent: e }));
+
     }
 
     Focus() {
