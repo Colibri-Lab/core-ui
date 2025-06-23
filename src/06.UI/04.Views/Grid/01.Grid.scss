@@ -15,9 +15,10 @@
         outline: none;
 
         &.app-component-shown {
-            display: table;
-            table-layout: fixed;
+            display: table;            
         }
+        table-layout: fixed;
+        border-collapse: separate;
 
         [data-object-name="button-container-for-row-selection"] {
             width: 40px;
@@ -29,7 +30,7 @@
             background-color: white;
             position: sticky;
             top: 0;
-            z-index: 2;
+            z-index: 10;
 
             &.app-component-shown {
                 display: table-header-group;
@@ -258,6 +259,7 @@
         .position-sticky-y.position-sticky-x {
             z-index: 2;
         }
+
     }
 
     .app-ui-grid-footer {
