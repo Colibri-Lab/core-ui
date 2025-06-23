@@ -82,6 +82,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         return this._user;
     }
 
+    get UserName() {
+        return this._userName;
+    }
+
     get isReady() {
         return this._ws.readyState === 1;
     }
@@ -311,7 +315,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                     return;
                 }
                 const msg = Colibri.Common.CometMessage.FromReceivedObject(message.domain, message.from, message.message, message.delivery, message.broadcast);
-                this._addMessage(msg).then(() => {
+                this.AddLocalMessage(msg).then(() => {
                     this.Dispatch('MessageReceived', {message: msg});
                 });
             });
@@ -324,7 +328,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         }
     }
 
-    _addMessage(message) {
+    AddLocalMessage(message) {
         return new Promise((resolve, reject) => {            
             this._storage.Add(message).then((message) => {
                 this._transferToModuleStore();
@@ -490,7 +494,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                 const msg = Colibri.Common.CometMessage.CreateForSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, message, {contact: contactName}, activate, wakeup);
                 msg.MarkAsRead();
                 if(msg.from !== msg.recipient) {
-                    this._addMessage(msg);
+                    this.AddLocalMessage(msg);
                     this.Dispatch('MessageSent', {message: msg});
                 }
                 this.DispatchHandlers('MessageSending', {message: msg}).then((responses) => {
@@ -576,7 +580,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                 const msg = Colibri.Common.CometMessage.CreateForFilesSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, files, {contact: contactName}, activate, wakeup);
                 msg.MarkAsRead();
                 if(msg.from !== msg.recipient) {
-                    this._addMessage(msg);
+                    this.AddLocalMessage(msg);
                     this.Dispatch('MessageSent', {message: msg});
                 }
                 this.DispatchHandlers('FilesSending', {message: msg}).then((responses) => {
@@ -640,8 +644,13 @@ Colibri.Web.InternalStore = class extends Colibri.Common.AbstractMessageStore {
         } else {
             messages = JSON.parse(messages);
         }
-        messages.push(message);
-        App.Browser.Set('comet.messages', JSON.stringify(messages));
+        const existing = Array.findObject(messages, 'id', message.id);
+        if(!existing) {
+            messages.push(message);
+            App.Browser.Set('comet.messages', JSON.stringify(messages));
+        } else {
+            console.log('Message with ID ' + message.id + ' already exists in the store, not adding it again');
+        }
         return Promise.resolve(message);
     }
 
@@ -800,14 +809,25 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
      */
     Add(message) {
         return new Promise((resolve, reject) => {
-            App.Device.SqLite.CreateTable(
-                this._db,
-                'messages',
-                this._fields,
-                [message]
-            ).then(() => {
-                resolve(message);
-            }).catch(error => reject(error));
+            
+            this.Get({filter: {
+                id: message.id
+            }}).then(existing => {
+                if(existing.length > 0) {
+                    console.log('Message with ID ' + message.id + ' already exists in the store, not adding it again');
+                    resolve(message);
+                } else {
+                    App.Device.SqLite.CreateTable(
+                        this._db,
+                        'messages',
+                        this._fields,
+                        [message]
+                    ).then(() => {
+                        resolve(message);
+                    }).catch(error => reject(error));
+                }
+            });
+
         });
     }
 
