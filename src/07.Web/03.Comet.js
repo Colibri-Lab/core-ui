@@ -46,6 +46,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         
         this.RegisterEvent('MessageReceivng', false, 'Before message received');
         this.RegisterEvent('MessageReceived', false, 'When a new message is received');
+        this.RegisterEvent('MessageUpdated', false, 'When message text is updated');
         this.RegisterEvent('MessageSent', false, 'When a new message is sent');
         this.RegisterEvent('MessagesMarkedAsRead', false, 'When all messages marked as read');
         this.RegisterEvent('MessageRemoved', false, 'When message is removed');
@@ -431,7 +432,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         return new Promise((resolve, reject) => {
             this._storage.Delete({filter: {id: Object.isObject(message) ? message.id : message}}).then(() => {
                 this._transferToModuleStore();
-                this.Dispatch('MessagesMarkedAsRead', {});            
+                this.Dispatch('MessageRemoved', {message: message});            
             }).catch(error => reject(error));
         });
     }
@@ -444,7 +445,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         return new Promise((resolve, reject) => {
             this._storage.Delete({filter: [{from: user}, {recipient: user}]}).then(() => {
                 this._transferToModuleStore();
-                this.Dispatch('ChatCleared', {});
+                this.Dispatch('ChatCleared', {member: user});
             }).catch(error => reject(error));
         });
     }
@@ -453,7 +454,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         return new Promise((resolve, reject) => {
             this._storage.Update({message: {text: text}}, id).then(() => {
                 this._transferToModuleStore();
-                this.Dispatch('ChatCleared', {});
+                this.Dispatch('MessageUpdated', {member: user});
             }).catch(error => reject(error));
         });
     }
