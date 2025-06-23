@@ -3649,11 +3649,12 @@ Element.prototype.insertText = function (text) {
 }
 
 Element.prototype.insertElement = function (element) {
+    this.preventFocusEvent = true;
+    
     if ((App.Device.isWeb || App.Device.isWindows) && document.queryCommandSupported('insertHTML')) {
-        document.execCommand('insertHTML', false, element.outerHtml());
+        document.execCommand('insertHTML', false, element?.outerHtml ? element?.outerHtml() : element.textContent);
     } else {
         
-        this.preventFocusEvent = true;
 
         const sel = window.getSelection();
         const range = sel.getRangeAt(0);
@@ -3668,9 +3669,8 @@ Element.prototype.insertElement = function (element) {
         sel.removeAllRanges();
         sel.addRange(newRange);
 
-        this.blur();
-        
     }
+    this.blur();
 }
 
 

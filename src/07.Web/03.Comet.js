@@ -123,14 +123,22 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                     this.__onCometOpened(true);
                 }, 
                 () => {
+                    this._connected = false;
                     this._ws.readyState = 0;
                 }, 
                 (message) => {
+                    // connection is alive
+                    this._connected = true;
+                    this._ws.readyState = 1;
                     this.__onCometMessage({data: message});
                 }, 
                 (log) => {
                     console.log(log);
+                },
+                (error) => {
+                    this.__onCometError(error)
                 }
+
             );
 
             ColibriAccessories.Service.start(
