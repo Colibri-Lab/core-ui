@@ -189,7 +189,6 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                         App.Notices.Add(new Colibri.UI.Notice('#{ui-messages-cannotgetsettings}'));
                         Colibri.Common.Delay(5000).then(() => {
                             if(navigator.serviceWorker) {
-                                debugger;
                                 navigator.serviceWorker.ready.then(registration => {
                                     if (registration) {
                                         registration.update();
@@ -265,7 +264,6 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                     App.Notices.Add(new Colibri.UI.Notice('Невозможно получить настройки!'));
                     Colibri.Common.Delay(5000).then(() => {
                         if(navigator.serviceWorker) {
-                            debugger;
                             navigator.serviceWorker.ready.then(registration => {
                                 if (registration) {
                                     registration.update();
