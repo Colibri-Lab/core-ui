@@ -185,10 +185,22 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                     headers['X-CSRF-TOKEN'] = this._csrfToken;
                 }
                 Colibri.IO.Request.Post(this._remoteDomain + '/settings', {}, headers).then((response) => {
-                    if(response.status != 200) {
+                    if(response.status != 200) {                        
                         App.Notices.Add(new Colibri.UI.Notice('#{ui-messages-cannotgetsettings}'));
+                        Colibri.Common.Delay(5000).then(() => {
+                            if(navigator.serviceWorker) {
+                                debugger;
+                                navigator.serviceWorker.ready.then(registration => {
+                                    if (registration) {
+                                        registration.update();
+                                        location.reload();
+                                    }
+                                });
+                            }
+                        });
                     }
                     else {
+                        Colibri.Common.StopTimer('app-settings-error');
                         const settings = (typeof response.result === 'string' ? JSON.parse(response.result) : response.result);
                         this._store.Set('app.settings', settings);
     
@@ -250,9 +262,18 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                     resolve();
      
                 }).catch(response => {
-                    console.log(response);
                     App.Notices.Add(new Colibri.UI.Notice('Невозможно получить настройки!'));
-                    reject();
+                    Colibri.Common.Delay(5000).then(() => {
+                        if(navigator.serviceWorker) {
+                            debugger;
+                            navigator.serviceWorker.ready.then(registration => {
+                                if (registration) {
+                                    registration.update();
+                                    location.reload();
+                                }
+                            });
+                        }
+                    });
                 });
     
                 this._notices = new Colibri.UI.Notices('notices', document.body);
