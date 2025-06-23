@@ -74,6 +74,23 @@ Colibri.Common.CometMessage = class {
         // do nothing
     }
 
+    clone() {
+        const msg = new Colibri.Common.CometMessage();
+        msg.action = this.action;
+        msg.domain = this.domain;
+        msg.date = this.date;
+        msg.id = this.id;
+        msg.from = this.from;
+        msg.read = this.read;
+        msg.recipient = this.recipient;
+        msg.message = Object.assign({}, this.message);
+        msg.broadcast = this.broadcast;
+        msg.delivery = this.delivery;
+        msg.activate = this.activate;
+        msg.wakeup = this.wakeup;
+        return msg;
+    }
+
     static FromReceivedObject(domain, from, message, delivery = 'untrusted', broadcast = false, activate = true, wakeup = true) {
         const msg = new Colibri.Common.CometMessage();
         msg.domain = domain === 'unknown' ? Colibri.Web.Comet.Options.origin : domain;

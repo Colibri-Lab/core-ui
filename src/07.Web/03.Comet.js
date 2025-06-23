@@ -497,7 +497,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                     this.AddLocalMessage(msg);
                     this.Dispatch('MessageSent', {message: msg});
                 }
-                this.DispatchHandlers('MessageSending', {message: msg}).then((responses) => {
+                this.DispatchHandlers('MessageSending', {message: msg.clone()}).then((responses) => {
                     this._ws.send(msg.toJson());
                 }).catch(error => {
                     this.Dispatch('MessageError', {error: error});
@@ -583,7 +583,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                     this.AddLocalMessage(msg);
                     this.Dispatch('MessageSent', {message: msg});
                 }
-                this.DispatchHandlers('FilesSending', {message: msg}).then((responses) => {
+                this.DispatchHandlers('FilesSending', {message: msg.clone()}).then((responses) => {
                     this._ws.send(msg.toJson());
                 }).catch(error => {
                     this.Dispatch('MessageError', {error: error});
@@ -612,7 +612,6 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
                 const msg = Colibri.Common.CometMessage.CreateForFilesSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, files, {contact: contactName}, activate, wakeup);
-                // const msg = {action: action, recipient: '*', message: {files: files, id: id, broadcast: true}, domain: Colibri.Web.Comet.Options.origin, delivery: 'trusted'};
                 this._ws.send(JSON.stringify(msg));
                 this.Dispatch('MessageSent', {message: msg});
                 return id;
