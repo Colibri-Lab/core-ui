@@ -78,17 +78,24 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * @returns {Colibri.Events.Dispatcher}
      */
     RemoveHandler(eventName, handler) {
-        
-        if (!this.__handlers[eventName]) {
-            this.__handlers[eventName] = [];
-        }
 
-        const handlerObject = { handler: handler, respondent: this };
-        for (let i = 0; i < this.__handlers[eventName].length; i++) {
-            const h = this.__handlers[eventName][i];
-            if (h.handler == handlerObject.handler && h.respondent == handlerObject.respondent) {
-                this.__handlers[eventName].splice(i, 1);
-                break;
+        if (eventName instanceof Array) {
+            eventName.forEach((en) => {
+                this.RemoveHandler(en, handler);
+            });
+        } else {
+            
+            if (!this.__handlers[eventName]) {
+                this.__handlers[eventName] = [];
+            }
+
+            const handlerObject = { handler: handler, respondent: this };
+            for (let i = 0; i < this.__handlers[eventName].length; i++) {
+                const h = this.__handlers[eventName][i];
+                if (h.handler == handlerObject.handler && h.respondent == handlerObject.respondent) {
+                    this.__handlers[eventName].splice(i, 1);
+                    break;
+                }
             }
         }
         return this;

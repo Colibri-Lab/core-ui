@@ -220,6 +220,23 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this.__specificHandlers[handlerName].push(handler);
     }
 
+
+    /**
+     * Registers a handler for specific events.
+     * @param {String} handlerName 
+     * @param {Function} handler 
+     */
+    UnRegisterHandler(handlerName, handler) {
+        if(this.__specificHandlers[handlerName]) {
+            for (let i = 0; i < this.__specificHandlers[handlerName].length; i++) {
+                if(this.__specificHandlers[handlerName][i] === handler) {
+                    this.__specificHandlers[handlerName].splice(i, 1);
+                    break;
+                }
+            }
+        }
+    }
+
     DispatchHandlers(handlerName, args) {
         return new Promise((resolve, reject) => {
             const promises = [];
