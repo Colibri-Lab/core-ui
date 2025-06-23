@@ -46,6 +46,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         
         this.RegisterEvent('MessageReceivng', false, 'Before message received');
         this.RegisterEvent('MessageReceived', false, 'When a new message is received');
+        this.RegisterEvent('MessageSent', false, 'When a new message is sent');
         this.RegisterEvent('MessagesMarkedAsRead', false, 'When all messages marked as read');
         this.RegisterEvent('MessageRemoved', false, 'When message is removed');
         this.RegisterEvent('ChatCleared', false, 'When chat with user is removed');
@@ -470,6 +471,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                 msg.MarkAsRead();
                 if(msg.from !== msg.recipient) {
                     this._addMessage(msg);
+                    this.Dispatch('MessageSent', {message: msg});
                 }
                 this.DispatchHandlers('MessageSending', {message: msg}).then((responses) => {
                     this._ws.send(msg.toJson());
@@ -526,6 +528,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             if(this._ws.readyState === 1) {
                 const msg = Colibri.Common.CometMessage.CreateForSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, text, {contact: contactName}, activate, wakeup);
                 this._ws.send(msg.toJson());
+                this.Dispatch('MessageSent', {message: msg});
                 return id;
             }
             else {
@@ -554,6 +557,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                 msg.MarkAsRead();
                 if(msg.from !== msg.recipient) {
                     this._addMessage(msg);
+                    this.Dispatch('MessageSent', {message: msg});
                 }
                 this.DispatchHandlers('FilesSending', {message: msg}).then((responses) => {
                     this._ws.send(msg.toJson());
@@ -586,6 +590,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                 const msg = Colibri.Common.CometMessage.CreateForFilesSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, files, {contact: contactName}, activate, wakeup);
                 // const msg = {action: action, recipient: '*', message: {files: files, id: id, broadcast: true}, domain: Colibri.Web.Comet.Options.origin, delivery: 'trusted'};
                 this._ws.send(JSON.stringify(msg));
+                this.Dispatch('MessageSent', {message: msg});
                 return id;
             }
             else {
