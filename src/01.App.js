@@ -185,7 +185,6 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                     headers['X-CSRF-TOKEN'] = this._csrfToken;
                 }
                 Colibri.IO.Request.Post(this._remoteDomain + '/settings', {}, headers).then((response) => {
-                    reject();
                     if(response.status != 200) {                        
                         reject();
                     }
