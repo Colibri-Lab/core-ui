@@ -195,6 +195,8 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                                         location.reload();
                                     }
                                 });
+                            } else {
+                                location.reload();
                             }
                         });
                     }
@@ -270,6 +272,8 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                                     location.reload();
                                 }
                             });
+                        } else {
+                            location.reload();
                         }
                     });
                 });
