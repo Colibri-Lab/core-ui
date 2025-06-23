@@ -303,7 +303,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             console.log('User registration error');
         }
         else if(message.action == 'debug-response') {
-            console.log('Debug', message.response);
+            console.log('Debug', message.message);
         }
         else if(message.action == 'message') {
             this.DispatchHandlers('MessageReceiving', {message: message}).then((responses) => {
