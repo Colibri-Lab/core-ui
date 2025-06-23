@@ -156,7 +156,11 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
     set enabled(val) {
         val = this._convertProperty('Boolean', val);
         super.enabled = val;
-        this._input.attr('disabled', val === true || val === 'true' ? null : 'disabled');
+        if(this._visual) {
+            this._input.attr('contenteditable', val === true || val === 'true' ? 'true' : 'false');
+        } else {
+            this._input.attr('disabled', val === true || val === 'true' ? null : 'disabled');
+        }
     }
 
     /**
