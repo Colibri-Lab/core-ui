@@ -186,19 +186,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                 }
                 Colibri.IO.Request.Post(this._remoteDomain + '/settings', {}, headers).then((response) => {
                     if(response.status != 200) {                        
-                        App.Notices.Add(new Colibri.UI.Notice('#{ui-messages-cannotgetsettings}'));
-                        Colibri.Common.Delay(5000).then(() => {
-                            if(App.Device.isWeb && navigator.serviceWorker) {
-                                navigator.serviceWorker.ready.then(registration => {
-                                    if (registration) {
-                                        registration.update();
-                                        location.reload();
-                                    }
-                                });
-                            } else {
-                                location.reload();
-                            }
-                        });
+                        reject();
                     }
                     else {
                         Colibri.Common.StopTimer('app-settings-error');
@@ -263,19 +251,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                     resolve();
      
                 }).catch(response => {
-                    App.Notices.Add(new Colibri.UI.Notice('Невозможно получить настройки!'));
-                    Colibri.Common.Delay(5000).then(() => {
-                        if(App.Device.isWeb && navigator.serviceWorker) {
-                            navigator.serviceWorker.ready.then(registration => {
-                                if (registration) {
-                                    registration.update();
-                                    location.reload();
-                                }
-                            });
-                        } else {
-                            location.reload();
-                        }
-                    });
+                    reject();
                 });
     
                 this._notices = new Colibri.UI.Notices('notices', document.body);
