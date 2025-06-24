@@ -31,6 +31,8 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         !!width && (this.width = width);
         !!height && (this.height = height);
 
+        this._windowContainer = this._element.querySelector('.app-component-window-container');
+
         /* запоминаем компонент заголовок */
         this._title = this._element.querySelector('.app-component-window-title > span');
         /* запихиваем в html */
@@ -76,43 +78,38 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     }
 
     /** @private */
-    _movingHandler(e) {
-        const windowElement = e.currentTarget.closest('.app-component-window');
-        const windowContainer = windowElement.querySelector('.app-component-window-container');
+    _setMovableEvents(value) {
 
-        const point = windowElement.tag('movingPoint');
+        /** @private */
+        this._movingStartHandler = (e) => {
+            
+            if(e.target.is('button')) {
+                return false;
+            }
 
-        windowContainer.css('left', (e.pageX - point.left - parseInt(windowContainer.css('margin-left'))) + 'px');
-        windowContainer.css('top', (e.pageY - point.top - parseInt(windowContainer.css('margin-top'))) + 'px');
-    }
-
-    /** @private */
-    _movingStartHandler(e) {
-        
-        if(e.target.is('button')) {
-            return false;
+            this.moving = true;
+            this.movingPoint = {left: e.layerX, top: e.layerY};
+            
+            this._windowContainer.addEventListener('contextmenu', this._movingStopHandler, true);
+            this._windowContainer.addEventListener('mousemove', this._movingHandler, true);
+            this._windowContainer.addEventListener('mouseup', this._movingStopHandler, true);
         }
 
-        const windowElement = e.currentTarget.closest('.app-component-window');
-        const windowComponent = windowElement.tag('component');
-        windowComponent.moving = true;
-        windowElement.addEventListener('contextmenu', windowComponent._movingStopHandler, true);
-        windowElement.addEventListener('mousemove', windowComponent._movingHandler, true);
-        windowElement.addEventListener('mouseup', windowComponent._movingStopHandler, true);
-        windowElement.tag('movingPoint', {left: e.layerX, top: e.layerY});
-    }
+        /** @private */
+        this._movingStopHandler = (e) => {
+            this.moving = false;
+            this._windowContainer.removeEventListener('mousemove', this._movingHandler, true);
+            this._windowContainer.removeEventListener('mouseup', this._movingStopHandler);
+        }
 
-    /** @private */
-    _movingStopHandler(e) {
-        const windowElement = e.currentTarget.closest('.app-component-window');
-        const windowComponent = windowElement.tag('component');
-        windowComponent.moving = false;
-        windowElement.removeEventListener('mousemove', windowComponent._movingHandler, true);
-        windowElement.removeEventListener('mouseup', windowComponent._movingStopHandler);
-    }
+         /** @private */
+        this._movingHandler = (e) => {
+            const point = this._movingPoint;
 
-    /** @private */
-    _setMovableEvents(value) {
+            this._windowContainer.css('left', (e.pageX - point.left - parseInt(this._windowContainer.css('margin-left'))) + 'px');
+            this._windowContainer.css('top', (e.pageY - point.top - parseInt(this._windowContainer.css('margin-top'))) + 'px');
+        }
+        
         if(value) {
             this._titleContainer.addEventListener('mousedown', this._movingStartHandler);
         }
