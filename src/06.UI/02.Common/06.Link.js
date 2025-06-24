@@ -112,42 +112,42 @@ Colibri.UI.Link = class extends Colibri.UI.Component {
         this._element.attr('disabled', value === true || value === 'true' ? null : 'disabled');
     }
 
-        /**
-         * Show custom menu
-         * @type {Boolean}
-         */
-        get customMenu() {
-            return this._customMenu;
+    /**
+     * Show custom menu
+     * @type {Boolean}
+     */
+    get customMenu() {
+        return this._customMenu;
+    }
+    /**
+     * Show custom menu
+     * @type {Boolean}
+     */
+    set customMenu(value) {
+        this._customMenu = value;
+        if(value) {
+            this.AddHandler('ContextMenu', (event, args) => this.__thisMouseDown(event, args));
+            this.AddHandler('ContextMenuItemClicked', (event, args) => this.__thisContextMenuItemClicked(event, args));
         }
-        /**
-         * Show custom menu
-         * @type {Boolean}
-         */
-        set customMenu(value) {
-            this._customMenu = value;
-            if(value) {
-                this.AddHandler('ContextMenu', (event, args) => this.__thisMouseDown(event, args));
-                this.AddHandler('ContextMenuItemClicked', (event, args) => this.__thisContextMenuItemClicked(event, args));
-            }
-        }
+    }
 
-        __thisMouseDown(event, args) {
-            
-            const contextmenu = [];
-            contextmenu.push({title: '#{ui-link-opennewtab}', name: 'openblank'});
-            contextmenu.push({title: '#{ui-link-open}', name: 'open'});
-            this.contextmenu = contextmenu;
-            this.ShowContextMenu([Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT]);
-            args.domEvent.preventDefault();
-            return false;
-        }
+    __thisMouseDown(event, args) {
+        
+        const contextmenu = [];
+        contextmenu.push({title: '#{ui-link-opennewtab}', name: 'openblank'});
+        contextmenu.push({title: '#{ui-link-open}', name: 'open'});
+        this.contextmenu = contextmenu;
+        this.ShowContextMenu([Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT]);
+        args.domEvent.preventDefault();
+        return false;
+    }
 
-        __thisContextMenuItemClicked(event, args) {
-            if(args.menuData?.name === 'openblank') {
-                this.Dispatch('Clicked', Object.assign(args, {target: '_blank'}));
-            } else if(args.menuData?.name === 'open') {
-                this.Dispatch('Clicked', args);
-            }
+    __thisContextMenuItemClicked(event, args) {
+        if(args.menuData?.name === 'openblank') {
+            this.Dispatch('Clicked', Object.assign(args, {target: '_blank'}));
+        } else if(args.menuData?.name === 'open') {
+            this.Dispatch('Clicked', args);
         }
+    }
 
 }
