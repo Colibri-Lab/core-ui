@@ -39,6 +39,121 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
 
         this._getCloseButton().shown = this._closable;
 
+        this._resizeDir = null;
+        this._resizeStart = null;
+
+        this._element.addEventListener('mousemove', (e) => {
+            const bounds = this._element.getBoundingClientRect();
+            const cornerSize = 20;
+            const x = e.clientX - bounds.left;
+            const y = e.clientY - bounds.top;
+
+            let corner = null;
+            if (x <= cornerSize && y <= cornerSize) {
+                corner = 'nw-resize';
+            } else if (x >= bounds.width - cornerSize && y <= cornerSize) {
+                corner = 'ne-resize';
+            } else if (x <= cornerSize && y >= bounds.height - cornerSize) {
+                corner = 'sw-resize';
+            } else if (x >= bounds.width - cornerSize && y >= bounds.height - cornerSize) {
+                corner = 'se-resize';
+            } else if (x <= cornerSize) {
+                corner = 'w-resize';
+            } else if (x >= bounds.width - cornerSize) {
+                corner = 'e-resize';
+            } else if (y <= cornerSize) {
+                corner = 'n-resize';
+            } else if (y >= bounds.height - cornerSize) {
+                corner = 's-resize';
+            }
+
+            if (this._resizable && corner) {
+                this._element.css('cursor', corner);
+            } else {
+                this._element.css('cursor', 'default');
+            }
+        }, true);
+
+        this._element.addEventListener('mousedown', (e) => {
+            const bounds = this._element.getBoundingClientRect();
+            const cornerSize = 20;
+            const x = e.clientX - bounds.left;
+            const y = e.clientY - bounds.top;
+
+            let dir = null;
+            if (x <= cornerSize && y <= cornerSize) {
+                dir = 'nw';
+            } else if (x >= bounds.width - cornerSize && y <= cornerSize) {
+                dir = 'ne';
+            } else if (x <= cornerSize && y >= bounds.height - cornerSize) {
+                dir = 'sw';
+            } else if (x >= bounds.width - cornerSize && y >= bounds.height - cornerSize) {
+                dir = 'se';
+            } else if (x <= cornerSize) {
+                dir = 'w';
+            } else if (x >= bounds.width - cornerSize) {
+                dir = 'e';
+            } else if (y <= cornerSize) {
+                dir = 'n';
+            } else if (y >= bounds.height - cornerSize) {
+                dir = 's';
+            }
+
+            if (this._resizable && dir) {
+                e.preventDefault();
+                this._resizeDir = dir;
+                this._resizeStart = {
+                    x: e.clientX,
+                    y: e.clientY,
+                    width: this._element.offsetWidth,
+                    height: this._element.offsetHeight,
+                    left: this._element.offsetLeft,
+                    top: this._element.offsetTop
+                };
+                document.addEventListener('mousemove', this.__resizeMove);
+                document.addEventListener('mouseup', this.__resizeStop);
+            }
+        }, true);
+
+        this.__resizeMove = (e) => {
+            if (!this._resizeDir || !this._resizeStart) return;
+            let dx = e.clientX - this._resizeStart.x;
+            let dy = e.clientY - this._resizeStart.y;
+            let newWidth = this._resizeStart.width;
+            let newHeight = this._resizeStart.height;
+            let newLeft = this._resizeStart.left;
+            let newTop = this._resizeStart.top;
+
+            if (this._resizeDir.indexOf('e') !== -1) {
+                newWidth = Math.max(100, this._resizeStart.width + dx);
+            }
+            if (this._resizeDir.indexOf('s') !== -1) {
+                newHeight = Math.max(100, this._resizeStart.height + dy);
+            }
+            if (this._resizeDir.indexOf('w') !== -1) {
+                newWidth = Math.max(100, this._resizeStart.width - dx);
+                newLeft = this._resizeStart.left + dx;
+            }
+            if (this._resizeDir.indexOf('n') !== -1) {
+                newHeight = Math.max(100, this._resizeStart.height - dy);
+                newTop = this._resizeStart.top + dy;
+            }
+
+            this._element.style.width = newWidth + 'px';
+            this._element.style.height = newHeight + 'px';
+            this._element.style.left = newLeft + 'px';
+            this._element.style.top = newTop + 'px';
+            this._updateStyleVariables();
+        };
+
+        this.__resizeStop = () => {
+            document.removeEventListener('mousemove', this.__resizeMove);
+            document.removeEventListener('mouseup', this.__resizeStop);
+            this._element.css('cursor', null);
+            this._resizeDir = null;
+            this._resizeStart = null;
+        };
+
         this.Dispatch('WindowContentRendered');
         this._handleEvents();
     }
@@ -54,7 +169,6 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     _handleEvents() {
         this._getCloseButton().AddHandler('Clicked', (event, args) => this.__close(event, args));
 
-        this._element.querySelector('.modeless-window-header-container').addEventListener('contextmenu', this.__dragStop.bind(this));
         this._element.querySelector('.modeless-window-header-container').addEventListener('mousedown', this.__dragStart.bind(this));
         this._container.addEventListener('mousemove', this.__move.bind(this));
         document.addEventListener('mouseup', this.__dragStop.bind(this));
@@ -88,7 +202,7 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
      * @private
      */
     __dragStart(event) {
-        if (!this._sticky) {
+        if (!this._sticky && this._movable) {
             let previousClientX = event.clientX,
                 previousClientY = event.clientY;
 
@@ -105,7 +219,7 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
      * @private
      */
     __move(event) {
-        if (!this._sticky && this._isDragged) {
+        if (!this._sticky && this._movable && this._isDragged) {
             let newClientX = event.clientX,
                 newClientY = event.clientY,
                 newLeft = newClientX - this.tag._diffX,
@@ -120,7 +234,7 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
      * @private
      */
     __dragStop() {
-         if (!this._sticky && this._isDragged) {
+         if (!this._sticky && this._movable && this._isDragged) {
              this._container.removeEventListener('mousemove', this.__move);
              document.removeEventListener('mouseup', this.__dragStop);
 
@@ -524,4 +638,36 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
             this.SendToBack();
         }
     }
+
+    /**
+     * Resizable window
+     * @type {Boolean}
+     */
+    get resizable() {
+        return this._resizable;
+    }
+    /**
+     * Resizable window
+     * @type {Boolean}
+     */
+    set resizable(value) {
+        this._resizable = value;
+    }
+
+    /**
+     * Move the window
+     * @type {Boolean}
+     */
+    get movable() {
+        return this._movable;
+    }
+    /**
+     * Move the window
+     * @type {Boolean}
+     */
+    set movable(value) {
+        this._movable = value;
+    }
+
+
 }

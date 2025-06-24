@@ -32,7 +32,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         },
         MouseUp: {
             domEvent: 'mouseup',
-            capture: true,
         },
         MouseEnter: {
             domEvent: 'mouseenter',
@@ -82,14 +81,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         },
         MouseDown: {
             domEvent: 'mousedown',
-            capture: true,
         },
         ContextMenu: {
             domEvent: 'contextmenu'
         },
         MouseMove: {
             domEvent: 'mousemove',
-            capture: true,            
         },
         Scrolled: {
             domEvent: 'scroll'

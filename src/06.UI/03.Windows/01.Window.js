@@ -75,11 +75,6 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
         this.Dispatch('WindowContentRendered');
 
-    }
-
-    /** @private */
-    _setMovableEvents(value) {
-
         /** @private */
         this._movingStartHandler = (e) => {
             
@@ -90,16 +85,16 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             this.moving = true;
             this.movingPoint = {left: e.layerX, top: e.layerY};
             
-            this._windowContainer.addEventListener('contextmenu', this._movingStopHandler, true);
-            this._windowContainer.addEventListener('mousemove', this._movingHandler, true);
-            this._windowContainer.addEventListener('mouseup', this._movingStopHandler, true);
+            this._element.addEventListener('mousemove', this._movingHandler);
+            this._element.addEventListener('mouseup', this._movingStopHandler);
         }
 
         /** @private */
         this._movingStopHandler = (e) => {
+
             this.moving = false;
-            this._windowContainer.removeEventListener('mousemove', this._movingHandler, true);
-            this._windowContainer.removeEventListener('mouseup', this._movingStopHandler);
+            this._element.removeEventListener('mousemove', this._movingHandler);
+            this._element.removeEventListener('mouseup', this._movingStopHandler);
         }
 
          /** @private */
@@ -109,7 +104,12 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             this._windowContainer.css('left', (e.pageX - point.left - parseInt(this._windowContainer.css('margin-left'))) + 'px');
             this._windowContainer.css('top', (e.pageY - point.top - parseInt(this._windowContainer.css('margin-top'))) + 'px');
         }
-        
+
+    }
+
+    /** @private */
+    _setMovableEvents(value) {
+
         if(value) {
             this._titleContainer.addEventListener('mousedown', this._movingStartHandler);
         }
@@ -338,6 +338,14 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      */
     get moving() {
         return this._moving;
+    }
+
+    set movingPoint(value) {
+        this._movingPoint = value;
+    }
+
+    get movingPoint() {
+        return this._movingPoint;
     }
 
     /**
@@ -605,6 +613,27 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      */
     set minimizedGetContentMethod(value) {
         this._minimizedGetContentMethod = value;
+    }
+
+    /**
+     * Is window resizable
+     * @type {Boolean}
+     */
+    get resizable() {
+        return this._resizable;
+    }
+    /**
+     * Is window resizable
+     * @type {Boolean}
+     */
+    set resizable(value) {
+        this._resizable = value;
+        this._showResizable();
+    }
+    _showResizable() {
+        
+
+
     }
 
 }
