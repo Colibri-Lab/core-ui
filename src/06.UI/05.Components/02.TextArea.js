@@ -334,6 +334,10 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
             this._input.insertText(text);
         }
     }
+
+    Blur() {
+        this._input.blur();
+    }
     
 
 }
