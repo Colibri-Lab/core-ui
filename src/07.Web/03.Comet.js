@@ -325,8 +325,32 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             const msg = Colibri.Common.CometEvent.FromReceivedObject(message.action, message.domain, message.from, message.message, message.delivery, message.broadcast);
             this.DispatchHandlers('EventReceiving', {message: msg}).then((responses) => {
                 this.Dispatch('EventReceived', {event: msg});
+                if(this.__eventHandlers[msg.action]) {
+                    for(const handler of this.__eventHandlers[msg.action]) {
+                        handler(msg);
+                    }
+                }
             });
         }
+    }
+
+    UnwaitForEvent(eventName, handler) {
+        if(!this.__eventHandlers[eventName]) {
+            this.__eventHandlers[eventName] = [];
+        }
+
+        const index = this.__eventHandlers[eventName].indexOf(handler);
+        if(index > -1) {
+            this.__eventHandlers[eventName].splice(index, 1);
+        }
+
+    }
+    
+    WaitForEvent(eventName, handler) {
+        if(!this.__eventHandlers[eventName]) {
+            this.__eventHandlers[eventName] = [];
+        }
+        this.__eventHandlers[eventName].push(handler);
     }
 
     AddLocalMessage(message) {
