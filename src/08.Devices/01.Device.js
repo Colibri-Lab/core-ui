@@ -649,17 +649,17 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     }
 
     SetAudioToDefault() {
-        if(AudioToggle !== undefined) {
+        if(window?.AudioToggle !== undefined) {
             AudioToggle.setAudioMode(AudioToggle.NORMAL);
         }
     }
     SetAudioToSpeakers() {
-        if(AudioToggle !== undefined) {
+        if(window?.AudioToggle !== undefined) {
             AudioToggle.setAudioMode(AudioToggle.SPEAKER);
         }
     }
     SetAudioToEarpiece() {
-        if(AudioToggle !== undefined) {
+        if(window?.AudioToggle !== undefined) {
             AudioToggle.setAudioMode(AudioToggle.EARPIECE);
         }
     }
