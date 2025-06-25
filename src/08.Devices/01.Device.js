@@ -649,27 +649,31 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     }
 
     SetAudioToDefault() {
-        if(window?.AudioToggle !== undefined) {
-            AudioToggle.setAudioMode(AudioToggle.NORMAL);
+        if(window['AudioToggle'] !== undefined) {
+            window['AudioToggle'].setAudioMode(AudioToggle.NORMAL);
         }
     }
     SetAudioToSpeakers() {
-        if(window?.AudioToggle !== undefined) {
-            AudioToggle.setAudioMode(AudioToggle.SPEAKER);
+        if(window['AudioToggle'] !== undefined) {
+            window['AudioToggle'].setAudioMode(AudioToggle.SPEAKER);
         }
     }
     SetAudioToEarpiece() {
-        if(window?.AudioToggle !== undefined) {
-            AudioToggle.setAudioMode(AudioToggle.EARPIECE);
+        if(window['AudioToggle'] !== undefined) {
+            window['AudioToggle'].setAudioMode(AudioToggle.EARPIECE);
         }
     }
 
     GetSystemSpeakerVolume() {
         return new Promise((resolve, reject) => {
-            cordova.plugins.VolumeControl.getVolume(
-                volume => resolve(parseFloat(volume)), 
-                e => reject(e)
-            );
+            if(cordova.plugins?.VolumeControl) {
+                cordova.plugins?.VolumeControl.getVolume(
+                    volume => resolve(parseFloat(volume)), 
+                    e => reject(e)
+                );
+            } else {
+                Promise.resolve();
+            }
         })
     }
 
