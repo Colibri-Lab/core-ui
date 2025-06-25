@@ -586,8 +586,9 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                         this.Dispatch('MessageSent', {message: msg});
                     });
                 }
-                this.DispatchHandlers('FilesSending', {message: msg.clone()}).then((responses) => {
-                    this._ws.send(msg.toJson());
+                const msgToSend = msg.clone();
+                this.DispatchHandlers('FilesSending', {message: msgToSend}).then((responses) => {
+                    this._ws.send(msgToSend.toJson());
                 }).catch(error => {
                     this.Dispatch('MessageError', {error: error});
                 });
