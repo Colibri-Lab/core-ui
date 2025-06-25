@@ -155,7 +155,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                 App.Device.id,
                 Colibri.Web.Comet.Options.origin,
                 this._user,
-                JSON.stringify(Object.assign({name: this._userName}, this._handlers)),
+                Object.assign({name: this._userName}, this._handlers),
                 () => {console.log('Successed !!!');},
                 (err) => {console.log('Error !!!', err);}
             );
