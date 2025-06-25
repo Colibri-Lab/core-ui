@@ -28,6 +28,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     /** @type {string} */
     _clientId = null;
 
+    __eventHandlers = {};
+
     static Options = {
         origin: location.host
     };
@@ -345,7 +347,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         }
 
     }
-    
+
     WaitForEvent(eventName, handler) {
         if(!this.__eventHandlers[eventName]) {
             this.__eventHandlers[eventName] = [];
