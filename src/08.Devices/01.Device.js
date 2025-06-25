@@ -678,11 +678,11 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     }
 
     IsMuted() {
-        if(!cordova?.plugins?.VolumeControl) {
+        if(!window?.cordova?.plugins?.VolumeControl) {
             return Promise.resolve(false);
         }
         return new Promise((resolve, reject) => {
-            cordova.plugins.VolumeControl.isMuted(
+            window.cordova.plugins.VolumeControl.isMuted(
                 muted => resolve(muted == 0), 
                 e => reject(e)
             );
@@ -690,7 +690,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     }
 
     ToggleMute() {
-        if(!cordova?.plugins?.VolumeControl) {
+        if(!window?.cordova?.plugins?.VolumeControl) {
             return Promise.resolve();
         }
         return new Promise((resolve, reject) => {
@@ -702,7 +702,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     }
 
     Mute() {
-        if(!cordova?.plugins?.VolumeControl) {
+        if(!window?.cordova?.plugins?.VolumeControl) {
             return Promise.resolve();
         }
         return this.IsMuted().then(muted => {
