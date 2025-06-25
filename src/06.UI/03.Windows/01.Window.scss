@@ -42,7 +42,7 @@
                 flex-direction: column;
                 height: 100%;
             }
-            @include platform(android, ios) {
+            @include platform(android,ios) {
                 width: 100%;
                 min-height: 100%;
                 margin: 0px;
@@ -89,7 +89,7 @@
         @include respond-to(500px) {
             width: 100% !important;
         }
-        @include platform(androiandroid, iosd) {
+        @include platform(androiandroid,iosd) {
             width: 100% !important;
         }
     }
@@ -106,7 +106,7 @@
                 flex: 1 1 100%;
                 overflow: auto;
             }
-            @include platform(android, ios) {
+            @include platform(android,ios) {
                 width: 100% !important;
                 height: 100%;
                 flex: 1 1 100%;
