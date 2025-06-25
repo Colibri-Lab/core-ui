@@ -38,8 +38,10 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         /* запихиваем в html */
         !!title && (this._title.innerHTML = title);
 
+        this._movablePoint = 'title';
         this._titleContainer = this._element.querySelector('.app-component-window-title');
         if (title === undefined) {
+            this._movablePoint = 'container';
             this._titleContainer.hideElement();
         }
 
@@ -110,11 +112,20 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     /** @private */
     _setMovableEvents(value) {
 
-        if(value) {
-            this._titleContainer.addEventListener('mousedown', this._movingStartHandler);
-        }
-        else {
-            this._titleContainer.removeEventListener('mousedown', this._movingStartHandler);
+        if(this._movablePoint === 'title') {
+            if(value) {
+                this._titleContainer.addEventListener('mousedown', this._movingStartHandler);
+            }
+            else {
+                this._titleContainer.removeEventListener('mousedown', this._movingStartHandler);
+            }
+        } else {
+            if(value) {
+                this._windowContainer.addEventListener('mousedown', this._movingStartHandler);
+            }
+            else {
+                this._windowContainer.removeEventListener('mousedown', this._movingStartHandler);
+            }
         }
     }
 

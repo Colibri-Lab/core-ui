@@ -110,6 +110,12 @@
     }
 }
 
+@mixin platform($platform) {
+  body.-#{$platform} & {
+    @content;
+  }
+}
+
 @keyframes fadein {
     from {
         opacity: 0;

@@ -79,6 +79,9 @@
         @include respond-to(500px) {
             width: 100% !important;
         }
+        @include platform(android) {
+            width: 100% !important;
+        }
     }
 
     .app-component-window-minimized-content {
@@ -88,6 +91,12 @@
         padding: 20px 30px;
         & {
             @include respond-to(500px) {
+                width: 100% !important;
+                height: 100%;
+                flex: 1 1 100%;
+                overflow: auto;
+            }
+            @include platform(android) {
                 width: 100% !important;
                 height: 100%;
                 flex: 1 1 100%;

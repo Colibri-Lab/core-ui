@@ -212,6 +212,14 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
         }
 
+        if(this.isIOs) {
+            document.body.classList.add('-ios');
+        } else if(this.isAndroid) {
+            document.body.classList.add('-android');
+        } else if(this.isWindows) {
+            document.body.classList.add('-windows');
+        }
+
     }
 
     ClearNotifications() {
