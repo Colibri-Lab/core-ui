@@ -683,7 +683,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         }
         return new Promise((resolve, reject) => {
             cordova.plugins.VolumeControl.isMuted(
-                muted => resolve(muted), 
+                muted => resolve(muted == 0), 
                 e => reject(e)
             );
         })
