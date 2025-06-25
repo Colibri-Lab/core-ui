@@ -110,9 +110,11 @@
     }
 }
 
-@mixin platform($platform) {
-  body.-#{$platform} & {
-    @content;
+@mixin platform-any($platforms...) {
+  @each $platform in $platforms {
+    body.-#{$platform} & {
+      @content;
+    }
   }
 }
 
