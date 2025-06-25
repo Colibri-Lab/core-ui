@@ -650,7 +650,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     SetAudioToDefault() {
         if(window['AudioToggle'] !== undefined) {
-            window['AudioToggle'].setAudioMode(AudioToggle.NORMAL);
+            window['AudioToggle'].setAudioMode(AudioToggle.NORMAL); 
         }
     }
     SetAudioToSpeakers() {
