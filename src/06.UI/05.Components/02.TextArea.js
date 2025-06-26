@@ -199,6 +199,19 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
 
         this._clear = new Colibri.UI.Pane('clear', this);
         this._clear.html = Colibri.UI.ClearIcon;
+        
+        this._input.addEventListener('paste', (e) => {
+            const res = this.Dispatch('Pasting', {domEvent: e});
+            if(res) {
+                Colibri.Common.Delay(100).then(() => {
+                    this.Dispatch('Pasted', {domEvent: e});
+                });
+            } else {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        });
 
         this._input.addEventListener('keyup', (e) => {
             this._clear.shown = this.value.length > 0;
@@ -262,6 +275,20 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
 
         this._clear = new Colibri.UI.Pane('clear', this);
         this._clear.html = Colibri.UI.ClearIcon;
+
+        this._input.addEventListener('paste', (e) => {
+            const res = this.Dispatch('Pasting', {domEvent: e});
+            if(res) {
+                Colibri.Common.Delay(100).then(() => {
+                    this.Dispatch('Pasted', {domEvent: e});
+                });
+            } else {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        });
+
 
         this._input.addEventListener('keyup', (e) => {
             this._clear.shown = this.value.length > 0;

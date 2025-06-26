@@ -547,6 +547,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.RegisterEvent('Hidden', false, 'When component is hidden');   
         this.RegisterEvent('Disconnected', false, 'When component disconnected from DOM, not when Disposed');   
         this.RegisterEvent('Pasted', false, 'When pasted into component');
+        this.RegisterEvent('Pasting', false, 'When pasting data');
         this.RegisterEvent('DragStart', false, 'When starts drag a component');
         this.RegisterEvent('DragEnd', false, 'When an element is no longer being dragged');
         this.RegisterEvent('DragEnter', false, 'When the dragged element enters the target element\'s area');

@@ -3869,6 +3869,28 @@ Math.easeInOutQuad = function (t, b, c, d) {
 // Helper
 //
 
+String.prototype.replaceUrls = function(callback) {
+    return new Promise((resolve, reject) => {
+        const regex = /https?:\/\/[^\s\"\\<\>']+/g;
+        const urls = [...new Set(this.match(regex) || [])];
+        let text = this + '';
+        console.log(text);
+
+        const promises = [];
+        for(const url of urls) {
+            promises.push(callback(url));
+        }
+
+        Promise.all(promises).then(responses => {
+            for(const urlInfo of responses) {
+                text = text.replace(urlInfo.url, urlInfo.converted);
+            }
+            console.log(text);
+            resolve(text);
+        });
+    });
+}
+
 // https://stackoverflow.com/a/11058858
 String.prototype.toArrayBuffer = function () {
     const buf = new ArrayBuffer(this.length);
