@@ -57,7 +57,7 @@ Colibri.Common = class {
         const _checkAction = (a, h) => {
             try {
                 if(a() || (maxTimeout && waiting >= maxTimeout)) {
-                    h();
+                    h((maxTimeout && waiting >= maxTimeout));
                 }
                 else {
                     Colibri.Common.Delay(interval).then(() => _checkAction(a, h));
@@ -72,8 +72,12 @@ Colibri.Common = class {
         
         return new Promise((resolve, reject) => {
 
-            _checkAction(action, () => {
-                resolve();
+            _checkAction(action, (timedout) => {
+                if(timedout) {
+                    reject();
+                } else {
+                    resolve();
+                }
             })
 
         });
