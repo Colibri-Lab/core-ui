@@ -3874,7 +3874,6 @@ String.prototype.replaceUrls = function(callback) {
         const regex = /https?:\/\/[^\s\"\\<\>']+/g;
         const urls = [...new Set(this.match(regex) || [])];
         let text = this + '';
-        console.log(text);
 
         const promises = [];
         for(const url of urls) {
@@ -3885,7 +3884,6 @@ String.prototype.replaceUrls = function(callback) {
             for(const urlInfo of responses) {
                 text = text.replace(urlInfo.url, urlInfo.converted);
             }
-            console.log(text);
             resolve(text);
         });
     });
