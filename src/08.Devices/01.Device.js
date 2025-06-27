@@ -767,4 +767,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    NotifyReady() {
+        if(window.ColibriAccessories) {
+            window.ColibriAccessories.App.NotifyReady();
+        }
+    }
+
 }
