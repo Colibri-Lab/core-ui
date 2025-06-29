@@ -4007,13 +4007,30 @@ window.__originalAdd = EventTarget.prototype.addEventListener;
 window.__originalRemove = EventTarget.prototype.removeEventListener;
 window.__listenersMap = new WeakMap();
 
+window.isPureTouchDevice = function() {
+    const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+    // Try to detect mouse presence via media query
+    const hasMouse = matchMedia('(pointer: fine)').matches;
+
+    return hasTouch && !hasMouse;
+}
+
 EventTarget.prototype.addEventListener = function (type, listener, options) {
     if (!__listenersMap.has(this)) {
         __listenersMap.set(this, []);
     }
 
+    if(window.isPureTouchDevice() && ['mouseenter','mouseleave','mouseover','mouseout','mousemove'].includes(type)) {
+        // nothing to do
+        return;
+    } else if( !window.isPureTouchDevice() && ['touchstart','touchend','touchmove'].includes(type)) {
+        // nothing to do
+        return;
+    }
     __listenersMap.get(this).push({ type, listener, options });
     return window.__originalAdd.call(this, type, listener, options);
+
 };
 
 EventTarget.prototype.removeEventListener = function (type, listener, options) {
@@ -4045,7 +4062,7 @@ Element.prototype.remove = function () {
         for (const { type, listener, options } of events) {
             this.removeEventListener(type, listener, options);
         }
-        __listenersMap.remove(this);
+        __listenersMap.delete(this);
     }
 
     // [3] Вызвать оригинальный метод
