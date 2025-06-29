@@ -4039,12 +4039,12 @@ window.getEventListenersFor = function (el) {
 
 window.__originalElementRemove = Element.prototype.remove;
 Element.prototype.remove = function () {
-    // [1] Очистить все слушатели, если ты их хранишь
-    const events = getEventListenersFor?.(this); // если ты ранее перехватывал addEventListener
+    const events = getEventListenersFor(this);
     if (events) {
         for (const { type, listener, options } of events) {
             this.removeEventListener(type, listener, options);
         }
+        __listenersMap.remove(this);
     }
 
     // [3] Вызвать оригинальный метод
