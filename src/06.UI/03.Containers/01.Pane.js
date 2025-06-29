@@ -35,50 +35,44 @@ Colibri.UI.Pane = class extends Colibri.UI.Component {
         this.AddClass('app-component-pane');
 
         this._resizable = resizable || 'none';
-        this.AddClass('app-component-resize-' + this._resizable);
-    }
 
-    /** @private */
-    _createResizeHandler() {
-        this._resizeHandler = Element.create('div', {class: 'app-component-pane-resize'});
-        this._element.prepend(this._resizeHandler);
+        
+        this.__stopClick = (e) => { e.preventDefault(); e.stopPropagation(); return false; };
 
-        const stopClick = (e) => { e.preventDefault(); e.stopPropagation(); return false; };
-
-        const startResize = (e) => {
+        this.__startResize = (e) => {
             this._resizing = true;
             Colibri.UI.Resizing = true;
             this._resizeData = this._element.bounds();
 
             // ставим на документ, чтобы точно перехватить        
-            document.addEventListener("touchend", stopResize, false);
-            document.addEventListener("mouseup", stopResize, false);
+            document.addEventListener("touchend", this.__stopResize, false);
+            document.addEventListener("mouseup", this.__stopResize, false);
 
-            document.addEventListener("touchmove", doResize, false);
-            document.addEventListener("mousemove", doResize, false);
+            document.addEventListener("touchmove", this.__doResize, false);
+            document.addEventListener("mousemove", this.__doResize, false);
 
             return false;
 
         };
 
-        const stopResize = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+        this.__stopResize = (e) => {
+            e?.preventDefault();
+            e?.stopPropagation();
         
             this._resizing = false;
             Colibri.UI.Resizing = false;
 
-            document.removeEventListener("touchend", stopResize, false);
-            document.removeEventListener("mouseup", stopResize, false);
+            document.removeEventListener("touchend", this.__stopResize, false);
+            document.removeEventListener("mouseup", this.__stopResize, false);
     
-            document.removeEventListener("touchmove", doResize, false);
-            document.removeEventListener("mousemove", doResize, false);
+            document.removeEventListener("touchmove", this.__doResize, false);
+            document.removeEventListener("mousemove", this.__doResize, false);
 
             return false;
 
         };
 
-        const doResize = (e) => {
+        this.__doResize = (e) => {
             if (this._resizing) {
                 e.preventDefault();
     
@@ -99,14 +93,32 @@ Colibri.UI.Pane = class extends Colibri.UI.Component {
             }
         };
 
-        this._resizeHandler.addEventListener("touchstart", startResize, false);
-        this._resizeHandler.addEventListener("mousedown", startResize, false);
+        this.AddClass('app-component-resize-' + this._resizable);
+    }
+
+    /** @private */
+    _createResizeHandler() {
+        this._resizeHandler = Element.create('div', {class: 'app-component-pane-resize'});
+        this._element.prepend(this._resizeHandler);
+
+        this._resizeHandler.addEventListener("touchstart", this.__startResize, false);
+        this._resizeHandler.addEventListener("mousedown", this.__startResize, false);
 
     }
 
     /** @private */
     _removeResizeHandler() {
-        this._resizeHandler && this._resizeHandler.remove();
+        if(this._resizeHandler) {
+            this.__stopResize(null);
+            this._resizeHandler.removeEventListener("touchstart", this.__startResize, false);
+            this._resizeHandler.removeEventListener("mousedown", this.__startResize, false);
+            this._resizeHandler && this._resizeHandler.remove();
+        }
+    }
+
+    Dispose() {
+        super.Dispose();
+        this._removeResizeHandler();
     }
 
     /**

@@ -1076,7 +1076,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
         this._scrolling = -1;
         this._scrollY = -1;
-        this._element.addEventListener('scroll', (event) => {
+
+        this.__scrollHandler = (event) => {
             if(event.target.scrollTop > this._scrollY) {                    
                 if (this._gridContent._element.getBoundingClientRect().bottom < (event.target.getBoundingClientRect().bottom + 10)) {
                     clearTimeout(this._scrolling);
@@ -1086,7 +1087,9 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                 }
             }
             this._scrollY = event.target.scrollTop;
-        });
+        };
+
+        this._element.addEventListener('scroll', this.__scrollHandler);
 
         this.AddHandler('ColumnEditorChanged', (event, args) => {
             const rowsName = this.rows.name;
@@ -1119,6 +1122,11 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             this.RecalculateCellVisibility(args.column);
         });
 
+    }
+
+    Dispose() {
+        this._element.removeEventListener('scroll', this.__scrollHandler);
+        super.Dispose();
     }
 
     /**

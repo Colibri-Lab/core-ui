@@ -21,7 +21,6 @@ Colibri.Common.Audio = class {
 
                     this._mediaRecorder.addEventListener("stop", () => {
                         const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                        console.log(audioBlob);
                         resolve(audioBlob);
                     });
 

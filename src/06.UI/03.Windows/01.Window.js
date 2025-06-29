@@ -109,6 +109,12 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
     }
 
+    Dispose() {
+        this.movable = false;
+        this.resizable = false;
+        super.Dispose();
+    }
+
     /** @private */
     _setMovableEvents(value) {
 
@@ -640,12 +646,6 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      */
     set resizable(value) {
         this._resizable = value;
-        this._showResizable();
-    }
-    _showResizable() {
-        
-
-
     }
 
 }

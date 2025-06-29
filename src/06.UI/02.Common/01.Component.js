@@ -144,7 +144,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         this._renderedIndex = 0;
         
-        this._clickToCopyHandler = (e) => (this._copyStyle === 'text' ? this.container.text() : this.value + '').copyToClipboard() && App.Notices.Add(new Colibri.UI.Notice('#{ui-copy-info}', Colibri.UI.Notice.Success));
+        this.__clickToCopyHandler = (e) => (this._copyStyle === 'text' ? this.container.text() : this.value + '').copyToClipboard() && App.Notices.Add(new Colibri.UI.Notice('#{ui-copy-info}', Colibri.UI.Notice.Success));
 
         Object.forEach(createEvents, (event, handler) => {
             this.AddHandler(event, handler);
@@ -637,6 +637,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         if(this._contextMenuObject) {
             this._contextMenuObject.Dispose();
+            this._contextMenuObject = null;
         }
         
         const contextMenuObject = new Colibri.UI.ContextMenu(this._name + '-contextmenu', document.body, orientation, point);
@@ -712,11 +713,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.__domHandlersAttached[eventName] = {
             domEvent,
             respondent,
-            handler
+            handler,
+            capture
         };
-        if(domEvent === 'touchmove') {
-            console.log(domEvent, handler, capture || false);
-        }
+
         respondent.addEventListener(domEvent, handler, capture || false);
     }
 
@@ -732,10 +732,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @private
      */
     __removeHtmlEvents() {
-        for(let {domEvent, respondent, handler} of Object.values(this.__domHandlersAttached)) {
-            (respondent !== this._element)  && respondent.removeEventListener(domEvent, handler);
+        for(let {domEvent, respondent, handler, capture} of Object.values(this.__domHandlersAttached)) {
+            if(respondent !== this._element) {
+                respondent.removeEventListener(domEvent, handler, capture || false);
+            }
         }
-
+        for (const key in this.__domHandlersAttached) {
+            delete this.__domHandlersAttached[key];
+        }
         this.__domHandlersAttached = {};
     }
 
@@ -780,8 +784,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     set hasContextMenu(value) {
         this._hasContextMenu = value === 'true' || value === true || value === 1;
         if(this._hasContextMenu) {
-            if(!this.__domHandlersAttached['ContextMenu']) {
-                this.AddHandler('ContextMenu', (event, args) => {
+            if(!this.__contextMenuHandler) {
+                this.__contextMenuHandler = (event, args) => {
                     if(this.hasContextMenu && this._getContextMenuIcon()) {
                         this.Dispatch('Clicked', { domEvent: args.domEvent, isContextMenuEvent: true });
                         this._getContextMenuIcon().Dispatch('Clicked', { domEvent: args.domEvent, isContextMenuEvent: true });
@@ -790,12 +794,16 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                         return false;
                     }
                     return true;
-                });
+                };
+            }
+            if(!this.__domHandlersAttached['ContextMenu']) {
+                this.AddHandler('ContextMenu', this.__contextMenuHandler);
             }
             this._createContextMenuButton();
         }
         else {
             this._removeContextMenuButton();
+            this.RemoveHandler('ContextMenu', this.__contextMenuHandler);
         }
     }
 
@@ -1616,6 +1624,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     set hasShadow(value) {
         if(value === true || value === 'true') {
 
+            if(!this.__shadowClicked) {
+                this.__shadowClicked = (e) => { this.Dispatch('ShadowClicked', {domEvent: e}); e.stopPropagation(); e.preventDefault(); return false; };
+            }
+
+
             if(typeof this._element.css('z-index') === 'string') {
                 this._element.css('z-index', Colibri.UI.maxZIndex + 1);
             }
@@ -1625,13 +1638,15 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 this._shadow = Element.create('div', {class: 'app-component-shadow-div'});
             }
             this._shadow.css('z-index', zIndex);
-            this._shadow.addEventListener('click', (e) => { this.Dispatch('ShadowClicked', {domEvent: e}); e.stopPropagation(); e.preventDefault(); return false; });
-            this._shadow.addEventListener('contextmenu', (e) => { this.Dispatch('ShadowClicked', {domEvent: e}); e.stopPropagation(); e.preventDefault(); return false; });
+            this._shadow.addEventListener('click', this.__shadowClicked);
+            this._shadow.addEventListener('contextmenu', this.__shadowClicked);
             this._element.after(this._shadow);
             
         }
         else {
             if(this._shadow) {
+                this._shadow.removeEventListener('click', this.__shadowClicked);
+                this._shadow.removeEventListener('contextmenu', this.__shadowClicked);
                 this._shadow.remove();
                 this._shadow = null;
             }
@@ -1933,42 +1948,54 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._handleSwipe = value;
         if(value) {
             this.__touchStartedPos = null;
-            this._swipeTouchEnd = (e) => {
-                if ( !this.__touchStartedPos && e.currentTarget != this._element  ) {
-                    return;
-                }
-                this.styles = null;
-                this.__touchStartedPos = null;
-                document.body.removeEventListener('touchend', this._swipeTouchEnd, true);
-                document.body.removeEventListener('touchmove', this._swipeTouchMove, true);
-            };
-            this._swipeTouchMove = (e) => {
-                if ( !this.__touchStartedPos && e.currentTarget != this._element ) {
-                    return;
-                }
-            
-                const xUp = e.touches[0].clientX;                                    
-                const yUp = e.touches[0].clientY;
-            
-                const sensitivity = this._swipesensitivity || 10;
-                const orientation = this._swipeOrientation || 'hr';
+            if(this._swipeTouchEnd) {
+                this._swipeTouchEnd = (e) => {
+                    if ( !this.__touchStartedPos && e.currentTarget != this._element  ) {
+                        return;
+                    }
+                    this.styles = null;
+                    this.__touchStartedPos = null;
+                    document.body.removeEventListener('touchend', this._swipeTouchEnd, true);
+                    document.body.removeEventListener('touchmove', this._swipeTouchMove, true);
+                };
+            }
+            if(this._swipeTouchMove) {
+                this._swipeTouchMove = (e) => {
+                    if ( !this.__touchStartedPos && e.currentTarget != this._element ) {
+                        return;
+                    }
+                
+                    const xUp = e.touches[0].clientX;                                    
+                    const yUp = e.touches[0].clientY;
+                
+                    const sensitivity = this._swipesensitivity || 10;
+                    const orientation = this._swipeOrientation || 'hr';
 
-                const diff = orientation === 'hr' ? this.__touchStartedPos.x - xUp : this.__touchStartedPos.y - yUp;
-                if(Math.abs(diff) > 10) {
-                    this.styles = orientation === 'hr' ? {marginLeft: (-1*diff) + 'px'} : {marginTop: (-1*diff) + 'px'};
-                    if ( diff > sensitivity ) {
-                        this.Dispatch(orientation === 'hr' ? 'SwipedToRight' : 'SwipedToBottom', {domEvent: e});
-                    } else if ( diff < -sensitivity ) {
-                        this.Dispatch(orientation === 'hr' ? 'SwipedToLeft' : 'SwipedToTop', {domEvent: e});
-                    }                       
-                }
-            };
+                    const diff = orientation === 'hr' ? this.__touchStartedPos.x - xUp : this.__touchStartedPos.y - yUp;
+                    if(Math.abs(diff) > 10) {
+                        this.styles = orientation === 'hr' ? {marginLeft: (-1*diff) + 'px'} : {marginTop: (-1*diff) + 'px'};
+                        if ( diff > sensitivity ) {
+                            this.Dispatch(orientation === 'hr' ? 'SwipedToRight' : 'SwipedToBottom', {domEvent: e});
+                        } else if ( diff < -sensitivity ) {
+                            this.Dispatch(orientation === 'hr' ? 'SwipedToLeft' : 'SwipedToTop', {domEvent: e});
+                        }                       
+                    }
+                };
+            }
             this.AddHandler('TouchStarted', (event, args) => {
                 const firstTouch = args.domEvent.touches[0];      
                 this.__touchStartedPos = {x: firstTouch.clientX, y: firstTouch.clientY};                                
                 document.body.addEventListener('touchend', this._swipeTouchEnd);
                 document.body.addEventListener('touchmove', this._swipeTouchMove);
             });
+        } else {
+
+            if(this._swipeTouchEnd) {
+                document.body.removeEventListener('touchend', this._swipeTouchEnd, true);
+            }
+            if(this._swipeTouchMove) {
+                document.body.removeEventListener('touchmove', this._swipeTouchMove, true);
+            }
         }
     }
 
@@ -2092,6 +2119,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * Disposes a component object and removes it from DOM
      */
     Dispose() {
+        
+        this.hasContextMenu = false;
+        this.copy = false;
+        this.hasShadow = false;
+        this.handleSwipe = false;
+
         this.hasShadow = false;
         this.Clear();
 
@@ -2106,7 +2139,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.__removeHtmlEvents();
         try {
             this._element.remove();
-            // this._element = null;
+            delete this._element;
+            this._element = null;
         }
         catch(e) { console.log('error removing element from DOM', e); }
         this.Dispatch('ComponentDisposed');
@@ -2167,8 +2201,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             val = val.split(' ');
         }
         for(const v of val) {
-            if(!this._element.classList.contains(v)) {
-                this._element.classList.add(v);
+            if(!this._element?.classList?.contains(v)) {
+                this._element?.classList?.add(v);
             }
         }
         return this;
@@ -2182,12 +2216,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     RemoveClass(val) {
         if(Array.isArray(val)) {
             for(const v of val) {
-                if(this._element.classList.contains(v)) {
-                    this._element.classList.remove(v);
+                if(this._element?.classList?.contains(v)) {
+                    this._element?.classList?.remove(v);
                 }
             }
-        } else if(this._element.classList.contains(val)) {
-            this._element.classList.remove(val);
+        } else if(this._element?.classList?.contains(val)) {
+            this._element?.classList?.remove(val);
         }    
         return this;
     }
@@ -2490,10 +2524,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     _showCopy() {
         if(this._copy) {
             this.AddClass('-cancopy');
-            this._element.addEventListener('mousedown', this._clickToCopyHandler);
+            this._element.addEventListener('mousedown', this.__clickToCopyHandler);
         } else {
             this.RemoveClass('-cancopy');
-            this._element.removeEventListener('mousedown', this._clickToCopyHandler);
+            this._element.removeEventListener('mousedown', this.__clickToCopyHandler);
         } 
     }
 

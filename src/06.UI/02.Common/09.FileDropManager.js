@@ -24,8 +24,72 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
 
         this.RegisterEvent('FileDropped', false, 'Когда перетащили файл в контейнер');
 
+        
+        this.__dragOverHandler = (e) => {
+            if(!this._enabled) {
+                e.stopPropagation();
+                e.preventDefault();
+                return false;                    
+            }
+            if(!this._dropContainer.classList.contains('-dragging')) {
+                this._dropContainer.classList.add('-dragging');
+                this._dropHover.css({zIndex: Colibri.UI.maxZIndex + 1});
+            }
+            e.stopPropagation();
+            e.preventDefault();
+            return false;
+
+        };
+
+        this._dragLeaveHandler = (e) => {
+            if(!this._enabled) {
+                e.stopPropagation();
+                e.preventDefault();
+                return false;                    
+            }
+            this._dropContainer.classList.remove('-dragging');
+            this._dropHover.css({zIndex: null});
+            e.stopPropagation();
+            e.preventDefault();
+            return false;
+        };
+
+        this.__dropHandler = (e) => {
+            if(!this._enabled) {
+                e.stopPropagation();
+                e.preventDefault();
+                return false;                    
+            }
+            this._dropContainer.classList.remove('-dragging');
+            this._dropHover.css({zIndex: null});
+
+            let eventFiles;
+            if (e.dataTransfer.files) {
+                eventFiles = e.dataTransfer.files;
+            }
+            else if (e.dataTransfer.items) {
+                eventFiles = e.dataTransfer.items;
+            }
+
+            this._checkFiles(eventFiles);
+
+            e.stopPropagation();
+            e.preventDefault();
+            return false;
+
+        };
+
         this._initManager();
         this.message = message;
+    }
+
+    Dispose() {
+        
+        this._dropContainer.removeEventListener('dragover', this.__dragOverHandler);
+        this._dropHover.removeEventListener('dragleave', this._dragLeaveHandler);
+        this._dropHover.removeEventListener('drop', this.__dropHandler);
+
+        super.Dispose();
     }
 
     /**
@@ -107,57 +171,10 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
      */
     _initManager() {
         
-        this._dropContainer.addEventListener('dragover', (e) => {
-            if(!this._enabled) {
-                e.stopPropagation();
-                e.preventDefault();
-                return false;                    
-            }
-            if(!this._dropContainer.classList.contains('-dragging')) {
-                this._dropContainer.classList.add('-dragging');
-                this._dropHover.css({zIndex: Colibri.UI.maxZIndex + 1});
-            }
-            e.stopPropagation();
-            e.preventDefault();
-            return false;
 
-        });
-        this._dropHover.addEventListener('dragleave', (e) => {
-            if(!this._enabled) {
-                e.stopPropagation();
-                e.preventDefault();
-                return false;                    
-            }
-            this._dropContainer.classList.remove('-dragging');
-            this._dropHover.css({zIndex: null});
-            e.stopPropagation();
-            e.preventDefault();
-            return false;
-        });
-        this._dropHover.addEventListener('drop', (e) => {
-            if(!this._enabled) {
-                e.stopPropagation();
-                e.preventDefault();
-                return false;                    
-            }
-            this._dropContainer.classList.remove('-dragging');
-            this._dropHover.css({zIndex: null});
-
-            let eventFiles;
-            if (e.dataTransfer.files) {
-                eventFiles = e.dataTransfer.files;
-            }
-            else if (e.dataTransfer.items) {
-                eventFiles = e.dataTransfer.items;
-            }
-
-            this._checkFiles(eventFiles);
-
-            e.stopPropagation();
-            e.preventDefault();
-            return false;
-
-        });
+        this._dropContainer.addEventListener('dragover', this.__dragOverHandler);
+        this._dropHover.addEventListener('dragleave', this._dragLeaveHandler);
+        this._dropHover.addEventListener('drop', this.__dropHandler);
 
     }
 

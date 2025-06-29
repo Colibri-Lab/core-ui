@@ -53,6 +53,13 @@ Colibri.Common.HashActions = class extends Colibri.Events.Dispatcher {
         });
         
     }
+
+    Dispose() {
+        document.querySelectorAll('[data-action]').forEach((element) => { 
+            element.removeEventListener('mousedown', this.__clickEvent);
+        }); 
+        super.Dispose();
+    }
     
     /**
      * Adds a handler for a hash action.

@@ -42,7 +42,7 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
         this._resizeDir = null;
         this._resizeStart = null;
 
-        this._element.addEventListener('mousemove', (e) => {
+        this.__startMove = (e) => {
             const bounds = this._element.getBoundingClientRect();
             const cornerSize = 20;
             const x = e.clientX - bounds.left;
@@ -72,9 +72,9 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
             } else {
                 this._element.css('cursor', 'default');
             }
-        }, true);
+        };
 
-        this._element.addEventListener('mousedown', (e) => {
+        this.__mouseDown = (e) => {
             const bounds = this._element.getBoundingClientRect();
             const cornerSize = 20;
             const x = e.clientX - bounds.left;
@@ -113,7 +113,8 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
                 document.addEventListener('mousemove', this.__resizeMove);
                 document.addEventListener('mouseup', this.__resizeStop);
             }
-        }, true);
+        };
+
 
         this.__resizeMove = (e) => {
             if (!this._resizeDir || !this._resizeStart) return;
@@ -154,8 +155,28 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
             this._resizeStart = null;
         };
 
+        this.__dragStartHandler = (e) => this.__dragStart(e);
+        this.__dragMoveHandler = (e) => this.__move(e);
+        this.__dragStopHandler = (e) => this.__dragStop(e);
+
+        this._element.addEventListener('mousemove', this.__startMove, true);
+        this._element.addEventListener('mousedown', this.__mouseDown, true);
+
         this.Dispatch('WindowContentRendered');
         this._handleEvents();
+    }
+
+    Dispose() {
+        document.removeEventListener('mousemove', this.__resizeMove);
+        document.removeEventListener('mouseup', this.__resizeStop);
+        this._element.removeEventListener('mousemove', this.__startMove, true);
+        this._element.removeEventListener('mousedown', this.__mouseDown, true);
+
+        this._element.querySelector('.modeless-window-header-container').removeEventListener('mousedown', this.__dragStartHandler);
+        this._container.removeEventListener('mousemove', this.__dragMoveHandler);
+        document.removeEventListener('mouseup', this.__dragStopHandler);
+
+        super.Dispose();
     }
 
     /** @protected */
@@ -169,9 +190,9 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     _handleEvents() {
         this._getCloseButton().AddHandler('Clicked', (event, args) => this.__close(event, args));
 
-        this._element.querySelector('.modeless-window-header-container').addEventListener('mousedown', this.__dragStart.bind(this));
-        this._container.addEventListener('mousemove', this.__move.bind(this));
-        document.addEventListener('mouseup', this.__dragStop.bind(this));
+        this._element.querySelector('.modeless-window-header-container').addEventListener('mousedown', this.__dragStartHandler);
+        this._container.addEventListener('mousemove', this.__dragMoveHandler);
+        document.addEventListener('mouseup', this.__dragStopHandler);
 
         this.AddHandler('Resize', (event, args) => {
             this._toggleBodyScroll(false);

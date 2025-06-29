@@ -1,11 +1,17 @@
 ui-filedropmanager-message:
-  ru: Пожалуйста, отпустите файлы в этой области. Загрузка будет произведена в выбранную папку
-  en: Please release files in this area. The download will be made in the selected folder
-  hy: "Խնդրում ենք թողարկել այս տարածքում գտնվող ֆայլերը: Ներբեռնումը կկատարվի ընտրված պանակում"
-  it: Per favore rilascia i file in questa area. Il download verrà effettuato nella cartella selezionata
-  es: Por favor, suelta los archivos en esta área. La descarga se realizará en la carpeta seleccionada
+  ru: Пожалуйста, отпустите файлы в этой области. Загрузка будет произведена в
+    выбранную папку
+  en: Please release files in this area. The download will be made in the selected
+    folder
+  hy: "Խնդրում ենք թողարկել այս տարածքում գտնվող ֆայլերը: Ներբեռնումը կկատարվի
+    ընտրված պանակում"
+  it: Per favore rilascia i file in questa area. Il download verrà effettuato
+    nella cartella selezionata
+  es: Por favor, suelta los archivos en esta área. La descarga se realizará en la
+    carpeta seleccionada
   kk: Файлдарды осы аймаққа тастаңыз. Жүктеу таңдалған қалтаға жасалады
-  uz: Fayllarni ushbu hududga tashlang. Yuklab olish tanlangan papkaga amalga oshiriladi
+  uz: Fayllarni ushbu hududga tashlang. Yuklab olish tanlangan papkaga amalga
+    oshiriladi
 ui-filedropmanager-error1:
   ru: Файл слишком большой или не подходящего типа.
   en: The file is too large or of the wrong type.

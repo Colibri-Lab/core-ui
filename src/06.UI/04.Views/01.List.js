@@ -29,7 +29,8 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         this.tabIndex = -1;
         this._scrolling = -1;
         this._scrollY = -1;
-        this._element.addEventListener('scroll', (event) => {
+
+        this.__scrollHandler = (event) => {
             try {
                 if(event.target.scrollTop > this._scrollY) {
                     if (this.Children('lastChild').container.getBoundingClientRect().bottom < (event.target.getBoundingClientRect().bottom + 10)) {
@@ -44,11 +45,18 @@ Colibri.UI.List = class extends Colibri.UI.Component {
             catch(e) {
 
             }
-        });
+        };
+
+        this._element.addEventListener('scroll', this.__scrollHandler);
 
         this.AddHandler('ReceiveFocus', (event, args) => this.AddClass('-focused'));
         this.AddHandler('LoosedFocus', (event, args) => this.RemoveClass('-focused'));
 
+    }
+
+    Dispose() {
+        this._element.removeEventListener('scroll', this.__scrollHandler);
+        super.Dispose();
     }
 
     /** @protected */
@@ -877,6 +885,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
     set value(value) {
 
         this.parent && this.parent.ClearSelection(false);
+        
         if(!(Symbol.iterator in Object(value))) {
             return;
         }

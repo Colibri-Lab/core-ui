@@ -39,7 +39,7 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
         this.AddHandler('Resize', (event, args) => this.__thisResize(event, args));
         Colibri.Common.Delay(100).then(() => this.__thisResize(null, null));
         
-        const startResize = (e) => {
+        this.__startResize = (e) => {
             
             this._resizing = true;
             Colibri.UI.Resizing = true;
@@ -47,11 +47,11 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
             this.AddClass('-resizing');
 
             // ставим на документ, чтобы точно перехватить        
-            document.addEventListener("touchend", stopResize, {capture: true});
-            document.addEventListener("mouseup", stopResize, {capture: true});
+            document.addEventListener("touchend", this.__stopResize, {capture: true});
+            document.addEventListener("mouseup", this.__stopResize, {capture: true});
 
-            document.addEventListener("touchmove", doResize, {capture: true});
-            document.addEventListener("mousemove", doResize, {capture: true});
+            document.addEventListener("touchmove", this.__doResize, {capture: true});
+            document.addEventListener("mousemove", this.__doResize, {capture: true});
 
             this.Dispatch('SplitResizeStart');
 
@@ -59,19 +59,19 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
 
         };
 
-        const stopResize = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+        this.__stopResize = (e) => {
+            e?.preventDefault();
+            e?.stopPropagation();
             this.RemoveClass('-resizing');
         
             this._resizing = false;
             Colibri.UI.Resizing = false;
 
-            document.removeEventListener("touchend", this.__resizeEnd, {capture: true});
-            document.removeEventListener("mouseup", this.__resizeEnd, {capture: true});
+            document.removeEventListener("touchend", this.__stopResize, {capture: true});
+            document.removeEventListener("mouseup", this.__stopResize, {capture: true});
     
-            document.removeEventListener("touchmove", doResize, {capture: true});
-            document.removeEventListener("mousemove", doResize, {capture: true});
+            document.removeEventListener("touchmove", this.__doResize, {capture: true});
+            document.removeEventListener("mousemove", this.__doResize, {capture: true});
 
             this.Dispatch('SplitResizeStop');
 
@@ -79,7 +79,7 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
 
         };
 
-        const doResize = (e) => {
+        this.__doResize = (e) => {
             if (this._resizing) {
                 e.preventDefault();
     
@@ -97,9 +97,14 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
             }
         };
 
-        this._handler.addEventListener("touchstart", startResize, false);
-        this._handler.addEventListener("mousedown", startResize, false);
+        this._handler.addEventListener("touchstart", this.__startResize, false);
+        this._handler.addEventListener("mousedown", this.__startResize, false);
 
+    }
+
+    Dispose() {
+        this.__stopResize(null);
+        super.Dispose();
     }
 
     __thisResize(event, args) {

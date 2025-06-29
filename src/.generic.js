@@ -4001,3 +4001,52 @@ window.convertFilterToStringForSql = function (filter) {
     }
 
 }
+
+
+window.__originalAdd = EventTarget.prototype.addEventListener;
+window.__originalRemove = EventTarget.prototype.removeEventListener;
+window.__listenersMap = new WeakMap();
+
+EventTarget.prototype.addEventListener = function (type, listener, options) {
+    if (!__listenersMap.has(this)) {
+        __listenersMap.set(this, []);
+    }
+
+    __listenersMap.get(this).push({ type, listener, options });
+    return window.__originalAdd.call(this, type, listener, options);
+};
+
+EventTarget.prototype.removeEventListener = function (type, listener, options) {
+    if (__listenersMap.has(this)) {
+        const arr = __listenersMap.get(this);
+        for (let i = 0; i < arr.length; i++) {
+            const l = arr[i];
+            if (l.type === type && l.listener === listener) {
+                arr.splice(i, 1);
+                break;
+            }
+        }
+    }
+
+    return window.__originalRemove.call(this, type, listener, options);
+};
+
+// Вспомогательная функция: получить список событий
+window.getEventListenersFor = function (el) {
+    return __listenersMap.get(el) || [];
+};
+
+
+window.__originalElementRemove = Element.prototype.remove;
+Element.prototype.remove = function () {
+    // [1] Очистить все слушатели, если ты их хранишь
+    const events = getEventListenersFor?.(this); // если ты ранее перехватывал addEventListener
+    if (events) {
+        for (const { type, listener, options } of events) {
+            this.removeEventListener(type, listener, options);
+        }
+    }
+
+    // [3] Вызвать оригинальный метод
+    return __originalElementRemove.call(this);
+};

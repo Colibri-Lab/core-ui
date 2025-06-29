@@ -35,11 +35,18 @@ Colibri.UI.Drag = class {
         this._container = container;
         this._moveHandler = moveHandler;
 
-        this.ЕndHandle = (e) => this.__end(e);
-        this.MoveHandle = (e) => this.__move(e);
+        this.__EndHandle = (e) => this.__end(e);
+        this.__MoveHandle = (e) => this.__move(e);
+        this.__StartHandle = (e) => this.__start(e);
 
-        this._element.addEventListener('mousedown', (e) => this.__start(e));
+        this._element.addEventListener('mousedown', this.__StartHandle);
 
+    }
+
+    Dispose() {
+        this.__end();
+        this._element.removeEventListener('mousedown', this.__StartHandle);
+        super.Dispose();
     }
 
     /**
@@ -48,8 +55,8 @@ Colibri.UI.Drag = class {
     __start(e) {
         const bounds = this._container.bounds();
         this._element.tag = {state: true, point: [e.clientX - bounds.left, e.clientY - bounds.top]};
-        document.addEventListener('mouseup', this.ЕndHandle, true);
-        document.addEventListener('mousemove', this.MoveHandle, true);
+        document.addEventListener('mouseup', this.__EndHandle, true);
+        document.addEventListener('mousemove', this.__MoveHandle, true);
     }
 
     /**
@@ -57,8 +64,8 @@ Colibri.UI.Drag = class {
      */
     __end(e) {
         this._element.tag = {state: false};
-        document.removeEventListener('mouseup', this.EndHandle, true);
-        document.removeEventListener('mousemove', this.MoveHandle, true);
+        document.removeEventListener('mouseup', this.__EndHandle, true);
+        document.removeEventListener('mousemove', this.__MoveHandle, true);
     }
 
     /**

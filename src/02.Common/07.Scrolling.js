@@ -19,6 +19,11 @@ Colibri.Common.Scrolling = class {
     
     }
 
+    Dispose() {
+        this.Disable();
+        super.Dispose();
+    }
+
     /**
      * Creates an instance of Colibri.Common.Scrolling.
      * @param {HTMLElement} element - The HTML element to apply scrolling behavior.

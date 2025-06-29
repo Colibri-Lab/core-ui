@@ -57,6 +57,10 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
     }
     
     Dispose() {
+        
+        this.resizable = false;
+
+
         super.Dispose();
         this.Dispatch('ColumnDisposed', {column: this});
     }
@@ -150,7 +154,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
 
         const stopClick = (e) => { e.preventDefault(); e.stopPropagation(); return false; };
 
-        const startResize = (e) => {
+        this._startResize = this._startResize ?? ((e) => {
             this._resizing = true;
             Colibri.UI.Resizing = true;
             
@@ -163,36 +167,36 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
             this._resizeData = {width: this.container.bounds().outerWidth, nextWidth: next.container.bounds().outerWidth, full: parentBounds.outerWidth, x: e.pageX};
 
             // ставим на документ, чтобы точно перехватить        
-            document.addEventListener("touchend", stopResize, {capture: true});
-            document.addEventListener("mouseup", stopResize, {capture: true});
+            document.addEventListener("touchend", this._stopResize, {capture: true});
+            document.addEventListener("mouseup", this._stopResize, {capture: true});
 
-            document.addEventListener("touchmove", doResize, {capture: true});
-            document.addEventListener("mousemove", doResize, {capture: true});
+            document.addEventListener("touchmove", this._doResize, {capture: true});
+            document.addEventListener("mousemove", this._doResize, {capture: true});
 
             e.preventDefault();
             e.stopPropagation();
             return false;
 
-        };
+        });
 
-        const stopResize = (e) => {
+        this._stopResize = this._stopResize ?? ((e) => {
             e.preventDefault();
             e.stopPropagation();
         
             this._resizing = false;
             Colibri.UI.Resizing = false;
 
-            document.removeEventListener("touchend", stopResize, {capture: true});
-            document.removeEventListener("mouseup", stopResize, {capture: true});
+            document.removeEventListener("touchend", this._stopResize, {capture: true});
+            document.removeEventListener("mouseup", this._stopResize, {capture: true});
     
-            document.removeEventListener("touchmove", doResize, {capture: true});
-            document.removeEventListener("mousemove", doResize, {capture: true});
+            document.removeEventListener("touchmove", this._doResize, {capture: true});
+            document.removeEventListener("mousemove", this._doResize, {capture: true});
 
             return false;
 
-        };
+        });
 
-        const doResize = (e) => {
+        this._doResize = this._doResize ?? ((e) => {
             if (this._resizing) {
                 e.preventDefault();
                 e.stopPropagation();
@@ -210,7 +214,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
 
                 return false;
             }
-        };
+        });
 
         this._resizeHandler.addEventListener("touchstart", startResize, false);
         this._resizeHandler.addEventListener("mousedown", startResize, false);
@@ -226,6 +230,15 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
     }
 
     _removeResizeHandler() {
+        
+        this._resizeHandler && document.removeEventListener("touchend", this._stopResize, {capture: true});
+        this._resizeHandler && document.removeEventListener("mouseup", this._stopResize, {capture: true});
+        this._resizeHandler && document.removeEventListener("touchmove", this._doResize, {capture: true});
+        this._resizeHandler && document.removeEventListener("mousemove", this._doResize, {capture: true});
+        this._resizeHandler && this._resizeHandler.removeEventListener("touchstart", this._startResize, false);
+        this._resizeHandler && this._resizeHandler.removeEventListener("mousedown", this._startResize, false);
+        this._resizeHandler && this._resizeHandler.removeEventListener("click", this._stopClick, false);
+        this._resizeHandler && this._resizeHandler.removeEventListener("dblclick", this._stopClick, false);
         this._resizeHandler && this._resizeHandler.remove();
     }
 
