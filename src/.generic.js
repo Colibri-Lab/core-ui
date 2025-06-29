@@ -4023,6 +4023,7 @@ EventTarget.prototype.removeEventListener = function (type, listener, options) {
             const l = arr[i];
             if (l.type === type && l.listener === listener) {
                 arr.splice(i, 1);
+                __listenersMap.set(this, arr);
                 break;
             }
         }
