@@ -25,10 +25,10 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
             this.placeholderinfo = this._fieldData.params.placeholderinfo;
         }
 
-        this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args || {}, {component: this})));
-        this._input.AddHandler('KeyDown', (event, args) => this.Dispatch('KeyDown', args));
-        this._input.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
-        this._input.AddHandler('Clicked', (event, args) => this.Dispatch('Clicked', args));
+        this._input.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
+        this._input.AddHandler('KeyDown', this.__thisBubble, false, this);
+        this._input.AddHandler('KeyUp', this.__thisBubble, false, this);
+        this._input.AddHandler('Clicked', this.__thisBubble, false, this);
 
         if(this._fieldData?.params?.readonly === undefined) {
             this.readonly = false;    

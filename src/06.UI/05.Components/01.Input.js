@@ -13,7 +13,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
      * @param {Element|string} element to create in
      */
     constructor(name, container, element) {
-        super(name, container, Element.create('div', {class: 'app-ui-component'}));
+        super(name, container, Element.create('div', { class: 'app-ui-component' }));
 
         this.GenerateChildren(element, this._element);
 
@@ -40,12 +40,12 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
 
         this._input.addEventListener('keyup', (e) => {
 
-            if(['Tab', 'Escape', 'Enter', 'ArrowDown', 'ArrowUp', 'Space'].indexOf(e.code) !== -1) {
+            if (['Tab', 'Escape', 'Enter', 'ArrowDown', 'ArrowUp', 'Space'].indexOf(e.code) !== -1) {
                 return true;
             }
 
-            if(!!this.maxlength && this.type != 'text') {
-                if( (this.value + '').length > this.maxlength ) {
+            if (!!this.maxlength && this.type != 'text') {
+                if ((this.value + '').length > this.maxlength) {
                     this.value = (this.value + '').substring(0, this.maxlength);
                     e.preventDefault();
                     e.stopPropagation();
@@ -53,26 +53,26 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
                 }
             }
 
-            if(!this._showClearIconAllways) {
-                if(this.readonly) {
+            if (!this._showClearIconAllways) {
+                if (this.readonly) {
                     this.Children('clear').shown = false;
                 } else {
                     this.Children('clear').shown = this._hasClearIcon && this._input.value.length > 0;
-                } 
+                }
             } else {
                 this.Children('clear').shown = this._input.value.length > 0;
             }
 
             this.Dispatch('KeyUp', { value: this.value, domEvent: e });
 
-            if(this._changeOnKeyUp) {
-                if(this._changeOnKeyUpTimeoutId) {
+            if (this._changeOnKeyUp) {
+                if (this._changeOnKeyUpTimeoutId) {
                     clearTimeout(this._changeOnKeyUpTimeoutId);
                 }
                 this._changeOnKeyUpTimeoutId = setTimeout(() => this.Dispatch('Changed', { value: this.value, domEvent: e }), this._changeOnKeyUpTimeout);
             }
 
-            if(this._fillTimeout) {
+            if (this._fillTimeout) {
                 clearTimeout(this._fillTimeout);
                 this._fillTimeout = null;
             }
@@ -102,27 +102,13 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
 
         const pasteEventHandler = (e) => {
             Colibri.Common.Delay(100).then(() => {
-                this.Dispatch('Pasted', {domEvent: e});
+                this.Dispatch('Pasted', { domEvent: e });
             });
         };
 
         this._input.addEventListener('paste', pasteEventHandler);
 
-        this.Children('clear').AddHandler('Clicked', (event, args) => {
-            if(!this.enabled) {
-                return;
-            }
-            this.Dispatch('BeforeClear', args);
-            if(args.cancel) {
-                return;
-            }
-
-            this._input.value = '';
-            this._input.focus();
-            this.Children('clear').shown = this._showClearIconAllways;
-            this.loading = false;
-            this.Dispatch('Cleared', args);
-        });
+        this.Children('clear').AddHandler('Clicked', this.__clearClicked, false, this);
 
         this._input.addEventListener('blur', (e) => {
             this.Dispatch('LoosedFocus', { value: this.value, domEvent: e });
@@ -133,8 +119,24 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
 
     }
 
+    __clearClicked(event, args) {
+        if (!this.enabled) {
+            return;
+        }
+        this.Dispatch('BeforeClear', args);
+        if (args.cancel) {
+            return;
+        }
+
+        this._input.value = '';
+        this._input.focus();
+        this.Children('clear').shown = this._showClearIconAllways;
+        this.loading = false;
+        this.Dispatch('Cleared', args);
+    }
+
     __thisLoosedFocus(event, args) {
-        if(this._popup) {
+        if (this._popup) {
             this._popup.Hide();
             this._popup.Dispose();
             this._popup = null;
@@ -169,7 +171,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
      * @returns this
      */
     Select() {
-        if(!this.readonly) {
+        if (!this.readonly) {
             this._input.select();
         }
         return this;
@@ -188,14 +190,14 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
      */
     set loading(value) {
         value = this._convertProperty('Boolean', value);
-        if(this.hasIcon) {
+        if (this.hasIcon) {
             this.Children('icon').shown = !value;
         }
         this.Children('loadingicon').shown = value;
     }
     /** @private */
     _hideLoading() {
-        if(this.icon) {
+        if (this.icon) {
             this.icon.shown = true;
         }
         this.loadingicon.shown = false;
@@ -241,7 +243,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         try {
             return this._input.attr('placeholder');
         }
-        catch(e) {
+        catch (e) {
             return '';
         }
     }
@@ -267,7 +269,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
      */
     set icon(value) {
         value = this._convertProperty('String', value);
-        if(value === null) {
+        if (value === null) {
             this.Children('icon').html = '';
             this.Children('icon').shown = false;
         }
@@ -303,10 +305,10 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
      * Input value
      * @type {string} 
      */
-    set value(value) { 
+    set value(value) {
         value = this._convertProperty('String', value);
         this._input.value = value;
-        if(this.Children('clear') && !this._showClearIconAllways) {
+        if (this.Children('clear') && !this._showClearIconAllways) {
             this.Children('clear').shown = this._hasClearIcon && this._input.value.length > 0;
         }
     }
@@ -324,7 +326,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
      */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
-        if(value === true || value === 'true') {
+        if (value === true || value === 'true') {
             this._input.attr('readonly', 'readonly').attr('tabindex', '-1');
         }
         else {
@@ -404,7 +406,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
      * @type {string}
      */
     get mask() {
-        if(this._masker) {
+        if (this._masker) {
             return this._masker.opts.pattern;
         }
         return null;
@@ -443,18 +445,21 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         el && popup.container.attr('namespace', el.attr('namespace'));
         //заполнение списка перед хэндлерами, чтобы не сработал SelectionChanged
         popup.FillItems(values, this._value);
-        popup.AddHandler('MouseDown', (event, args) => {
-            this._input.value = popup?.selected?.value;
-        });
+        popup.AddHandler('MouseDown', this.__popupMouseDown, false, this);
         return popup;
     }
+
+    __popupMouseDown(event, args) {
+        this._input.value = event?.sender?.selected?.value;
+    }
+
     /** @private */
     _showSuggestions() {
-        if(this._suggestions && this._suggestions.length > 0) {
-            if(!this._popup) {
+        if (this._suggestions && this._suggestions.length > 0) {
+            if (!this._popup) {
                 this._popup = this._createPopup(this._suggestions);
             }
-            this._popup.Show();    
+            this._popup.Show();
         }
     }
 
@@ -496,12 +501,12 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
     set showClearIconAllways(value) {
         value = this._convertProperty('Boolean', value);
         this._showClearIconAllways = value;
-        if(value) {
+        if (value) {
             this.Children('clear').shown = true;
         }
     }
 
-    
+
     /**
      * Change on key up event
      * @type {Boolean}

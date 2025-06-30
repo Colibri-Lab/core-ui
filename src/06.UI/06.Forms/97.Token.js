@@ -5,7 +5,7 @@
  * @memberof Colibri.UI.Forms
  */
 Colibri.UI.Forms.Token = class extends Colibri.UI.Forms.Field {
-    
+
     /**
      * Render field component
      */
@@ -24,8 +24,8 @@ Colibri.UI.Forms.Token = class extends Colibri.UI.Forms.Field {
         this._button.shown = true;
         this._button.value = 'Сгенерировать';
 
-        this._button.AddHandler('Clicked', this.__buttonClicked, false, this); 
-        this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', {domEvent: e, component: this}));
+        this._button.AddHandler('Clicked', this.__buttonClicked, false, this);
+        this._input.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
 
     }
 
@@ -33,7 +33,7 @@ Colibri.UI.Forms.Token = class extends Colibri.UI.Forms.Field {
         this._input.value = String.Password(40);
         this._input.Select();
         this._input.Focus();
-        this.Dispatch('Changed', {domEvent: args.domEvent, component: this});
+        this.Dispatch('Changed', { domEvent: args.domEvent, component: this });
     }
 
     /**
@@ -53,4 +53,4 @@ Colibri.UI.Forms.Token = class extends Colibri.UI.Forms.Field {
 
 }
 
-Colibri.UI.Forms.Field.RegisterFieldComponent('Token', 'Colibri.UI.Forms.Token', '#{ui-fields-token}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler'])
+Colibri.UI.Forms.Field.RegisterFieldComponent('Token', 'Colibri.UI.Forms.Token', '#{ui-fields-token}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler'])

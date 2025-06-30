@@ -37,22 +37,26 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
         this._handlerEvents();
     }
 
+    __headerChoseToggleClicked(event, args) {
+        if(this.ContainsClass('-minimized')) {
+            this.RemoveClass('-minimized');
+            App.Browser.Delete(this.name + '-minimized');
+        } else {
+            this.AddClass('-minimized');
+            App.Browser.Set(this.name + '-minimized', 1);
+        }
+    }
+
+    __headerTitleClicked(event, args) {
+        if(this._toggleOnTitle) {
+            this._headerCloseToggle.Dispatch('Clicked');
+        }
+    }
+
     /** @protected */
     _handlerEvents() {
-        this._headerCloseToggle.AddHandler('Clicked', (event, args) => {
-            if(this.ContainsClass('-minimized')) {
-                this.RemoveClass('-minimized');
-                App.Browser.Delete(this.name + '-minimized');
-            } else {
-                this.AddClass('-minimized');
-                App.Browser.Set(this.name + '-minimized', 1);
-            }
-        });
-        this._headerTitle.AddHandler('Clicked', (event, args) => {
-            if(this._toggleOnTitle) {
-                this._headerCloseToggle.Dispatch('Clicked');
-            }
-        });
+        this._headerCloseToggle.AddHandler('Clicked', this.__headerChoseToggleClicked, false, this);
+        this._headerTitle.AddHandler('Clicked', this.__headerTitleClicked, false, this);
     }
 
     /**

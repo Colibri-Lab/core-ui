@@ -463,64 +463,73 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             rows.title = title;
         }
 
-        rows.AddHandler('CellClicked', (event, args) => {
-            if (this.selectionMode === Colibri.UI.Grid.EveryCell) {
-                this.DeactivateAllCells();
-                if (!this.multiple) {
-                    this.DeselectAllCells();
-                }
-                args.cell.activated = !args.cell.activated;
-                args.cell.selected = !args.cell.selected;
-            }
-            this.Dispatch('CellClicked', args);
-        });
-
-        rows.AddHandler('CellDoubleClicked', (event, args) => {
-            this.Dispatch('CellDoubleClicked', args);
-        });
-
-        rows.AddHandler('RowClicked', (event, args) => {
-            this.Dispatch('RowClicked', args);
-            this.Dispatch('SelectionChanged', Object.assign(args, { item: this.selected }));
-        });
-
-        rows.AddHandler('RowSelected', (event, args) => {
-            if (rows.checked.length == 0) {
-                rows.checkbox.checked = false;
-            }
-            this.Dispatch('RowSelected', args);
-        });
-
-        rows.AddHandler('RowDisposed', (event, args) => {
-            this.RecalculateCellPositions();
-            this.Dispatch('RowDisposed', args);
-        });
-
-        rows.AddHandler('StickyChanged', (event, args) => {
-            this.RecalculateCellPositions();
-        });
-
-        rows.AddHandler('GridCellsChanged', (event, args) => {
-            this.RecalculateCellPositions();
-        });
-
-        rows.AddHandler('RowAdded', (event, args) => {
-            this._norows.shown = false;
-            this._gridContent.shown = true;
-            Object.forEach(this.groups, (name, rows) => {
-                rows.columns = this.header.columnsCount;
-            });
-            this.RecalculateCellPositions();
-            this.Dispatch('RowAdded', { row: args.row });
-        });
-
-        rows.AddHandler('RowUpdated', (event, args) => {
-            this.RecalculateCellPositions();
-            this.Dispatch('RowUpdated', { row: args.row });
-        });
-
+        rows.AddHandler('CellClicked', this.__rowsCellClicked, false, this);
+        rows.AddHandler('CellDoubleClicked', this.__rowsCellDoubleClicked, false, this);
+        rows.AddHandler('RowClicked', this.__rowsRowClicked, false, this);
+        rows.AddHandler('RowSelected', this.__rowsRowSelected, false, this);
+        rows.AddHandler('RowDisposed', this.__rowsRowDisposed, false, this);
+        rows.AddHandler('StickyChanged', this.__rowsStickyChanged, false, this);
+        rows.AddHandler('GridCellsChanged', this.__rowsGridCellsChanged, false, this);
+        rows.AddHandler('RowAdded', this.__rowsRowAdded, false, this);
+        rows.AddHandler('RowUpdated', this.__rowsRowUpdated, false, this);
 
         return rows;
+    }
+
+    __rowsCellClicked(event, args) {
+        if (this.selectionMode === Colibri.UI.Grid.EveryCell) {
+            this.DeactivateAllCells();
+            if (!this.multiple) {
+                this.DeselectAllCells();
+            }
+            args.cell.activated = !args.cell.activated;
+            args.cell.selected = !args.cell.selected;
+        }
+        this.Dispatch('CellClicked', args);
+    }
+
+    __rowsCellDoubleClicked(event, args) {
+        this.Dispatch('CellDoubleClicked', args);
+    }
+
+    __rowsRowClicked(event, args) {
+        this.Dispatch('RowClicked', args);
+        this.Dispatch('SelectionChanged', Object.assign(args, { item: this.selected }));
+    }
+
+    __rowsRowSelected(event, args) {
+        if (rows.checked.length == 0) {
+            rows.checkbox.checked = false;
+        }
+        this.Dispatch('RowSelected', args);
+    }
+
+    __rowsRowDisposed(event, args) {
+        this.RecalculateCellPositions();
+        this.Dispatch('RowDisposed', args);
+    }
+
+    __rowsStickyChanged(event, args) {
+        this.RecalculateCellPositions();
+    }
+
+    __rowsGridCellsChanged(event, args) {
+        this.RecalculateCellPositions();
+    }
+
+    __rowsRowAdded(event, args) {
+        this._norows.shown = false;
+        this._gridContent.shown = true;
+        Object.forEach(this.groups, (name, rows) => {
+            rows.columns = this.header.columnsCount;
+        });
+        this.RecalculateCellPositions();
+        this.Dispatch('RowAdded', { row: args.row });
+    }
+
+    __rowsRowUpdated(event, args) {
+        this.RecalculateCellPositions();
+        this.Dispatch('RowUpdated', { row: args.row });
     }
 
     /**
@@ -1205,9 +1214,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                 const cl = this._massActionsMenuClass;
                 this._massActionsMenuObject = new cl(this.name + '-mass-actions-menu', container || document.body);
                 this._massActionsMenuObject.parent = this;
-                this._massActionsMenuObject.AddHandler('ActionClicked', (event, args) => {
-                    event.sender.parent.Dispatch('MassActionsMenuActionClicked', Object.assign({ items: event.sender.parent.checked }, args));
-                });
+                this._massActionsMenuObject.AddHandler('ActionClicked', this.__massActionMenuObjectActionClicked, false, this);
             }
 
             this._massActionsMenuObject.actions = this._massActionsMenu;
@@ -1216,6 +1223,10 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             this._massActionsMenuObject.styles = { 'max-width': container.container.bounds().outerWidth + 'px' };
 
         }
+    }
+
+    __massActionMenuObjectActionClicked(event, args) {
+        this._massActionsMenuObject.parent.Dispatch('MassActionsMenuActionClicked', Object.assign({ items: this.checked }, args));
     }
 
     RecalculateCellVisibility(column) {

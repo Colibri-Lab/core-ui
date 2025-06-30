@@ -49,9 +49,17 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
         this._element.addEventListener('scroll', this.__scrollHandler);
 
-        this.AddHandler('ReceiveFocus', (event, args) => event.sender.AddClass('-focused'));
-        this.AddHandler('LoosedFocus', (event, args) => event.sender.RemoveClass('-focused'));
+        this.AddHandler('ReceiveFocus', this.__thisReceiveFocus);
+        this.AddHandler('LoosedFocus', this.__thisLoosedFocus);
 
+    }
+
+    __thisReceiveFocus (event, args) {
+        this.AddClass('-focused');
+    }
+    
+    __thisLoosedFocus(event, args) {
+        this.RemoveClass('-focused');
     }
 
     Dispose() {
@@ -622,8 +630,12 @@ Colibri.UI.List.SearchBox = class extends Colibri.UI.Pane {
 
         this._input = new Colibri.UI.Input(this.name + '-input', this);
         this._input.shown = true;
-        this._input.AddHandler(['Filled', 'Cleared'], (event, args) => this.Dispatch('Changed', args));
+        this._input.AddHandler(['Filled', 'Cleared'], this.__inputChangedOrFilled, false, this);
 
+    }
+
+    __inputChangedOrFilled(event, args) {
+        this.Dispatch('Changed', args);
     }
 
     /** @protected */
@@ -1049,11 +1061,15 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
         this.AddHandler('Clicked', this.__ItemSelected);
         this.AddHandler('DoubleClicked', this.__ItemDblSelected);
         this.AddHandler(['MouseDown', 'TouchStarted'], this.__ItemMouseDown);
-        this.AddHandler(['MouseUp', 'TouchEnded'], (event, args) => this.list?.Dispatch('ItemMouseUp', args));
+        this.AddHandler(['MouseUp', 'TouchEnded'], this.__thisMouseUpOrTouchEnded);
 
         this.AddHandler('ContextMenuIconClicked', (event, args) => event.sender.group.Dispatch('ContextMenuIconClicked', Object.assign({item: event.sender}, args)));
         this.AddHandler('ContextMenuItemClicked', (event, args) => event.sender.group.Dispatch('ContextMenuItemClicked', Object.assign({item: event.sender}, args)));
 
+    }
+
+    __thisMouseUpOrTouchEnded(event, args) {
+        this.list?.Dispatch('ItemMouseUp', args);
     }
 
 

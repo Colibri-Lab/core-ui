@@ -5,7 +5,7 @@
  * @memberof Colibri.UI.Forms
  */
 Colibri.UI.Forms.DayOfMonth = class extends Colibri.UI.Forms.Field {
-    
+
     /**
      * Render field component
      */
@@ -21,25 +21,22 @@ Colibri.UI.Forms.DayOfMonth = class extends Colibri.UI.Forms.Field {
         this._month = new Colibri.UI.Selector('month', contentContainer, false, false, false, this._getMonths(), parseInt(this._fieldData.default.split('-')[0]));
         this._month.shown = true;
 
-        this._month.AddHandler('Changed', (event, args) => {
-            this._day.values = this._getDays(this._month.value?.value ?? this._month.value);
-            this.Dispatch('Changed', Object.assign(args, {component: this}));
-        });
-        this._month.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp'));
+        this._month.AddHandler('Changed', this.__monthChanged, false, this);
+        this._month.AddHandler('KeyUp', this.__thisBubble, false, this);
 
-        this._month.AddHandler('KeyDown', (event, args) => this.Dispatch('KeyDown'));
-        this._day.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args, {component: this})));
-        this._day.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp'));
-        this._day.AddHandler('KeyDown', (event, args) => this.Dispatch('KeyDown'));
+        this._month.AddHandler('KeyDown', this.__thisBubble, false, this);
+        this._day.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
+        this._day.AddHandler('KeyUp', this.__thisBubble, false, this);
+        this._day.AddHandler('KeyDown', this.__thisBubble, false, this);
 
 
-        if(this._fieldData?.params?.readonly === undefined) {
-            this.readonly = false;    
+        if (this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;
         }
         else {
             this.readonly = this._fieldData?.params?.readonly;
         }
-        if(this._fieldData?.params?.enabled === undefined) {
+        if (this._fieldData?.params?.enabled === undefined) {
             this.enabled = true;
         }
         else {
@@ -48,9 +45,14 @@ Colibri.UI.Forms.DayOfMonth = class extends Colibri.UI.Forms.Field {
 
     }
 
+    __monthChanged(event, args) {
+        this._day.values = this._getDays(this._month.value?.value ?? this._month.value);
+        this.Dispatch('Changed', Object.assign(args, { component: this }));
+    }
+
     _getMonths() {
         const ret = [];
-        [1,2,3,4,5,6,7,8,9,10,11,12].forEach((m) => {
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].forEach((m) => {
             ret.push({
                 value: m,
                 title: (m + '').expand('0', 2)
@@ -62,7 +64,7 @@ Colibri.UI.Forms.DayOfMonth = class extends Colibri.UI.Forms.Field {
     _getDays(month) {
         const d = [];
         const days = new Date(Date.Now().getFullYear(), month, 0).getDate();
-        for(let j=1; j<=days; j++) {
+        for (let j = 1; j <= days; j++) {
             d.push({
                 value: j,
                 title: (j + '').expand('0', 2)
@@ -139,4 +141,4 @@ Colibri.UI.Forms.DayOfMonth = class extends Colibri.UI.Forms.Field {
         }
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('DayOfMonth', 'Colibri.UI.Forms.DayOfMonth', '#{ui-fields-dayofmonth}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler'])
+Colibri.UI.Forms.Field.RegisterFieldComponent('DayOfMonth', 'Colibri.UI.Forms.DayOfMonth', '#{ui-fields-dayofmonth}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler'])

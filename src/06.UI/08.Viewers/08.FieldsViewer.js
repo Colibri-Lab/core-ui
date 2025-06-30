@@ -11,7 +11,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
      * @param {Element|Colibri.UI.Component} container container element and component
      * @param {Element|string} element element to generate childs
      * @param {Colibri.UI.Component|null} root root component 
-     */ 
+     */
     constructor(name, container, element = null, root = null) {
         super(name, container, element || Element.create('span'), root);
         this.AddClass('app-fields-viewer-component');
@@ -127,12 +127,30 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */ 
+     */
     __toggleHidden(event, args) {
         this._hidden.shown = !this._hidden.shown;
         this._hiddenLink1.shown = !this._hiddenLink1.shown;
         this._hiddenLink2.shown = !this._hiddenLink2.shown;
-        this.Dispatch('FieldsToggled', {state: this._hidden.shown});
+        this.Dispatch('FieldsToggled', { state: this._hidden.shown });
+    }
+
+    __viewerChanged(event, args) {
+        this.Dispatch('EditorChanged', {
+            domEvent: args.domEvent,
+            editor: event.sender,
+            field: event.sender.field,
+            name: event.sender.name.replaceAll('-viewer', '')
+        })
+    }
+
+    __editorClicked(event, args) {
+        return this.Dispatch('ViewerClicked', {
+            domEvent: args.domEvent,
+            viewer: event.sender,
+            field: event.sender.field,
+            name: event.sender.name.replaceAll('-viewer', '')
+        });
     }
 
     /**
@@ -143,7 +161,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
      * @param {boolean} showTitles show titles
      */
     _createFields(fields = null, value = null, contentElement = null, showTitles = true) {
-        if(fields === null) {
+        if (fields === null) {
             this._viewers = [];
         }
         const root = this.root || this;
@@ -158,12 +176,12 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
 
         let isHidden = false;
         Object.forEach(fields, (name, field) => {
-            if(field?.params?.fieldsviewer && field?.params?.fieldsviewer.hidden === true) {
+            if (field?.params?.fieldsviewer && field?.params?.fieldsviewer.hidden === true) {
                 isHidden = true;
             }
         });
 
-        if(isHidden) {
+        if (isHidden) {
             this._hidden = new Colibri.UI.Pane(this.name + '_hidden', contentElement);
             this._hiddenLink1 = new Colibri.UI.Link(this.name + '_link1', contentElement);
             this._hiddenLink2 = new Colibri.UI.Link(this.name + '_link2', contentElement);
@@ -180,19 +198,19 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
 
         Object.forEach(fields, (name, field) => {
 
-            if(!field) {
+            if (!field) {
                 return true;
             }
 
-            if(field.component == 'Hidden') {
+            if (field.component == 'Hidden') {
                 return true;
             }
 
-            if(!this._showUnsetFields && !field.params?.editor && (value[name] === undefined || value[name] === null || value[name] === '' || (Array.isArray(value[name]) && value[name].length === 0))) {
+            if (!this._showUnsetFields && !field.params?.editor && (value[name] === undefined || value[name] === null || value[name] === '' || (Array.isArray(value[name]) && value[name].length === 0))) {
                 return true;
             }
 
-            if(this._hideFields.indexOf(name) !== -1) {
+            if (this._hideFields.indexOf(name) !== -1) {
                 return true;
             }
 
@@ -200,27 +218,27 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
             const shortComponentName = field.component.substr(field.component.lastIndexOf('.') + 1).toLowerCase();
 
             pane.AddClass(`app-field-pane app-${shortComponentName}-pane`);
-            if(field?.params?.className) {
+            if (field?.params?.className) {
                 let className = field.params?.className;
-                if(typeof className === 'function') {
+                if (typeof className === 'function') {
                     className = className(pane, value[name]);
                 }
                 pane.AddClass(className);
             }
-            if(field.params?.editor) {
+            if (field.params?.editor) {
                 pane.AddClass('app-field-pane-editor');
             }
 
             pane.shown = field.hidden === undefined || field.hidden === true;
 
             field.name = name;
-            field.params = Object.assign(field.params ?? {}, {data: this.tag.data});
-            
-            if(field.params && field.params.condition) {
+            field.params = Object.assign(field.params ?? {}, { data: this.tag.data });
+
+            if (field.params && field.params.condition) {
                 const condition = field.params.condition;
-                if(condition.field) {
+                if (condition.field) {
                     const fieldValue = value[condition.field];
-                    if(fieldValue && fieldValue.value !== condition.value) {
+                    if (fieldValue && fieldValue.value !== condition.value) {
                         pane.shown = false;
                     }
                     else {
@@ -232,11 +250,11 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                 }
             }
 
-            if(field.desc !== false) {
+            if (field.desc !== false) {
                 const title = new Colibri.UI.TextSpan(name + '-title', pane);
                 title.AddClass('app-field-title');
                 try {
-                    if(typeof field.desc === 'function') {
+                    if (typeof field.desc === 'function') {
                         const tvalue = field.desc;
                         tvalue(field, this).then((value) => {
                             title.value = value;
@@ -244,11 +262,11 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                     } else {
                         title.value = Lang !== undefined ? Lang.Translate(field.desc) : field.desc;
                     }
-                } catch(e) {
+                } catch (e) {
                     title.value = field.desc;
                 }
                 title.shown = showTitles;
-                if(field?.params?.fieldsviewer?.info) {
+                if (field?.params?.fieldsviewer?.info) {
                     const icon = new Colibri.UI.Icon(name + '-icon', title);
                     icon.shown = true;
                     icon.iconSVG = field?.params?.fieldsviewer?.info?.icon;
@@ -256,22 +274,22 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                 }
             }
 
-            if(this._showUnsetFields || value[name] !== undefined) {
+            if (this._showUnsetFields || value[name] !== undefined) {
 
                 const fieldContainer = new Colibri.UI.Pane(name + '-fields-pane', pane);
                 fieldContainer.AddClass('app-field-container');
                 fieldContainer.AddClass('app-field-' + shortComponentName);
                 fieldContainer.shown = field.hidden === undefined || field.hidden === true;
 
-                if(field.component == 'Colibri.UI.Forms.Array') {
-                    if(Object.isObject(value[name])) {
+                if (field.component == 'Colibri.UI.Forms.Array') {
+                    if (Object.isObject(value[name])) {
                         value[name] = Object.values(value[name]);
                     }
                     value[name].forEach((v) => {
                         this._createFields(field.fields, v, fieldContainer, false);
                     });
                 }
-                else if(field.component == 'Colibri.UI.Forms.Object' && !field.params && !field.params.single) {
+                else if (field.component == 'Colibri.UI.Forms.Object' && !field.params && !field.params.single) {
                     this._createFields(field.fields, value[name], fieldContainer, false);
                 }
                 else {
@@ -280,9 +298,9 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                     let viewer = null;
                     let viewerAttrs = field.params?.viewerAttrs ?? {};
                     try {
-                        viewer = eval('new '+ viewerComponentName + '(name + \'-viewer\', fieldContainer, null, root)');
+                        viewer = eval('new ' + viewerComponentName + '(name + \'-viewer\', fieldContainer, null, root)');
                     }
-                    catch(e) { 
+                    catch (e) {
                         viewer = new Colibri.UI.TextViewer(name + '-viewer', fieldContainer, null, root);
                     }
                     viewer.field = field;
@@ -290,57 +308,57 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                     viewer.enabled = field.params?.enabled ?? true;
                     viewer.download = this._download;
                     viewer.downloadlink = this._downloadlink;
-                    if(field.fields) {
+                    if (field.fields) {
                         viewer.fields = field.fields;
                     }
                     Object.forEach(viewerAttrs, (attr, value) => {
                         viewer[attr] = value;
                     });
-                    if(field.attrs) {
+                    if (field.attrs) {
                         viewer.width = field.attrs?.width ?? null;
                         viewer.height = field.attrs?.height ?? null;
                     }
-                    if(field?.params?.className) {
+                    if (field?.params?.className) {
                         let className = field.params?.className;
-                        if(typeof className === 'function') {
+                        if (typeof className === 'function') {
                             className = className(viewer, value[name]);
                         }
                         viewer.AddClass(className);
                     }
                     viewer.value = this._generateValue(field, value, name, viewer);
 
-                    if(field.params?.editor) {
-                        viewer.AddHandler('Changed', (event, args) => this.Dispatch('EditorChanged', {domEvent: args.domEvent, editor: viewer, field: field, name: name}));
+                    if (field.params?.editor) {
+                        viewer.AddHandler('Changed', this.__editorChanged, false, this);
                     } else {
-                        viewer.AddHandler('Clicked', (event, args) => this.Dispatch('ViewerClicked', {domEvent: args.domEvent, viewer: viewer, field: field, name: name}));
+                        viewer.AddHandler('Clicked', this.__viewerChanged, false, this);
                     }
 
                     this._viewers.push(viewer);
 
                 }
 
-    
+
             }
 
-            if(field.params.generatestyles) {
+            if (field.params.generatestyles) {
                 let f = field.params.generatestyles;
-                if(typeof(f) !== 'function') {
+                if (typeof (f) !== 'function') {
                     pane.styles = f;
                 } else {
                     pane.styles = f(field, pane);
                 }
             }
 
-            
+
             let hidden = field?.params?.hidden ?? false;
-            if(typeof hidden === 'function') {
+            if (typeof hidden === 'function') {
                 let v = value[name] ?? field.default ?? '';
                 try {
                     v = value[name][Lang.Current] ?? value[name] ?? field.default ?? '';
-                } catch(e) { }
+                } catch (e) { }
                 hidden = hidden(v, field);
             }
-            if(hidden) {
+            if (hidden) {
                 pane.shown = false;
             }
 
@@ -363,17 +381,17 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         fields = fields || this._fields;
         value = value || this._value;
 
-        if((!this._showUnsetFields && Object.countKeys(value) === 0) || Object.countKeys(fields) === 0) {
+        if ((!this._showUnsetFields && Object.countKeys(value) === 0) || Object.countKeys(fields) === 0) {
             return;
         }
-        
-        if(contentElement.children < 4) {
+
+        if (contentElement.children < 4) {
             this._createFields(fields, value, contentElement, showTitles);
         }
         else {
             Object.forEach(fields, (name, field) => {
                 const component = this.FindByName(name + '-viewer');
-                if(component) {
+                if (component) {
                     component.value = this._generateValue(field, value, name, component);
                 }
             });
@@ -385,16 +403,16 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         let vv = null;
         try {
             vv = Lang.Translate(value[name] ?? field.default ?? '' ?? null);
-        } catch(e) {
+        } catch (e) {
             vv = value[name] ?? field.default ?? '' ?? null;
         }
-        if(field.params && field.params.valuegenerator) {
+        if (field.params && field.params.valuegenerator) {
             const f = typeof field?.params?.valuegenerator === 'string' ? eval(field?.params?.valuegenerator) : field?.params?.valuegenerator;
             const isOldVersion = typeof field?.params?.valuegenerator === 'string' && field?.params?.valuegenerator.indexOf('(parentValue, formValue') !== -1;
-            const v = isOldVersion ? 
-                f(vv, value, component, this) : 
+            const v = isOldVersion ?
+                f(vv, value, component, this) :
                 f(vv, value, component, this, component);
-            if(v !== undefined) {
+            if (v !== undefined) {
                 console.log('generated', v);
                 return v;
             }

@@ -17,14 +17,9 @@ Colibri.UI.Forms.DateTime = class extends Colibri.UI.Forms.Field {
 
         this._input = new Colibri.UI.DateSelector(this._name + '-input', contentContainer);
         this._input.shown = true;
-        this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args || {}, {component: this})));
-        this._input.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
-        this._input.AddHandler('Clicked', (event, args) => {
-            this.Focus();
-            this.Dispatch('Clicked', args);
-            args.domEvent.stopPropagation();
-            return false;
-        });
+        this._input.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
+        this._input.AddHandler('KeyUp', this.__thisBubble, false, this);
+        this._input.AddHandler('Clicked', this.__thisBubbleWithFocus, false, this);
 
         this._time = new Colibri.UI.Input(this._name + '-time', contentContainer);
         this._time.shown = true;
@@ -35,23 +30,25 @@ Colibri.UI.Forms.DateTime = class extends Colibri.UI.Forms.Field {
         this._icon = new Colibri.UI.Icon(this.name + '-clear', contentContainer);
         this._icon.shown = true;
         this._icon.value = Colibri.UI.ClearIcon;
-        this._icon.AddHandler('Clicked', (event, args) => {
-            this.value = null;
-        });
+        this._icon.AddHandler('Clicked', this.__clearClicked, false, this);
 
-        if(this._fieldData?.params?.readonly === undefined) {
-            this.readonly = false;    
+        if (this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;
         }
         else {
             this.readonly = this._fieldData?.params?.readonly;
         }
-        if(this._fieldData?.params?.enabled === undefined) {
+        if (this._fieldData?.params?.enabled === undefined) {
             this.enabled = true;
         }
         else {
             this.enabled = this._fieldData.params.enabled;
         }
 
+    }
+
+    __clearClicked(event, args) {
+        this.value = null;
     }
 
     /**
@@ -102,7 +99,7 @@ Colibri.UI.Forms.DateTime = class extends Colibri.UI.Forms.Field {
     get value() {
         let value = this._input.value;
         let timeValue = this._time.value;
-        
+
         value = (value?.toString() === 'Invalid Date' ? null : value.toShortDateString());
         return value ? value + ' ' + timeValue : null;
     }
@@ -156,4 +153,4 @@ Colibri.UI.Forms.DateTime = class extends Colibri.UI.Forms.Field {
         }
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('DateTime', 'Colibri.UI.Forms.DateTime', '#{ui-fields-datetime}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler']);
+Colibri.UI.Forms.Field.RegisterFieldComponent('DateTime', 'Colibri.UI.Forms.DateTime', '#{ui-fields-datetime}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler']);

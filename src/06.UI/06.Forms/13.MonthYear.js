@@ -18,13 +18,13 @@ Colibri.UI.Forms.MonthYear = class extends Colibri.UI.Forms.Field {
         this._month.shown = true;
         this._year.shown = true;
 
-        this._month.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args, {component: this})));
-        this._month.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp'));
-        this._month.AddHandler('KeyDown', (event, args) => this.Dispatch('KeyDown'));
+        this._month.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
+        this._month.AddHandler('KeyUp', this.__thisBubble, false, this);
+        this._month.AddHandler('KeyDown', this.__thisBubble, false, this);
 
-        this._year.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args, {component: this})));
-        this._year.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp'));
-        this._year.AddHandler('KeyDown', (event, args) => this.Dispatch('KeyDown'));
+        this._year.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
+        this._year.AddHandler('KeyUp', this.__thisBubble, false, this);
+        this._year.AddHandler('KeyDown', this.__thisBubble, false, this);
 
         if(this._fieldData?.params?.readonly === undefined) {
             this.readonly = false;    

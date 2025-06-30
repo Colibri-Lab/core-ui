@@ -16,14 +16,14 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         this._allowedExtensions = null;
         this._maxFileSize = null;
 
-        if(!Array.isArray(this._fieldData.params.allow)) {
+        if (!Array.isArray(this._fieldData.params.allow)) {
             this._fieldData.params.allow = this._fieldData.params.allow.split(',');
         }
-        
-        if(typeof this._fieldData.params.size === 'string') {
+
+        if (typeof this._fieldData.params.size === 'string') {
             this._fieldData.params.size = parseInt(this._fieldData.params.size);
         }
-        
+
         this._allowedExtensions = this._fieldData.params.allow ?? null;
         this._maxFileSize = this._fieldData.params.size ?? null;
         this._maxCount = this._fieldData.params.maxadd ?? null;
@@ -47,13 +47,13 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         this._renderInput();
         this._handleEvents();
 
-        if(this._fieldData?.params?.readonly === undefined) {
-            this.readonly = false;    
+        if (this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;
         }
         else {
             this.readonly = this._fieldData?.params?.readonly;
         }
-        if(this._fieldData?.params?.enabled === undefined) {
+        if (this._fieldData?.params?.enabled === undefined) {
             this.enabled = true;
         }
         else {
@@ -62,50 +62,58 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
 
     }
 
-    /** @protected */
-    _handleEvents() {
+    __filesItemClicked(event, args) {
+        this._itemClicked(args.item.value);
+    }
 
-        this._files.AddHandler('ItemClicked', (event, args) => this._itemClicked(args.item.value));
+    __inputInputFileChosen(event, args) {
+        if (args.files) {
+            let validatedFiles = this._validate(args.files);
 
-        if (this.dropAreaEnabled) {
-            /* Валидация выбранных файлов, отображение файлов, прошедших проверку, вывод ошибок */
-            this._input.AddHandler('InputFileChosen', (event, args) => {
-                if (args.files) {
-                    let validatedFiles = this._validate(args.files);
-
-                    if (validatedFiles.length > 0) {
-                        this._addValue(validatedFiles);
-                        this._clearInput();
-
-                        if (this._fieldData.params && this._fieldData.params.more) {
-                            this._input.title = this._fieldData.params.more;
-                            this._input.AddClass('-full');
-                        }
-                    }
-
-                    if (!this._validated) {
-                        this._showError();
-                    }
-                    this.Dispatch('Changed', Object.assign(args, {component: this}));
-                }
-            });
-        }
-        else {
-
-            this._input.AddHandler('InputFileChanged', (event, args) => {
-                this._files.shown = true;
-                this.lastValue = this.value;
-                let validatedFiles = this._validate(this._input.Files());
+            if (validatedFiles.length > 0) {
                 this._addValue(validatedFiles);
+                this._clearInput();
 
                 if (this._fieldData.params && this._fieldData.params.more) {
                     this._input.title = this._fieldData.params.more;
                     this._input.AddClass('-full');
                 }
+            }
 
-                this.Dispatch('Changed', Object.assign(args, {component: this}));
+            if (!this._validated) {
+                this._showError();
+            }
+            this.Dispatch('Changed', Object.assign(args, { component: this }));
+        }
+    }
 
-            });
+    __inputInputFileChanged(event, args) {
+        this._files.shown = true;
+        this.lastValue = this.value;
+        let validatedFiles = this._validate(this._input.Files());
+        this._addValue(validatedFiles);
+
+        if (this._fieldData.params && this._fieldData.params.more) {
+            this._input.title = this._fieldData.params.more;
+            this._input.AddClass('-full');
+        }
+
+        this.Dispatch('Changed', Object.assign(args, { component: this }));
+
+    }
+
+    /** @protected */
+    _handleEvents() {
+
+        this._files.AddHandler('ItemClicked', this.__filesItemClicked, false, this);
+
+        if (this.dropAreaEnabled) {
+            /* Валидация выбранных файлов, отображение файлов, прошедших проверку, вывод ошибок */
+            this._input.AddHandler('InputFileChosen', this.__inputInputFileChosen, false, this);
+        }
+        else {
+
+            this._input.AddHandler('InputFileChanged', this.__inputInputFileChanged, false, this);
         }
     }
 
@@ -131,7 +139,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
                 picture.shown = filename.shown = deleteIcon.shown = true;
                 picture.image = itemData.file;
                 picture.width = picture.height = 40;
-                
+
             } else {
                 icon.shown = filename.shown = deleteIcon.shown = true;
                 icon.value = Colibri.UI.FileLinkIcon;
@@ -148,56 +156,60 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
                 sign.value = '#{ui-files-sign}';
             }
 
-            deleteIcon.AddHandler('Clicked', (event, args) => {
-                const value = this.value,
-                    delParams = this._delDialog,
-                    delAction = () => {
-                        this.lastValue = value;
-                        args.removed = itemData.file || null;
-                        event.sender.parent.Dispose();
-                        if (this._filesGroup.children == 0) {
-                            this._files.shown = false;
-                            if (this._fieldData.params && this._fieldData.params.button) {
-                                this._input.title = this._fieldData.params.button;
-                                this._input.RemoveClass('-full');
-                            }
-                        }
-                        this.Dispatch('Changed', Object.assign(args, {component: this}));
-                    };
+            deleteIcon.AddHandler('Clicked', this.__deleteIconClicked, false, this)
 
-                if (delParams) {
-                    const dialog = new Colibri.UI.ConfirmDialog(this.name + '-confirm-delete-dialog', document.body);
-                    dialog.Show(delParams.title, delParams.message.replace(/{([^{}]+)}/g, (keyExpr, key) => {
-                        return itemData.file[key] || "";
-                    }), delParams.button ?? 'Удалить', (result) => {
-                        if (result === true) {
-                            delAction.call(this);
-                        }
-                    });
-                } else {
-                    delAction.call(this);
-                }
-
-                args.domEvent?.stopPropagation();
-                return false;
-            })
-
-            sign && sign.AddHandler('Clicked', (event, args) => {
-
-                const component = eval(this._fieldData?.params?.sign_component);
-                component.Show(itemData.file, (signedFile) => {
-                    container.value.file = signedFile;
-                    container.value.title = signedFile.name;
-                    sign.value = 'Файл подписан';
-                    sign.shown = false;
-                    filename.value = signedFile.name;
-                });
-
-                args.domEvent?.stopPropagation();
-                return false;
-            });
+            sign && sign.AddHandler('Clicked', this.__sighClicked, false, this);
             filename.value = itemData.title;
         }
+    }
+
+    __sighClicked(event, args) {
+
+        const component = eval(this._fieldData?.params?.sign_component);
+        component.Show(itemData.file, (signedFile) => {
+            container.value.file = signedFile;
+            container.value.title = signedFile.name;
+            sign.value = 'Файл подписан';
+            sign.shown = false;
+            filename.value = signedFile.name;
+        });
+
+        args.domEvent?.stopPropagation();
+        return false;
+    }
+
+    __deleteIconClicked(event, args) {
+        const value = this.value,
+            delParams = this._delDialog,
+            delAction = () => {
+                this.lastValue = value;
+                args.removed = itemData.file || null;
+                event.sender.parent.Dispose();
+                if (this._filesGroup.children == 0) {
+                    this._files.shown = false;
+                    if (this._fieldData.params && this._fieldData.params.button) {
+                        this._input.title = this._fieldData.params.button;
+                        this._input.RemoveClass('-full');
+                    }
+                }
+                this.Dispatch('Changed', Object.assign(args, { component: this }));
+            };
+
+        if (delParams) {
+            const dialog = new Colibri.UI.ConfirmDialog(this.name + '-confirm-delete-dialog', document.body);
+            dialog.Show(delParams.title, delParams.message.replace(/{([^{}]+)}/g, (keyExpr, key) => {
+                return itemData.file[key] || "";
+            }), delParams.button ?? 'Удалить', (result) => {
+                if (result === true) {
+                    delAction.call(this);
+                }
+            });
+        } else {
+            delAction.call(this);
+        }
+
+        args.domEvent?.stopPropagation();
+        return false;
     }
 
     /** @private */
@@ -290,30 +302,30 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
             });
         }
         this._allowedExtensions = this._allowedExtensions.filter(v => !!v);
-        if (this._allowedExtensions && 
-            (Array.isArray(this._allowedExtensions) ? 
-                (this._allowedExtensions.includes('*') || this._allowedExtensions.includes('*.*')) : 
+        if (this._allowedExtensions &&
+            (Array.isArray(this._allowedExtensions) ?
+                (this._allowedExtensions.includes('*') || this._allowedExtensions.includes('*.*')) :
                 (this._allowedExtensions != '*' && this._allowedExtensions != '*.*'))
         ) {
             let extensions = this._allowedExtensions.map((item) => item.toLowerCase());
-            if(!(extensions.includes('*') || extensions.includes('*.*'))) {
+            if (!(extensions.includes('*') || extensions.includes('*.*'))) {
                 filesList.forEach((file, index) => {
                     let fileName = file.name;
                     let ext = '';
-    
+
                     if (fileName.includes('.')) {
                         ext = fileName.substring(fileName.lastIndexOf('.') + 1);
                         ext = ext.toLowerCase();
                     }
-    
+
                     if (!extensions.includes(ext)) {
                         error = true;
                         this._validated = false;
-    
+
                         validatedList.splice(index, 1);
                         this._errorMessages.push('#{ui-files-format} ' + fileName);
                     }
-                });    
+                });
             }
         }
 
@@ -398,28 +410,28 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
     }
     /** @private */
     _setValue(value) {
-        if(Array.isArray(value)) {
+        if (Array.isArray(value)) {
             this._filesGroup.value = [];
-            for(const file of value) {
-                this._filesGroup.AddItem({title: file.name, file: file});
-            }            
-        } else if( !value) {
+            for (const file of value) {
+                this._filesGroup.AddItem({ title: file.name, file: file });
+            }
+        } else if (!value) {
             this._filesGroup.value = [];
         } else {
-            this._filesGroup.AddItem({title: value.name, file: value});
+            this._filesGroup.AddItem({ title: value.name, file: value });
         }
-        
+
         this._files.shown = this._filesGroup.value.length > 0;
 
     }
     /** @private */
     _addValue(value) {
-        if(Array.isArray(value)) {
-            for(const file of value) {
-                this._filesGroup.AddItem({title: file.name, file: file});
-            }            
+        if (Array.isArray(value)) {
+            for (const file of value) {
+                this._filesGroup.AddItem({ title: file.name, file: file });
+            }
         } else {
-            this._filesGroup.AddItem({title: value.name, file: value});
+            this._filesGroup.AddItem({ title: value.name, file: value });
         }
         this._files.shown = true;
     }
@@ -478,7 +490,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
      */
     get tabIndex() {
         return this._input && this._input.tabIndex;
-    } 
+    }
     /**
      * Tab index
      * @type {number}
@@ -489,4 +501,4 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         }
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Files', 'Colibri.UI.Forms.Files', '#{ui-fields-files}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler','allow','size'])
+Colibri.UI.Forms.Field.RegisterFieldComponent('Files', 'Colibri.UI.Forms.Files', '#{ui-fields-files}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'allow', 'size'])

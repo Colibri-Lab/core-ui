@@ -19,20 +19,20 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
         this._grid.shown = true;
         this._grid.rows.title = '';
 
-        if(this._fieldData?.params?.readonly === undefined) {
-            this.readonly = false;    
+        if (this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;
         }
         else {
             this.readonly = this._fieldData?.params?.readonly;
         }
-        if(this._fieldData?.params?.enabled === undefined) {
+        if (this._fieldData?.params?.enabled === undefined) {
             this.enabled = true;
         }
         else {
             this.enabled = this._fieldData?.params?.enabled;
         }
 
-        if(!this._fieldData.params) {
+        if (!this._fieldData.params) {
             this._fieldData.params = {};
         }
         this._fieldData.params.simplearraywidth = (this._fieldData?.params?.simplearraywidth ?? 1);
@@ -41,24 +41,28 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
         const column = this._grid.header.columns.Add('col0', '');
         column.width = 50;
         column.align = 'right';
-        
-        for(let i=0; i < this._fieldData.params?.simplearraywidth; i++) {
+
+        for (let i = 0; i < this._fieldData.params?.simplearraywidth; i++) {
             const column = this._grid.header.columns.Add('col' + (i + 1), (i + 1));
             column.editor = Colibri.UI.TextEditor;
             column.editorAllways = true;
         }
 
-        for(let j=0; j < this._fieldData.params?.simplearrayheight; j++) {
-            let val = {col0: j + 1};
-            for(let i=0; i < this._fieldData.params?.simplearraywidth; i++) {
+        for (let j = 0; j < this._fieldData.params?.simplearrayheight; j++) {
+            let val = { col0: j + 1 };
+            for (let i = 0; i < this._fieldData.params?.simplearraywidth; i++) {
                 val['col' + (i + 1)] = '';
-            }   
+            }
             this._grid.rows.Add('item' + (j + 1), val);
         }
 
-        this._grid.AddHandler('CellEditorChanged', (event, args) => this.Dispatch('Changed', {component: this}));
+        this._grid.AddHandler('CellEditorChanged', this.__gridCellEditorChanged);
 
-    } 
+    }
+
+    __gridCellEditorChanged(event, args) {
+        return this.Dispatch('Changed', { component: this });
+    }
 
     /** @protected */
     _registerEvents() {
@@ -104,10 +108,10 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
      */
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
-        if(this._enabled != value) {
+        if (this._enabled != value) {
             this._enabled = value;
             this.contentContainer.ForEach((name, component) => {
-                component.enabled = this._enabled; 
+                component.enabled = this._enabled;
             });
             this._link && (this._link.enabled = this._enabled);
         }
@@ -123,7 +127,7 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
         this._grid.ForEveryRow((name, row) => {
             let v = [];
             Object.forEach(row.value, (key, value) => {
-                if(key != 'col0') {
+                if (key != 'col0') {
                     v.push(value);
                 }
             });
@@ -137,14 +141,14 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
      * @type {Array}
      */
     set value(value) {
-        if(!Array.isArray(value)) {
+        if (!Array.isArray(value)) {
             value = [];
         }
-        for(let i=0; i < value.length; i++) {
-            let v = {col0: i + 1};
-            for(let j=0; j < value[i].length; j++) {
+        for (let i = 0; i < value.length; i++) {
+            let v = { col0: i + 1 };
+            for (let j = 0; j < value[i].length; j++) {
                 v['col' + (j + 1)] = value[i][j] ?? '';
-            }    
+            }
             this._grid.rows.Children('item' + (i + 1)).value = v;
         }
     }
@@ -181,4 +185,4 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
     }
 
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('SimpleArray', 'Colibri.UI.Forms.SimpleArray', '#{ui-fields-simplearray}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler','simplearraywidth','simplearrayheight'])
+Colibri.UI.Forms.Field.RegisterFieldComponent('SimpleArray', 'Colibri.UI.Forms.SimpleArray', '#{ui-fields-simplearray}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'simplearraywidth', 'simplearrayheight'])

@@ -11,58 +11,61 @@ Colibri.UI.Forms.DateRange = class extends Colibri.UI.Forms.Field {
     RenderFieldContainer() {
         this.AddClass('app-component-daterange-field');
 
-        const contentContainer = this.contentContainer; 
+        const contentContainer = this.contentContainer;
 
         this._input1 = new Colibri.UI.DateSelector(this._name + '-input1', contentContainer);
         this._input1.shown = true;
-        this._input1.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args || {}, {component: this})));
-        this._input1.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', Object.assign(args || {}, {component: this._input1})));
-        this._input1.AddHandler('Clicked', (event, args) => {
-            this.Focus();
-            this.Dispatch('Clicked', args);
-            args.domEvent.stopPropagation();
-            return false;
-        });
+        this._input1.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
+        this._input1.AddHandler('KeyUp', this.__input1KeyUp, false, this);
+        this._input1.AddHandler('Clicked', this.__thisBubbleWithFocusStopPropagation, false, this);
 
-        this._input1.AddHandler('PopupOpened', (event, args) => this.AddClass('-opened'));
-        this._input1.AddHandler('PopupClosed', (event, args) => this.RemoveClass('-opened'));
+        this._input1.AddHandler('PopupOpened', this.__inputPopupOpened, false, this);
+        this._input1.AddHandler('PopupClosed', this.__inputPopupClosed, false, this);
 
         this._input2 = new Colibri.UI.DateSelector(this._name + '-input2', contentContainer);
         this._input2.shown = true;
         this._input2.hasIcon = false;
-        this._input2.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args || {}, {component: this})));
-        this._input2.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', Object.assign(args || {}, {component: this._input2})));
-        this._input2.AddHandler('Clicked', (event, args) => {
-            this.Focus();
-            this.Dispatch('Clicked', args);
-            args.domEvent.stopPropagation(); 
-            return false;
-        });
+        this._input2.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
+        this._input2.AddHandler('KeyUp', this.__input2KeyUp, false, this);
+        this._input2.AddHandler('Clicked', this.__thisBubbleWithFocusStopPropagation, false, this);
 
-        this._input2.AddHandler('PopupOpened', (event, args) => this.AddClass('-opened'));
-        this._input2.AddHandler('PopupClosed', (event, args) => this.RemoveClass('-opened'));
+        this._input2.AddHandler('PopupOpened', this.__inputPopupOpened, false, this);
+        this._input2.AddHandler('PopupClosed', this.__inputPopupClosed, false, this);
 
-
-        if(this._fieldData?.params?.readonly === undefined) {
-            this.readonly = false;    
+        if (this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;
         }
         else {
             this.readonly = this._fieldData?.params?.readonly;
         }
-        if(this._fieldData?.params?.enabled === undefined) {
+        if (this._fieldData?.params?.enabled === undefined) {
             this.enabled = true;
         }
         else {
             this.enabled = this._fieldData.params.enabled;
         }
 
-        if(this._fieldData?.params?.format) {
+        if (this._fieldData?.params?.format) {
             let dateformat = App.DateFormat || 'ru-RU';
-            this._input1.format = new Intl.DateTimeFormat(this._fieldData?.params?.format?.locale || dateformat, this._fieldData?.params?.format?.options ?? {day: '2-digit', month: 'short', year: 'numeric'});
-            this._input2.format = new Intl.DateTimeFormat(this._fieldData?.params?.format?.locale || dateformat, this._fieldData?.params?.format?.options ?? {day: '2-digit', month: 'short', year: 'numeric'});
+            this._input1.format = new Intl.DateTimeFormat(this._fieldData?.params?.format?.locale || dateformat, this._fieldData?.params?.format?.options ?? { day: '2-digit', month: 'short', year: 'numeric' });
+            this._input2.format = new Intl.DateTimeFormat(this._fieldData?.params?.format?.locale || dateformat, this._fieldData?.params?.format?.options ?? { day: '2-digit', month: 'short', year: 'numeric' });
         }
+    }
 
+    __inputPopupOpened(event, args) {
+        this.AddClass('-opened');
+    }
 
+    __inputPopupClosed(event, args) { 
+        this.RemoveClass('-opened');
+    }
+
+    __input2KeyUp(event, args) {
+        return this.Dispatch('KeyUp', Object.assign(args || {}, { component: this._input2 }));
+    }
+
+    __input1KeyUp(event, args) {
+        return this.Dispatch('KeyUp', Object.assign(args || {}, { component: this._input1 }));
     }
 
     /**
@@ -70,11 +73,11 @@ Colibri.UI.Forms.DateRange = class extends Colibri.UI.Forms.Field {
      * @type {Array}
      */
     get value() {
-        if(this._input1.value == 'Invalid Date' && this._input2.value == 'Invalid Date') {
+        if (this._input1.value == 'Invalid Date' && this._input2.value == 'Invalid Date') {
             return null;
         }
         return [
-            this._input1.value == 'Invalid Date' ? null : this._input1.value, 
+            this._input1.value == 'Invalid Date' ? null : this._input1.value,
             this._input2.value == 'Invalid Date' ? null : this._input2.value
         ];
     }
@@ -83,7 +86,7 @@ Colibri.UI.Forms.DateRange = class extends Colibri.UI.Forms.Field {
      * @type {Array}
      */
     set value(value) {
-        if(!Array.isArray(value)) {
+        if (!Array.isArray(value)) {
             value = [value ?? '', ''];
         }
 
@@ -93,4 +96,4 @@ Colibri.UI.Forms.DateRange = class extends Colibri.UI.Forms.Field {
 
 }
 
-Colibri.UI.Forms.Field.RegisterFieldComponent('DateRange', 'Colibri.UI.Forms.DateRange', '#{ui-fields-daterange}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler'])
+Colibri.UI.Forms.Field.RegisterFieldComponent('DateRange', 'Colibri.UI.Forms.DateRange', '#{ui-fields-daterange}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler'])

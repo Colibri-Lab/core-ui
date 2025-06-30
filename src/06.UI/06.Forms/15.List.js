@@ -19,9 +19,9 @@ Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
         this._group = this._list.AddGroup('group', '');
         this._list.shown = true;
         
-        this._list.AddHandler('SelectionChanged', (event, args) => this.Dispatch('Changed', Object.assign(args, {component: this})));
-        this._list.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
-        this._list.AddHandler('KeyDown', (event, args) => this.Dispatch('KeyDown', args));
+        this._list.AddHandler('SelectionChanged', this.__thisBubbleWithComponent, false, this);
+        this._list.AddHandler('KeyUp', this.__thisBubble, false, this);
+        this._list.AddHandler('KeyDown', this.__thisBubble, false, this);
 
         if(this._fieldData?.params?.rendererComponent) {
             this._list.rendererComponent = this._fieldData.params?.rendererComponent;

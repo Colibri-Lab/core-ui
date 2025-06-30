@@ -275,7 +275,6 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         this.Children(componentHeaderButton.name, componentHeaderButton);
         componentContainer && this.Children(componentContainer.name, componentContainer);
 
-        // componentHeaderButton.AddHandler('Clicked', (event, args) => this.Dispatch('TabClicked', {domEvent: args.domEvent, tab: event.sender}));
         return componentContainer;
     }
 

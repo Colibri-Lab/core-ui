@@ -4,12 +4,12 @@
  * @memberof Colibri.UI
  */
 Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
-    
+
     /**
      * @constructor
      * @param {string} name name of component
      * @param {Element|Colibri.UI.Component} container container element and component
-     */ 
+     */
     constructor(name, container) {
         super(name, container, Element.create('div'));
         this.AddClass('app-files-editor-component');
@@ -27,35 +27,19 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
             const icon = new Colibri.UI.Icon('icon', container);
             const filename = new Colibri.UI.TextSpan('span', container);
             let sign = null;
-            if(this._fieldData?.params?.canbesigned && itemData.title.indexOf('-signed') === -1) {
+            if (this._fieldData?.params?.canbesigned && itemData.title.indexOf('-signed') === -1) {
                 sign = new Colibri.UI.TextSpan('sign', container);
                 sign.value = 'Подписать';
             }
             const deleteIcon = new Colibri.UI.TextSpan('delete', container);
             icon.shown = filename.shown = deleteIcon.shown = true;
-            if(sign) {
+            if (sign) {
                 sign.shown = true;
             }
             icon.value = Colibri.UI.FileLinkIcon;
             deleteIcon.value = Colibri.UI.ClearIcon;
-            deleteIcon.AddHandler('Clicked', (event, args) => {
-                event.sender.parent.Dispose();
-                if(this._filesGroup.children == 0) {
-                    this._files.shown = false;
-                }
-                this.Dispatch('Changed');
-            });
-            sign && sign.AddHandler('Clicked', (event, args) => {
-                const component = eval(this._fieldData?.params?.sign_component);
-                component.Show(itemData.file, (signedFile) => {
-                    const idata = container.value;
-                    idata.file = signedFile;
-                    idata.title = signedFile.name;
-                    container.value = idata;
-                });
-                args.domEvent?.stopPropagation();
-                return false;
-            });
+            deleteIcon.AddHandler('Clicked', this.__deleteIconClicked, false, this);
+            sign && sign.AddHandler('Clicked', this.__signClicked, false, this);
 
             filename.value = itemData.title;
 
@@ -64,24 +48,46 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
         this._input.shown = true;
         this._input.multiple = true;
 
-        this._input.AddHandler('InputFileChanged', (event, args) => {
+        this._input.AddHandler('InputFileChanged', this.__inputInputFileChanged, false, this);
 
-            let validatedFiles = this._validate(this._input.Files());
+    }
 
-            this._files.shown = true;
-            validatedFiles.forEach((file) => {
-                const item = {title: file.name, file: file};
-                this._filesGroup.AddItem(item);    
-            });
+    __deleteIconClicked(event, args) {
+        event.sender.parent.Dispose();
+        if (this._filesGroup.children == 0) {
+            this._files.shown = false;
+        }
+        this.Dispatch('Changed');
+    }
 
-            
-            if (!this._validated) {
-                this._showError();
-            }
+    __signClicked(event, args) {
+        const component = eval(this._fieldData?.params?.sign_component);
+        component.Show(itemData.file, (signedFile) => {
+            const idata = container.value;
+            idata.file = signedFile;
+            idata.title = signedFile.name;
+            container.value = idata;
+        });
+        args.domEvent?.stopPropagation();
+        return false;
+    }
 
-            this.Dispatch('Changed');
+    __inputInputFileChanged(event, args) {
+
+        let validatedFiles = this._validate(this._input.Files());
+
+        this._files.shown = true;
+        validatedFiles.forEach((file) => {
+            const item = { title: file.name, file: file };
+            this._filesGroup.AddItem(item);
         });
 
+
+        if (!this._validated) {
+            this._showError();
+        }
+
+        this.Dispatch('Changed');
     }
 
     /** @protected */
@@ -90,7 +96,7 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
         this.RegisterEvent('Changed', false, 'Когда файлы выбраны');
     }
 
-    
+
     /**
      * Валидация выбранного списка файлов
      * @param {array} filesList
@@ -158,7 +164,7 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
      * Show errors
      * @private
      */
-     _showError() {
+    _showError() {
         this._errorMessages.forEach((message) => {
             App.Notices.Add({
                 severity: 'error',
@@ -174,7 +180,7 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
      * Validate editor
      */
     Validate() {
-        
+
     }
 
     /**
@@ -196,19 +202,19 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
     set value(value) {
         this._filesGroup.Clear();
         value && value.forEach((file) => {
-            const item = {title: file.name, file: file};
+            const item = { title: file.name, file: file };
             this._filesGroup.AddItem(item);
         });
-        
-        if(value && value.length > 0) {
+
+        if (value && value.length > 0) {
             this._setFilled();
         } else {
             this._unsetFilled();
         }
 
     }
-    
-    
+
+
     /**
      * Field object
      * @type {object}

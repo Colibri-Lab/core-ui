@@ -13,7 +13,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
     /** Left top */
     static LT = 'lt';
     /** Right top */
-    static RT = 'rt'; 
+    static RT = 'rt';
 
     _addedClasses = [];
 
@@ -44,7 +44,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
 
     __thisShadowClicked(event, args) {
         this.Hide();
-        this.Dispatch('Clicked', {menuData: null, menu: null});
+        this.Dispatch('Clicked', { menuData: null, menu: null });
     }
 
     /**
@@ -65,20 +65,21 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
 
     /** @private */
     _addItem(item) {
-        if(item.name === 'separator' || item.name == '-') {
+        if (item.name === 'separator' || item.name == '-') {
             const itemObject = new Colibri.UI.Hr('separator-' + Date.Mc(), this);
             itemObject.shown = true;
+            itemObject.tag = item;
         }
         else {
             const itemObject = new Colibri.UI.TextSpan(item.name, this);
             itemObject.tag = item;
-            
+
             itemObject.shown = true;
             itemObject.AddClass('app-contextmenu-item-component');
-            if(item.className) {
+            if (item.className) {
                 itemObject.AddClass('-' + item.className);
             }
-            
+
             const icon = new Colibri.UI.Icon(item.name + '-icon', itemObject);
             const text = new Colibri.UI.TextSpan(item.name + '-text', itemObject);
             const arrow = new Colibri.UI.Icon(item.name + '-arrow', itemObject);
@@ -86,9 +87,9 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
 
             if (item.children) {
                 arrow.shown = true;
-            } 
+            }
 
-            if(item.icon) {
+            if (item.icon) {
                 icon.value = item.icon;
                 icon.shown = true;
             }
@@ -99,39 +100,44 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
             text.value = item.title;
             text.shown = true;
 
-            itemObject.AddHandler('Clicked', (event, args) => {
-                if(item.children) {
-                    if(this._childContextMenu) {
-                        this._childContextMenu.Dispose();
-                        this._childContextMenu = null;
-                    }
-
-                    // показываем дочернее меню
-                    this._childContextMenu = new Colibri.UI.ContextMenu(itemObject.name + '_contextmenu', document.body, [Colibri.UI.ContextMenu.RT, Colibri.UI.ContextMenu.LT]);
-                    this._childContextMenu.Show(item.children, itemObject);
-                    this._childContextMenu.hasShadow = false;
-                    this._childContextMenu.AddHandler('Clicked', (event, args) => {
-                        this.Dispatch('Clicked', args);
-                        this._childContextMenu.Dispose();
-                        this._childContextMenu = null;
-                        args.domEvent && args.domEvent.preventDefault();
-                        args.domEvent && args.domEvent.stopPropagation();
-                        return false;
-                    });
-                    if(this._addedClasses.length > 0) {
-                        this._childContextMenu.AddClass(this._addedClasses);
-                    }
-                }
-                else {
-                    this.Dispatch('Clicked', { menu: event.sender, menuData: event.sender.tag, domEvent: args.domEvent });
-                }
-                args.domEvent.preventDefault();
-                args.domEvent.stopPropagation();
-                return false;
-            });
+            itemObject.AddHandler('Clicked', this.__itemObjectClicked, false, this);
         }
-    
 
+
+    }
+
+    __itemObjectClicked(event, args) {
+        const itemObject = event.sender;
+        if (itemObject.tag.children) {
+            if (this._childContextMenu) {
+                this._childContextMenu.Dispose();
+                this._childContextMenu = null;
+            }
+
+            // показываем дочернее меню
+            this._childContextMenu = new Colibri.UI.ContextMenu(itemObject.name + '_contextmenu', document.body, [Colibri.UI.ContextMenu.RT, Colibri.UI.ContextMenu.LT]);
+            this._childContextMenu.Show(item.children, itemObject);
+            this._childContextMenu.hasShadow = false;
+            this._childContextMenu.AddHandler('Clicked', this.__childContextMenuClicked, false, this);
+            if (this._addedClasses.length > 0) {
+                this._childContextMenu.AddClass(this._addedClasses);
+            }
+        }
+        else {
+            this.Dispatch('Clicked', { menu: event.sender, menuData: event.sender.tag, domEvent: args.domEvent });
+        }
+        args.domEvent.preventDefault();
+        args.domEvent.stopPropagation();
+        return false;
+    }
+
+    __childContextMenuClicked(event, args) {
+        this.Dispatch('Clicked', args);
+        this._childContextMenu.Dispose();
+        this._childContextMenu = null;
+        args.domEvent && args.domEvent.preventDefault();
+        args.domEvent && args.domEvent.stopPropagation();
+        return false;
     }
 
     /** @private */
@@ -143,7 +149,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
 
     /** @private */
     _findParent() {
-        if(this.parent) {
+        if (this.parent) {
             const iconParent = this.parent.Children(this.parent.name + '-contextmenu-icon-parent') ?? this.parent;
             return this.parent.Children(this.parent.name + '-contextmenu-icon-parent') ? iconParent.Children('firstChild') : this.parent;
         } else {
@@ -156,29 +162,29 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
         const parent = this._findParent();
         const ori = this._orientation[0];
         const parentBounds = parent.container.bounds(true, true);
-        switch(ori) {
+        switch (ori) {
             default:
             case Colibri.UI.ContextMenu.RB: {
                 return {
-                    left: parentBounds.left + parentBounds.outerWidth, 
+                    left: parentBounds.left + parentBounds.outerWidth,
                     top: parentBounds.top + parentBounds.outerHeight
                 };
             }
             case Colibri.UI.ContextMenu.LB: {
                 return {
-                    left: parentBounds.left, 
+                    left: parentBounds.left,
                     top: parentBounds.top + parentBounds.outerHeight
                 };
             }
             case Colibri.UI.ContextMenu.LT: {
                 return {
-                    left: parentBounds.left, 
+                    left: parentBounds.left,
                     top: parentBounds.top
                 };
             }
             case Colibri.UI.ContextMenu.RT: {
                 return {
-                    left: parentBounds.left + parentBounds.outerWidth, 
+                    left: parentBounds.left + parentBounds.outerWidth,
                     top: parentBounds.top
                 };
             }
@@ -189,29 +195,29 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
     _getOrientationPoint(pointOnParent) {
         const ori = this._orientation[1];
         const thisBounds = this._element.bounds(true, true);
-        switch(ori) {
-            default: 
+        switch (ori) {
+            default:
             case Colibri.UI.ContextMenu.RB: {
                 return {
-                    left: pointOnParent.left - thisBounds.outerWidth, 
+                    left: pointOnParent.left - thisBounds.outerWidth,
                     top: pointOnParent.top - thisBounds.outerHeight
                 };
             }
             case Colibri.UI.ContextMenu.LB: {
                 return {
-                    left: pointOnParent.left, 
+                    left: pointOnParent.left,
                     top: pointOnParent.top - thisBounds.outerHeight
                 };
             }
             case Colibri.UI.ContextMenu.LT: {
                 return {
-                    left: pointOnParent.left, 
+                    left: pointOnParent.left,
                     top: pointOnParent.top
                 };
             }
             case Colibri.UI.ContextMenu.RT: {
                 return {
-                    left: pointOnParent.left - thisBounds.outerWidth, 
+                    left: pointOnParent.left - thisBounds.outerWidth,
                     top: pointOnParent.top
                 };
             }
@@ -222,7 +228,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
     _setPosition(selectedBounds = null) {
         const pointOnParent = this._point || this._findPointOnParent();
         const point = selectedBounds ?? this._getOrientationPoint(pointOnParent);
-        this.styles = {left: point.left + 'px', top: point.top + 'px'};
+        this.styles = { left: point.left + 'px', top: point.top + 'px' };
         this.RemoveClass('-rt', '-rb', '-lt', '-lb');
         this.AddClass('-' + this._orientation[0] + this._orientation[1]);
 
@@ -231,16 +237,16 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
     /** @private */
     _checkPosition() {
         const thisBounds = this.container.bounds(true, true);
-        if(thisBounds.top + thisBounds.outerHeight > window.innerHeight) {
+        if (thisBounds.top + thisBounds.outerHeight > window.innerHeight) {
             thisBounds.top = window.innerHeight - thisBounds.outerHeight;
         }
-        if(thisBounds.left + thisBounds.outerWidth > document.body.offsetWidth) {
+        if (thisBounds.left + thisBounds.outerWidth > document.body.offsetWidth) {
             thisBounds.left = document.body.offsetWidth - thisBounds.outerWidth;
         }
-        if(thisBounds.top < 0) {
+        if (thisBounds.top < 0) {
             thisBounds.top = 0;
         }
-        if(thisBounds.left < 0) {
+        if (thisBounds.left < 0) {
             thisBounds.left = 0;
         }
         this._setPosition(thisBounds);
@@ -278,17 +284,17 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
      */
     set shown(value) {
         super.shown = value;
-        
+
         this.BringToFront();
         this.hasShadow = value;
-        if(value) {
+        if (value) {
             this._element.css('visibility', 'hidden');
             Colibri.Common.Delay(10).then(() => {
                 this._setPosition();
                 this._element.css('visibility', 'visible');
                 this.handleVisibilityChange = true;
                 this.handleResize = true;
-            });    
+            });
         }
     }
 
@@ -298,7 +304,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
      * @param {Colibri.UI.Component} parent parent component
      */
     Show(menu, parent = null) {
-        if(parent) {
+        if (parent) {
             this.parent = parent;
         }
         this.value = menu;
@@ -310,10 +316,10 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
      */
     Dispose() {
         const shadow = this._element.next();
-        if(shadow && shadow.classList.contains('app-component-shadow-div')) {
+        if (shadow && shadow.classList.contains('app-component-shadow-div')) {
             shadow.remove();
         }
-        if(this._childContextMenu) {
+        if (this._childContextMenu) {
             this._childContextMenu.Dispose();
             this._childContextMenu = null;
         }
@@ -321,12 +327,12 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
     }
 
     AddClass(className) {
-        if(!this._addedClasses) {
+        if (!this._addedClasses) {
             this._addedClasses = [];
         }
         this._addedClasses.push(className);
         super.AddClass(className);
     }
 
- 
+
 }

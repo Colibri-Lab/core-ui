@@ -10,7 +10,6 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
         super(name, container, Element.create('tr'));
         this.AddClass('app-ui-header-columns');
         this.AddHandler('ChildAdded', this.__thisChildAdded);
-
         this._columnsAddedEventSent = false;
     }
 
@@ -20,17 +19,13 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
      * @param {*} args event arguments
      */ 
     __thisChildAdded(event, args) {
-        args.component.AddHandler('ColumnStickyChange', (event, args) => {
-            this.Dispatch('ColumnStickyChange', args);
-        });
+        args.component.AddHandler('ColumnStickyChange', this.__thisBubble, false, this);
+        args.component.AddHandler('ColumnClicked', this.__thisBubble, false, this);
+        args.component.AddHandler('ColumnDisposed', this.__thisBubble, false, this);
+    }
 
-        args.component.AddHandler('ColumnClicked', (event, args) => {
-            this.Dispatch('ColumnClicked', args);
-        });
-
-        args.component.AddHandler('ColumnDisposed', (event, args) => {
-            this.Dispatch('ColumnDisposed', args);
-        });
+    __newColumnMoved(event, args) {
+        this.Dispatch('ColumnMoved', Object.assign(args, {column: newColumn}));
     }
 
     /** @protected */
@@ -52,7 +47,7 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
             newColumn[name] = attr;
         });
 
-        newColumn.AddHandler('ComponentMoved', (event, args) => this.Dispatch('ColumnMoved', Object.assign(args, {column: newColumn})));
+        newColumn.AddHandler('ComponentMoved', this.__newColumnMoved, false, this);
         this.Dispatch('ColumnAdded', {column: newColumn});
         
         return newColumn;

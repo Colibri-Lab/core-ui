@@ -23,13 +23,6 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('DragDropOver', false, 'Когда произошло наведение');
         this.RegisterEvent('DragDropLeave', false, 'Когда произошел уход из области');
 
-        this.__dragStartFromSourcesHandler = (event, args) => this.__dragStartFromSources(event, args);
-        this.__dragEndFromSourcesHandler = (event, args) => this.__dragEndFromSources(event, args);
-
-        this.__dragOverTheDestinationHandler = (event, args) => this.__dragOverTheDestination(event, args);
-        this.__dragLeaveTheDestinationHandler = (event, args) => this.__dragLeaveTheDestination(event, args);
-        this.__dragDropOnTheDestinationHandler = (event, args) => this.__dragDropOnTheDestination(event, args);
-
         this._initManager();
     }
     
@@ -41,15 +34,15 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
 
         this._sources.forEach((source) => {
             source.draggable = false;
-            source.RemoveHandler('DragStart', this.__dragStartFromSourcesHandler);
-            source.RemoveHandler('DragEnd', this.__dragEndFromSourcesHandler);
+            source.RemoveHandler('DragStart', this.__dragStartFromSources, false, this);
+            source.RemoveHandler('DragEnd', this.__dragEndFromSources, false, this);
         });
 
         this._destinations.forEach((dest) => {
             dest.dropable = false;
-            dest.RemoveHandler('DragOver', this.__dragOverTheDestinationHandler);
-            dest.RemoveHandler('DragLeave', this.__dragLeaveTheDestinationHandler);
-            dest.RemoveHandler('Drop', this.__dragDropOnTheDestinationHandler);
+            dest.RemoveHandler('DragOver', this.__dragOverTheDestination, false, this);
+            dest.RemoveHandler('DragLeave', this.__dragLeaveTheDestination, false, this);
+            dest.RemoveHandler('Drop', this.__dragDropOnTheDestination, false, this);
         });
 
         this._sources = [];
@@ -65,15 +58,15 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
 
         this._sources.forEach((source) => {
             source.draggable = true;
-            source.AddHandler('DragStart', this.__dragStartFromSourcesHandler);
-            source.AddHandler('DragEnd', this.__dragEndFromSourcesHandler);
+            source.AddHandler('DragStart', this.__dragStartFromSources, false, this);
+            source.AddHandler('DragEnd', this.__dragEndFromSources, false, this);
         });
 
         this._destinations.forEach((dest) => {
             dest.dropable = true;
-            dest.AddHandler('DragOver', this.__dragOverTheDestinationHandler);
-            dest.AddHandler('DragLeave', this.__dragLeaveTheDestinationHandler);
-            dest.AddHandler('Drop', this.__dragDropOnTheDestinationHandler);
+            dest.AddHandler('DragOver', this.__dragOverTheDestination, false, this);
+            dest.AddHandler('DragLeave', this.__dragLeaveTheDestination, false, this);
+            dest.AddHandler('Drop', this.__dragDropOnTheDestination, false, this);
         });
 
     }

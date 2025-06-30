@@ -48,6 +48,10 @@ Colibri.UI.GridFileViewer = class extends Colibri.UI.Viewer {
 
     }
 
+    __contextMenuParentClicked(event, args) {
+        return this.Dispatch('ContextMenuIconClicked', args);
+    }
+
     /** @private */
     _createContextMenuButton() {
         if(!this._hasContextMenu || this.Children(this._name + '-contextmenu-icon-parent')) {
@@ -56,11 +60,10 @@ Colibri.UI.GridFileViewer = class extends Colibri.UI.Viewer {
 
         this.AddClass('app-component-hascontextmenu');
 
-
         const contextMenuParent = new Colibri.UI.Pane(this._name + '-contextmenu-icon-parent', this);
         contextMenuParent.AddClass('app-contextmenu-icon-component');
         contextMenuParent.shown = true;
-        contextMenuParent.AddHandler('Clicked', (event, args) => this.Dispatch('ContextMenuIconClicked', args));
+        contextMenuParent.AddHandler('Clicked', this.__contextMenuParentClicked, false, this);
 
         let icons = [];
         this.value.forEach((v) => {

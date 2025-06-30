@@ -26,18 +26,22 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
         this._form = formComponent;
         this._field = fieldComponent;
         fieldComponent.container.tag('validator', this);
-        this._field.AddHandler(['Changed', 'KeyUp', 'Pasted'], (event, args) => {
-            Colibri.Common.Delay(100).then(() => {
-                this.Clear();
-                const messages = !(event.sender._fieldData?.params && event.sender._fieldData.params.messages === false);
-                this.Validate(messages, this._className);
-                this.Dispatch('Validated', {messages: messages});    
-            });
-        });
-        this._field.AddHandler('FieldsRendered', (event, args) => {
-            this._createValidators();
-        });
+        this._field.AddHandler(['Changed', 'KeyUp', 'Pasted'], this.__fieldChangedOrKeyUpOrPasted, false, this);
+        this._field.AddHandler('FieldsRendered', this.__fieldFieldsRendered, false, this);
         this._createValidators();
+    }
+
+    __fieldFieldsRendered(event, args) {
+        this._createValidators();
+    }
+
+    __fieldChangedOrKeyUpOrPasted(event, args) {
+        Colibri.Common.Delay(100).then(() => {
+            this.Clear();
+            const messages = !(event.sender._fieldData?.params && event.sender._fieldData.params.messages === false);
+            this.Validate(messages, this._className);
+            this.Dispatch('Validated', {messages: messages});    
+        });
     }
 
     /** @private */
@@ -46,12 +50,14 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
             this._validators = [];
             Object.forEach(this._field.Fields(), (name, component) => {
                 const validator = new Colibri.UI.FieldValidator(component, this._form);
-                validator.AddHandler('Validated', (event, args) => {
-                    this.Dispatch('Validated', args);
-                });
+                validator.AddHandler('Validated', this.__validatorValidated, false, this);
                 this._validators.push(validator);
             })
         }
+    }
+
+    __validatorValidated(event, args) {
+        this.Dispatch('Validated', args);
     }
 
     /**

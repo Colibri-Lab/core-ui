@@ -11,26 +11,26 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     RenderFieldContainer() {
 
         this.AddClass('app-component-array-field');
-        
+
         this._enabled = true;
 
         const contentContainer = this.contentContainer;
         this._itemsContainer = new Colibri.UI.Pane(this.name + '-items', contentContainer);
         this._itemsContainer.shown = true;
 
-        if(this._fieldData?.params?.initempty === undefined || this._fieldData?.params?.initempty === true) {
+        if (this._fieldData?.params?.initempty === undefined || this._fieldData?.params?.initempty === true) {
             this._addNew();
         }
 
         this._createAddNewLink();
 
-        if(this._fieldData?.params?.readonly === undefined) {
-            this.readonly = false;    
+        if (this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;
         }
         else {
             this.readonly = this._fieldData?.params?.readonly;
         }
-        if(this._fieldData?.params?.enabled === undefined) {
+        if (this._fieldData?.params?.enabled === undefined) {
             this.enabled = true;
         }
         else {
@@ -39,19 +39,19 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
         this.RegisterEvent('ObjectRemoved', false, 'Object in array removed');
 
-    } 
+    }
 
     /** @private */
     _createAddNewLink() {
         if (!this._fieldData?.params) {
             this._fieldData.params = {};
         }
-        if(this._fieldData?.params && this._fieldData.params?.addlink === null) {
+        if (this._fieldData?.params && this._fieldData.params?.addlink === null) {
             return;
         }
 
         this.contentContainer.Children('add-new') && this.contentContainer.Children('add-new').Dispose();
-        if(typeof Lang.Translate(this._fieldData.params?.addlink) === 'object') {
+        if (typeof Lang.Translate(this._fieldData.params?.addlink) === 'object') {
             const linkData = this._fieldData.params?.addlink;
             const c = eval(linkData.component);
             this._link = new c('add-new', this.contentContainer);
@@ -60,24 +60,26 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
             });
 
         } else {
-            this._fieldData.desc = this._fieldData.desc ? this._fieldData.desc[Lang.Current] ?? this._fieldData.desc : ''; 
+            this._fieldData.desc = this._fieldData.desc ? this._fieldData.desc[Lang.Current] ?? this._fieldData.desc : '';
             this._fieldData.params.addlink = this._fieldData?.params?.addlink ? this._fieldData.params?.addlink[Lang.Current] ?? this._fieldData.params?.addlink : '';
             this._link = new Colibri.UI.Link('add-new', this.contentContainer);
-            this._link.value = this._fieldData.params && this._fieldData.params?.addlink || '#{ui-array-add} «' + (this._fieldData.desc) + '»';    
+            this._link.value = this._fieldData.params && this._fieldData.params?.addlink || '#{ui-array-add} «' + (this._fieldData.desc) + '»';
         }
-        
+
 
         this._link.shown = true;
-        this._link.AddHandler('Clicked', (event, args) => {
-            if(this.readonly || !this.enabled) {
-                return;
-            }
-            this.AddNew();
-        });
-        if(this.readonly || !this.enabled) {
+        this._link.AddHandler('Clicked', this.__linkClicked, false, this);
+        if (this.readonly || !this.enabled) {
             this._link.Hide();
         }
         return this._link;
+    }
+
+    __linkClicked(event, args) {
+        if (this.readonly || !this.enabled) {
+            return;
+        }
+        this.AddNew();
     }
 
     /** @private */
@@ -91,12 +93,12 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
      * @returns {Colibri.UI.Forms.Object}
      */
     AddNew(value) {
-        if(this._link.ContainsClass('ui-disabled')) {
+        if (this._link.ContainsClass('ui-disabled')) {
             return;
         }
         const object = this._addNew(value);
-        this.Dispatch('Changed', {component: this});
-        
+        this.Dispatch('Changed', { component: this });
+
         return object;
     }
 
@@ -112,93 +114,87 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         delete fieldData?.note;
         delete fieldData?.params?.validate;
         delete fieldData?.params?.fieldgenerator;
-        if(fieldData?.params){
-            fieldData.params.validate = [{message: '', method: () => true}];
-        } 
+        if (fieldData?.params) {
+            fieldData.params.validate = [{ message: '', method: () => true }];
+        }
         fieldData = this.__updateObjectFields(fieldData);
         const object = new Colibri.UI.Forms.Object('object-' + Date.Now().getTime(), this._itemsContainer, fieldData, this, this.root);
         object.shown = true;
         object.title = '';
         object.enabled = this.enabled;
-        if(this._fieldData.params && this._fieldData.params.removelink !== false && !this.readonly && this.enabled) {
+        if (this._fieldData.params && this._fieldData.params.removelink !== false && !this.readonly && this.enabled) {
             object.AddRemoveLink(() => {
 
-                if(this.readonly || !this.enabled) {
+                if (this.readonly || !this.enabled) {
                     return;
                 }
 
                 Object.forEach(this.Fields(), (name, field) => {
-                    if(field instanceof Colibri.UI.Forms.Field) {
+                    if (field instanceof Colibri.UI.Forms.Field) {
                         field.Dispatch('Changed', {});
                     }
                 });
-                this.Dispatch('Changed', {component: this});
-                
-                if(this._fieldData.params && !!this._fieldData.params.maxadd) {
+                this.Dispatch('Changed', { component: this });
+
+                if (this._fieldData.params && !!this._fieldData.params.maxadd) {
                     const count = Object.countKeys(this.Fields());
-                    if(count < parseInt(this._fieldData.params.maxadd)) {
+                    if (count < parseInt(this._fieldData.params.maxadd)) {
                         this._link.Show();
                     }
                 }
 
-                if(this._fieldData.params && this._fieldData.params?.showObjectCount) {
-                    if(typeof this._fieldData.params?.showObjectCount === 'function') {
+                if (this._fieldData.params && this._fieldData.params?.showObjectCount) {
+                    if (typeof this._fieldData.params?.showObjectCount === 'function') {
                         const f = this._fieldData.params?.showObjectCount;
-                        f(this.itemsContainer.children, this);    
+                        f(this.itemsContainer.children, this);
                     } else {
                         this.title = this._fieldData.desc + ' (' + this.itemsContainer.children + ')';
                     }
                 }
 
-                this.Dispatch('ObjectRemoved', {component: this});
+                this.Dispatch('ObjectRemoved', { component: this });
 
-                if(!this.root) {
+                if (!this.root) {
                     this._hideAndShow();
                 }
 
             });
         }
-        if(this._fieldData.params && this._fieldData.params.updownlink !== false && !this.readonly && this.enabled) {
+        if (this._fieldData.params && this._fieldData.params.updownlink !== false && !this.readonly && this.enabled) {
             object.AddUpDownLink(() => {
                 object.MoveUp();
                 object.Focus();
-                this.Dispatch('Changed', {component: this});
+                this.Dispatch('Changed', { component: this });
             }, () => {
                 object.MoveDown();
                 object.Focus();
-                this.Dispatch('Changed', {component: this});
+                this.Dispatch('Changed', { component: this });
             });
         }
 
-        object.AddHandler('Changed', (event, args) => {
-            if(this._fieldData.params && this._fieldData.params.title !== null) {
-                const f = eval(this._fieldData.params.title);
-                f && f(object, this);
-            }
-            // return this.Dispatch('Changed', Object.assign(args ?? {}, {component: this}));
-        });
+        object.AddHandler('Changed', this.__objectChanged, false, this);
         this._itemsContainer.Children(object.name, object);
-        if(this._fieldData.params && this._fieldData.params.title !== null) {
+        if (this._fieldData.params && this._fieldData.params.title !== null) {
             const f = eval(this._fieldData.params.title);
             f && f(object, this);
         }
 
-        if(this._fieldData.params && !!this._fieldData.params.maxadd) {
+        if (this._fieldData.params && !!this._fieldData.params.maxadd) {
             const count = Object.countKeys(this.Fields());
-            if(count >= parseInt(this._fieldData.params.maxadd)) {
+            if (count >= parseInt(this._fieldData.params.maxadd)) {
                 this._link && this._link.Hide();
             }
         }
 
         this.Dispatch('FieldsRendered');
-        if(value) {
+        if (value) {
             object.value = value;
         }
 
-        if(this._fieldData.params && this._fieldData.params?.showObjectCount) {
-            if(typeof this._fieldData.params?.showObjectCount === 'function') {
+        if (this._fieldData.params && this._fieldData.params?.showObjectCount) {
+            if (typeof this._fieldData.params?.showObjectCount === 'function') {
                 const f = this._fieldData.params?.showObjectCount;
-                f(this.itemsContainer.children, this);    
+                f(this.itemsContainer.children, this);
             } else {
                 this.title = this._fieldData.desc + ' (' + this.itemsContainer.children + ')';
             }
@@ -206,6 +202,14 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
         // object.Focus();
         return object;
+    }
+
+    __objectChanged(event, args) {
+        if (this._fieldData.params && this._fieldData.params.title !== null) {
+            const f = eval(this._fieldData.params.title);
+            f && f(object, this);
+        }
+        // return this.Dispatch('Changed', Object.assign(args ?? {}, {component: this}));
     }
 
     /** @protected */
@@ -218,7 +222,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
      * Focus on component to the first object of array
      */
     Focus() {
-        if(this._itemsContainer.Children('firstChild')) {
+        if (this._itemsContainer.Children('firstChild')) {
             this._itemsContainer.Children('firstChild').Focus();
         }
     }
@@ -239,10 +243,10 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         value = this._convertProperty('Boolean', value);
         this._readonly = value;
         this._itemsContainer.ForEach((name, component) => {
-            component.readonly = value; 
+            component.readonly = value;
         });
         this._link && (this._link.shown = !value);
-        
+
     }
 
     /**
@@ -259,10 +263,10 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
      */
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
-        if(this._enabled != value) {
+        if (this._enabled != value) {
             this._enabled = value;
             this._itemsContainer.ForEach((name, component) => {
-                component.enabled = this._enabled; 
+                component.enabled = this._enabled;
             });
             this._link && (this._link.enabled = this._enabled);
         }
@@ -276,7 +280,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
         let data = [];
         this._itemsContainer.ForEach((name, component) => {
-            if(component instanceof Colibri.UI.Forms.Object) {
+            if (component instanceof Colibri.UI.Forms.Object) {
                 data.push(component.value);
             }
         });
@@ -290,19 +294,19 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
      * @type {Array}
      */
     set value(value) {
-        
+
         value = eval_default_values(value);
-        if(!value || !Array.isArray(value)) {
+        if (!value || !Array.isArray(value)) {
             return;
         }
 
         this._itemsContainer.Clear();
-        if(value.length > 0) {
-            for(const v of value) {
+        if (value.length > 0) {
+            for (const v of value) {
                 this._addNew(v);
             }
-        } else if(this._fieldData?.params?.initempty) {
-            this._addNew();            
+        } else if (this._fieldData?.params?.initempty) {
+            this._addNew();
         }
 
 
@@ -314,17 +318,17 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
      * @returns {Array<Colibri.UI.Forms.Object>}
      */
     Fields(name) {
-        if(!this._itemsContainer) {
+        if (!this._itemsContainer) {
             return [];
         }
 
-        if(name) {
+        if (name) {
             return this._itemsContainer.Children(name);
         }
 
         let ret = {};
         this._itemsContainer.ForEach((name, component) => {
-            if(component instanceof Colibri.UI.Forms.Field) {
+            if (component instanceof Colibri.UI.Forms.Field) {
                 ret[name] = component;
             }
         });
@@ -367,8 +371,8 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
     /** @proptected */
     _calcRuntimeValues(rootValue = null) {
-        if(!this.needRecalc) {
-            return ;
+        if (!this.needRecalc) {
+            return;
         }
 
         const formValue = rootValue ?? this.root?.value ?? {};
@@ -388,7 +392,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
     /** @private */
     _hideAndShow() {
-        if(!this.needHideAndShow) {
+        if (!this.needHideAndShow) {
             return;
         }
         this.ForEveryField((name, component) => component._hideAndShow());
@@ -409,4 +413,4 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
 
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Array', 'Colibri.UI.Forms.Array', '#{ui-fields-array}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler','vertical','addlink','removelink','updownlink','hasscroll','initempty','maxadd','title','removedesc'])
+Colibri.UI.Forms.Field.RegisterFieldComponent('Array', 'Colibri.UI.Forms.Array', '#{ui-fields-array}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'vertical', 'addlink', 'removelink', 'updownlink', 'hasscroll', 'initempty', 'maxadd', 'title', 'removedesc'])

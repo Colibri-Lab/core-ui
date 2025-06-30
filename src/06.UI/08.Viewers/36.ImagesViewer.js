@@ -53,9 +53,13 @@ Colibri.UI.ImagesViewer = class extends Colibri.UI.Viewer {
             const im = new Colibri.UI.Img(image.id, this._grid);
             im.shown = true;
             im.source = image.path;
-            im.AddHandler('Clicked', (event, args) => this.Dispatch('ImageClicked', {image: im}));
+            im.AddHandler('Clicked', this.__imageClicked, false, this);
         }
 
+    }
+
+    __imageClicked(event, args) {
+        return this.Dispatch('ImageClicked', {image: event.sender});
     }
 
 }

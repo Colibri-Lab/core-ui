@@ -117,8 +117,37 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     __domHandlersAttached = {};
 
     __thisBubble(event, args) {
+        return this.Dispatch(event, args);
+    }
+
+    __thisBubbleWithComponent(event, args) {
+        return this.Dispatch(event, Object.assign(args || {}, {component: this}));
+    }
+
+    __thisBubblePreventDefault(event, args) {
+        this.Dispatch(event, args);
+        args.domEvent.stopPropagation();
+        args.domEvent.preventDefault();
+        return false;
+    }
+
+    __thisBubbleStopPropagation(event, args) {
+        this.Dispatch(event, args);
+        args.domEvent.stopPropagation();
+        return false;
+    }
+
+    __thisBubbleWithFocus(event, args) {
+        this?.Focus();
         this.Dispatch(event, args);
     }
+
+    __thisBubbleWithFocusStopPropagation(event, args) {
+        this?.Focus();
+        args.domEvent?.stopPropagation();
+        this.Dispatch(event, args);
+    }
+
 
     /**
      * @constructor
@@ -624,12 +653,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         const contextMenuIcon = new Colibri.UI.Icon(this._name + '-contextmenu-icon', contextMenuParent);
         contextMenuIcon.shown = true;
         contextMenuIcon.value = Colibri.UI.ContextMenuIcon;
-        contextMenuIcon.AddHandler('Clicked', (event, args) => {
-            event.sender.parent.parent.Dispatch('ContextMenuIconClicked', args);
-            args.domEvent.stopPropagation();
-            args.domEvent.preventDefault();
-            return false;
-        });
+        contextMenuIcon.AddHandler('Clicked', this.__contextMenuIconClicked, false, this);
+    }
+
+    __contextMenuIconClicked(event, args) {
+        this.Dispatch('ContextMenuIconClicked', args);
+        args.domEvent.stopPropagation();
+        args.domEvent.preventDefault();
+        return false;
     }
 
     /**

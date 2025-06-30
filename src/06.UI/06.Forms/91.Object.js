@@ -76,10 +76,11 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
             const component = Colibri.UI.Forms.Field.Create('nofields', this.contentContainer, {
                 component: 'TextArea'
             }, this, this.root);
+            
             component.placeholder = 'Введите JSON обьекта';
             component.message = false;
             component.shown = true;
-            component.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign({ component: this }, args)));
+            component.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
 
         }
         else {

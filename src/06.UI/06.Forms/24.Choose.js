@@ -20,35 +20,35 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
 
         this._input.shown = true;
         this.placeholder = this._fieldData.placeholder;
-        if(this._fieldData?.params?.placeholderinfo) {
+        if (this._fieldData?.params?.placeholderinfo) {
             this.placeholderinfo = this._fieldData.params.placeholderinfo;
         }
 
-        this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args || {}, {component: this})));
-        this._input.AddHandler('KeyDown', (event, args) => this.Dispatch('KeyDown', args));
-        this._input.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
-        this._input.AddHandler('Clicked', (event, args) => this.Dispatch('Clicked', args));
+        this._input.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
+        this._input.AddHandler('KeyDown', this.__thisBubble, false, this);
+        this._input.AddHandler('KeyUp', this.__thisBubble, false, this);
+        this._input.AddHandler('Clicked', this.__thisBubble, false, this);
 
-        if(this._fieldData?.params?.readonly === undefined) {
-            this.readonly = false;    
+        if (this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;
         }
         else {
             this.readonly = this._fieldData?.params?.readonly;
         }
-        if(this._fieldData?.params?.enabled === undefined) {
+        if (this._fieldData?.params?.enabled === undefined) {
             this.enabled = true;
         }
         else {
             this.enabled = this._fieldData.params.enabled;
         }
 
-        if(this._fieldData?.selector?.openonnote) {
+        if (this._fieldData?.selector?.openonnote) {
             this.AddClass('-openonnote');
             this._content.Children(this._name + '-note').AddHandler('Clicked', this.__clickOnNote, false, this);
             this._input.openButton = false;
         }
 
-        if(this._fieldData?.selector?.ondemand) {
+        if (this._fieldData?.selector?.ondemand) {
             this._input.__BeforeFilled = () => {
                 return new Promise((resolve, reject) => {
                     if (this._fieldData.lookup) {
@@ -57,7 +57,7 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
                         this._setLookup(this._fieldData.lookup).then((response) => {
                             this.values = response.result || response;
                         }).finally(() => {
-                            this.loading = false;                        
+                            this.loading = false;
                             this.RemoveClass('app-select-loading');
                             this._setEnabled();
                             resolve(true);
@@ -73,9 +73,9 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */ 
+     */
     __clickOnNote(event, args) {
-        if(!this.readonly) {
+        if (!this.readonly) {
             this._input.ShowChooser();
         }
     }
@@ -100,7 +100,7 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
      */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
-        if(value) {
+        if (value) {
             this.AddClass('app-component-readonly');
         } else {
             this.RemoveClass('app-component-readonly');
@@ -160,16 +160,16 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
      */
     get value() {
         let value = this._input.value ?? null;
-        if(this._fieldData?.params?.emptyAsNull && !value) {
+        if (this._fieldData?.params?.emptyAsNull && !value) {
             value = null;
         }
-        if(Array.isArray(value)) {
+        if (Array.isArray(value)) {
             value = value.map((v) => v[this._fieldData.selector?.value ?? 'value'] ?? v);
         }
-        else if(Object.isObject(value)) {
+        else if (Object.isObject(value)) {
             value = value[this._fieldData.selector?.value ?? 'value'] ?? value;
         }
-        if(value === undefined) {
+        if (value === undefined) {
             value = null;
         }
         return value;
@@ -188,10 +188,10 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
      */
     set values(value) {
         let required = this._fieldData?.params?.required;
-        if(required === undefined) {
+        if (required === undefined) {
             required = false;
         }
-        if(!required) {
+        if (!required) {
             const o = {};
             o[this._fieldData?.selector?.title] = '---';
             o[this._fieldData?.selector?.value] = 0;
@@ -225,7 +225,7 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
     }
     /** @private */
     _setEnabled() {
-        if(!this.value && this._fieldData.default) {
+        if (!this.value && this._fieldData.default) {
             this.value = this._fieldData.default;
         }
     }
@@ -245,7 +245,7 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
     _getDependsValue(type = null) {
         if (this.root && this._fieldData?.lookup) {
 
-            if((type && !this._fieldData.lookup[type]['depends']) || (!type && !this._fieldData.lookup['depends'])) {
+            if ((type && !this._fieldData.lookup[type]['depends']) || (!type && !this._fieldData.lookup['depends'])) {
                 return;
             }
 
@@ -253,11 +253,11 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
             if (dependsField) {
                 dependsField = dependsField.replaceAll('{', '').replaceAll('}', '');
                 const rootValues = this.root?.value;
-                if(eval(`typeof rootValues?.${dependsField}`) !== 'undefined') {
+                if (eval(`typeof rootValues?.${dependsField}`) !== 'undefined') {
                     return eval(`rootValues.${dependsField}`);
                 }
                 const parentValues = this.parentField?.value;
-                if(eval(`typeof parentValues?.${dependsField}`) !== 'undefined') {
+                if (eval(`typeof parentValues?.${dependsField}`) !== 'undefined') {
                     return eval(`parentValues.${dependsField}`);
                 }
                 return null;
@@ -277,7 +277,7 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
                     this.values = response.result || response;
                 }).finally(() => {
                     this.loading = false;
-                    if(this._lastValue) {
+                    if (this._lastValue) {
                         this.value = this._lastValue;
                         this._lastValue = null;
                     } else {
@@ -343,6 +343,6 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
     get valueObject() {
         return this._input.valueObject;
     }
-    
+
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Choose', 'Colibri.UI.Forms.Choose', '#{ui-fields-choose}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler']);
+Colibri.UI.Forms.Field.RegisterFieldComponent('Choose', 'Colibri.UI.Forms.Choose', '#{ui-fields-choose}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler']);

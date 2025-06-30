@@ -109,15 +109,14 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     /** @protected */
     _handleEvents() {
 
-        this._input.AddHandler('Cleared', this.__thisInputCleared, false, this);
-        this._input.AddHandler('Clicked', this.__thisInputClicked, false, this);
+        this._input.AddHandler('Cleared', this.__inputCleared, false, this);
+        this._input.AddHandler('Clicked', this.__inputClicked, false, this);
         this._input.AddHandler('KeyUp', this.__thisBubble, false, this);
         this._input.AddHandler('ReceiveFocus', this.__thisBubble, false, this);
-        this._input.AddHandler('LoosedFocus', this.__thisInputLoosesFocus, false, this);
-        this._input.AddHandler('KeyDown', this.__thisInputKeyDown, false, this);
-        this._input.AddHandler('Filled', (event, args) => this.__thisFilled(event, Object.assign(args, { search: true })));
-        this._input.AddHandler('LoosedFocus', (event, args) => !this._skipLooseFocus && this.Dispatch('LoosedFocus', args));
-
+        this._input.AddHandler('LoosedFocus', this.__inputLoosesFocus, false, this);
+        this._input.AddHandler('KeyDown', this.__inputKeyDown, false, this);
+        this._input.AddHandler('Filled', this.__inputFilled, false, this);
+        this._input.AddHandler('LoosedFocus', this.__inputLoosedFocus, false, this);
         this.AddHandler('LoosedFocus', this.__thisLoosesFocus);
 
         this._arrow.addEventListener('click', (e) => {
@@ -130,19 +129,23 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
     }
 
+    __inputLoosedFocus(event, args) {
+        !this._skipLooseFocus && this.Dispatch('LoosedFocus', args);
+    }
+
     __thisLoosesFocus(event, args) {
         if (!this._skipLooseFocus) {
             this._hidePopup();
         }
     }
 
-    __thisInputLoosesFocus(event, args) {
+    __inputLoosesFocus(event, args) {
         if (!this._skipLooseFocus) {
             this._hidePopup();
         }
     }
 
-    __thisInputKeyDown(event, args) {
+    __inputKeyDown(event, args) {
 
         // , 'Space'
         if (['Escape', 'ArrowUp', 'ArrowDown', 'Enter', 'NumpadEnter'].indexOf(args.domEvent.code) !== -1) {
@@ -179,6 +182,10 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
 
         return this.Dispatch('KeyDown', args);
+    }
+
+    __inputFilled(event, args) {
+        this.__thisFilled(event, Object.assign(args, { search: true }));
     }
 
     /**
@@ -219,7 +226,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
      */
-    __thisInputCleared(event, args) {
+    __inputCleared(event, args) {
         const values = this._search(!this.searchable ? '' : this._input.value);
         this._setValue(null);
 
@@ -242,7 +249,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
      */
-    __thisInputClicked(event, args) {
+    __inputClicked(event, args) {
         this.Focus();
         if (this.enabled) {
             this.__thisFilled(null, { search: false });
@@ -749,44 +756,48 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     _registerPopupEventHandlers(popup) {
         // сначала происходит SelectionChanged потом ItemClicked, странность, но так сделано
         // SelectionChanged появляется внутри списка, и не связан с значением по умолчанию в селекторе
-        popup.AddHandler('ItemMouseDown', (event, args) => {
-            this._skipLooseFocus = true;
-        });
-        popup.AddHandler('Clicked', (event, args) => {
-            this._skipLooseFocus = false;
-            this._itemSelected = true;
-            args?.domEvent.stopPropagation();
-            args?.domEvent.preventDefault();
+        popup.AddHandler('ItemMouseDown', this.__popupItemMouseDown, false, this);
+        popup.AddHandler('Clicked', this.__popupClicked, false, this);
+        popup.AddHandler('ShadowClicked', this.__popupShadowClicked, false, this);
+    }
 
-            let selected;
-            if (!this._multiple) {
-                selected = popup.selected?.value ?? [];
-                popup.Dispatch('ShadowClicked');
-            } else {
-                selected = popup.selected?.map((item) => { return item.value; }) ?? [];
-            }
+    __popupItemMouseDown(event, args) {
+        this._skipLooseFocus = true;
+    }
+    __popupClicked(event, args) {
+        const popup = event.sender;
+        this._skipLooseFocus = false;
+        this._itemSelected = true;
+        args?.domEvent.stopPropagation();
+        args?.domEvent.preventDefault();
 
-            if (!Array.isArray(selected)) {
-                selected = [selected];
-            }
+        let selected;
+        if (!this._multiple) {
+            selected = popup.selected?.value ?? [];
+            popup.Dispatch('ShadowClicked');
+        } else {
+            selected = popup.selected?.map((item) => { return item.value; }) ?? [];
+        }
 
-            if (JSON.stringify(selected) === JSON.stringify(this._value)) {
-                return false;
-            }
+        if (!Array.isArray(selected)) {
+            selected = [selected];
+        }
 
-            this._setValue(selected);
-            this._renderValue(!this._multiple);
-            this.Focus();
-            this.Dispatch('Changed', args);
-
+        if (JSON.stringify(selected) === JSON.stringify(this._value)) {
             return false;
-        });
+        }
 
+        this._setValue(selected);
+        this._renderValue(!this._multiple);
+        this.Focus();
+        this.Dispatch('Changed', args);
 
-        popup.AddHandler('ShadowClicked', () => {
-            this._hidePopup();
-            this.Focus();
-        });
+        return false;
+    }
+
+    __popupShadowClicked(event, args) {
+        this._hidePopup();
+        this.Focus();
     }
 
     /**

@@ -17,12 +17,12 @@ Colibri.Common.HashActions = class extends Colibri.Events.Dispatcher {
         
         this.RegisterEvent('ActionRaised', false, 'When action is raised');
 
-        this.__clickEvent = (e) => {
+        this.__clickEvent = this.__clickEvent ?? ((e) => {
             this._handleAction(e.target.data('action').substring(1), e);
             e.preventDefault();
             e.stopPropagation();
             return false;
-        };
+        });
     }
     
     /**

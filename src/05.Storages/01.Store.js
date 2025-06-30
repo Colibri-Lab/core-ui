@@ -29,15 +29,19 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
         this._permanent = permanent ?? false;
         if(this._permanent) {
-            App.Db.AddHandler('DatabaseDoesNotExists', (event, args) => {
-                App.Db.CreateStore(this._name, '__domain');
-            });
-            App.Db.AddHandler('DatabaseOpened', (event, args) => {
-                this.RetreiveFromPermanentStore();
-            });
+            App.Db.AddHandler('DatabaseDoesNotExists', this.__appDbDatabaseDoesNotExists, false, this);
+            App.Db.AddHandler('DatabaseOpened', this.__appDatabaseOpened, false, this);
             App.Db.Open();
         }
 
+    }
+
+    __appDatabaseOpened(event, args) {
+        this.RetreiveFromPermanentStore();
+    }
+
+    __appDbDatabaseDoesNotExists(event, args) {
+        App.Db.CreateStore(this._name, '__domain');
     }
 
     destructor() {

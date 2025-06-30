@@ -20,18 +20,18 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
         this._button = new Colibri.UI.Button(this.name + '_button', this._flex);
         this._flex.shown = this._color.shown = this._input.shown = this._button.shown = true;
         this._input.loading = this._input.hasIcon = this._input.hasClearIcon = false;
-        
+
         const icon = new Colibri.UI.Icon(this.name + '_buttonicon', this._button);
         icon.shown = true;
         icon.value = Colibri.UI.SelectArrowIcon;
 
-        if(this._fieldData?.params?.readonly === undefined) {
-            this.readonly = false;    
+        if (this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;
         }
         else {
             this.readonly = this._fieldData?.params?.readonly;
         }
-        if(this._fieldData?.params?.enabled === undefined) {
+        if (this._fieldData?.params?.enabled === undefined) {
             this.enabled = true;
         }
         else {
@@ -44,45 +44,51 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
 
         this._button.AddHandler('Clicked', this.__buttonClicked, false, this);
 
-        this._input.AddHandler('Changed', (event, args) => {
-            this._color.styles = {backgroundColor: this._input.value};
-            this.Dispatch('Changed', Object.assign(args, {component: this}));
-        });
-        this._input.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
-        this._input.AddHandler('KeyDown', (event, args) => this.Dispatch('KeyDown', args));
-        this._input.AddHandler('Clicked', (event, args) => this.Dispatch('Clicked', args));
+        this._input.AddHandler('Changed', this.__inputChanged, false, this);
+        this._input.AddHandler('KeyUp', this.__thisBubble, false, this);
+        this._input.AddHandler('KeyDown', this.__thisBubble, false, this);
+        this._input.AddHandler('Clicked', this.__thisBubble, false, this);
 
+    }
+
+    __inputChanged(event, args) {
+        this._color.styles = { backgroundColor: this._input.value };
+        this.Dispatch('Changed', Object.assign(args, { component: this }));
     }
 
     /** @private */
     _showPopup() {
-        
+
         this._colorPopup = new Colibri.UI.Color(this.name + '_color', document.body);
         this._colorPopup.parent = this.contentContainer;
         this._colorPopup.hasShadow = true;
         this._colorPopup.shown = true;
         this._colorPopup.BringToFront();
-        this._colorPopup.AddHandler('Changed', (event, args) => {
-            this._input.value = this._colorPopup.value.hex;
-            this._color.styles = {backgroundColor: this._input.value};
-            this.Dispatch('Changed', args);
-        });
-        this._colorPopup.AddHandler('ShadowClicked', (event, args) => {
-            console.log('disposing');
-            this._colorPopup.Dispose();
-        });
+        this._colorPopup.AddHandler('Changed', this.__coloPopupChanged, false, this);
+        this._colorPopup.AddHandler('ShadowClicked', this.__colorPopupShadowClicked, false, this);
         this._colorPopup.value = this._input.value;
         this._colorPopup.top = this._input.top + this._input.height;
         this._colorPopup.left = this._input.left;
         this._colorPopup.width = Math.max(this._input.width, 379);
-        
+
+    }
+
+    __colorPopupShadowClicked(event, args) {
+        console.log('disposing');
+        this._colorPopup.Dispose();
+    }
+
+    __coloPopupChanged(event, args) {
+        this._input.value = this._colorPopup.value.hex;
+        this._color.styles = { backgroundColor: this._input.value };
+        this.Dispatch('Changed', args);
     }
 
     /**
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */ 
+     */
     __buttonClicked(event, args) {
         this._showPopup();
     }
@@ -99,7 +105,7 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
     Focus() {
         this._input.Focus();
     }
-    
+
     /**
      * Readonly
      * @type {boolean}
@@ -141,10 +147,10 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
      */
     get value() {
         let value = this._input.value;
-        if(this._fieldData?.params?.emptyAsNull && !value) {
+        if (this._fieldData?.params?.emptyAsNull && !value) {
             value = null;
         }
-        if(this._fieldData?.params?.eval) {
+        if (this._fieldData?.params?.eval) {
             value = eval(this._fieldData?.params?.eval);
         }
         return value;
@@ -156,7 +162,7 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
      */
     set value(value) {
         this._input.value = value ?? '';
-        this._color.styles = {backgroundColor: this._input.value};
+        this._color.styles = { backgroundColor: this._input.value };
     }
 
     /**
@@ -194,4 +200,4 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
 
 }
 
-Colibri.UI.Forms.Field.RegisterFieldComponent('Color', 'Colibri.UI.Forms.Color', '#{ui-fields-color}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler']);
+Colibri.UI.Forms.Field.RegisterFieldComponent('Color', 'Colibri.UI.Forms.Color', '#{ui-fields-color}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler']);

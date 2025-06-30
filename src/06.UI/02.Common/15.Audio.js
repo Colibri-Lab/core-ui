@@ -34,6 +34,25 @@ Colibri.UI.Audio = class extends Colibri.UI.Component {
     get controls() {
         return this._audio.attr('controls') === 'controls';
     }
+
+    __playClicked(event, args) {
+        this._audio.play();
+        this._play.shown = false;
+        this._pause.shown = true;
+        args.domEvent.stopPropagation();
+        args.domEvent.preventDefault();
+        return false;
+    }
+
+    __pauseClicked(event, args) {
+        this._audio.pause();
+        this._play.shown = true;
+        this._pause.shown = false;
+        args.domEvent.stopPropagation();
+        args.domEvent.preventDefault();
+        return false;
+    }
+
     /**
      * Controls
      * @type {playpause,full,none}
@@ -47,22 +66,8 @@ Colibri.UI.Audio = class extends Colibri.UI.Component {
             this._pause.shown = false;
             this._play.iconSVG = 'Colibri.UI.PlayIcon';
             this._pause.iconSVG = 'Colibri.UI.PauseIcon';
-            this._play.AddHandler('Clicked', (event, args) => {
-                this._audio.play();
-                this._play.shown = false;
-                this._pause.shown = true;
-                args.domEvent.stopPropagation();
-                args.domEvent.preventDefault();
-                return false;
-            });
-            this._pause.AddHandler('Clicked', (event, args) => {
-                this._audio.pause();
-                this._play.shown = true;
-                this._pause.shown = false;
-                args.domEvent.stopPropagation();
-                args.domEvent.preventDefault();
-                return false;
-            });
+            this._play.AddHandler('Clicked', this.__playClicked, false, this);
+            this._pause.AddHandler('Clicked', this.__pauseClicked, false, this);
         } else if(value === 'full') {
             this._audio.attr('controls', true);
             this._play?.Dispose();

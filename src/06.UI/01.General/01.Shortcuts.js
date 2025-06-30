@@ -2,13 +2,13 @@
  * @class
  * @memberof Colibri.UI
  */
-Colibri.UI.Shortcuts = {
+Colibri.UI.Shortcuts = class {
 
     /**
      * Keys added for shortcuts
      * @type {object}
      */
-    keys: {},
+    static keys = {};
 
     /**
      * Add handler to shortcut
@@ -17,19 +17,19 @@ Colibri.UI.Shortcuts = {
      * @param {Array} keys array of keys to add
      * @param {Function} handler method to execute when shortcut is raised
      */
-    Add: function (keys, handler) {
-        if(!this.keys[keys]) {
-            this.keys[keys] = [];
+    static Add(keys, handler) {
+        if(!Colibri.UI.Shortcuts.keys[keys]) {
+            Colibri.UI.Shortcuts.keys[keys] = [];
         }
-        this.keys[keys].push(handler);
-    },
+        Colibri.UI.Shortcuts.keys[keys].push(handler);
+    }
 
     /**
      * Bund all shortcuts added before
      * @public
      * @static
      */
-    Bind: function() {
+    static Bind() {
 
         window.addEventListener('keydown', (e) => {
     
@@ -50,9 +50,9 @@ Colibri.UI.Shortcuts = {
     
             key = key.join('+');
     
-            if(this.keys[key]) {
+            if(Colibri.UI.Shortcuts.keys[key]) {
                 let ret = true;
-                this.keys[key].forEach((handler) => {
+                Colibri.UI.Shortcuts.keys[key].forEach((handler) => {
                     ret &= handler(key);
                 });
                 if(!ret) {

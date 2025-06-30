@@ -40,28 +40,36 @@ Colibri.UI.MassActionsMenu = class extends Colibri.UI.Component {
     _renderActions() {
         this._actionsContainer.Clear();
         this._actions.forEach((action) => {
-            let actionButton = new Colibri.UI.GrayButton(action.name, this._actionsContainer);
-            actionButton.AddClass('app-mass-actions-menu-action-component');
-            actionButton.value = action.title;
+            if(this._actionButton) {
+                this._actionButton.Dispose();
+                this._actionButton = null;
+            }
+
+            this._actionButton = new Colibri.UI.GrayButton(action.name, this._actionsContainer);
+            this._actionButton.AddClass('app-mass-actions-menu-action-component');
+            this._actionButton.value = action.title;
             if(action.icon) {
-                actionButton.icon = action.icon;
+                this._actionButton.icon = action.icon;
             }
             if(action.contextmenu && action.contextmenu.length > 0) {
-                actionButton.contextmenu = action.contextmenu;
+                this._actionButton.contextmenu = action.contextmenu;
             }
-            actionButton.tag = action;
-            actionButton.AddHandler('ContextMenuItemClicked', (event, args) => {
-                this.Dispatch('ActionClicked', args);
-            });
-            actionButton.AddHandler('Clicked', (event, args) => {
-                if(event.sender.contextmenu.length > 0) {
-                    event.sender.ShowContextMenu([Colibri.UI.ContextMenu.LT, Colibri.UI.ContextMenu.RT], '', null);
-                } else {
-                    this.Dispatch('ActionClicked', Object.assign({menu: event.sender, menuData: event.sender.tag}, args));
-                }
-            });
-            actionButton.shown = true
+            this._actionButton.tag = action;
+            this._actionButton.AddHandler('ContextMenuItemClicked', this.__actionButtonContextMenuItemClicked, false, this);
+            this._actionButton.AddHandler('Clicked', this.__actionButtonClicked, false, this);
+            this._actionButton.shown = true
         });
+    }
+
+    __actionButtonContextMenuItemClicked(event, args) {
+        this.Dispatch('ActionClicked', args);
+    }
+    __actionButtonClicked(event, args) {
+        if(this._actionButton.contextmenu.length > 0) {
+            this._actionButton.ShowContextMenu([Colibri.UI.ContextMenu.LT, Colibri.UI.ContextMenu.RT], '', null);
+        } else {
+            this.Dispatch('ActionClicked', Object.assign({menu: this._actionButton, menuData: this._actionButton.tag}, args));
+        }
     }
 
     /**

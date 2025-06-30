@@ -235,11 +235,15 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         const contextMenuIcon = new Colibri.UI.Icon(this._name + '-contextmenu-icon', contextMenuParent);
         contextMenuIcon.shown = true;
         contextMenuIcon.value = Colibri.UI.ContextMenuIcon;
-        contextMenuIcon.AddHandler('Clicked', (event, args) => this.Dispatch('ContextMenuIconClicked', args));    
+        contextMenuIcon.AddHandler('Clicked', this.__thisContextMenuItemClicked, false, this);    
 
         this.AddHandler('Scrolled', this.__thisScrolled); 
         this.Dispatch('Scrolled');
 
+    }
+
+    __thisContextMenuItemClicked(event, args) {
+        this.Dispatch('ContextMenuIconClicked', args);
     }
 
     __thisScrolled(event, args) {
@@ -465,7 +469,7 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
             const contextMenuIcon = new Colibri.UI.Icon(this._name + '-contextmenu-icon', contextMenuParent);
             contextMenuIcon.shown = true;
             contextMenuIcon.value = Colibri.UI.ContextMenuIcon;
-            contextMenuIcon.AddHandler('Clicked', (event, args) => this.parent.tree.Dispatch('ContextMenuIconClicked', Object.assign({item: this}, args)));    
+            contextMenuIcon.AddHandler('Clicked', this.__contextMenuIconClicked, false, this);
         }
         
     }
@@ -513,6 +517,10 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
 
     __thisContextMenuItemClicked(event, args) {
         this._nodes.tree.Dispatch('ContextMenuItemClicked', Object.assign({item: this}, args));
+    }
+
+    __contextMenuIconClicked(event, args) {
+        this.parent.tree.Dispatch('ContextMenuIconClicked', Object.assign({item: this}, args));
     }
 
     __thisDoubleClicked2(event, args) {
@@ -1004,6 +1012,14 @@ Colibri.UI.TreeNodes = class extends Colibri.UI.Component {
 
     }
 
+    __nodeExpanded(event, args) { 
+        return this._tree.Dispatch('NodeExpanded', {node: event.sender}); 
+    }
+
+    __nodeCollapsed(event, args) { 
+        return this._tree.Dispatch('NodeCollapsed', {node: event.sender}); 
+    }
+
     /**
      * Adds a new node to nodes collection 
      * @param {string} name name of new node
@@ -1017,8 +1033,8 @@ Colibri.UI.TreeNodes = class extends Colibri.UI.Component {
         }
         else {
             node = new Colibri.UI.TreeNode(name || 'node', this);
-            node.AddHandler('Expanded', (event, args) => { return this._tree.Dispatch('NodeExpanded', {node: event.sender}); });
-            node.AddHandler('Collapsed', (event, args) => { return this._tree.Dispatch('NodeCollapsed', {node: event.sender}); });    
+            node.AddHandler('Expanded', this.__nodeExpanded, false, this);
+            node.AddHandler('Collapsed', this.__nodeCollapsed, false, this);    
         }
 
         if(this.parent instanceof Colibri.UI.TreeNode) {

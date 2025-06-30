@@ -8,16 +8,20 @@ Colibri.UI.DeferredFormValidator = class {
     /**
      * @constructor
      * @param {Colibri.UI.Forms.Form} form form component
-     */ 
+     */
     constructor(form) {
         this._form = form;
         this._init(this._form.Fields());
-        this._form.AddHandler('FieldsRendered', (event, args) => {
-            this._init(this._form.Fields());            
-        });
-        this._form.AddHandler('Changed', (event, args) => {
-            this._form.message = '';
-        });
+        this._form.AddHandler('FieldsRendered', this.__formFieldsRendered, false, this);
+        this._form.AddHandler('Changed', this.__formChanged, false, this);
+    }
+
+    __formChanged(event, args) {
+        this._form.message = '';
+    }
+
+    __formFieldsRendered(event, args) {
+        this._init(this._form.Fields());
     }
 
     /**
@@ -26,15 +30,23 @@ Colibri.UI.DeferredFormValidator = class {
      * @param {object} fields fields object
      */
     _init(fields) {
-        if(fields.length == 0) {
+        if (fields.length == 0) {
             return;
         }
         Object.forEach(fields, (name, field) => {
             field.field.params && (field.field.params.validated = 'not-validated-yet');
-            field.AddHandler('Changed', (event, args) => this.__validateField(field));
-            field.AddHandler('FieldsRendered', (event, args) => this._init(event.sender.Fields()));
+            field.AddHandler('Changed', this.__fieldClicked, false, this);
+            field.AddHandler('FieldsRendered', this.__fieldFieldsRendered, false, this);
             this._init(field.Fields ? field.Fields() : []);
         });
+    }
+
+    __fieldClicked(event, args) {
+        return this.__validateField(field);
+    }
+
+    __fieldFieldsRendered(event, args) {
+        return this._init(event.sender.Fields());
     }
 
     /**
@@ -48,29 +60,29 @@ Colibri.UI.DeferredFormValidator = class {
         field.message = '';
         field.RemoveClass('app-validate-error');
 
-        if(!field.shown) {
+        if (!field.shown) {
             return;
         }
 
 
         const validate = field.field?.params?.validate;
-        if(!validate) {
+        if (!validate) {
             return;
         }
 
         field.__validating = true;
 
-        for(const v of validate) {
+        for (const v of validate) {
             const message = v.message instanceof Function ? v.message(field, this) : v.message;
             const method = typeof v.method !== 'function' ? eval(v.method) : v.method;
             let res = method(field, this);
-            if(!(res instanceof Promise)) {
+            if (!(res instanceof Promise)) {
                 res = Promise.resolve(res);
             }
             res.then((returned) => {
-                if(!returned) {
+                if (!returned) {
                     field.field.params && (field.field.params.validated = 'error');
-                    if(showMessages) {
+                    if (showMessages) {
                         field.message = message;
                         field.AddClass('app-validate-error');
                     }
@@ -90,26 +102,26 @@ Colibri.UI.DeferredFormValidator = class {
      */
     Status(fields = null) {
 
-        if(!fields) {
+        if (!fields) {
             fields = this._form.Fields();
         }
 
-        if(!Array.isArray(fields)) {
+        if (!Array.isArray(fields)) {
             fields = Object.values(fields);
         }
 
-        if(fields.length == 0) {
+        if (fields.length == 0) {
             return true;
         }
 
-        for(const field of fields) {
+        for (const field of fields) {
             // if(field.field?.params?.validate) {    
-                if(field.field.params && field.field.params.validated !== 'success') {
-                    return false;
-                }
-                if(!this.Status(field.Fields ? field.Fields() : [])) {
-                    return false;
-                }
+            if (field.field.params && field.field.params.validated !== 'success') {
+                return false;
+            }
+            if (!this.Status(field.Fields ? field.Fields() : [])) {
+                return false;
+            }
             //}
         }
 
@@ -125,19 +137,19 @@ Colibri.UI.DeferredFormValidator = class {
 
         this._form.message = '';
 
-        if(!fields) {
+        if (!fields) {
             fields = this._form.Fields();
         }
 
-        if(!Array.isArray(fields)) {
+        if (!Array.isArray(fields)) {
             fields = Object.values(fields);
         }
 
-        if(fields.length == 0) {
+        if (fields.length == 0) {
             return;
         }
 
-        for(const field of fields) {
+        for (const field of fields) {
             field.message = '';
             field.RemoveClass('app-validate-error');
             field.field.params && (field.field.params.validated = true);
@@ -149,22 +161,22 @@ Colibri.UI.DeferredFormValidator = class {
     }
 
     _startValidationProcess(fields, showMessages = true) {
-        if(!fields) {
+        if (!fields) {
             fields = this._form.Fields();
         }
 
-        if(!Array.isArray(fields)) {
+        if (!Array.isArray(fields)) {
             fields = Object.values(fields);
         }
 
-        if(fields.length == 0) {
+        if (fields.length == 0) {
             return;
         }
 
-        for(const field of fields) {
+        for (const field of fields) {
             this.__validateField(field, showMessages);
             const ffields = field.Fields ? Object.values(field.Fields()) : [];
-            if(ffields.length > 0) {
+            if (ffields.length > 0) {
                 this._startValidationProcess(ffields, showMessages);
             }
         }
@@ -178,9 +190,9 @@ Colibri.UI.DeferredFormValidator = class {
 
         return new Promise((resolve, reject) => {
             this._form.message = '';
-            
+
             this._startValidationProcess(fields, showMessages);
-    
+
             Colibri.Common.Wait(() => !this.Validating()).then(() => {
                 resolve(this.Status())
             })
@@ -190,24 +202,24 @@ Colibri.UI.DeferredFormValidator = class {
     }
 
     Validating(fields = null) {
-        if(!fields) {
+        if (!fields) {
             fields = this._form.Fields();
         }
 
-        if(!Array.isArray(fields)) {
+        if (!Array.isArray(fields)) {
             fields = Object.values(fields);
         }
 
-        if(fields.length == 0) {
+        if (fields.length == 0) {
             return;
         }
 
-        for(const field of fields) {
-            if(field.__validating) {
+        for (const field of fields) {
+            if (field.__validating) {
                 return true;
             }
 
-            if(this.Validating(field.Fields ? field.Fields() : [])) {
+            if (this.Validating(field.Fields ? field.Fields() : [])) {
                 return true;
             }
         }
@@ -220,7 +232,7 @@ Colibri.UI.DeferredFormValidator = class {
      */
     SetAsValid(field) {
         const f = typeof field === 'string' ? this._form.FindField(field) : field;
-        if(!f) {
+        if (!f) {
             return;
         }
         f.field.params.validated = 'success';
@@ -234,12 +246,12 @@ Colibri.UI.DeferredFormValidator = class {
      * @param {string} message validation message 
      */
     Invalidate(field, message) {
-        if(field == 'form' || field instanceof Colibri.UI.Forms.Form) {
+        if (field == 'form' || field instanceof Colibri.UI.Forms.Form) {
             this._form.message = message;
             return;
         }
         const f = typeof field === 'string' ? this._form.FindField(field) : field;
-        if(!f) {
+        if (!f) {
             return;
         }
         f.field.params.validated = 'error';
@@ -258,15 +270,15 @@ Colibri.UI.DeferredFormValidator = class {
 
     GetFirstInvalid(fields = null) {
         let found = null;
-        if(!fields) {
+        if (!fields) {
             fields = this._form.Fields();
         }
         Object.forEach(fields, (name, field) => {
-            if(field.field.params.validated === 'error') {
+            if (field.field.params.validated === 'error') {
                 found = field;
                 return false;
             }
-            if( field.Fields && (found = this.GetFirstInvalid(field.Fields())) ) {
+            if (field.Fields && (found = this.GetFirstInvalid(field.Fields()))) {
                 return false;
             }
         });

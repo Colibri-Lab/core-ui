@@ -12,7 +12,6 @@ Colibri.UI.Forms.DateTimeRange = class extends Colibri.UI.Forms.Field {
 
         this.AddClass('app-component-datetimerange-field');
 
-
         const contentContainer = this.contentContainer;
 
         this._flex1 = new Colibri.UI.FlexBox(this._name + '-flex1', contentContainer);
@@ -21,13 +20,9 @@ Colibri.UI.Forms.DateTimeRange = class extends Colibri.UI.Forms.Field {
 
         this._input1 = new Colibri.UI.DateSelector(this._name + '-input1', this._flex1);
         this._input1.shown = true;
-        this._input1.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args || {}, {component: this})));
-        this._input1.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
-        this._input1.AddHandler('Clicked', (event, args) => {
-            this.Dispatch('Clicked', args);
-            args.domEvent.stopPropagation();
-            return false;
-        });
+        this._input1.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
+        this._input1.AddHandler('KeyUp', this.__thisBubble, false, this);
+        this._input1.AddHandler('Clicked', this.__thisBubbleStopPropagation, false, this);
 
         this._time1 = new Colibri.UI.Input(this._name + '-time1', this._flex1);
         this._time1.shown = true;
@@ -37,13 +32,9 @@ Colibri.UI.Forms.DateTimeRange = class extends Colibri.UI.Forms.Field {
 
         this._input2 = new Colibri.UI.DateSelector(this._name + '-input2', this._flex2);
         this._input2.shown = true;
-        this._input2.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args || {}, {component: this})));
-        this._input2.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
-        this._input2.AddHandler('Clicked', (event, args) => {
-            this.Dispatch('Clicked', args);
-            args.domEvent.stopPropagation();
-            return false;
-        });
+        this._input2.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
+        this._input2.AddHandler('KeyUp', this.__thisBubble, false, this);
+        this._input2.AddHandler('Clicked', this.__thisBubbleStopPropagation, false, this);
 
         this._time2 = new Colibri.UI.Input(this._name + '-time2', this._flex2);
         this._time2.shown = true;
@@ -55,23 +46,25 @@ Colibri.UI.Forms.DateTimeRange = class extends Colibri.UI.Forms.Field {
         this._icon = new Colibri.UI.Icon(this.name + '-clear', contentContainer);
         this._icon.shown = true;
         this._icon.value = Colibri.UI.ClearIcon;
-        this._icon.AddHandler('Clicked', (event, args) => {
-            this.value = [null,null];
-        });
+        this._icon.AddHandler('Clicked', this.__iconClicked);
 
-        if(this._fieldData?.params?.readonly === undefined) {
-            this.readonly = false;    
+        if (this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;
         }
         else {
             this.readonly = this._fieldData?.params?.readonly;
         }
-        if(this._fieldData?.params?.enabled === undefined) {
+        if (this._fieldData?.params?.enabled === undefined) {
             this.enabled = true;
         }
         else {
             this.enabled = this._fieldData.params.enabled;
         }
 
+    }
+
+    __iconClicked(event, args) {
+        this.value = [null, null];
     }
 
     /**
@@ -127,7 +120,7 @@ Colibri.UI.Forms.DateTimeRange = class extends Colibri.UI.Forms.Field {
         let value2 = this._input2.value;
         let timeValue1 = this._time1.value;
         let timeValue2 = this._time2.value;
-        
+
         value1 = (value1?.toString() === 'Invalid Date' ? null : value1.toShortDateString());
         value2 = (value2?.toString() === 'Invalid Date' ? null : value2.toShortDateString());
         return [value1 ? value1 + ' ' + timeValue1 : null, value2 ? value2 + ' ' + timeValue2 : null];
@@ -138,13 +131,13 @@ Colibri.UI.Forms.DateTimeRange = class extends Colibri.UI.Forms.Field {
      * @type {Array<Date>}
      */
     set value(value) {
-        if(!Array.isArray(value)) {
+        if (!Array.isArray(value)) {
             value = [value ?? '', ''];
         }
-        if(typeof value[0] == 'string') {
+        if (typeof value[0] == 'string') {
             value[0] = new Date(value[0]);
         }
-        if(typeof value[1] == 'string') {
+        if (typeof value[1] == 'string') {
             value[1] = new Date(value[1]);
         }
         this._input1.value = value[0];
@@ -192,4 +185,4 @@ Colibri.UI.Forms.DateTimeRange = class extends Colibri.UI.Forms.Field {
         }
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('DateTimeRange', 'Colibri.UI.Forms.DateTimeRange', '#{ui-fields-datetimerage}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler']);
+Colibri.UI.Forms.Field.RegisterFieldComponent('DateTimeRange', 'Colibri.UI.Forms.DateTimeRange', '#{ui-fields-datetimerage}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler']);

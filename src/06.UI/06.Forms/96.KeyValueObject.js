@@ -58,18 +58,26 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
 
         this._grid.AddHandler('ContextMenuIconClicked', this.__gridContextMenuIconClicked, false, this);
         this._grid.AddHandler('ContextMenuItemClicked', this.__gridContextMenuItemClicked, false, this);
-        this._grid.AddHandler('CellEditorChanged', (event, args) => this.Dispatch('Changed', {component: this}));
-        this._link.AddHandler('Clicked', (event, args) => this._grid.rows.Add('row' + Date.Mc(), {key: 'new-key-' + (this._grid.rows.children - 1), value: ''}));
+        this._grid.AddHandler('CellEditorChanged', this.__gridCellEditorChanged, false, this);
+        this._link.AddHandler('Clicked', this.__linkClicked, false, this);
 
         this.canEditKey = this._fieldData?.params?.canEditKey ?? true;
         this.canAddNew = this._fieldData?.params?.canAddNew ?? true;
         this.canRemoveRows = this._fieldData?.params?.canRemoveRows ?? true;
 
     }
+
+    __linkClicked(event, args) {
+        this._grid.rows.Add('row' + Date.Mc(), { key: 'new-key-' + (this._grid.rows.children - 1), value: '' });
+    }
+
+    __gridCellEditorChanged(event, args) {
+        return this.Dispatch('Changed', { component: this });
+    }
     
     __gridContextMenuIconClicked(event, args) {
-        args.item.contextmenu = [{name: 'remove', title: '#{ui-fields-keyvalueobject-remove}'}];
-        args.item.ShowContextMenu(args.isContextMenuEvent ? [Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT] : [Colibri.UI.ContextMenu.RB, Colibri.UI.ContextMenu.RT], '', args.isContextMenuEvent ? {left: args.domEvent.clientX, top: args.domEvent.clientY} : null);
+        args.item.contextmenu = [{ name: 'remove', title: '#{ui-fields-keyvalueobject-remove}' }];
+        args.item.ShowContextMenu(args.isContextMenuEvent ? [Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT] : [Colibri.UI.ContextMenu.RB, Colibri.UI.ContextMenu.RT], '', args.isContextMenuEvent ? { left: args.domEvent.clientX, top: args.domEvent.clientY } : null);
     }
 
     __gridContextMenuItemClicked(event, args) {

@@ -37,7 +37,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         this.halign = this._parentColumn?.halign;
 
         this._handleEvents();
-        if(this._parentColumn?.editorAllways ?? false) {
+        if (this._parentColumn?.editorAllways ?? false) {
             this.EditValue(false);
         }
     }
@@ -54,13 +54,13 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         this.RegisterEvent('EditorChanged', false, 'Изменилось значение в редакторе');
     }
 
-    
+
     __thisDoubleClicked(event, args) {
-        this.Dispatch('CellDoubleClicked', {cell: this, row: this.parentRow});
+        this.Dispatch('CellDoubleClicked', { cell: this, row: this.parentRow });
     }
 
     __thisComponentDisposed(event, args) {
-        this.Dispatch('CellDisposed', {cell: this});
+        this.Dispatch('CellDisposed', { cell: this });
     }
 
     __thisParentRowRowStickyChange(event, args) {
@@ -74,29 +74,29 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
     }
 
     __thisViewerClicked(event, args) {
-        this.grid.Dispatch('CellViewerClicked', Object.assign(args, {cell: this, field: this.columnName, data: this.parentRow.value}));
-        this.Dispatch('CellClicked', {cell: this});
+        this.grid.Dispatch('CellViewerClicked', Object.assign(args, { cell: this, field: this.columnName, data: this.parentRow.value }));
+        this.Dispatch('CellClicked', { cell: this });
         this.EditValue();
     }
 
     __thisEditorChanged(event, args) {
-        if(this.value == args.value) {
+        if (this.value == args.value) {
             return true;
         }
 
         const oldValue = this.value;
         this.value = args.value;
-        this.grid.Dispatch('CellValueChanged', {cell: this, row: this.parentRow, value: event.sender.value, oldValue: oldValue});
-        this.grid.Dispatch('CellEditorChanged', {cell: this, field: this.columnName, data: this.parentRow.value});
+        this.grid.Dispatch('CellValueChanged', { cell: this, row: this.parentRow, value: event.sender.value, oldValue: oldValue });
+        this.grid.Dispatch('CellEditorChanged', { cell: this, field: this.columnName, data: this.parentRow.value });
     }
 
     _handleEvents() {
         this.AddHandler('DoubleClicked', this.__thisDoubleClicked);
         this.AddHandler('ComponentDisposed', this.__thisComponentDisposed);
-        this.parentRow.AddHandler('RowStickyChange', this.__thisParentRowRowPositionChange, false, this);
-        this.parentRow.AddHandler('RowPositionChange', this.__thisParentRowRowPositionChange, false, this);
         this.AddHandler('ViewerClicked', this.__thisViewerClicked);
         this.AddHandler('EditorChanged', this.__thisEditorChanged);
+        this.parentRow.AddHandler('RowStickyChange', this.__thisParentRowRowPositionChange, false, this);
+        this.parentRow.AddHandler('RowPositionChange', this.__thisParentRowRowPositionChange, false, this);
     }
 
     /**
@@ -135,9 +135,9 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
             this._element.style.left = '';
         }
         this._stickyHorizontally = value;
-        this.Dispatch('CellHorizontalStickyChanged', {cell: this});
+        this.Dispatch('CellHorizontalStickyChanged', { cell: this });
     }
-    
+
     /**
      * Vertical sticky
      * @type {Boolean}
@@ -157,7 +157,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
             this._element.style.left = '';
         }
         this._stickyVertically = value;
-        this.Dispatch('CellVerticalStickyChanged', {cell: this});
+        this.Dispatch('CellVerticalStickyChanged', { cell: this });
     }
 
     /**
@@ -181,7 +181,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
      * Is activated
      * @type {Boolean}
      */
-    get activated () {
+    get activated() {
         return this._activated;
     }
 
@@ -201,7 +201,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
      * Is selected
      * @type {Boolean}
      */
-    get selected () {
+    get selected() {
         return this._selected;
     }
 
@@ -225,40 +225,39 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
      * @type {Colibri.UI.Grid.Column}
      */
     set parentColumn(value) {
-        if(this._parentColumn && value != this._parentColumn) {
-            this._parentColumn.RemoveHandler('ColumnStickyChangse', this.__parentColumnStickyChangeHandler);
-            this._parentColumn.RemoveHandler('ColumnDisposed', this.__parentColumnDisposedHandler);
+        if (this._parentColumn && value != this._parentColumn) {
+            this._parentColumn.RemoveHandler('ColumnStickyChange', this.__parentColumnStickyChange);
+            this._parentColumn.RemoveHandler('ColumnDisposed', this.__parentColumnDisposed);
             this._parentColumn.RemoveHandler('ColumnPositionChange', this.__parentColumnPositionChange);
         }
 
         this._parentColumn = value;
-        if(this._parentColumn !== null) {
-
-            this.__parentColumnStickyChangeHandler = this.__parentColumnStickyChangeHandler ?? ((event, args) => {
-                this.stickyHorizontally = args.column.sticky;
-            });
-
-            this.__parentColumnDisposedHandler = this.__parentColumnDisposedHandler ?? ((event, args) => {
-                const parent = this.parent;
-                if(parent?.hasContextMenu) {
-                    parent?.lastCell && parent.lastCell.CreateContextMenuButton();   
-                }
-            });
-
-            this.__parentColumnPositionChange = this.__parentColumnPositionChange ?? ((event, args) => {
-                if (this.stickyHorizontally) {
-                    this.left = args.column._positionLeft;
-                    if(args.column.ContainsClass('-last-sticky')) {
-                        this.AddClass('-last-sticky');   
-                    }
-                }
-            });
-
+        if (this._parentColumn !== null) {
             this.stickyHorizontally = this._parentColumn.sticky;
-            this._parentColumn.AddHandler('ColumnStickyChange', this.__parentColumnStickyChangeHandler);
-            this._parentColumn.AddHandler('ColumnDisposed', this.__parentColumnDisposedHandler);
-            this._parentColumn.AddHandler('ColumnPositionChange', this.__parentColumnPositionChange);
+            this._parentColumn.AddHandler('ColumnStickyChange', this.__parentColumnStickyChange, false, this);
+            this._parentColumn.AddHandler('ColumnDisposed', this.__parentColumnDisposed, false, this);
+            this._parentColumn.AddHandler('ColumnPositionChange', this.__parentColumnPositionChange, false, this);
 
+        }
+    }
+
+    __parentColumnStickyChange(event, args) {
+        this.stickyHorizontally = args.column.sticky;
+    }
+
+    __parentColumnDisposed(event, args) {
+        const parent = this.parent;
+        if (parent?.hasContextMenu) {
+            parent?.lastCell && parent.lastCell.CreateContextMenuButton();
+        }
+    }
+
+    __parentColumnPositionChange(event, args) {
+        if (this.stickyHorizontally) {
+            this.left = args.column._positionLeft;
+            if (args.column.ContainsClass('-last-sticky')) {
+                this.AddClass('-last-sticky');
+            }
         }
     }
 
@@ -316,14 +315,14 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
      */
     get value() {
         return this._value;
-    } 
+    }
     /**
      * Value of cell
      * @type {String}
      */
     set value(value) {
         this._value = value;
-        if(this._viewerObject) {
+        if (this._viewerObject) {
             this._viewerObject.value = this._value;
             this._viewerObject.viewedObject = this.parentRow.value;
         }
@@ -333,7 +332,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
             this._valueContainer.value = this._generateViewFromParams();
         }
 
-        if(this._editorObject) {
+        if (this._editorObject) {
             this._editorObject.value = this._value;
         }
 
@@ -388,7 +387,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
      * @type {Colibri.UI.Grid.Cell}
      */
     get nextCell() {
-        if(this.next instanceof Colibri.UI.Grid.Cell) {
+        if (this.next instanceof Colibri.UI.Grid.Cell) {
             return this.next;
         }
         return null;
@@ -399,7 +398,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
      * @type {Colibri.UI.Grid.Cell}
      */
     get prevCell() {
-        if(this.prev instanceof Colibri.UI.Grid.Cell && this.prev.name !== 'button-container-for-row-selection') {
+        if (this.prev instanceof Colibri.UI.Grid.Cell && this.prev.name !== 'button-container-for-row-selection') {
             return this.prev;
         }
         return null;
@@ -407,9 +406,9 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
 
     _generateViewFromParams(value) {
         const column = this.grid.header.FindColumn(this.columnName);
-        if(column.tag.params && column.tag.params.render) {
+        if (column.tag.params && column.tag.params.render) {
             const ret = column.tag.params.render.apply(this, [this, this.parentRow]);
-            if(ret) {
+            if (ret) {
                 return ret;
             }
         }
@@ -419,7 +418,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
     }
 
     _createValueContainer() {
-        if(!this._valueContainer) {
+        if (!this._valueContainer) {
             this._valueContainer = new Colibri.UI.TextSpan('span', this);
             this._valueContainer.AddClass('app-ui-row-cell-value-container');
             this._valueContainer.shown = true;
@@ -428,38 +427,42 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
     }
 
     _createViewer() {
-        if(this._viewer && !this._viewerObject) {
+        if (this._viewer && !this._viewerObject) {
             const cell = this;
             const viewer = eval(this._viewer);
-            if(!viewer) {
+            if (!viewer) {
                 throw 'Can not find viewer component: ' + this._viewer;
             }
             this._viewerObject = new viewer(this.name + '_viewer', this);
-            this._viewerObject.AddHandler('Clicked', (event, args) => this.Dispatch('ViewerClicked', Object.assign(args, {value: event.sender.value})));
+            this._viewerObject.AddHandler('Clicked', this.__viewerObjectClicked, false, this);
             this._viewerObject.shown = true;
             this._viewerObject.field = this.parentColumn.tag;
             this._viewerObject.download = this.parentColumn.download;
-            this._viewerObject.tag = {column: this.parentColumn, row: this.parentRow, cell: this};
+            this._viewerObject.tag = { column: this.parentColumn, row: this.parentRow, cell: this };
             Object.forEach(this.parentColumn.tag.viewerAttrs, (name, value) => {
                 this._viewerObject[name] = value;
             });
 
             this._valueContainer && (this._valueContainer.shown = false);
         }
-        else if(!this._viewer && this._viewerObject) {
+        else if (!this._viewer && this._viewerObject) {
             this._viewerObject.Dispose();
             this._valueContainer ? (this._valueContainer.shown = true) : this._createValueContainer();
         }
     }
 
+    __viewerObjectClicked(event, args) {
+        this.Dispatch('ViewerClicked', Object.assign(args, { value: event.sender.value }));
+    }
+
     _createEditor() {
-        if(this._editor && !this._editorObject) {
+        if (this._editor && !this._editorObject) {
             let editor = this._editor;
             let tag = this.parentColumn.tag;
             let download = this.parentColumn.download;
-            if(typeof editor === 'string') {
+            if (typeof editor === 'string') {
                 editor = eval(editor);
-            } else if(editor instanceof Function && (!(editor instanceof Colibri.UI.Editor) && !(editor.prototype instanceof Colibri.UI.Editor))) {
+            } else if (editor instanceof Function && (!(editor instanceof Colibri.UI.Editor) && !(editor.prototype instanceof Colibri.UI.Editor))) {
                 const returns = editor(this, this.parentRow, this.parentColumn, this.grid);
                 editor = returns.editor;
                 tag = returns.tag;
@@ -467,48 +470,52 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
 
             this._editorObject = new editor(this.name + '_editor', this);
             this._editorObject.field = tag;
-            this._editorObject.download = download;  
-            this._editorObject.tag = {column: this.parentColumn, row: this.parentRow, cell: this};
-            this._editorObject.AddHandler('KeyDown', (event, args) => {
-                if(args.domEvent.keyCode == 13 && !this._editorObject.invalid) {
-                    this.Dispatch('EditorChanged', {value: this._editorObject.value});
-                    this.EndEdit();
-                }
-                else if(args.domEvent.keyCode == 27) {
-                    this._editorObject.Dispatch('LoosedFocus');
-                }
-                args.domEvent.stopPropagation();
-            });
-            this._editorObject.AddHandler('Changed', (event, args) => {
-                if(!this._editorObject.invalid) {
-                    this.Dispatch('EditorChanged', {value: this._editorObject.value});
-                }
-            });
-            this._editorObject.AddHandler('LoosedFocus', (event, args) => {
-                this.EndEdit();
-            });
+            this._editorObject.download = download;
+            this._editorObject.tag = { column: this.parentColumn, row: this.parentRow, cell: this };
+            this._editorObject.AddHandler('KeyDown', this.__editorObjectKeyDown, false, this);
+            this._editorObject.AddHandler('Changed', this.__editorObjectChanged, false, this);
+            this._editorObject.AddHandler('LoosedFocus', this.__editorObjectLoosedFocus, false, this);
         }
-        else if(!this._editor && this._editorObject) {
+        else if (!this._editor && this._editorObject) {
             this._editorObject.Dispose();
         }
     }
 
+    __editorObjectKeyDown(event, args) {
+        if (args.domEvent.keyCode == 13 && !this._editorObject.invalid) {
+            this.Dispatch('EditorChanged', { value: this._editorObject.value });
+            this.EndEdit();
+        }
+        else if (args.domEvent.keyCode == 27) {
+            this._editorObject.Dispatch('LoosedFocus');
+        }
+        args.domEvent.stopPropagation();
+    }
+    __editorObjectChanged(event, args) {
+        if (!this._editorObject.invalid) {
+            this.Dispatch('EditorChanged', { value: this._editorObject.value });
+        }
+    }
+    __editorObjectLoosedFocus(event, args) {
+        this.EndEdit();
+    }
+
     EditValue(setFocus = true) {
-        if(this._editorObject) {
+        if (this._editorObject) {
             Colibri.Common.Delay(50).then(() => {
                 this.AddClass('-editing');
                 this.parentRow && this.parentRow.AddClass('-editing');
                 this._valueContainer && this._valueContainer.Hide();
                 this._viewerObject && this._viewerObject.Hide();
-                if(!this._editorObject.field) {
+                if (!this._editorObject.field) {
                     this._editorObject.field = this._parentColumn.tag;
                 }
                 this._editorObject.Show();
-                if(setFocus) {
+                if (setFocus) {
                     this._editorObject.Focus();
                 }
-                this._editorObject.editedObject = this.parentRow ? this.parentRow.value : null; 
-                this._editorObject.value = this.value;   
+                this._editorObject.editedObject = this.parentRow ? this.parentRow.value : null;
+                this._editorObject.value = this.value;
             });
             return true;
         }
@@ -516,48 +523,50 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
     }
 
     EndEdit(hide = true) {
-        if(this._parentColumn.editorAllways) {
+        if (this._parentColumn.editorAllways) {
             return;
         }
         this.RemoveClass('-editing');
         this.parentRow.RemoveClass('-editing');
-        if(this._viewerObject) {
+        if (this._viewerObject) {
             this._viewerObject.Show();
         }
         else {
             this._valueContainer ? this._valueContainer.Show() : this._createValueContainer();
         }
         hide && this._editorObject && this._editorObject.Hide();
-    } 
+    }
 
     CreateContextMenuButton() {
         let contextMenuParent = this.Children(this._name + '-contextmenu-icon-parent');
-        if(!this.parent.hasContextMenu || contextMenuParent) {
+        if (!this.parent.hasContextMenu || contextMenuParent) {
             return;
         }
 
         contextMenuParent = new Colibri.UI.Component(this._name + '-contextmenu-icon-parent', this);
         contextMenuParent.AddClass('app-contextmenu-icon-component');
         contextMenuParent.shown = true;
-        
+
         const contextMenuIcon = new Colibri.UI.Icon(this._name + '-contextmenu-icon', contextMenuParent);
         contextMenuIcon.shown = true;
         contextMenuIcon.value = Colibri.UI.ContextMenuIcon;
-        contextMenuIcon.AddHandler(['Clicked', 'DoubleClicked'], (event, args) => {
-            this.parent.Dispatch('ContextMenuIconClicked', args);
-            args.domEvent.stopPropagation();
-            args.domEvent.preventDefault();
-            args.domEvent.returnValue = true;
-            return false;
-        });
+        contextMenuIcon.AddHandler(['Clicked', 'DoubleClicked'], this.__contextMenuIconClickedOrDoubleClicked, false, this);
+    }
+
+    __contextMenuIconClickedOrDoubleClicked(event, args) {
+        this.parent.Dispatch('ContextMenuIconClicked', args);
+        args.domEvent.stopPropagation();
+        args.domEvent.preventDefault();
+        args.domEvent.returnValue = true;
+        return false;
     }
 
     RemoveContextMenuButton() {
-        if(this.parent.hasContextMenu && this.Children(this._name + '-contextmenu-icon-parent')) {
+        if (this.parent.hasContextMenu && this.Children(this._name + '-contextmenu-icon-parent')) {
             this.Children(this._name + '-contextmenu-icon-parent').Dispose();
         }
     }
 
-    
+
 
 }

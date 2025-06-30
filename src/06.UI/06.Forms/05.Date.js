@@ -18,33 +18,25 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
         this._input = new Colibri.UI.DateSelector(this._name + '-input', contentContainer);
         this._input.shown = true;
         this._input.clearIcon = false;
-        this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args || {}, {component: this})));
-        this._input.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
-        this._input.AddHandler('Clicked', (event, args) => {
-            this.Focus();
-            this.Dispatch('Clicked', args);
-            args.domEvent.stopPropagation();
-            return false;
-        });
-        
+        this._input.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
+        this._input.AddHandler('KeyUp', this.__thisBubble, false, this);
+        this._input.AddHandler('Clicked', this__inputClicked, false, this);
+
         this._icon = new Colibri.UI.Icon(this.name + '-clear', contentContainer);
         this._icon.shown = true;
         this._icon.value = Colibri.UI.ClearIcon;
-        this._icon.AddHandler('Clicked', (event, args) => {
-            this.value = null;
-        });
+        this._icon.AddHandler('Clicked', this.__clearClicked, false, this);
 
+        this._input.AddHandler('PopupOpened', this.__inputPopupOpened, false, this);
+        this._input.AddHandler('PopupClosed', this.__inputPopupClosed, false, this);
 
-        this._input.AddHandler('PopupOpened', (event, args) => this.AddClass('-opened'));
-        this._input.AddHandler('PopupClosed', (event, args) => this.RemoveClass('-opened'));
-
-        if(this._fieldData?.params?.readonly === undefined) {
-            this.readonly = false;    
+        if (this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;
         }
         else {
             this.readonly = this._fieldData?.params?.readonly;
         }
-        if(this._fieldData?.params?.enabled === undefined) {
+        if (this._fieldData?.params?.enabled === undefined) {
             this.enabled = true;
         }
         else {
@@ -62,6 +54,25 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
         this._input.todayString = this._todayString;
 
     }
+
+    __inputPopupOpened(event, args) {
+        this.AddClass('-opened');
+    }
+    __inputPopupClosed(event, args) {
+        this.RemoveClass('-opened');
+    }
+
+    __clearClicked(event, args) {
+        this.value = null;
+    }
+
+    __inputClicked(event, args) {
+        this.Focus();
+        this.Dispatch('Clicked', args);
+        args.domEvent.stopPropagation();
+        return false;
+    }
+
     /**
      * Focus on component
      */
@@ -117,12 +128,12 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
      * @type {Date}
      */
     set value(value) {
-        if(typeof value == 'string') {
+        if (typeof value == 'string') {
             value = new Date(value);
         }
-        if(value < this._min) {
+        if (value < this._min) {
             return;
-        } else if(value > this._max) {
+        } else if (value > this._max) {
             return;
         }
         this._input.value = value;
@@ -131,7 +142,7 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
     /**
      * Enable/Disable
      * @type {boolean}
-     */   
+     */
     get enabled() {
         return this._input.enabled;
     }
@@ -139,7 +150,7 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
     /**
      * Enable/Disable
      * @type {boolean}
-     */   
+     */
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
         this._input.enabled = value;
@@ -163,4 +174,4 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
         }
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Date', 'Colibri.UI.Forms.Date', '#{ui-fields-date}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler']);
+Colibri.UI.Forms.Field.RegisterFieldComponent('Date', 'Colibri.UI.Forms.Date', '#{ui-fields-date}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler']);

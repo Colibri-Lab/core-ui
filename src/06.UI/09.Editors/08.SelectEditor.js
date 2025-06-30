@@ -8,12 +8,12 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
      * @constructor
      * @param {string} name name of component
      * @param {Element|Colibri.UI.Component} container container element and component
-     */ 
+     */
     constructor(name, container) {
         super(name, container, Element.create('div'));
         this.AddClass('app-select-editor-component');
-        
-        
+
+
 
 
     }
@@ -22,7 +22,7 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
      * Validate editor
      */
     Validate() {
-        
+
     }
 
     /**
@@ -31,8 +31,8 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
      */
     get readonly() {
         return this.field.readonly;
-    }  
- 
+    }
+
     /**
      * Readonly
      * @type {boolean}
@@ -65,7 +65,7 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
     get value() {
         try {
             return this._input?.value[this._input._valueField ?? 'value'];
-        } catch(e) {
+        } catch (e) {
             return null;
         }
     }
@@ -78,13 +78,13 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
         Colibri.Common.Wait(() => !this.loading).then(() => {
             this._input.value = value;
             this.Validate();
-            if(value) {
+            if (value) {
                 this._setFilled();
             } else {
                 this._unsetFilled();
             }
         });
-        
+
     }
 
     /**
@@ -100,7 +100,7 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
      * @type {boolean}
      */
     set enabled(value) {
-        if(value) {
+        if (value) {
             this.RemoveClass('ui-disabled');
             this._input.enabled = true;
         }
@@ -125,45 +125,52 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
         super.field = value;
         this._showField();
     }
+
+    __inputReceiveFocus(event, args) {
+        this.parent.parent.AddClass('-focused');
+    }
+
+    __inputLoosedFocus(event, args) {
+        this.parent.parent.RemoveClass('-focused');
+    }
+
     /** @private */
     _showField() {
-        if(!this._input) {
+        if (!this._input) {
             this._input = this._createSelector();
             this._input.shown = true;
-            this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', args));
-            this._input.AddHandler('ReceiveFocus', (event, args) => {
-                this.parent.parent.AddClass('-focused');
-            });
-            this._input.AddHandler('LoosedFocus', (event, args) => this.parent.parent.RemoveClass('-focused'));
+            this._input.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
+            this._input.AddHandler('ReceiveFocus', this.__inputReceiveFocus, false, this);
+            this._input.AddHandler('LoosedFocus', this.__inputLoosedFocus, false, this);
             this._initializeValues();
-            if(this.field?.params?.readonly === undefined) {
-                this.readonly = false;    
+            if (this.field?.params?.readonly === undefined) {
+                this.readonly = false;
             }
             else {
                 this.readonly = this.field?.params?.readonly;
             }
-            if(this.field?.params?.searchable === undefined) {
-                this.searchable = false;    
+            if (this.field?.params?.searchable === undefined) {
+                this.searchable = false;
             }
             else {
                 this.searchable = this.field?.params?.searchable;
             }
-            if(this.field?.params?.enabled === undefined) {
+            if (this.field?.params?.enabled === undefined) {
                 this.enabled = true;
             }
             else {
                 this.enabled = this.field.params.enabled;
             }
 
-            if(this.field?.params?.values !== undefined) {
+            if (this.field?.params?.values !== undefined) {
                 this.values = this.field?.params?.values;
             }
 
-            if(this.field?.params?.value !== undefined) {
+            if (this.field?.params?.value !== undefined) {
                 this.value = this.field?.params?.value;
             }
 
-            if(this.field?.selector?.ondemand) {
+            if (this.field?.selector?.ondemand) {
                 this._input.__BeforeFilled = () => {
                     return new Promise((resolve, reject) => {
                         if (this.field.lookup) {
@@ -172,7 +179,7 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
                             this._setLookup(this.field.lookup).then((response) => {
                                 this.values = response.result || response;
                             }).finally(() => {
-                                this.loading = false;                        
+                                this.loading = false;
                                 this.RemoveClass('app-select-loading');
                                 this._setEnabled();
                                 resolve(true);
@@ -182,7 +189,7 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
                 };
             }
         }
-        
+
     }
 
     /** @private */
@@ -231,18 +238,18 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
     _getDependsValue(type = null) {
         if (this.root && this.field?.lookup) {
 
-            if((type && !this.field.lookup[type]['depends']) || (!type && !this.field.lookup['depends'])) {
+            if ((type && !this.field.lookup[type]['depends']) || (!type && !this.field.lookup['depends'])) {
                 return;
             }
 
             let dependsField = type ? this.field.lookup[type]['depends'] : this.field.lookup['depends'];
             if (dependsField) {
                 const rootValues = this.root?.value;
-                if(eval(`typeof rootValues?.${dependsField}`) !== 'undefined') {
+                if (eval(`typeof rootValues?.${dependsField}`) !== 'undefined') {
                     return eval(`rootValues.${dependsField}`);
                 }
                 const parentValues = this.parentField?.value;
-                if(eval(`typeof parentValues?.${dependsField}`) !== 'undefined') {
+                if (eval(`typeof parentValues?.${dependsField}`) !== 'undefined') {
                     return eval(`parentValues.${dependsField}`);
                 }
                 return null;
@@ -267,10 +274,10 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
      */
     set values(value) {
         let required = this.field?.params?.required;
-        if(required === undefined) {
+        if (required === undefined) {
             required = false;
         }
-        if(!required) {
+        if (!required) {
             const o = {};
             o[this.field?.selector?.title] = '---';
             o[this.field?.selector?.value] = 0;
@@ -302,7 +309,7 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
                     this.values = response.result || response;
                 }).finally(() => {
                     this.loading = false;
-                    if(this._lastValue) {
+                    if (this._lastValue) {
                         this.value = this._lastValue;
                         this._lastValue = null;
                     } else {
@@ -319,7 +326,7 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
 
     /** @private */
     _setEnabled() {
-        if(!this.value && this.field.default) {
+        if (!this.value && this.field.default) {
             this.value = this.field.default;
         }
     }
@@ -337,7 +344,7 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
      */
     set shown(value) {
         super.shown = value;
-        if(this._input) {
+        if (this._input) {
             this._input.shown = value;
         }
     }

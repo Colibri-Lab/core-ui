@@ -30,12 +30,14 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         this.title = 'По умолчанию';
         this.columns = this.grid.header.columnsCount;
 
-        this._titleCell.AddHandler('Clicked', (event, args) => {
-            if(this._titleCellArrow.shown) {
-                this.closed = !this.closed;
-            }
-        });
+        this._titleCell.AddHandler('Clicked', this.__titleCellClicked, false, this);
 
+    }
+
+    __titleCellClicked(event, args) {
+        if(this._titleCellArrow.shown) {
+            this.closed = !this.closed;
+        }
     }
 
     __addButtonContainerForRowSelection() {
@@ -51,20 +53,22 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         this._checkbox.hasThirdState = true;
         this._checkbox.shown = true;
 
-        this._checkbox.AddHandler('Changed', (event, args) => {
-            this.ForEach((name, row) => {
-                if(row.shown) {
-                    row.checked = args.value;
-                }
-                else {
-                    row.checked = false;
-                }
-            });    
-            this.grid.header.checkbox.thirdState = this.grid.rowsCount > this.grid.checked.length;
-            this.checkbox.thirdState = this.rowsCount > this.checked.length;
-            this.grid.Dispatch('RowSelected');
-        });
+        this._checkbox.AddHandler('Changed', this.__checkboxChanged, false, this);
 
+    }
+
+    __checkboxChanged(event, args) {
+        this.ForEach((name, row) => {
+            if(row.shown) {
+                row.checked = args.value;
+            }
+            else {
+                row.checked = false;
+            }
+        });    
+        this.grid.header.checkbox.thirdState = this.grid.rowsCount > this.grid.checked.length;
+        this.checkbox.thirdState = this.rowsCount > this.checked.length;
+        this.grid.Dispatch('RowSelected');
     }
 
     /** @protected */
@@ -80,6 +84,60 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         this.RegisterEvent('RowDisposed', false, 'Поднимается, когда удалили строку');
         this.RegisterEvent('GridCellsChanged', false, 'Поднимается, когда все строки сообщили об изменении ячеек (sticky/dispose)');
         this.RegisterEvent('StickyChanged', false, 'Поднимается, когда все ячейки сообщили об изменинии sticky');
+    }
+
+    __newRowRowUpdated(event, args) {
+        if(this.grid?.tag?.params?.sort) {
+            const foundIndex = this.grid.tag.params.sort(event.sender, this);
+            this.Children(newRow.name, event.sender, foundIndex);
+        }
+        this.Dispatch('RowUpdated', {row: args.row});
+    }
+
+    __newRowRowStickyChange(event, args) {
+        this.Dispatch('RowStickyChange', args);
+    }
+
+    __newRowCellClicked(event, args) {
+        this.Dispatch('CellClicked', args);
+    }
+
+    __newRowCellDoubleClicked(event, args) {
+        this.Dispatch('CellDoubleClicked', args);
+    }
+
+    __newRowRowSelected(event, args) {
+        if (this.grid?.selectionMode === Colibri.UI.Grid.FullRow) {
+            if (!this.grid.multiple) { 
+                this.grid.UnselectAllRows();
+            }
+            //args.row.selected = !args.row.selected;
+            this.Dispatch('RowSelected', args);
+        }
+    }
+
+    __newRowComponentDisposed(event, args) {
+        this.Dispatch('RowDisposed', {row: event.sender});
+    }
+
+    __newRowCellHorizontalStickyChanged(event, args) {
+        this._tempCountRowsReportedCellsChange = this._tempCountRowsReportedCellsChange + 1;
+        if (this.rowsCount === this._tempCountRowsReportedCellsChange) {
+            this._tempCountRowsReportedCellsChange = 0;
+            this.Dispatch('GridCellsChanged', {rows: this});
+        }
+    }
+
+    __newRowCellDisposed(event, args) {
+        this._tempCountRowsReportedCellsChange = this._tempCountRowsReportedCellsChange + 1;
+        if (this.rowsCount === this._tempCountRowsReportedCellsChange) {
+            this._tempCountRowsReportedCellsChange = 0;
+            this.Dispatch('GridCellsChanged', {rows: this});
+        }
+    }
+
+    __newRowStickyChanged(event, args) {
+        this.Dispatch('StickyChanged', args);
     }
 
     Add(name, value, index = null) {
@@ -99,59 +157,15 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
         this.Dispatch('RowAdded', {row: newRow});
 
-        newRow.AddHandler('RowUpdated', (event, args) => {
-            if(this.grid?.tag?.params?.sort) {
-                const foundIndex = this.grid.tag.params.sort(newRow, this);
-                this.Children(newRow.name, newRow, foundIndex);
-            }
-            this.Dispatch('RowUpdated', {row: args.row});
-        });
-
-        newRow.AddHandler('RowStickyChange', (event, args) => {
-            this.Dispatch('RowStickyChange', args);
-        });
-
-        newRow.AddHandler('CellClicked', (event, args) => {
-            this.Dispatch('CellClicked', args);
-        });
-
-        newRow.AddHandler('CellDoubleClicked', (event, args) => {
-            this.Dispatch('CellDoubleClicked', args);
-        });
-
-        newRow.AddHandler('RowSelected', (event, args) => {
-            if (this.grid?.selectionMode === Colibri.UI.Grid.FullRow) {
-                if (!this.grid.multiple) { 
-                    this.grid.UnselectAllRows();
-                }
-                //args.row.selected = !args.row.selected;
-                this.Dispatch('RowSelected', args);
-            }
-        });
-
-        newRow.AddHandler('ComponentDisposed', (event, args) => {
-            this.Dispatch('RowDisposed', {row: newRow});
-        });
-
-        newRow.AddHandler('CellHorizontalStickyChanged', (event, args) => {
-            this._tempCountRowsReportedCellsChange = this._tempCountRowsReportedCellsChange + 1;
-            if (this.rowsCount === this._tempCountRowsReportedCellsChange) {
-                this._tempCountRowsReportedCellsChange = 0;
-                this.Dispatch('GridCellsChanged', {rows: this});
-            }
-        });
-
-        newRow.AddHandler('CellDisposed', (event, args) => {
-            this._tempCountRowsReportedCellsChange = this._tempCountRowsReportedCellsChange + 1;
-            if (this.rowsCount === this._tempCountRowsReportedCellsChange) {
-                this._tempCountRowsReportedCellsChange = 0;
-                this.Dispatch('GridCellsChanged', {rows: this});
-            }
-        });
-
-        newRow.AddHandler('StickyChanged', (event, args) => {
-            this.Dispatch('StickyChanged', args);
-        });
+        newRow.AddHandler('RowUpdated', this.__newRowRowUpdated, false, this);
+        newRow.AddHandler('RowStickyChange', this.__newRowRowStickyChange, false, this);
+        newRow.AddHandler('CellClicked', this.__newRowCellClicked, false, this);
+        newRow.AddHandler('CellDoubleClicked', this.__newRowCellDoubleClicked, false, this);
+        newRow.AddHandler('RowSelected', this.__newRowRowSelected, false, this);
+        newRow.AddHandler('ComponentDisposed', this.__newRowComponentDisposed, false, this);
+        newRow.AddHandler('CellHorizontalStickyChanged', this.__newRowCellHorizontalStickyChanged, false, this);
+        newRow.AddHandler('CellDisposed', this.__newRowCellDisposed, false, this);
+        newRow.AddHandler('StickyChanged', this.__newRowStickyChanged, false, this);
 
         this._titleCellCountSpan.value = ' (' + this.rowsCount + ')';
 

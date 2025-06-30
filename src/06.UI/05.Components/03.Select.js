@@ -255,8 +255,8 @@ Colibri.UI.Select.DefaultDropdown = class extends Colibri.UI.Select.Dropdown {
 
     /** @protected */
     _handleEvents() {
-        this.list.AddHandler('SelectionChanged', (event, args) => { return this.Dispatch('SelectionChanged', args) });
-        this.options.AddHandler('OptionClicked', (event, args) => { return this.Dispatch('OptionClicked', args) });
+        this.list.AddHandler('SelectionChanged', this.__thisBubble, false, this);
+        this.options.AddHandler('OptionClicked', this.__thisBubble, false, this);
     }
 
     /**

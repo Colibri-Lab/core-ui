@@ -11,7 +11,7 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
      * @param {Element|Colibri.UI.Component} container container of component
      */
     constructor(name, container) {
-        super(name, container, Element.create('div', {class: 'app-ui-component'}));
+        super(name, container, Element.create('div', { class: 'app-ui-component' }));
 
         this.AddClass('app-textarea-component');
         this._visual = false;
@@ -32,7 +32,7 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
      * Focus on component
      * @returns this
      */
-     Focus() {
+    Focus() {
         this._input.focus();
         return this;
     }
@@ -60,7 +60,7 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
         try {
             return this._input.attr('placeholder');
         }
-        catch(e) {
+        catch (e) {
             return '';
         }
     }
@@ -77,7 +77,7 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
      * @type {string} 
      */
     get value() {
-        if(this._visual) {
+        if (this._visual) {
             return this._input.html();
         } else {
             return this._input.value;
@@ -88,7 +88,7 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
      * @type {string} 
      */
     set value(value) {
-        if(this._visual) {
+        if (this._visual) {
             this._input.html(value);
         } else {
             this._input.value = value;
@@ -156,7 +156,7 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
     set enabled(val) {
         val = this._convertProperty('Boolean', val);
         super.enabled = val;
-        if(this._visual) {
+        if (this._visual) {
             this._input.attr('contenteditable', val === true || val === 'true' ? 'true' : 'false');
         } else {
             this._input.attr('disabled', val === true || val === 'true' ? null : 'disabled');
@@ -176,7 +176,7 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
      */
     set visual(value) {
         this._visual = value;
-        if(this._visual) {
+        if (this._visual) {
             this._createDivContentEditable();
         } else {
             this._createTextArea();
@@ -185,10 +185,10 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
 
     _createTextArea() {
 
-        if(this._input) {
+        if (this._input) {
             this._input.remove();
         }
-        if(this._clear) {
+        if (this._clear) {
             this._clear.Dispose();
         }
 
@@ -199,12 +199,12 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
 
         this._clear = new Colibri.UI.Pane('clear', this);
         this._clear.html = Colibri.UI.ClearIcon;
-        
+
         this._input.addEventListener('paste', (e) => {
-            const res = this.Dispatch('Pasting', {domEvent: e});
-            if(res) {
+            const res = this.Dispatch('Pasting', { domEvent: e });
+            if (res) {
                 Colibri.Common.Delay(100).then(() => {
-                    this.Dispatch('Pasted', {domEvent: e});
+                    this.Dispatch('Pasted', { domEvent: e });
                 });
             } else {
                 e.preventDefault();
@@ -219,8 +219,8 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
             if (this.value.length == 0) {
                 this.Dispatch('Cleared');
             }
-            if(this._changeOnKeyUp) {
-                if(this._changeOnKeyUpTimeoutId) {
+            if (this._changeOnKeyUp) {
+                if (this._changeOnKeyUpTimeoutId) {
                     clearTimeout(this._changeOnKeyUpTimeoutId);
                 }
                 this._changeOnKeyUpTimeoutId = setTimeout(() => this.Dispatch('Changed', { value: this.value, domEvent: e }), this._changeOnKeyUpTimeout);
@@ -241,16 +241,10 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
             return false;
         });
 
-        this._clear.AddHandler('Clicked', (event, args) => {
-            this.value = '';
-            this.Focus();
-            this.Select();
-            this._clear.shown = false;
-            this.Dispatch('Cleared');
-        });
-        
+        this._clear.AddHandler('Clicked', this.__clearClicked, false, this);
+
         this._input.addEventListener('focus', (e) => {
-            if(!this._input.preventFocusEvent) {
+            if (!this._input.preventFocusEvent) {
                 return this.Dispatch('ReceiveFocus', { domEvent: e })
             }
             this._input.preventFocusEvent = false;
@@ -259,12 +253,20 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
         this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', { domEvent: e }));
     }
 
+    __clearClicked(event, args) {
+        this.value = '';
+        this.Focus();
+        this.Select();
+        this._clear.shown = false;
+        this.Dispatch('Cleared');
+    }
+
     _createDivContentEditable() {
 
-        if(this._input) {
+        if (this._input) {
             this._input.remove();
         }
-        if(this._clear) {
+        if (this._clear) {
             this._clear.Dispose();
         }
 
@@ -277,10 +279,10 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
         this._clear.html = Colibri.UI.ClearIcon;
 
         this._input.addEventListener('paste', (e) => {
-            const res = this.Dispatch('Pasting', {domEvent: e});
-            if(res) {
+            const res = this.Dispatch('Pasting', { domEvent: e });
+            if (res) {
                 Colibri.Common.Delay(100).then(() => {
-                    this.Dispatch('Pasted', {domEvent: e});
+                    this.Dispatch('Pasted', { domEvent: e });
                 });
             } else {
                 e.preventDefault();
@@ -296,8 +298,8 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
             if (this.value.length == 0) {
                 this.Dispatch('Cleared');
             }
-            if(this._changeOnKeyUp) {
-                if(this._changeOnKeyUpTimeoutId) {
+            if (this._changeOnKeyUp) {
+                if (this._changeOnKeyUpTimeoutId) {
                     clearTimeout(this._changeOnKeyUpTimeoutId);
                 }
                 this._changeOnKeyUpTimeoutId = setTimeout(() => this.Dispatch('Changed', { value: this.value, domEvent: e }), this._changeOnKeyUpTimeout);
@@ -318,16 +320,10 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
             return false;
         });
 
-        this._clear.AddHandler('Clicked', (event, args) => {
-            this.value = '';
-            this.Focus();
-            this.Select();
-            this._clear.shown = false;
-            this.Dispatch('Cleared');
-        });
+        this._clear.AddHandler('Clicked', this.__clearClicked, false, this);
 
         this._input.addEventListener('focus', (e) => {
-            if(!this._input.preventFocusEvent) {
+            if (!this._input.preventFocusEvent) {
                 return this.Dispatch('ReceiveFocus', { domEvent: e })
             }
             this._input.preventFocusEvent = false;
@@ -337,6 +333,14 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
 
     }
 
+    __clearClicked(event, args) {
+        this.value = '';
+        this.Focus();
+        this.Select();
+        this._clear.shown = false;
+        this.Dispatch('Cleared');
+    }
+
     Focus() {
         this._input.focus();
     }
@@ -344,7 +348,7 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
     Select() {
         this._input.select();
     }
-    
+
     /**
      * Content height
      * @type {Number}
@@ -355,7 +359,7 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
     }
 
     InsertTextToSelection(text) {
-        if(this._visual) {
+        if (this._visual) {
             this._input.insertElement(Element.fromHtml(text)[0]);
         } else {
             this._input.insertText(text);
@@ -365,6 +369,6 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
     Blur() {
         this._input.blur();
     }
-    
+
 
 }

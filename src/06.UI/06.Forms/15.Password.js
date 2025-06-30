@@ -19,8 +19,8 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         this._original = null;
 
         const contentContainer = this.contentContainer;
-        const params = {type: 'password', name: (this.form && this.form.shuffleFieldNames ? 'field-' + Date.Mc() : this._name + '-input')};
-        if(this.form && this.form.shuffleFieldNames) {
+        const params = { type: 'password', name: (this.form && this.form.shuffleFieldNames ? 'field-' + Date.Mc() : this._name + '-input') };
+        if (this.form && this.form.shuffleFieldNames) {
             params.autocomplete = 'new-password';
         }
         this._input = contentContainer.container.append(Element.create('input', params));
@@ -29,15 +29,15 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         this.RegisterEvent('PasswordGenerated', false, 'Когда пароль сгенерирован');
 
         this._input.addEventListener('change', (e) => {
-            if(this._original != this._input.value) {
-                this.Dispatch('Changed', {domEvent: e, component: this});
+            if (this._original != this._input.value) {
+                this.Dispatch('Changed', { domEvent: e, component: this });
             }
             this._original = this._input.value;
         });
         this._input.addEventListener('keyup', (e) => {
-            this.Dispatch('KeyUp', {domEvent: e});
-            if( (this._fieldData?.params?.changeOnKeyPress ?? false) ) {
-                if(this._keyUpChangeTimer !== -1) {
+            this.Dispatch('KeyUp', { domEvent: e });
+            if ((this._fieldData?.params?.changeOnKeyPress ?? false)) {
+                if (this._keyUpChangeTimer !== -1) {
                     clearTimeout(this._keyUpChangeTimer);
                 }
                 this._keyUpChangeTimer = setTimeout(() => {
@@ -49,56 +49,59 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
             this._input.emitHtmlEvents('change');
             this._original = this._input.value;
             this.Dispatch('Pasted', { domEvent: e });
-            this.Dispatch('Changed', {domEvent: e, component: this});
+            this.Dispatch('Changed', { domEvent: e, component: this });
         });
         this._input.addEventListener('paste', onInputPasted);
         this._input.addEventListener('input', onInputPasted);
-        this._input.addEventListener('keydown', (e) => this.Dispatch('KeyDown', {domEvent: e}));
-        this._input.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', {domEvent: e}));
-        this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', {domEvent: e}));
+        this._input.addEventListener('keydown', (e) => this.Dispatch('KeyDown', { domEvent: e }));
+        this._input.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', { domEvent: e }));
+        this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', { domEvent: e }));
         this._input.addEventListener('click', (e) => {
             this.Focus();
             e.stopPropagation();
             return false;
         });
 
-        if(this._fieldData?.params?.readonly === undefined) {
-            this.readonly = false;    
+        if (this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;
         }
         else {
             this.readonly = this._fieldData?.params?.readonly;
         }
-        if(this._fieldData?.params?.enabled === undefined) {
+        if (this._fieldData?.params?.enabled === undefined) {
             this.enabled = true;
         }
         else {
             this.enabled = this._fieldData.params.enabled;
         }
 
-        if(this._fieldData?.params?.icon) {
+        if (this._fieldData?.params?.icon) {
             this.icon = this._fieldData?.params?.icon;
         }
-        if(this._fieldData?.params?.eyeicon) {
+        if (this._fieldData?.params?.eyeicon) {
             this.eyeIcon = this._fieldData?.params?.eyeicon;
         }
 
-        this.AddHandler(['KeyUp', 'Pasted', 'ReceiveFocus'], (event, args) => {
-            const strength = this.CalcPasswordStrength();
-            this._showPasswordTip(strength);
-            this.Dispatch('PasswordValidated', {strength: strength});
-        });
+        this.AddHandler(['KeyUp', 'Pasted', 'ReceiveFocus'], this.__thisKeyUpOrPastedOrReceivedFocus, false, this);
+        this.AddHandler(['ScrolledIn', 'Resize'], this.__thisScrolledInOrResize, false, this);
 
-        this.AddHandler(['ScrolledIn','Resize'], (event, args) => {
-            if(this._passwordTip.shown) {
-                this._passwordTip._setPosition();
-            }
-        });
+    }
 
+    __thisScrolledInOrResize(event, args) {
+        if (this._passwordTip.shown) {
+            this._passwordTip._setPosition();
+        }
+    }
+
+    __thisKeyUpOrPastedOrReceivedFocus(event, args) {
+        const strength = this.CalcPasswordStrength();
+        this._showPasswordTip(strength);
+        this.Dispatch('PasswordValidated', { strength: strength });
     }
 
     /** @private */
     _hidePasswordTip() {
-        if(this._passwordTip) {
+        if (this._passwordTip) {
             Colibri.Common.Delay(2000).then(() => {
                 this._passwordTip.Hide();
                 this.handleContainerScroll = false;
@@ -109,21 +112,21 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
 
     /** @private */
     _showPasswordTip(strength) {
-        
-        if(this._fieldData?.params?.tip) {
+
+        if (this._fieldData?.params?.tip) {
             const tipData = this._fieldData?.params?.tip;
-            if(!this._passwordTip) {
+            if (!this._passwordTip) {
                 this._passwordTip = new Colibri.UI.ToolTip(
-                    this.name + '_tip', document.body, 
+                    this.name + '_tip', document.body,
                     tipData.orientation ? tipData.orientation : [Colibri.UI.ToolTip.RT, Colibri.UI.ToolTip.LT]
                 );
             }
 
-            if(tipData.className) {
+            if (tipData.className) {
                 this._passwordTip.AddClass(tipData.className);
             }
 
-            const requirements = this._fieldData?.params?.requirements || {digits: 8, strength: 40};
+            const requirements = this._fieldData?.params?.requirements || { digits: 8, strength: 40 };
 
             let cls = 'bad';
             if (strength > requirements?.minForStrong ?? 80) {
@@ -136,31 +139,31 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
                 cls = "weak";
             }
             let tipText = '';
-            if(typeof tipData.text === 'function') {
+            if (typeof tipData.text === 'function') {
                 const f = tipData.text;
                 tipText = f(strength, tipData, requirements, cls, this.value);
             } else {
-                tipText = '<p>' + (Array.isArray(tipData.text) ? tipData.text.join('</p><p>') : tipData.text) + '</p>' + 
-                    '<ul><li>' + (Array.isArray(tipData.digits) ? requirements.digits.formatSequence(tipData.digits, true) : tipData.digits.replaceAll('%s', requirements.digits)) + '</li>' + tipData.additional.map(f => '<li>' + f + '</li>').join('') + '</ul>' + 
-                    '<div class="password-progress ' + cls + '"><span style="width: ' + strength + '%"></span></div>' +  
-                    '<p>' + (strength < requirements.strength ? tipData.error : tipData.success) + '</p>' + 
+                tipText = '<p>' + (Array.isArray(tipData.text) ? tipData.text.join('</p><p>') : tipData.text) + '</p>' +
+                    '<ul><li>' + (Array.isArray(tipData.digits) ? requirements.digits.formatSequence(tipData.digits, true) : tipData.digits.replaceAll('%s', requirements.digits)) + '</li>' + tipData.additional.map(f => '<li>' + f + '</li>').join('') + '</ul>' +
+                    '<div class="password-progress ' + cls + '"><span style="width: ' + strength + '%"></span></div>' +
+                    '<p>' + (strength < requirements.strength ? tipData.error : tipData.success) + '</p>' +
                     '<a href="#">' + tipData.generate + '</a>';
             }
-            
+
             this._passwordTip.value = tipText;
             const a = this._passwordTip.container.querySelector('a');
-            if(a) {
+            if (a) {
                 a.addEventListener('click', (e) => this._generatePassword(e));
             }
 
-            if(cls === 'strong') {
+            if (cls === 'strong') {
                 this._hidePasswordTip();
-            } else if(this.value.length > 0 && this.elementIsInOffset) {
+            } else if (this.value.length > 0 && this.elementIsInOffset) {
                 this._passwordTip.Show(this.contentContainer, true);
                 this.handleContainerScroll = true;
                 this.handleResize = true;
-            }     
-            
+            }
+
         }
     }
 
@@ -173,8 +176,8 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         this.value.copyToClipboard().then(() => {
             App.Notices.Add(new Colibri.UI.Notice(tipData.copied, Colibri.UI.Notice.Success));
         });
-        this.Dispatch('Changed', {component: this});
-        this.Dispatch('PasswordValidated', {value: this.value});
+        this.Dispatch('Changed', { component: this });
+        this.Dispatch('PasswordValidated', { value: this.value });
         e.preventDefault();
         e.stopPropagation();
         return false;
@@ -187,9 +190,9 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
     CalcPasswordStrength() {
         const pass = this.value;
 
-        const requirements = this._fieldData?.params?.requirements || {digits: 8, strength: 40};
+        const requirements = this._fieldData?.params?.requirements || { digits: 8, strength: 40 };
 
-        if(this._fieldData?.params?.strengthMethod) {
+        if (this._fieldData?.params?.strengthMethod) {
             const f = this._fieldData?.params?.strengthMethod;
             return f(pass, requirements);
         }
@@ -202,7 +205,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         let score = 0;
         // award every unique letter until 5 repetitions
         let letters = {};
-        for (let i=0; i<pass.length; i++) {
+        for (let i = 0; i < pass.length; i++) {
             letters[pass[i]] = (letters[pass[i]] || 0) + 1;
             score += 5.0 / letters[pass[i]];
         }
@@ -221,7 +224,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         }
         score += (variationCount - 1) * 10;
 
-        if(score > 100) {
+        if (score > 100) {
             score = 100;
         }
 
@@ -258,7 +261,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
      */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
-        if(value) {
+        if (value) {
             this._input.attr('readonly', 'readonly');
         }
         else {
@@ -289,7 +292,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
      */
     get value() {
         let value = this._input.value;
-        if(this._fieldData?.params?.emptyAsNull && !value) {
+        if (this._fieldData?.params?.emptyAsNull && !value) {
             value = null;
         }
         return value;
@@ -307,7 +310,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
     /**
      * Enable/Disable
      * @type {boolean}
-     */ 
+     */
     get enabled() {
         return this._input.attr('disabled') != 'disabled';
     }
@@ -315,10 +318,10 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
     /**
      * Enable/Disable
      * @type {boolean}
-     */ 
+     */
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
-        if(value) {
+        if (value) {
             this.RemoveClass('app-component-disabled');
             this._input.attr('disabled', null);
         }
@@ -346,7 +349,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
     /** @private */
     _showIcon() {
         const contentContainer = this.contentContainer;
-        if(!this._icon) {
+        if (!this._icon) {
             this.RemoveClass('-has-icon');
             contentContainer.Children(this._name + '-icon').Dispose();
             return;
@@ -380,7 +383,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
     /** @private */
     _createEyeIcon() {
         const contentContainer = this.contentContainer;
-        if(!this._eyeIcon) {
+        if (!this._eyeIcon) {
             this.RemoveClass('-has-eye-icon');
             contentContainer.Children(this._name + '-eyeicon').Dispose();
             return;
@@ -389,18 +392,20 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         const icon = new Colibri.UI.Icon(this._name + '-eyeicon', contentContainer);
         icon.value = Colibri.UI.Forms.Password.EyeIconOpen;
         icon.shown = true;
-        icon.AddHandler('Clicked', (event, args) => {
-            if(this._input.attr('type') === 'password') {
-                icon.value = Colibri.UI.Forms.Password.EyeIconClose;
-                this._input.attr('type', 'text');
-            }
-            else {
-                icon.value = Colibri.UI.Forms.Password.EyeIconOpen;
-                this._input.attr('type', 'password');
-            } 
-        })
+        icon.AddHandler('Clicked', this.__iconClicked, false, this)
 
         this.AddClass('-has-eye-icon');
+    }
+
+    __iconClicked(event, args) {
+        if (this._input.attr('type') === 'password') {
+            icon.value = Colibri.UI.Forms.Password.EyeIconClose;
+            this._input.attr('type', 'text');
+        }
+        else {
+            icon.value = Colibri.UI.Forms.Password.EyeIconOpen;
+            this._input.attr('type', 'password');
+        }
     }
 
     /**
@@ -425,7 +430,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
      * Dispose component
      */
     Dispose() {
-        if(this._passwordTip) {
+        if (this._passwordTip) {
             this._passwordTip.Dispose();
             this._passwordTip = null;
         }
@@ -442,4 +447,4 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
 
 }
 
-Colibri.UI.Forms.Field.RegisterFieldComponent('Password', 'Colibri.UI.Forms.Password', '#{ui-fields-password}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler'])
+Colibri.UI.Forms.Field.RegisterFieldComponent('Password', 'Colibri.UI.Forms.Password', '#{ui-fields-password}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler'])

@@ -33,15 +33,10 @@ Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
 
     /** @protected */
     _handleEvents(input) {
-        input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args || {}, {component: this})));
-        input.AddHandler('Clicked', (event, args) => {
-            this.Dispatch('Clicked', args)
-            args.domEvent.stopPropagation();
-            args.domEvent.preventDefault();
-            return false;
-        });
-        input.AddHandler('ReceiveFocus', (event, args) => this.Dispatch('ReceiveFocus', args));
-        input.AddHandler('LoosedFocus', (event, args) => this.Dispatch('LoosedFocus', args));
+        input.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
+        input.AddHandler('Clicked', this.__thisBubblePreventDefault, false, this);
+        input.AddHandler('ReceiveFocus', this.__thisBubble, false, this);
+        input.AddHandler('LoosedFocus', this.__thisBubble, false, this);
     }
 
     /**

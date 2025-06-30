@@ -411,23 +411,25 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             throw new Error('component ' + name + ' not found');
         }
         component.shown = shown;
-        component.AddHandler('Validated', (event, args) => this.Dispatch('Validated', args));
-        component.AddHandler('Changed', (event, args) => {
-            args = args ? args : {};
-            if (component._timeout) {
-                clearTimeout(component._timeout);
-                component._timeout = null;
-            }
-            if (!args.component) {
-                args.component = component;
-            }
-            component._timeout = setTimeout(() => this.Dispatch('Changed', args), 50);
-        });
+        component.AddHandler('Validated', this.__thisBubble, false, this);
+        component.AddHandler('Changed', this.__componentChanged, false, this);
         component.download = this._download;
         if (value && value[name] !== undefined) {
             component.value = value[name];
         }
 
+    }
+
+    __componentChanged(event, args) {
+        args = args ? args : {};
+        if (component._timeout) {
+            clearTimeout(component._timeout);
+            component._timeout = null;
+        }
+        if (!args.component) {
+            args.component = component;
+        }
+        component._timeout = setTimeout(() => this.Dispatch('Changed', args), 50);
     }
 
     get needRecalc() {
@@ -448,6 +450,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     /** @private */
     _renderFields(value) {
+        
         let hasGroups = false;
         Object.forEach(this._fields, (name, fieldData) => {
             fieldData = Object.cloneRecursive(fieldData);
@@ -463,26 +466,6 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             }
         });
 
-        const groupChanged = (event, args) => {
-            const groupName = args.button.name;
-            Object.forReverseEach(this._fields, (name, fieldData) => {
-                fieldData = Object.cloneRecursive(fieldData);
-                fieldData.group && (fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group);
-                if (fieldData.group !== 'window') {
-                    if (fieldData.group === groupName) {
-                        this.Children(name).Retreive();
-                    }
-                    else {
-                        this.Children(name).KeepInMind();
-                    }
-                }
-            });
-
-            if (args?.noevent) {
-                return;
-            }
-            this.Dispatch('GroupChanged', args);
-        };
 
         this._groups = null;
         if (hasGroups) {
@@ -495,7 +478,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                     this._groups.AddButton(fieldData.group, fieldData.group);
                 }
             });
-            this._groups.AddHandler('Changed', groupChanged);
+            this._groups.AddHandler('Changed', this.__groupsChanged, false, this);
         }
 
         Object.forEach(this._fields, (name, fieldData) => {
@@ -508,12 +491,33 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
 
         this._groups && this._groups.SelectButton('firstChild', true);
-        this._groups && groupChanged(null, { index: 0, button: this._groups.Children('firstChild'), noevent: true });
+        this._groups && this.__groupsChanged(null, { index: 0, button: this._groups.Children('firstChild'), noevent: true });
 
         this._error = new Colibri.UI.Pane('form-message', this);
         this._error.shown = true;
 
         this.Dispatch('FieldsRendered');
+    }
+
+    __groupsChanged(event, args) {
+        const groupName = args.button.name;
+        Object.forReverseEach(this._fields, (name, fieldData) => {
+            fieldData = Object.cloneRecursive(fieldData);
+            fieldData.group && (fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group);
+            if (fieldData.group !== 'window') {
+                if (fieldData.group === groupName) {
+                    this.Children(name).Retreive();
+                }
+                else {
+                    this.Children(name).KeepInMind();
+                }
+            }
+        });
+
+        if (args?.noevent) {
+            return;
+        }
+        this.Dispatch('GroupChanged', args);
     }
 
     /** @private */

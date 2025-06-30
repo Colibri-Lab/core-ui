@@ -19,10 +19,10 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      * @param {Array} params params of component
      */
     static RegisterFieldComponent(name, className, description, icon, params) {
-        if(!icon) {
+        if (!icon) {
             icon = Colibri.UI.FieldIcons[className];
         }
-        Colibri.UI.Forms.Field.Components[name] = {className, description, icon, params};
+        Colibri.UI.Forms.Field.Components[name] = { className, description, icon, params };
     }
     /**
      * Unregisters a field from backend list
@@ -33,12 +33,12 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     }
 
     static FindFieldComponent(nameOrClassName) {
-        if(Colibri.UI.Forms.Field.Components[nameOrClassName]) {
+        if (Colibri.UI.Forms.Field.Components[nameOrClassName]) {
             return Colibri.UI.Forms.Field.Components[nameOrClassName];
         } else {
             let found = null;
             Object.forEach(Colibri.UI.Forms.Field.Components, (name, componentData) => {
-                if(componentData.className === nameOrClassName) {
+                if (componentData.className === nameOrClassName) {
                     found = componentData;
                     return false;
                 }
@@ -49,7 +49,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
     static HasParam(nameOrClassName, paramName) {
         const paramData = Colibri.UI.Forms.Field.FindFieldComponent(nameOrClassName);
-        if(!paramData) {
+        if (!paramData) {
             return true;
         }
         return paramData.params.indexOf(paramName) !== -1;
@@ -64,49 +64,49 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      * @param {Colibri.UI.Forms.Form} root form component
      */
     static Create(name, container, field, parent, root = null) {
-        if(!field.component && !field.type) {
-            return ;
+        if (!field.component && !field.type) {
+            return;
         }
         try {
 
             let component = field.component || '';
-            if(!component) {
+            if (!component) {
 
-                if(field.values !== undefined || field.lookup !== undefined) {
+                if (field.values !== undefined || field.lookup !== undefined) {
                     component = 'Select';
                 }
-                else if(['varchar', 'char'].indexOf(field.type) !== -1 && field.class === 'string') {
+                else if (['varchar', 'char'].indexOf(field.type) !== -1 && field.class === 'string') {
                     component = 'Text';
                 }
-                else if(['text', 'longtext', 'tinytext', 'mediumtext'].indexOf(field.type) !== -1 && field.class === 'string') {
+                else if (['text', 'longtext', 'tinytext', 'mediumtext'].indexOf(field.type) !== -1 && field.class === 'string') {
                     component = 'TextArea';
                 }
-                else if(['date', 'datetime', 'timestamp'].indexOf(field.type)) {
+                else if (['date', 'datetime', 'timestamp'].indexOf(field.type)) {
                     component = 'Date';
                 }
-                else if(['tinyint'].indexOf(field.type) !== -1) {
+                else if (['tinyint'].indexOf(field.type) !== -1) {
                     component = 'Bool';
                 }
-                else if(['int', 'integer', 'bigint', 'float', 'decimal', 'double', 'real', 'smallint'].indexOf(field.type) !== -1) {
+                else if (['int', 'integer', 'bigint', 'float', 'decimal', 'double', 'real', 'smallint'].indexOf(field.type) !== -1) {
                     component = 'Number';
                 }
-                else if(['json', 'longtext'].indexOf(field.type) !== -1) {
-                    if(field.class.indexOf('ArrayField') !== -1) {
+                else if (['json', 'longtext'].indexOf(field.type) !== -1) {
+                    if (field.class.indexOf('ArrayField') !== -1) {
                         component = 'Object';
                     }
                     else {
                         component = 'Array';
-                    }   
+                    }
                 }
             }
 
-            if(!component) {
+            if (!component) {
                 return null;
             }
 
             let componentObject = null;
 
-            if(component === 'Colibri.UI.Forms.Hidden') {
+            if (component === 'Colibri.UI.Forms.Hidden') {
                 componentObject = new Colibri.UI.Forms.HiddenField(name, container, field, parent, root);
             } else {
 
@@ -123,15 +123,15 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
             componentObject.shown = true;
             componentObject.tabIndex = true;
-            if(field.attrs) {
+            if (field.attrs) {
                 Object.forEach(field.attrs, (attrName, attrValue) => {
                     componentObject[attrName] = attrValue;
                 });
             }
 
             return componentObject;
-        
-        } catch(e) {
+
+        } catch (e) {
             debugger;
         }
 
@@ -169,11 +169,11 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this._content.Children(this._name + '-note').shown = true;
         this._content.Children(this._name + '-message').shown = false;
 
-        if(this._fieldData?.params?.noteClass) {
+        if (this._fieldData?.params?.noteClass) {
             this._content.Children(this._name + '-note').AddClass(this._fieldData.params.noteClass);
         }
 
-        if(this._fieldData?.params?.fieldgenerator) {
+        if (this._fieldData?.params?.fieldgenerator) {
             const f = eval(this._fieldData?.params?.fieldgenerator);
             f(this._fieldData, this, this.root);
         }
@@ -185,82 +185,85 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this.note = this._fieldData?.note ? this._fieldData?.note[Lang.Current] ?? this._fieldData?.note ?? '' : '';
         this.placeholder = this._fieldData?.placeholder ? this._fieldData?.placeholder[Lang.Current] ?? this._fieldData?.placeholder ?? '' : '';
 
-        if(this._fieldData?.attrs) {
+        if (this._fieldData?.attrs) {
             Object.assign(this, this._fieldData.attrs);
         }
 
         Object.forEach(this._fieldData?.params, (key, value) => {
-            if(key.indexOf('On') === 0) {
+            if (key.indexOf('On') === 0) {
 
                 let handler = null;
-                if(typeof value === 'string') {
+                if (typeof value === 'string') {
                     handler = eval(value);
-                } else if(typeof value === 'Function' || typeof value === 'function') {
+                } else if (typeof value === 'Function' || typeof value === 'function') {
                     handler = value;
                 }
 
-                if(handler) {
+                if (handler) {
                     this.AddHandler(key.replaceAll('On', ''), handler);
                 }
             }
         });
 
-        if(this._fieldData?.params?.copyTitle) {
+        if (this._fieldData?.params?.copyTitle) {
             this._title.copy = this._fieldData?.params?.copyTitle;
-            if(this._fieldData?.params?.copyTitleStyle) {
+            if (this._fieldData?.params?.copyTitleStyle) {
                 this._title.copyStyle = this._fieldData?.params?.copyTitleStyle ?? 'text';
             }
         }
 
-        this.AddHandler(['Changed', 'KeyUp', 'KeyDown'], (event, args) => {
-            if(event.name == 'Changed') {
-                this.note = this._fieldData?.note ? (this._fieldData.note[Lang.Current] ?? this._fieldData.note ?? '') : '';
-                this._applyRuntimes();
-                this._setFilledMark();
-            }
-            if(this._parentField) {
-                this._parentField.Dispatch(event.name, Object.assign({component: event.sender}, args));
-            }
-
-            if(this._fieldData?.params?.onchangehandler) {
-                let handler = null;
-                if(typeof this._fieldData?.params?.onchangehandler === 'string') {
-                    handler = eval(this._fieldData?.params?.onchangehandler);
-                } else if(typeof this._fieldData?.params?.onchangehandler === 'Function') {
-                    handler = this._fieldData?.params?.onchangehandler;
-                }
-                if(handler) {
-                    handler(event, args);
-                }
-            }
-
-            args && args.domEvent && args.domEvent.stopPropagation();
-            return true;
-        });
-
+        this.AddHandler(['Changed', 'KeyUp', 'KeyDown'], this.__thisChangedOrKeyUpOrKeyDown);
         this.AddHandler('ReceiveFocus', this.__thisReceiveFocus);
         this.AddHandler('LoosedFocus', this.__thisLoosedFocus);
 
-        if(this._fieldData?.hidden && this._fieldData?.hidden === true) {
+        if (this._fieldData?.hidden && this._fieldData?.hidden === true) {
             this.AddClass('app-component-field-hidden');
         }
 
-        if(this._fieldData?.params?.className) {
+        if (this._fieldData?.params?.className) {
             const className = this._convertProperty('String', this._fieldData?.params?.className);
             this.AddClass(className);
         }
-        if(this._fieldData?.attrs?.class) {
+        if (this._fieldData?.attrs?.class) {
             this.AddClass(this._fieldData?.attrs?.class);
         }
 
-        if(this._fieldData?.break) {
-            this._element.before(Element.create('div', {class: 'break'}, {}));
+        if (this._fieldData?.break) {
+            this._element.before(Element.create('div', { class: 'break' }, {}));
         }
 
-        this._content.Children(this._name + '-message').AddHandler('Clicked', (event, args) => {
-            this.Dispatch('MessageClicked', {domEvent: args.domEvent, field: this});
-        });
+        this._content.Children(this._name + '-message').AddHandler('Clicked', this.__messageClicked, false, this);
 
+    }
+
+    __messageClicked(event, args) {
+        this.Dispatch('MessageClicked', { domEvent: args.domEvent, field: this });
+    }
+
+    __thisChangedOrKeyUpOrKeyDown(event, args) {
+        if (event.name == 'Changed') {
+            this.note = this._fieldData?.note ? (this._fieldData.note[Lang.Current] ?? this._fieldData.note ?? '') : '';
+            this._applyRuntimes();
+            this._setFilledMark();
+        }
+        if (this._parentField) {
+            this._parentField.Dispatch(event.name, Object.assign({ component: event.sender }, args));
+        }
+
+        if (this._fieldData?.params?.onchangehandler) {
+            let handler = null;
+            if (typeof this._fieldData?.params?.onchangehandler === 'string') {
+                handler = eval(this._fieldData?.params?.onchangehandler);
+            } else if (typeof this._fieldData?.params?.onchangehandler === 'Function') {
+                handler = this._fieldData?.params?.onchangehandler;
+            }
+            if (handler) {
+                handler(event, args);
+            }
+        }
+
+        args && args.domEvent && args.domEvent.stopPropagation();
+        return true;
     }
 
     __thisReceiveFocus(event, args) {
@@ -281,13 +284,15 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this._removeLink.AddClass('app-component-remove-field')
         this._removeLink.shown = true;
         this._removeLink.value = Colibri.UI.RemoveIcon;
-        this._removeLink.AddHandler('Clicked', (event, args) => {
-            if(!this.enabled) {
-                return;
-            }
-            this.Dispose();
-            callback && callback();
-        });
+        this._removeLink.AddHandler('Clicked', this.__removeLinkClicked, false, this);
+    }
+
+    __removeLinkClicked(event, args) {
+        if (!this.enabled) {
+            return;
+        }
+        this.Dispose();
+        callback && callback();
     }
 
     /**
@@ -300,36 +305,43 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this._upLink.AddClass('app-component-up-field')
         this._upLink.shown = true;
         this._upLink.value = Colibri.UI.UpIcon;
-        this._upLink.AddHandler('Clicked', (event, args) => {
-            if(!this.enabled) {
-                return;
-            }
-            upCallback && upCallback();
-        });
+        this._upLink.callback = upCallback;
+        this._upLink.AddHandler('Clicked', this.__upLinkClicked, false, this);
+
         this._downLink = new Colibri.UI.Icon(this._name + '-down', this);
         this._downLink.AddClass('app-component-down-field')
         this._downLink.shown = true;
         this._downLink.value = Colibri.UI.DownIcon;
-        this._downLink.AddHandler('Clicked', (event, args) => {
-            if(!this.enabled) {
-                return;
-            }
-            downCallback && downCallback();
-        });
+        this._downLink.callback = downCallback;
+        this._downLink.AddHandler('Clicked', this.__downLinkClicked, false, this);
+    }
+
+    __downLinkClicked(event, args) {
+        if (!this.enabled) {
+            return;
+        }
+        this._downLink.callback && this._downLink.callback();
+    }
+
+    __upLinkClicked(event, args) {
+        if (!this.enabled) {
+            return;
+        }
+        this._upLink.callback && this._upLink.callback();
     }
 
     /** @protected */
-    _registerEvents() { 
-        super._registerEvents();  
+    _registerEvents() {
+        super._registerEvents();
         this.RegisterEvent('Validated', false, 'Validation passed')
-        this.RegisterEvent('Changed', false, 'A change in component data has occurred') 
+        this.RegisterEvent('Changed', false, 'A change in component data has occurred')
         this.RegisterEvent('KeyDown', false, 'When the button is pressed')
         this.RegisterEvent('KeyUp', false, 'When the button is released')
         this.RegisterEvent('FieldsRendered', false, 'When the fields are created');
         this.RegisterEvent('MessageClicked', false, 'When you were pointed at an error')
     }
 
-    
+
     /**
      * Render bounded to component data
      * @protected
@@ -343,7 +355,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     /** @private */
     _applyRuntimes() {
         let runtime = this._fieldData?.params?.runtime;
-        if(runtime) {
+        if (runtime) {
             runtime = eval(runtime);
             runtime(this, this.root);
         }
@@ -351,22 +363,22 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
     /** @protected */
     _setFilledMark() {
-        if(this instanceof Colibri.UI.Forms.Array) {
+        if (this instanceof Colibri.UI.Forms.Array) {
             this.itemsContainer.ForEach((name, component) => component instanceof Colibri.UI.Forms.Field && component._setFilledMark());
         }
-        else if(this instanceof Colibri.UI.Forms.ArrayGrid) {
+        else if (this instanceof Colibri.UI.Forms.ArrayGrid) {
             this.contentContainer.ForEach((name, component) => component instanceof Colibri.UI.Forms.Field && component._setFilledMark());
         }
-        else if(this instanceof Colibri.UI.Forms.Object) {
-            this.contentContainer && Object.forEach(this._fieldData?.fields, (name, fieldData) => this.contentContainer.Children(name) instanceof Colibri.UI.Forms.Field && this.contentContainer.Children(name)._setFilledMark());   
+        else if (this instanceof Colibri.UI.Forms.Object) {
+            this.contentContainer && Object.forEach(this._fieldData?.fields, (name, fieldData) => this.contentContainer.Children(name) instanceof Colibri.UI.Forms.Field && this.contentContainer.Children(name)._setFilledMark());
         }
         else {
-            if((Array.isArray(this.value) ? this.value.length > 0 : (this.value !== null && this.value !== undefined && this.value !== ''))) {
+            if ((Array.isArray(this.value) ? this.value.length > 0 : (this.value !== null && this.value !== undefined && this.value !== ''))) {
                 this.AddClass('-filled');
             }
             else {
                 this.RemoveClass('-filled');
-            }    
+            }
         }
 
     }
@@ -407,7 +419,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      */
     get message() {
         const message = this._content.Children(this._name + '-message');
-        if(!message) {
+        if (!message) {
             return null;
         }
         return message.value;
@@ -419,7 +431,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      */
     set message(value) {
         const message = this._content.Children(this._name + '-message');
-        if(!message) {
+        if (!message) {
             return;
         }
         message.shown = !!value;
@@ -447,24 +459,24 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      * @type {string}
      */
     set title(value) {
-        if(typeof value === 'function') {
+        if (typeof value === 'function') {
             value(this).then((v) => {
                 this._title.value = v ? (v[Lang.Current] ?? v) : '';
-                if(!value) {
+                if (!value) {
                     this.AddClass('-without-title');
                 }
                 else {
                     this.RemoveClass('-without-title');
-                }                    
+                }
             });
         } else {
             this._title.value = value ? (value[Lang.Current] ?? value) : '';
-            if(!value) {
+            if (!value) {
                 this.AddClass('-without-title');
             }
             else {
                 this.RemoveClass('-without-title');
-            }    
+            }
         }
     }
 
@@ -484,11 +496,11 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this._before.shown = !!value;
     }
 
-     /**
-     * Note object
-     * @type {Colibri.UI.Component}
-     * @readonly
-     */
+    /**
+    * Note object
+    * @type {Colibri.UI.Component}
+    * @readonly
+    */
     get noteObject() {
         return this._content.Children(this._name + '-note');
     }
@@ -541,7 +553,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      */
     set field(value) {
         this._fieldData = value;
-        
+
     }
 
     /**
@@ -623,7 +635,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     _needRecalcF(fields) {
         let nr = false;
         Object.forEach(fields, (n, f) => {
-            if(!!f.fields) {
+            if (!!f.fields) {
                 nr = nr || this._needRecalcF(f.fields);
             } else {
                 nr = nr || !!(f?.params?.valuegenerator ?? false);
@@ -635,7 +647,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     _needHideAndShowF(fields) {
         let nr = false;
         Object.forEach(fields, (n, f) => {
-            if(!!f.fields) {
+            if (!!f.fields) {
                 nr = nr || (!!(f?.params?.fieldgenerator ?? false) || !!(f?.params?.condition ?? false) || !!(f?.params?.hidden ?? false)) || this._needHideAndShowF(f.fields);
             } else {
                 nr = nr || (!!(f?.params?.fieldgenerator ?? false) || !!(f?.params?.condition ?? false) || !!(f?.params?.hidden ?? false));
@@ -649,7 +661,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      * @readonly
      */
     get needRecalc() {
-        if(!!this._fieldData.fields) {
+        if (!!this._fieldData.fields) {
             return !!(this._fieldData?.params?.valuegenerator ?? false) || this._needRecalcF(this._fieldData.fields);
         } else {
             return !!(this._fieldData?.params?.valuegenerator ?? false);
@@ -661,7 +673,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      * @readonly
      */
     get needHideAndShow() {
-        if(!!this._fieldData.fields) {
+        if (!!this._fieldData.fields) {
             return (!!(this._fieldData?.params?.fieldgenerator ?? false) || !!(this._fieldData?.params?.condition ?? false) || !!(this._fieldData?.params?.hidden ?? false)) || this._needHideAndShowF(this._fieldData.fields);
         } else {
             return (!!(this._fieldData?.params?.fieldgenerator ?? false) || !!(this._fieldData?.params?.condition ?? false) || !!(this._fieldData?.params?.hidden ?? false));
@@ -683,7 +695,7 @@ Colibri.UI.Forms.HiddenField = class extends Colibri.UI.Component {
      * @param {object} fieldData field data
      */
     constructor(name, container, fieldData) {
-        super(name, container, Element.create('input', {type: 'hidden'}));
+        super(name, container, Element.create('input', { type: 'hidden' }));
         this._fieldData = fieldData;
         this._validated = true;
     }

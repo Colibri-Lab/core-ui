@@ -123,13 +123,15 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         this._checkbox = new Colibri.UI.Checkbox('row-checkbox', this._checkboxContainer);
         this._checkbox.shown = true;
 
-        this._checkbox.AddHandler('Changed', (event, args) => {
-            this.Dispatch('RowSelected', { row: this });
+        this._checkbox.AddHandler('Changed', this.__checkboxChanged, false, this);
 
-            this.header && (this.header.checkbox.thirdState = this.grid?.rowsCount > this.grid?.checked.length);
-            this.group.checkbox.thirdState = this.group.rowsCount > this.group.checked.length;
-        });
+    }
 
+    __checkboxChanged(event, args) {
+        this.Dispatch('RowSelected', { row: this });
+
+        this.header && (this.header.checkbox.thirdState = this.grid?.rowsCount > this.grid?.checked.length);
+        this.group.checkbox.thirdState = this.group.rowsCount > this.group.checked.length;
     }
 
     _renderTemplateRow() {
@@ -222,6 +224,22 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         return null;
     }
 
+    __newCellCellDoubleClicked(event, args) {
+        this.Dispatch('CellDoubleClicked', args);
+    }
+
+    __newCellCellHorizontalStickyChanged(event, args) {
+        this.Dispatch('CellHorizontalStickyChanged', args);
+    }
+
+    __newCellCellVerticalStickyChanged(event, args) {
+        this._tempCountCellsReportedChange = this._tempCountCellsReportedChange + 1;
+        if (this.countCells === this._tempCountCellsReportedChange) {
+            this._tempCountCellsReportedChange = 0;
+            this.Dispatch('StickyChanged', { row: this });
+        }
+    }
+
     __newCell(value, column) {
 
         let val = '';
@@ -250,25 +268,10 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
                 newCell.shown = false;
             }
 
-            newCell.AddHandler('CellDoubleClicked', (event, args) => {
-                this.Dispatch('CellDoubleClicked', args);
-            });
-
-            newCell.AddHandler('CellHorizontalStickyChanged', (event, args) => {
-                this.Dispatch('CellHorizontalStickyChanged', args);
-            });
-
-            newCell.AddHandler('CellVerticalStickyChanged', (event, args) => {
-                this._tempCountCellsReportedChange = this._tempCountCellsReportedChange + 1;
-                if (this.countCells === this._tempCountCellsReportedChange) {
-                    this._tempCountCellsReportedChange = 0;
-                    this.Dispatch('StickyChanged', { row: this });
-                }
-            });
-
-            newCell.AddHandler('CellDisposed', (event, args) => {
-                this.Dispatch('CellDisposed', args);
-            });
+            newCell.AddHandler('CellDoubleClicked', this.__newCellCellDoubleClicked, false, this);
+            newCell.AddHandler('CellHorizontalStickyChanged', this.__newCellCellHorizontalStickyChanged, false, this);
+            newCell.AddHandler('CellVerticalStickyChanged', this.__newCellCellVerticalStickyChanged, false, this);
+            newCell.AddHandler('CellDisposed', this.__thisBubble, false, this);
         }
 
         newCell.value = val;
@@ -396,15 +399,17 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         if (className) {
             contextMenuObject.AddClass(className);
         }
-        contextMenuObject.AddHandler('Clicked', (event, args) => {
-            contextMenuObject.Hide();
-            this.Dispatch('ContextMenuItemClicked', args);
-            contextMenuObject.Dispose();
-            cell.Children(cell.name + '-contextmenu-icon-parent')?.RemoveClass('-selected');
-        });
+        contextMenuObject.AddHandler('Clicked', this.__contextMenuObjectClicked, false, this);
 
 
         this._contextMenuObject = contextMenuObject;
+    }
+
+    __contextMenuObjectClicked(event, args) {
+        contextMenuObject.Hide();
+        this.Dispatch('ContextMenuItemClicked', args);
+        contextMenuObject.Dispose();
+        cell.Children(cell.name + '-contextmenu-icon-parent')?.RemoveClass('-selected');
     }
 
 

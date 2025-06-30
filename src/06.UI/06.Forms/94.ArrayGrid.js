@@ -20,13 +20,13 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
 
         this._handleEvents();
 
-        if(this._fieldData?.params?.readonly === undefined) {
-            this.readonly = false;    
+        if (this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;
         }
         else {
             this.readonly = this._fieldData?.params?.readonly;
         }
-        if(this._fieldData?.params?.enabled === undefined) {
+        if (this._fieldData?.params?.enabled === undefined) {
             this.enabled = true;
         }
         else {
@@ -41,13 +41,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         this._addObjectButton.AddHandler('Clicked', this.newObject, false, this);
 
         /** Открыть окно с выбранным объектом */
-        this._objectsGrid.AddHandler('SelectionChanged', (event, args) => {
-            // не открываем окно, если на строке вызывают контекстное меню
-            const selected = this._getSelected();
-            if (args.isContextMenuEvent !== true && selected) {
-                this.showObject(selected.value);
-            }
-        });
+        this._objectsGrid.AddHandler('SelectionChanged', this.__objectGridSelectionChanged, false, this);
 
         /** Добавить строкам таблицы контекстное меню */
         this._objectsGrid.AddHandler('ContextMenuIconClicked', this.__showContextMenu, false, this);
@@ -55,6 +49,14 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         /** Вызвать нужный обработчик контекстного меню */
         this._objectsGrid.AddHandler('ContextMenuItemClicked', this.__processContextMenuAction, false, this);
 
+    }
+
+    __objectGridSelectionChanged(event, args) {
+        // do not open the window if the context menu is called on the row
+        const selected = this._getSelected();
+        if (args.isContextMenuEvent !== true && selected) {
+            this.showObject(selected.value);
+        }
     }
 
     /** @private */
@@ -91,7 +93,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
             this._objectWindow.closable = true;
 
             this._objectWindow.fields = this._fieldData.fields;
-            if(this._fieldData?.desc) {
+            if (this._fieldData?.desc) {
                 this._objectWindow.title = Lang.Translate(this._fieldData.desc);
             }
             // this._objectWindow.stickyX = "center";
@@ -101,27 +103,9 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
 
             if (this._fieldData.params?.window) { this._objectWindow.setParams(this._fieldData.params.window); }
 
-            /** Добавить или обновить объект после отправки формы */
-            this._objectWindow.AddHandler('FormSubmitted', (event, args) => {
-                let newArgs = Object.assign({object_row: this._getSelected()}, args);
-                if(this._objectWindow.containsNewObject) {
-                    this.addObjectRow(args.value) 
-                } else {
-                    this.updateObjectRow(args.value);
-                }
-
-                this._objectsGrid.UnselectAllRows();
-            });
-            /** Обновить объект, когда содержимое формы изменилось */
-            this._objectWindow.AddHandler('Changed', (event, args) => {
-                if (!this._objectWindow.containsNewObject) {
-                    this.updateObjectRow(event, Object.assign({object_row: this._getSelected()}, args));
-                }
-            });
-            /** Удалить окно из свойства, если оно было удалено из DOM */
-            this._objectWindow.AddHandler('WindowClosed', (event, args) => {
-                if (this._objectWindow.disposeOnClose) { this._objectWindow = null; }
-            });
+            this._objectWindow.AddHandler('FormSubmitted', this.__objectWindowFormSubmited, false, this);
+            this._objectWindow.AddHandler('Changed', this.__objectWindowChanged, false, this);
+            this._objectWindow.AddHandler('WindowClosed', this.__objectWindowWindowClosed, false, this);
         }
 
         this._objectWindow.containsNewObject = !!!value;
@@ -129,12 +113,33 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         this._objectWindow.shown = true;
     }
 
+    __objectWindowWindowClosed(event, args) {
+        if (this._objectWindow.disposeOnClose) { this._objectWindow = null; }
+    }
+
+    __objectWindowChanged(event, args) {
+        if (!this._objectWindow.containsNewObject) {
+            this.updateObjectRow(event, Object.assign({ object_row: this._getSelected() }, args));
+        }
+    }
+
+    __objectWindowFormSubmited(event, args) {
+        let newArgs = Object.assign({ object_row: this._getSelected() }, args);
+        if (this._objectWindow.containsNewObject) {
+            this.addObjectRow(args.value)
+        } else {
+            this.updateObjectRow(args.value);
+        }
+
+        this._objectsGrid.UnselectAllRows();
+    }
+
     newObject(event, args) {
         this._openObjectWindow();
     }
 
     showObject(value) {
-        this._openObjectWindow(value); 
+        this._openObjectWindow(value);
     }
 
     addObjectRow(value) {
@@ -144,7 +149,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
 
     updateObjectRow(value) {
         let row = this._getSelected();
-        if (row) { 
+        if (row) {
             row.value = value;
             this.Dispatch('Changed');
         }
@@ -154,7 +159,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */ 
+     */
     __showContextMenu(event, args) {
         args.domEvent.preventDefault();
         args.domEvent.stopPropagation();
@@ -183,14 +188,14 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         ];
 
         args.item.contextmenu = contextmenu;
-        args.item.ShowContextMenu(args.isContextMenuEvent ? [Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT] : [Colibri.UI.ContextMenu.RB, Colibri.UI.ContextMenu.RT], '', args.isContextMenuEvent ? {left: args.domEvent.clientX, top: args.domEvent.clientY} : null);
+        args.item.ShowContextMenu(args.isContextMenuEvent ? [Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT] : [Colibri.UI.ContextMenu.RB, Colibri.UI.ContextMenu.RT], '', args.isContextMenuEvent ? { left: args.domEvent.clientX, top: args.domEvent.clientY } : null);
     }
 
     /**
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */ 
+     */
     __processContextMenuAction(event, args) {
         if (args?.menuData && args?.item) {
             switch (args.menuData.name) {
@@ -243,7 +248,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
     _setDisplayedColumns() {
         this._displayedColumns = [];
         let paramColumns = this._fieldData.params?.displayed_columns;
-        if(typeof paramColumns === 'string') {
+        if (typeof paramColumns === 'string') {
             paramColumns = paramColumns.split(';');
         }
 
@@ -297,12 +302,12 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
      */
     set value(value) {
         value = eval_default_values(value);
-        if(value && !Array.isArray(value)) { 
-            throw new Error('#{ui-arraygrid-errors}'); 
+        if (value && !Array.isArray(value)) {
+            throw new Error('#{ui-arraygrid-errors}');
         }
 
         this._objectsGrid.value = value;
-        
+
     }
 
     /**
@@ -363,14 +368,15 @@ Colibri.UI.Forms.ArrayGrid.ObjectWindow = class extends Colibri.UI.Window {
         this._form = new Colibri.UI.Forms.Form(this._name + '-form', this.container);
         this._saveButton = new Colibri.UI.SuccessButton(this._name + '-save-button', this.footer);
         this._saveButton.value = '#{ui-arraygrid-save}';
-
-        this._saveButton.AddHandler('Clicked', (event, args) => {
-            this.Dispatch('FormSubmitted', {value: this._form.value});
-            this.Hide();
-        });
+        this._saveButton.AddHandler('Clicked', this.__saveButtonClicked, false, this);
 
         this._form.shown = true;
         this._saveButton.shown = true;
+    }
+
+    __saveButtonClicked(event, args) {
+        this.Dispatch('FormSubmitted', { value: this._form.value });
+        this.Hide();
     }
 
     /** @protected */
@@ -407,7 +413,7 @@ Colibri.UI.Forms.ArrayGrid.ObjectWindow = class extends Colibri.UI.Window {
      * Form fields
      * @type {Object}
      */
-    get fields () {
+    get fields() {
         return this._form.fields;
     }
     /**
@@ -466,4 +472,4 @@ Colibri.UI.Forms.ArrayGrid.ObjectWindow = class extends Colibri.UI.Window {
 
 }
 
-Colibri.UI.Forms.Field.RegisterFieldComponent('ArrayGrid', 'Colibri.UI.Forms.ArrayGrid', '#{ui-fields-arraygrid}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler','vertical','addlink','removelink','updownlink','hasscroll','initempty','maxadd','title','removedesc','displayed_columns'])
+Colibri.UI.Forms.Field.RegisterFieldComponent('ArrayGrid', 'Colibri.UI.Forms.ArrayGrid', '#{ui-fields-arraygrid}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'vertical', 'addlink', 'removelink', 'updownlink', 'hasscroll', 'initempty', 'maxadd', 'title', 'removedesc', 'displayed_columns'])

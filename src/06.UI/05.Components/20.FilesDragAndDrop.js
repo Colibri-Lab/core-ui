@@ -41,34 +41,46 @@ Colibri.UI.FilesDragAndDrop = class extends Colibri.UI.Component {
             this._innerInput.value = '';
         });
 
-        this._dropContainer.AddHandler('Clicked', (event, args) => { this._innerInput.click(); });
-        this._dropContainer.AddHandler('DragOver', (event, args) => {
-            args.domEvent.preventDefault();
-            this.AddClass('-active');
-        });
-        this._dropContainer.AddHandler('DragLeave', (event, args) => { this.RemoveClass('-active'); });
+        this._dropContainer.AddHandler('Clicked', this.__dropContainerClicked, false, this);
+        this._dropContainer.AddHandler('DragOver', this.__dropContainerDragOver, false, this);
+        this._dropContainer.AddHandler('DragLeave', this.__dropContainerDragLeave, false, this);
 
         /* выбрать файлы в зависимости от источника, очистить выбор после вызова события  */
-        this._dropContainer.AddHandler('Drop', (event, args) => {
-            args.domEvent.preventDefault();
-            this.RemoveClass('-active');
+        this._dropContainer.AddHandler('Drop', this.__dropContainerDrop, false, this);
+    }
 
-            let eventFiles;
-            if (args.inputFiles) {
-                eventFiles = args.inputFiles;
-            }
-            else if (args.domEvent.dataTransfer.files) {
-                eventFiles = args.domEvent.dataTransfer.files;
-            }
-            else if (args.domEvent.dataTransfer.items) {
-                eventFiles = args.domEvent.dataTransfer.items;
-            }
 
-            this._chooseFiles(eventFiles);
-            this.Dispatch('InputFileChosen', {files: this._inputFiles});
+    __dropContainerClicked(event, args) { 
+        this._innerInput.click(); 
+    }
+    __dropContainerDragOver(event, args){
+        args.domEvent.preventDefault();
+        this.AddClass('-active');
+    }
+    __dropContainerDragLeave(event, args) { 
+        this.RemoveClass('-active'); 
+    }
 
-            this._inputFiles = [];
-        });
+    /* выбрать файлы в зависимости от источника, очистить выбор после вызова события  */
+    __dropContainerDrop(event, args) {
+        args.domEvent.preventDefault();
+        this.RemoveClass('-active');
+
+        let eventFiles;
+        if (args.inputFiles) {
+            eventFiles = args.inputFiles;
+        }
+        else if (args.domEvent.dataTransfer.files) {
+            eventFiles = args.domEvent.dataTransfer.files;
+        }
+        else if (args.domEvent.dataTransfer.items) {
+            eventFiles = args.domEvent.dataTransfer.items;
+        }
+
+        this._chooseFiles(eventFiles);
+        this.Dispatch('InputFileChosen', {files: this._inputFiles});
+
+        this._inputFiles = [];
     }
 
     /**

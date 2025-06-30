@@ -44,12 +44,14 @@ Colibri.UI.Link = class extends Colibri.UI.Component {
     set navigate(value) {
         this._navigate = value;
         this._element.attr('href', '#' + Date.Mc());
-        this.AddHandler('Clicked', (event, args) => {
-            App.Router.Navigate(event.sender.navigate?.url ?? '/', event.sender.navigate?.options ?? {});
-            args.domEvent.stopPropagation();
-            args.domEvent.preventDefault();
-            return false;
-        });
+        this.AddHandler('Clicked', this.__thisClicked);
+    }
+
+    __thisClicked(event, args) {
+        App.Router.Navigate(event.sender.navigate?.url ?? '/', event.sender.navigate?.options ?? {});
+        args.domEvent.stopPropagation();
+        args.domEvent.preventDefault();
+        return false;
     }
 
     /**
@@ -96,7 +98,7 @@ Colibri.UI.Link = class extends Colibri.UI.Component {
     set download(value) {
         this._element.attr('download', value);
     }
-       
+
     /**
      * Enable/Disable
      * @type {boolean}
@@ -125,17 +127,17 @@ Colibri.UI.Link = class extends Colibri.UI.Component {
      */
     set customMenu(value) {
         this._customMenu = value;
-        if(value) {
+        if (value) {
             this.AddHandler('ContextMenu', this.__thisMouseDown);
             this.AddHandler('ContextMenuItemClicked', this.__thisContextMenuItemClicked);
         }
     }
 
     __thisMouseDown(event, args) {
-        
+
         const contextmenu = [];
-        contextmenu.push({title: '#{ui-link-opennewtab}', name: 'openblank'});
-        contextmenu.push({title: '#{ui-link-open}', name: 'open'});
+        contextmenu.push({ title: '#{ui-link-opennewtab}', name: 'openblank' });
+        contextmenu.push({ title: '#{ui-link-open}', name: 'open' });
         this.contextmenu = contextmenu;
         this.ShowContextMenu([Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT]);
         args.domEvent.preventDefault();
@@ -143,9 +145,9 @@ Colibri.UI.Link = class extends Colibri.UI.Component {
     }
 
     __thisContextMenuItemClicked(event, args) {
-        if(args.menuData?.name === 'openblank') {
-            this.Dispatch('Clicked', Object.assign(args, {target: '_blank'}));
-        } else if(args.menuData?.name === 'open') {
+        if (args.menuData?.name === 'openblank') {
+            this.Dispatch('Clicked', Object.assign(args, { target: '_blank' }));
+        } else if (args.menuData?.name === 'open') {
             this.Dispatch('Clicked', args);
         }
     }

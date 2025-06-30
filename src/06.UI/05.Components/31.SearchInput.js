@@ -5,7 +5,7 @@
  * @memberof Colibri.UI
  */
 Colibri.UI.SearchInput = class extends Colibri.UI.FlexBox {
-    
+
     /**
      * @constructor
      * @param {string} name name of component
@@ -19,14 +19,18 @@ Colibri.UI.SearchInput = class extends Colibri.UI.FlexBox {
         this._input = this.Children('input');
         this._search = this.Children('search');
 
-        this._input.AddHandler(['KeyDown','Pasted','Cleared'], this.__inputSearch, false, this);
-        this._search.AddHandler('Clicked', (event, args) => this.Dispatch('Search', {value: this.value}));
+        this._input.AddHandler(['KeyDown', 'Pasted', 'Cleared'], this.__inputKeyDownOrPastedOrCleared, false, this);
+        this._search.AddHandler('Clicked', this.__searchClicked, false, this);
 
     }
 
-    __inputSearch(event, args) {
-        if( (event.name === 'KeyDown' && args.domEvent.keyCode === 13) || event.name === 'Pasted' || event.name === 'Cleared' ) {
-            this.Dispatch('Search', {value: this.value});
+    __searchClicked(event, args) {
+        this.Dispatch('Search', { value: this.value });
+    }
+
+    __inputKeyDownOrPastedOrCleared(event, args) {
+        if ((event.name === 'KeyDown' && args.domEvent.keyCode === 13) || event.name === 'Pasted' || event.name === 'Cleared') {
+            this.Dispatch('Search', { value: this.value });
         }
     }
 

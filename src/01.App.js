@@ -77,9 +77,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
      * @method
      */
     RegisterEventHandlers() {
-        this.AddHandler('DocumentShown', (event, args) => {
-            Colibri.UI.UpdateMaxZIndex();
-        });
+        this.AddHandler('DocumentShown', Colibri.UI.UpdateMaxZIndex);
     }
 
     /**
@@ -197,35 +195,35 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                             this._comet = new Colibri.Web.Comet(settings.comet);
                             this._comet.AddHandler(['MessageReceived', 'MessagesMarkedAsRead', 'MessageRemoved'], (event, args) => {
                                 if(!document.hasFocus()) {
-                                    this.StartFlashTitle();
+                                    App.StartFlashTitle();
                                 }
                                 else {
-                                    this.StopFlashTitle();
+                                    App.StopFlashTitle();
                                 }
                             });
                         } 
                         document.addEventListener('visibilitychange', (e) => {
                             
                             if(initComet && settings.comet && settings.comet.host) {
-                                this.StopFlashTitle();
+                                App.StopFlashTitle();
                             }
     
                             if(document.hidden) {
-                                this.Dispatch('DocumentHidden', {});
+                                App.Dispatch('DocumentHidden', {});
                             }
                             else {
-                                this.Dispatch('DocumentShown', {});
+                                App.Dispatch('DocumentShown', {});
                             }
                         });
 
                         window.addEventListener('beforeunload', (e) => {
-                            this._initialized = false;
-                            this.Dispatch('DocumentUnloaded', {domEvent: e});  
+                            App.Initialized = false;
+                            App.Dispatch('DocumentUnloaded', {domEvent: e});  
                         });
     
                         if(settings?.screen?.theme === 'follow-device') {
                             this._device.AddHandler('ThemeChanged', (event, args) => {
-                                this.SetTheme(args.current);
+                                App.SetTheme(args.current);
                             });
                             this.SetTheme(this._device.Theme);
                         }    
@@ -524,6 +522,10 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
      */
     get Initialized() {
         return this._initialized;
+    }
+
+    set Initialized(value) {
+        this._initialized = value;
     }
 
     /**
