@@ -39,13 +39,15 @@ Colibri.UI.Video = class extends Colibri.UI.Component {
             this._icon.shown = true;
         });
 
-        this.AddHandler('Clicked', (event, args) => {
-            this.toggle(false);
-            args.domEvent.preventDefault(); 
-            args.domEvent.stopPropagation();
-            return false;
-        });
+        this.AddHandler('Clicked', this.__thisClicked);
 
+    }
+
+    __thisClicked(event, args) {
+        this.toggle(false);
+        args.domEvent.preventDefault(); 
+        args.domEvent.stopPropagation();
+        return false;
     }
 
     get videoElement() {

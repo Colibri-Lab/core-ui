@@ -16,9 +16,7 @@ Colibri.UI.SlideDown = class extends Colibri.UI.Pane {
         this.AddClass('app-component-slidedown-component');
         
         this.tabIndex = null;
-        this.AddHandler('ShadowClicked', (event, args) => {
-            this.Hide();
-        });
+        this.AddHandler('ShadowClicked', this.Hide);
 
     }
 
@@ -65,11 +63,11 @@ Colibri.UI.SlideDown = class extends Colibri.UI.Pane {
             Colibri.Common.Wait(() => Colibri.UI.Find(this._handler)).then(() => {
                 this._handler = Colibri.UI.Find(this._handler);
                 if(this._handler) {
-                    this._handler.AddHandler('Clicked', (event, args) => this.__handlerClicked(event, args));
+                    this._handler.AddHandler('Clicked', this.__handlerClicked, false, this);
                 }
             });
         } else {
-            this._handler.AddHandler('Clicked', (event, args) => this.__handlerClicked(event, args));
+            this._handler.AddHandler('Clicked', this.__handlerClicked, false, this);
         }
     }
 

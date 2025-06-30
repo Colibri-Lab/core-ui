@@ -22,7 +22,7 @@ Colibri.UI.YearMonthSelector = class extends Colibri.UI.FlexBox {
         this._selector.readonly = false;
         this._selector.shown = true;
 
-        this._selector.AddHandler('Changed', (event, args) => this.__selectorChanged(event, args));
+        this._selector.AddHandler('Changed', this.__selectorChanged, false, this);
 
     }
     

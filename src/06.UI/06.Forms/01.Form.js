@@ -42,10 +42,12 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     /** @protected */
     _registerEventHandlers() {
-        this.AddHandler('Changed', (event, args) => {
-            this._hideAndShow();
-            this._calcRuntimeValues(args?.component ?? null);
-        });
+        this.AddHandler('Changed', this.__thisChanged);
+    }
+
+    __thisChanged(event, args) {
+        this._hideAndShow();
+        this._calcRuntimeValues(args?.component ?? null);
     }
 
     /** @protected */
@@ -58,7 +60,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     /** @protected */
     _calcRuntimeValues(changedComponent = null) {
-        if(this._calculating || !this.needRecalc) {
+        if (this._calculating || !this.needRecalc) {
             return;
         }
 
@@ -66,29 +68,29 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         try {
 
             Object.forEach(this._fields, (name, fieldData) => {
-                const fieldComponent = this.Children(name);            
-                if(!fieldComponent || !fieldComponent.needRecalc) {
+                const fieldComponent = this.Children(name);
+                if (!fieldComponent || !fieldComponent.needRecalc) {
                     return true;
-                } 
+                }
 
-                if(fieldComponent instanceof Colibri.UI.Forms.Object || fieldComponent instanceof Colibri.UI.Forms.Array || fieldComponent instanceof Colibri.UI.Forms.Tabs) {
+                if (fieldComponent instanceof Colibri.UI.Forms.Object || fieldComponent instanceof Colibri.UI.Forms.Array || fieldComponent instanceof Colibri.UI.Forms.Tabs) {
                     fieldComponent._calcRuntimeValues(changedComponent);
                 } else {
-                    try {                        
-                        if(fieldData?.params?.valuegenerator) {
+                    try {
+                        if (fieldData?.params?.valuegenerator) {
                             const f = typeof fieldData?.params?.valuegenerator === 'string' ? eval(fieldData?.params?.valuegenerator) : fieldData?.params?.valuegenerator;
                             const isOldVersion = typeof fieldData?.params?.valuegenerator === 'string' && fieldData?.params?.valuegenerator.indexOf('(parentValue, formValue') !== -1;
                             const v = isOldVersion ? f(this.value, this.value, fieldComponent, this) : f(this.value, this.value, fieldComponent, this, changedComponent);
-                            if(v !== undefined) {
+                            if (v !== undefined) {
                                 fieldComponent.value = v;
                             }
                         }
-                    } catch(e) {
+                    } catch (e) {
                         console.log('Error in ValueGenerator', name, fieldData, fieldData?.params?.valuegenerator, e);
                     }
                 }
             });
-        } catch(e) {
+        } catch (e) {
             console.log(e);
             console.trace();
         } finally {
@@ -100,7 +102,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     /** @protected */
     _hideAndShow() {
 
-        if(!this.needHideAndShow) {
+        if (!this.needHideAndShow) {
             return;
         }
 
@@ -108,22 +110,22 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
         Object.forEach(this._fields, (name, fieldData) => {
             let fieldComponent = this.Children(name);
-            if(!fieldComponent || !fieldComponent.needHideAndShow) {
+            if (!fieldComponent || !fieldComponent.needHideAndShow) {
                 return true;
             }
 
-            if(fieldData?.params?.fieldgenerator) {
+            if (fieldData?.params?.fieldgenerator) {
                 const gen = eval(fieldData.params.fieldgenerator);
                 gen(fieldData, fieldComponent, this);
-                if(fieldData?.replace ?? false) {
+                if (fieldData?.replace ?? false) {
                     fieldComponent.Dispose();
                     fieldComponent = this._renderField(name, fieldData, data[name] ?? null, true);
                 }
-            } 
+            }
 
-            if(fieldData.params && fieldData.params.condition) {
+            if (fieldData.params && fieldData.params.condition) {
                 const condition = fieldData.params.condition;
-                if(condition.field) {
+                if (condition.field) {
 
                     const type = condition?.type == 'disable' ? 'enabled' : 'shown';
                     const empty = condition?.empty || false;
@@ -131,27 +133,27 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                     let fieldValue = eval('data?.' + condition.field.split('.').join('?.'));
                     fieldValue = fieldValue?.value ?? fieldValue;
                     let conditionResult = true;
-                    if((condition?.value ?? null) !== null) {
-                        if(Array.isArray(condition.value)) {
+                    if ((condition?.value ?? null) !== null) {
+                        if (Array.isArray(condition.value)) {
                             conditionResult = fieldValue === undefined || (fieldValue !== undefined && condition.value.indexOf(fieldValue) !== -1);
                         }
                         else {
                             conditionResult = fieldValue === undefined || (fieldValue !== undefined && fieldValue === condition.value);
                         }
-                    } else if(condition?.method) {
-                        if(typeof condition.method === 'string') {
+                    } else if (condition?.method) {
+                        if (typeof condition.method === 'string') {
                             conditionResult = eval(condition.method);
                         } else {
                             conditionResult = condition.method(fieldValue, data, type, empty, inverse, fieldData, this);
                         }
                     }
 
-                    if(inverse) {
+                    if (inverse) {
                         conditionResult = !conditionResult;
                     }
                     fieldComponent[type] = conditionResult;
-                    if(!conditionResult && empty) {
-                        fieldComponent.value = null;  
+                    if (!conditionResult && empty) {
+                        fieldComponent.value = null;
                     }
                 }
                 else {
@@ -159,11 +161,11 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                     fieldComponent.enable = true;
                 }
             }
-            else if(fieldData.params && fieldData.params.hidden) {
+            else if (fieldData.params && fieldData.params.hidden) {
                 fieldComponent.shown = false;
             }
-            
-            if(fieldComponent._hideAndShow) {
+
+            if (fieldComponent._hideAndShow) {
                 fieldComponent._hideAndShow();
             }
         });
@@ -190,7 +192,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
      * @type {object}
      */
     set fields(fields) {
-        if(typeof fields == 'string') {
+        if (typeof fields == 'string') {
             fields = this._storage.Query(fields);
         }
         this._fields = fields;
@@ -214,13 +216,13 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
      */
     Fields(name = null) {
 
-        if(name) {
+        if (name) {
             return this.Children(name);
         }
 
         const ret = {};
         this.ForEach((name, component) => {
-            if(component instanceof Colibri.UI.Forms.Field) {
+            if (component instanceof Colibri.UI.Forms.Field) {
                 ret[name] = component;
             }
         });
@@ -233,7 +235,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
      */
     set value(value) {
 
-        if(!this._checkIfChanged(value)) {
+        if (!this._checkIfChanged(value)) {
             return;
         }
 
@@ -243,17 +245,17 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         }
         else {
             this.ForEach((name, component) => {
-                if(component instanceof Colibri.UI.Forms.Field) {
-                    if(name == '_adds') {
+                if (component instanceof Colibri.UI.Forms.Field) {
+                    if (name == '_adds') {
                         // если наткнулись на _adds
                         component.ForEveryField((name, field) => {
                             let def = field?.field?.default;
-                            if(field?.field?.params?.generator) {
+                            if (field?.field?.params?.generator) {
                                 const gen = typeof field?.field?.params?.generator === 'string' ? eval(field.field.params.generator) : field?.field?.params?.generator;
                                 def = gen(value, component, this);
-                            }    
-                            if(!this._value) {
-                                field.value = def ?? null;    
+                            }
+                            if (!this._value) {
+                                field.value = def ?? null;
                             }
                             else {
                                 field.value = this._value[name] ?? def ?? null;
@@ -262,12 +264,12 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                     }
                     else {
                         let def = component?.field?.default;
-                        if(component?.field?.params?.generator) {
+                        if (component?.field?.params?.generator) {
                             const gen = typeof component?.field?.params?.generator === 'string' ? eval(component.field.params.generator) : component.field.params.generator;
                             def = gen(value, component, this);
                         }
-                        if(!this._value) {
-                            component.value = def ?? null;    
+                        if (!this._value) {
+                            component.value = def ?? null;
                         }
                         else {
                             component.value = this._value[name] ?? def ?? null;
@@ -277,7 +279,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             });
 
             const oneof = this.Children('_oneof');
-            if(oneof) {
+            if (oneof) {
                 const keys = Object.keys(this._value);
                 oneof.value = keys[0];
             }
@@ -296,8 +298,8 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     get value() {
         let data = Object.assign({}, this._value);
         this.ForEach((name, component) => {
-            if(component instanceof Colibri.UI.Forms.Field) {
-                if(name == '_adds') {
+            if (component instanceof Colibri.UI.Forms.Field) {
+                if (name == '_adds') {
                     data = Object.assign(data, component.value);
                 }
                 else {
@@ -332,7 +334,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
      */
     set shuffleFieldNames(value) {
         this._shuffleFieldNames = value === true || value === 'true';
-        if(this._shuffleFieldNames) {
+        if (this._shuffleFieldNames) {
             this._element.attr('autocomplete', 'off');
         }
     }
@@ -347,17 +349,17 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     /** @private */
     _prepareOneOf(data, field) {
-        if(Object.isObject(data)) {
+        if (Object.isObject(data)) {
             Object.forEach(data, (n, v) => {
                 data[n] = this._prepareOneOf(v, this._fields[n]);
             });
-            if(Object.keys(data).indexOf('_oneof') !== -1) {
+            if (Object.keys(data).indexOf('_oneof') !== -1) {
                 const oneof = {};
                 const allfields = Object.keys(field.fields);
                 const oneofvalues = field.fields['_oneof'].values.map((f) => f.value);
                 const otherfields = allfields.filter((v) => !oneofvalues.includes(v));
                 otherfields.forEach((f) => {
-                    if(data[f] && f != '_oneof') {
+                    if (data[f] && f != '_oneof') {
                         oneof[f] = data[f];
                     }
                 })
@@ -381,13 +383,15 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
         let fields = this._element.querySelectorAll(queryString);
 
-        if(fields) {
-            if(fields.length === 1) {
-                field = fields[0].tag('component');
+        if (fields) {
+            if (fields.length === 1) {
+                // field = fields[0].getUIComponent();
+                field = fields[0].getUIComponent();
             } else {
-                for(let _fieldEl of fields) {
-                    let _field = _fieldEl.tag('component');
-                    if(_field instanceof Colibri.UI.Forms.Field) {
+                for (let _fieldEl of fields) {
+                    // let _field = _fieldEl.getUIComponent();
+                    let _field = _fieldEl.getUIComponent();
+                    if (_field instanceof Colibri.UI.Forms.Field) {
                         field = _field;
                         break;
                     }
@@ -399,10 +403,10 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     /** @private */
     _renderField(name, fieldData, value, shown = true) {
-        
+
         const root = this.root || this;
         const component = Colibri.UI.Forms.Field.Create(name, this, fieldData, null, root);
-        if(!component) {
+        if (!component) {
             console.trace();
             throw new Error('component ' + name + ' not found');
         }
@@ -410,17 +414,17 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         component.AddHandler('Validated', (event, args) => this.Dispatch('Validated', args));
         component.AddHandler('Changed', (event, args) => {
             args = args ? args : {};
-            if(component._timeout) {
+            if (component._timeout) {
                 clearTimeout(component._timeout);
                 component._timeout = null;
             }
-            if(!args.component) {
+            if (!args.component) {
                 args.component = component;
             }
             component._timeout = setTimeout(() => this.Dispatch('Changed', args), 50);
         });
         component.download = this._download;
-        if(value && value[name] !== undefined) {
+        if (value && value[name] !== undefined) {
             component.value = value[name];
         }
 
@@ -447,11 +451,11 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         let hasGroups = false;
         Object.forEach(this._fields, (name, fieldData) => {
             fieldData = Object.cloneRecursive(fieldData);
-            if(fieldData.virtual) {
+            if (fieldData.virtual) {
                 return true;
             }
             fieldData.group && (fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group);
-            if(!fieldData.group || fieldData.group === 'window') {
+            if (!fieldData.group || fieldData.group === 'window') {
                 this._renderField(name, fieldData, value, true);
             }
             else {
@@ -464,8 +468,8 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             Object.forReverseEach(this._fields, (name, fieldData) => {
                 fieldData = Object.cloneRecursive(fieldData);
                 fieldData.group && (fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group);
-                if(fieldData.group !== 'window') {
-                    if(fieldData.group === groupName) {
+                if (fieldData.group !== 'window') {
+                    if (fieldData.group === groupName) {
                         this.Children(name).Retreive();
                     }
                     else {
@@ -474,41 +478,41 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                 }
             });
 
-            if(args?.noevent) {
+            if (args?.noevent) {
                 return;
             }
             this.Dispatch('GroupChanged', args);
         };
-        
+
         this._groups = null;
-        if(hasGroups) {
+        if (hasGroups) {
             this._groups = new Colibri.UI.ButtonGroup('groups', this);
             this._groups.shown = true;
-            Object.forEach(this._fields,(name, fieldData) => {
+            Object.forEach(this._fields, (name, fieldData) => {
                 fieldData = Object.cloneRecursive(fieldData);
                 fieldData.group && (fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group);
-                if(fieldData.group && fieldData.group !== 'window') {
+                if (fieldData.group && fieldData.group !== 'window') {
                     this._groups.AddButton(fieldData.group, fieldData.group);
                 }
             });
             this._groups.AddHandler('Changed', groupChanged);
         }
-        
+
         Object.forEach(this._fields, (name, fieldData) => {
             fieldData = Object.cloneRecursive(fieldData);
             fieldData.group && (fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group);
-            if(fieldData.group && fieldData.group !== 'window') {
+            if (fieldData.group && fieldData.group !== 'window') {
                 this._renderField(name, fieldData, value, true);
             }
         });
 
-        
+
         this._groups && this._groups.SelectButton('firstChild', true);
-        this._groups && groupChanged(null, {index: 0, button: this._groups.Children('firstChild'), noevent: true});
+        this._groups && groupChanged(null, { index: 0, button: this._groups.Children('firstChild'), noevent: true });
 
         this._error = new Colibri.UI.Pane('form-message', this);
         this._error.shown = true;
-        
+
         this.Dispatch('FieldsRendered');
     }
 
@@ -524,7 +528,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
      */
     Focus() {
         const firstComponent = this.Children('firstChild');
-        if(firstComponent) {
+        if (firstComponent) {
             firstComponent.Focus();
         }
     }
@@ -542,7 +546,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
      */
     set enabled(value) {
         super.enabled = value;
-        if(value) {
+        if (value) {
             this._hideAndShow();
         }
     }
@@ -559,34 +563,34 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
      * @type {Colibri.UI.Form.Field}
      */
     set activeField(value) {
-        if(
-            (this._activeField && 
+        if (
+            (this._activeField &&
                 !(this._activeField instanceof Colibri.UI.Forms.Object) &&
-                !(this._activeField instanceof Colibri.UI.Forms.Array) && 
+                !(this._activeField instanceof Colibri.UI.Forms.Array) &&
                 !(this._activeField instanceof Colibri.UI.Forms.Tabs) && (
-                    value && 
-                    !(value instanceof Colibri.UI.Forms.Object) && 
-                    !(value instanceof Colibri.UI.Forms.Array) && 
+                    value &&
+                    !(value instanceof Colibri.UI.Forms.Object) &&
+                    !(value instanceof Colibri.UI.Forms.Array) &&
                     !(value instanceof Colibri.UI.Forms.Tabs)
                 )
             ) || !this._activeField
         ) {
-            
+
             const changed = this._activeField !== value;
             this._activeField = value;
-            if(changed) {
-                this.Dispatch('ActiveFieldChanged', {field: this._activeField});
+            if (changed) {
+                this.Dispatch('ActiveFieldChanged', { field: this._activeField });
             }
-            
+
         }
     }
 
     defaultValues(fields = null) {
         let ret = {};
         Object.forEach(fields || this._fields, (name, field) => {
-            if(field.fields) {
+            if (field.fields) {
                 ret[name] = this.defaultValues(field.fields);
-            } else if(field.default) {
+            } else if (field.default) {
                 ret[name] = field.default
             } else {
                 ret[name] = null;
@@ -596,8 +600,8 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     }
 
     SelectGroup(index) {
-        if(!this._groups) {
-            return ;
+        if (!this._groups) {
+            return;
         }
 
         this._groups.SelectButton(index);

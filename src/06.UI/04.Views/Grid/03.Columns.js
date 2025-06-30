@@ -9,7 +9,7 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
     constructor(name, container) {
         super(name, container, Element.create('tr'));
         this.AddClass('app-ui-header-columns');
-        this.AddHandler('ChildAdded', (event, args) => this.__thisChildAdded(event, args));
+        this.AddHandler('ChildAdded', this.__thisChildAdded);
 
         this._columnsAddedEventSent = false;
     }

@@ -18,21 +18,23 @@ Colibri.UI.PromptDialog = class extends Colibri.UI.Window {
 
         this._callback = null;
 
-        this.AddHandler('KeyDown', (event, args) => {
-            if(args.domEvent.code == 'Enter' || args.domEvent.code == 'NumpadEnter') {
-                this._save.Dispatch('Clicked');
-                args.domEvent.stopPropagation();
-                args.domEvent.preventDefault();
-                return false;
-            }
-            else if(args.domEvent.code == 'Escape') {
-                this._cancel.Dispatch('Clicked');
-                args.domEvent.stopPropagation();
-                args.domEvent.preventDefault();
-                return false;
-            }
-        });
+        this.AddHandler('KeyDown', this.__thisKeyDown);
 
+    }
+
+    __thisKeyDown(event, args) {
+        if (args.domEvent.code == 'Enter' || args.domEvent.code == 'NumpadEnter') {
+            this._save.Dispatch('Clicked');
+            args.domEvent.stopPropagation();
+            args.domEvent.preventDefault();
+            return false;
+        }
+        else if (args.domEvent.code == 'Escape') {
+            this._cancel.Dispatch('Clicked');
+            args.domEvent.stopPropagation();
+            args.domEvent.preventDefault();
+            return false;
+        }
     }
 
     /**
@@ -51,7 +53,7 @@ Colibri.UI.PromptDialog = class extends Colibri.UI.Window {
             this._cancel = this.Children('btn-cancel');
             this._save.enabled = false;
 
-            if(!this._validator) {
+            if (!this._validator) {
                 this._validator = new Colibri.UI.FormValidator(this._form);
             }
             this._form.fields = fields;
@@ -72,7 +74,7 @@ Colibri.UI.PromptDialog = class extends Colibri.UI.Window {
                 resolve(this._form.value);
                 this.Hide();
             });
-    
+
             this._cancel.ClearHandlers();
             this._cancel.AddHandler('Clicked', (event, args) => {
                 reject();

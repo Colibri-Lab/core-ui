@@ -237,11 +237,13 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         contextMenuIcon.value = Colibri.UI.ContextMenuIcon;
         contextMenuIcon.AddHandler('Clicked', (event, args) => this.Dispatch('ContextMenuIconClicked', args));    
 
-        this.AddHandler('Scrolled', (event, args) => {
-            contextMenuParent.container.css('bottom', (-1 * this.scrollTop + 10) + 'px');
-        }); 
+        this.AddHandler('Scrolled', this.__thisScrolled); 
         this.Dispatch('Scrolled');
 
+    }
+
+    __thisScrolled(event, args) {
+        contextMenuParent.container.css('bottom', (-1 * this.scrollTop + 10) + 'px');
     }
 
     /** @private */
@@ -484,46 +486,56 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         this.RegisterEvent('CheckChanged', false, 'When multiple check changed');
     }
 
+    __thisClicked(sender, args) {
+        if(this._element.querySelector('div>em.expander') === args.domEvent.target) {
+            this.expanded = !this.expanded;
+        } else {
+            const isIconClicked = args.domEvent.target.closest('em.icon') != null
+            if(this._nodes.tree.Dispatch('NodeClicked', Object.assign({item: this, clickedOnIcon: isIconClicked}, args)) !== false) {
+                this._nodes.tree.Select(this);
+            }
+            if(this.tree.expandOnClick) {
+                this.expanded = true;
+            }
+        }
+        args.domEvent.stopPropagation();
+        return false;
+    }
+
+    __thisDoubleClicked(sender, args) {
+        const isIconClicked = args.domEvent.target.closest('em.icon') != null;
+        if(this._element.querySelector('div>em.expander') !== args.domEvent.target) {
+            this._nodes.tree.Dispatch('NodeDoubleClicked', Object.assign({item: this, clickedOnIcon: isIconClicked}, args));
+        }
+        args.domEvent.stopPropagation();
+        return false;
+    }
+
+    __thisContextMenuItemClicked(event, args) {
+        this._nodes.tree.Dispatch('ContextMenuItemClicked', Object.assign({item: this}, args));
+    }
+
+    __thisDoubleClicked2(event, args) {
+    
+        if(this._editable) {
+            this.__nodeEditableStart(event, args);
+        }
+        else {
+            this._nodes.tree.Dispatch('DoubleClicked', Object.assign({item: this}, args));
+        }
+        
+        args.domEvent.stopPropagation();
+        args.domEvent.preventDefault();
+        return false;
+    }
+
     /** @protected */
     _handleEvents() {
-        this.AddHandler('Clicked', (sender, args) => {
-            if(this._element.querySelector('div>em.expander') === args.domEvent.target) {
-                this.expanded = !this.expanded;
-            } else {
-                const isIconClicked = args.domEvent.target.closest('em.icon') != null
-                if(this._nodes.tree.Dispatch('NodeClicked', Object.assign({item: this, clickedOnIcon: isIconClicked}, args)) !== false) {
-                    this._nodes.tree.Select(this);
-                }
-                if(this.tree.expandOnClick) {
-                    this.expanded = true;
-                }
-            }
-            args.domEvent.stopPropagation();
-            return false;
-        });
-        this.AddHandler('DoubleClicked', (sender, args) => {
-            const isIconClicked = args.domEvent.target.closest('em.icon') != null
-            if(this._element.querySelector('div>em.expander') !== args.domEvent.target) {
-                this._nodes.tree.Dispatch('NodeDoubleClicked', Object.assign({item: this, clickedOnIcon: isIconClicked}, args));
-            }
-            args.domEvent.stopPropagation();
-            return false;
-        });
+        this.AddHandler('Clicked', this.__thisClicked);
+        this.AddHandler('DoubleClicked', this.__thisDoubelClicked);
 
-        this.AddHandler('ContextMenuItemClicked', (event, args) => this._nodes.tree.Dispatch('ContextMenuItemClicked', Object.assign({item: this}, args)));
-        this.AddHandler('DoubleClicked', (event, args) => {
-            
-            if(this._editable) {
-                this.__nodeEditableStart(event, args);
-            }
-            else {
-                this._nodes.tree.Dispatch('DoubleClicked', Object.assign({item: this}, args));
-            }
-            
-            args.domEvent.stopPropagation();
-            args.domEvent.preventDefault();
-            return false;
-        });
+        this.AddHandler('ContextMenuItemClicked', this.__thisContextMenuItemClicked);
+        this.AddHandler('DoubleClicked', this.__thisDoubleClicked2);
 
     }
 
@@ -904,7 +916,7 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
                 this._checkBox = new Colibri.UI.Checkbox('checkbox', this._check);
                 this._checkBox.parent = this;
                 this._checkBox.shown = true;
-                this._checkBox.AddHandler('Changed', (event, args) => this.__checkChanged(event, args));
+                this._checkBox.AddHandler('Changed', this.__checkChanged, false, this);
             }
         } else {
             this._check.hideElement();

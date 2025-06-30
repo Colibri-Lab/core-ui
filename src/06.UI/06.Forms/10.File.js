@@ -22,7 +22,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         this._validated = false;
         this._errorMessage = '';
 
-        if(this._fieldData?.params?.allow && !Array.isArray(this._fieldData?.params?.allow)) {
+        if (this._fieldData?.params?.allow && !Array.isArray(this._fieldData?.params?.allow)) {
             this._fieldData.params.allow = this._fieldData.params.allow.split(',');
         }
 
@@ -36,15 +36,15 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
 
         this._renderInput();
         this._handleEvents();
-        
 
-        if(this._fieldData?.params?.readonly === undefined) {
-            this.readonly = false;    
+
+        if (this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;
         }
         else {
             this.readonly = this._fieldData?.params?.readonly;
         }
-        if(this._fieldData?.params?.enabled === undefined) {
+        if (this._fieldData?.params?.enabled === undefined) {
             this.enabled = true;
         }
         else {
@@ -54,48 +54,52 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
     }
 
     /** @private */
-    _clicked(value) {
+    __thisClicked(event, args) {
         if (this._value instanceof File) {
             this._value.download();
         }
-        else if (this._fieldData.params?.download && value.file?.guid) {
-            window.open((window.rpchandler ?? '') + this._fieldData.params.download + '?guid=' + this._value.guid);
+        else if (this._fieldData.params?.download && args.file?.guid) {
+            window.open((window.rpchandler ?? '') + this._fieldData.params.download + '?guid=' + args.file?.guid);
         }
+    }
+
+    __inputFileChanged(event, args) {
+        this._value = this._input.Files();
+        this.Dispatch('Changed', Object.assign(args, { component: this }));
+    }
+
+    __inputInputFileChosen(event, args) {
+        if (args.files) {
+            this._validate(args.files);
+
+            if (this._validated) {
+                this._value = args.files[0];
+                this._showFile();
+            }
+            else {
+                this._value = null;
+                this._showError();
+            }
+            this.Dispatch('Changed', args);
+        }
+    }
+
+    __removeButtonClicked(event, args) {
+        this._value = null;
+        this._clearInput();
+        this.Dispatch('Changed', args);
     }
 
     /** @protected */
     _handleEvents() {
 
-        this.AddHandler('Clicked', (event, args) => this._clicked(args));
-
-        this._input.AddHandler('InputFileChanged', (event, args) => {
-            this._value = this._input.Files();
-            this.Dispatch('Changed', Object.assign(args, {component: this}));
-        });
+        this.AddHandler('Clicked', this.__thisClicked);
+        this._input.AddHandler('InputFileChanged', this.__inputFileChanged, false, this);
 
         if (this._dropAreaEnabled) {
             /* Валидация выбранных файлов, отображение одного файла, вывод ошибок */
-            this._input.AddHandler('InputFileChosen', (event, args) => {
-                if (args.files) {
-                    this._validate(args.files);
-
-                    if (this._validated) {
-                        this._value = args.files[0];
-                        this._showFile();
-                    }
-                    else {
-                        this._value = null;
-                        this._showError();
-                    }
-                    this.Dispatch('Changed', args);
-                }
-            });
-
-            this._removeButton.AddHandler('Clicked', (event, args) => {
-                this._value = null;
-                this._clearInput();
-                this.Dispatch('Changed', args);
-            });
+            this._input.AddHandler('InputFileChosen', this.__inputInputFileChosen, false, this);
+            this._removeButton.AddHandler('Clicked', this.__removeButtonClicked);
         }
     }
 
@@ -268,13 +272,13 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
      * @type {File}
      */
     set value(value) {
-        if(value instanceof File) {
+        if (value instanceof File) {
             this._value = value;
             this._showFile();
         }
-        else if(value?.guid) {
-            Colibri.IO.Request.Get('/file.stream', {storage: value.storage, field: value.field, guid: value.guid}).then((response) => {
-                if(response.status == 200) {
+        else if (value?.guid) {
+            Colibri.IO.Request.Get('/file.stream', { storage: value.storage, field: value.field, guid: value.guid }).then((response) => {
+                if (response.status == 200) {
                     value.data = response.result;
                     this._valueData = value;
                     this._value = Base2File(value.data, value.name, value.mimetype);
@@ -288,7 +292,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
     /**
      * Download the file
      * @type {boolean}
-     */ 
+     */
     set download(value) {
         value = this._convertProperty('String', value);
         this._download = value;
@@ -297,7 +301,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
     /**
      * Download the file
      * @type {boolean}
-     */ 
+     */
     get download() {
         return this._download;
     }
@@ -315,8 +319,8 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
      */
     set allowedExtensions(value) {
         this._allowedExtensions = value;
-        if (this._dropAreaEnabled) { 
-            this._input.extensionsLabel.value = this._extensionsToString(); 
+        if (this._dropAreaEnabled) {
+            this._input.extensionsLabel.value = this._extensionsToString();
         }
     }
 
@@ -369,4 +373,4 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         }
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('File', 'Colibri.UI.Forms.File', '#{ui-fields-file}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler','allow','size'])
+Colibri.UI.Forms.Field.RegisterFieldComponent('File', 'Colibri.UI.Forms.File', '#{ui-fields-file}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'allow', 'size'])

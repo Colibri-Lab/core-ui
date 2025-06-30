@@ -54,44 +54,49 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
         this.RegisterEvent('EditorChanged', false, 'Изменилось значение в редакторе');
     }
 
+    
+    __thisDoubleClicked(event, args) {
+        this.Dispatch('CellDoubleClicked', {cell: this, row: this.parentRow});
+    }
+
+    __thisComponentDisposed(event, args) {
+        this.Dispatch('CellDisposed', {cell: this});
+    }
+
+    __thisParentRowRowStickyChange(event, args) {
+        this.stickyVertically = args.row.sticky;
+    }
+
+    __thisParentRowRowPositionChange(event, args) {
+        if (this.stickyVertically) {
+            this._element.css('top', args.row._positionTop + 'px');
+        }
+    }
+
+    __thisViewerClicked(event, args) {
+        this.grid.Dispatch('CellViewerClicked', Object.assign(args, {cell: this, field: this.columnName, data: this.parentRow.value}));
+        this.Dispatch('CellClicked', {cell: this});
+        this.EditValue();
+    }
+
+    __thisEditorChanged(event, args) {
+        if(this.value == args.value) {
+            return true;
+        }
+
+        const oldValue = this.value;
+        this.value = args.value;
+        this.grid.Dispatch('CellValueChanged', {cell: this, row: this.parentRow, value: event.sender.value, oldValue: oldValue});
+        this.grid.Dispatch('CellEditorChanged', {cell: this, field: this.columnName, data: this.parentRow.value});
+    }
+
     _handleEvents() {
-
-        this.AddHandler('DoubleClicked', (event, args) => {
-            this.Dispatch('CellDoubleClicked', {cell: this, row: this.parentRow});
-        });
-
-        this.AddHandler('ComponentDisposed', (event, args) => {
-            this.Dispatch('CellDisposed', {cell: this});
-        });
-
-
-        this.parentRow.AddHandler('RowStickyChange', (event, args) => {
-            this.stickyVertically = args.row.sticky;
-        });
-
-        this.parentRow.AddHandler('RowPositionChange', (event, args) => {
-            if (this.stickyVertically) {
-                this._element.css('top', args.row._positionTop + 'px');
-            }
-        });
-
-        this.AddHandler('ViewerClicked', (event, args) => {
-            this.grid.Dispatch('CellViewerClicked', Object.assign(args, {cell: this, field: this.columnName, data: this.parentRow.value}));
-            this.Dispatch('CellClicked', {cell: this});
-            this.EditValue();
-        });
-
-        this.AddHandler('EditorChanged', (event, args) => {
-            if(this.value == args.value) {
-                return true;
-            }
-
-            const oldValue = this.value;
-            this.value = args.value;
-            this.grid.Dispatch('CellValueChanged', {cell: this, row: this.parentRow, value: event.sender.value, oldValue: oldValue});
-            this.grid.Dispatch('CellEditorChanged', {cell: this, field: this.columnName, data: this.parentRow.value});
-        });
-
+        this.AddHandler('DoubleClicked', this.__thisDoubleClicked);
+        this.AddHandler('ComponentDisposed', this.__thisComponentDisposed);
+        this.parentRow.AddHandler('RowStickyChange', this.__thisParentRowRowPositionChange, false, this);
+        this.parentRow.AddHandler('RowPositionChange', this.__thisParentRowRowPositionChange, false, this);
+        this.AddHandler('ViewerClicked', this.__thisViewerClicked);
+        this.AddHandler('EditorChanged', this.__thisEditorChanged);
     }
 
     /**
@@ -220,23 +225,27 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
      * @type {Colibri.UI.Grid.Column}
      */
     set parentColumn(value) {
-        this._parentColumn = value;
-        if(this.parentColumn !== null) {
+        if(this._parentColumn && value != this._parentColumn) {
+            this._parentColumn.RemoveHandler('ColumnStickyChangse', this.__parentColumnStickyChangeHandler);
+            this._parentColumn.RemoveHandler('ColumnDisposed', this.__parentColumnDisposedHandler);
+            this._parentColumn.RemoveHandler('ColumnPositionChange', this.__parentColumnPositionChange);
+        }
 
-            this.stickyHorizontally = this.parentColumn.sticky;
-            this.parentColumn.AddHandler('ColumnStickyChange', (event, args) => {
+        this._parentColumn = value;
+        if(this._parentColumn !== null) {
+
+            this.__parentColumnStickyChangeHandler = this.__parentColumnStickyChangeHandler ?? ((event, args) => {
                 this.stickyHorizontally = args.column.sticky;
             });
 
-            this.parentColumn.AddHandler('ColumnDisposed', (event, args) => {
+            this.__parentColumnDisposedHandler = this.__parentColumnDisposedHandler ?? ((event, args) => {
                 const parent = this.parent;
-                this.Dispose();
                 if(parent?.hasContextMenu) {
                     parent?.lastCell && parent.lastCell.CreateContextMenuButton();   
                 }
             });
 
-            this.parentColumn.AddHandler('ColumnPositionChange', (event, args) => {
+            this.__parentColumnPositionChange = this.__parentColumnPositionChange ?? ((event, args) => {
                 if (this.stickyHorizontally) {
                     this.left = args.column._positionLeft;
                     if(args.column.ContainsClass('-last-sticky')) {
@@ -244,6 +253,12 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Pane {
                     }
                 }
             });
+
+            this.stickyHorizontally = this._parentColumn.sticky;
+            this._parentColumn.AddHandler('ColumnStickyChange', this.__parentColumnStickyChangeHandler);
+            this._parentColumn.AddHandler('ColumnDisposed', this.__parentColumnDisposedHandler);
+            this._parentColumn.AddHandler('ColumnPositionChange', this.__parentColumnPositionChange);
+
         }
     }
 

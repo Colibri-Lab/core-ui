@@ -44,35 +44,40 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         this._element.append(Element.fromHtml('<div class="tabs-header-container"><div class="tabs-header"></div><div class="tabs-links"></div></div>'));
         this._element.append(Element.fromHtml('<div class="tabs-container"></div>'));
 
-        this.AddHandler('TabClicked', (event, args) => {
-            let newIndex = args.tab.container.index();
-            this._selectTab(newIndex);
-        });
+        this.AddHandler('TabClicked', this.__thisTabClicked);
+        this.AddHandler('ChildsProcessed', this.__thisChildsProcessed);
+        this.AddHandler('Clicked', this.__thisClicked);
+    }
 
-        this.AddHandler('ChildsProcessed', (event, args) => {
-            const buttons = this.buttonsByIndex;
-            const containers = this.componentsByIndex;
+    __thisClicked(event, args) {
+        const senderComponent = args.domEvent.target.closest('.app-component-button');
+        if(
+            senderComponent && 
+            senderComponent?.getUIComponent().parentContainer === this.header && 
+            senderComponent?.getUIComponent() instanceof Colibri.UI.Button
+        ) {
+            // this.Dispatch('TabClicked', {domEvent: args.domEvent, tab: senderComponent.getUIComponent()});
+            this.Dispatch('TabClicked', {domEvent: args.domEvent, tab: senderComponent.getUIComponent()});
+            args.domEvent.stopPropagation();
+            args.domEvent.preventDefault();
+            return false;
+        }
+    }
 
-            for(let i=0; i<buttons.length; i++) {
-               buttons[i].contentContainer = containers[i] ?? null;
-            }
-            
-            this._selectTab(0);
-        });
+    __thisChildsProcessed(event, args) {
+        const buttons = this.buttonsByIndex;
+        const containers = this.componentsByIndex;
 
-        this.AddHandler('Clicked', (event, args) => {
-            const senderComponent = args.domEvent.target.closest('.app-component-button');
-            if(
-                senderComponent && 
-                senderComponent?.tag('component').parentContainer === this.header && 
-                senderComponent?.tag('component') instanceof Colibri.UI.Button
-            ) {
-                this.Dispatch('TabClicked', {domEvent: args.domEvent, tab: senderComponent.tag('component')});
-                args.domEvent.stopPropagation();
-                args.domEvent.preventDefault();
-                return false;
-            }
-        });
+        for(let i=0; i<buttons.length; i++) {
+            buttons[i].contentContainer = containers[i] ?? null;
+        }
+        
+        this._selectTab(0);
+    }
+
+    __thisTabClicked(event, args) {
+        let newIndex = args.tab.container.index();
+        this._selectTab(newIndex);
     }
 
     /** @protected */
@@ -89,12 +94,14 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         const containers = this.container.querySelectorAll(':scope > .app-ui-component');
 
         buttons.forEach((button) => {
-            const bc = button.tag('component');
+            // const bc = button.getUIComponent();
+            const bc = button.getUIComponent();
             bc.RemoveClass('tab-selected');
         });
 
         containers.forEach((container) => {
-            const cc = container.tag('component');
+            // const cc = container.getUIComponent();
+            const cc = container.getUIComponent();
             cc.RemoveClass('tab-selected');
             cc.shown = false;
             !this._allTabsInDoc && cc.KeepInMind();
@@ -243,7 +250,8 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
      * @readonly
      */
     get selectedButton() {
-        return this.header.querySelector('.tab-selected') ? this.header.querySelector('.tab-selected').tag('component') : null;
+        // return this.header.querySelector('.tab-selected') ? this.header.querySelector('.tab-selected').getUIComponent() : null;
+        return this.header.querySelector('.tab-selected') ? this.header.querySelector('.tab-selected').getUIComponent() : null;
     }
 
     /**

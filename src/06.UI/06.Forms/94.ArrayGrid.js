@@ -38,7 +38,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
     /** @protected */
     _handleEvents() {
         /** Открыть окно с новым объектом */
-        this._addObjectButton.AddHandler('Clicked', (event, args) => this.newObject(event, args));
+        this._addObjectButton.AddHandler('Clicked', this.newObject, false, this);
 
         /** Открыть окно с выбранным объектом */
         this._objectsGrid.AddHandler('SelectionChanged', (event, args) => {
@@ -50,10 +50,10 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         });
 
         /** Добавить строкам таблицы контекстное меню */
-        this._objectsGrid.AddHandler('ContextMenuIconClicked', (event, args) => this.__showContextMenu(event, args));
+        this._objectsGrid.AddHandler('ContextMenuIconClicked', this.__showContextMenu, false, this);
 
         /** Вызвать нужный обработчик контекстного меню */
-        this._objectsGrid.AddHandler('ContextMenuItemClicked', (event, args) => this.__processContextMenuAction(event, args));
+        this._objectsGrid.AddHandler('ContextMenuItemClicked', this.__processContextMenuAction, false, this);
 
     }
 

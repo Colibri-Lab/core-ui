@@ -27,7 +27,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         super(name, container);
 
         this.AddClass('app-ui-grid-container');
-        
+
         this._recalculateTimerCellPositions = null;
 
         this._groups = false;
@@ -87,7 +87,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     get groups() {
         let ret = {};
         this._gridContent.ForEach((name, component) => {
-            if(component instanceof Colibri.UI.Grid.Rows) {
+            if (component instanceof Colibri.UI.Grid.Rows) {
                 ret[name] = component;
             }
         });
@@ -102,7 +102,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         let selected = [];
         if (this.selectionMode === Colibri.UI.Grid.FullRow) {
             Object.forEach(this.groups, (name, group) => {
-                if(group.selected) {
+                if (group.selected) {
                     selected = selected.concat(group.selected);
                 }
             });
@@ -127,7 +127,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      */
     set selected(value) {
 
-        if(value === null) {
+        if (value === null) {
             this.UnselectAllRows();
             return;
         }
@@ -138,12 +138,12 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         if (!cell && !row) {
             return;
         }
-        
+
         let args = {};
         args.cell = cell;
         args.row = row;
 
-        switch(this.selectionMode) {
+        switch (this.selectionMode) {
             case Colibri.UI.Grid.EveryCell:
                 if (cell) {
                     this.DeactivateAllCells();
@@ -178,7 +178,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     get checked() {
         let checked = [];
         this.ForEveryRow((name, row) => {
-            if(row.checked) {
+            if (row.checked) {
                 checked.push(row);
             }
         });
@@ -268,7 +268,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      * @type {Colibri.UI.Cell}
      */
     get activeCell() {
-        if(!this.activeGroup || !this.activeGroup.activeRow || !this.activeGroup.activeRow.activeCell) {
+        if (!this.activeGroup || !this.activeGroup.activeRow || !this.activeGroup.activeRow.activeCell) {
             return null;
         }
         return this.activeGroup.activeRow.activeCell;
@@ -279,7 +279,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      * @returns Colibri.UI.Row
      */
     get activeRow() {
-        if(!this.activeGroup || !this.activeGroup.activeRow) {
+        if (!this.activeGroup || !this.activeGroup.activeRow) {
             return null;
         }
         return this.activeGroup.activeRow;
@@ -292,7 +292,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     get activeGroup() {
         let activeGroup = null;
         Object.forEach(this.groups, (name, group) => {
-            if(group.activeRow) {
+            if (group.activeRow) {
                 activeGroup = group;
                 return false;
             }
@@ -327,7 +327,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             count += rows.rowsCount;
         });
         return count;
-    }    
+    }
 
     get emptyMessage() {
         return this._norows.value;
@@ -358,7 +358,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         let found = null;
         Object.forEach(this.groups, (name, group) => {
             let f = group.Children(key);
-            if(f) {
+            if (f) {
                 found = f;
                 return false;
             }
@@ -431,7 +431,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             group.checkbox.checked = false;
         });
         this.header.checkbox.checked = false;
-        if(this._massActionsMenuObject) {
+        if (this._massActionsMenuObject) {
             this._massActionsMenuObject.Dispose();
             this._massActionsMenuObject = null;
         }
@@ -459,7 +459,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     AddGroup(name, title) {
         const rows = new Colibri.UI.Grid.Rows(name, this._gridContent);
         rows.AddClass('app-ui-grid-rows');
-        if(title) {
+        if (title) {
             rows.title = title;
         }
 
@@ -481,11 +481,11 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
         rows.AddHandler('RowClicked', (event, args) => {
             this.Dispatch('RowClicked', args);
-            this.Dispatch('SelectionChanged', Object.assign(args, {item: this.selected}));
+            this.Dispatch('SelectionChanged', Object.assign(args, { item: this.selected }));
         });
 
         rows.AddHandler('RowSelected', (event, args) => {
-            if(rows.checked.length == 0) {
+            if (rows.checked.length == 0) {
                 rows.checkbox.checked = false;
             }
             this.Dispatch('RowSelected', args);
@@ -511,18 +511,18 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                 rows.columns = this.header.columnsCount;
             });
             this.RecalculateCellPositions();
-            this.Dispatch('RowAdded', {row: args.row});
+            this.Dispatch('RowAdded', { row: args.row });
         });
 
         rows.AddHandler('RowUpdated', (event, args) => {
             this.RecalculateCellPositions();
-            this.Dispatch('RowUpdated', {row: args.row});
+            this.Dispatch('RowUpdated', { row: args.row });
         });
 
 
         return rows;
     }
-    
+
     /**
      * Создает подвал для таблицы
      * @param {string} name название
@@ -545,8 +545,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */ 
-    __processKeydown(event, args) {
+     */
+    __thisKeyDown(event, args) {
 
         const e = args.domEvent;
 
@@ -561,7 +561,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                 direction = 'Y';
                 let activeRow = this.activeRow;
                 let activeGroup = this.activeGroup;
-                if(!activeGroup) {
+                if (!activeGroup) {
                     activeGroup = this.firstGroup;
                 }
                 let lastGroup = this.lastGroup;
@@ -569,9 +569,9 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                 let newActiveRow = null;
 
                 if (activeRow === null) {
-                    if (['ArrowDown', 'ArrowRight'].indexOf(e.code) !==  -1) {
+                    if (['ArrowDown', 'ArrowRight'].indexOf(e.code) !== -1) {
                         newActiveRow = activeGroup.firstRow;
-                    } 
+                    }
                     else if (['ArrowUp', 'ArrowLeft'].indexOf(e.code) !== -1) {
                         newActiveRow = lastGroup.lastRow;
                     }
@@ -592,7 +592,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                                 newActiveRow = activeGroup.prevGroup ? activeGroup.prevGroup.lastRow : this.lastGroup.lastRow;
                             }
                         }
-                        if(newActiveRow) {
+                        if (newActiveRow) {
                             correctionCoefficient = newActiveRow._heightPrevStickyRow;
                         }
                     } else if (e.code === 'Enter') {
@@ -602,7 +602,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                         } else {
                             activeRow.selected = !activeRow.selected;
                         }
-                        this.Dispatch('SelectionChanged', {item: activeRow});
+                        this.Dispatch('SelectionChanged', { item: activeRow });
                     }
                 }
 
@@ -679,7 +679,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                         }
                         activeCell.selected = !activeCell.selected;
                         newActiveCell = activeCell;
-                        this.Dispatch('SelectionChanged', {item: newActiveCell});
+                        this.Dispatch('SelectionChanged', { item: newActiveCell });
                     }
 
                 }
@@ -698,13 +698,13 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                 }
                 newActiveItem.activated = true;
                 this.__customScroll(newActiveItem._element, this.container, correctionCoefficient, direction);
-                this.Dispatch('HighlightedItemChanged', {item: newActiveItem});
+                this.Dispatch('HighlightedItemChanged', { item: newActiveItem });
             }
             e.stopPropagation();
             e.preventDefault();
             return false;
         }
-        else if(e.code === 'Space' && !(e.target.is('input') || e.target.is('textarea'))) {
+        else if (e.code === 'Space' && !(e.target.is('input') || e.target.is('textarea'))) {
             this.selected = null;
             this.activeRow.checked = !this.activeRow.checked;
             this.Dispatch('CheckChanged');
@@ -712,30 +712,32 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             e.preventDefault();
             return false;
         }
-        
+
     }
 
     /**
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */ 
+     */
     __clickedProcessing(event, args) {
-        const   target = args.domEvent.target,
-                cell = target.closest('.app-ui-row-cell')?.tag('component');
+        const target = args.domEvent.target;
+        // const cell = target.closest('.app-ui-row-cell')?.getUIComponent();
+        const cell = target.closest('.app-ui-row-cell')?.getUIComponent();
 
-        if(!cell) {
+        if (!cell) {
             return false;
         }
 
-        const row = target.closest('.app-ui-row').tag('component');
+        // const row = target.closest('.app-ui-row').getUIComponent();
+        const row = target.closest('.app-ui-row').getUIComponent;
 
         args.cell = cell;
         args.row = row;
 
         this._element.focus();
 
-        switch(this.selectionMode) {
+        switch (this.selectionMode) {
             case Colibri.UI.Grid.EveryCell:
                 this.DeactivateAllCells();
                 if (!this.multiple) {
@@ -769,42 +771,43 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      */
     RecalculateCellPositions() {
 
-        if (this._recalculateTimerCellPositions !== null) {
-            clearTimeout(this._recalculateTimerCellPositions);
-        }
+        // if (this._recalculateTimerCellPositions !== null) {
+        //     clearTimeout(this._recalculateTimerCellPositions);
+        // }
 
-        this._recalculateTimerCellPositions = setTimeout(() => {
+        // this._recalculateTimerCellPositions = setTimeout(() => {
 
-            let tempHeight = this.header.height;
-            Object.forEach(this.groups, (name, group) => {
-                group.ForEach((nameRow, row) => {
-                    row._heightPrevStickyRow = tempHeight;
-                    if (row.sticky) {
-                        row._positionTop = tempHeight;
-                        tempHeight += row.height;
-                        row.Dispatch('RowPositionChange', {row: row});
-                    }
-                });
-            });
-
-            let tempWidth = 0;
-            let tempWidthPrevStickyCell = 0;
-            let col = null;
-            Object.forEach(this.header.FindAllColumns(), (nameColumn, column) => {
-                column._widthPrevStickyCell = tempWidthPrevStickyCell;
-                if (column.sticky) {
-                    col = column;
-                    tempWidthPrevStickyCell += parseFloat(column._element.css('width'));
-                    column.left = tempWidth;
-                    column._positionLeft = tempWidth;
-                    tempWidth += parseFloat(column._element.css('width'));
-                    column.Dispatch('ColumnPositionChange', {column: column});
+        let tempHeight = this.header.height;
+        Object.forEach(this.groups, (name, group) => {
+            group.ForEach((nameRow, row) => {
+                row._heightPrevStickyRow = tempHeight;
+                if (row.sticky) {
+                    row._positionTop = tempHeight;
+                    tempHeight += row.height;
+                    row.Dispatch('RowPositionChange', { row: row });
                 }
             });
-            col && col.AddClass('-last-sticky')
-            col && col.Dispatch('ColumnPositionChange', {column: col});
+        });
 
-        }, 200);
+        let tempWidth = 0;
+        let tempWidthPrevStickyCell = 0;
+        let col = null;
+        Object.forEach(this.header.FindAllColumns(), (nameColumn, column) => {
+
+            column._widthPrevStickyCell = tempWidthPrevStickyCell;
+            if (column.sticky) {
+                col = column;
+                tempWidthPrevStickyCell += parseFloat(column._element.css('width'));
+                column.left = tempWidth;
+                column._positionLeft = tempWidth;
+                tempWidth += parseFloat(column._element.css('width'));
+                column.Dispatch('ColumnPositionChange', { column: column });
+            }
+        });
+        col && col.AddClass('-last-sticky')
+        col && col.Dispatch('ColumnPositionChange', { column: col });
+
+        // }, 200);
 
 
     }
@@ -816,7 +819,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      * @param {number} correctionCoefficient коэфициент корректировки
      * @param {bool} direction направление
      */
-    __customScroll(element, container, correctionCoefficient, direction){
+    __customScroll(element, container, correctionCoefficient, direction) {
 
         if (!!!correctionCoefficient) {
             correctionCoefficient = 0;
@@ -869,7 +872,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     _removeContextMenuButton() {
         // Do nothing
     }
-    
+
     /**
      * Удаляет строки из грида, все
      * @param {bool} removeGroups удалить пустые группы тоже
@@ -877,7 +880,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     ClearAllRows(removeGroups = true) {
         Object.forEach(this.groups, (name, group) => {
             group.Clear();
-            if(removeGroups) {
+            if (removeGroups) {
                 group.Hide();
             }
         });
@@ -885,7 +888,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this._norows.shown = true;
         this.UnselectAllRows();
         this.UncheckAllRows();
-        
+
     }
 
     /**
@@ -905,15 +908,15 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         let cancel = false;
         Object.forEach(this.groups, (name, group, igroup) => {
             group.ForEach((rname, row, irow) => {
-                if(row instanceof Colibri.UI.Grid.Row) {
-                    if(callback(rname, row, irow) === false) {
+                if (row instanceof Colibri.UI.Grid.Row) {
+                    if (callback(rname, row, irow) === false) {
                         cancel = true;
                         return false;
                     }
                 }
                 return true;
             });
-            if(cancel) {
+            if (cancel) {
                 return false;
             }
             return true;
@@ -921,15 +924,15 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     DeleteAllExcept(found) {
-        
+
         let collected = [];
         this.ForEveryRow((name, row) => {
-            if(found.indexOf(name) === -1) {
+            if (found.indexOf(name) === -1) {
                 collected.push(row);
             }
         });
 
-        for(const row of collected) {
+        for (const row of collected) {
             row.Dispose();
         }
 
@@ -975,23 +978,23 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     _setSortAndOrder(column) {
-        if(!column.sortable) {
+        if (!column.sortable) {
             return;
         }
-        
+
         const check = [this._sortColumn?.name, this._sortOrder];
-        if(this._sortColumn && this._sortColumn === column) {
-            if(this._sortOrder === null) {
+        if (this._sortColumn && this._sortColumn === column) {
+            if (this._sortOrder === null) {
                 this._sortOrder = Colibri.UI.Grid.SortAsc;
             }
-            else if(this._sortOrder === Colibri.UI.Grid.SortAsc) {
+            else if (this._sortOrder === Colibri.UI.Grid.SortAsc) {
                 this._sortOrder = Colibri.UI.Grid.SortDesc;
             }
-            else if(this._sortOrder === Colibri.UI.Grid.SortDesc) {
+            else if (this._sortOrder === Colibri.UI.Grid.SortDesc) {
                 this._sortOrder = null;
             }
         }
-        else if(!this._sortColumn || this._sortColumn !== column) {
+        else if (!this._sortColumn || this._sortColumn !== column) {
             // убираем со старого
             this._sortColumn && (this._sortColumn.sortState = null);
 
@@ -1001,8 +1004,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
         this._sortColumn.sortState = this._sortOrder;
 
-        if(JSON.stringify(check) !== JSON.stringify([this._sortColumn?.name, this._sortOrder])) {
-            this.Dispatch('SortChanged', {sortColumn: this._sortColumn, order: this._sortOrder});
+        if (JSON.stringify(check) !== JSON.stringify([this._sortColumn?.name, this._sortOrder])) {
+            this.Dispatch('SortChanged', { sortColumn: this._sortColumn, order: this._sortOrder });
         }
 
     }
@@ -1010,8 +1013,95 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     Sort(columnName, order) {
         this._sortColumn = this.header.FindColumn(columnName);
         this._sortOrder = order;
-        this.Dispatch('SortChanged', {sortColumn: this._sortColumn, order: this._sortOrder});
+        this.Dispatch('SortChanged', { sortColumn: this._sortColumn, order: this._sortOrder });
     }
+
+    __thisSelectionChanged(event, args) {
+        if (args.item) {
+            this.ForEveryRow((name, row) => {
+                if (row.ContainsClass('-editing') && row != args.item) {
+                    row.EndEdit();
+                }
+            })
+        }
+    }
+
+    __thisRowSelected(event, args) {
+        if (this.checked.length == 0) {
+            this.header.checkbox.checked = false;
+        }
+        this.Dispatch('CheckChanged');
+    }
+
+    __columnColumnMoved(event, args) {
+        this.ForEveryRow((name, row) => {
+            const cell = row.Children(row.name + '-' + args.column.name);
+            if (args.direction === 'up') {
+                cell.MoveUp();
+            } else if (args.direction === 'down') {
+                cell.MoveDown();
+            }
+        });
+    }
+
+    __columnColumnAdded(event, args) {
+        Object.forEach(this.groups, (name, rows) => {
+            rows.columns = this.header.columnsCount;
+        });
+        this.RecalculateCellPositions();
+    }
+
+    __headerColumnDisposed(event, args) {
+        Object.forEach(this.groups, (name, rows) => {
+            rows.columns = this.header.columnsCount;
+        });
+        this.Dispatch('ColumnDisposed', args);
+    }
+
+    __headerColumnStickyChange(event, args) {
+        this.Dispatch('ColumnStickyChange', args);
+    }
+
+    __headerColumnClicked(event, args) {
+        this._setSortAndOrder(args.column);
+        this.Dispatch('ColumnClicked', args);
+    }
+
+    __thisColumnEditorChanged(event, args) {
+        const rowsName = this.rows.name;
+        this.ForEveryRow((name, component) => {
+            if (component instanceof Colibri.UI.Grid.Cell) {
+                component.editor = this.header.FindColumn(name).editor;
+            }
+        });
+    }
+
+    __thisColumnViewerChanged(event, args) {
+        const rowsName = this.rows.name;
+        this.ForEveryRow((name, component) => {
+            if (component instanceof Colibri.UI.Grid.Cell) {
+                component.viewer = this.header.FindColumn(name).viewer;
+            }
+        });
+    }
+
+    __thisVerticalAlignChanged(event, args) {
+        const rowsName = this.rows.name;
+        this.ForEveryRow((name, component) => {
+            if (component instanceof Colibri.UI.Grid.Cell) {
+                component.align = this.header.FindColumn(name).align;
+            }
+        });
+    }
+
+    __thisColumnVisibilityChanged(event, args) {
+        this.RecalculateCellVisibility(args.column);
+    }
+
+    __thisRowSelected(event, args) {
+        this._massActionsMenuObject && (this._massActionsMenuObject.selectedItems = this.checked);
+    }
+
 
     /**
      * Регистрация обработчиков событий
@@ -1019,66 +1109,22 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     _handleEvents() {
 
         this.AddHandler('Clicked', this.__clickedProcessing);
+        this.AddHandler('SelectionChanged', this.__thisSelectionChanged);
+        this.AddHandler('RowSelected', this.__thisRowSelected);
+        this.AddHandler('KeyDown', this.__thisKeyDown);
+        this.AddHandler('RowSelected', this.__thisRowSelected);
 
-        this.AddHandler('SelectionChanged', (event, args) => {
-            if(args.item) {
-                this.ForEveryRow((name, row) => {
-                    if(row.ContainsClass('-editing') && row != args.item) {
-                        row.EndEdit();
-                    }
-                })
-            }
-        });
+        this.header.ForEach((name, columns) => columns.AddHandler('ColumnMoved', this.__columnColumnMoved, false, this));
+        this.header.ForEach((name, columns) => columns.AddHandler('ColumnAdded', this.__columnColumnAdded, false, this));
 
-        this.AddHandler('RowSelected', (event, args) => {
-            if(this.checked.length == 0) {
-                this.header.checkbox.checked = false;
-            }
-            this.Dispatch('CheckChanged');
-        });
-
-        this.AddHandler('KeyDown', this.__processKeydown);
-
-        this.header.ForEach((name, columns) => columns.AddHandler('ColumnMoved', (event, args) => {
-            this.ForEveryRow((name, row) => {
-                const cell = row.Children(row.name + '-' + args.column.name);
-                if(args.direction === 'up') {
-                    cell.MoveUp();
-                } else if(args.direction === 'down') {
-                    cell.MoveDown();
-                }
-            });
-        })); 
-
-
-        this.header.ForEach((name, columns) => columns.AddHandler('ColumnAdded', (event, args) => {
-            Object.forEach(this.groups, (name, rows) => {
-                rows.columns = this.header.columnsCount;
-            });
-            this.RecalculateCellPositions();
-        }));
-
-        this.header.AddHandler('ColumnDisposed', (event, args) => {
-            Object.forEach(this.groups, (name, rows) => {
-                rows.columns = this.header.columnsCount;
-            });
-            this.Dispatch('ColumnDisposed', args);
-        });
-
-        this.header.AddHandler('ColumnStickyChange', (event, args) => {
-            this.Dispatch('ColumnStickyChange', args);
-        });
-
-        this.header.AddHandler('ColumnClicked', (event, args) => {
-            this._setSortAndOrder(args.column);
-            this.Dispatch('ColumnClicked', args);
-        });
+        this.header.AddHandler('ColumnDisposed', this.__headerColumnDisposed, false, this);
+        this.header.AddHandler('ColumnStickyChange', this.__headerColumnStickyChange, false, this);
+        this.header.AddHandler('ColumnClicked', this.__headerColumnClicked, false, this);
 
         this._scrolling = -1;
         this._scrollY = -1;
-
         this.__scrollHandler = (event) => {
-            if(event.target.scrollTop > this._scrollY) {                    
+            if (event.target.scrollTop > this._scrollY) {
                 if (this._gridContent._element.getBoundingClientRect().bottom < (event.target.getBoundingClientRect().bottom + 10)) {
                     clearTimeout(this._scrolling);
                     this._scrolling = setTimeout(() => {
@@ -1091,36 +1137,13 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
         this._element.addEventListener('scroll', this.__scrollHandler);
 
-        this.AddHandler('ColumnEditorChanged', (event, args) => {
-            const rowsName = this.rows.name;
-            this.ForEveryRow((name, component) => {
-                if(component instanceof Colibri.UI.Grid.Cell) {
-                    component.editor = this.header.FindColumn(name).editor;
-                }
-            });
-        });
+        this.AddHandler('ColumnEditorChanged', this.__thisColumnEditorChanged);
 
-        this.AddHandler('ColumnViewerChanged', (event, args) => {
-            const rowsName = this.rows.name;
-            this.ForEveryRow((name, component) => {
-                if(component instanceof Colibri.UI.Grid.Cell) {
-                    component.viewer = this.header.FindColumn(name).viewer;
-                }
-            });
-        });
+        this.AddHandler('ColumnViewerChanged', this.__thisColumnViewerChanged);
 
-        this.AddHandler('VerticalAlignChanged', (event, args) => {
-            const rowsName = this.rows.name;
-            this.ForEveryRow((name, component) => {
-                if(component instanceof Colibri.UI.Grid.Cell) {
-                    component.align = this.header.FindColumn(name).align;
-                }
-            });
-        });
+        this.AddHandler('VerticalAlignChanged', this.__thisVerticalAlignChanged);
 
-        this.AddHandler('ColumnVisibilityChanged', (event, args) => {
-            this.RecalculateCellVisibility(args.column);
-        });
+        this.AddHandler('ColumnVisibilityChanged', this.__thisColumnVisibilityChanged);
 
     }
 
@@ -1151,9 +1174,9 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     set massActionsMenu(value) {
         value = this._convertProperty('Array', value);
         this._massActionsMenu = value;
-        if (!this._massActionsMenu) { 
-            this._massActionsMenuObject?.Dispose(); 
-            this._massActionsMenuObject = null; 
+        if (!this._massActionsMenu) {
+            this._massActionsMenuObject?.Dispose();
+            this._massActionsMenuObject = null;
         }
     }
 
@@ -1165,11 +1188,12 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         return this._massActionsMenuClass;
     }
     set massActionsMenuClass(value) {
-        if(value instanceof String) {
+        if (value instanceof String) {
             value = eval(value);
         }
         this._massActionsMenuClass = value;
     }
+
 
     /**
      * Показать меню массовых операций
@@ -1178,26 +1202,18 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     ShowMassActionsMenu(container) {
         if (this._massActionsMenuClass) {
             if (!this._massActionsMenuObject) {
-                const cl = this._massActionsMenuClass; 
-                let actionsMenu = new cl(this.name + '-mass-actions-menu', container || document.body);
-                actionsMenu.parent = this;
-    
-                this.AddHandler('RowSelected', (event, args) => {
-                    actionsMenu.selectedItems = this.checked;
+                const cl = this._massActionsMenuClass;
+                this._massActionsMenuObject = new cl(this.name + '-mass-actions-menu', container || document.body);
+                this._massActionsMenuObject.parent = this;
+                this._massActionsMenuObject.AddHandler('ActionClicked', (event, args) => {
+                    event.sender.parent.Dispatch('MassActionsMenuActionClicked', Object.assign({ items: event.sender.parent.checked }, args));
                 });
-    
-                actionsMenu.AddHandler('ActionClicked', (event, args) => {
-                    this.Dispatch('MassActionsMenuActionClicked', Object.assign({items: this.checked}, args));
-                });
-    
-                this._massActionsMenuObject = actionsMenu;
-                    
             }
 
             this._massActionsMenuObject.actions = this._massActionsMenu;
             this._massActionsMenuObject.selectedItems = this.checked;
             this._massActionsMenuObject.shown = true;
-            this._massActionsMenuObject.styles = {'max-width': container.container.bounds().outerWidth + 'px'};
+            this._massActionsMenuObject.styles = { 'max-width': container.container.bounds().outerWidth + 'px' };
 
         }
     }
@@ -1205,7 +1221,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     RecalculateCellVisibility(column) {
         this.ForEveryRow((name, row) => {
             row.ForEach((name, cell) => {
-                if(cell.parentColumn) {
+                if (cell.parentColumn) {
                     cell.shown = cell.parentColumn.shown;
                 }
             });
@@ -1248,11 +1264,11 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     set value(value) {
 
-        if(!value) {
+        if (!value) {
             value = [];
         }
 
-        if(Object.isObject(value)) {
+        if (Object.isObject(value)) {
             value = Object.values(value);
         }
 

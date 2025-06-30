@@ -63,11 +63,13 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         this._renderValue();
 
         this.handleVisibilityChange = true;
-        this.AddHandler('VisibilityChanged', (event, args) => {
-            this._input.toolTip = this._input.isValueExceeded ? this._input.value : '';
-        });
+        this.AddHandler('VisibilityChanged', this.__thisVisibilityChanged);
 
         this._handleEvents();
+    }
+
+    __thisVisibilityChanged(event, args) {
+        this._input.toolTip = this._input.isValueExceeded ? this._input.value : '';
     }
 
 
@@ -107,8 +109,8 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
 
         this._input.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
 
-        this._input.AddHandler('Filled', (event, args) => this.__Filled(event, args));
-        this._input.AddHandler('Cleared', (event, args) => this.__Cleared(event, args));
+        this._input.AddHandler('Filled', this.__Filled, false, this);
+        this._input.AddHandler('Cleared', this.__Cleared, false, this);
 
         this._arrow.addEventListener('click', (e) => {
             if(!this.readonly) {

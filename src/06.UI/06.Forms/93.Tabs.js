@@ -15,25 +15,15 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         this._tabs.shown = true;
         this._tabs.allTabsInDoc = true;
 
-        this._tabs.AddHandler('SelectionChanged', (event, args) => {
-            // ! нужно видимо убрать событие TabChanged
-            // this.Dispatch('TabChanged', args);
-            this.Dispatch('Changed', args);
-        });
-
-        this._tabs.AddHandler('TabClicked', (event, args) => this.Dispatch('TabClicked', args));
-
+        this._tabs.AddHandler('SelectionChanged', this.__thisSelectionChanged, false, this);
+        this._tabs.AddHandler('TabClicked', this.__thisTabClicked, false, this);
 
         this._renderFields();
         this._hideAndShow();
 
         this._tabs.selectedIndex = 0;
 
-        this.AddHandler('Changed', (event, args) => {
-            if(!this.root) {
-                this._hideAndShow();
-            }
-        });
+        this.AddHandler('Changed', this.__thisChanged);
 
         if(this._fieldData.className) {
             this.AddClass(this._fieldData.className);
@@ -52,6 +42,22 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
             this.enabled = this._fieldData.params.enabled;
         }
 
+    }
+
+    __thisSelectionChanged(event, args) {
+        // ! нужно видимо убрать событие TabChanged
+        // this.Dispatch('TabChanged', args);
+        this.Dispatch('Changed', args);
+    }
+
+    __thisTabClicked(event, args) {
+        this.Dispatch('TabClicked', args);
+    }
+
+    __thisChanged(event, args) {
+        if(!this.root) {
+            this._hideAndShow();
+        }
     }
 
     _renderField(name, fieldData, value, shown = true) {

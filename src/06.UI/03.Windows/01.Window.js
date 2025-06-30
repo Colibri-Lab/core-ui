@@ -60,7 +60,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         this.Children('closebutton', new Colibri.UI.Button('closebutton', closeButtonContainer));
         this.Children('closebutton').AddClass('s-close');
         this.Children('closebutton').shown = this._closable;
-        this.Children('closebutton').AddHandler('Clicked', (event, args) => this.__CloseClicked(event, args));
+        this.Children('closebutton').AddHandler('Clicked', this.__CloseClicked, false, this);
 
         const closeIcon = new Colibri.UI.Icon('close-icon', this.Children('closebutton'));
         closeIcon.iconSVG = 'Colibri.UI.ClearIcon';
@@ -69,11 +69,11 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         this.Children('minimizebutton', new Colibri.UI.Button('minimizebutton', minimizeButtonContainer));
         this.Children('minimizebutton').AddClass('s-minimize');
         this.Children('minimizebutton').shown = this._minimizable;
-        this.Children('minimizebutton').AddHandler('Clicked', (event, args) => this.__MinimizeClicked(event, args));
+        this.Children('minimizebutton').AddHandler('Clicked', this.__MinimizeClicked, false, this);
 
-        this.AddHandler('MouseUp', (event, args) => this.__MouseUp(event, args));
-        this.AddHandler('MouseDown', (event, args) => this.__MouseDown(event, args));
-        this.AddHandler('KeyDown', (event, args) => this.__KeyDown(event, args));
+        this.AddHandler('MouseUp', this.__MouseUp);
+        this.AddHandler('MouseDown', this.__MouseDown);
+        this.AddHandler('KeyDown', this.__KeyDown);
 
         this.Dispatch('WindowContentRendered');
 

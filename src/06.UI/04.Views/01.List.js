@@ -49,8 +49,8 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
         this._element.addEventListener('scroll', this.__scrollHandler);
 
-        this.AddHandler('ReceiveFocus', (event, args) => this.AddClass('-focused'));
-        this.AddHandler('LoosedFocus', (event, args) => this.RemoveClass('-focused'));
+        this.AddHandler('ReceiveFocus', (event, args) => event.sender.AddClass('-focused'));
+        this.AddHandler('LoosedFocus', (event, args) => event.sender.RemoveClass('-focused'));
 
     }
 
@@ -494,7 +494,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
             this.AddClass('-has-search');
             this._searchBox = new Colibri.UI.List.SearchBox(this.name + '-searchbox', this);
             this._searchBox.shown = true;
-            this._searchBox.AddHandler('Changed', (event, args) => this.__searchBoxChanged(event, args));
+            this._searchBox.AddHandler('Changed', this.__searchBoxChanged, false, this);
         } else if(this._searchBox) {
             this.RemoveClass('-has-search');
             this._searchBox.Dispose();
@@ -731,8 +731,8 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
     /** @protected */
     _handlerEvents() {
 
-        this.AddHandler('ContextMenuIconClicked', (event, args) => this.parent.Dispatch('ContextMenuIconClicked', Object.assign({item: args.item}, args)));
-        this.AddHandler('ContextMenuItemClicked', (event, args) => this.parent.Dispatch('ContextMenuItemClicked', Object.assign({item: args.item}, args)));
+        this.AddHandler('ContextMenuIconClicked', (event, args) => event.sender.parent.Dispatch('ContextMenuIconClicked', Object.assign({item: args.item}, args)));
+        this.AddHandler('ContextMenuItemClicked', (event, args) => event.sender.parent.Dispatch('ContextMenuItemClicked', Object.assign({item: args.item}, args)));
 
         this.AddHandler('Clicked', (sender, args) => {
             if (args.domEvent.target.tagName == 'SPAN' && args.domEvent.target.parentElement == this._element) {
@@ -1046,13 +1046,13 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
 
         this.AddClass('app-component-list-item');
 
-        this.AddHandler('Clicked', (event, args) => this.__ItemSelected(event, args));
-        this.AddHandler('DoubleClicked', (event, args) => this.__ItemDblSelected(event, args));
-        this.AddHandler(['MouseDown', 'TouchStarted'], (event, args) => this.__ItemMouseDown(event, args));
+        this.AddHandler('Clicked', this.__ItemSelected);
+        this.AddHandler('DoubleClicked', this.__ItemDblSelected);
+        this.AddHandler(['MouseDown', 'TouchStarted'], this.__ItemMouseDown);
         this.AddHandler(['MouseUp', 'TouchEnded'], (event, args) => this.list?.Dispatch('ItemMouseUp', args));
 
-        this.AddHandler('ContextMenuIconClicked', (event, args) => this.group.Dispatch('ContextMenuIconClicked', Object.assign({item: this}, args)));
-        this.AddHandler('ContextMenuItemClicked', (event, args) => this.group.Dispatch('ContextMenuItemClicked', Object.assign({item: this}, args)));
+        this.AddHandler('ContextMenuIconClicked', (event, args) => event.sender.group.Dispatch('ContextMenuIconClicked', Object.assign({item: event.sender}, args)));
+        this.AddHandler('ContextMenuItemClicked', (event, args) => event.sender.group.Dispatch('ContextMenuItemClicked', Object.assign({item: event.sender}, args)));
 
     }
 
@@ -1142,24 +1142,24 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
                 name = Lang.Translate(name);
             }
             name = (name + '').replaceAll('"', '');
-            let content = this.Children(name);
-            if(!content) {
+            this._content = this.Children(name);
+            if(!this._content) {
                 let comp = typeof(this.list.rendererComponent) === 'string' ? this.list.rendererComponent : this.list.rendererComponent(this._itemData, this);
                 if(!(comp instanceof Colibri.UI.Component)) {
                     comp = eval(comp);
                 }
-                content = new comp(name, this);
-                content.shown = true;
-                content.parent = this;
+                this._content = new comp(name, this);
+                this._content.shown = true;
+                this._content.parent = this;
                 delete attrs.name;
                 Object.forEach(attrs, (key, value) => {
-                    content[key] = value;
+                    this._content[key] = value;
                 });
             }
             if(attrs?.render) {
-                content[attrs?.render] = this._itemData;
+                this._content[attrs?.render] = this._itemData;
             } else {
-                content.value = this._itemData;
+                this._content.value = this._itemData;
             }
             if(this.hasContextMenu) {
                 this._removeContextMenuButton();
@@ -1230,6 +1230,14 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
      */
     get group() {
         return this.parent?.parent ?? null;
+    }
+
+    Dispose() {
+        this._content && this._content.Dispose();
+        if(this.hasContextMenu) {
+            this._removeContextMenuButton();
+        }
+        super.Dispose();
     }
 
 }

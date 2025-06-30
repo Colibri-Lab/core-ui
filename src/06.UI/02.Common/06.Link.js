@@ -45,7 +45,7 @@ Colibri.UI.Link = class extends Colibri.UI.Component {
         this._navigate = value;
         this._element.attr('href', '#' + Date.Mc());
         this.AddHandler('Clicked', (event, args) => {
-            App.Router.Navigate(this._navigate?.url ?? '/', this._navigate?.options ?? {});
+            App.Router.Navigate(event.sender.navigate?.url ?? '/', event.sender.navigate?.options ?? {});
             args.domEvent.stopPropagation();
             args.domEvent.preventDefault();
             return false;
@@ -126,8 +126,8 @@ Colibri.UI.Link = class extends Colibri.UI.Component {
     set customMenu(value) {
         this._customMenu = value;
         if(value) {
-            this.AddHandler('ContextMenu', (event, args) => this.__thisMouseDown(event, args));
-            this.AddHandler('ContextMenuItemClicked', (event, args) => this.__thisContextMenuItemClicked(event, args));
+            this.AddHandler('ContextMenu', this.__thisMouseDown);
+            this.AddHandler('ContextMenuItemClicked', this.__thisContextMenuItemClicked);
         }
     }
 

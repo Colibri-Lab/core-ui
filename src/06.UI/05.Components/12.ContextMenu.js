@@ -32,16 +32,19 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
         this._orientation = orientation;
         this._point = point;
 
-        this.AddHandler(['VisibilityChanged', 'Resized'], (event, args) => {
-            this._checkPosition();
-        });
-
-        this.AddHandler('ShadowClicked', (event, args) => {
-            this.Hide();
-            this.Dispatch('Clicked', {menuData: null, menu: null});
-        });
+        this.AddHandler(['VisibilityChanged', 'Resized'], this.__thisResized);
+        this.AddHandler('ShadowClicked', this.__thisShadowClicked);
 
         this.value = items;
+    }
+
+    __thisResized(event, args) {
+        this._checkPosition();
+    }
+
+    __thisShadowClicked(event, args) {
+        this.Hide();
+        this.Dispatch('Clicked', {menuData: null, menu: null});
     }
 
     /**

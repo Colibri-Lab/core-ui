@@ -188,18 +188,23 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
 
     /** @protected */
     _handleEvents() {
-        this._getCloseButton().AddHandler('Clicked', (event, args) => this.__close(event, args));
+        this._getCloseButton().AddHandler('Clicked', this.__close, false, this);
 
         this._element.querySelector('.modeless-window-header-container').addEventListener('mousedown', this.__dragStartHandler);
         this._container.addEventListener('mousemove', this.__dragMoveHandler);
         document.addEventListener('mouseup', this.__dragStopHandler);
 
-        this.AddHandler('Resize', (event, args) => {
-            this._toggleBodyScroll(false);
-            this._updateStyleVariables();
-        });
+        this.AddHandler('Resize', this.__thisResize);
+        this.AddHandler('Resized', this.__thisResized);
+    }
 
-        this.AddHandler('Resized', (event, args) => { this._toggleBodyScroll(true); });
+    __thisResized(event, args) { 
+        this._toggleBodyScroll(true);
+    }
+
+    __thisResize(event, args) {
+        this._toggleBodyScroll(false);
+        this._updateStyleVariables();
     }
 
     /**

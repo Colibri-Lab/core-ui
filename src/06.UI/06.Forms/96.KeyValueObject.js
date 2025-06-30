@@ -56,8 +56,8 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
         column2.editor = this._fieldData?.params?.valueEditor || Colibri.UI.TextEditor;
         column2.value = this._fieldData?.params?.valueTitle || '#{ui-fields-keyvalueobject-value}';
 
-        this._grid.AddHandler('ContextMenuIconClicked', (event, args) => this.__gridContextMenuIconClicked(event, args));
-        this._grid.AddHandler('ContextMenuItemClicked', (event, args) => this.__gridContextMenuItemClicked(event, args));
+        this._grid.AddHandler('ContextMenuIconClicked', this.__gridContextMenuIconClicked, false, this);
+        this._grid.AddHandler('ContextMenuItemClicked', this.__gridContextMenuItemClicked, false, this);
         this._grid.AddHandler('CellEditorChanged', (event, args) => this.Dispatch('Changed', {component: this}));
         this._link.AddHandler('Clicked', (event, args) => this._grid.rows.Add('row' + Date.Mc(), {key: 'new-key-' + (this._grid.rows.children - 1), value: ''}));
 

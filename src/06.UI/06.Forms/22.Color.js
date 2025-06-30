@@ -42,7 +42,7 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
 
         this.value = this._fieldData?.default ?? '';
 
-        this._button.AddHandler('Clicked', (event, args) => this.__buttonClicked(event, args));
+        this._button.AddHandler('Clicked', this.__buttonClicked, false, this);
 
         this._input.AddHandler('Changed', (event, args) => {
             this._color.styles = {backgroundColor: this._input.value};

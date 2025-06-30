@@ -84,7 +84,8 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
      * @param {*} args event arguments
      */ 
     __dragStartFromSources(event, args) {
-        this._current = args.domEvent.target.closest('[data-object-name][draggable="true"]').tag('component');
+        //this._current = args.domEvent.target.closest('[data-object-name][draggable="true"]').getUIComponent();
+        this._current = args.domEvent.target.closest('[data-object-name][draggable="true"]').getUIComponent();
         this._current.styles = {overflow: 'hidden'};
     }
 
@@ -120,7 +121,8 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
             return false;
         }
 
-        const dropTarget = dropElement.tag('component');
+        //const dropTarget = dropElement.getUIComponent();
+        const dropTarget = dropElement.getUIComponent();
         if(this._current == dropTarget) {
             return false;
         }
@@ -158,7 +160,8 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
             return false;
         }
 
-        const dropTarget = dropElement.tag('component');
+        // const dropTarget = dropElement.getUIComponent();
+        const dropTarget = dropElement.getUIComponent();
         dropTarget.RemoveClass('app-drop-target-component');
         event.sender.RemoveClass('app-drop-component');
 
@@ -186,7 +189,8 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
             return false;
         }
 
-        const dropTarget = dropElement.tag('component');
+        // const dropTarget = dropElement.getUIComponent();
+        const dropTarget = dropElement.getUIComponent();
         args.domEvent.preventDefault();
 
         this.Dispatch('DragDropComplete', {dragged: this._current, droppedTo: dropTarget, droppedToElement: target, domEvent: args.domEvent});

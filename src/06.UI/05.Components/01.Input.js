@@ -128,17 +128,20 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
             this.Dispatch('LoosedFocus', { value: this.value, domEvent: e });
         });
 
-        this.AddHandler('LoosedFocus', (event, args) => {
-            if(this._popup) {
-                this._popup.Hide();
-                this._popup.Dispose();
-                this._popup = null;
-            }
-        });
-        this.AddHandler('ReceiveFocus', (event, args) => {
-            this._showSuggestions();
-        });
+        this.AddHandler('LoosedFocus', this.__thisLoosedFocus);
+        this.AddHandler('ReceiveFocus', this.__thisReceiveFocus);
 
+    }
+
+    __thisLoosedFocus(event, args) {
+        if(this._popup) {
+            this._popup.Hide();
+            this._popup.Dispose();
+            this._popup = null;
+        }
+    }
+    __thisReceiveFocus(event, args) {
+        this._showSuggestions();
     }
 
     /** @protected */

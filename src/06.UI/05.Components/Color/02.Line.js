@@ -23,12 +23,12 @@ Colibri.UI.Color.Line = class extends Colibri.UI.Component {
         this._pointer = new Colibri.UI.Pane(this.name + '_pointer', this);
         this._pointer.AddClass('app-color-line-pointer-component');
         this._pointer.shown = true;
-
-        this.AddHandler('Clicked', (event, args) => this.__lineClicked(event, args));
-        this.handleResize = true;
-        this.AddHandler('Resized', (event, args) => this._renderGradient());
         this.tabIndex = 0;
-        this.AddHandler('KeyDown', (event, args) => this.__keyDown(event, args));
+
+        this.handleResize = true;
+        this.AddHandler('Resized', this._renderGradient);
+        this.AddHandler('Clicked', this.__lineClicked);
+        this.AddHandler('KeyDown', this.__keyDown);
 
         new Colibri.UI.Drag(this._pointer.container, this.container, (left, top) => {
             this._pointer.styles = {left: left + 'px'};

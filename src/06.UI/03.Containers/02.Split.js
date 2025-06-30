@@ -36,7 +36,7 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
         this.AddClass('app-component-split-' + this._orientation);
 
         this.handleResize = true;
-        this.AddHandler('Resize', (event, args) => this.__thisResize(event, args));
+        this.AddHandler('Resize', this.__thisResize);
         Colibri.Common.Delay(100).then(() => this.__thisResize(null, null));
         
         this.__startResize = (e) => {

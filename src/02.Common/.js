@@ -16,8 +16,8 @@ Colibri.Common = class {
      * @param {number} timeout - The time to wait in milliseconds.
      * @return {Promise} - A promise that resolves after the specified time.
      */
-    static Delay(timeout) {
-        return new Promise((resolve, reject) => setTimeout(() => resolve(), timeout));
+    static Delay(timeout, args) {
+        return new Promise((resolve, reject) => setTimeout(() => resolve(args), timeout));
     }
 
     /** @type {Object.<string, number>} */
@@ -31,9 +31,12 @@ Colibri.Common = class {
      */
     static StartTimer(name, timeout, tickFunction) {
         if(Colibri.Common._timers[name]) {
-            clearTimeout(Colibri.Common._timers[name]);
+            clearTimeout(Colibri.Common._timers[name].timer);
+            delete Colibri.Common._timers[name].tickFunction;
+            delete Colibri.Common._timers[name];
         }
-        Colibri.Common._timers[name] = setInterval(tickFunction, timeout);
+        const timer = setInterval(tickFunction, timeout);
+        Colibri.Common._timers[name] = {timer, tickFunction};
     }
 
     /**
@@ -41,8 +44,11 @@ Colibri.Common = class {
      * @param {string} name - The name of the timer to stop.
      */
     static StopTimer(name) {
-        clearInterval(Colibri.Common._timers[name]);
-        delete Colibri.Common._timers[name];
+        if(Colibri.Common._timers[name]) {
+            clearInterval(Colibri.Common._timers[name].timer);
+            delete Colibri.Common._timers[name].tickFunction;
+            delete Colibri.Common._timers[name];
+        }
     }
 
     /**
@@ -53,24 +59,24 @@ Colibri.Common = class {
      * @returns {Promise} - A promise that resolves when the condition is true or the timeout occurs.
      */
     static Wait(action, maxTimeout = 0, interval = 100) {
-        let waiting = 0;
-        const _checkAction = (a, h) => {
-            try {
-                if(a() || (maxTimeout && waiting >= maxTimeout)) {
-                    h((maxTimeout && waiting >= maxTimeout));
-                }
-                else {
-                    Colibri.Common.Delay(interval).then(() => _checkAction(a, h));
-                }
-            }
-            catch(e) {
-                Colibri.Common.Delay(interval).then(() => _checkAction(a, h));
-            } finally {
-                waiting += interval;
-            }
-        }
-        
         return new Promise((resolve, reject) => {
+            
+            let waiting = 0;
+            const _checkAction = (a, h) => {
+                try {
+                    if(a() || (maxTimeout && waiting >= maxTimeout)) {
+                        h((maxTimeout && waiting >= maxTimeout));
+                    }
+                    else {
+                        Colibri.Common.Delay(interval).then(() => _checkAction(a, h));
+                    }
+                }
+                catch(e) {
+                    Colibri.Common.Delay(interval).then(() => _checkAction(a, h));
+                } finally {
+                    waiting += interval;
+                }
+            };
 
             _checkAction(action, (timedout) => {
                 if(timedout) {
@@ -78,7 +84,7 @@ Colibri.Common = class {
                 } else {
                     resolve();
                 }
-            })
+            });
 
         });
         

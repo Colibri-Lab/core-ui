@@ -20,9 +20,9 @@ Colibri.UI.Color.Alpha = class extends Colibri.UI.Component {
         this._pointer.AddClass('app-color-alpha-pointer-component');
         this._pointer.shown = true;
 
-        this.AddHandler('Clicked', (event, args) => this.__lineClicked(event, args));
+        this.AddHandler('Clicked', this.__lineClicked);
         this.tabIndex = 0;
-        this.AddHandler('KeyDown', (event, args) => this.__keyDown(event, args));
+        this.AddHandler('KeyDown', this.__keyDown);
 
         new Colibri.UI.Drag(this._pointer.container, this.container, (left, top) => {
             this._pointer.styles = {top: top + 'px'};

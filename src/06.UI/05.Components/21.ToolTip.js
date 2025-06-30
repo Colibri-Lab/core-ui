@@ -38,7 +38,7 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
         this._point = point;
         this._permanent = permanent ?? false;
 
-        this.AddHandler('ShadowClicked', (event, args) => this.__thisShadowClicked(event, args));
+        this.AddHandler('ShadowClicked', this.__thisShadowClicked);
 
     }
 

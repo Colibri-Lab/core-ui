@@ -27,7 +27,7 @@ Colibri.UI.Toolbar = class extends Colibri.UI.Component {
         super(name, container, element || Element.create('div'));
         this.AddClass('app-toolbar-container-component');
 
-        this.AddHandler('Clicked', (event, args) => this.__clicked(event, args));
+        this.AddHandler('Clicked', this.__clicked);
 
     }
 
@@ -98,7 +98,8 @@ Colibri.UI.Toolbar = class extends Colibri.UI.Component {
      * @param {*} args event arguments
      */ 
     __clicked(event, args) {
-        const component = args.domEvent.target.closest('.app-toolbar-container-component > *')?.tag('component');
+        // const component = args.domEvent.target.closest('.app-toolbar-container-component > *')?.getUIComponent();
+        const component = args.domEvent.target.closest('.app-toolbar-container-component > *')?.getUIComponent();
         this.Dispatch('ToolbarButtonClicked', {button: component});
     }
 

@@ -15,8 +15,12 @@ Colibri.UI.PaneSwitcher = class extends Colibri.UI.Pane {
         super(name, container);
         this.AddClass('colibri-ui-paneswitcher');
 
-        this.AddHandler('ChildsProcessed', (event, args) => this.ForEach((name, component) => component.Disconnect()));
+        this.AddHandler('ChildsProcessed', this.__thisChildsProcessed);
 
+    }
+
+    __thisChildsProcessed(event, args) {
+        this.ForEach((name, component) => component.Disconnect());
     }
 
     HideAll() {
@@ -40,7 +44,6 @@ Colibri.UI.PaneSwitcher = class extends Colibri.UI.Pane {
     }
     /** @private */
     _showValue() {
-        
         this.ForEach((name, component) => component.Disconnect())
         this.Children(this._value).ConnectTo(this);
 

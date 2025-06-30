@@ -3337,7 +3337,8 @@ Element.prototype.parent = function () {
  * @returns Colibri.UI.Component|null
  */
 Element.prototype.closestComponent = function () {
-    return this.closest('[data-object-name]')?.tag('component') ?? null;
+    // return this.closest('[data-object-name]')?.getUIComponent() ?? null;
+    return this.closest('[data-object-name]')?.getUIComponent() ?? null;
 }
 
 /**
@@ -4002,11 +4003,6 @@ window.convertFilterToStringForSql = function (filter) {
 
 }
 
-
-window.__originalAdd = EventTarget.prototype.addEventListener;
-window.__originalRemove = EventTarget.prototype.removeEventListener;
-window.__listenersMap = new WeakMap();
-
 window.isPureTouchDevice = function() {
     const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
@@ -4016,11 +4012,13 @@ window.isPureTouchDevice = function() {
     return hasTouch && !hasMouse;
 }
 
-EventTarget.prototype.addEventListener = function (type, listener, options) {
-    if (!__listenersMap.has(this)) {
-        __listenersMap.set(this, []);
-    }
+window.__originalAdd = EventTarget.prototype.addEventListener;
+window.__originalRemove = EventTarget.prototype.removeEventListener;
+window.__listenersMap = new WeakMap();
+window.__elToInstance = new WeakMap();
 
+EventTarget.prototype.addEventListener = function (type, listener, options) {
+    
     if(window.isPureTouchDevice() && ['mouseenter','mouseleave','mouseover','mouseout','mousemove'].includes(type)) {
         // nothing to do
         return;
@@ -4028,6 +4026,11 @@ EventTarget.prototype.addEventListener = function (type, listener, options) {
         // nothing to do
         return;
     }
+    
+    if (!__listenersMap.has(this)) {
+        __listenersMap.set(this, []);
+    }
+
     __listenersMap.get(this).push({ type, listener, options });
     return window.__originalAdd.call(this, type, listener, options);
 
@@ -4058,9 +4061,22 @@ window.getEventListenersFor = function (el) {
     return __listenersMap.get(el) || [];
 };
 
+Element.prototype.mapToUIComponent = function (instance) {
+    __elToInstance.set(this, instance);
+};
 
-window.__originalElementRemove = Element.prototype.remove;
-Element.prototype.remove = function () {
+Element.prototype.getUIComponent = function() {
+    return __elToInstance.get(this);
+};
+
+Element.prototype.delete = function () {
+
+    __elToInstance.delete(this);
+
+    try {
+        this.remove();
+    } catch(e) { }
+
     const events = getEventListenersFor(this);
     if (events) {
         for (const { type, listener, options } of events) {
@@ -4069,6 +4085,12 @@ Element.prototype.remove = function () {
         __listenersMap.delete(this);
     }
 
-    // [3] Вызвать оригинальный метод
-    return __originalElementRemove.call(this);
+    if(Object.isObject(this._tag)) {
+        for(const key of Object.keys(this._tag)) {
+            delete this._tag[key];
+        }
+        this._tag = null;
+    }
+
 };
+

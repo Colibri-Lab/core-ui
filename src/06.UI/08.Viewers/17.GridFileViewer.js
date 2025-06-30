@@ -18,8 +18,8 @@ Colibri.UI.GridFileViewer = class extends Colibri.UI.Viewer {
 
         this._value = null;
 
-        this.AddHandler('ContextMenuIconClicked', (event, args) => this.__createContextMenu(event, args));
-        this.AddHandler('ContextMenuItemClicked', (event, args) => this.__clickOnContextMenu(event, args));        
+        this.AddHandler('ContextMenuIconClicked', this.__createContextMenu);
+        this.AddHandler('ContextMenuItemClicked', this.__clickOnContextMenu);        
 
     }
 

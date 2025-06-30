@@ -46,7 +46,7 @@ Colibri.UI.Forms.DocumentGenerator = class extends Colibri.UI.Forms.Field {
         this._note.shown = false;
         this._note.value = this._generatorOptions.note;
 
-        this._generatedFileLink.AddHandler('Clicked', (event, args) => this.__generatedFileLinkClicked(event, args));
+        this._generatedFileLink.AddHandler('Clicked', this.__generatedFileLinkClicked, false, this);
 
     }
 

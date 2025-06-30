@@ -25,10 +25,10 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
             return false;
         });
 
-        this.AddHandler('Changed', (event, args) => this.Validate());
-        this.AddHandler('KeyUp', (event, args) => this.Validate());
-        this.AddHandler('ReceiveFocus', (event, args) => this.__thisFocused(event, args));
-        this.AddHandler('LoosedFocus', (event, args) => this.__thisUnfocused(event, args));
+        this.AddHandler('Changed', this.Validate);
+        this.AddHandler('KeyUp', this.Validate);
+        this.AddHandler('ReceiveFocus', this.__thisFocused);
+        this.AddHandler('LoosedFocus', this.__thisUnfocused);
 
     }
 
@@ -39,8 +39,11 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
      */ 
     __thisFocused(event, args) {
         const fieldEditoPane = this._element.closest('.app-field-pane-editor');
-        if(fieldEditoPane && fieldEditoPane.tag('component')) {
-            fieldEditoPane.tag('component').AddClass('-focused');
+        // if(fieldEditoPane && fieldEditoPane.getUIComponent()) {
+        //     fieldEditoPane.getUIComponent().AddClass('-focused');
+        // }
+        if(fieldEditoPane && fieldEditoPane.getUIComponent()) {
+            fieldEditoPane.getUIComponent().AddClass('-focused');
         }
     }
 
@@ -51,8 +54,11 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
      */ 
     __thisUnfocused(event, args) {
         const fieldEditoPane = this._element.closest('.app-field-pane-editor');
-        if(fieldEditoPane && fieldEditoPane.tag('component')) {
-            fieldEditoPane.tag('component').RemoveClass('-focused');
+        // if(fieldEditoPane && fieldEditoPane.getUIComponent()) {
+        //     fieldEditoPane.getUIComponent().RemoveClass('-focused');
+        // }
+        if(fieldEditoPane && fieldEditoPane.getUIComponent()) {
+            fieldEditoPane.getUIComponent().RemoveClass('-focused');
         }
     }
 
@@ -109,16 +115,22 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
     /** @protected */
     _setFilled() {
         const fieldEditoPane = this._element.closest('.app-field-pane-editor');
-        if(fieldEditoPane && fieldEditoPane.tag('component')) {
-            fieldEditoPane.tag('component').AddClass('-filled');
+        // if(fieldEditoPane && fieldEditoPane.getUIComponent()) {
+        //     fieldEditoPane.getUIComponent().AddClass('-filled');
+        // }
+        if(fieldEditoPane && fieldEditoPane.getUIComponent()) {
+            fieldEditoPane.getUIComponent().AddClass('-filled');
         }
     }
 
     /** @protected */
     _unsetFilled() {
         const fieldEditoPane = this._element.closest('.app-field-pane-editor');
-        if(fieldEditoPane && fieldEditoPane.tag('component')) {
-            fieldEditoPane.tag('component').RemoveClass('-filled');
+        // if(fieldEditoPane && fieldEditoPane.getUIComponent()) {
+        //     fieldEditoPane.getUIComponent().RemoveClass('-filled');
+        // }
+        if(fieldEditoPane && fieldEditoPane.getUIComponent()) {
+            fieldEditoPane.getUIComponent().RemoveClass('-filled');
         }
     }
     /**

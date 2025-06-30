@@ -24,7 +24,7 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
         this._input = Element.create('input', {type:'file', id: 'component-' + name + '-' + this._uniqueString});
         this._element.append(this._input);
 
-        this.AddHandler('Clicked', (event, args) => this.__clicked(event, args));
+        this.AddHandler('Clicked', this.__clicked);
         this._input.addEventListener('change', (event) => {
             this._checkChoosedFiles(this._input.files);
             this._input.value = '';

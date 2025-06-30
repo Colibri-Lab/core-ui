@@ -15,9 +15,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     static __nullHandler = (event, args) => {};
     static __disableHandler = (event, args) => { args.domEvent?.stopPropagation(); args.domEvent?.preventDefault(); return false; };
-    __containerScrollHandler = (e) => {
-        this.Dispatch('ScrolledIn', {domEvent: e}); 
-    }
+    static __containerScrollHandler = (e) => { e.currentTarget?.getUIComponent()?.Dispatch('ScrolledIn', {domEvent: e}); }
 
     /**
      * Dom events map to Colibri events
@@ -99,6 +97,16 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         },
         TouchMoved: {
             domEvent: 'touchmove'      
+        },
+        __ClickedOut: {
+            domEvent: 'click',
+            respondent: document.body,
+            handler: function(e) {
+                const c = e.currentTarget.getUIComponent();
+                if (!c.ContainsElement(e.target)) {
+                    c.Dispatch('ClickedOut', {domEvent: e});
+                }
+            }
         }
     };
 
@@ -107,6 +115,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @private
      */
     __domHandlersAttached = {};
+
+    __thisBubble(event, args) {
+        this.Dispatch(event, args);
+    }
 
     /**
      * @constructor
@@ -144,11 +156,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         this._renderedIndex = 0;
         
-        this.__clickToCopyHandler = (e) => (this._copyStyle === 'text' ? this.container.text() : this.value + '').copyToClipboard() && App.Notices.Add(new Colibri.UI.Notice('#{ui-copy-info}', Colibri.UI.Notice.Success));
+        this._clickToCopyHandler = (e) => (this._copyStyle === 'text' ? this.container.text() : this.value + '').copyToClipboard() && App.Notices.Add(new Colibri.UI.Notice('#{ui-copy-info}', Colibri.UI.Notice.Success));
 
-        Object.forEach(createEvents, (event, handler) => {
-            this.AddHandler(event, handler);
-        });
+        for(const key of Object.keys(createEvents)) {
+            this.AddHandler(key, createEvents[key]);
+        }
 
         if (!element) {
             element = Element.create('div');
@@ -169,8 +181,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         /** @type {HTMLElement} */
         this._element = element.clone();
         this._element.data('objectName', this._name);
-        this._element.tag('component', this);
+        this.__uniqueId = Date.Mc();
+        this._element.data('uniqueId', this.__uniqueId);
+        // this._element.tag('component', this);
         this.AddClass('app-ui-component');
+
+        this._element.mapToUIComponent(this);
 
         if (container instanceof Colibri.UI.Component) {
             this._parent = container;
@@ -193,29 +209,29 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         
         this.Dispatch('ComponentRendered');
 
-        this._mouseEnterHandler = (event, args) => {
-            if(this._toolTip) {
-                this._createTipObject();
-                this._setToolTipPositionAndGap();
-                this._tipObject.html(this._toolTip);
-                this._tipObject.showElement();
-            }
-        }
-        this._mouseLeaveHandler = (event, args) => {
-            if(this._tipObject) {
-                this._tipObject.html('');
-                this._tipObject.hideElement();
-            }
-        };
-
-        this.AddHandler('MouseEnter', this._mouseEnterHandler);
-        this.AddHandler('MouseLeave', this._mouseLeaveHandler);
+        this.AddHandler('MouseEnter', this.__defaultMouseEnterHandler);
+        this.AddHandler('MouseLeave', this.__defaultMouseLeaveHandler);
 
         element = null;
         this._renderedIndex = this.index;
 
     }
 
+    __defaultMouseEnterHandler(event, args) {
+        if(this._toolTip) {
+            this._createTipObject();
+            this._setToolTipPositionAndGap();
+            this._tipObject.html(this._toolTip);
+            this._tipObject.showElement();
+        }
+    }
+
+    __defaultMouseLeaveHandler(event, args) {
+        if(this._tipObject) {
+            this._tipObject.html('');
+            this._tipObject.hideElement();
+        }
+    }
 
     /**
      * Converts property to its correct type, if the value is function then runs a function
@@ -257,10 +273,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     _registerObserver() {
         this._observer = new window.IntersectionObserver(([entry]) => {
-            if(this._visible != entry.isIntersecting) {
-                this.Dispatch('VisibilityChanged', {state: entry.isIntersecting});
+            const c = entry.target.getUIComponent();
+            if(c && c._visible != entry.isIntersecting) {
+                c.Dispatch('VisibilityChanged', {state: entry.isIntersecting});
             }
-            this._visible = entry.isIntersecting;
+            c && (c._visible = entry.isIntersecting);
         }, {
             root: null,
             threshold: 1,
@@ -602,12 +619,13 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         const contextMenuParent = new Colibri.UI.Pane(this._name + '-contextmenu-icon-parent', this);
         contextMenuParent.AddClass('app-contextmenu-icon-component');
         contextMenuParent.shown = true;
+        contextMenuParent.__unique = Date.Mc();
         
         const contextMenuIcon = new Colibri.UI.Icon(this._name + '-contextmenu-icon', contextMenuParent);
         contextMenuIcon.shown = true;
         contextMenuIcon.value = Colibri.UI.ContextMenuIcon;
         contextMenuIcon.AddHandler('Clicked', (event, args) => {
-            this.Dispatch('ContextMenuIconClicked', args);
+            event.sender.parent.parent.Dispatch('ContextMenuIconClicked', args);
             args.domEvent.stopPropagation();
             args.domEvent.preventDefault();
             return false;
@@ -616,7 +634,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     /**
      * @private
-     */s
+     */
     _removeContextMenuButton() {
         if(this._hasContextMenu && this.Children(this._name + '-contextmenu-icon-parent')) {
             this.Children(this._name + '-contextmenu-icon-parent').Dispose();
@@ -637,7 +655,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         if(this._contextMenuObject) {
             this._contextMenuObject.Dispose();
-            this._contextMenuObject = null;
         }
         
         const contextMenuObject = new Colibri.UI.ContextMenu(this._name + '-contextmenu', document.body, orientation, point);
@@ -648,11 +665,13 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             contextMenuObject.AddClass(className);
         }
         contextMenuObject.AddHandler('Clicked', (event, args) => {
-            contextMenuObject.Hide();
-            this.Dispatch('ContextMenuItemClicked', Object.assign(args, {item: this}));
-            contextMenuObject.Dispose();   
-            this._contextMenuObject = null;         
-            this.Children(this._name + '-contextmenu-icon-parent') && this.Children(this._name + '-contextmenu-icon-parent').RemoveClass('-selected');
+            const component = event.sender.parent;
+            event.sender.Hide();
+            component.Dispatch('ContextMenuItemClicked', Object.assign(args, {item: component}));
+            component._contextMenuObject = null;         
+            component.Children(component.name + '-contextmenu-icon-parent') && 
+                component.Children(component.name + '-contextmenu-icon-parent').RemoveClass('-selected');
+            
         });
         
         this._contextMenuObject = contextMenuObject;
@@ -689,6 +708,30 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
+    __eventHandler(e) {
+        let ename = null;
+        for(const key of Object.keys(Colibri.UI.Component.__domHandlers)) {
+            if(Colibri.UI.Component.__domHandlers[key].domEvent === e.type) {
+                ename = key;
+                break;
+            }
+        }
+        if(!ename) {
+            return;
+        }
+        
+        const component = e.currentTarget.getUIComponent();
+        if(!component) {
+            return;
+        }
+
+        return component.Dispatch(ename, {domEvent: e});
+    }
+
+    __delayedEventHandler(e) {
+        Colibri.Common.Delay(delay, e).then(this.__eventHandler);
+    }
+
     /**
      * Binds html event to attached component event
      * @private
@@ -705,18 +748,17 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         respondent = respondent ? respondent : this._element;
 
         if(delay) {
-            handler = e => Colibri.Common.Delay(delay).then(() => handler(e))
+            handler = this.__delayedEventHandler;
         } else {
-            handler = handler ? handler : (e => this.Dispatch(eventName, {domEvent: e}));
-        }
+            handler = handler ? handler : this.__eventHandler;
+        } 
 
         this.__domHandlersAttached[eventName] = {
             domEvent,
             respondent,
-            handler,
-            capture
+            handler
         };
-
+        
         respondent.addEventListener(domEvent, handler, capture || false);
     }
 
@@ -732,14 +774,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @private
      */
     __removeHtmlEvents() {
-        for(let {domEvent, respondent, handler, capture} of Object.values(this.__domHandlersAttached)) {
-            if(respondent !== this._element) {
-                respondent.removeEventListener(domEvent, handler, capture || false);
-            }
+        for(let {domEvent, respondent, handler} of Object.values(this.__domHandlersAttached)) {
+            (respondent !== this._element) && respondent.removeEventListener(domEvent, handler);
         }
-        for (const key in this.__domHandlersAttached) {
-            delete this.__domHandlersAttached[key];
-        }
+
         this.__domHandlersAttached = {};
     }
 
@@ -784,27 +822,25 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     set hasContextMenu(value) {
         this._hasContextMenu = value === 'true' || value === true || value === 1;
         if(this._hasContextMenu) {
-            if(!this.__contextMenuHandler) {
-                this.__contextMenuHandler = (event, args) => {
-                    if(this.hasContextMenu && this._getContextMenuIcon()) {
-                        this.Dispatch('Clicked', { domEvent: args.domEvent, isContextMenuEvent: true });
-                        this._getContextMenuIcon().Dispatch('Clicked', { domEvent: args.domEvent, isContextMenuEvent: true });
-                        args.domEvent.stopPropagation();
-                        args.domEvent.preventDefault();
-                        return false;
-                    }
-                    return true;
-                };
-            }
             if(!this.__domHandlersAttached['ContextMenu']) {
-                this.AddHandler('ContextMenu', this.__contextMenuHandler);
+                this.AddHandler('ContextMenu', this.__defaultContextMenuHandler);
             }
             this._createContextMenuButton();
         }
         else {
             this._removeContextMenuButton();
-            this.RemoveHandler('ContextMenu', this.__contextMenuHandler);
         }
+    }
+
+    __defaultContextMenuHandler(event, args) {
+        if(this.hasContextMenu && this._getContextMenuIcon()) {
+            this.Dispatch('Clicked', { domEvent: args.domEvent, isContextMenuEvent: true });
+            this._getContextMenuIcon().Dispatch('Clicked', { domEvent: args.domEvent, isContextMenuEvent: true });
+            args.domEvent.stopPropagation();
+            args.domEvent.preventDefault();
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -950,11 +986,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     set left(value) {
         if(value === null) {
-            this._element.css('left', null);
+            this._element?.css('left', null);
         } else if(typeof value == 'string' && (value.indexOf('%') !== -1 || value.indexOf('px') !== -1 || value.includes('calc'))) {
-            this._element.css('left', value);
+            this._element?.css('left', value);
         } else {
-            this._element.css('left', value + 'px');
+            this._element?.css('left', value + 'px');
         }
     }
 
@@ -1070,11 +1106,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     set className(value) {
         this._className = value;
-        value.split(' ').forEach((v) => {
+        for(const v of value.split(' ')) {
             if(v) {
                 this._element.classList.add(v);
             }
-        });
+        };
     }
 
     /**
@@ -1104,6 +1140,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @type {string}
      */
     set html(value) {
+        if(!this._element) {
+            debugger;
+        }
         this._element.html(value);
     }
 
@@ -1192,9 +1231,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             this.RemoveClass('ui-disabled')._element.attr('disabled', null);
         }
 
-        this.ForEach((name, control) => {
+        for(const control of this._children) {
             control.enabled = val;
-        });
+        }
 
         this.Dispatch('EnabledStateChanged');
 
@@ -1205,7 +1244,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @type {boolean}
      */
     get shown() {
-        return this._element.classList.contains('app-component-shown');
+        return this._element?.classList?.contains('app-component-shown') ?? false;
     }
     /**
      * Is component shown
@@ -1257,7 +1296,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @type {String}
      */
     set value(value) {
-        this._element?.html(value);
+        this._element.html(value);
     }
 
     /**
@@ -1291,19 +1330,20 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             if(!this._tipObject) {
                 this._createTipObject();
             }
-            this.AddHandler('MouseMove', (event, args) => {
-                if(this._toolTip) {
-                    this._setToolTipPositionAndGap();
-                }
-            });
-        }
-        else {
+            this.AddHandler('MouseMove', this.__mouseMoveForToolTip);
+        } else {
             if(this._tipObject) {
                 this._tipObject.remove();
                 this._tipObject = null;
             }
         }
 
+    }
+
+    __mouseMoveForToolTip(event, args) {
+        if(this._toolTip) {
+            this._setToolTipPositionAndGap();
+        }
     }
 
     /**
@@ -1582,9 +1622,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     Sort(callback) {
         this._children.sort(callback);
-        this._children.forEach((child, index) => {
-            this._moveInDom(child.container, this.container, index);
-        });
+        let index = 0;
+        for(const child of this._children) {
+            this._moveInDom(child.container, this.container, index++);
+        }
     }
 
     /** 
@@ -1624,11 +1665,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     set hasShadow(value) {
         if(value === true || value === 'true') {
 
-            if(!this.__shadowClicked) {
-                this.__shadowClicked = (e) => { this.Dispatch('ShadowClicked', {domEvent: e}); e.stopPropagation(); e.preventDefault(); return false; };
-            }
-
-
             if(typeof this._element.css('z-index') === 'string') {
                 this._element.css('z-index', Colibri.UI.maxZIndex + 1);
             }
@@ -1636,17 +1672,16 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             const zIndex = this._element.css('z-index') - 1;
             if(!this._shadow) {
                 this._shadow = Element.create('div', {class: 'app-component-shadow-div'});
+                this._shadow.mapToUIComponent(this);
             }
             this._shadow.css('z-index', zIndex);
-            this._shadow.addEventListener('click', this.__shadowClicked);
-            this._shadow.addEventListener('contextmenu', this.__shadowClicked);
+            this._shadow.addEventListener('click', (e) => { e.currentTarget.getUIComponent().Dispatch('ShadowClicked', {domEvent: e}); e.stopPropagation(); e.preventDefault(); return false; });
+            this._shadow.addEventListener('contextmenu', (e) => { e.currentTarget.getUIComponent().Dispatch('ShadowClicked', {domEvent: e}); e.stopPropagation(); e.preventDefault(); return false; });
             this._element.after(this._shadow);
             
         }
         else {
             if(this._shadow) {
-                this._shadow.removeEventListener('click', this.__shadowClicked);
-                this._shadow.removeEventListener('contextmenu', this.__shadowClicked);
                 this._shadow.remove();
                 this._shadow = null;
             }
@@ -1697,15 +1732,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             if(this.isConnected) {
                 this.__renderBoundedValues(data, path);
             }
-            //  else {
-            //     Colibri.Common.Wait(() => {
-            //         console.log('wating', this.name);
-            //         return this.isConnected;
-            //     }, 0, 100).then(() => {
-            //         console.log('found', this.name);
-            //         return this.__renderBoundedValues(data, path)
-            //     });
-            // }
         } catch(e) {
             console.error(e);
             App.Notices.Add(new Colibri.UI.Notice(e, Colibri.UI.Notice.Error));
@@ -1811,7 +1837,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             }
         }
 
-        this.ForEach((name, component) => component.ReloadBinding());
+        for(const component of this._children) {
+            component.ReloadBinding();
+        }
 
     }
 
@@ -1894,15 +1922,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     set handleClickedOut(value) {
         this._handleClickedOut = value;
         if(value) {
-            this.__bindHtmlEvent('__ClickedOut', {
-                domEvent: 'click',
-                respondent: document.body,
-                handler: (e) => {
-                    if (!this.ContainsElement(e.target)) {
-                        this.Dispatch('ClickedOut', {domEvent: e});
-                    }
-                }
-            });
+            this.__bindHtmlEvent('__ClickedOut');
         }
     }
 
@@ -1948,55 +1968,47 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._handleSwipe = value;
         if(value) {
             this.__touchStartedPos = null;
-            if(this._swipeTouchEnd) {
-                this._swipeTouchEnd = (e) => {
-                    if ( !this.__touchStartedPos && e.currentTarget != this._element  ) {
-                        return;
-                    }
-                    this.styles = null;
-                    this.__touchStartedPos = null;
-                    document.body.removeEventListener('touchend', this._swipeTouchEnd, true);
-                    document.body.removeEventListener('touchmove', this._swipeTouchMove, true);
-                };
-            }
-            if(this._swipeTouchMove) {
-                this._swipeTouchMove = (e) => {
-                    if ( !this.__touchStartedPos && e.currentTarget != this._element ) {
-                        return;
-                    }
-                
-                    const xUp = e.touches[0].clientX;                                    
-                    const yUp = e.touches[0].clientY;
-                
-                    const sensitivity = this._swipesensitivity || 10;
-                    const orientation = this._swipeOrientation || 'hr';
+            this._swipeTouchEnd = (e) => {
+                const c = e.currentTarget.getUIComponent();
+                if ( !c.__touchStartedPos && e.currentTarget != c._element  ) {
+                    return;
+                }
+                c.styles = null;
+                c.__touchStartedPos = null;
+                document.body.removeEventListener('touchend', c._swipeTouchEnd, true);
+                document.body.removeEventListener('touchmove', c._swipeTouchMove, true);
+            };
+            this._swipeTouchMove = (e) => {
+                const c = e.currentTarget.getUIComponent();
+                if ( !c.__touchStartedPos && e.currentTarget != c._element ) {
+                    return;
+                }
+            
+                const xUp = e.touches[0].clientX;                                    
+                const yUp = e.touches[0].clientY;
+            
+                const sensitivity = c._swipesensitivity || 10;
+                const orientation = c._swipeOrientation || 'hr';
 
-                    const diff = orientation === 'hr' ? this.__touchStartedPos.x - xUp : this.__touchStartedPos.y - yUp;
-                    if(Math.abs(diff) > 10) {
-                        this.styles = orientation === 'hr' ? {marginLeft: (-1*diff) + 'px'} : {marginTop: (-1*diff) + 'px'};
-                        if ( diff > sensitivity ) {
-                            this.Dispatch(orientation === 'hr' ? 'SwipedToRight' : 'SwipedToBottom', {domEvent: e});
-                        } else if ( diff < -sensitivity ) {
-                            this.Dispatch(orientation === 'hr' ? 'SwipedToLeft' : 'SwipedToTop', {domEvent: e});
-                        }                       
-                    }
-                };
-            }
-            this.AddHandler('TouchStarted', (event, args) => {
-                const firstTouch = args.domEvent.touches[0];      
-                this.__touchStartedPos = {x: firstTouch.clientX, y: firstTouch.clientY};                                
-                document.body.addEventListener('touchend', this._swipeTouchEnd);
-                document.body.addEventListener('touchmove', this._swipeTouchMove);
-            });
-        } else {
-
-            if(this._swipeTouchEnd) {
-                document.body.removeEventListener('touchend', this._swipeTouchEnd, true);
-            }
-            if(this._swipeTouchMove) {
-                document.body.removeEventListener('touchmove', this._swipeTouchMove, true);
-            }
+                const diff = orientation === 'hr' ? c.__touchStartedPos.x - xUp : c.__touchStartedPos.y - yUp;
+                if(Math.abs(diff) > 10) {
+                    c.styles = orientation === 'hr' ? {marginLeft: (-1*diff) + 'px'} : {marginTop: (-1*diff) + 'px'};
+                    if ( diff > sensitivity ) {
+                        c.Dispatch(orientation === 'hr' ? 'SwipedToRight' : 'SwipedToBottom', {domEvent: e});
+                    } else if ( diff < -sensitivity ) {
+                        c.Dispatch(orientation === 'hr' ? 'SwipedToLeft' : 'SwipedToTop', {domEvent: e});
+                    }                       
+                }
+            };
+            this.AddHandler('TouchStarted', this.__defaultTouchStartHandler);
         }
+    }
+
+    __defaultTouchStartHandler(event, args) {
+        const firstTouch = args.domEvent.touches[0];      
+        this.__touchStartedPos = {x: firstTouch.clientX, y: firstTouch.clientY};                                
+        document.body.addEventListener('touchend', this._swipeTouchEnd);
+        document.body.addEventListener('touchmove', this._swipeTouchMove);
     }
 
     /**
@@ -2090,19 +2102,23 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     _sendEventToChilds(event, args = {}) {
-        this.ForEach((name, component) => {
+        for(const component of this._children) {
             component.Dispatch(event, args);
             component._sendEventToChilds(event, args);
-        });
+        }
     }
 
     /**
      * Clears a children of component
      */
     Clear() {
-        this.ForReverseEach((name, control) => {
-            control.Dispose();
-        });
+        this._children.reverse();
+        while(this._children.length > 0) {
+            const o = this._children[0];
+            o.Dispose();
+            this.Children(o.name, null);
+        }
+        this._children = [];
     }
 
     /**
@@ -2119,12 +2135,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * Disposes a component object and removes it from DOM
      */
     Dispose() {
-        
-        this.hasContextMenu = false;
-        this.copy = false;
-        this.hasShadow = false;
-        this.handleSwipe = false;
 
+        this.handleSwipe = false;
+        this.hasShadow = false;
+        this._removeContextMenuButton();
+        
         this.hasShadow = false;
         this.Clear();
 
@@ -2136,13 +2151,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             this.parent.Children(this.name, null);
             this.parent = null;
         }
+        
         this.__removeHtmlEvents();
-        try {
-            this._element.remove();
-            delete this._element;
+        if(this._element) {
+            this._element.delete();
             this._element = null;
         }
-        catch(e) { console.log('error removing element from DOM', e); }
         this.Dispatch('ComponentDisposed');
 
         // this._parent = null;
@@ -2185,7 +2199,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         if(!component) {
             return null;
         }
-        return component.tag('component') || null;
+        return component.getUIComponent() || null;
+        // return component.getUIComponent() || null;
     }
 
     /**
@@ -2222,7 +2237,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             }
         } else if(this._element?.classList?.contains(val)) {
             this._element?.classList?.remove(val);
-        }    
+        }
         return this;
     }
 
@@ -2232,7 +2247,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @returns {this}
      */
     ContainsClass(val) {
-        return this._element.classList.contains(val);
+        return this._element?.classList?.contains(val);
     }
 
     /**
@@ -2524,10 +2539,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     _showCopy() {
         if(this._copy) {
             this.AddClass('-cancopy');
-            this._element.addEventListener('mousedown', this.__clickToCopyHandler);
+            this._element.addEventListener('mousedown', this._clickToCopyHandler);
         } else {
             this.RemoveClass('-cancopy');
-            this._element.removeEventListener('mousedown', this.__clickToCopyHandler);
+            this._element.removeEventListener('mousedown', this._clickToCopyHandler);
         } 
     }
 
@@ -2688,13 +2703,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
     _showHandleContainerScroll() {
         if(this._handleContainerScroll) {
-            document.addEventListener('scroll', this.__containerScrollHandler, true);
+            document.addEventListener('scroll', Colibri.UI.__containerScrollHandler, true);
         } else {
-            document.removeEventListener('scroll', this.__containerScrollHandler, true);
+            document.removeEventListener('scroll', Colibri.UI.__containerScrollHandler, true);
         }
     }
 
     StartBlink(name, styles, timeout) {
+        debugger;
         Colibri.Common.StartTimer(name, timeout, () => {
             if(this._blinkSet) {
                 Object.forEach(styles, (style, value) => {
@@ -2706,12 +2722,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                     this._element.css(style, value);
                 });
                 this._blinkSet = true;
-
             }
         });
     }
 
     StopBlink(name) {
+        debugger;
         Colibri.Common.StopTimer(name);
     }
 

@@ -26,27 +26,29 @@ Colibri.UI.LinkEditor = class extends Colibri.UI.Editor {
         this._text = new Colibri.UI.TextSpan('span', this);
         this._text.shown = true;
 
-        this.AddHandler('Clicked', (event, args) => {
+        this.AddHandler('Clicked', this.__thisClicked);
 
-            this._clickOnLink();
+    }
 
-            args.domEvent.stopPropagation();
-            args.domEvent.preventDefault();
-            return false;
-        });
+    __thisClicked(event, args) {
 
+        this._clickOnLink();
+
+        args.domEvent.stopPropagation();
+        args.domEvent.preventDefault();
+        return false;
     }
 
     /** @private */
     _showValue() {
         this._text.value = this.value;
-        if(this._grid) {
+        if (this._grid) {
             const field = this._grid.header.columns.Children(this.parent.name.replaceAll(this.parent.parentRow.name + '-', '')).tag;
-            if(field) {
+            if (field) {
                 this._text.value = field.params && field.params.view ? field.params.view : field.desc;
             }
         }
-        else if(this.field) {
+        else if (this.field) {
             this._text.value = this.field.desc + ' #{ui-editors-link-download}';
         }
         else {
@@ -57,7 +59,7 @@ Colibri.UI.LinkEditor = class extends Colibri.UI.Editor {
 
     /** @private */
     _clickOnLink() {
-        if(this.field && this._downloadlink) {
+        if (this.field && this._downloadlink) {
             window.open((window.rpchandler ? window.rpchandler : '') + this._downloadlink + '?name=' + this.field.name + '&data=' + this.field.params.data);
         }
     }

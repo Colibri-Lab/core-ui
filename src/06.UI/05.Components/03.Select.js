@@ -30,40 +30,47 @@ Colibri.UI.Select = class extends Colibri.UI.Input {
 
         this._dropdownShadowComponent = new Colibri.UI.Pane('dropdown-shadow', this);
 
-        this.AddHandler('Clicked', (event, args) => {
-            if (this._input === args.domEvent.target) {
-                this._dropdownShadowComponent.shown = !this._dropdownShadowComponent.shown;
-                this._dropdown.shown = !this._dropdown.shown;
-                this.AddClass('app-component-opened');
-            }
-        });
+        this.AddHandler('Clicked', this.__thisClicked);
 
         this._input.addEventListener('input', (e) => {
             this.dropdown.FilterItems(this._input.value);
         });
 
-        this.AddHandler('Cleared', () => {
-            this.dropdown.FilterItems('');
-        });
+        this.AddHandler('Cleared', this.__thisCleared);
 
-        this._dropdownShadowComponent.AddHandler('Clicked', (sender, args) => {
-            this._dropdown.shown = !this._dropdown.shown;
+        this._dropdownShadowComponent.AddHandler('Clicked', this.__thisDropdownShadowClicked, false, this);
+        this._toggleDropdownComponent.AddHandler('Clicked', this.__thisToggleDropdownClicked, false, this);
+
+    }
+
+    __thisClicked(event, args) {
+        if (this._input === args.domEvent.target) {
             this._dropdownShadowComponent.shown = !this._dropdownShadowComponent.shown;
+            this._dropdown.shown = !this._dropdown.shown;
+            this.AddClass('app-component-opened');
+        }
+    }
+
+    __thisCleared() {
+        this.dropdown.FilterItems('');
+    }
+
+    __thisDropdownShadowClicked(sender, args) {
+        this._dropdown.shown = !this._dropdown.shown;
+        this._dropdownShadowComponent.shown = !this._dropdownShadowComponent.shown;
+        this.RemoveClass('app-component-opened');
+        this.GenerateSelectionText();
+    }
+
+    __thisToggleDropdownClicked(sender, args) {
+        if (this._dropdown.shown) {
             this.RemoveClass('app-component-opened');
             this.GenerateSelectionText();
-        });
-
-        this._toggleDropdownComponent.AddHandler('Clicked', (sender, args) => {
-            if (this._dropdown.shown) {
-                this.RemoveClass('app-component-opened');
-                this.GenerateSelectionText();
-            } else {
-                this.AddClass('app-component-opened');
-            }
-            this._dropdown.shown = !this._dropdown.shown;
-            this._dropdownShadowComponent.shown = !this._dropdownShadowComponent.shown;
-
-        });
+        } else {
+            this.AddClass('app-component-opened');
+        }
+        this._dropdown.shown = !this._dropdown.shown;
+        this._dropdownShadowComponent.shown = !this._dropdownShadowComponent.shown;
 
     }
 
@@ -131,7 +138,7 @@ Colibri.UI.Select = class extends Colibri.UI.Input {
      */
     set dropdown(value) {
         this._dropdown = value;
-        this._dropdown.AddHandler('SelectionChanged', (event, args) => this.__DropdownSelectionChanged(event, args));
+        this._dropdown.AddHandler('SelectionChanged', this.__DropdownSelectionChanged, false, this);
     }
 
 };
@@ -301,11 +308,13 @@ Colibri.UI.Select.DefaultDropdown.Options = class extends Colibri.UI.Pane {
 
     /** @protected */
     _handleEvents() {
-        this.AddHandler('Clicked', (event, args) => {
-            if(args.domEvent.target.is('[data-option-name]')) {
-                this.Dispatch('OptionClicked', {option: args.domEvent.target.dataset.optionName});
-            }
-        });
+        this.AddHandler('Clicked', this.__thisClicked);
+    }
+
+    __thisClicked(event, args) {
+        if(args.domEvent.target.is('[data-option-name]')) {
+            this.Dispatch('OptionClicked', {option: args.domEvent.target.dataset.optionName});
+        }
     }
 
     /** @protected */

@@ -42,18 +42,18 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._value = [];
         this._placeholder = '#{ui-selector-nothingchoosed}';
 
-        this._input =  new Colibri.UI.Input(this._name + '-input', this);
+        this._input = new Colibri.UI.Input(this._name + '-input', this);
         this._input.shown = true;
         this._input.icon = null;
         this._input.hasIcon = false;
         this._input.hasClearIcon = !!clearIcon;
-        if(typeof clearIcon === 'string') {
+        if (typeof clearIcon === 'string') {
             this._input.clearIcon = clearIcon;
         }
         this._input.placeholder = this._placeholder;
         this._input.toolTip = '';
 
-        this._arrow = Element.create('span', {class: 'arrow'});
+        this._arrow = Element.create('span', { class: 'arrow' });
         this._arrow.html(Colibri.UI.SelectArrowIcon);
         this._element.append(this._arrow);
 
@@ -71,9 +71,9 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     /** @private */
     _inprooveValues() {
         let v = [];
-        for(let vv of this._values) {
-            if(!Object.isObject(vv)) {
-                vv = {value: vv, title: vv};
+        for (let vv of this._values) {
+            if (!Object.isObject(vv)) {
+                vv = { value: vv, title: vv };
             }
             v.push(vv);
         }
@@ -92,7 +92,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     __preventScrolling(e) {
         e.preventDefault();
     }
-    
+
     /** @private */
     _changeBodyScroll() {
 
@@ -109,91 +109,93 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     /** @protected */
     _handleEvents() {
 
-        this._input.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
-
-        this._input.AddHandler('Filled', (event, args) => this.__Filled(event, Object.assign(args, {search: true})));
-        this._input.AddHandler('Cleared', (event, args) => this.__Cleared(event, args));
-        this._input.AddHandler('Clicked', (event, args) => this.__Clicked(event, args));
-        this._input.AddHandler('ReceiveFocus', (event, args) => this.Dispatch('ReceiveFocus', args));
+        this._input.AddHandler('Cleared', this.__thisInputCleared, false, this);
+        this._input.AddHandler('Clicked', this.__thisInputClicked, false, this);
+        this._input.AddHandler('KeyUp', this.__thisBubble, false, this);
+        this._input.AddHandler('ReceiveFocus', this.__thisBubble, false, this);
+        this._input.AddHandler('LoosedFocus', this.__thisInputLoosesFocus, false, this);
+        this._input.AddHandler('KeyDown', this.__thisInputKeyDown, false, this);
+        this._input.AddHandler('Filled', (event, args) => this.__thisFilled(event, Object.assign(args, { search: true })));
         this._input.AddHandler('LoosedFocus', (event, args) => !this._skipLooseFocus && this.Dispatch('LoosedFocus', args));
 
+        this.AddHandler('LoosedFocus', this.__thisLoosesFocus);
 
-        this._arrow.addEventListener('click', (e) => { 
+        this._arrow.addEventListener('click', (e) => {
             this.Focus();
-            if(this.enabled) {
-                this.__Filled(null, {search: false});
+            if (this.enabled) {
+                this.__thisFilled(null, { search: false });
             }
-            return false; 
+            return false;
         });
 
-        this._input.AddHandler('LoosedFocus', (event, args) => {
-            if(!this._skipLooseFocus) {
+    }
+
+    __thisLoosesFocus(event, args) {
+        if (!this._skipLooseFocus) {
+            this._hidePopup();
+        }
+    }
+
+    __thisInputLoosesFocus(event, args) {
+        if (!this._skipLooseFocus) {
+            this._hidePopup();
+        }
+    }
+
+    __thisInputKeyDown(event, args) {
+
+        // , 'Space'
+        if (['Escape', 'ArrowUp', 'ArrowDown', 'Enter', 'NumpadEnter'].indexOf(args.domEvent.code) !== -1) {
+
+            if (args.domEvent.code === 'Escape') {
                 this._hidePopup();
             }
-        });
-        this.AddHandler('LoosedFocus', (event, args) => {
-            if(!this._skipLooseFocus) {
-                this._hidePopup();
+            else if (args.domEvent.code === 'Space') {
+                if (this.enabled) {
+                    this.__thisFilled(null, { search: false });
+                }
             }
-        });
+            else if (args.domEvent.code === 'ArrowUp') {
+                if (!this._popup) {
+                    this.Focus();
+                }
+                try { this.__moveSelection(-1); } catch (e) { }
+            }
+            else if (args.domEvent.code === 'ArrowDown') {
+                if (!this._popup) {
+                    this.Focus();
+                }
+                try { this.__moveSelection(1); } catch (e) { }
 
-        // перехватить keydown и обработать Escape
-        this._input.AddHandler('KeyDown', (event, args) => {
-
-            // , 'Space'
-            if(['Escape', 'ArrowUp', 'ArrowDown', 'Enter', 'NumpadEnter'].indexOf(args.domEvent.code) !== -1) {
-
-                if(args.domEvent.code === 'Escape') {
-                    this._hidePopup();
-                }
-                else if(args.domEvent.code === 'Space') {
-                    if(this.enabled) {
-                        this.__Filled(null, {search: false});
-                    }
-                }
-                else if(args.domEvent.code === 'ArrowUp') {
-                    if(!this._popup) {
-                        this.Focus();
-                    }
-                    try { this.__moveSelection(-1); } catch(e) {}
-                }
-                else if(args.domEvent.code === 'ArrowDown') {
-                    if(!this._popup) {
-                        this.Focus();
-                    }
-                    try { this.__moveSelection(1); } catch(e) {}
-                    
-                }
-                else if(args.domEvent.code === 'Enter') {
-                    this._popup.Dispatch('Clicked', {domEvent: args.domEvent});
-                }
-    
-                args.domEvent.stopPropagation();
-                args.domEvent.preventDefault();
-                return false;
+            }
+            else if (args.domEvent.code === 'Enter') {
+                this._popup.Dispatch('Clicked', { domEvent: args.domEvent });
             }
 
+            args.domEvent.stopPropagation();
+            args.domEvent.preventDefault();
+            return false;
+        }
 
-            return this.Dispatch('KeyDown', args);        
-        });
 
+        return this.Dispatch('KeyDown', args);
     }
 
     /**
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */ 
-    __Filled(event, args) {
+     */
+    __thisFilled(event, args) {
         this._itemSelected = false;
         this.__BeforeFilled().then((searchAllreadyPerformed = false) => {
-            if(this._itemSelected === true) {
+            if (this._itemSelected === true) {
                 return;
             }
-            
+
             const values = this._search(!this.searchable || !args.search || searchAllreadyPerformed ? '' : this._input.value);
             this._showPopup(values);
-            
+
             // if(this.allowempty) {
             //     this.Dispatch('Changed', args);
             // }
@@ -216,8 +218,8 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */ 
-    __Cleared(event, args) {
+     */
+    __thisInputCleared(event, args) {
         const values = this._search(!this.searchable ? '' : this._input.value);
         this._setValue(null);
 
@@ -239,12 +241,12 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */ 
-    __Clicked(event, args) { 
+     */
+    __thisInputClicked(event, args) {
         this.Focus();
-        if(this.enabled) {
-            this.__Filled(null, {search: false});
-        }    
+        if (this.enabled) {
+            this.__thisFilled(null, { search: false });
+        }
         args.domEvent.stopPropagation();
         args.domEvent.preventDefault();
         return false;
@@ -252,11 +254,11 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
     /** @private */
     _removePopup() {
-        if(this._popup) {
+        if (this._popup) {
             this._popup.shown = false;
             this._popup.Dispose();
             this._popup = null;
-            if(!this.allowempty && (!this._value || !this._value.length) && this._lastValue) {
+            if (!this.allowempty && (!this._value || !this._value.length) && this._lastValue) {
                 this.value = this._lastValue;
             }
             this.SendToBack();
@@ -281,46 +283,46 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      */
     _showPopup(values) {
 
-        if(this.readonly || !this.enabled) {
+        if (this.readonly || !this.enabled) {
             return;
         }
 
         let promise = null;
-        if(this.beforePopupHandler) {
+        if (this.beforePopupHandler) {
             const f = this.beforePopupHandler;
             promise = f(this);
         } else {
-            promise = Promise.resolve({values: values});
+            promise = Promise.resolve({ values: values });
         }
 
         promise.then((response) => {
             values = response.values;
 
-            if(!this._popup) {
+            if (!this._popup) {
                 this._popup = this._createPopup(values);
                 this._registerPopupEventHandlers(this._popup);
             }
             else {
                 this._popup.FillItems(values, this._lastValue);
             }
-    
-            if(!this._popup.shown) {
+
+            if (!this._popup.shown) {
                 this._popup.Show();
-                if(this._popupconfig) {
+                if (this._popupconfig) {
                     Object.assign(this._popup, this._popupconfig);
                 }
                 this._input.BringToFront();
             }
-    
+
             this._changeBodyScroll();
-    
+
         });
 
     }
 
     /** @private */
     __moveSelection(positionDelta) {
-        if(!this._popup?.selected) {
+        if (!this._popup?.selected) {
             this._popup.selectedIndex = 0;
             return;
         }
@@ -369,11 +371,11 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     _setValue(value) {
         if (value === null || value === false) {
             this._value = [];
-            if(this.allowempty) {
+            if (this.allowempty) {
                 this._lastValue = this._value;
             }
         }
-        else if(Array.isArray(value)) {
+        else if (Array.isArray(value)) {
             if (!this._multiple) {
                 this._value = [];
                 this._value.push(this._lastValue = value.shift());
@@ -382,7 +384,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                 this._lastValue = this._value = value;
             }
         }
-        else if(Object.isObject(value)) {
+        else if (Object.isObject(value)) {
             if (!this._multiple) {
                 this._value = [];
             }
@@ -393,21 +395,21 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
             if (!this._multiple) {
                 this._value = [];
                 let _found = this._findValue(value);
-                if(_found) {
+                if (_found) {
                     this._value.push(_found);
                     this._lastValue = _found;
                 }
-            
+
             }
             else {
                 this._value = [];
                 value = !Array.isArray(value) ? value.split(',') : value;
-                for(const v of value) {
+                for (const v of value) {
                     let _found = this._findValue(v);
-                    if(_found) {
+                    if (_found) {
                         this._value.push(_found);
                         this._lastValue = _found;
-                    }        
+                    }
                 }
             }
         }
@@ -420,14 +422,14 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      */
     _findValue(value) {
         let foundValue = null;
-        if(value) {
+        if (value) {
             value = value[this._valueField] ?? value;
         }
-        if(this._values) {
+        if (this._values) {
             const values = Object.values(this._values);
-            for(let vv of values) {
-                if(!Object.isObject(vv)) {
-                    vv = {value: vv, title: vv}
+            for (let vv of values) {
+                if (!Object.isObject(vv)) {
+                    vv = { value: vv, title: vv }
                 }
                 if (vv[this._valueField] == value) {
                     foundValue = vv;
@@ -444,30 +446,30 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      */
     _renderValue(renderValue = true) {
         if (!this.multiple) {
-            if(renderValue) {
+            if (renderValue) {
                 let v = '';
-                if(Array.isArray(this._value)) {
+                if (Array.isArray(this._value)) {
                     v = (this._value[0] !== '' && this._value[0] !== null && this._value[0] !== undefined ? (this._value[0][this._titleField] ?? this._value[0] ?? '') : '');
-                    if(Object.isObject(v)) {
-                        try { v = v[Lang.Current] } catch(e) { v = ''; };
+                    if (Object.isObject(v)) {
+                        try { v = v[Lang.Current] } catch (e) { v = ''; };
                     }
                     else {
                         v = (v + '').stripHtml();
                     }
                 }
                 else {
-                    if(Object.isObject(this._value)) {
-                        try { v = this._value[Lang.Current] } catch(e) { v = ''; };
+                    if (Object.isObject(this._value)) {
+                        try { v = this._value[Lang.Current] } catch (e) { v = ''; };
                     }
                     else {
                         v = (this._value + '').stripHtml();
                     }
                 }
-                
+
                 this._input.value = v;
             }
 
-            if(!this._placeholderempty || this.HaveValues()) {
+            if (!this._placeholderempty || this.HaveValues()) {
                 this._input.placeholder = (this.placeholder ?? '').stripHtml();
             } else {
                 this._input.placeholder = this._placeholderempty.stripHtml();
@@ -478,12 +480,12 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
             this._input._forcedClearIcon = (itemCount !== 0);
             renderValue && (this._input.value = '');
 
-            if(itemCount === 0) {
+            if (itemCount === 0) {
                 this._input.placeholder = this.placeholder ?? '';
                 this.RemoveClass('-selected');
-            } else if(this._placeholderinfo) {
+            } else if (this._placeholderinfo) {
                 let info = this._placeholderinfo;
-                if(this._placeholderinfo instanceof Function) {
+                if (this._placeholderinfo instanceof Function) {
                     info = this._placeholderinfo;
                     info(this._value, this._values).then((text) => {
                         this._input.placeholder = (text + '').stripHtml();
@@ -494,9 +496,9 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                         info(this._value, this._values).then((text) => {
                             this._input.placeholder = (text + '').stripHtml();
                         });
-                    } catch(e) {
+                    } catch (e) {
                         this._input.placeholder = String.Pluralize(this._placeholderinfo, itemCount).stripHtml();
-                    }    
+                    }
                 }
                 this.AddClass('-selected');
             } else {
@@ -506,7 +508,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
         }
 
-        if(this._showToolTip) {
+        if (this._showToolTip) {
             this._input.toolTip = this._input.isValueExceeded ? (this._input.value ?? this._input.placeholder) : '';
         }
 
@@ -516,7 +518,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * Set focus on selector
      */
     Focus() {
-        if(this._input?.readonly) {
+        if (this._input?.readonly) {
             this._element.focus();
             this.Dispatch('ReceiveFocus', {});
         } else {
@@ -546,15 +548,15 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      */
     set readonly(value) {
         this._readonly = value === true || value === 'true';
-        if(!this._searchable) {
+        if (!this._searchable) {
             this._input.readonly = true;
-        } else if(this._readonly) {
+        } else if (this._readonly) {
             this._input.readonly = true;
         }
         else {
             this._input.readonly = false;
         }
-        if(this._readonly) {
+        if (this._readonly) {
             this.AddClass('app-component-readonly');
         } else {
             this.RemoveClass('app-component-readonly');
@@ -574,7 +576,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      */
     set searchable(value) {
         this._searchable = value === true || value === 'true';
-        if(this._searchable) {
+        if (this._searchable) {
             this.AddClass('app-component-searchable');
             this._input.readonly = false;
         }
@@ -645,7 +647,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * @type {boolean}
      */
     set enabled(value) {
-        if(value) {
+        if (value) {
             this.RemoveClass('app-component-disabled');
         }
         else {
@@ -764,11 +766,11 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                 selected = popup.selected?.map((item) => { return item.value; }) ?? [];
             }
 
-            if(!Array.isArray(selected)) {
+            if (!Array.isArray(selected)) {
                 selected = [selected];
             }
 
-            if(JSON.stringify(selected) === JSON.stringify(this._value)) {
+            if (JSON.stringify(selected) === JSON.stringify(this._value)) {
                 return false;
             }
 
@@ -776,10 +778,10 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
             this._renderValue(!this._multiple);
             this.Focus();
             this.Dispatch('Changed', args);
-            
+
             return false;
         });
-        
+
 
         popup.AddHandler('ShadowClicked', () => {
             this._hidePopup();
@@ -876,7 +878,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * @type {Function|string}
      */
     set beforePopupHandler(value) {
-        value = this._convertProperty('Function', value);   
+        value = this._convertProperty('Function', value);
         this._beforePopupHandler = value;
     }
 

@@ -68,6 +68,7 @@ Colibri.UI = class {
         }
     }
 
+
     /**
      * Updates max z-index in static property
      * @static
@@ -91,7 +92,8 @@ Colibri.UI = class {
         if(!component) {
             return null;
         }
-        return component.tag('component') || null;
+        // return component.getUIComponent() || null;
+        return component.getUIComponent() || null;
     }
 
     /**
@@ -107,7 +109,8 @@ Colibri.UI = class {
         const components = (parent ? parent._element : document).querySelectorAll(query);
         const ret = [];
         for(const component of components) {            
-            ret.push(component.tag('component'));
+            // ret.push(component.getUIComponent());
+            ret.push(component.getUIComponent());
         }
         return ret;
     }

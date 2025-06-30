@@ -26,23 +26,24 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
         this._groupField = groupField;
         this._canSelectGroup = canSelectGroup;
         this.tabIndex = null;
-        this.AddHandler('ShadowClicked', (event, args) => {
-            this.Hide();
-        });
+        this.AddHandler('ShadowClicked', this.__thisShadowClicked);
 
         this.handleVisibilityChange = true;
-        this.AddHandler('VisibilityChanged', (event, args) => {
-            const bounds = this.parent.container.bounds(true, true);
-            if(!args.state) {
-                this.top = null;
-                this.bottom = (window.innerHeight - bounds.top);
-            }
-        });
+        this.AddHandler('VisibilityChanged', this.__thisVisibilityChanged);
+        this.AddHandler('KeyDown', Colibri.UI.Component.__disableHandler);
 
-        this.AddHandler('KeyDown', (event, args) => {
-            return false;
-        });
+    }
 
+    __thisShadowClicked(event, args) {
+        this.Hide();
+    }
+
+    __thisVisibilityChanged(event, args) {
+        const bounds = this.parent.container.bounds(true, true);
+        if(!args.state) {
+            this.top = null;
+            this.bottom = (window.innerHeight - bounds.top);
+        }
     }
 
     /** @private */

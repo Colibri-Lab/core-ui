@@ -184,7 +184,8 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
      * @param {*} args event arguments
      */ 
     __dragStartFromSources(event, args) {
-        this._current = args.domEvent.target.closest('[data-object-name]').tag('component');
+        // this._current = args.domEvent.target.closest('[data-object-name]').getUIComponent();
+        this._current = args.domEvent.target.closest('[data-object-name]').getUIComponent();
     }
 
     /**
@@ -217,7 +218,8 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
             return false;
         }
 
-        const dropTarget = dropElement.tag('component');
+        // const dropTarget = dropElement.getUIComponent();
+        const dropTarget = dropElement.getUIComponent();
         if(this._current == dropTarget) {
             return false;
         }
@@ -246,7 +248,8 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
             return false;
         }
 
-        const dropTarget = dropElement.tag('component');
+        // const dropTarget = dropElement.getUIComponent();
+        const dropTarget = dropElement.getUIComponent();
         dropTarget.RemoveClass('app-drop-target-component');
         event.sender.RemoveClass('app-drop-component');
 
@@ -269,7 +272,8 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
             return false;
         }
 
-        const dropTarget = dropElement.tag('component');
+        // const dropTarget = dropElement.getUIComponent();
+        const dropTarget = dropElement.getUIComponent();
         args.domEvent.preventDefault();
 
         this.Dispatch('DragDropComplete', {dragged: this._current, droppedTo: dropTarget});

@@ -238,14 +238,8 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             return true;
         });
 
-        this.AddHandler('ReceiveFocus', (event, args) => {
-            this.AddClass('-focused');
-            this.form.activeField = this;
-        });
-        this.AddHandler('LoosedFocus', (event, args) => {
-            this.RemoveClass('-focused');
-            this.form.activeField = null;
-        });
+        this.AddHandler('ReceiveFocus', this.__thisReceiveFocus);
+        this.AddHandler('LoosedFocus', this.__thisLoosedFocus);
 
         if(this._fieldData?.hidden && this._fieldData?.hidden === true) {
             this.AddClass('app-component-field-hidden');
@@ -267,6 +261,15 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             this.Dispatch('MessageClicked', {domEvent: args.domEvent, field: this});
         });
 
+    }
+
+    __thisReceiveFocus(event, args) {
+        this.AddClass('-focused');
+        this.form.activeField = this;
+    }
+    __thisLoosedFocus(event, args) {
+        this.RemoveClass('-focused');
+        this.form.activeField = null;
     }
 
     /**
@@ -595,7 +598,8 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      */
     get form() {
         const formElement = this._element.closest('.app-form-component');
-        return formElement ? formElement.tag('component') : null;
+        // return formElement ? formElement.getUIComponent() : null;
+        return formElement ? formElement.getUIComponent() : null;
     }
 
     /**

@@ -27,17 +27,22 @@ Colibri.UI.DropDown = class extends Colibri.UI.Component {
         this._list.shown = true;
         this._search.shown = true;
 
-        this._list.AddHandler('ItemClicked', (event, args) => this.Dispatch('ItemClicked', {item: args.item, domEvent: args.domEvent}));
+        this._list.AddHandler('ItemClicked', this.__listItemClicked, false, this);
+        this.AddHandler('Shown', this.__thisShown);
+        this.AddHandler('ClickedOut', this.__thisClickedOut);
 
-        this.AddHandler('Shown', (event, args) => {
-            this._search.Focus();
-        });
+    }
 
-        this.AddHandler('ClickedOut', (event, args) => {
-            this.Hide();
-        });
+    __listItemClicked(event, args) {
+        this.Dispatch('ItemClicked', {item: args.item, domEvent: args.domEvent});
+    }
+    
+    __thisClickedOut(event, args) {
+        this.Hide();
+    }
 
-
+    __thisShown(event, args) {
+        this._search.Focus();
     }
 
     /** @protected */

@@ -27,7 +27,7 @@ Colibri.UI.RemoteFileEditor = class extends Colibri.UI.Editor {
         this._link = new Colibri.UI.Link('link-choose', this);
         this._link.value = '#{ui-editors-remotefile}';
         this._link.shown = true;
-        this._link.AddHandler('Clicked', (event, args) => this.__linkClicked(event, args));
+        this._link.AddHandler('Clicked', this.__linkClicked, false, this);
 
         this._input.addEventListener('change', (event) => {
             this._checkChoosedFiles(this._input.files);

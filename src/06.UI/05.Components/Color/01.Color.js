@@ -32,23 +32,25 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
         this._colorSelectedColorGrad.shown = true;
         this._colorOpacityGrad.shown = true;
 
-        this._colorGrad.AddHandler('Changed', (event, args) => this.__lineValueChanged(event, args));
-        this._colorSelectedColorGrad.AddHandler('Changed', (event, args) => this.__blockValueChanged(event, args));
-        this._colorOpacityGrad.AddHandler('Changed', (event, args) => this.__opacityValueChanged(event, args));
+        this._colorGrad.AddHandler('Changed', this.__lineValueChanged, false, this);
+        this._colorSelectedColorGrad.AddHandler('Changed', this.__blockValueChanged, false, this);
+        this._colorOpacityGrad.AddHandler('Changed', this.__opacityValueChanged, false, this);
 
         this._colorHex.addEventListener('change', (e) => {
             this.value = this._colorHex.value;
         });
 
         this.handleVisibilityChange = true;
-        this.AddHandler('VisibilityChanged', (event, args) => {
-            const bounds = this.parent.container.bounds(true, true);
-            if(!args.state) {
-                this.top = null;
-                this.bottom = (window.innerHeight - bounds.top);
-            }
-        });
+        this.AddHandler('VisibilityChanged', this.__thisVisibilityChanged);
 
+    }
+
+    __thisVisibilityChanged(event, args) {
+        const bounds = this.parent.container.bounds(true, true);
+        if(!args.state) {
+            this.top = null;
+            this.bottom = (window.innerHeight - bounds.top);
+        }
     }
 
     /** @private */

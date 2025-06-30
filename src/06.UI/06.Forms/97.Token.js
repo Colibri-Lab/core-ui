@@ -24,7 +24,7 @@ Colibri.UI.Forms.Token = class extends Colibri.UI.Forms.Field {
         this._button.shown = true;
         this._button.value = 'Сгенерировать';
 
-        this._button.AddHandler('Clicked', (event, args) => this.__buttonClicked(event, args)); 
+        this._button.AddHandler('Clicked', this.__buttonClicked, false, this); 
         this._input.AddHandler('Changed', (event, args) => this.Dispatch('Changed', {domEvent: e, component: this}));
 
     }

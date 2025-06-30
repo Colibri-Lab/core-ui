@@ -177,10 +177,12 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      */
     RegisterEventHandlers() {
         if(this._parent) {
-            this.AddHandler('StoreUpdated', (event, args) => {
-                this._parent.Dispatch('StoreUpdated', {child: this});
-            }); 
+            this.AddHandler('StoreUpdated', this.__thisStoreUpdated); 
         }
+    }
+
+    __thisStoreUpdated(event, args) {
+        this._parent.Dispatch('StoreUpdated', {child: this});
     }
 
     /**

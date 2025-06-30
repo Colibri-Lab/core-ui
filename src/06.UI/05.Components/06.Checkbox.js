@@ -33,26 +33,36 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
 
     /** @protected */
     _handleEvents() {
-        this.AddHandler('Clicked', (event, args) => {
-            if (!this._readonly && this._enabled) {
-                this._setChecked(!this._input.checked);
-                this.Dispatch('Changed', {value: this._input.checked});
-            }
-            
-            args.domEvent.stopPropagation();
-            args.domEvent.preventDefault();
-            return false;
-        });
-        this.AddHandler('KeyUp', (event, args) => {
-            if(args.domEvent.code === 'Space') {
-                this.Dispatch('Clicked', args);
-            }
-            args.domEvent.stopPropagation();
-            args.domEvent.preventDefault();
-            return false;
-        });
-        this._checkIcon.AddHandler('ReceiveFocus', (event, args) => this.Dispatch('ReceiveFocus', args));
-        this._checkIcon.AddHandler('LoosedFocus', (event, args) => this.Dispatch('LoosedFocus', args));
+        this.AddHandler('Clicked', this.__thisClicked);
+        this.AddHandler('KeyUp', this.__thisKeyUp);
+        this._checkIcon.AddHandler('ReceiveFocus', this.__thisCheckIconReceiveFocus, false, this);
+        this._checkIcon.AddHandler('LoosedFocus', this.__thisCheckIconLoosedFocus, false, this);
+    }
+
+    __thisClicked(event, args) {
+        if (!this._readonly && this._enabled) {
+            this._setChecked(!this._input.checked);
+            this.Dispatch('Changed', {value: this._input.checked});
+        }
+        
+        args.domEvent.stopPropagation();
+        args.domEvent.preventDefault();
+        return false;
+    }
+    __thisKeyUp(event, args) {
+        if(args.domEvent.code === 'Space') {
+            this.Dispatch('Clicked', args);
+        }
+        args.domEvent.stopPropagation();
+        args.domEvent.preventDefault();
+        return false;
+    }
+    
+    __thisCheckIconReceiveFocus(event, args) {
+        this.Dispatch('ReceiveFocus', args);
+    }
+    __thisCheckIconLoosedFocus(event, args) {
+        this.Dispatch('LoosedFocus', args);
     }
 
     /**

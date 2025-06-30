@@ -6,6 +6,26 @@ const Colibri = class {
  
 }
 
+class DestructableRegistry {
+    static refs = new Set();
+
+    constructor() {
+
+        window.addEventListener('beforeunload', () => {
+            for (const ref of DestructableRegistry.refs) {
+                const obj = ref.deref();
+                if (obj) obj.destructor();
+            }
+            DestructableRegistry.refs.clear();
+        });
+
+    }
+
+    static Register(obj) {
+        DestructableRegistry.refs.add(new WeakRef(obj));
+    }
+}
+
 /**
  * Destructable class provides a base class for objects that need cleanup upon destruction.
  * @class
@@ -17,7 +37,8 @@ const Destructable = class {
      * Registers a listener for the 'beforeunload' event to trigger the destructor method.
      */
     constructor() {
-        window.addEventListener('beforeunload', e => this.destructor());
+        DestructableRegistry.Register(this);
+        // window.addEventListener('bseforeunload', e => this.destructor());
     }
 
     /**

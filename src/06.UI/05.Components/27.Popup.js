@@ -16,36 +16,36 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
         this.AddClass('app-popup-component');
         
         this.tabIndex = null;
-        this.AddHandler('ShadowClicked', (event, args) => {
-            this.Hide();
-        });
+        this.AddHandler('ShadowClicked', this.Hide);
 
         this.handleVisibilityChange = true;
-        this.AddHandler('VisibilityChanged', (event, args) => {
-            if(this.parent && this._positionOnParent) {
-                const bounds = this.container.bounds(true, true);
-                if(!args.state) {
-                    
-                    if(this.isComponentWentOutOfRight) {
-                        this.right = 0;
-                        this.left = null;
-                    } else if(this.isComponentWentOutOfLeft) {
-                        this.left = 0;
-                        this.right = null;
-                    } 
-                    if(this.isComponentWentOutOfBottom) {
-                        this.bottom = 0;
-                        this.top = null;
-                    } else if(this.isComponentWentOutOfTop) {
-                        this.bottom = null;
-                        this.top = 0;
-                    }
-                }
-            }
-        });
+        this.AddHandler('VisibilityChanged', this.__thisVisibilityChanged);
 
         this._positionOnParent = true;
 
+    }
+
+    __thisVisibilityChanged(event, args) {
+        if(this.parent && this._positionOnParent) {
+            const bounds = this.container.bounds(true, true);
+            if(!args.state) {
+                
+                if(this.isComponentWentOutOfRight) {
+                    this.right = 0;
+                    this.left = null;
+                } else if(this.isComponentWentOutOfLeft) {
+                    this.left = 0;
+                    this.right = null;
+                } 
+                if(this.isComponentWentOutOfBottom) {
+                    this.bottom = 0;
+                    this.top = null;
+                } else if(this.isComponentWentOutOfTop) {
+                    this.bottom = null;
+                    this.top = 0;
+                }
+            }
+        }
     }
 
     /**

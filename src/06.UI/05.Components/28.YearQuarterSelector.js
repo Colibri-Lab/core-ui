@@ -38,8 +38,8 @@ Colibri.UI.YearQuarterSelector = class extends Colibri.UI.FlexBox {
         this._yearSelector.shown = true;
         this._quarterSelector.shown = true;
 
-        this._yearSelector.AddHandler('Changed', (event, args) => this.__yearSelectorChanged(event, args));
-        this._quarterSelector.AddHandler('Changed', (event, args) => this.__quarterSelectorChanged(event, args));
+        this._yearSelector.AddHandler('Changed', this.__yearSelectorChanged, false, this);
+        this._quarterSelector.AddHandler('Changed', this.__quarterSelectorChanged, false, this);
 
     }
     

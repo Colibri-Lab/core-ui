@@ -47,13 +47,17 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         this.RegisterEvent('ColumnPositionChange', false, 'Поднимается, когда колонка изменила положение липкости');
     }
 
+    __thisClicked(event, args) {
+        this.Dispatch('ColumnClicked', {column: this});
+    }
+    
+    __thisComponentDisposed(event, args) {
+        this.Dispatch('ColumnDisposed', {column: this});
+    }
+
     _handleEvents() {
-        this.AddHandler('Clicked', (event, args) => {
-            this.Dispatch('ColumnClicked', {column: this});
-        });
-        this.AddHandler('ComponentDisposed', (event, args) => {
-            this.Dispatch('ColumnDisposed', {column: this});
-        });
+        this.AddHandler('Clicked', this.__thisClicked);
+        this.AddHandler('ComponentDisposed', this.__thisComponentDisposed);
     }
     
     Dispose() {
@@ -158,7 +162,8 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
             this._resizing = true;
             Colibri.UI.Resizing = true;
             
-            const next = this.container.next().tag('component');
+            // const next = this.container.next().getUIComponent();
+            const next = this.container.next().getUIComponent();
             if(!next) {
                 return false;
             }
@@ -201,7 +206,8 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
                 e.preventDefault();
                 e.stopPropagation();
 
-                const next = this.container.next().tag('component');
+                // const next = this.container.next().getUIComponent();
+                const next = this.container.next().getUIComponent();
                 const newWidth = (this._resizeData.width + (e.pageX - this._resizeData.x)).percentOf(this._resizeData.full);
                 const newNextWidth = (this._resizeData.nextWidth - (e.pageX - this._resizeData.x)).percentOf(this._resizeData.full);
 

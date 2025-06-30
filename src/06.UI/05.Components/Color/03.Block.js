@@ -24,7 +24,7 @@ Colibri.UI.Color.Block = class extends Colibri.UI.Component {
             this._setNewColor(left, top);     
         });
 
-        this.AddHandler('Clicked', (event, args) => this.__blockClicked(event, args));
+        this.AddHandler('Clicked', this.__blockClicked);
 
     }
 

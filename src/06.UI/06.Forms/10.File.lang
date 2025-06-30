@@ -4,8 +4,8 @@ ui-files-error-max:
   hy: Դուք կարող եք ընտրել մինչև %s ֆայլ
   it: Puoi selezionare fino a %s file
   es: Puede seleccionar hasta %s archivos
-  kk: "Сіз %s файлға дейін таңдай аласыз"
-  uz: "Siz %s tagacha fayl tanlashingiz mumkin"
+  kk: Сіз %s файлға дейін таңдай аласыз
+  uz: Siz %s tagacha fayl tanlashingiz mumkin
 ui-files-error-format:
   ru: Недопустимый формат файла
   en: Invalid file format

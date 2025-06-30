@@ -35,16 +35,19 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
         });
 
         this.handleVisibilityChange = true;
-        this.AddHandler('VisibilityChanged', (event, args) => {
-            this._generateChart();
-        });
+        this.AddHandler('VisibilityChanged', this.__thisVisibilityChanged);
+        
+        this.AddHandler('Shown', this.__thisShown);
+        this.AddHandler('GoogleChartsLoaded', this.__thisGoogleChartsLoaded);
 
-        this.AddHandler('Shown', (event, args) => {
-            this._generateChart();
-        });
+    }
 
-        this.AddHandler('GoogleChartsLoaded', (event, args) => this.__thisGoogleChartsLoaded(event, args));
+    __thisShown(event, args) {
+        this._generateChart();
+    }
 
+    __thisVisibilityChanged(event, args) {
+        this._generateChart();
     }
 
     /**

@@ -16,44 +16,46 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
 
         this._input1 = new Colibri.UI.DateSelector(this._name + '-input1', contentContainer);
         this._input1.shown = true;
-        this._input1.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args ?? {}, {component: this})));
+        this._input1.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args ?? {}, { component: this })));
         this._input1.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
 
         this._input2 = new Colibri.UI.DateSelector(this._name + '-input2', contentContainer);
         this._input2.shown = true;
-        this._input2.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args ?? {}, {component: this})));
+        this._input2.AddHandler('Changed', (event, args) => this.Dispatch('Changed', Object.assign(args ?? {}, { component: this })));
         this._input2.AddHandler('KeyUp', (event, args) => this.Dispatch('KeyUp', args));
 
         this._text = new Colibri.UI.TextSpan(this._name + '-text', contentContainer);
         this._text.shown = true;
 
-        this.AddHandler('Changed', (event, args) => {
-            if(this._input1.value != 'Invalid Date' && this._input2.value != 'Invalid Date') {
-                const days = parseInt((this._input2.value.getTime() - this._input1.value.getTime()) / 1000 / 86400) + 1;
-                this._text.value = days.formatSequence(['#{ui-period-day1}', '#{ui-period-day2}', '#{ui-period-day3}'], true);
-            }
-            else {
-                this._text.value = '';
-            }
-        });
-        
-        if(this._fieldData?.params?.readonly === undefined) {
-            this.readonly = false;    
+        this.AddHandler('Changed', this.__thisChanged);
+
+        if (this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;
         }
         else {
             this.readonly = this._fieldData?.params?.readonly;
         }
-        if(this._fieldData?.params?.enabled === undefined) {
+        if (this._fieldData?.params?.enabled === undefined) {
             this.enabled = true;
         }
         else {
             this.enabled = this._fieldData.params.enabled;
         }
 
-        if(this._fieldData?.params?.days !== undefined) {
+        if (this._fieldData?.params?.days !== undefined) {
             this._text.shown = this._fieldData?.params?.days;
         }
 
+    }
+
+    __thisChanged(event, args) {
+        if (this._input1.value != 'Invalid Date' && this._input2.value != 'Invalid Date') {
+            const days = parseInt((this._input2.value.getTime() - this._input1.value.getTime()) / 1000 / 86400) + 1;
+            this._text.value = days.formatSequence(['#{ui-period-day1}', '#{ui-period-day2}', '#{ui-period-day3}'], true);
+        }
+        else {
+            this._text.value = '';
+        }
     }
 
     /**
@@ -93,7 +95,7 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
      * @type {string}
      */
     set placeholder(value) {
-        if(Array.isArray(value)) {
+        if (Array.isArray(value)) {
             value[0] = this._convertProperty('String', value[0]);
             value[1] = this._convertProperty('String', value[1]);
             this._input1.placeholder = value[0];
@@ -127,7 +129,7 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
     /**
      * Enable/Disable
      * @type {boolean}
-     */   
+     */
     get enabled() {
         return this._input1.enabled;
     }
@@ -135,7 +137,7 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
     /**
      * Enable/Disable
      * @type {boolean}
-     */   
+     */
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
         this._input1.enabled = value;
@@ -159,4 +161,4 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
         }
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Period', 'Colibri.UI.Forms.Period', '#{ui-fields-period}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler'])
+Colibri.UI.Forms.Field.RegisterFieldComponent('Period', 'Colibri.UI.Forms.Period', '#{ui-fields-period}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler'])
