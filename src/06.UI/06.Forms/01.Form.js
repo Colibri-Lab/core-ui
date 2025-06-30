@@ -421,6 +421,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     }
 
     __componentChanged(event, args) {
+        const component = event.sender;
         args = args ? args : {};
         if (component._timeout) {
             clearTimeout(component._timeout);
