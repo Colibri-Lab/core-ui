@@ -4040,7 +4040,11 @@ EventTarget.prototype.removeEventListener = function (type, listener, options) {
             const l = arr[i];
             if (l.type === type && l.listener === listener) {
                 arr.splice(i, 1);
-                __listenersMap.set(this, arr);
+                if(arr.length > 0) {
+                    __listenersMap.set(this, arr);
+                } else {
+                    __listenersMap.delete(this);
+                }
                 break;
             }
         }
