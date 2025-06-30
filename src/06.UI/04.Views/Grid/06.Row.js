@@ -392,24 +392,27 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
         if (this._contextMenuObject) {
             this._contextMenuObject.Dispose();
+            this._contextMenuObject = null;
         }
 
-        const contextMenuObject = new Colibri.UI.ContextMenu(cell.name + '-contextmenu', document.body, orientation, point);
-        contextMenuObject.Show(this.contextmenu, cell);
+        this._contextMenuObject = new Colibri.UI.ContextMenu(cell.name + '-contextmenu', document.body, orientation, point);
+        this._contextMenuObject.Show(this.contextmenu, cell);
         if (className) {
-            contextMenuObject.AddClass(className);
+            this._contextMenuObject.AddClass(className);
         }
-        contextMenuObject.AddHandler('Clicked', this.__contextMenuObjectClicked, false, this);
+        this._contextMenuObject.AddHandler('Clicked', this.__contextMenuObjectClicked, false, this);
 
-
-        this._contextMenuObject = contextMenuObject;
     }
 
     __contextMenuObjectClicked(event, args) {
-        contextMenuObject.Hide();
-        this.Dispatch('ContextMenuItemClicked', args);
-        contextMenuObject.Dispose();
+        
+        const cell = this.Children('lastChild');
         cell.Children(cell.name + '-contextmenu-icon-parent')?.RemoveClass('-selected');
+
+        this._contextMenuObject.Hide();
+        this.Dispatch('ContextMenuItemClicked', args);
+        this._contextMenuObject.Dispose();
+        this._contextMenuObject = null;
     }
 
 

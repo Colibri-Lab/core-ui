@@ -477,6 +477,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     __rowsCellClicked(event, args) {
+        debugger;
         if (this.selectionMode === Colibri.UI.Grid.EveryCell) {
             this.DeactivateAllCells();
             if (!this.multiple) {
@@ -498,8 +499,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     __rowsRowSelected(event, args) {
-        if (rows.checked.length == 0) {
-            rows.checkbox.checked = false;
+        if (event.sender.checked.length == 0) {
+            event.sender.checkbox.checked = false;
         }
         this.Dispatch('RowSelected', args);
     }
@@ -730,6 +731,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      * @param {*} args event arguments
      */
     __clickedProcessing(event, args) {
+
         const target = args.domEvent.target;
         // const cell = target.closest('.app-ui-row-cell')?.getUIComponent();
         const cell = target.closest('.app-ui-row-cell')?.getUIComponent();
@@ -738,8 +740,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             return false;
         }
 
-        // const row = target.closest('.app-ui-row').getUIComponent();
-        const row = target.closest('.app-ui-row').getUIComponent;
+        const row = target.closest('.app-ui-row').getUIComponent();
 
         args.cell = cell;
         args.row = row;

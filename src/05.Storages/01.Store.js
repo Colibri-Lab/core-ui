@@ -266,6 +266,10 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         return this;
     }
 
+    __componentDisposed(event, args) {
+        this.EraseComponentFormHandlers(event.sender);
+    }
+
     /**
      * Adds a path handler for the specified path.
      * @param {string|string[]} path - The path or an array of paths for which the handler is registered.
@@ -294,9 +298,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         }
 
         if(respondent instanceof Colibri.UI.Component) {
-            respondent.AddHandler('ComponentDisposed', (event, args) => {
-                this.RemovePathHandler(path, respondent, handler);
-            });
+            respondent.AddHandler('ComponentDisposed', this.__componentDisposed, false, this);
         }
 
         if (path instanceof Array) {
@@ -325,6 +327,18 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         }
 
         return this;
+    }
+
+    EraseComponentFormHandlers(component) {
+        for(const key of Object.keys(this._pathHandlers)) {
+            const handlers = this._pathHandlers[key];
+            for(let i = handlers.length - 1; i >= 0; i--) {
+                const handlerObject = handlers[i];
+                if(handlerObject.respondent === component) {
+                    handlers.splice(i, 1);
+                }
+            }
+        }
     }
 
     /**

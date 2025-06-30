@@ -36,9 +36,6 @@ Colibri.UI.Pane = class extends Colibri.UI.Component {
 
         this._resizable = resizable || 'none';
 
-        
-        this.__stopClick = (e) => { e.preventDefault(); e.stopPropagation(); return false; };
-
         this.__startResize = (e) => {
             this._resizing = true;
             Colibri.UI.Resizing = true;

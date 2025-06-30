@@ -117,35 +117,35 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     __domHandlersAttached = {};
 
     __thisBubble(event, args) {
-        return this.Dispatch(event, args);
+        return this.Dispatch(event.name, args);
     }
 
     __thisBubbleWithComponent(event, args) {
-        return this.Dispatch(event, Object.assign(args || {}, {component: this}));
+        return this.Dispatch(event.name, Object.assign(args || {}, {component: this}));
     }
 
     __thisBubblePreventDefault(event, args) {
-        this.Dispatch(event, args);
+        this.Dispatch(event.name, args);
         args.domEvent.stopPropagation();
         args.domEvent.preventDefault();
         return false;
     }
 
     __thisBubbleStopPropagation(event, args) {
-        this.Dispatch(event, args);
+        this.Dispatch(event.name, args);
         args.domEvent.stopPropagation();
         return false;
     }
 
     __thisBubbleWithFocus(event, args) {
         this?.Focus();
-        this.Dispatch(event, args);
+        this.Dispatch(event.name, args);
     }
 
     __thisBubbleWithFocusStopPropagation(event, args) {
         this?.Focus();
         args.domEvent?.stopPropagation();
-        this.Dispatch(event, args);
+        this.Dispatch(event.name, args);
     }
 
 
@@ -1861,7 +1861,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             }
             else {
                 this._storage.AsyncQuery(this._binding).then((data) => {
-                    if(this.__renderBoundedValues) {
+                    if(this._element && this.__renderBoundedValues) {
                         this.__renderBoundedValues(data, this._binding);
                     }
                 });

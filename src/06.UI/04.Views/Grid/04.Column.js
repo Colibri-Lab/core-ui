@@ -156,7 +156,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
 
     _bindResizeEvents() {
 
-        const stopClick = (e) => { e.preventDefault(); e.stopPropagation(); return false; };
+        this._stopClick = (e) => { e.preventDefault(); e.stopPropagation(); return false; };
 
         this._startResize = this._startResize ?? ((e) => {
             this._resizing = true;
@@ -222,10 +222,10 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
             }
         });
 
-        this._resizeHandler.addEventListener("touchstart", startResize, false);
-        this._resizeHandler.addEventListener("mousedown", startResize, false);
-        this._resizeHandler.addEventListener("click", stopClick, false);
-        this._resizeHandler.addEventListener("dblclick", stopClick, false);
+        this._resizeHandler.addEventListener("touchstart", this._startResize, false);
+        this._resizeHandler.addEventListener("mousedown", this._startResize, false);
+        this._resizeHandler.addEventListener("click", this._stopClick, false);
+        this._resizeHandler.addEventListener("dblclick", this._stopClick, false);
 
     }
 
