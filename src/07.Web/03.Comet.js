@@ -156,6 +156,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                 Colibri.Web.Comet.Options.origin,
                 this._user,
                 Object.assign({name: this._userName}, this._handlers),
+                this._texts ?? {},
                 () => {console.log('Successed !!!');},
                 (err) => {console.log('Error !!!', err);}
             );
@@ -179,17 +180,24 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     
     /**
      * Initializes the Comet object with user data and storage settings.
-     * @param {object} userData - Data of the user.
-     * @param {Colibri.Storages.Store} store - Storage object.
-     * @param {string} storeMessages - Key where messages will be stored.
+     * @param {object} userData - The user data object containing user GUID and name.
+     * @param {Colibri.Storages.Store} store - The store to save messages.
+     * @param {string} storeMessages - The key for storing messages in the store.
+     * @param {object} handlers - Handlers for specific events.
+     * @param {object} texts - Texts for notifications.
+     * @param {object|null} firebaseServiceJson - Firebase service configuration JSON.
+     * @param {string|null} pushToken - Push token for notifications.
+     * @param {function|null} pushFunction - Function to handle push notifications.
+     * @returns {void}
      */
-    Init(userData, store, storeMessages, handlers = {}, firebaseServiceJson = null, pushToken = null, pushFunction = null) {
+    Init(userData, store, storeMessages, handlers = {}, texts = {}, firebaseServiceJson = null, pushToken = null, pushFunction = null) {
 
         this._user = userData.guid;
         this._userName = userData.name;
         this._store = store;
         this._storeMessages = storeMessages;
         this._handlers = handlers;
+        this._texts = texts;
         this._firebaseServiceJson = firebaseServiceJson;
         this._pushToken = pushToken;
         this._pushFunction = pushFunction;
