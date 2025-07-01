@@ -147,7 +147,6 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
                         this.Dispatch('NotificationTapped', notification);
                     }, e => console.log(e));
                     this._pushNotifications.onBackgroundMessage((notification) => {
-                        console.log(this.__handlers);
                         this.Dispatch('NotificationTapped', notification);
                     });
                 });
@@ -175,6 +174,9 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
                 window.addEventListener('colibri-accessories:onDeviceUnlocked', (e) => {
                     this._deviceLocked = false;
                     this.Dispatch('DeviceUnlocked', {locked: false});
+                });
+                window.addEventListener('colibri-accessories:onNotification', (e) => {
+                    this.Dispatch('NotificationTapped', {payload: e.detail});
                 });
             }
 
