@@ -271,9 +271,14 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
      */
     AddTab(componentHeaderButton, componentContainer) {
         componentHeaderButton.contentContainer = componentContainer;
+        componentHeaderButton.parent = this;
 
         this.Children(componentHeaderButton.name, componentHeaderButton);
-        componentContainer && this.Children(componentContainer.name, componentContainer);
+        if(componentContainer) {
+            this.Children(componentContainer.name, componentContainer);
+            componentContainer.parent = this;
+        }
+        
 
         return componentContainer;
     }

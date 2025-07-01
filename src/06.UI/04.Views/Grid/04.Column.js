@@ -61,12 +61,8 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
     }
     
     Dispose() {
-        
         this.resizable = false;
-
-
         super.Dispose();
-        this.Dispatch('ColumnDisposed', {column: this});
     }
 
     /**

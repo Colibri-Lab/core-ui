@@ -1056,7 +1056,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     __columnColumnAdded(event, args) {
         Object.forEach(this.groups, (name, rows) => {
-            rows.columns = this.header.columnsCount;
+            rows.Dispatch('ColumnAdded', {column: args.column, count: this.header.columnsCount});
         });
         this.RecalculateCellPositions();
     }

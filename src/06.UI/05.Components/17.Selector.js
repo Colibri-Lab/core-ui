@@ -262,7 +262,6 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     /** @private */
     _removePopup() {
         if (this._popup) {
-            this._popup.shown = false;
             this._popup.Dispose();
             this._popup = null;
             if (!this.allowempty && (!this._value || !this._value.length) && this._lastValue) {
@@ -496,13 +495,13 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                     info = this._placeholderinfo;
                     info(this._value, this._values).then((text) => {
                         this._input.placeholder = (text + '').stripHtml();
-                    });
+                    }).catch(e => console.log(e));
                 } else {
                     try {
                         info = eval(this._placeholderinfo);
                         info(this._value, this._values).then((text) => {
                             this._input.placeholder = (text + '').stripHtml();
-                        });
+                        }).catch(e => console.log(e));
                     } catch (e) {
                         this._input.placeholder = String.Pluralize(this._placeholderinfo, itemCount).stripHtml();
                     }

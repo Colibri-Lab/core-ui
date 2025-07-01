@@ -114,8 +114,8 @@ Colibri.UI.Pane = class extends Colibri.UI.Component {
     }
 
     Dispose() {
-        super.Dispose();
         this._removeResizeHandler();
+        super.Dispose();
     }
 
     /**

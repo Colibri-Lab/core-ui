@@ -89,8 +89,8 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
      * Gets the requests being processed.
      * @returns {Object} The working requests.
      */
-    Requests() {
-        return this._workingRequests;
+    Requests(name = null) {
+        return name ? this._workingRequests[name] : this._workingRequests;
     }
 
     /**

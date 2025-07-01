@@ -22,10 +22,12 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
         args.component.AddHandler('ColumnStickyChange', this.__thisBubble, false, this);
         args.component.AddHandler('ColumnClicked', this.__thisBubble, false, this);
         args.component.AddHandler('ColumnDisposed', this.__thisBubble, false, this);
+        args.component.AddHandler('ComponentMoved', this.__newColumnMoved, false, this);
+        this.Dispatch('ColumnAdded', {column: args.component});
     }
 
     __newColumnMoved(event, args) {
-        this.Dispatch('ColumnMoved', Object.assign(args, {column: newColumn}));
+        this.Dispatch('ColumnMoved', Object.assign(args, {column: event}));
     }
 
     /** @protected */
@@ -47,9 +49,6 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
             newColumn[name] = attr;
         });
 
-        newColumn.AddHandler('ComponentMoved', this.__newColumnMoved, false, this);
-        this.Dispatch('ColumnAdded', {column: newColumn});
-        
         return newColumn;
     }
 

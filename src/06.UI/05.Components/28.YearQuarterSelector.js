@@ -20,7 +20,11 @@ Colibri.UI.YearQuarterSelector = class extends Colibri.UI.FlexBox {
         this._yearSelector = new Colibri.UI.Selector(this.name + '-year', this);
         this._quarterSelector = new Colibri.UI.Selector(this.name + '-quarter', this, true);
         this._quarterSelector.placeholderinfo = (value, values) => new Promise((resolve, reject) => {
-            resolve(value.map(v => ['I', 'II', 'III', 'IV'][parseInt(v.value) - 1]).join(', '));
+            if(this.isConnected) {
+                resolve(value.map(v => ['I', 'II', 'III', 'IV'][parseInt(v.value) - 1]).join(', '));
+            } else {
+                reject();
+            }
         });
 
         this._yearSelector.searchable = false;

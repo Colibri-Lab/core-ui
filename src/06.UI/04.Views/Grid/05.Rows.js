@@ -32,6 +32,15 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
         this._titleCell.AddHandler('Clicked', this.__titleCellClicked, false, this);
 
+        this.AddHandler('ColumnAdded', this.__columnAdded);
+
+    }
+
+    __columnAdded(event, args) {
+        this.columns = args.count;
+        this.ForEveryRow((name, row) => {
+            row.Dispatch('ColumnAdded', args);
+        });
     }
 
     __titleCellClicked(event, args) {
@@ -84,6 +93,7 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         this.RegisterEvent('RowDisposed', false, 'Поднимается, когда удалили строку');
         this.RegisterEvent('GridCellsChanged', false, 'Поднимается, когда все строки сообщили об изменении ячеек (sticky/dispose)');
         this.RegisterEvent('StickyChanged', false, 'Поднимается, когда все ячейки сообщили об изменинии sticky');
+        this.RegisterEvent('ColumnAdded', false, 'When added a column to grid');
     }
 
     __newRowRowUpdated(event, args) {
@@ -350,11 +360,12 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
     }
 
     Clear() {
-        this.ForEach((name, component) => {
-            if(component instanceof Colibri.UI.Grid.Row) {
-                component.Dispose();
-            }
-        });
+        this._children.reverse();
+        while(this._children.length > 1) {
+            const o = this._children[0];
+            o.Dispose();
+            this.Children(o.name, null);
+        }
     }
 
     ForEveryRow(callback) {

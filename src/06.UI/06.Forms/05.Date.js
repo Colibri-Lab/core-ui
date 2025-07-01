@@ -20,7 +20,7 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
         this._input.clearIcon = false;
         this._input.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
         this._input.AddHandler('KeyUp', this.__thisBubble, false, this);
-        this._input.AddHandler('Clicked', this__inputClicked, false, this);
+        this._input.AddHandler('Clicked', this.__inputClicked, false, this);
 
         this._icon = new Colibri.UI.Icon(this.name + '-clear', contentContainer);
         this._icon.shown = true;

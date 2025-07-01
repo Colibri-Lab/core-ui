@@ -37,7 +37,6 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         this.draggable = this.grid?.draggable ?? false;
         this.dropable = this.grid?.dropable ?? false;
 
-        this.AddHandler('ComponentDisposed', this.__thisComponentDisposed);
 
     }
 
@@ -47,7 +46,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         }
     }
 
-    __columnsColumnAddedHandler(event, args) {
+    __columnAdded(event, args) {
         this.__newCell('', args.column);
     }
 
@@ -56,7 +55,6 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
             return;
         }
         this?.grid?._rowSelectionCheckbox.delete(this._checkboxContainer);
-        this.header?.ForEach((name, columns) => columns.RemoveHandler('ColumnAdded', this.__columnsColumnAddedHandler, false, this));
         super.Dispose();
     }
 
@@ -100,13 +98,14 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     _handleEvents() {
 
-        this.header?.ForEach((name, columns) => columns.AddHandler('ColumnAdded', this.__columnsColumnAddedHandler, false, this));
-
         this.AddHandler('RowStickyChange', this.__thisRowStickyChange);
         this.AddHandler('RowPositionChange', this.__thisRowPositionChange);
 
         this.AddHandler('ContextMenuIconClicked', (event, args) => event.sender.grid?.Dispatch('ContextMenuIconClicked', Object.assign({ item: event.sender }, args)));
         this.AddHandler('ContextMenuItemClicked', (event, args) => event.sender.grid?.Dispatch('ContextMenuItemClicked', Object.assign({ item: event.sender }, args)));
+
+        this.AddHandler('ComponentDisposed', this.__thisComponentDisposed);
+        this.AddHandler('ColumnAdded', this.__columnAdded);
 
     }
 

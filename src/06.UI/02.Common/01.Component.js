@@ -101,12 +101,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         __ClickedOut: {
             domEvent: 'click',
             respondent: document.body,
-            handler: function(e) {
-                const c = e.currentTarget.getUIComponent();
-                if (!c.ContainsElement(e.target)) {
-                    c.Dispatch('ClickedOut', {domEvent: e});
-                }
-            }
+        },
+        __Resized: {
+            domEvent: 'resized',
+            respondent: window,
+        },
+        __Resize: {
+            domEvent: 'resize',
+            respondent: window,
         }
     };
 
@@ -1257,9 +1259,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         val = val === true || val === 'true';
 
         if (!val) {
-            this.AddClass('ui-disabled')._element.attr('disabled', 'disabled');
+            this.AddClass('ui-disabled');
+            this._element.attr('disabled', 'disabled');
         } else {
-            this.RemoveClass('ui-disabled')._element.attr('disabled', null);
+            this.RemoveClass('ui-disabled')
+            this._element.attr('disabled', null);
         }
 
         for(const control of this._children) {
@@ -1881,7 +1885,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @type {Boolean}
      */
     get isConnected() {
-        return this._element.isConnected;
+        return this._element?.isConnected ?? false;
     }
 
     /**
@@ -1953,7 +1957,15 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     set handleClickedOut(value) {
         this._handleClickedOut = value;
         if(value) {
-            this.__bindHtmlEvent('__ClickedOut');
+            this.AddHandler('__ClickedOut', this.__clickedOutHandler);
+        } else {
+            this.RemoveHandler('__ClickedOut', this.__clickedOutHandler);
+        }
+    }
+
+    __clickedOutHandler(event, args) {
+        if (!this.ContainsElement(e.target)) {
+            this.Dispatch('ClickedOut', {domEvent: e});
         }
     }
 
@@ -1971,17 +1983,17 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     set handleResize(value) {
         this._handleResize = value;
         if(value) {
-            this.__bindHtmlEvent('__Resized', {
-                domEvent: 'resized',
-                respondent: window,
-                handler: (e) => this.Dispatch('Resized', {domEvent: e})
-            });
-            this.__bindHtmlEvent('__Resize', {
-                domEvent: 'resize',
-                respondent: window,
-                handler: (e) => this.Dispatch('Resize', {domEvent: e})
-            });
+            this.AddHandler('__Resized', this.__resizedHandler);
+            this.AddHandler('__Resize', this.__resizeHandler);
         }
+    }
+
+    __resizedHandler(event, args) {
+        this.Dispatch('Resized', {domEvent: e});
+    }
+
+    __resizeHandler(event, args) {
+        this.Dispatch('Resize', {domEvent: e})
     }
 
     /**

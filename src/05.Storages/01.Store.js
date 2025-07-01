@@ -277,7 +277,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @param {boolean} prepend - Indicates whether the handler should be added at the beginning (true) or end (false) of the handlers list.
      * @returns {Colibri.Storages.Store} The store instance.
      */
-    AddPathHandler(path, handler, prepend) {
+    AddPathHandler(path, handler, prepend, respondent = this) {
 
         if(Array.isArray(path)) {
             for(const p of path) {
@@ -291,7 +291,6 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
             return childStoreData.child.AddPathHandler(childStoreData.path, handler, prepend);
         }
 
-        let respondent = this;
         if(Array.isArray(handler)) {
             respondent = handler[0];
             handler = handler[1];
