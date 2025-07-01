@@ -110,6 +110,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     }
 
     Dispose() {
+        debugger;
         this.movable = false;
         this.resizable = false;
         super.Dispose();
