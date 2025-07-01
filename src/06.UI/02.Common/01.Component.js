@@ -753,7 +753,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             return;
         }
         
-        const component = e.currentTarget.getUIComponent();
+        const component = e?.currentTarget?.getUIComponent ? e?.currentTarget?.getUIComponent() : null;
         if(!component) {
             return;
         }
