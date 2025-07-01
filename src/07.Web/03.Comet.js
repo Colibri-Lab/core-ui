@@ -511,14 +511,14 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * Sends a message to a specific user.
      * @param {string} userGuid - The GUID of the recipient user.
      * @param {string} message - The message content.
-     * @param {string} contactName - The name of the contact.
+     * @param {object} contact - The name of the contact.
      * @returns {string|null} - The ID of the sent message.
      */
-    SendTo(userGuid, message = null, contactName = null, activate = true, wakeup = true) {
+    SendTo(userGuid, message = null, contact = null, activate = false, wakeup = false) {
         try {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
-                const msg = Colibri.Common.CometMessage.CreateForSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, message, {contact: contactName}, activate, wakeup);
+                const msg = Colibri.Common.CometMessage.CreateForSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, message, {contact: contact.name, photo: contact.avatar}, activate, wakeup);
                 msg.MarkAsRead();
                 if(msg.from !== msg.recipient) {
                     this.AddLocalMessage(msg).then(() => {
@@ -549,7 +549,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {object} message - The message content.
      * @returns {string|null} - The ID of the sent message. 
      */
-    CommandBroadcast(action, message = null, activate = true, wakeup = true) {
+    CommandBroadcast(action, message = null, activate = false, wakeup = false) {
         try {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
@@ -572,14 +572,14 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * Sends a broadcast message.
      * @param {string} action - The action to be performed.
      * @param {string} message - The message content.
-     * @param {string} contactName - The name of the contact.
+     * @param {object} contact - The name of the contact.
      * @returns {string|null} - The ID of the sent message. 
      */
-    SendBroadcast(text = null, contactName = null, activate = true, wakeup = true) {
+    SendBroadcast(text = null, contact = null, activate = false, wakeup = false) {
         try {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
-                const msg = Colibri.Common.CometMessage.CreateForSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, text, {contact: contactName}, activate, wakeup);
+                const msg = Colibri.Common.CometMessage.CreateForSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, text, {contact: contact.name, photo: contact.avatar}, activate, wakeup);
                 this._ws.send(msg.toJson());
                 this.Dispatch('MessageSent', {message: msg});
                 return id;
@@ -599,14 +599,14 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {string} userGuid - The GUID of the recipient user.
      * @param {string} action - The action to be performed.
      * @param {Array} message - The message content.
-     * @param {string} contactName - The name of the contact.
+     * @param {object} contact - The name of the contact.
      * @returns {string|null} - The ID of the sent message.
      */
-    SendFilesTo(userGuid, action, files = null, contactName = null, activate = true, wakeup = true) {
+    SendFilesTo(userGuid, action, files = null, contact = null, activate = false, wakeup = false) {
         try {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
-                const msg = Colibri.Common.CometMessage.CreateForFilesSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, files, {contact: contactName}, activate, wakeup);
+                const msg = Colibri.Common.CometMessage.CreateForFilesSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, files, {contact: contact.name, photo: contact.avatar}, activate, wakeup);
                 msg.MarkAsRead();
                 if(msg.from !== msg.recipient) {
                     this.AddLocalMessage(msg).then(() => {
@@ -635,14 +635,14 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * Sends a broadcast message.
      * @param {string} action - The action to be performed.
      * @param {Array} files - The message content.
-     * @param {string} contactName - The name of the contact.
+     * @param {object} contact - The name of the contact.
      * @returns {string|null} - The ID of the sent message. 
      */
-    SendFilesBroadcast(action, files = null, contactName = null, activate = true, wakeup = true) {
+    SendFilesBroadcast(action, files = null, contact = null, activate = false, wakeup = false) {
         try {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
-                const msg = Colibri.Common.CometMessage.CreateForFilesSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, files, {contact: contactName}, activate, wakeup);
+                const msg = Colibri.Common.CometMessage.CreateForFilesSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, files, {contact: contact.name, photo: contact.avatar}, activate, wakeup);
                 this._ws.send(JSON.stringify(msg));
                 this.Dispatch('MessageSent', {message: msg});
                 return id;
