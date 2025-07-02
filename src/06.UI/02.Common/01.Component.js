@@ -2011,7 +2011,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     __resizeHandler(event, args) {
-        console.log(args);
         this.Dispatch('Resize', args)
     }
 
