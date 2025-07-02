@@ -4017,7 +4017,7 @@ window.__originalRemove = EventTarget.prototype.removeEventListener;
 window.__listenersMap = new WeakMap();
 window.__elToInstance = new WeakMap();
 
-EventTarget.prototype.addEventListener = function (type, listener, options) {
+EventTarget.prototype.addEventListener = function (type, listener, options, component = null) {
     
     if(window.isPureTouchDevice() && ['mouseenter','mouseleave','mouseover','mouseout','mousemove'].includes(type)) {
         // nothing to do
@@ -4032,6 +4032,7 @@ EventTarget.prototype.addEventListener = function (type, listener, options) {
     }
 
     __listenersMap.get(this).push({ type, listener, options });
+
     return window.__originalAdd.call(this, type, listener, options);
 
 };
@@ -4061,17 +4062,34 @@ window.getEventListenersFor = function (el) {
     return __listenersMap.get(el) || [];
 };
 
-Element.prototype.mapToUIComponent = function (instance) {
-    __elToInstance.set(this, instance);
+Window.prototype.mapToUIComponent = Element.prototype.mapToUIComponent = function (instance) {
+    if(__elToInstance.has(this)) {
+        let exists = __elToInstance.get(this);
+        if(!Array.isArray(exists)) {
+            exists = [exists];
+        }
+        if(!exists.includes(instance)) {
+            exists.push(instance);
+        }
+        __elToInstance.set(this, exists);
+    } else {
+        __elToInstance.set(this, instance);
+    }
 };
 
-Element.prototype.getUIComponent = function() {
-    return __elToInstance.get(this);
+Window.prototype.getUIComponent = Element.prototype.getUIComponent = function() {
+    const exists = __elToInstance.get(this);
+    if(!Array.isArray(exists)) {
+        return exists;
+    } else if(exists.length === 1) {
+        return exists[0];
+    }
+    return exists;
 };
 
 Element.prototype.delete = function () {
 
-    __elToInstance.delete(this);
+   __elToInstance.delete(this);
 
     try {
         this.remove();

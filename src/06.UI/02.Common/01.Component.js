@@ -100,14 +100,17 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         },
         __ClickedOut: {
             domEvent: 'click',
+            eventName: 'ClickedOut',
             respondent: document.body,
         },
         __Resized: {
             domEvent: 'resized',
+            eventName: 'Resized',
             respondent: window,
         },
         __Resize: {
             domEvent: 'resize',
+            eventName: 'Resize',
             respondent: window,
         }
     };
@@ -742,23 +745,30 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     __eventHandler(e) {
-        let ename = null;
+        let enames = [];
         for(const key of Object.keys(Colibri.UI.Component.__domHandlers)) {
-            if(Colibri.UI.Component.__domHandlers[key].domEvent === e.type) {
-                ename = key;
-                break;
+            const eb = Colibri.UI.Component.__domHandlers[key];
+            if(eb.domEvent === e.type) {
+                enames.push(eb.eventName || key);
             }
         }
-        if(!ename) {
+        if(enames.length == 0) {
             return;
         }
+
         
         const component = e?.currentTarget?.getUIComponent ? e?.currentTarget?.getUIComponent() : null;
         if(!component) {
             return;
         }
 
-        return component.Dispatch(ename, {domEvent: e});
+        if(Array.isArray(component)) {
+            for(const c of component) {
+                c.Dispatch(enames.length === 0 ? enames[0] : enames, {domEvent: e});                
+            }
+        }
+
+        return component.Dispatch(enames.length === 0 ? enames[0] : enames, {domEvent: e});
     }
 
     __delayedEventHandler(e) {
@@ -791,7 +801,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             respondent,
             handler
         };
-        
+
+        if(respondent === window || respondent === document.body || respondent === document) {
+            respondent.mapToUIComponent(this);
+        }
+
         respondent.addEventListener(domEvent, handler, capture || false);
     }
 
@@ -1993,6 +2007,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     __resizeHandler(event, args) {
+        console.log(args);
         this.Dispatch('Resize', {domEvent: e})
     }
 
