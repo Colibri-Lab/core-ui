@@ -360,12 +360,18 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
     }
 
     Clear() {
-        this._children.reverse();
-        while(this._children.length > 1) {
-            const o = this._children[0];
-            o.Dispose();
-            this.Children(o.name, null);
+
+        const collected = [];
+        for(const row of this._children) {
+            if(row instanceof Colibri.UI.Grid.Row) {
+                collected.push(row); 
+            }
+        }      
+
+        while(collected.length > 0) {
+            collected[0].Dispose();
         }
+
     }
 
     ForEveryRow(callback) {
