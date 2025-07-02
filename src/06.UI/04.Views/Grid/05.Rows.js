@@ -370,6 +370,7 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
         while(collected.length > 0) {
             collected[0].Dispose();
+            collected.shift();
         }
 
     }
