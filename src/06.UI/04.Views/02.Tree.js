@@ -247,7 +247,7 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
     }
 
     __thisScrolled(event, args) {
-        event.sender.container.css('bottom', (-1 * this.scrollTop + 10) + 'px');
+        this.Children(this._name + '-contextmenu-icon-parent').container.css('bottom', (-1 * this.scrollTop + 10) + 'px');
     }
 
     /** @private */
