@@ -652,7 +652,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
                 const msg = Colibri.Common.CometMessage.CreateForFilesSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, files, {contact: contact.name, photo: contact.photo}, activate, wakeup);
-                this._ws.send(JSON.stringify(msg));
+                this._ws.send(msg.toJson());
                 this.Dispatch('MessageSent', {message: msg});
                 return id;
             }
