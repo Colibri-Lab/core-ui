@@ -169,7 +169,7 @@ Colibri.Common.CometMessage = class {
     toJson() {
         if(this.isForSent) {
             let useEncoding = true;
-            if(this.message.text) {
+            if(this.message.text && this.message.encrypted) {
                 useEncoding = false;
             }
             return JSON.stringify({
