@@ -4113,8 +4113,11 @@ Element.prototype.delete = function () {
 };
 
 const oldStringifyMethod = JSON.stringify;
-JSON.stringify = function(value, replacer, space) {
+JSON.stringify = function(value, replacer, space, escapeUnicode = false) {
     let v = oldStringifyMethod(value, replacer, space);
+    if(!escapeUnicode) {
+        return v;
+    }
     return (v + '').replace(/[\u007F-\uFFFF]/g, function(ch) {
         return '\\u' + ch.charCodeAt(0).toString(16).padStart(4, '0');
     });
