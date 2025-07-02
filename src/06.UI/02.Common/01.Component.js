@@ -614,6 +614,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.RegisterEvent('TouchStarted', false, 'When a finger was pressed on the screen');
         this.RegisterEvent('TouchEnded', false, 'When the finger is removed from the screen');
         this.RegisterEvent('TouchMoved', false, 'When they swipe their finger on the screen');
+        
+        this.RegisterEvent('__Resize', false, 'When the window resizing (fake event internal use only)');
+        this.RegisterEvent('__Resized', false, 'When the window resized (fake event internal use only)');
+        this.RegisterEvent('__ClickedOut', false, 'When clicked out (fake event internal use only)');
     }
 
     /**
@@ -1996,16 +2000,19 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         if(value) {
             this.AddHandler('__Resized', this.__resizedHandler);
             this.AddHandler('__Resize', this.__resizeHandler);
+        } else {
+            this.RemoveHandler('__Resized', this.__resizedHandler);
+            this.RemoveHandler('__Resize', this.__resizeHandler);
         }
     }
 
     __resizedHandler(event, args) {
-        this.Dispatch('Resized', {domEvent: e});
+        this.Dispatch('Resized', args);
     }
 
     __resizeHandler(event, args) {
         console.log(args);
-        this.Dispatch('Resize', {domEvent: e})
+        this.Dispatch('Resize', args)
     }
 
     /**
