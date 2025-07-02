@@ -606,9 +606,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * Sends a message to a specific user.
      * @param {string} userGuid - The GUID of the recipient user.
      * @param {string} action - The action to be performed.
-     * @param {Array} message - The message content.
+     * @param {Array} files - The message content.
      * @param {object} contact - The name of the contact.
      * @returns {string|null} - The ID of the sent message.
+     * @description This method sends files to a specific user and updates the local message store.
      */
     SendFilesTo(userGuid, action, files = null, contact = null, activate = false, wakeup = false) {
         try {
