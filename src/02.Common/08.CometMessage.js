@@ -168,10 +168,6 @@ Colibri.Common.CometMessage = class {
 
     toJson() {
         if(this.isForSent) {
-            let useEncoding = true;
-            if(this.message.text && this.message.encrypted) {
-                useEncoding = false;
-            }
             return JSON.stringify({
                 domain: this.domain, 
                 action: this.action, 
@@ -182,7 +178,7 @@ Colibri.Common.CometMessage = class {
                 broadcast: this.broadcast,
                 activate: this.activate,
                 wakeup: this.wakeup,
-            }, null, null, useEncoding);
+            });
         } else {
             return JSON.stringify({
                 domain: this.domain, 
