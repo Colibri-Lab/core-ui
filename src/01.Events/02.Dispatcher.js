@@ -127,6 +127,12 @@ Colibri.Events.Dispatcher = class extends Destructable {
      */
     Dispatch(event, args = null) {
 
+        if(Array.isArray(event)) {
+            for(const e of event) {
+                this.Dispatch(e, args);
+            }
+        }
+
         if (!(event instanceof Colibri.Events.Event)) {
             // ищем сoбытие в стандартных
             if(this.__events[event]) {

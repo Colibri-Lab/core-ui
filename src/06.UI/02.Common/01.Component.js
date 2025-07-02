@@ -100,17 +100,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         },
         __ClickedOut: {
             domEvent: 'click',
-            eventName: 'ClickedOut',
             respondent: document.body,
         },
         __Resized: {
             domEvent: 'resized',
-            eventName: 'Resized',
             respondent: window,
         },
         __Resize: {
             domEvent: 'resize',
-            eventName: 'Resize',
             respondent: window,
         }
     };
@@ -749,7 +746,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         for(const key of Object.keys(Colibri.UI.Component.__domHandlers)) {
             const eb = Colibri.UI.Component.__domHandlers[key];
             if(eb.domEvent === e.type) {
-                enames.push(eb.eventName || key);
+                enames.push(key);
             }
         }
         if(enames.length == 0) {
@@ -764,11 +761,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         if(Array.isArray(component)) {
             for(const c of component) {
-                c.Dispatch(enames.length === 0 ? enames[0] : enames, {domEvent: e});                
+                c.Dispatch(enames.length === 1 ? enames[0] : enames, {domEvent: e});                
             }
         }
 
-        return component.Dispatch(enames.length === 0 ? enames[0] : enames, {domEvent: e});
+        return component.Dispatch(enames.length === 1 ? enames[0] : enames, {domEvent: e});
     }
 
     __delayedEventHandler(e) {
