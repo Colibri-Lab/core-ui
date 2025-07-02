@@ -526,7 +526,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         try {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
-                const msg = Colibri.Common.CometMessage.CreateForSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, message, {contact: contact.name, photo: contact.avatar}, activate, wakeup);
+                const msg = Colibri.Common.CometMessage.CreateForSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, message, {contact: contact.name, photo: contact.photo}, activate, wakeup);
                 msg.MarkAsRead();
                 if(msg.from !== msg.recipient) {
                     this.AddLocalMessage(msg).then(() => {
@@ -587,7 +587,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         try {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
-                const msg = Colibri.Common.CometMessage.CreateForSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, text, {contact: contact.name, photo: contact.avatar}, activate, wakeup);
+                const msg = Colibri.Common.CometMessage.CreateForSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, text, {contact: contact.name, photo: contact.photo}, activate, wakeup);
                 this._ws.send(msg.toJson());
                 this.Dispatch('MessageSent', {message: msg});
                 return id;
@@ -615,7 +615,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         try {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
-                const msg = Colibri.Common.CometMessage.CreateForFilesSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, files, {contact: contact.name, photo: contact.avatar}, activate, wakeup);
+                const msg = Colibri.Common.CometMessage.CreateForFilesSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, files, {contact: contact.name, photo: contact.photo}, activate, wakeup);
                 msg.MarkAsRead();
                 if(msg.from !== msg.recipient) {
                     this.AddLocalMessage(msg).then(() => {
@@ -651,7 +651,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         try {
             const id = Date.Mc();
             if(this._ws.readyState === 1) {
-                const msg = Colibri.Common.CometMessage.CreateForFilesSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, files, {contact: contact.name, photo: contact.avatar}, activate, wakeup);
+                const msg = Colibri.Common.CometMessage.CreateForFilesSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, files, {contact: contact.name, photo: contact.photo}, activate, wakeup);
                 this._ws.send(JSON.stringify(msg));
                 this.Dispatch('MessageSent', {message: msg});
                 return id;
