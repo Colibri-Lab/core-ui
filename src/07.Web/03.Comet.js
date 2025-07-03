@@ -124,6 +124,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @private
      */
     _initConnection() {
+        
 
         if((App.Device.isAndroid || App.Device.isIOs) && window['ColibriAccessories'] && window['ColibriAccessories']['Service']) {
             ColibriAccessories.Service.handle(
@@ -139,8 +140,9 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                     this._connected = true;
                     this._ws.readyState = 1;
                     if(!Array.isArray(messages)) {
-                        messages = [];
+                        messages = [messages];
                     }
+                    console.log(messages);
                     messages.forEach((message) => this.__onCometMessage({data: message}));
                 }, 
                 (log) => {

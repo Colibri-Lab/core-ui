@@ -93,6 +93,7 @@ Colibri.Common.CometMessage = class {
 
     static FromReceivedObject(domain, from, message, delivery = 'untrusted', broadcast = false, activate = true, wakeup = true) {
         const msg = new Colibri.Common.CometMessage();
+        msg.id = message.id || msg.id;
         msg.domain = domain === 'unknown' ? Colibri.Web.Comet.Options.origin : domain;
         msg.from = from === 'unknown' ? 'system' : from;    
         msg.message = Object.assign(message, {id: msg.id});
