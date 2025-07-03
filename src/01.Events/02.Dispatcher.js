@@ -131,7 +131,7 @@ Colibri.Events.Dispatcher = class extends Destructable {
             for(const e of event) {
                 this.Dispatch(e, args);
             }
-        }
+        } 
 
         if (!(event instanceof Colibri.Events.Event)) {
             // ищем сoбытие в стандартных
