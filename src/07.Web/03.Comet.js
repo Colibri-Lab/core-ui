@@ -134,11 +134,14 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                     this._connected = false;
                     this._ws.readyState = 0;
                 }, 
-                (message) => {
+                (messages) => {
                     // connection is alive
                     this._connected = true;
                     this._ws.readyState = 1;
-                    this.__onCometMessage({data: message});
+                    if(!Array.isArray(messages)) {
+                        messages = [];
+                    }
+                    messages.forEach((message) => this.__onCometMessage({data: message}));
                 }, 
                 (log) => {
                     console.log(log);
