@@ -284,6 +284,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this._removeLink.AddClass('app-component-remove-field')
         this._removeLink.shown = true;
         this._removeLink.value = Colibri.UI.RemoveIcon;
+        this._removeLink.callback = callback;
         this._removeLink.AddHandler('Clicked', this.__removeLinkClicked, false, this);
     }
 
@@ -292,7 +293,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             return;
         }
         this.Dispose();
-        callback && callback();
+        event.sender.callback && event.sender.callback();
     }
 
     /**
