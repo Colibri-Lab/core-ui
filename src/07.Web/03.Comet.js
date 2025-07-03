@@ -928,7 +928,7 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
 
         return new Promise((resolve, reject) => {
 
-            options.order = options.order ?? ['id'];
+            options.order = options.order ?? ['date'];
             options.direction = options.direction ?? 'asc';
             options.filter = options.filter ?? {};
             options.page = options.page ?? 0;
