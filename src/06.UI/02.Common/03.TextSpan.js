@@ -21,14 +21,14 @@ Colibri.UI.TextSpan = class extends Colibri.UI.Component {
      * @type {string}
      */
     get value() {
-        return this._element.html();
+        return this._element?.html() ?? '';
     }
     /**
      * Value string
      * @type {string}
      */
     set value(value) {
-        this._element.html(value);
+        this._element?.html(value);
     }
 
 }

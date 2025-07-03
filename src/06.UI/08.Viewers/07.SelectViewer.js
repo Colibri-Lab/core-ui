@@ -69,6 +69,9 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                     }
                     else if(this._field?.lookup) {
                         this._setLookup(this._field.lookup).then((response) => {
+                            if(!this.isConnected) {
+                                return;
+                            }
                             const _result = (response.result ?? response);
                             if(_result?.length) {
                                 for (let val of _result) {
@@ -141,6 +144,9 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                     value = value.value ?? value;
                     this.AddClass('app-viewer-loading');
                     this._setLookup(this._field.lookup).then((response) => {
+                        if(!this.isConnected) {
+                            return;
+                        }
                         const _result = (response.result ?? response);
                         if(_result?.length) {
                             for (let val of _result) {
