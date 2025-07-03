@@ -3542,6 +3542,10 @@ Element.prototype.hideShowProcess = function (callback, timeout = 30) {
     this.css('visibility', 'hidden');
     document.body.css('overflow', 'hidden');
     Colibri.Common.Delay(timeout).then(() => {
+        if(!this || !this.isConnected) {
+            document.body.css('overflow', null);
+            return;
+        }
         callback();
         this.css('visibility', null);
         document.body.css('overflow', null);
