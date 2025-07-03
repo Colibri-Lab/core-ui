@@ -81,6 +81,9 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                                 }
                             }
                         }).finally(() => {
+                            if(!this.isConnected) {
+                                return;
+                            }
                             this.RemoveClass('app-viewer-loading')
 
                             if(r.length > 1) {
@@ -158,6 +161,9 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
                             }
                         }
                     }).finally(() => {
+                        if(!this.isConnected) {
+                            return;
+                        }
                         this.RemoveClass('app-viewer-loading')
                         if(!selected) {
                             try {
