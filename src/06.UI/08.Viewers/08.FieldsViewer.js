@@ -135,7 +135,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         this.Dispatch('FieldsToggled', { state: this._hidden.shown });
     }
 
-    __viewerChanged(event, args) {
+    __editorChanged(event, args) {
         this.Dispatch('EditorChanged', {
             domEvent: args.domEvent,
             editor: event.sender,
@@ -144,7 +144,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         })
     }
 
-    __editorClicked(event, args) {
+    __viewerClicked(event, args) {
         return this.Dispatch('ViewerClicked', {
             domEvent: args.domEvent,
             viewer: event.sender,
@@ -330,7 +330,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                     if (field.params?.editor) {
                         viewer.AddHandler('Changed', this.__editorChanged, false, this);
                     } else {
-                        viewer.AddHandler('Clicked', this.__viewerChanged, false, this);
+                        viewer.AddHandler('Clicked', this.__viewerClicked, false, this);
                     }
 
                     this._viewers.push(viewer);
