@@ -142,7 +142,6 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                     if(!Array.isArray(messages)) {
                         messages = [messages];
                     }
-                    console.log(messages);
                     messages.forEach((message) => this.__onCometMessage({data: message}));
                 }, 
                 (log) => {
@@ -929,7 +928,7 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
 
         return new Promise((resolve, reject) => {
 
-            options.order = options.order ?? ['date'];
+            options.order = options.order ?? ['id'];
             options.direction = options.direction ?? 'asc';
             options.filter = options.filter ?? {};
             options.page = options.page ?? 0;
