@@ -973,7 +973,17 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
                 req.onsuccess = (e) => {
                     const cursor = e.target.result;
                     if (cursor) {
-                        const match = Object.entries(options.filter).every(([key, val]) => cursor.value[key] === val);
+                        const val = cursor.value;
+                        let match = false;
+
+                        if (Array.isArray(options.filter)) {
+                            match = options.filter.some(cond =>
+                                Object.entries(cond).every(([k, v]) => val[k] === v)
+                            );
+                        } else {
+                            match = Object.entries(options.filter).every(([k, v]) => val[k] === v);
+                        }
+
                         if (match) cursor.delete();
                         cursor.continue();
                     } else {
@@ -984,6 +994,7 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
             });
         });
     }
+
 }
 
 Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
