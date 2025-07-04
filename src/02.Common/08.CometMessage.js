@@ -167,32 +167,27 @@ Colibri.Common.CometMessage = class {
         return this.recipient === '*' || this.message.boradcast;
     }
 
-    toJson() {
-        if(this.isForSent) {
-            return JSON.stringify({
-                domain: this.domain, 
-                action: this.action, 
-                id: this.id, 
-                recipient: this.recipient, 
-                message: this.message, 
-                delivery: this.delivery,
-                broadcast: this.broadcast,
-                activate: this.activate,
-                wakeup: this.wakeup,
-            });
-        } else {
-            return JSON.stringify({
-                domain: this.domain, 
-                action: this.action, 
-                id: this.id, 
-                from: this.from, 
-                message: this.message, 
-                delivery: this.delivery,
-                broadcast: this.broadcast,
-                activate: this.activate,
-                wakeup: this.wakeup,
-            });
+    toObject() {
+        const ret = {
+            domain: this.domain, 
+            action: this.action, 
+            date: this.date.toDbDate(),
+            id: this.id, 
+            recipient: this.recipient, 
+            message: this.message, 
+            delivery: this.delivery,
+            broadcast: this.broadcast,
+            activate: this.activate,
+            wakeup: this.wakeup,
+        };
+        if(!this.isForSent) {
+            ret.from = this.from;
         }
+        return ret;
+    }
+
+    toJson() {
+        return JSON.stringify(this.toObject());
     }
 
 }

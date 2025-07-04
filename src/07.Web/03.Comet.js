@@ -209,7 +209,11 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         if((App.Device.isAndroid || App.Device.isIOs) && App.Device.SqLite.isAvailable) {
             this._storage = new Colibri.Web.SqLiteStore();
         } else {
-            this._storage = new Colibri.Web.InternalStore();
+            let storeType = Colibri.Web.InternalStore;
+            if(this._settings.store) {
+                storeType = eval('Colibri.Web.' + this._settings.store);
+            }
+            this._storage = new storeType();
         }
         this._initConnection();
         this._transferToModuleStore();
@@ -367,6 +371,11 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this.__eventHandlers[eventName].push(handler);
     }
 
+    /**
+     * Adds a message to the local storage.
+     * @param {Colibri.Common.CometMessage} message message to save
+     * @returns {Promise}
+     */
     AddLocalMessage(message) {
         return new Promise((resolve, reject) => {            
             this._storage.Add(message).then((message) => {
@@ -398,7 +407,9 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                     Object.forEach(message, (k, v) => {
                         msg[k] = v;
                     });
-                    msg.date = typeof msg.date === 'string' ? msg.date : msg.date.toDateFromUnixTime();
+                    if(!(msg.date instanceof Date)) {
+                        msg.date = typeof msg.date === 'string' ? msg.date : msg.date.toDateFromUnixTime();
+                    }
                     msg.broadcast = (msg.broadcast === 'true' || msg.broadcast === true || msg.broadcast === 1);
                     msg.read = (msg.read === 'true' || msg.read === true || msg.read === 1);
                     msg.message = typeof msg.message === 'string' ? JSON.parse(msg.message) : msg.message;
@@ -815,6 +826,163 @@ Colibri.Web.InternalStore = class extends Colibri.Common.AbstractMessageStore {
 
         App.Browser.Set('comet.messages', JSON.stringify(messages));
         return Promise.resolve();
+    }
+}
+
+Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
+
+    constructor() {
+        super();
+
+        this._dbName = 'comet.messages';
+        this._storeName = 'messages';
+        this._version = 1;
+        this._db = null;
+
+        this._initDb();
+    }
+
+    _initDb() {
+        const request = indexedDB.open(this._dbName, this._version);
+
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains(this._storeName)) {
+                const store = db.createObjectStore(this._storeName, { keyPath: 'id' });
+                store.createIndex('action', 'action', { unique: false });
+                store.createIndex('domain', 'domain', { unique: false });
+                store.createIndex('date', 'date', { unique: false });
+                store.createIndex('from', 'from', { unique: false });
+                store.createIndex('recipient', 'recipient', { unique: false });
+                store.createIndex('read', 'read', { unique: false });
+                store.createIndex('message', 'message', { unique: false });
+                store.createIndex('delivery', 'delivery', { unique: false });
+                store.createIndex('broadcast', 'broadcast', { unique: false });
+                store.createIndex('activate', 'activate', { unique: false });
+                store.createIndex('wakeup', 'wakeup', { unique: false });
+            }
+        };
+
+        request.onsuccess = (event) => {
+            this._db = event.target.result;
+        };
+
+        request.onerror = (event) => {
+            console.error('IndexedDB error:', event.target.error);
+        };
+    }
+
+    _withStore(mode, callback) {
+        return new Promise((resolve, reject) => {
+            if (!this._db) {
+                const request = indexedDB.open(this._dbName, this._version);
+                request.onsuccess = () => {
+                    this._db = request.result;
+                    const tx = this._db.transaction(this._storeName, mode);
+                    const store = tx.objectStore(this._storeName);
+                    resolve(callback(store, tx));
+                };
+                request.onerror = e => reject(e.target.error);
+            } else {
+                const tx = this._db.transaction(this._storeName, mode);
+                const store = tx.objectStore(this._storeName);
+                resolve(callback(store, tx));
+            }
+        });
+    }
+
+    Add(message) {
+        return this.Get({ filter: { id: message.id } }).then(existing => {
+            if (existing.length > 0) {
+                console.log(`Message with ID ${message.id} already exists`);
+                return message;
+            }
+            return this._withStore('readwrite', (store) => {
+                store.add(message);
+                return message;
+            });
+        });
+    }
+
+    Update(message, id) {
+        message.id = id;
+        return this._withStore('readwrite', (store) => {
+            store.put(message);
+            return message;
+        });
+    }
+
+    Store(messages) {
+        return this._withStore('readwrite', (store) => {
+            messages.forEach(msg => store.put(msg));
+            return messages;
+        });
+    }
+
+    Get(options = {}) {
+        options.order = options.order ?? ['date'];
+        options.direction = options.direction ?? 'asc';
+        options.filter = options.filter ?? {};
+        options.page = options.page ?? 1;
+        options.pagesize = options.pagesize ?? 100;
+
+        return this._withStore('readonly', (store) => {
+            return new Promise((resolve, reject) => {
+                const result = [];
+                const req = store.openCursor();
+                req.onsuccess = (e) => {
+                    const cursor = e.target.result;
+                    if (cursor) {
+                        const val = cursor.value;
+                        let match = false;
+
+                        if (Array.isArray(options.filter)) {
+                            match = options.filter.some(cond =>
+                                Object.entries(cond).every(([k, v]) => val[k] === v)
+                            );
+                        } else {
+                            match = Object.entries(options.filter).every(([k, v]) => val[k] === v);
+                        }
+
+                        if (match) result.push(val);
+                        cursor.continue();
+                    } else {
+                        const sorted = result.sort((a, b) => {
+                            const key = options.order[0];
+                            return options.direction === 'asc' ? a[key] - b[key] : b[key] - a[key];
+                        });
+                        const offset = (options.page - 1) * options.pagesize;
+                        resolve(sorted.slice(offset, offset + options.pagesize));
+                    }
+                };
+                req.onerror = e => reject(e.target.error);
+            });
+        });
+    }
+
+    Clear() {
+        return this._withStore('readwrite', (store) => {
+            store.clear();
+        });
+    }
+
+    Delete(options) {
+        return this._withStore('readwrite', (store) => {
+            return new Promise((resolve, reject) => {
+                const req = store.openCursor();
+                req.onsuccess = (e) => {
+                    const cursor = e.target.result;
+                    if (cursor) {
+                        const match = Object.entries(options.filter).every(([key, val]) => cursor.value[key] === val);
+                        if (match) cursor.delete();
+                        cursor.continue();
+                    } else {
+                        resolve();
+                    }
+                };
+                req.onerror = e => reject(e.target.error);
+            });
+        });
     }
 }
 

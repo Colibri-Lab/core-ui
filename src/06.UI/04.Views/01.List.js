@@ -342,6 +342,15 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
     }
 
+    
+    ShowLastMessage() {
+        const lastGroup = this.Children('lastChild');
+        const last = lastGroup.Items('lastChild');
+        if(last) {
+            this.ScrollTo(10000000);
+        }
+    }
+
     /**
      * Is list can select multiple items
      * @type {boolean}
@@ -961,6 +970,39 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
     get noItemsText() {
         return this.emptyMessage;
     }
+    
+    /**
+     * Renderer component
+     * @type {string|Colibri.UI.Component|Function}
+     */
+    get rendererComponent() {
+        return this._rendererComponent;
+    }
+    /**
+     * Renderer component
+     * @type {string|Colibri.UI.Component|Function}
+     */
+    set rendererComponent(value) {
+        this._rendererComponent = value;
+    }
+
+    /**
+     * Renderer component attributes
+     * @type {string|Object}
+     */
+    get rendererAttrs() {
+        return this._rendererAttrs;
+    }
+    /**
+     * Renderer component attributes
+     * @type {string|Object}
+     */
+    set rendererAttrs(value) {
+        if(typeof value === 'string') {
+            eval('value = ' + value + ';');
+        }
+        this._rendererAttrs = value;
+    }
 
     /**
      * Expand group
@@ -1151,8 +1193,9 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
         this._itemData = value;
         
         let html = this._itemData?.title ?? '';
-        if(this.list?.rendererComponent) {
-            const attrs = this.list?.rendererAttrs ?? {};
+        let rendererComponent = this.group?.rendererComponent ?? this.list?.rendererComponent ?? null;
+        const rendererAttrs = this.group?.rendererAttrs ?? this.list?.rendererAttrs ?? {};
+        if(rendererComponent) {
             let name = (this._itemData?.id ?? this._itemData?.name ?? (this.name + '_renderer'));
             if(Lang) {
                 name = Lang.Translate(name);
@@ -1160,20 +1203,20 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
             name = (name + '').replaceAll('"', '');
             this._content = this.Children(name);
             if(!this._content) {
-                let comp = typeof(this.list.rendererComponent) === 'string' ? this.list.rendererComponent : this.list.rendererComponent(this._itemData, this);
+                let comp = typeof(rendererComponent) === 'string' ? rendererComponent : rendererComponent(this._itemData, this);
                 if(!(comp instanceof Colibri.UI.Component)) {
                     comp = eval(comp);
                 }
                 this._content = new comp(name, this);
                 this._content.shown = true;
                 this._content.parent = this;
-                delete attrs.name;
-                Object.forEach(attrs, (key, value) => {
+                delete rendererAttrs.name;
+                Object.forEach(rendererAttrs, (key, value) => {
                     this._content[key] = value;
                 });
             }
-            if(attrs?.render) {
-                this._content[attrs?.render] = this._itemData;
+            if(rendererAttrs?.render) {
+                this._content[rendererAttrs?.render] = this._itemData;
             } else {
                 this._content.value = this._itemData;
             }
