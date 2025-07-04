@@ -766,9 +766,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             for(const c of component) {
                 c.Dispatch(enames.length === 1 ? enames[0] : enames, {domEvent: e});                
             }
+        } else {
+            return component?.Dispatch(enames.length === 1 ? enames[0] : enames, {domEvent: e});
         }
 
-        return component?.Dispatch(enames.length === 1 ? enames[0] : enames, {domEvent: e});
     }
 
     __delayedEventHandler(e) {

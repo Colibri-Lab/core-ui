@@ -79,7 +79,6 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
         /** @private */
         this._movingStartHandler = (e) => {
-            
             if(e.target.is('button')) {
                 return false;
             }
@@ -126,24 +125,12 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     /** @private */
     _setMovableEvents(value) {
 
-        if(this._movablePoint === 'title') {
-            if(value) {
-                this._titleContainer.addEventListener('mousedown', this._movingStartHandler);
-                document.addEventListener('mouseout', this.__movingMouseOutHandler);
-            }
-            else {
-                this._titleContainer.removeEventListener('mousedown', this._movingStartHandler);
-                document.removeEventListener('mouseout', this.__movingMouseOutHandler);
-            }
-        } else {
-            if(value) {
-                this._windowContainer.addEventListener('mousedown', this._movingStartHandler);
-                document.addEventListener('mouseout', this.__movingMouseOutHandler);
-            }
-            else {
-                this._windowContainer.removeEventListener('mousedown', this._movingStartHandler);
-                document.removeEventListener('mouseout', this.__movingMouseOutHandler);
-            }
+        document.addEventListener('mouseout', this.__movingMouseOutHandler);
+        this._titleContainer.removeEventListener('mousedown', this._movingStartHandler);
+        this._windowContainer.removeEventListener('mousedown', this._movingStartHandler);
+        if(value) {
+            (this._movablePoint === 'title' ? this._titleContainer : this._windowContainer)
+                .addEventListener('mousedown', this._movingStartHandler);
         }
         
     }
