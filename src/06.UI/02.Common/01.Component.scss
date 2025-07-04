@@ -44,7 +44,27 @@
         $scrollbar-thumb-color,
         $scrollbar-thumb-hover-color
     );
-    
+
+    &.-scrollbar-only-when-scrolling {
+        @media screen and (-webkit-min-device-pixel-ratio:0) { 
+            & {
+                -webkit-background-clip: text;
+                background-color: rgba(0,0,0,0);
+                transition: background-color .3s;
+            }
+            &.-scrolling {
+                background-color: rgba(0,0,0,0.18);  
+            }
+            
+            &::-webkit-scrollbar-track {
+                display: none;
+            }
+            &::-webkit-scrollbar-thumb {
+                background-color: inherit;
+            }
+        }
+    }
+
     .app-contextmenu-icon-component {
         width: 23px;
         align-items: center;

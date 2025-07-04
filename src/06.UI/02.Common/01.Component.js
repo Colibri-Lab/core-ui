@@ -15,7 +15,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     static __nullHandler = (event, args) => {};
     static __disableHandler = (event, args) => { args.domEvent?.stopPropagation(); args.domEvent?.preventDefault(); return false; };
-    static __containerScrollHandler = (e) => { e.currentTarget?.getUIComponent()?.Dispatch('ScrolledIn', {domEvent: e}); }
 
     /**
      * Dom events map to Colibri events
@@ -2764,10 +2763,24 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
     _showHandleContainerScroll() {
         if(this._handleContainerScroll) {
-            document.addEventListener('scroll', Colibri.UI.__containerScrollHandler, true);
+            this._registerPositionObserver();
         } else {
-            document.removeEventListener('scroll', Colibri.UI.__containerScrollHandler, true);
+            this._unregisterPositionObserver();
         }
+    }
+
+    _registerPositionObserver() {
+        this._positionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                this.Dispatch('ScrolledIn', {});
+            });
+        });
+        this._positionObserver.observe(this._element);
+    }
+
+    _unregisterPositionObserver() {
+        this._positionObserver.unobserve();
+        this._positionObserver = null;
     }
 
     StartBlink(name, styles, timeout) {
@@ -2809,12 +2822,24 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     set showScrollbarOnlyWhenScrolling(value) {
         this._showScrollbarOnlyWhenScrolling = value;
-        this.handleContainerScroll = value;
-        this.AddHandler('ScrolledIn', this.__thisScrolledHandler);
+        if(value) {
+            this.AddClass('-scrollbar-only-when-scrolling');
+        } else {
+            this.RemoveClass('-scrollbar-only-when-scrolling');
+        }
+        this.AddHandler('Scrolled', this.__thisScrolledHandler)
     }
 
     __thisScrolledHandler(event, args) {
         this.AddClass('-scrolling');
+        clearTimeout(this.__scrollTimeout);
+        this.__scrollTimeout = setTimeout(() => {
+            this.__scrollTimeout = -1;
+            if(!this.isConnected) {
+                return;
+            }
+            this.RemoveClass('-scrolling');
+        }, 300);
     }
 
 }
