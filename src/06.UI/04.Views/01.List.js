@@ -756,7 +756,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
         this.AddHandler('ContextMenuItemClicked', (event, args) => event.sender.parent.Dispatch('ContextMenuItemClicked', Object.assign({item: args.item}, args)));
 
         this.AddHandler('Clicked', (sender, args) => {
-            if (args.domEvent.target.tagName == 'SPAN' && args.domEvent.target.parentElement == this._element) {
+            if (args.domEvent?.target?.tagName == 'SPAN' && args.domEvent?.target?.parentElement == this._element) {
                 this.expanded = !this.expanded;
             }
         });
