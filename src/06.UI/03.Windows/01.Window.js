@@ -464,6 +464,12 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         else {
             this._element.querySelector('.app-component-window-title').showElement();
         }
+
+        if (!value) {
+            this._movablePoint = 'container';
+        } else {
+            this._movablePoint = 'title';
+        }
     }
 
     /**
