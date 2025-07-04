@@ -107,10 +107,17 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             this._windowContainer.css('top', (e.pageY - point.top - parseInt(this._windowContainer.css('margin-top'))) + 'px');
         }
 
+        this.__movingMouseOutHandler = (e) => {
+            if (!e.relatedTarget || e.relatedTarget.nodeName === "HTML") {
+                this.moving = false;
+                this._element.removeEventListener('mousemove', this._movingHandler);
+                this._element.removeEventListener('mouseup', this._movingStopHandler);
+            }
+        }
+
     }
 
     Dispose() {
-        debugger;
         this.movable = false;
         this.resizable = false;
         super.Dispose();
@@ -122,18 +129,23 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         if(this._movablePoint === 'title') {
             if(value) {
                 this._titleContainer.addEventListener('mousedown', this._movingStartHandler);
+                document.addEventListener('mouseout', this.__movingMouseOutHandler);
             }
             else {
                 this._titleContainer.removeEventListener('mousedown', this._movingStartHandler);
+                document.removeEventListener('mouseout', this.__movingMouseOutHandler);
             }
         } else {
             if(value) {
                 this._windowContainer.addEventListener('mousedown', this._movingStartHandler);
+                document.addEventListener('mouseout', this.__movingMouseOutHandler);
             }
             else {
                 this._windowContainer.removeEventListener('mousedown', this._movingStartHandler);
+                document.removeEventListener('mouseout', this.__movingMouseOutHandler);
             }
         }
+        
     }
 
     /** @protected */
@@ -470,6 +482,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         } else {
             this._movablePoint = 'title';
         }
+        this._setMovableEvents(this._movable);
     }
 
     /**
