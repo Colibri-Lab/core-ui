@@ -2796,4 +2796,25 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return this._renderedIndex;
     }
 
+    /**
+     * Show scrollbar only when scrolling content
+     * @type {Boolean}
+     */
+    get showScrollbarOnlyWhenScrolling() {
+        return this._showScrollbarOnlyWhenScrolling;
+    }
+    /**
+     * Show scrollbar only when scrolling content
+     * @type {Boolean}
+     */
+    set showScrollbarOnlyWhenScrolling(value) {
+        this._showScrollbarOnlyWhenScrolling = value;
+        this.handleContainerScroll = value;
+        this.AddHandler('ScrolledIn', this.__thisScrolledHandler);
+    }
+
+    __thisScrolledHandler(event, args) {
+        this.AddClass('-scrolling');
+    }
+
 }

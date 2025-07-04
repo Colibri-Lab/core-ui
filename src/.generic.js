@@ -3842,6 +3842,19 @@ window.addEventListener('resize', (e) => {
 
 });
 
+document.scrollEndTimeout = -1;
+document.addEventListener('scroll', (e) => {
+
+    if (document.scrollEndTimeout != -1) {
+        clearTimeout(document.scrollEndTimeout);
+    }
+
+    document.scrollEndTimeout = setTimeout(() => {
+        document.dispatchEvent(new Event('scrolled'));
+    }, 100);
+
+});
+
 /**
  * Checks if the object is a Promise.
  * @param {*} p The object to check.
