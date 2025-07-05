@@ -75,7 +75,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         catch(e) {}
 
 
-        if(window.ColibriAccessories) {
+        if(window.ColibriAccessories && ColibriAccessories.Share) {
             ColibriAccessories.Share.Handle((items) => {
                 this.Dispatch('ShareReceived', { items });
             });
