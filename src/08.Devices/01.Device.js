@@ -744,7 +744,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     Notify(title, text, contact, photo) {
         return new Promise((resolve, reject) => {
-            if(this.isAndroid || this.isIOs) {
+            if(this.isAndroid || this.isIOs || this.isWindows) {
                 window.ColibriAccessories.UI.notifyMessage(
                     title, 
                     photo, 
@@ -754,18 +754,19 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
                         resolve(token);
                     }
                 );
-            } else if(this.isWindows) {
-                const notification = new Notification(
-                    title, {
-                        body: text,
-                        icon: 'img/app.png',
-                        data: { contact: contact },
-                    }
-                );
-                notification.onclick = (e) => {
-                    resolve(e.target.data.contact);
-                };
             }
+            // else if(this.isWindows) {
+            //     const notification = new Notification(
+            //         title, {
+            //             body: text,
+            //             icon: 'img/app.png',
+            //             data: { contact: contact },
+            //         }
+            //     );
+            //     notification.onclick = (e) => {
+            //         resolve(e.target.data.contact);
+            //     };
+            // }
         });
     }
 
