@@ -905,7 +905,14 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
     }
 
     Update(message, id) {
-        message.id = id;
+        let messages = App.Browser.Get('comet.messages');
+        if(!messages) {
+            messages = [];
+        } else {
+            messages = JSON.parse(messages);
+        }
+        const messageIndex = Array.findIndex(messages, (v, i, l) => v.id === id);
+        messages[messageIndex] = Object.assignRecursive(message, messages[messageIndex]);
         return this._withStore('readwrite', (store) => {
             store.put(message);
             return message;
