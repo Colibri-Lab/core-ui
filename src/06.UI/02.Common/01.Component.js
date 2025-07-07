@@ -2029,45 +2029,52 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._handleSwipe = value;
         if(value) {
             this.__touchStartedPos = null;
-            this._swipeTouchEnd = (e) => {
-                const c = e.currentTarget.getUIComponent();
-                if ( !c.__touchStartedPos && e.currentTarget != c._element  ) {
-                    return;
-                }
-                c.styles = null;
-                c.__touchStartedPos = null;
-                document.body.removeEventListener('touchend', c._swipeTouchEnd, true);
-                document.body.removeEventListener('touchmove', c._swipeTouchMove, true);
-            };
-            this._swipeTouchMove = (e) => {
-                const c = e.currentTarget.getUIComponent();
-                if ( !c.__touchStartedPos && e.currentTarget != c._element ) {
-                    return;
-                }
             
-                const xUp = e.touches[0].clientX;                                    
-                const yUp = e.touches[0].clientY;
-            
-                const sensitivity = c._swipesensitivity || 10;
-                const orientation = c._swipeOrientation || 'hr';
-
-                const diff = orientation === 'hr' ? c.__touchStartedPos.x - xUp : c.__touchStartedPos.y - yUp;
-                if(Math.abs(diff) > 10) {
-                    c.styles = orientation === 'hr' ? {marginLeft: (-1*diff) + 'px'} : {marginTop: (-1*diff) + 'px'};
-                    if ( diff > sensitivity ) {
-                        c.Dispatch(orientation === 'hr' ? 'SwipedToRight' : 'SwipedToBottom', {domEvent: e});
-                    } else if ( diff < -sensitivity ) {
-                        c.Dispatch(orientation === 'hr' ? 'SwipedToLeft' : 'SwipedToTop', {domEvent: e});
-                    }                       
-                }
-            };
             this.AddHandler('TouchStarted', this.__defaultTouchStartHandler);
+        }
+    }
+
+    _swipeTouchEnd(e) {
+        if (!document.body.__swipingComponent) {
+            return;
+        }
+
+        const c = document.body.__swipingComponent;
+        c.styles = null;
+        document.body.removeEventListener('touchend', c._swipeTouchEnd, true);
+        document.body.removeEventListener('touchmove', c._swipeTouchMove, true);
+        document.body.__swipingComponent = null;
+        c.__touchStartedPos = null;
+    }
+
+    _swipeTouchMove(e) {
+        if (!document.body.__swipingComponent) {
+            return;
+        }
+        
+        const c = document.body.__swipingComponent;
+    
+        const xUp = e.touches[0].clientX;                                    
+        const yUp = e.touches[0].clientY;
+    
+        const sensitivity = c._swipesensitivity || 10;
+        const orientation = c._swipeOrientation || 'hr';
+
+        const diff = orientation === 'hr' ? c.__touchStartedPos.x - xUp : c.__touchStartedPos.y - yUp;
+        if(Math.abs(diff) > 10) {
+            c.styles = orientation === 'hr' ? {marginLeft: (-1*diff) + 'px'} : {marginTop: (-1*diff) + 'px'};
+            if ( diff > sensitivity ) {
+                c.Dispatch(orientation === 'hr' ? 'SwipedToRight' : 'SwipedToBottom', {domEvent: e});
+            } else if ( diff < -sensitivity ) {
+                c.Dispatch(orientation === 'hr' ? 'SwipedToLeft' : 'SwipedToTop', {domEvent: e});
+            }                       
         }
     }
 
     __defaultTouchStartHandler(event, args) {
         const firstTouch = args.domEvent.touches[0];      
         this.__touchStartedPos = {x: firstTouch.clientX, y: firstTouch.clientY};                                
+        document.body.__swipingComponent = this;
         document.body.addEventListener('touchend', this._swipeTouchEnd);
         document.body.addEventListener('touchmove', this._swipeTouchMove);
     }
@@ -2802,7 +2809,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     StopBlink(name) {
-        debugger;
         Colibri.Common.StopTimer(name);
     }
 

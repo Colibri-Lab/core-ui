@@ -4138,18 +4138,4 @@ JSON.stringify = function(value, replacer, space, escapeUnicode = false) {
     return (v + '').replace(/[\u007F-\uFFFF]/g, function(ch) {
         return '\\u' + ch.charCodeAt(0).toString(16).padStart(4, '0');
     });
-    
-    
-    // return oldStringifyMethod(value, (key, value) => {
-    //     if(replacer && typeof replacer === 'function') {
-    //         value = replacer(key, value);
-    //     }
-    //     if (typeof value === 'string') {
-    //         value = value.replace(/[\u007F-\uFFFF]/g, function(ch) {
-    //             return '\\u' + ch.charCodeAt(0).toString(16).padStart(4, '0');
-    //         });
-    //     }
-    //     debugger;
-    //     return value;
-    // }, space);  
 };
