@@ -161,6 +161,9 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
     _findPointOnParent() {
         const parent = this._findParent();
         const ori = this._orientation[0];
+        if(!parent.isConnected) {
+            return {left: 0, top: 0};
+        }
         const parentBounds = parent.container.bounds(true, true);
         switch (ori) {
             default:
