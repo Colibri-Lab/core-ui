@@ -513,13 +513,11 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         super.shown = value;
         if(value) {
             this.BringToFront();
+            this.StartTabIndexRoutine();
+            this.Dispatch('WindowOpened');
         }
         else {
             this.SendToBack();
-        }
-        this.StartTabIndexRoutine();
-        if(value === true) {
-            this.Dispatch('WindowOpened');
         }
     }
 
