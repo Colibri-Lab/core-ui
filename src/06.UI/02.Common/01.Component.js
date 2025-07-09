@@ -1331,7 +1331,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * Sends componpent to bottom of z-index
      */
     SendToBack() {
-        this._element.css('z-index', null);
+        this._element && this._element.css('z-index', null);
     }
 
     /**
