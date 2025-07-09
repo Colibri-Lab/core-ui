@@ -53,7 +53,7 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         const senderComponent = args.domEvent.target.closest('.app-component-button');
         if(
             senderComponent && 
-            senderComponent?.getUIComponent().parentContainer === this.header && 
+            senderComponent?.getUIComponent()?.parentContainer === this.header && 
             senderComponent?.getUIComponent() instanceof Colibri.UI.Button
         ) {
             // this.Dispatch('TabClicked', {domEvent: args.domEvent, tab: senderComponent.getUIComponent()});

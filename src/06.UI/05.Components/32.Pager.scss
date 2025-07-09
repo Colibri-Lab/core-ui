@@ -1,0 +1,48 @@
+.colibri-ui-pager {
+    justify-content: center;
+    gap: 5px;
+    .app-component-button {
+        &.app-component-shown {
+            display: flex;
+        }
+        align-items: center;
+        justify-content: center;
+
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: 2px;
+        width: 40px;
+        height: 40px;
+        padding: 0px;
+
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 18px;
+        text-transform: uppercase;
+        color: #0074FF;
+
+        svg {
+            path {
+                stroke:  #0074FF;
+            }
+        }
+
+        &.-selected, &:hover {
+            border: 1px solid #0074FF;
+        }
+
+        &:disabled, &.-disabled {
+            border: 1px solid transparent;
+            &:hover {
+                border: 1px solid transparent;
+            }
+            color: #B5B2B2;
+            svg {
+                path {
+                    stroke: #B5B2B2;
+                }
+            }
+        }
+    }
+}

@@ -966,8 +966,13 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
                             const key = options.order[0];
                             return options.direction === 'asc' ? a[key] - b[key] : b[key] - a[key];
                         });
-                        const offset = (options.page - 1) * options.pagesize;
-                        resolve(sorted.slice(offset, offset + options.pagesize));
+                        if(options.page > 0) {
+                            const offset = (options.page - 1) * options.pagesize;
+                            const paged = sorted.slice(offset, offset + options.pagesize);
+                            resolve(paged);
+                        } else {
+                            resolve(sorted);
+                        }
                     }
                 };
                 req.onerror = e => reject(e.target.error);
@@ -1128,7 +1133,7 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
             options.page = options.page ?? 0;
             options.pagesize = options.pagesize ?? 100;
 
-            const limit = options.pagesize + ' offset ' + ((options.page - 1) * options.pagesize);
+            const limit = options.page > 0 ? options.pagesize + ' offset ' + ((options.page - 1) * options.pagesize) : '';
             const orderby = options.order.map(v => v + ' ' + options.direction).join(',');
             const filter = window.convertFilterToStringForSql(options.filter);
             
