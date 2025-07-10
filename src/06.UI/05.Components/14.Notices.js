@@ -42,11 +42,20 @@ Colibri.UI.Notices = class extends Colibri.UI.Pane {
         const notice = this._group.AddItem(noticeData);
         
         const removeNotice = () => {
+            if(!notice.isConnected) {
+                return;
+            }
             notice.RemoveClass(noticeData.className);
             Colibri.Common.Delay(300).then(() => {
+                if(!notice.isConnected) {
+                    return Promise.resolve();
+                }
                 notice.height = 0;
                 return Colibri.Common.Delay(100);
             }).then(() => {
+                if(!notice.isConnected) {
+                    return;
+                }
                 notice.Dispose();
                 if(this._group.children == 0) {
                     this.shown = false;
@@ -55,6 +64,9 @@ Colibri.UI.Notices = class extends Colibri.UI.Pane {
         };
 
         Colibri.Common.Delay(10).then(() => {
+            if(!notice.isConnected) {
+                return;
+            }
 
             notice.AddClass(noticeData.className);
 
