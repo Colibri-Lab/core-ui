@@ -92,7 +92,9 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
         /** @private */
         this._movingStopHandler = (e) => {
-
+            if(!this._isConnected) {
+                return;
+            }
             this.moving = false;
             this._element.removeEventListener('mousemove', this._movingHandler);
             this._element.removeEventListener('mouseup', this._movingStopHandler);
@@ -100,6 +102,9 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
          /** @private */
         this._movingHandler = (e) => {
+            if(!this._isConnected) {
+                return;
+            }
             const point = this._movingPoint;
 
             this._windowContainer.css('left', (e.pageX - point.left - parseInt(this._windowContainer.css('margin-left'))) + 'px');
@@ -107,6 +112,9 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         }
 
         this.__movingMouseOutHandler = (e) => {
+            if(!this._isConnected) {
+                return;
+            }
             if (!e.relatedTarget || e.relatedTarget.nodeName === "HTML") {
                 this.moving = false;
                 this._element.removeEventListener('mousemove', this._movingHandler);
