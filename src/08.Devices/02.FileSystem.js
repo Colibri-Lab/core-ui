@@ -128,7 +128,7 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @type {*}
      */
     get ExternalAppStorageDirectory() {
-        return this._device.externalApplicationStorageDirectory;
+        return this._plugin.externalApplicationStorageDirectory;
     }
 
     /**
@@ -136,7 +136,7 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @type {*}
      */
     get ExternalDataDirectory() {
-        return this._device.externalDataDirectory;
+        return this._plugin.externalDataDirectory;
     } 
     
     /**
