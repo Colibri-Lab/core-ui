@@ -257,13 +257,13 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @param {string} path - The file system path.
      * @returns {Promise} - Promise resolving to the file system entry.
      */
-    LocalAsBlob(path) {
+    LocalAsBlob(path, type = null) {
         return new Promise((resolve, reject) => {
             window.resolveLocalFileSystemURL(path, (entry) => {
                 entry.file((file) => {
                     const reader = new FileReader();
                     reader.onloadend = () => {
-                        const blob = new Blob([new Uint8Array(reader.result)], { type: file.type });
+                        const blob = new Blob([new Uint8Array(reader.result)], { type: type ? type : file.type });
                         resolve(blob);
                     };
                     reader.readAsArrayBuffer(file);
