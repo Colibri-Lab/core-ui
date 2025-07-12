@@ -385,6 +385,24 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
     }
 
     /**
+     * Requests a file writer.
+     * @param {*} type - The type of the file system.
+     * @param {number} quota - The quota for the file system.
+     * @param {string} path - The file path.
+     * @param {string} fileName - The file name.
+     * @param {*} options - Options for file request.
+     * @returns {Promise} - Promise resolving to the file entry.
+     */
+    RequestLocalWriter(rootDir, fileName, options = {}) {
+        return new Promise((resolve, reject) => {
+            this.Local(rootDir)
+                .then((fs) => this.File(fs, fileName, options))
+                .then((fileEntry) => fileEntry.createWriter((fileWriter) => resolve(fileWriter)))
+                .catch(e => reject(e));
+        });
+    }
+
+    /**
      * Creates a directory.
      * @param {string} rootPath - The root path.
      * @param {string} path - The directory path.
