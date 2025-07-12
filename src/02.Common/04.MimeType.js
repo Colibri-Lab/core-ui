@@ -277,19 +277,34 @@ Colibri.Common.MimeType = class {
      * @param {string} ext - The file extension.
      * @returns {boolean} True if the file is an image, otherwise false.
      */
-    static isImage(ext) { return ["gif", "jpeg", "jpg", "png", "bmp", "dib", "svg", "webp"].indexOf(ext.toLowerCase()) != -1; }
+    static isImage(ext) { 
+        if(ext.indexOf('/') !== -1) {
+            return ext.split('/')[0] === 'image';
+        }
+        return ["gif", "jpeg", "jpg", "png", "bmp", "dib", "svg", "webp"].indexOf(ext.toLowerCase()) != -1; 
+    }
     /**
      * Check if a file with the given extension is an audio file.
      * @param {string} ext - The file extension.
      * @returns {boolean} True if the file is an audio file, otherwise false.
      */
-    static isAudio(ext) { return ["mid", "mp3", "au","wav"].indexOf(ext.toLowerCase()) != -1; }
+    static isAudio(ext) { 
+        if(ext.indexOf('/') !== -1) {
+            return ext.split('/')[0] === 'audio';
+        }
+        return ["mid", "mp3", "au","wav"].indexOf(ext.toLowerCase()) != -1; 
+    }
     /**
      * Check if a file with the given extension is a video file.
      * @param {string} ext - The file extension.
      * @returns {boolean} True if the file is a video file, otherwise false.
      */
-    static isVideo(ext) { return ["wmv", "mpg", "mp4", "webm"].indexOf(ext.toLowerCase()) != -1; }
+    static isVideo(ext) { 
+        if(ext.indexOf('/') !== -1) {
+            return ext.split('/')[0] === 'video';
+        }    
+        return ["wmv", "mpg", "mp4", "webm"].indexOf(ext.toLowerCase()) != -1; 
+    }
     /**
      * Check if a file with the given extension is a Flash file.
      * @param {string} ext - The file extension.
