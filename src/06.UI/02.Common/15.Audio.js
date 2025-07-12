@@ -37,7 +37,7 @@ Colibri.UI.Audio = class extends Colibri.UI.Component {
 
     __playClicked(event, args) {
         if(this._src) {
-            if(this._src.indexOf('file:')) {
+            if(this._src.indexOf('file:') !== -1) {
                 // is Local
                 if(App.isAndroid || App.isIos) {
                     App.Device.FileSystem.LocalAsBlob(value.src).then((blob) => {
