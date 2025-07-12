@@ -44,15 +44,17 @@ Colibri.UI.Audio = class extends Colibri.UI.Component {
                         this._localBlobUrl = URL.createObjectURL(blob);
                         this._audio.src = this._localBlobUrl;
                         this._audio.onended = () => URL.revokeObjectURL(this._localBlobUrl);
+                        this._audio.play();
                     });
                 } else {
                     this._audio.attr('src', this._src);
+                    this._audio.play();
                 }
             } else {
                 this._audio.attr('src', this._src);
+                this._audio.play();
             }
         }
-        this._audio.play();
         this._play.shown = false;
         this._pause.shown = true;
         args.domEvent.stopPropagation();
