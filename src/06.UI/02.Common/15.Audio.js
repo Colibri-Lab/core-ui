@@ -42,7 +42,7 @@ Colibri.UI.Audio = class extends Colibri.UI.Component {
                 if(App.Device.isAndroid || App.Device.isIOs) {
                     App.Device.FileSystem.LocalAsBlob(this._src).then((blob) => {
                         this._localBlobUrl = URL.createObjectURL(blob);
-                        this._audio.src = blobUrl;
+                        this._audio.src = this._localBlobUrl;
                         this._audio.onended = () => URL.revokeObjectURL(this._localBlobUrl);
                     });
                 } else {
