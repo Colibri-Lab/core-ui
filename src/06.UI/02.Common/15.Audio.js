@@ -36,25 +36,7 @@ Colibri.UI.Audio = class extends Colibri.UI.Component {
     }
 
     __playClicked(event, args) {
-        if(this._src) {
-            if(this._src.indexOf('file:') !== -1) {
-                // is Local
-                if(App.Device.isAndroid || App.Device.isIOs) {
-                    App.Device.FileSystem.LocalAsBlob(this._src, 'audio/wav').then((blob) => {
-                        this._localBlobUrl = URL.createObjectURL(blob);
-                        this._audio.src = this._localBlobUrl;
-                        this._audio.onended = () => URL.revokeObjectURL(this._localBlobUrl);
-                        this._audio.play();
-                    });
-                } else {
-                    this._audio.attr('src', this._src);
-                    this._audio.play();
-                }
-            } else {
-                this._audio.attr('src', this._src);
-                this._audio.play();
-            }
-        }
+        this._audio.play();
         this._play.shown = false;
         this._pause.shown = true;
         args.domEvent.stopPropagation();
@@ -165,16 +147,14 @@ Colibri.UI.Audio = class extends Colibri.UI.Component {
      * @type {String}
      */
     get src() {
-        return this._src;
-        // return this._audio.attr('src');
+        return this._audio.attr('src');
     }
     /**
      * Source of the audio
      * @type {String}
      */
     set src(value) {
-        this._src = value;
-        // this._audio.attr('src', value);
+        this._audio.attr('src', value);
     }
 
     /**
