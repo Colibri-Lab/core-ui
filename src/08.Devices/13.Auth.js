@@ -14,7 +14,11 @@ Colibri.Devices.Auth = class extends Destructable {
 
     IsAvailable() {
         if(App.Device.isWeb || App.Device.isWindows) {
-            return Promise.resolve(!!window.PublicKeyCredential && location.protocol === 'https:');
+            if(!!window.PublicKeyCredential && location.protocol === 'https:') {
+                return Promise.resolve();
+            } else {
+                return Promise.reject();
+            }
         // } else if(App.Device.isWindows) {
         //     return Promise.reject();
         } else {
