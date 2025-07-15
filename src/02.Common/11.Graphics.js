@@ -49,6 +49,10 @@ Colibri.Common.Graphics = class {
      */
     static ResizeImage(image, width, height, aspectRatio = true) {
         return new Promise((resolve, reject) => {
+            if(image.width < width && image.height < height) {
+                resolve(image);
+                return;
+            }
             if (aspectRatio) {
                 const ratio = Math.max(width / image.width, height / image.height);
                 width = image.width * ratio;
@@ -160,8 +164,6 @@ Colibri.Common.Graphics = class {
         return new Promise((resolve, reject) => {
             Colibri.Common.Graphics.ImageFromFile(file).then((image) => {
                 return Colibri.Common.Graphics.ResizeImage(image, previewWidth, previewHeight);
-            }).then((image) => {
-                return Colibri.Common.Graphics.CropImage(image, (image.width - previewWidth) / 2, (image.height - previewHeight) / 2, previewWidth, previewHeight);
             }).then((image) => {
                 return Colibri.Common.Graphics.FileFromImage(image, name);
             }).then((file) => {

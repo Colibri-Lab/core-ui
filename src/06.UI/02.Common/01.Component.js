@@ -117,6 +117,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     __domHandlersAttached = {};
 
+    _clickWhenContextMenuClicked = true;
+
     __thisBubble(event, args) {
         return this.Dispatch(event.name, args);
     }
@@ -880,9 +882,27 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
+    /**
+     * Send clicked event when contextmenu event is dispatched
+     * @type {Boolean}
+     */
+    get clickWhenContextMenuClicked() {
+        return this._clickWhenContextMenuClicked;
+    }
+    /**
+     * Send clicked event when contextmenu event is dispatched
+     * @type {Boolean}
+     */
+    set clickWhenContextMenuClicked(value) {
+        value = this._convertProperty('Boolean', value);
+        this._clickWhenContextMenuClicked = value;
+    }
+
     __defaultContextMenuHandler(event, args) {
         if(this.hasContextMenu && this._getContextMenuIcon()) {
-            this.Dispatch('Clicked', { domEvent: args.domEvent, isContextMenuEvent: true });
+            if(this._clickWhenContextMenuClicked) {
+                this.Dispatch('Clicked', { domEvent: args.domEvent, isContextMenuEvent: true });
+            }
             this._getContextMenuIcon().Dispatch('Clicked', { domEvent: args.domEvent, isContextMenuEvent: true });
             args.domEvent.stopPropagation();
             args.domEvent.preventDefault();

@@ -91,6 +91,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         group.label.value = title;
         group.shown = true;
         group.hasContextMenu = this.hasContextMenu;
+        group.clickWhenContextMenuClicked = this.clickWhenContextMenuClicked;
         return group;
     }
 
@@ -132,7 +133,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
      * @param {Colibri.UI.List.Item[]} selected items to unselect
      */
     UnselectItem(selected) {
-        if(!this._multiple) {
+        if(!this._multiple || !this._isMultipleKeyPressed()) {
             this.ClearSelection(false);
         }
         else if(Array.isArray(selected)) {
@@ -158,7 +159,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         if(!this._canSelect || !selected) {
             return;
         }
-        if(!this._multiple) {
+        if(!this._multiple || !this._isMultipleKeyPressed()) {
             this.ClearSelection(false);
             selected = Array.isArray(selected) && selected.length ? selected.shift() : selected;
             selected.selected = true;
@@ -365,6 +366,32 @@ Colibri.UI.List = class extends Colibri.UI.Component {
      */
     set multiple(value) {
         this._multiple = value;
+        if(value) {
+            this.AddClass('-multiple');
+        } else {
+            this.RemoveClass('-multiple');
+        }
+    }
+
+    /**
+     * Key used for multiple selection
+     * @type {string} ctrl+alt+shit or ctrl
+     */
+    get multipleSelectionKey() {
+        return this._multipleSelectionKey;
+    }
+
+    /**
+     * Key used for multiple selection
+     * @type {string} ctrl+alt+shit or ctrl
+     */
+    set multipleSelectionKey(value) {
+        this._multipleSelectionKey = value;
+    }
+
+    _isMultipleKeyPressed() {
+        const keys = this._multipleSelectionKey.split('+');
+        return keys.map(v => document.keysPressed[v] ? 1 : 0).sum() > 0;
     }
 
     /**
@@ -792,6 +819,7 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
             control.shown = true;
             control.selected = selected;
             control.hasContextMenu = this.hasContextMenu;
+            control.clickWhenContextMenuClicked = this.clickWhenContextMenuClicked;
             control.key = newKey;
             control.value = itemData;
 
@@ -1292,6 +1320,7 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
     }
 
     Dispose() {
+        this.list.UnselectItem(this);
         this._content && this._content.Dispose();
         if(this.hasContextMenu) {
             this._removeContextMenuButton();

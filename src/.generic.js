@@ -4139,3 +4139,20 @@ JSON.stringify = function(value, replacer, space, escapeUnicode = false) {
         return '\\u' + ch.charCodeAt(0).toString(16).padStart(4, '0');
     });
 };
+
+document.keysPressed = {
+    ctrl: false,
+    alg: false,
+    shift: false
+};
+
+document.addEventListener('keydown', (e) => {
+    document.keysPressed.ctrl = e.ctrlKey;
+    document.keysPressed.alt = e.altKey;
+    document.keysPressed.shift = e.shiftKey;
+});
+document.addEventListener('keyup', (e) => {
+    document.keysPressed.ctrl = e.ctrlKey;
+    document.keysPressed.alt = e.altKey;
+    document.keysPressed.shift = e.shiftKey;
+});
