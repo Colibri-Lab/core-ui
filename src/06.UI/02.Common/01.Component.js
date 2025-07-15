@@ -2207,6 +2207,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.handleSwipe = false;
         this.hasShadow = false;
         this._removeContextMenuButton();
+        if(this._contextMenuObject) {
+            this._contextMenuObject.Dispose();
+        }
+
         
         this.hasShadow = false;
         this.Clear();
