@@ -2210,7 +2210,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         if(this._contextMenuObject) {
             this._contextMenuObject.Dispose();
         }
-
         
         this.hasShadow = false;
         this.Clear();
