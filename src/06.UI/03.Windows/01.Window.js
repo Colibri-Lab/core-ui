@@ -86,8 +86,8 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             this.moving = true;
             this.movingPoint = {left: e.layerX, top: e.layerY};
             
-            this._element.addEventListener('mousemove', this._movingHandler);
-            this._element.addEventListener('mouseup', this._movingStopHandler);
+            this._element?.addEventListener('mousemove', this._movingHandler);
+            this._element?.addEventListener('mouseup', this._movingStopHandler);
         }
 
         /** @private */
@@ -96,8 +96,8 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
                 return;
             }
             this.moving = false;
-            this._element.removeEventListener('mousemove', this._movingHandler);
-            this._element.removeEventListener('mouseup', this._movingStopHandler);
+            this._element?.removeEventListener('mousemove', this._movingHandler);
+            this._element?.removeEventListener('mouseup', this._movingStopHandler);
         }
 
          /** @private */
@@ -107,8 +107,8 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             }
             const point = this._movingPoint;
 
-            this._windowContainer.css('left', (e.pageX - point.left - parseInt(this._windowContainer.css('margin-left'))) + 'px');
-            this._windowContainer.css('top', (e.pageY - point.top - parseInt(this._windowContainer.css('margin-top'))) + 'px');
+            this._windowContainer?.css('left', (e.pageX - point.left - parseInt(this._windowContainer.css('margin-left'))) + 'px');
+            this._windowContainer?.css('top', (e.pageY - point.top - parseInt(this._windowContainer.css('margin-top'))) + 'px');
         }
 
         this.__movingMouseOutHandler = (e) => {
@@ -117,8 +117,8 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             }
             if (!e.relatedTarget || e.relatedTarget.nodeName === "HTML") {
                 this.moving = false;
-                this._element.removeEventListener('mousemove', this._movingHandler);
-                this._element.removeEventListener('mouseup', this._movingStopHandler);
+                this._element?.removeEventListener('mousemove', this._movingHandler);
+                this._element?.removeEventListener('mouseup', this._movingStopHandler);
             }
         }
 
