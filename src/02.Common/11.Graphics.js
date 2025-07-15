@@ -174,4 +174,20 @@ Colibri.Common.Graphics = class {
         });
     }
 
+    static CreatePreviewCrop(file, name, previewWidth, previewHeight) {
+        return new Promise((resolve, reject) => {
+            Colibri.Common.Graphics.ImageFromFile(file).then((image) => {
+                return Colibri.Common.Graphics.ResizeImage(image, previewWidth, previewHeight);
+            }).then((image) => {
+                return Colibri.Common.Graphics.CropImage(image, (image.width - previewWidth) / 2, (image.height - previewHeight) / 2, previewWidth, previewHeight);
+            }).then((image) => {
+                return Colibri.Common.Graphics.FileFromImage(image, name);
+            }).then((file) => {
+                resolve(file);
+            }).catch((error) => {
+                reject(error);
+            });
+        });
+    }
+
 }
