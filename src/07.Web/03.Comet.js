@@ -29,6 +29,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     _clientId = null;
 
     __eventHandlers = {};
+    __sentMessages = {};
 
     static Options = {
         origin: location.host
@@ -332,6 +333,18 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         else if(message.action == 'debug-response') {
             console.log('Debug', message.message);
         }
+        else if(message.action.endsWith('-sent') || message.action.endsWith('-error')) {
+            const sentMessagePromise = this.__sentMessages[message.message.id];
+            if(sentMessagePromise) {
+                delete this.__sentMessages[message.message.id];
+                if(message.action.endsWith('-sent')) {
+                    sentMessagePromise.resolve(message);
+                } else {
+                    sentMessagePromise.reject(message);
+                }
+            }
+
+        }
         else if(message.action == 'message') {
             this.DispatchHandlers('MessageReceiving', {message: message}).then((responses) => {
                 if(responses.filter(v => v === false).length > 0) {
@@ -354,6 +367,27 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                 }
             });
         }
+    }
+
+    /**
+     * Send the message and resolves or rejects a promise
+     * @param {Colibri.Common.CometMessage|Colibri.Common.CometEvent} msg 
+     * @returns Promise
+     */
+    _send(msg, resolve, reject) {
+
+        if(['register', 'firebase', 'debug'].indexOf(msg.action) !== -1) {
+            this._ws.send(msg.toJson());
+            resolve({id: msg.id, message: 'sent'});
+            return;
+        }
+
+        this.__sentMessages[msg.id] = { resolve, reject };
+        this._ws.send(msg.toJson());
+        Colibri.Common.Delay(3000).then(() => {
+            delete this.__sentMessages[msg.id];
+            reject('Can not sent the message. Message timed out: ' + msg.action + ' (' + msg.id + ')');
+        });
     }
 
     UnwaitForEvent(eventName, handler) {
@@ -521,19 +555,43 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {object} message - The message data.
      */
     Command(userGuid, action, message = null, activate = false, wakeup = false) {
-        try {
-            if(this._ws.readyState === 1) {
-                const msg = Colibri.Common.CometEvent.CreateForSend(action, Colibri.Web.Comet.Options.origin, this._user, userGuid, message, 'untrusted', activate, wakeup);
-                // const msg = {action: action, recipient: userGuid, message: message, domain: Colibri.Web.Comet.Options.origin, delivery: 'untrusted'};
-                this._ws.send(msg.toJson());
+        return new Promise((resolve, reject) => {
+            try {
+                if(this._ws.readyState === 1) {
+                    const msg = Colibri.Common.CometEvent.CreateForSend(action, Colibri.Web.Comet.Options.origin, this._user, userGuid, message, 'untrusted', activate, wakeup);
+                    this._send(msg, resolve, reject);
+                }
+                else {
+                    reject('server goes away');
+                }
             }
-            else {
-                console.log('server goes away');
+            catch(e) {
+                reject(e);
             }
-        }
-        catch(e) {
-            console.log(e);
-        }
+        });
+    }
+
+    /**
+     * Sends a broadcast message.
+     * @param {string} action - The action to be performed.
+     * @param {object} message - The message content.
+     * @returns {string|null} - The ID of the sent message. 
+     */
+    CommandBroadcast(action, message = null, activate = false, wakeup = false) {
+        return new Promise((resolve, reject) => {
+            try {
+                if(this._ws.readyState === 1) {
+                    const msg = Colibri.Common.CometEvent.CreateForSendBroadcast(action, Colibri.Web.Comet.Options.origin, this._user, message, activate, wakeup);
+                    this._send(msg, resolve, reject);
+                }
+                else {
+                    reject('server goes away');
+                }
+            }
+            catch(e) {
+                reject(e);
+            }
+        });
     }
 
     /**
@@ -544,57 +602,35 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @returns {string|null} - The ID of the sent message.
      */
     SendTo(userGuid, message = null, contact = null, activate = false, wakeup = false) {
-        try {
-            const id = Date.Mc();
-            if(this._ws.readyState === 1) {
-                const msg = Colibri.Common.CometMessage.CreateForSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, message, {contact: contact.name, photo: contact.photo}, activate, wakeup);
-                msg.MarkAsRead();
-                if(msg.from !== msg.recipient) {
-                    this.AddLocalMessage(msg).then(() => {
-                        this.Dispatch('MessageSent', {message: msg});
-                    });
-                }
-                const msgToSend = msg.clone();
-                this.DispatchHandlers('MessageSending', {message: msgToSend}).then((responses) => {
-                    this._ws.send(msgToSend.toJson());
-                }).catch(error => {
-                    this.Dispatch('MessageError', {error: error});
-                });
-                return id;
-            }
-            else {
-                console.log('server goes away');
-            }
-        }
-        catch(e) {
-            console.log(e);
-        }
-        return null;
-    }
+        return new Promise((resolve, reject) => {
+            try {
 
-    /**
-     * Sends a broadcast message.
-     * @param {string} action - The action to be performed.
-     * @param {object} message - The message content.
-     * @returns {string|null} - The ID of the sent message. 
-     */
-    CommandBroadcast(action, message = null, activate = false, wakeup = false) {
-        try {
-            const id = Date.Mc();
-            if(this._ws.readyState === 1) {
-                const msg = Colibri.Common.CometEvent.CreateForSendBroadcast(action, Colibri.Web.Comet.Options.origin, this._user, message, activate, wakeup);
-                // const msg = {action: action, recipient: '*', message: {text: message, id: id, broadcast: true}, domain: Colibri.Web.Comet.Options.origin, delivery: 'trusted'};
-                this._ws.send(msg.toJson());
-                return id;
+                const id = Date.Mc();
+                if(this._ws.readyState === 1) {
+                    const msg = Colibri.Common.CometMessage.CreateForSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, message, {contact: contact.name, photo: contact.photo}, activate, wakeup);
+                    msg.MarkAsRead();
+                    if(msg.from !== msg.recipient) {
+                        this.AddLocalMessage(msg).then(() => {
+                            this.Dispatch('MessageSent', {message: msg});
+                        });
+                    }
+                    const msgToSend = msg.clone();
+                    this.DispatchHandlers('MessageSending', {message: msgToSend}).then((responses) => {
+                        this._send(msgToSend, resolve, reject);
+                    }).catch(error => {
+                        this.Dispatch('MessageError', {error: error});
+                    });
+                    return id;
+                }
+                else {
+                    reject('server goes away');
+                }
             }
-            else {
-                console.log('server goes away');
+            catch(e) {
+                reject(e);
             }
-        }
-        catch(e) {
-            console.log(e);
-        }
-        return null;
+        });
+        
     }
 
     /**
@@ -605,60 +641,58 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @returns {string|null} - The ID of the sent message. 
      */
     SendBroadcast(text = null, contact = null, activate = false, wakeup = false) {
-        try {
-            const id = Date.Mc();
-            if(this._ws.readyState === 1) {
-                const msg = Colibri.Common.CometMessage.CreateForSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, text, {contact: contact.name, photo: contact.photo}, activate, wakeup);
-                this._ws.send(msg.toJson());
-                this.Dispatch('MessageSent', {message: msg});
-                return id;
+        return new Promise((resolve, reject) => {
+            try {
+                if(this._ws.readyState === 1) {
+                    const msg = Colibri.Common.CometMessage.CreateForSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, text, {contact: contact.name, photo: contact.photo}, activate, wakeup);
+                    this._send(msg, resolve, reject);
+                    this.Dispatch('MessageSent', {message: msg});
+                }
+                else {
+                    reject('server goes away');
+                }
             }
-            else {
-                console.log('server goes away');
+            catch(e) {
+                reject(e);
             }
-        }
-        catch(e) {
-            console.log(e);
-        }
-        return null;
+        });
     }
     
     /**
      * Sends a message to a specific user.
      * @param {string} userGuid - The GUID of the recipient user.
-     * @param {string} action - The action to be performed.
      * @param {Array} files - The message content.
      * @param {object} contact - The name of the contact.
      * @returns {string|null} - The ID of the sent message.
      * @description This method sends files to a specific user and updates the local message store.
      */
-    SendFilesTo(userGuid, action, files = null, contact = null, activate = false, wakeup = false) {
-        try {
-            const id = Date.Mc();
-            if(this._ws.readyState === 1) {
-                const msg = Colibri.Common.CometMessage.CreateForFilesSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, files, {contact: contact.name, photo: contact.photo}, activate, wakeup);
-                msg.MarkAsRead();
-                if(msg.from !== msg.recipient) {
-                    this.AddLocalMessage(msg).then(() => {
-                        this.Dispatch('MessageSent', {message: msg});
+    SendFilesTo(userGuid, files = null, contact = null, activate = false, wakeup = false) {
+        return new Promise((resolve, reject) => {
+            try {
+                if(this._ws.readyState === 1) {
+                    const msg = Colibri.Common.CometMessage.CreateForFilesSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, files, {contact: contact.name, photo: contact.photo}, activate, wakeup);
+                    msg.MarkAsRead();
+                    if(msg.from !== msg.recipient) {
+                        this.AddLocalMessage(msg).then(() => {
+                            this.Dispatch('MessageSent', {message: msg});
+                        });
+                    }
+                    const msgToSend = msg.clone();
+                    this.DispatchHandlers('FilesSending', {message: msgToSend}).then((responses) => {
+                        this._send(msgToSend.toJson(), resolve, reject);
+                    }).catch(error => {
+                        this.Dispatch('MessageError', {error: error});
+                        reject(error);
                     });
                 }
-                const msgToSend = msg.clone();
-                this.DispatchHandlers('FilesSending', {message: msgToSend}).then((responses) => {
-                    this._ws.send(msgToSend.toJson());
-                }).catch(error => {
-                    this.Dispatch('MessageError', {error: error});
-                });
-                return id;
+                else {
+                    reject('server goes away');
+                }
             }
-            else {
-                console.log('server goes away');
+            catch(e) {
+                reject(e);
             }
-        }
-        catch(e) {
-            console.log(e);
-        }
-        return null;
+        });
     }
 
     /**
@@ -668,23 +702,22 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {object} contact - The name of the contact.
      * @returns {string|null} - The ID of the sent message. 
      */
-    SendFilesBroadcast(action, files = null, contact = null, activate = false, wakeup = false) {
-        try {
-            const id = Date.Mc();
-            if(this._ws.readyState === 1) {
-                const msg = Colibri.Common.CometMessage.CreateForFilesSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, files, {contact: contact.name, photo: contact.photo}, activate, wakeup);
-                this._ws.send(msg.toJson());
-                this.Dispatch('MessageSent', {message: msg});
-                return id;
+    SendFilesBroadcast(files = null, contact = null, activate = false, wakeup = false) {
+        return new Promise((resolve, reject) => {
+            try {
+                if(this._ws.readyState === 1) {
+                    const msg = Colibri.Common.CometMessage.CreateForFilesSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, files, {contact: contact.name, photo: contact.photo}, activate, wakeup);
+                    this._send(msg.toJson(), resolve, reject);
+                    this.Dispatch('MessageSent', {message: msg});
+                }
+                else {
+                    reject('server goes away');
+                }
             }
-            else {
-                console.log('server goes away');
+            catch(e) {
+                reject(e);
             }
-        }
-        catch(e) {
-            console.log(e);
-        }
-        return null;
+        });
     }
 
 
