@@ -1143,7 +1143,7 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
     Update(message, id) {
         return new Promise((resolve, reject) => {
 
-            this.Get({filter: {id: id}}).then(messages => {
+            this.Get({filter: {id: id}}).then((messages) => {   
 
                 if(messages.length === 0) {
                     reject('Message not found');
