@@ -336,12 +336,20 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         else if(message.action.endsWith('-sent') || message.action.endsWith('-error')) {
             const sentMessagePromise = this.__sentMessages[message.message.id];
             if(sentMessagePromise) {
-                delete this.__sentMessages[message.message.id];
-                if(message.action.endsWith('-sent')) {
-                    sentMessagePromise.resolve(message);
-                } else {
-                    sentMessagePromise.reject(message);
-                }
+                this.UpdateSetStatus(message.message.id, message.message.message.replaceAll('message ', '')).catch(() => {
+                    // do hothing
+                }).finally(() => {
+                    if(this.__sentMessages[message.message.id]) {
+                        clearTimeout(this.__sentMessages[message.message.id].rejectTimeout);
+                        delete this.__sentMessages[message.message.id];
+                        if(message.action.endsWith('-sent')) {
+                            sentMessagePromise.resolve(message);
+                        } else {
+                            sentMessagePromise.reject(message);
+                        } 
+                    }
+                });
+                
             }
 
         }
@@ -378,16 +386,21 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
         if(['register', 'firebase', 'debug'].indexOf(msg.action) !== -1) {
             this._ws.send(msg.toJson());
-            resolve({id: msg.id, message: 'sent'});
+            resolve({id: msg.id, message: 'message sent'});
             return;
         }
 
-        this.__sentMessages[msg.id] = { resolve, reject };
+        this.__sentMessages[msg.id] = { 
+            resolve, 
+            reject, 
+            rejectTimeout: setTimeout(() => {
+                if(this.__sentMessages[msg.id]) {
+                    delete this.__sentMessages[msg.id];
+                    reject('Can not sent the message. Message timed out: ' + msg.action + ' (' + msg.id + ')');
+                }
+            }, 30000)
+        };
         this._ws.send(msg.toJson());
-        Colibri.Common.Delay(3000).then(() => {
-            delete this.__sentMessages[msg.id];
-            reject('Can not sent the message. Message timed out: ' + msg.action + ' (' + msg.id + ')');
-        });
     }
 
     UnwaitForEvent(eventName, handler) {
@@ -548,6 +561,15 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    UpdateSetStatus(id, status = 'sent') {
+        return new Promise((resolve, reject) => {
+            this._storage.Update({message: {status: status}}, id).then(() => {
+                this._transferToModuleStore();
+                this.Dispatch('MessageUpdated', {member: user});
+            }).catch(error => reject(error));
+        });
+    }
+
     /**
      * Sends a command to the Comet server.
      * @param {string} userGuid - The GUID of the user.
@@ -605,22 +627,25 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         return new Promise((resolve, reject) => {
             try {
 
-                const id = Date.Mc();
                 if(this._ws.readyState === 1) {
                     const msg = Colibri.Common.CometMessage.CreateForSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, message, {contact: contact.name, photo: contact.photo}, activate, wakeup);
                     msg.MarkAsRead();
-                    if(msg.from !== msg.recipient) {
-                        this.AddLocalMessage(msg).then(() => {
-                            this.Dispatch('MessageSent', {message: msg});
+
+                    const realSend = () => {
+                        this.Dispatch('MessageSent', {message: msg});
+                        
+                        const msgToSend = msg.clone();
+                        this.DispatchHandlers('MessageSending', {message: msgToSend}).then((responses) => {
+                            this._send(msgToSend, resolve, reject);
+                        }).catch(error => {
+                            this.Dispatch('MessageError', {error: error});
                         });
+                    };
+                    if(msg.from !== msg.recipient) {
+                        this.AddLocalMessage(msg).then(realSend);
+                    } else {
+                        realSend();
                     }
-                    const msgToSend = msg.clone();
-                    this.DispatchHandlers('MessageSending', {message: msgToSend}).then((responses) => {
-                        this._send(msgToSend, resolve, reject);
-                    }).catch(error => {
-                        this.Dispatch('MessageError', {error: error});
-                    });
-                    return id;
                 }
                 else {
                     reject('server goes away');
@@ -761,9 +786,11 @@ Colibri.Web.InternalStore = class extends Colibri.Common.AbstractMessageStore {
             messages = JSON.parse(messages);
         }
         const messageIndex = Array.findIndex(messages, (v, i, l) => v.id === id);
-        messages[messageIndex] = Object.assignRecursive(message, messages[messageIndex]);
-        // messages[messageIndex] = Object.assign({}, messages[messageIndex], message);
-        App.Browser.Set('comet.messages', JSON.stringify(messages));
+        if(messageIndex !== -1) {
+            messages[messageIndex] = Object.assignRecursive(message, messages[messageIndex]);
+            App.Browser.Set('comet.messages', JSON.stringify(messages));
+            return Promise.reject('Can not find message');
+        }
         return Promise.resolve(message);
     }
 
@@ -948,6 +975,7 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
             this.Get({filter: {id: id}}).then((messages) => {            
                 if(messages.length == 0) {
                     reject('Message not found');
+                    return;
                 }
                 let msg = messages[0];
                 msg = Object.assignRecursive(message, msg);
@@ -1114,6 +1142,7 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
      */
     Update(message, id) {
         return new Promise((resolve, reject) => {
+            debugger;
             App.Device.SqLite.CreateTable(
                 this._db,
                 'messages',

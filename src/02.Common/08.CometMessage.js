@@ -96,7 +96,7 @@ Colibri.Common.CometMessage = class {
         msg.id = message.id || msg.id;
         msg.domain = domain === 'unknown' ? Colibri.Web.Comet.Options.origin : domain;
         msg.from = from === 'unknown' ? 'system' : from;    
-        msg.message = Object.assign(message, {id: msg.id});
+        msg.message = Object.assign(message, {id: msg.id, status: 'received'});
         msg.broadcast = broadcast;
         msg.delivery = delivery;
         msg.recipient = App.Comet.User;
@@ -110,7 +110,7 @@ Colibri.Common.CometMessage = class {
         message.domain = domain;
         message.from = from;
         message.recipient = recipient;
-        message.message = Object.assign({text, id: message.id}, addditional);
+        message.message = Object.assign({text, id: message.id, status: 'sending'}, addditional);
         message.activate = activate;
         message.wakeup = wakeup;
         return message;
@@ -121,7 +121,7 @@ Colibri.Common.CometMessage = class {
         message.domain = domain;
         message.from = from;
         message.recipient = recipient;
-        message.message = {files, id: message.id};
+        message.message = Object.assign({files, id: message.id, status: 'sending'}, addditional);
         message.activate = activate;
         message.wakeup = wakeup;
         return message;
@@ -133,7 +133,7 @@ Colibri.Common.CometMessage = class {
         message.from = from;
         message.recipient = '*';
         message.broadcast = true;
-        message.message = Object.assign({text, id: message.id}, addditional);
+        message.message = Object.assign({text, id: message.id, status: 'sending'}, addditional);
         message.activate = activate;
         message.wakeup = wakeup;
         return message;
@@ -145,7 +145,7 @@ Colibri.Common.CometMessage = class {
         message.from = from;
         message.recipient = '*';
         message.broadcast = true;
-        message.message = Object.assign({files, id: message.id}, addditional);
+        message.message = Object.assign({files, id: message.id, status: 'sending'}, addditional);
         message.activate = activate;
         message.wakeup = wakeup;
         return message;
