@@ -1142,18 +1142,28 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
      */
     Update(message, id) {
         return new Promise((resolve, reject) => {
-            debugger;
-            App.Device.SqLite.CreateTable(
-                this._db,
-                'messages',
-                this._fields,
-            ).then(() => App.Device.SqLite.Update(
-                this._db,
-                'messages',
-                [Object.assign({}, message, {id: id})]
-            )).then(() => {
-                resolve(message);
-            }).catch(error => reject(error));
+
+            this.Get({filter: {id: id}}).then(messages => {
+
+                if(messages.length === 0) {
+                    reject('Message not found');
+                    return;
+                }
+
+                let msg = messages[0];
+                msg = Object.assignRecursive(message, msg);
+
+                App.Device.SqLite.Update(
+                    this._db,
+                    'messages',
+                    [Object.assign({}, msg, {id: id})]
+                ).then(() => {
+                    resolve(message);
+                }).catch(error => reject(error));
+
+
+            });
+
         });
     }
 
