@@ -46,12 +46,12 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
      * @param {*} args event arguments
      */ 
     __thisColumnAdded(event, args) {
-        if(args.component.name != 'checkbox-column' && args.component.name != 'contextmenu-column') {
+        if(args.column.name != 'checkbox-column' && args.column.name != 'contextmenu-column') {
             if(this._contextmenuContainer) {
                 this.MoveChild(this._contextmenuContainer, this._contextmenuContainer.childIndex, this.children, false);
             }
         }
-        this.grid?.Dispatch('ColumnAdded', {column: args.component});
+        this.grid?.Dispatch('ColumnAdded', {column: args.column});
     }
 
     Add(name, title, attrs = {}) {

@@ -37,7 +37,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         });
 
         if(container instanceof Colibri.UI.Component) {
-            container.Dispatch('ChildAdded', {component: this});
+            container.Dispatch('ChildAdded', {column: this});
         }
 
     }

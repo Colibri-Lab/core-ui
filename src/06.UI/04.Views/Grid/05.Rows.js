@@ -124,7 +124,8 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         if(this._titleCellCountSpan) {
             this._titleCellCountSpan.value = ' (' + this.rowsCount + ')';
         }
-        args.row.checkbox = this.grid.showCheckboxes
+        args.row.checkbox = this.grid.showCheckboxes;
+        args.row.hasContextMenu = this.grid.hasContextMenu;
     }
 
     /**
@@ -416,27 +417,6 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
             ret.push(row.value);
         });
         return ret;
-    }
-
-    /**
-     * Has context menu
-     * @type {Boolean}
-     */
-    get hasContextMenu() {
-        return this._hasContextMenu;
-    }
-    /**
-     * Has context menu
-     * @type {Boolean}
-     */
-    set hasContextMenu(value) {
-        this._hasContextMenu = value;
-        this._showHasContextMenu();
-    }
-    _showHasContextMenu() {
-        this.ForEveryRow((n, row) => {
-            row.hasContextMenu = this._hasContextMenu;
-        });
     }
 
 
