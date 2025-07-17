@@ -432,9 +432,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     __contextMenuObjectClicked(event, args) {
         
-        const cell = this.Children('lastChild');
-        cell.Children(cell.name + '-contextmenu-icon-parent')?.RemoveClass('-selected');
-
+        this._contextmenuContainer.Children('firstChild')?.RemoveClass('-selected');
         this._contextMenuObject.Hide();
         this.grid.Dispatch('ContextMenuItemClicked', Object.assign(args, {item: this}));
         this._contextMenuObject.Dispose();
