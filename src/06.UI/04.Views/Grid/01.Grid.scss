@@ -20,9 +20,15 @@
         table-layout: fixed;
         border-collapse: separate;
 
-        [data-object-name="button-container-for-row-selection"] {
+        [data-object-name="checkbox-column"] {
             width: 40px;
             left: 0;
+            vertical-align: middle;
+        }
+
+        [data-object-name="contextmenu-column"] {
+            width: 20px;
+            padding: 0px;
             vertical-align: middle;
         }
 
@@ -218,6 +224,17 @@
                 &.row-selected {
                     background-color: #DFEEFF;
                 }
+
+                [data-object-name="contextmenu-column"] {
+                    width: 20px;
+                    padding: 0px;
+                    vertical-align: right;
+                    .app-contextmenu-icon-component {
+                        position: static;
+
+                    }
+                }
+
             }
 
             .app-ui-row-template {

@@ -18,7 +18,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
         this._templateElement = null;
 
-        this.countCells = 0;
+        this.cells = 0;
         this._tempCountCellsReportedChange = 0;
 
         this._heightPrevStickyRow = this.header?.shown ? this.header.height : 0;
@@ -28,65 +28,51 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
         this._checkbox = null;
         this._checkboxContainer = null;
-        this.__addButtonContainerForRowSelection();
-
-        this._handleEvents();
+        this._addCheckboxContainer();
+        this._createContextMenuButton();
 
         this._data = null;
 
         this.draggable = this.grid?.draggable ?? false;
         this.dropable = this.grid?.dropable ?? false;
 
+        this.AddHandler('ComponentDisposed', this.__thisComponentDisposed);
+        this.AddHandler('ChildAdded', this.__thisChildAdded);
+        this.AddHandler('ContextMenu', this.__thisContextMenu);
 
-    }
-
-    __thisComponentDisposed(event, args) {
-        if (this._templateElement) {
-            this._templateElement.remove();
-        }
-    }
-
-    __columnAdded(event, args) {
-        this.__newCell('', args.column);
     }
 
     Dispose() {
-        if (!this?.grid) {
-            return;
+
+        if (this._templateElement) {
+            this._templateElement.remove();
         }
-        this?.grid?._rowSelectionCheckbox.delete(this._checkboxContainer);
+
+        this.grid?.UnregisterCheckbox(this._checkboxContainer);
         super.Dispose();
     }
 
     /** @protected */
     _registerEvents() {
         super._registerEvents();
-        this.RegisterEvent('RowStickyChange', false, 'Поднимается, когда строка меняет липкость');
-        this.RegisterEvent('CellClicked', false, 'Поднимается, когда щелкнули по ячейке');
-        this.RegisterEvent('CellDoubleClicked', false, 'Поднимается, когда дважды щелкнули по ячейке');
-        this.RegisterEvent('RowSelected', false, 'Поднимается, когда выбирают строку');
-        this.RegisterEvent('RowClicked', false, 'Поднимается, когда кликнули по строке');
-        this.RegisterEvent('RowUpdated', false, 'Поднимается, когда обновили данные строки');
-        this.RegisterEvent('CellHorizontalStickyChanged', false, 'Поднимается, когда ячейка меняет sticky по горизонтали');
-        this.RegisterEvent('StickyChanged', false, 'Поднимается, когда все ячейки сообщили об изменинии sticky');
-        this.RegisterEvent('CellDisposed', false, 'Поднимается, когда удалили ячейку');
-        this.RegisterEvent('RowPositionChange', false, 'Поднимается, когда меняется положение липкости');
+
+        this.RegisterEvent('RowDisposed', true, 'Поднимается, когда выбирают строку');        
+        this.RegisterEvent('RowSelected', true, 'Поднимается, когда выбирают строку');        
+        this.RegisterEvent('RowStickyChanged', true, 'Поднимается, когда все ячейки сообщили об изменинии sticky');
+
     }
 
-    __thisRowStickyChange(event, args) {
-        if (!this._checkboxContainer) {
-            return true;
-        }
-
-        if (args.row.sticky) {
-            this._checkboxContainer.AddClass('position-sticky-y');
-        } else {
-            this._checkboxContainer.RemoveClass('position-sticky-y');
-        }
-        this._checkboxContainer._stickyVertically = args.row.sticky;
+    __thisComponentDisposed(event, args) {
+        this.Dispatch('RowDisposed', args);
     }
 
-    __thisRowPositionChange(event, args) {
+    __thisChildAdded(event, args) {
+        if(this._contextmenuContainer) {
+            this.MoveChild(this._contextmenuContainer, this._contextmenuContainer.childIndex, this.children, false);
+        }
+    }
+
+    PerformRowPositionChanged() {
         if (!this._checkboxContainer) {
             return true;
         }
@@ -94,36 +80,74 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         if (this._checkboxContainer._stickyVertically) {
             this._checkboxContainer._element.css('top', args.row._positionTop + 'px');
         }
-    }
 
-    _handleEvents() {
-
-        this.AddHandler('RowStickyChange', this.__thisRowStickyChange);
-        this.AddHandler('RowPositionChange', this.__thisRowPositionChange);
-
-        this.AddHandler('ContextMenuIconClicked', (event, args) => event.sender.grid?.Dispatch('ContextMenuIconClicked', Object.assign({ item: event.sender }, args)));
-        this.AddHandler('ContextMenuItemClicked', (event, args) => event.sender.grid?.Dispatch('ContextMenuItemClicked', Object.assign({ item: event.sender }, args)));
-
-        this.AddHandler('ComponentDisposed', this.__thisComponentDisposed);
-        this.AddHandler('ColumnAdded', this.__columnAdded);
+        this.ForEach((name, cell) => cell.PerformPositionChange());
 
     }
 
-    __addButtonContainerForRowSelection() {
-
-        this._checkboxContainer = new Colibri.UI.Component('button-container-for-row-selection', this, Element.create('td'));
-        this._checkboxContainer.AddClass('app-ui-row-cell');
-        this._checkboxContainer.shown = this.grid?.showCheckboxes ?? false;
-        if (this.grid?.showCheckboxes) {
-            this._checkboxContainer.AddClass('input-checkbox-shown');
+    PerformColumnPositionChanged(column, newPosition) {
+        let cell = this.Children(this.name + '-' + column.name);
+        if(cell) {
+            this.Children(cell.name, cell, newPosition);
         }
-        this.grid?._rowSelectionCheckbox.add(this._checkboxContainer);
+    }
 
-        this._checkbox = new Colibri.UI.Checkbox('row-checkbox', this._checkboxContainer);
-        this._checkbox.shown = true;
+    PerformColumnAdd(column) {
+        this.Add(this.value, column);
+    }
 
+    PerformColumnRemove(column) {
+        let cell = this.Children(this.name + '-' + column.name);
+        if(cell) {
+            cell.Dispose();
+        }
+    }
+
+    _addCheckboxContainer() {
+
+        this._checkboxContainer = new Colibri.UI.Component('checkbox-column', this, Element.create('td'));
+        this._checkboxContainer.AddClass('app-ui-row-cell');
+        this._checkboxContainer.shown = false;
+
+        this._checkbox = new Colibri.UI.Checkbox('checkbox', this._checkboxContainer);
+        this._checkbox.shown = false;
         this._checkbox.AddHandler('Changed', this.__checkboxChanged, false, this);
 
+    }
+
+    _createContextMenuButton() {
+        this._contextmenuContainer = new Colibri.UI.Component('contextmenu-column', this, Element.create('td'));
+        this._contextmenuContainer.AddClass('app-ui-row-cell');
+        this._contextmenuContainer.shown = false;
+        this._contextmenuContainer.width = 20;
+        
+        const contextMenuParent = new Colibri.UI.Component(this._name + '-contextmenu-icon-parent', this._contextmenuContainer);
+        contextMenuParent.AddClass('app-contextmenu-icon-component');
+        contextMenuParent.shown = true;
+
+        const contextMenuIcon = new Colibri.UI.Icon(this._name + '-contextmenu-icon', contextMenuParent);
+        contextMenuIcon.shown = true;
+        contextMenuIcon.value = Colibri.UI.ContextMenuIcon;
+        contextMenuIcon.AddHandler(['Clicked', 'DoubleClicked'], this.__contextMenuIconClickedOrDoubleClicked, false, this);
+    }
+
+    _removeContextMenuButton() {
+        if(this._hasContextMenu && this._contextmenuContainer.Children(this._name + '-contextmenu-icon-parent')) {
+            this._contextmenuContainer.Children(this._name + '-contextmenu-icon-parent').Dispose();
+        }
+    }
+
+
+    __contextMenuIconClickedOrDoubleClicked(event, args) {
+        if(event.name === 'ContextMenu') {
+            args.isContextMenuEvent = true;
+        }
+        this.grid.Dispatch('ContextMenuIconClicked', Object.assign(args, {item: this}));
+        if(event.name === 'ContextMenu') {
+            args.domEvent.stopPropagation();
+            args.domEvent.preventDefault();
+            return false;
+        }
     }
 
     __checkboxChanged(event, args) {
@@ -174,10 +198,9 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
     set value(value) {
         this._data = Object.assign({}, value);
         Object.forEach(this.header?.FindAllColumns(), (columnName, column) => {
-            this.__newCell(this._data, column);
+            this.Add(this._data, column);
         });
         this._renderTemplateRow();
-        this.Dispatch('RowUpdated', { row: this });
         return this;
     }
 
@@ -223,24 +246,8 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         return null;
     }
 
-    __newCellCellDoubleClicked(event, args) {
-        this.Dispatch('CellDoubleClicked', args);
-    }
-
-    __newCellCellHorizontalStickyChanged(event, args) {
-        this.Dispatch('CellHorizontalStickyChanged', args);
-    }
-
-    __newCellCellVerticalStickyChanged(event, args) {
-        this._tempCountCellsReportedChange = this._tempCountCellsReportedChange + 1;
-        if (this.countCells === this._tempCountCellsReportedChange) {
-            this._tempCountCellsReportedChange = 0;
-            this.Dispatch('StickyChanged', { row: this });
-        }
-    }
-
-    __newCell(value, column) {
-
+    Add(value, column) {
+        
         let val = '';
         try {
             val = column.name.indexOf('.') === -1 ? value[column.name] : eval(`value.${column.name}`);
@@ -251,34 +258,38 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
             return null;
         }
 
-        this.countCells = this.countCells + 1;
-
         let newCell = this.Children(this.name + '-' + column.name);
         if (!newCell) {
-
-            if (this.hasContextMenu) {
-                this._removeContextMenuButton();
-            }
-
-            newCell = new Colibri.UI.Grid.Cell(this.name + '-' + column.name, this);
+            newCell = new Colibri.UI.Grid.Cell(this.name + '-' + column.name, this, column);    
+        } else {
             newCell.parentColumn = column;
-            newCell.shown = true;
-            if (!column.shown) {
-                newCell.shown = false;
-            }
-
-            newCell.AddHandler('CellDoubleClicked', this.__newCellCellDoubleClicked, false, this);
-            newCell.AddHandler('CellHorizontalStickyChanged', this.__newCellCellHorizontalStickyChanged, false, this);
-            newCell.AddHandler('CellVerticalStickyChanged', this.__newCellCellVerticalStickyChanged, false, this);
-            newCell.AddHandler('CellDisposed', this.__thisBubble, false, this);
         }
 
+        newCell.shown = column.shown;
+        
         newCell.value = val;
 
-        if (this.hasContextMenu) {
-            this._createContextMenuButton();
-        }
+    }
 
+    /**
+     * Has context menu
+     * @type {Boolean}
+     */
+    get hasContextMenu() {
+        return this._contextmenuContainer.shown;
+    }
+    /**
+     * Has context menu
+     * @type {Boolean}
+     */
+    set hasContextMenu(value) {
+        value = this._convertProperty('Boolean', value);
+        this._contextmenuContainer.shown = value;
+        if(value) {
+            this.AddHandler('ContextMenu', this.__contextMenuIconClickedOrDoubleClicked);
+        } else {
+            this.RemoveHandler('ContextMenu', this.__contextMenuIconClickedOrDoubleClicked);
+        }
     }
 
     get sticky() {
@@ -286,18 +297,32 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
     }
 
     set sticky(value) {
+
         if (value) {
             this.AddClass('container-position-sticky-y');
         } else {
             this.RemoveClass('container-position-sticky-y');
         }
 
-        if (this._sticky !== value) {
-            this._sticky = value;
-            this.Dispatch('RowStickyChange', { row: this });
+        const isChanged = this._sticky !== value; 
+        this._sticky = value;
+
+        if (this._checkboxContainer) {
+            if (value) {
+                this._checkboxContainer.AddClass('position-sticky-y');
+            } else {
+                this._checkboxContainer.RemoveClass('position-sticky-y');
+            }
+            this._checkboxContainer._stickyVertically = args.row.sticky;
+        }
+
+        if (isChanged) {
+            this.Dispatch('RowStickyChanged', { row: this });
         }
 
     }
+
+
 
     get selected() {
         return this._selected;
@@ -306,6 +331,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
     set selected(value) {
         value ? this.AddClass('row-selected') : this.RemoveClass('row-selected');
         this._selected = value;
+        this.Dispatch('RowSelected', {row: this});
     }
 
     get activated() {
@@ -325,24 +351,25 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         this._activated = value;
     }
 
+    /**
+     * @readonly
+     */
     get group() {
         return this.parent;
     }
 
+    /**
+     * @readonly
+     */
     get grid() {
         return this?.parent?.parent?.parent;
     }
 
+    /**
+     * @readonly
+     */
     get header() {
         return this.grid?.header ?? null;
-    }
-
-    get countCells() {
-        return this._countCells;
-    }
-
-    set countCells(value) {
-        this._countCells = value;
     }
 
     get checked() {
@@ -359,22 +386,22 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         this._checkbox && (this._checkbox.enabled = value);
     }
 
+    get checkboxTooltip() {
+        return this._checkbox ? this._checkbox.toolTip : null;
+    }
     set checkboxTooltip(value) {
         this._checkbox && (this._checkbox.toolTip = value);
     }
 
+    set checkbox(value) {
+        this._checkboxContainer.shown = value;
+    }
+    get checkbox() {
+        return this._checkboxContainer.shown;
+    }
+
     Cell(columnName) {
         return this.Children(this.name + '-' + columnName);
-    }
-
-    _createContextMenuButton() {
-        this.lastCell && this.lastCell.CreateContextMenuButton();
-        this.AddClass('app-component-hascontextmenu');
-    }
-
-    _removeContextMenuButton() {
-        this.lastCell && this.lastCell.RemoveContextMenuButton();
-        this.RemoveClass('app-component-hascontextmenu');
     }
 
     EndEdit() {
@@ -384,18 +411,17 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
     }
 
 
-    ShowContextMenu(orientation = [Colibri.UI.ContextMenu.RT, Colibri.UI.ContextMenu.RB], className = '', point = null) {
-        const cell = this.Children('lastChild');
+    ShowContextMenu(orientation = [Colibri.UI.ContextMenu.RB, Colibri.UI.ContextMenu.RT], className = '', point = null) {
 
-        cell.Children(cell.name + '-contextmenu-icon-parent').AddClass('-selected');
+        this._contextmenuContainer.Children('firstChild').AddClass('-selected');
 
         if (this._contextMenuObject) {
             this._contextMenuObject.Dispose();
             this._contextMenuObject = null;
         }
 
-        this._contextMenuObject = new Colibri.UI.ContextMenu(cell.name + '-contextmenu', document.body, orientation, point);
-        this._contextMenuObject.Show(this.contextmenu, cell);
+        this._contextMenuObject = new Colibri.UI.ContextMenu(this.name + '-contextmenu', document.body, orientation, point);
+        this._contextMenuObject.Show(this.contextmenu, this._contextmenuContainer);
         if (className) {
             this._contextMenuObject.AddClass(className);
         }
@@ -409,15 +435,15 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         cell.Children(cell.name + '-contextmenu-icon-parent')?.RemoveClass('-selected');
 
         this._contextMenuObject.Hide();
-        this.Dispatch('ContextMenuItemClicked', args);
+        this.grid.Dispatch('ContextMenuItemClicked', Object.assign(args, {item: this}));
         this._contextMenuObject.Dispose();
         this._contextMenuObject = null;
     }
 
 
     _getContextMenuIcon() {
-        if (this.lastCell.Children(this.lastCell.name + '-contextmenu-icon-parent')) {
-            return this.lastCell.Children(this.lastCell.name + '-contextmenu-icon-parent/' + this.lastCell.name + '-contextmenu-icon');
+        if (this._contextmenuContainer.Children(this.lastCell.name + '-contextmenu-icon-parent')) {
+            return this._contextmenuContainer.Children(this.lastCell.name + '-contextmenu-icon-parent/' + this.lastCell.name + '-contextmenu-icon');
         }
         return null;
     }

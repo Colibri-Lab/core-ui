@@ -127,6 +127,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return this.Dispatch(event.name, Object.assign(args || {}, {component: this}));
     }
 
+    __thisBubbleWithItem(event, args) {
+        return this.Dispatch(event.name, Object.assign(args || {}, {item: this}));
+    }
+
     __thisBubblePreventDefault(event, args) {
         this.Dispatch(event.name, args);
         args.domEvent.stopPropagation();
@@ -220,18 +224,16 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         this._element.mapToUIComponent(this);
 
-        if (container instanceof Colibri.UI.Component) {
-            this._parent = container;
-            container.Children(this._name, this);
-            container.Dispatch('ChildAdded', {component: this});
-        }
-
         this._registerEvents();
 
         this.ProcessChildren(element.childNodes, null, false);
 
         // вводим в DOM
         this._container && this._container.append(this._element);
+        if (container instanceof Colibri.UI.Component) {
+            this._parent = container;
+            container.Children(this._name, this);
+        }
 
         this._bindHtmlEvents();
         this._registerEventHandlers();
@@ -725,7 +727,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @param {Colibri.UI.Dispatcher} respondent respondet object
      * @returns {Colibri.Events.Dispatcher}
      */
-    AddHandler(eventName, handler, prepend = false, respondent = this) {
+    AddHandler(eventName, handler, prepend = false, respondent = null) {
+        if(!respondent) {
+            respondent = this;
+        }
+
         const __domHandlers = Colibri.UI.Component.__domHandlers;
         if(__domHandlers[eventName]) {
             this.__bindHtmlEvent(eventName, __domHandlers[eventName]);
@@ -1573,7 +1579,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @param {number} toIndex new index of child 
      * @param {boolean} raiseEvent rais ComponentMoved event
      */
-    MoveChild(child, fromIndex, toIndex, raiseEvent = false) {
+    MoveChild(child, fromIndex, toIndex, raiseEvent = true) {
         
         // если то же место то ничего не делаем
         if(fromIndex == toIndex) {
@@ -1581,9 +1587,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
 
         this._children.splice(fromIndex, 1);
-        // стало на один меньше
         if(fromIndex < toIndex) {
-            // all is ok, can move
             toIndex--;
         } 
 
@@ -1597,23 +1601,41 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     /**
      * Move current component up in its parent childs
      */
-    MoveUp() {
+    MoveUp(raiseEvent = true) {
         if(!this.prev) {
             return;
         }    
-        this.parent.MoveChild(this, this.childIndex, this.childIndex - 1);
-        this.Dispatch('ComponentMoved', {direction: 'up'});
+        this.parent.MoveChild(this, this.childIndex, this.childIndex - 1, false);
+        if(raiseEvent) {
+            this.Dispatch('ComponentMoved', {direction: 'up'});
+        }
     }
 
     /**
      * Move current component down in its parent childs
      */
-    MoveDown() {
+    MoveDown(raiseEvent = true) {
         if(!this.next) {
             return;
         }    
-        this.parent.MoveChild(this, this.childIndex, this.childIndex + 1);
-        this.Dispatch('ComponentMoved', {direction: 'down'});
+        this.parent.MoveChild(this, this.childIndex, this.childIndex + 1, false);
+        if(raiseEvent) {
+            this.Dispatch('ComponentMoved', {direction: 'down'});
+        }
+    }
+
+    MoveEnd(raiseEvent = true) {
+        this.parent.MoveChild(this, this.childIndex, this.children, false);
+        if(raiseEvent) {
+            this.Dispatch('ComponentMoved', {direction: 'end'});
+        }
+    }
+
+    MoveTop(raiseEvent = true) {
+        this.parent.MoveChild(this, this.childIndex, 0, false);
+        if(raiseEvent) {
+            this.Dispatch('ComponentMoved', {direction: 'end'});
+        }
     }
 
     /**
@@ -1639,7 +1661,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     _moveInDom(insertedElement, parentElement, index) {
         insertedElement.remove();
-        parentElement.insertBefore(insertedElement, parentElement.children[index]);
+        if(parentElement.children[index]) {
+            parentElement.insertBefore(insertedElement, parentElement.children[index]);
+        } else {
+            parentElement.appendChild(insertedElement);
+        }
         this._renderedIndex = this.index;
     }
 

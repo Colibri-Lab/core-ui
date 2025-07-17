@@ -6,11 +6,38 @@
  */
 Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
 
-    constructor(name, container) {
+    constructor(name, container, createCheckBox = false) {
         super(name, container, Element.create('tr'));
         this.AddClass('app-ui-header-columns');
-        this.AddHandler('ChildAdded', this.__thisChildAdded);
-        this._columnsAddedEventSent = false;
+
+        if(createCheckBox) {
+            this._checkboxContainer = new Colibri.UI.Grid.Column('checkbox-column', this, null, {value: '', shown: false});
+            this._checkboxContainer.shown = false;
+
+            this._checkbox = new Colibri.UI.Checkbox('checkbox', this._checkboxContainer);
+            this._checkbox.hasThirdState = true;
+            this._checkbox.shown = true;
+
+            this._checkbox.AddHandler('Changed', this.__thisCheckboxChanged, false, this);
+
+            this._contextmenuContainer = new Colibri.UI.Grid.Column('contextmenu-column', this, null, {value: '', shown: true, width: 20});
+            this._contextmenuContainer.shown = false;
+
+        }
+
+    }
+
+    __thisCheckboxChanged(event, args) {
+        this.grid?.Dispatch('HeaderCheckboxChanged', {value: this._checkbox.checked});
+    }
+
+    get checkbox() {
+        return this._checkbox ?? null;
+    }
+
+    _registerEventHandlers() {
+        super._registerEventHandlers();
+        this.AddHandler('ChildAdded', this.__thisColumnAdded);
     }
 
     /**
@@ -18,38 +45,19 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
      */ 
-    __thisChildAdded(event, args) {
-        args.component.AddHandler('ColumnStickyChange', this.__thisBubble, false, this);
-        args.component.AddHandler('ColumnClicked', this.__thisBubble, false, this);
-        args.component.AddHandler('ColumnDisposed', this.__thisBubble, false, this);
-        args.component.AddHandler('ComponentMoved', this.__newColumnMoved, false, this);
-        this.Dispatch('ColumnAdded', {column: args.component});
-    }
-
-    __newColumnMoved(event, args) {
-        this.Dispatch('ColumnMoved', Object.assign(args, {column: event}));
-    }
-
-    /** @protected */
-    _registerEvents() {
-        super._registerEvents();
-        this.RegisterEvent('ColumnAdded', false, 'Поднимается, когда добавляется колонка');
-        this.RegisterEvent('ColumnMoved', false, 'Поднимается, когда колонка передвинута');
-        this.RegisterEvent('ColumnStickyChange', false, 'Поднимается, когда колонка меняет липкость');
-        this.RegisterEvent('ColumnClicked', false, 'Поднимается, когда щелкнули по колонке в заголовке');
-        this.RegisterEvent('ColumnDisposed', false, 'Поднимается, когда удалили колонку');
+    __thisColumnAdded(event, args) {
+        if(args.component.name != 'checkbox-column' && args.component.name != 'contextmenu-column') {
+            if(this._contextmenuContainer) {
+                this.MoveChild(this._contextmenuContainer, this._contextmenuContainer.childIndex, this.children, false);
+            }
+        }
+        this.grid?.Dispatch('ColumnAdded', {column: args.component});
     }
 
     Add(name, title, attrs = {}) {
-        let newColumn = new Colibri.UI.Grid.Column(name, this);
-        newColumn.value = title;
-        newColumn.shown = true;
-
-        Object.forEach(attrs, (name, attr) => {
-            newColumn[name] = attr;
-        });
-
-        return newColumn;
+        const ret = new Colibri.UI.Grid.Column(name, this, null, Object.assign(attrs, {value: title}));
+        ret.shown = true;
+        return ret;
     }
 
     Remove(name) {
@@ -72,6 +80,30 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
 
     get count() {
         return this.children - 1;
+    }
+
+    /**
+     * Has context menu
+     * @type {Boolean}
+     */
+    get hasContextMenu() {
+        return this._contextmenuContainer.shown;
+    }
+    
+    /**
+     * Has context menu
+     * @type {Boolean}
+     */
+    set hasContextMenu(value) {
+        this._contextmenuContainer.shown = value;
+    }
+
+    get contextmenuContainer() {
+        return this._contextmenuContainer;
+    }
+
+    get checkboxContainer() {
+        return this._checkboxContainer;
     }
 
 }

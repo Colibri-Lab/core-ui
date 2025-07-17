@@ -76,6 +76,9 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
      */
     set value(value) {
         Colibri.Common.Wait(() => !this.loading).then(() => {
+            if(!this.isConnected) {
+                return;
+            }
             this._input.value = value;
             this.Validate();
             if (value) {

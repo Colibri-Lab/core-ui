@@ -17,7 +17,8 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
         this._title = new Colibri.UI.Component('rows-title', this, Element.create('tr'));
         this._title.AddClass('app-ui-rows-group');
-        this.__addButtonContainerForRowSelection();
+        this._createCheckboxContainer();
+        
         this._titleCell = new Colibri.UI.Component('rows-title-cell', this._title, Element.create('td'));
         this._titleCell.shown = true;
         this._titleCellSpan = new Colibri.UI.TextSpan('rows-title-span', this._titleCell);
@@ -32,14 +33,35 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
         this._titleCell.AddHandler('Clicked', this.__titleCellClicked, false, this);
 
-        this.AddHandler('ColumnAdded', this.__columnAdded);
+    }
+
+    /** @protected */
+    _registerEvents() {
+        super._registerEvents();
+
+        this.RegisterEvent('RowAdded', false, 'When row added to group');
 
     }
 
-    __columnAdded(event, args) {
-        this.columns = args.count;
+    _registerEventHandlers() {
+        super._registerEventHandlers();
+
+        this.AddHandler('Changed', this.__thisChanged);
+        this.AddHandler('ChildAdded', this.__childAdded);
+
+    }
+
+    PerformColumnAdd(column) {
+        this.columns = this.grid.header.columnsCount;
         this.ForEveryRow((name, row) => {
-            row.Dispatch('ColumnAdded', args);
+            row.PerformColumnAdd(column);
+        });
+    }
+
+    PerformColumnRemove(column) {
+        this.columns = this.grid.header.columnsCount;
+        this.ForEveryRow((name, row) => {
+            row.PerformColumnRemove(column);
         });
     }
 
@@ -49,16 +71,16 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         }
     }
 
-    __addButtonContainerForRowSelection() {
+    _createCheckboxContainer() {
 
-        this._checkboxContainer = new Colibri.UI.Component('button-container-for-row-selection', this._title, Element.create('td'));
+        this._checkboxContainer = new Colibri.UI.Component('checkbox-column', this._title, Element.create('td'));
         this._checkboxContainer.AddClass('app-ui-row-cell');
         this._checkboxContainer.shown = this.grid?.showCheckboxes ?? false;
         if (this.grid?.showCheckboxes) {
             this._checkboxContainer.AddClass('input-checkbox-shown');
         }
 
-        this._checkbox = new Colibri.UI.Checkbox('row-checkbox', this._checkboxContainer);
+        this._checkbox = new Colibri.UI.Checkbox('checkbox', this._checkboxContainer);
         this._checkbox.hasThirdState = true;
         this._checkbox.shown = true;
 
@@ -77,86 +99,21 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         });    
         this.grid.header.checkbox.thirdState = this.grid.rowsCount > this.grid.checked.length;
         this.checkbox.thirdState = this.rowsCount > this.checked.length;
-        this.grid.Dispatch('RowSelected');
     }
 
-    /** @protected */
-    _registerEvents() {
-        super._registerEvents();
-        this.RegisterEvent('RowAdded', false, 'Поднимается, когда добавляется строка');
-        this.RegisterEvent('RowUpdated', false, 'Поднимается, когда обновляется строка');
-        this.RegisterEvent('RowStickyChange', false, 'Поднимается, когда строка меняет липкость');
-        this.RegisterEvent('RowClicked', false, 'Поднимается, когда щелкнули по строке');
-        this.RegisterEvent('CellClicked', false, 'Поднимается, когда щелкнули по ячейке');
-        this.RegisterEvent('CellDoubleClicked', false, 'Поднимается, когда дважды щелкнули по ячейке');
-        this.RegisterEvent('RowSelected', false, 'Поднимается, когда выбирают строку');
-        this.RegisterEvent('RowDisposed', false, 'Поднимается, когда удалили строку');
-        this.RegisterEvent('GridCellsChanged', false, 'Поднимается, когда все строки сообщили об изменении ячеек (sticky/dispose)');
-        this.RegisterEvent('StickyChanged', false, 'Поднимается, когда все ячейки сообщили об изменинии sticky');
-        this.RegisterEvent('ColumnAdded', false, 'When added a column to grid');
-    }
-
-    __newRowRowUpdated(event, args) {
+    __thisChanged(event, args) {
         if(this.grid?.tag?.params?.sort) {
             const foundIndex = this.grid.tag.params.sort(event.sender, this);
             this.Children(newRow.name, event.sender, foundIndex);
         }
-        this.Dispatch('RowUpdated', {row: args.row});
-    }
-
-    __newRowRowStickyChange(event, args) {
-        this.Dispatch('RowStickyChange', args);
-    }
-
-    __newRowCellClicked(event, args) {
-        this.Dispatch('CellClicked', args);
-    }
-
-    __newRowCellDoubleClicked(event, args) {
-        this.Dispatch('CellDoubleClicked', args);
-    }
-
-    __newRowRowSelected(event, args) {
-        if (this.grid?.selectionMode === Colibri.UI.Grid.FullRow) {
-            if (!this.grid.multiple) { 
-                this.grid.UnselectAllRows();
-            }
-            //args.row.selected = !args.row.selected;
-            this.Dispatch('RowSelected', args);
-        }
-    }
-
-    __newRowComponentDisposed(event, args) {
-        this.Dispatch('RowDisposed', {row: event.sender});
-    }
-
-    __newRowCellHorizontalStickyChanged(event, args) {
-        this._tempCountRowsReportedCellsChange = this._tempCountRowsReportedCellsChange + 1;
-        if (this.rowsCount === this._tempCountRowsReportedCellsChange) {
-            this._tempCountRowsReportedCellsChange = 0;
-            this.Dispatch('GridCellsChanged', {rows: this});
-        }
-    }
-
-    __newRowCellDisposed(event, args) {
-        this._tempCountRowsReportedCellsChange = this._tempCountRowsReportedCellsChange + 1;
-        if (this.rowsCount === this._tempCountRowsReportedCellsChange) {
-            this._tempCountRowsReportedCellsChange = 0;
-            this.Dispatch('GridCellsChanged', {rows: this});
-        }
-    }
-
-    __newRowStickyChanged(event, args) {
-        this.Dispatch('StickyChanged', args);
     }
 
     Add(name, value, index = null) {
         this.shown = true;
         let newRow = new Colibri.UI.Grid.Row(name, this);
-        newRow.value = value;
         newRow.hasContextMenu = this.grid?.hasContextMenu ?? false;
+        newRow.value = value;
 
-        // добавили, смотрим есть ли сортировка
         if(this.grid?.tag?.params?.sort) {
             const foundIndex = this.grid.tag.params.sort(newRow, this);
             this.Children(name, newRow, foundIndex);
@@ -165,20 +122,6 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
             this.Children(name, newRow, index);
         }
 
-        this.Dispatch('RowAdded', {row: newRow});
-
-        newRow.AddHandler('RowUpdated', this.__newRowRowUpdated, false, this);
-        newRow.AddHandler('RowStickyChange', this.__newRowRowStickyChange, false, this);
-        newRow.AddHandler('CellClicked', this.__newRowCellClicked, false, this);
-        newRow.AddHandler('CellDoubleClicked', this.__newRowCellDoubleClicked, false, this);
-        newRow.AddHandler('RowSelected', this.__newRowRowSelected, false, this);
-        newRow.AddHandler('ComponentDisposed', this.__newRowComponentDisposed, false, this);
-        newRow.AddHandler('CellHorizontalStickyChanged', this.__newRowCellHorizontalStickyChanged, false, this);
-        newRow.AddHandler('CellDisposed', this.__newRowCellDisposed, false, this);
-        newRow.AddHandler('StickyChanged', this.__newRowStickyChanged, false, this);
-
-        this._titleCellCountSpan.value = ' (' + this.rowsCount + ')';
-
         if(value?.__selected === true) {
             this.grid.selected = newRow;
         }
@@ -186,7 +129,15 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
             newRow.checked = true;
         }
 
+        this.grid.Dispatch('RowAdded', {row: newRow});
+
         return newRow;
+    }
+
+    __childAdded(event, args) {
+        if(this._titleCellCountSpan) {
+            this._titleCellCountSpan.value = ' (' + this.rowsCount + ')';
+        }
     }
 
     /**
@@ -331,13 +282,13 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
      * @type {Boolean}
      */
     get showCheckBoxes() {
-        return this._title.Children('button-container-for-row-selection').shown;
+        return this._title.Children('checkbox-column').shown;
     }
     /**
      * @type {Boolean}
      */ 
     set showCheckbox(value) {
-        this._title.Children('button-container-for-row-selection').shown = value;
+        this._title.Children('checkbox-column').shown = value;
     }
 
     /**
@@ -479,5 +430,51 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         });
         return ret;
     }
+
+    /**
+     * Has context menu
+     * @type {Boolean}
+     */
+    get hasContextMenu() {
+        return this._hasContextMenu;
+    }
+    /**
+     * Has context menu
+     * @type {Boolean}
+     */
+    set hasContextMenu(value) {
+        this._hasContextMenu = value;
+        this._showHasContextMenu();
+    }
+    _showHasContextMenu() {
+        this.ForEveryRow((n, row) => {
+            row.hasContextMenu = this._hasContextMenu;
+        });
+    }
+
+
+    /**
+     * Show checkboxes on rows
+     * @type {Boolean}
+     */
+    get showCheckboxes() {
+        return this._showCheckboxes;
+    }
+    /**
+     * Show checkboxes on rows
+     * @type {Boolean}
+     */
+    set showCheckboxes(value) {
+        this._showCheckboxes = value;
+        this._showShowCheckboxes();
+    }
+    _showShowCheckboxes() {
+        
+        this.ForEveryRow((n, row) => {
+            row.checkbox = true;
+        });
+
+    }
+
 
 }

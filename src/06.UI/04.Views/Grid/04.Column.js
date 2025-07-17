@@ -10,17 +10,15 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      * @param {string} name name of component
      * @param {Element|Colibri.UI.Component} container container of component
      */
-    constructor(name, container, element) {
+    constructor(name, container, element, attrs = {}) {
         super(name, container, Element.create('td'));
         this.AddClass('app-ui-column');
         this.AddClass('position-sticky-y');
         // this.shown = this.parent.shown;
 
-        this.sticky = false;
+        this._sticky = false;
         this._resizable = false;
         this._resizeHandler = null;
-
-        this._handleEvents();
 
         this._editor = null;
         this._viewer = null;
@@ -34,36 +32,36 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
 
         this.GenerateChildren(element);
 
+        Object.forEach(attrs, (n, v) => {
+            this[n] = v;
+        });
 
-    }
+        if(container instanceof Colibri.UI.Component) {
+            container.Dispatch('ChildAdded', {component: this});
+        }
 
-    /** @protected */
-    _registerEvents() {
-        super._registerEvents();
-        this.RegisterEvent('ColumnStickyChange', false, 'Поднимается, когда колонка меняет липкость');
-        this.RegisterEvent('ColumnClicked', false, 'Поднимается, когда щелкнули по колонке в заголовке');
-        this.RegisterEvent('ColumnMoved', false, 'Поднимается, колонка сдвинута');
-        this.RegisterEvent('ColumnDisposed', false, 'Поднимается, когда удалили колонку');
-        this.RegisterEvent('ColumnPositionChange', false, 'Поднимается, когда колонка изменила положение липкости');
-    }
-
-    __thisClicked(event, args) {
-        this.Dispatch('ColumnClicked', {column: this});
     }
     
-    __thisComponentDisposed(event, args) {
-        this.Dispatch('ColumnDisposed', {column: this});
-    }
-
-    _handleEvents() {
+    _registerEventHandlers() {
+        super._registerEventHandlers();
         this.AddHandler('Clicked', this.__thisClicked);
-        this.AddHandler('ComponentDisposed', this.__thisComponentDisposed);
+        this.AddHandler('ComponentMoved', this.__thisComponentMoved);
     }
-    
+
     Dispose() {
+        this.grid?.Dispatch('ColumnDisposed', {column: this});
         this.resizable = false;
         super.Dispose();
     }
+
+    __thisComponentMoved(event, args) {
+        this.grid?.Dispatch('ColumnMoved', {column: this});        
+    }
+
+    __thisClicked(event, args) {
+        this.grid?.Dispatch('ColumnClicked', {column: this})
+    }
+    
 
     /**
      * Set and get the column sticky
@@ -86,7 +84,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
 
         if (this._sticky !== (value === 'true' || value === true)) {
             this._sticky = (value === 'true' || value === true);
-            this.Dispatch('ColumnStickyChange', {column: this});
+            this.grid?.Dispatch('ColumnPropertyChanged', {column: this, property: 'sticky'});
         }
     }
 
@@ -261,7 +259,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      * @type {Colibri.UI.Grid}
      */
     get grid() {
-        return this.parent.parent.parent.parent;
+        return this.parent?.parent?.parent?.parent;
     }
 
     /**
@@ -285,7 +283,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      */
     set editor(value) {
         this._editor = value;
-        this.grid.Dispatch('ColumnEditorChanged', {column: this});
+        this.grid?.Dispatch('ColumnPropertyChanged', {property: 'editor', column: this});
     }
 
     /**
@@ -301,7 +299,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      */
     set viewer(value) {
         this._viewer = value;
-        this.grid.Dispatch('ColumnViewerChanged', {column: this});
+        this.grid?.Dispatch('ColumnPropertyChanged', {property: 'viewer', column: this});
     }
 
     /**
@@ -318,7 +316,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
     set valign(value) {
         this._valign = value;
         this._element.css('vertical-align', value);
-        this.grid.Dispatch('ColumnVerticalAlignChanged', {column: this});
+        this.grid?.Dispatch('ColumnPropertyChanged', {property: 'valign', column: this});
     }
 
     /**
@@ -335,7 +333,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
     set halign(value) {
         this._halign = value;
         this._element.css('text-align', value);
-        this.grid.Dispatch('ColumnHorizontalAlignChanged', {column: this});
+        this.grid?.Dispatch('ColumnPropertyChanged', {property: 'halign', column: this});
     }
 
     /**
@@ -343,7 +341,9 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      * @type {Boolean}
      */
     set editorAllways(value) {
+        value = this._convertProperty('Boolean', value);
         this._editorAllways = value;
+        this.grid?.Dispatch('ColumnPropertyChanged', {property: 'editorAllways', column: this});
     }
     /**
      * Use editor allways
@@ -359,6 +359,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      */
     set download(value) {
         this._download = value;
+        this.grid?.Dispatch('ColumnPropertyChanged', {property: 'download', column: this});
     }
     /**
      * Download controller
@@ -381,6 +382,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      */
     set rowspan(value) {
         this._element.attr('rowspan', value);
+        this.grid?.Dispatch('ColumnPropertyChanged', {property: 'rowspan', column: this});
     }
 
     /**
@@ -396,6 +398,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      */
     set colspan(value) {
         this._element.attr('colspan', value);
+        this.grid?.Dispatch('ColumnPropertyChanged', {property: 'colspan', column: this});
     }
 
     /**
@@ -411,6 +414,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      */
     set index(value) {
         this._index = value;
+        this.grid?.Dispatch('ColumnPropertyChanged', {property: 'index', column: this});
     }
 
     /**
@@ -418,8 +422,8 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      * @type {Object|String}
      */
     get sortIcons() {
-        if(this.grid.columnSortIcons) {
-            this._sortIcons = this.grid.columnSortIcons;
+        if(this.grid?.columnSortIcons) {
+            this._sortIcons = this.grid?.columnSortIcons;
         }
         return this._sortIcons;
     }
@@ -433,6 +437,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         }
         this._sortIcons = value;
         this._sortHandler && this._sortHandler.html(this.sortIcons['none'] ?? '');
+        this.grid?.Dispatch('ColumnPropertyChanged', {property: 'sortIcons', column: this});
 
     }
 
@@ -449,7 +454,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      */
     set shown(value) {
         super.shown = value;
-        this.grid.Dispatch('ColumnVisibilityChanged', {column: this});   
+        this.grid?.Dispatch('ColumnPropertyChanged', {property: 'shown', column: this});
     }
 
     /**
@@ -465,6 +470,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      */
     set canCopy(value) {
         this._canCopy = value;
+        this.grid?.Dispatch('ColumnPropertyChanged', {property: 'canCopy', column: this});
     }
 
     /**

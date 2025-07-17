@@ -45,7 +45,11 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * @param {Object} [respondent=this] - The object that responds to the event.
      * @returns {Colibri.Events.Dispatcher}
      */
-    AddHandler(eventName, handler, prepend = false, respondent = this) {
+    AddHandler(eventName, handler, prepend = false, respondent = null) {
+
+        if(!respondent) {
+            respondent = this;
+        }
 
         if (eventName instanceof Array) {
             eventName.forEach((en) => {
@@ -77,7 +81,11 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * @param {Function} handler - The handler to remove.
      * @returns {Colibri.Events.Dispatcher}
      */
-    RemoveHandler(eventName, handler, respondent = this) {
+    RemoveHandler(eventName, handler, respondent = null) {
+
+        if(!respondent) {
+            respondent = this;
+        }
 
         if (eventName instanceof Array) {
             eventName.forEach((en) => {

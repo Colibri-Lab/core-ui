@@ -127,7 +127,7 @@ Colibri.UI.NumberEditor = class extends Colibri.UI.Editor {
             value = value * 100;
         }
 
-        this._element.value = value ?? '';
+        this._element.value = !value || isNaN(value) ? '' : value;
         this.Validate();
         if(value) {
             this._setFilled();

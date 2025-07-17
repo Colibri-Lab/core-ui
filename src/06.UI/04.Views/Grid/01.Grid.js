@@ -56,6 +56,78 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this._handleEvents();
     }
 
+
+    /** @protected */
+    _registerEvents() {
+        super._registerEvents();
+
+        this.RegisterEvent('HighlightedItemChanged', false, 'Поднимается, когда меняется подствеченный элемент');
+        this.RegisterEvent('SelectionChanged', false, 'Поднимается, когда выбирают элемент');
+        this.RegisterEvent('CheckChanged', false, 'Поднимается, когда изменяется выбор галочек');
+        this.RegisterEvent('SortChanged', false, 'When sort column or order is changed');
+        this.RegisterEvent('ScrolledToBottom', false, 'Поднимается, когда грид доскролили до конца');
+
+        this.RegisterEvent('RowsCheckboxClicked', false, 'Rows checkbox clicked');
+        this.RegisterEvent('RowsCheckboxContextMenuItemClicked', false, 'Rows checkbox contextmenu clicked');
+
+
+        this.RegisterEvent('HeaderCheckboxChanged', false, 'When header checkbox state changed');
+        this.RegisterEvent('ColumnPropertyChanged', false, 'When changed the column property');
+        this.RegisterEvent('ColumnClicked', false, 'Поднимается, когда щелкнули по колонке в заголовке');
+        this.RegisterEvent('ColumnDisposed', false, 'Поднимается, когда удаляют колонку');
+        this.RegisterEvent('ColumnEditorChanged', false, 'Когда изменился редактор в колонке');
+        this.RegisterEvent('ColumnViewerChanged', false, 'Когда изменился компонент отображения в колонке');
+        this.RegisterEvent('ColumnAdded', false, 'Поднимается, когда обновилась строка');
+        this.RegisterEvent('ColumnMoved', false, 'Поднимается, когда обновилась строка');
+
+
+        this.RegisterEvent('RowStickyChanged', false, 'Поднимается, когда строка меняет липкость');
+        this.RegisterEvent('RowSelected', false, 'Поднимается, когда выбирают строку');
+        this.RegisterEvent('RowDisposed', false, 'Поднимается, когда удаляют строку');
+        this.RegisterEvent('RowAdded', false, 'Поднимается, когда добавилась строка');
+        this.RegisterEvent('RowUpdated', false, 'Поднимается, когда обновилась строка');
+        
+
+        this.RegisterEvent('CellViewerClicked', false, 'Когда кникнули на компонент отображения в колонке');
+        this.RegisterEvent('CellEditorChanged', false, 'Когда редактирование ячейки завершено');
+        this.RegisterEvent('MassActionsMenuActionClicked', false, 'Когда кликнули на кнопку внутри меню массовых операций');
+
+    }
+
+    _registerEventHandlers() {
+        super._registerEventHandlers();
+
+        this.AddHandler('RowStickyChanged', this.__rowsStickyChanged);
+
+        this.AddHandler('RowSelected', this.__rowsRowSelected);
+        this.AddHandler('RowDisposed', this.__rowsRowDisposed);
+        this.AddHandler('RowAdded', this.__rowsRowAdded);
+
+        this.AddHandler('HeaderCheckboxChanged', this.__headerCheckboxChanged);
+
+        this.AddHandler('Clicked', this.__clickedProcessing);
+        this.AddHandler('SelectionChanged', this.__thisSelectionChanged);
+        this.AddHandler('RowSelected', this.__thisRowSelected);
+        this.AddHandler('KeyDown', this.__thisKeyDown);
+        this.AddHandler('ColumnPropertyChanged', this.__thisColumnPropertyChanged);
+
+        this.AddHandler('ColumnMoved', this.__columnColumnMoved);
+        this.AddHandler('ColumnAdded', this.__columnColumnAdded);
+
+        this.AddHandler('ColumnDisposed', this.__headerColumnDisposed);
+        this.AddHandler('ColumnStickyChange', this.__headerColumnStickyChange);
+        this.AddHandler('ColumnClicked', this.__headerColumnClicked);
+
+    }
+
+    RegisterCheckbox(container) {
+        this._rowSelectionCheckbox.add(container);
+    }
+
+    UnregisterCheckbox(container) {
+        this._rowSelectionCheckbox.delete(container);
+    }
+
     /**
      * Возвращает хедер
      * @type {Colibri.UI.Grid.Header}
@@ -198,20 +270,14 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      * @type {bool}
      */
     set showCheckboxes(value) {
-        this._setShowCheckboxes(value);
-    }
-    _setShowCheckboxes(value) {
-        this._rowSelectionCheckbox.forEach((obj) => {
-            if (value) {
-                obj.AddClass('input-checkbox-shown');
-            } else {
-                obj.RemoveClass('input-checkbox-shown');
-            }
-        });
-        this.header.columns.Children('button-container-for-row-selection').shown = value;
+        value = this._convertProperty('Boolean', value);
         this._showCheckboxes = value;
+        this._showShowCheckboxes();
+    }
+    _showShowCheckboxes() {
+        this.header.columns.showCheckboxes = this._showCheckboxes;
         Object.forEach(this.groups, (name, group) => {
-            group.showCheckbox = value;
+            group.showCheckboxes = this._showCheckboxes;
         });
     }
 
@@ -374,7 +440,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         Object.forEach(this.groups, (name, group) => {
             group.ForEach((nameRow, row) => {
                 row.ForEach((nameCell, cell) => {
-                    if (nameCell !== 'button-container-for-row-selection') {
+                    if (nameCell !== 'checkbox-column') {
                         cell.selected = false;
                     }
                 })
@@ -389,7 +455,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         Object.forEach(this.groups, (name, group) => {
             group.ForEach((nameRow, row) => {
                 row.ForEach((nameCell, cell) => {
-                    if (nameCell !== 'button-container-for-row-selection') {
+                    if (nameCell !== 'checkbox-column') {
                         cell.activated = false;
                     }
                 })
@@ -463,51 +529,23 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             rows.title = title;
         }
 
-        rows.AddHandler('CellClicked', this.__rowsCellClicked, false, this);
-        rows.AddHandler('CellDoubleClicked', this.__rowsCellDoubleClicked, false, this);
-        rows.AddHandler('RowClicked', this.__rowsRowClicked, false, this);
-        rows.AddHandler('RowSelected', this.__rowsRowSelected, false, this);
-        rows.AddHandler('RowDisposed', this.__rowsRowDisposed, false, this);
-        rows.AddHandler('StickyChanged', this.__rowsStickyChanged, false, this);
         rows.AddHandler('GridCellsChanged', this.__rowsGridCellsChanged, false, this);
-        rows.AddHandler('RowAdded', this.__rowsRowAdded, false, this);
         rows.AddHandler('RowUpdated', this.__rowsRowUpdated, false, this);
 
         return rows;
-    }
-
-    __rowsCellClicked(event, args) {
-        debugger;
-        if (this.selectionMode === Colibri.UI.Grid.EveryCell) {
-            this.DeactivateAllCells();
-            if (!this.multiple) {
-                this.DeselectAllCells();
-            }
-            args.cell.activated = !args.cell.activated;
-            args.cell.selected = !args.cell.selected;
-        }
-        this.Dispatch('CellClicked', args);
-    }
-
-    __rowsCellDoubleClicked(event, args) {
-        this.Dispatch('CellDoubleClicked', args);
-    }
-
-    __rowsRowClicked(event, args) {
-        this.Dispatch('RowClicked', args);
-        this.Dispatch('SelectionChanged', Object.assign(args, { item: this.selected }));
     }
 
     __rowsRowSelected(event, args) {
         if (event.sender.checked.length == 0) {
             event.sender.checkbox.checked = false;
         }
-        this.Dispatch('RowSelected', args);
     }
 
     __rowsRowDisposed(event, args) {
+        Object.forEach(this.groups, (name, rows) => {
+            rows.columns = this.header.columnsCount;
+        });
         this.RecalculateCellPositions();
-        this.Dispatch('RowDisposed', args);
     }
 
     __rowsStickyChanged(event, args) {
@@ -523,9 +561,9 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this._gridContent.shown = true;
         Object.forEach(this.groups, (name, rows) => {
             rows.columns = this.header.columnsCount;
+            rows.hasContextMenu = this.hasContextMenu;
         });
         this.RecalculateCellPositions();
-        this.Dispatch('RowAdded', { row: args.row });
     }
 
     __rowsRowUpdated(event, args) {
@@ -767,10 +805,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                 break;
         }
 
-        this.Dispatch('CellClicked', args);
         cell.EditValue && cell.EditValue();
-
-        this.Dispatch('RowClicked', args);
 
         args.item = this.selected;
         this.Dispatch('SelectionChanged', args);
@@ -780,44 +815,44 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      * Пересчитывает высоту строк
      */
     RecalculateCellPositions() {
+        if(!this.header) {
+            return;
+        }
 
-        // if (this._recalculateTimerCellPositions !== null) {
-        //     clearTimeout(this._recalculateTimerCellPositions);
-        // }
+        let tempWidth = 0;
+        let tempWidthPrevStickyCell = 0;
+        let col = null;
 
-        // this._recalculateTimerCellPositions = setTimeout(() => {
+        Object.forEach(this.header.FindAllColumns(), (nameColumn, column) => {
+            column._widthPrevStickyCell = tempWidthPrevStickyCell;
+            if (column.sticky) {
+                col = column;
+                tempWidthPrevStickyCell += parseFloat(column._element.css('width'));
+                column.left = tempWidth;
+                column.tag.stickyLeft = tempWidth;
+                tempWidth += parseFloat(column._element.css('width'));
+            }
+        });
+
+        col && col.AddClass('-last-sticky')
 
         let tempHeight = this.header.height;
         Object.forEach(this.groups, (name, group) => {
             group.ForEach((nameRow, row) => {
                 row._heightPrevStickyRow = tempHeight;
                 if (row.sticky) {
-                    row._positionTop = tempHeight;
+                    row.top = tempHeight;
                     tempHeight += row.height;
-                    row.Dispatch('RowPositionChange', { row: row });
                 }
+                row.ForEach((n, cell) => {
+                    if(n !== 'checkbox-column' && n !== 'contextmenu-column') {
+                        if(cell.parentColumn?.sticky) {
+                            cell.left = cell.parentColumn.tag.stickyLeft;
+                        }
+                    }
+                });
             });
         });
-
-        let tempWidth = 0;
-        let tempWidthPrevStickyCell = 0;
-        let col = null;
-        Object.forEach(this.header.FindAllColumns(), (nameColumn, column) => {
-
-            column._widthPrevStickyCell = tempWidthPrevStickyCell;
-            if (column.sticky) {
-                col = column;
-                tempWidthPrevStickyCell += parseFloat(column._element.css('width'));
-                column.left = tempWidth;
-                column._positionLeft = tempWidth;
-                tempWidth += parseFloat(column._element.css('width'));
-                column.Dispatch('ColumnPositionChange', { column: column });
-            }
-        });
-        col && col.AddClass('-last-sticky')
-        col && col.Dispatch('ColumnPositionChange', { column: col });
-
-        // }, 200);
 
 
     }
@@ -949,42 +984,16 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
 
-    /** @protected */
-    _registerEvents() {
-        super._registerEvents();
+    __headerCheckboxChanged(event, args) {
 
-        this.RegisterEvent('HighlightedItemChanged', false, 'Поднимается, когда меняется подствеченный элемент');
-        this.RegisterEvent('SelectionChanged', false, 'Поднимается, когда выбирают элемент');
-        this.RegisterEvent('CheckChanged', false, 'Поднимается, когда изменяется выбор галочек');
-        this.RegisterEvent('RowsCheckboxClicked', false, 'Rows checkbox clicked');
-        this.RegisterEvent('RowsCheckboxContextMenuItemClicked', false, 'Rows checkbox contextmenu clicked');
+        for(const group of Object.values(this.groups)) {
+            group.ForEveryRow((name, row) => (row.checked = row.shown && args.value));
+            group.checkbox.checked = args.value;
+            group.checkbox.thirdState = group.rowsCount > group.checked.length;
+        }
 
-        this.RegisterEvent('ScrolledToBottom', false, 'Поднимается, когда грид доскролили до конца');
-
-        this.RegisterEvent('ColumnVerticalAlignChanged', false, 'Изменилась вертикальная ориентация колонки')
-        this.RegisterEvent('ColumnHorizontalAlignChanged', false, 'Изменилась горизонтальная ориентация колонки')
-        this.RegisterEvent('ColumnVisibilityChanged', false, 'When column visibility is changed')
-        this.RegisterEvent('ColumnClicked', false, 'Поднимается, когда щелкнули по колонке в заголовке');
-        this.RegisterEvent('ColumnStickyChange', false, 'Поднимается, когда колонка меняет липкость');
-        this.RegisterEvent('ColumnDisposed', false, 'Поднимается, когда удаляют колонку');
-        this.RegisterEvent('ColumnEditorChanged', false, 'Когда изменился редактор в колонке');
-        this.RegisterEvent('ColumnViewerChanged', false, 'Когда изменился компонент отображения в колонке');
-        this.RegisterEvent('SortChanged', false, 'When sort column or order is changed');
-
-        this.RegisterEvent('RowClicked', false, 'Поднимается, когда щелкнули по строке');
-        this.RegisterEvent('RowStickyChange', false, 'Поднимается, когда строка меняет липкость');
-        this.RegisterEvent('RowSelected', false, 'Поднимается, когда выбирают строку');
-        this.RegisterEvent('RowDisposed', false, 'Поднимается, когда удаляют строку');
-        this.RegisterEvent('RowAdded', false, 'Поднимается, когда добавилась строка');
-        this.RegisterEvent('RowUpdated', false, 'Поднимается, когда обновилась строка');
-
-        this.RegisterEvent('CellClicked', false, 'Поднимается, когда щелкнули по ячейке');
-        this.RegisterEvent('CellDoubleClicked', false, 'Поднимается, когда щелкнули по ячейке');
-        this.RegisterEvent('CellValueChanged', false, 'Когда встреенный редактор отправил Changed');
-        this.RegisterEvent('CellViewerClicked', false, 'Когда кникнули на компонент отображения в колонке');
-        this.RegisterEvent('CellEditorChanged', false, 'Когда редактирование ячейки завершено');
-        this.RegisterEvent('MassActionsMenuActionClicked', false, 'Когда кликнули на кнопку внутри меню массовых операций');
-
+        this.header.checkbox.thirdState = this.rowsCount > this.checked.length;
+        this.Dispatch('RowSelected');
     }
 
     _setSortAndOrder(column) {
@@ -1045,36 +1054,48 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     __columnColumnMoved(event, args) {
         this.ForEveryRow((name, row) => {
-            const cell = row.Children(row.name + '-' + args.column.name);
-            if (args.direction === 'up') {
-                cell.MoveUp();
-            } else if (args.direction === 'down') {
-                cell.MoveDown();
-            }
+            const cell = row.Cell(args.column.name);
+            if(cell) {
+                const fromIndex = cell.childIndex;
+                const toIndex = args.column.childIndex;
+                row.MoveChild(cell, fromIndex, toIndex + 1, false);
+            } 
         });
+        this.RecalculateCellPositions();
     }
 
     __columnColumnAdded(event, args) {
-        Object.forEach(this.groups, (name, rows) => {
-            rows.Dispatch('ColumnAdded', {column: args.column, count: this.header.columnsCount});
+        const column = args.column;
+        this.ForEveryRow((name, row) => {
+            row.Add(row.value[column.name] ?? null, column);
         });
         this.RecalculateCellPositions();
     }
 
     __headerColumnDisposed(event, args) {
+        const column = args.column;
+        this.ForEveryRow((name, row) => {
+            row.Cell(column.name)?.Dispose();
+        });
         Object.forEach(this.groups, (name, rows) => {
             rows.columns = this.header.columnsCount;
         });
-        this.Dispatch('ColumnDisposed', args);
     }
 
-    __headerColumnStickyChange(event, args) {
-        this.Dispatch('ColumnStickyChange', args);
+    __thisColumnPropertyChanged(event, args) {
+        if(args.property === 'sticky') {
+            this.RecalculateCellPositions();
+        } else if(args.property === 'shown') {
+            this.ForEveryRow((n, row) => {
+                if(row.Cell(args.column.name)) {
+                    row.Cell(args.column.name).shown = args.column.shown;
+                }
+            });
+        }
     }
 
     __headerColumnClicked(event, args) {
         this._setSortAndOrder(args.column);
-        this.Dispatch('ColumnClicked', args);
     }
 
     __thisColumnEditorChanged(event, args) {
@@ -1118,18 +1139,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      */
     _handleEvents() {
 
-        this.AddHandler('Clicked', this.__clickedProcessing);
-        this.AddHandler('SelectionChanged', this.__thisSelectionChanged);
-        this.AddHandler('RowSelected', this.__thisRowSelected);
-        this.AddHandler('KeyDown', this.__thisKeyDown);
-        this.AddHandler('RowSelected', this.__thisRowSelected);
 
-        this.header.ForEach((name, columns) => columns.AddHandler('ColumnMoved', this.__columnColumnMoved, false, this));
-        this.header.ForEach((name, columns) => columns.AddHandler('ColumnAdded', this.__columnColumnAdded, false, this));
 
-        this.header.AddHandler('ColumnDisposed', this.__headerColumnDisposed, false, this);
-        this.header.AddHandler('ColumnStickyChange', this.__headerColumnStickyChange, false, this);
-        this.header.AddHandler('ColumnClicked', this.__headerColumnClicked, false, this);
 
         this._scrolling = -1;
         this._scrollY = -1;
@@ -1170,8 +1181,11 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         return this._hasMassActionsMenu;
     }
     set hasMassActionsMenu(value) {
-        this._hasMassActionsMenu = (value === true || value === 'true' || value === 1);
-        if (this._hasMassActionsMenu) { this._setShowCheckboxes(true) }
+        value = this._convertProperty('Boolean', value);
+        this._hasMassActionsMenu = value;
+        if (this._hasMassActionsMenu) { 
+            this.showCheckboxes = true; 
+        }
     }
 
     /**
@@ -1198,9 +1212,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         return this._massActionsMenuClass;
     }
     set massActionsMenuClass(value) {
-        if (value instanceof String) {
-            value = eval(value);
-        }
+        value = this._convertProperty('Colibri.UI.MassActionsMenu', value);
         this._massActionsMenuClass = value;
     }
 
@@ -1228,6 +1240,28 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     __massActionMenuObjectActionClicked(event, args) {
         this._massActionsMenuObject.parent.Dispatch('MassActionsMenuActionClicked', Object.assign({ items: this.checked }, args));
+    }
+
+    /**
+     * Has context menu
+     * @type {Boolean}
+     */
+    get hasContextMenu() {
+        return this._hasContextMenu;
+    }
+    /**
+     * Has context menu
+     * @type {Boolean}
+     */
+    set hasContextMenu(value) {
+        this._hasContextMenu = value;
+        this._showHasContextMenu();
+    }
+    _showHasContextMenu() {
+        this.header.hasContextMenu = this._hasContextMenu;
+        for(const group of Object.values(this.groups)) {
+            group.hasContextMenu = this._hasContextMenu;
+        }
     }
 
     RecalculateCellVisibility(column) {
@@ -1288,6 +1322,9 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         value.forEach((d) => {
             this.rows.Add('data' + (d.id ?? Date.Mc()), d);
         });
+
+        this._norows.shown = value.length == 0;
+        this._gridContent.shown = value.length > 0;
 
     }
 
