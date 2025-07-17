@@ -443,5 +443,16 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
     }
 
+    _createContextMenuButton() {
+        // do nothing
+    }
 
+    _removeContextMenuButton() {
+        // do nothing
+    }
+
+    _getContextMenuIcon() {
+        return null;
+    }
+    
 }
