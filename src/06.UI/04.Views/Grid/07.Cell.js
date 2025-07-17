@@ -26,6 +26,10 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         this.parentColumn = parentColumn ?? this.grid.header.FindColumn(this.columnName);
         this.className = this.parentColumn.className;
 
+        if(container instanceof Colibri.UI.Component) {
+            container.Dispatch('ChildAdded', { cell: this });
+        }
+
     }
 
     /** @protected */

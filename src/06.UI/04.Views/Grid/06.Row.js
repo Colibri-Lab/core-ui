@@ -268,6 +268,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         newCell.shown = column.shown;
         
         newCell.value = val;
+        
 
     }
 
