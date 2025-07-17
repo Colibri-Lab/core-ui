@@ -36,9 +36,10 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         this.draggable = this.grid?.draggable ?? false;
         this.dropable = this.grid?.dropable ?? false;
 
-        this.AddHandler('ComponentDisposed', this.__thisComponentDisposed);
-        this.AddHandler('ChildAdded', this.__thisChildAdded);
-        this.AddHandler('ContextMenu', this.__thisContextMenu);
+        if(container instanceof Colibri.UI.Component) {
+            container.Dispatch('ChildAdded', { row: this });
+        }
+
 
     }
 
@@ -62,6 +63,15 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     }
 
+    _registerEventHandlers() {
+        super._registerEventHandlers();
+        
+        this.AddHandler('ComponentDisposed', this.__thisComponentDisposed);
+        this.AddHandler('ChildAdded', this.__thisChildAdded);
+        this.AddHandler('ContextMenu', this.__thisContextMenu);
+
+    }
+
     __thisComponentDisposed(event, args) {
         this.Dispatch('RowDisposed', args);
     }
@@ -69,26 +79,6 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
     __thisChildAdded(event, args) {
         if(this._contextmenuContainer) {
             this.MoveChild(this._contextmenuContainer, this._contextmenuContainer.childIndex, this.children, false);
-        }
-    }
-
-    PerformRowPositionChanged() {
-        if (!this._checkboxContainer) {
-            return true;
-        }
-
-        if (this._checkboxContainer._stickyVertically) {
-            this._checkboxContainer._element.css('top', args.row._positionTop + 'px');
-        }
-
-        this.ForEach((name, cell) => cell.PerformPositionChange());
-
-    }
-
-    PerformColumnPositionChanged(column, newPosition) {
-        let cell = this.Children(this.name + '-' + column.name);
-        if(cell) {
-            this.Children(cell.name, cell, newPosition);
         }
     }
 
@@ -110,7 +100,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         this._checkboxContainer.shown = false;
 
         this._checkbox = new Colibri.UI.Checkbox('checkbox', this._checkboxContainer);
-        this._checkbox.shown = false;
+        this._checkbox.shown = true;
         this._checkbox.AddHandler('Changed', this.__checkboxChanged, false, this);
 
     }

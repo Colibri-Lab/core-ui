@@ -270,6 +270,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      * @type {bool}
      */
     set showCheckboxes(value) {
+        debugger;
         value = this._convertProperty('Boolean', value);
         this._showCheckboxes = value;
         this._showShowCheckboxes();

@@ -51,20 +51,6 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
     }
 
-    PerformColumnAdd(column) {
-        this.columns = this.grid.header.columnsCount;
-        this.ForEveryRow((name, row) => {
-            row.PerformColumnAdd(column);
-        });
-    }
-
-    PerformColumnRemove(column) {
-        this.columns = this.grid.header.columnsCount;
-        this.ForEveryRow((name, row) => {
-            row.PerformColumnRemove(column);
-        });
-    }
-
     __titleCellClicked(event, args) {
         if(this._titleCellArrow.shown) {
             this.closed = !this.closed;
@@ -138,6 +124,7 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         if(this._titleCellCountSpan) {
             this._titleCellCountSpan.value = ' (' + this.rowsCount + ')';
         }
+        args.row.checkbox = this.grid.showCheckboxes
     }
 
     /**

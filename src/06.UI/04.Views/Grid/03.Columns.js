@@ -106,4 +106,25 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
         return this._checkboxContainer;
     }
 
+    
+    /**
+     * SHow hide checkboxes
+     * @type {Boolean}
+     */
+    get showCheckboxes() {
+        return this._showCheckboxes;
+    }
+    /**
+     * SHow hide checkboxes
+     * @type {Boolean}
+     */
+    set showCheckboxes(value) {
+        this._showCheckboxes = value;
+        this._showShowCheckboxes();
+    }
+    _showShowCheckboxes() {
+        this._checkboxContainer.shown = this._showCheckboxes;
+    }
+
+
 }
