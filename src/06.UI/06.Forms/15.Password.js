@@ -399,11 +399,11 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
 
     __iconClicked(event, args) {
         if (this._input.attr('type') === 'password') {
-            icon.value = Colibri.UI.Forms.Password.EyeIconClose;
+            this._icon.value = Colibri.UI.Forms.Password.EyeIconClose;
             this._input.attr('type', 'text');
         }
         else {
-            icon.value = Colibri.UI.Forms.Password.EyeIconOpen;
+            this._icon.value = Colibri.UI.Forms.Password.EyeIconOpen;
             this._input.attr('type', 'password');
         }
     }
