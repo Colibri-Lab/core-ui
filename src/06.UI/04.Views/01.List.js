@@ -24,6 +24,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         if (multiple === undefined) {
             multiple = false;
         }
+        this._multipleSelectionKey = '';
         this._multiple = multiple;
 
         this.tabIndex = -1;
@@ -390,6 +391,9 @@ Colibri.UI.List = class extends Colibri.UI.Component {
     }
 
     _isMultipleKeyPressed() {
+        if(!this._multipleSelectionKey) {
+            return true;
+        }
         const keys = this._multipleSelectionKey.split('+');
         return keys.map(v => document.keysPressed[v] ? 1 : 0).sum() > 0;
     }
