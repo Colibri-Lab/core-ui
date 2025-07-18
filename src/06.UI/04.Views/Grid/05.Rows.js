@@ -120,6 +120,12 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         return newRow;
     }
 
+    UpdateCheckedState() {
+        this.checkbox.checked = this.checked.length > 0;
+        this.checkbox.thirdState = this.rowsCount > this.group.checked.length;
+                
+    }
+
     __childAdded(event, args) {
         if(this._titleCellCountSpan) {
             this._titleCellCountSpan.value = ' (' + this.rowsCount + ')';

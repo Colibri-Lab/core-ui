@@ -608,6 +608,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.RegisterEvent('Drag', false, 'When the drag and drop process occurs');
         this.RegisterEvent('ContextMenu', false, 'Context menu');
         this.RegisterEvent('Scrolled', false, 'When scrolled');
+        this.RegisterEvent('ScrollEnded', false, 'When scroll process is ended');
+        this.RegisterEvent('ScrolledToBottom', false, 'When scrolled to end of element');
+        this.RegisterEvent('ScrolledToTop', false, 'When scrolled to top of element');
+        this.RegisterEvent('ScrolledToRight', false, 'When scrolled to right of element');
+        this.RegisterEvent('ScrolledToLeft', false, 'When scrolled to left of element');
         this.RegisterEvent('ScrolledIn', false, 'When component moved in scroll container');
         this.RegisterEvent('VisibilityChanged', false, 'When the display state changed');
         this.RegisterEvent('SwipedToLeft', false, 'When the user swiped left with their finger/mouse');
@@ -2887,6 +2892,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     __thisScrolledHandler(event, args) {
+        this._scrolling = true;
         this.AddClass('-scrolling');
         clearTimeout(this.__scrollTimeout);
         this.__scrollTimeout = setTimeout(() => {
@@ -2894,8 +2900,90 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             if(!this.isConnected) {
                 return;
             }
+            this._scrolling = false;
             this.RemoveClass('-scrolling');
         }, 300);
     }
+
+    /**
+     * Handle scroll additional properties
+     * @type {Boolean}
+     */
+    get handleScrollProperties() {
+        return this._handleScrollProperties;
+    }
+    /**
+     * Handle scroll additional properties
+     * @type {Boolean}
+     */
+    set handleScrollProperties(value) {
+        this._handleScrollProperties = value;
+        if(this._handleScrollProperties) {
+            this.AddHandler('Scrolled', this.__thisDefaultScrollHandler)
+        } else {
+            this.RemoveHandler('Scrolled', this.__thisDefaultScrollHandler)
+        }
+    }
+
+    __thisDefaultScrollHandler(event, args) {
+        
+        if (this._scrollEndTimeout != -1) {
+            clearTimeout(this._scrollEndTimeout);
+        }
+
+        if(!this._lastScrollPosition) {
+            this._scrollDirection = null;
+        } else {
+            
+            if (this.scrollTop > this._lastScrollPosition.top) {
+                this._scrollDirection = 'down';
+            } else if (this.scrollTop < this._lastScrollPosition.top) {
+                this._scrollDirection = 'up';
+            } else {
+                this._scrollDirection = '';
+            }
+
+            if (this.scrollLeft > this._lastScrollPosition.left) {
+                this._scrollDirection = this._scrollDirection ? this._scrollDirection + ' right' : 'right';
+            } else if (this.scrollLeft < this._lastScrollPosition.left) {
+                this._scrollDirection = this._scrollDirection ? this._scrollDirection + ' left' : 'left';
+            }
+
+            this._scrollDirection = this._scrollDirection.trimString();
+
+        }
+
+        this._lastScrollPosition = {top: this.scrollTop, left: this.scrollLeft};
+
+        this._scrolling = true;
+        this._scrollEndTimeout = setTimeout(() => {
+            if(!this.isConnected) {
+                return;
+            }
+            this.Dispatch('ScrollEnded', { direction: this.scrollDirection, domEvent: args.domEvent });
+            
+            if (this._element.scrollTop + this._element.clientHeight >= this._element.scrollHeight) {
+                this.Dispatch('ScrolledToBottom', {});
+            } else if(this._element.scrollTop <= 0) {
+                this.Dispatch('ScrolledToTop', {});
+            } else if(this._element.scrollLeft + this._element.clientWidth >= this._element.scrollWidth) {
+                this.Dispatch('ScrolledToRight', {});
+            } else if(this._element.scrollLeft <= 0) {
+                this.Dispatch('ScrolledToLeft', {});
+            }
+
+            this._scrolling = false;
+            this._scrollDirection = null;
+        }, 100);
+
+    }
+
+    get scrolling() {
+        return this._scrolling;
+    }
+
+    get scrollDirection() {
+        return this._scrollDirection;
+    } 
 
 }

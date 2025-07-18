@@ -49,11 +49,12 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this._norows.shown = true;
 
         this._footer = this.AddFooter('footer');
-
+        
         this.GenerateChildren(element);
 
+        this.handleScrollProperties = true;
+
         this.tabIndex = 0;
-        this._handleEvents();
     }
 
 
@@ -82,12 +83,12 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
 
         this.RegisterEvent('RowStickyChanged', false, 'Поднимается, когда строка меняет липкость');
+        this.RegisterEvent('RowCheckChanged', false, 'Поднимается, когда строка меняет липкость');
         this.RegisterEvent('RowSelected', false, 'Поднимается, когда выбирают строку');
         this.RegisterEvent('RowDisposed', false, 'Поднимается, когда удаляют строку');
         this.RegisterEvent('RowAdded', false, 'Поднимается, когда добавилась строка');
         this.RegisterEvent('RowUpdated', false, 'Поднимается, когда обновилась строка');
         
-
         this.RegisterEvent('CellViewerClicked', false, 'Когда кникнули на компонент отображения в колонке');
         this.RegisterEvent('CellEditorChanged', false, 'Когда редактирование ячейки завершено');
         this.RegisterEvent('MassActionsMenuActionClicked', false, 'Когда кликнули на кнопку внутри меню массовых операций');
@@ -99,7 +100,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
         this.AddHandler('RowStickyChanged', this.__rowsStickyChanged);
 
-        this.AddHandler('RowSelected', this.__rowsRowSelected);
+        this.AddHandler('RowCheckChanged', this.__rowsRowCheckChanged);
         this.AddHandler('RowDisposed', this.__rowsRowDisposed);
         this.AddHandler('RowAdded', this.__rowsRowAdded);
 
@@ -107,7 +108,6 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
         this.AddHandler('Clicked', this.__clickedProcessing);
         this.AddHandler('SelectionChanged', this.__thisSelectionChanged);
-        this.AddHandler('RowSelected', this.__thisRowSelected);
         this.AddHandler('KeyDown', this.__thisKeyDown);
         this.AddHandler('ColumnPropertyChanged', this.__thisColumnPropertyChanged);
 
@@ -117,6 +117,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this.AddHandler('ColumnDisposed', this.__headerColumnDisposed);
         this.AddHandler('ColumnStickyChange', this.__headerColumnStickyChange);
         this.AddHandler('ColumnClicked', this.__headerColumnClicked);
+
+        this.AddHandler('VerticalAlignChanged', this.__thisVerticalAlignChanged);
 
     }
 
@@ -533,12 +535,6 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         rows.AddHandler('RowUpdated', this.__rowsRowUpdated, false, this);
 
         return rows;
-    }
-
-    __rowsRowSelected(event, args) {
-        if (event.sender.checked.length == 0) {
-            event.sender.checkbox.checked = false;
-        }
     }
 
     __rowsRowDisposed(event, args) {
@@ -987,7 +983,9 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     __headerCheckboxChanged(event, args) {
 
         for(const group of Object.values(this.groups)) {
-            group.ForEveryRow((name, row) => (row.checked = row.shown && args.value));
+            group.ForEveryRow((name, row) => {
+                row.checked = row.shown && args.value;
+            });
             group.checkbox.checked = args.value;
             group.checkbox.thirdState = group.rowsCount > group.checked.length;
         }
@@ -1045,11 +1043,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         }
     }
 
-    __thisRowSelected(event, args) {
-        if (this.checked.length == 0) {
-            this.header.checkbox.checked = false;
-        }
-        this.Dispatch('CheckChanged');
+    __rowsRowCheckChanged(event, args) {
+        this._massActionsMenuObject && (this._massActionsMenuObject.selectedItems = this.checked);
     }
 
     __columnColumnMoved(event, args) {
@@ -1085,92 +1080,18 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     __thisColumnPropertyChanged(event, args) {
         if(args.property === 'sticky') {
             this.RecalculateCellPositions();
-        } else if(args.property === 'shown') {
+        } else if(['shown', 'editor', 'viewer', 'valign', 'halign'].indexOf(args.property) !== -1) {
             this.ForEveryRow((n, row) => {
                 if(row.Cell(args.column.name)) {
-                    row.Cell(args.column.name).shown = args.column.shown;
+                    row.Cell(args.column.name)[args.property] = args.column[args.property];
                 }
             });
+            this.RecalculateCellVisibility(args.column);
         }
     }
 
     __headerColumnClicked(event, args) {
         this._setSortAndOrder(args.column);
-    }
-
-    __thisColumnEditorChanged(event, args) {
-        const rowsName = this.rows.name;
-        this.ForEveryRow((name, component) => {
-            if (component instanceof Colibri.UI.Grid.Cell) {
-                component.editor = this.header.FindColumn(name).editor;
-            }
-        });
-    }
-
-    __thisColumnViewerChanged(event, args) {
-        const rowsName = this.rows.name;
-        this.ForEveryRow((name, component) => {
-            if (component instanceof Colibri.UI.Grid.Cell) {
-                component.viewer = this.header.FindColumn(name).viewer;
-            }
-        });
-    }
-
-    __thisVerticalAlignChanged(event, args) {
-        const rowsName = this.rows.name;
-        this.ForEveryRow((name, component) => {
-            if (component instanceof Colibri.UI.Grid.Cell) {
-                component.align = this.header.FindColumn(name).align;
-            }
-        });
-    }
-
-    __thisColumnVisibilityChanged(event, args) {
-        this.RecalculateCellVisibility(args.column);
-    }
-
-    __thisRowSelected(event, args) {
-        this._massActionsMenuObject && (this._massActionsMenuObject.selectedItems = this.checked);
-    }
-
-
-    /**
-     * Регистрация обработчиков событий
-     */
-    _handleEvents() {
-
-
-
-
-        this._scrolling = -1;
-        this._scrollY = -1;
-        this.__scrollHandler = (event) => {
-            if (event.target.scrollTop > this._scrollY) {
-                if (this._gridContent._element.getBoundingClientRect().bottom < (event.target.getBoundingClientRect().bottom + 10)) {
-                    clearTimeout(this._scrolling);
-                    this._scrolling = setTimeout(() => {
-                        this.Dispatch('ScrolledToBottom', {});
-                    }, 66);
-                }
-            }
-            this._scrollY = event.target.scrollTop;
-        };
-
-        this._element.addEventListener('scroll', this.__scrollHandler);
-
-        this.AddHandler('ColumnEditorChanged', this.__thisColumnEditorChanged);
-
-        this.AddHandler('ColumnViewerChanged', this.__thisColumnViewerChanged);
-
-        this.AddHandler('VerticalAlignChanged', this.__thisVerticalAlignChanged);
-
-        this.AddHandler('ColumnVisibilityChanged', this.__thisColumnVisibilityChanged);
-
-    }
-
-    Dispose() {
-        this._element.removeEventListener('scroll', this.__scrollHandler);
-        super.Dispose();
     }
 
     /**

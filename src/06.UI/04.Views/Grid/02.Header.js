@@ -22,6 +22,10 @@ Colibri.UI.Grid.Header = class extends Colibri.UI.Component {
 
     }
 
+    UpdateCheckedState() {
+        this.columns.checkbox.checked = this.grid?.checked.length > 0;
+        this.columns.checkbox.thirdState = this.grid?.rowsCount > this.grid?.checked.length;
+    }
 
     __checkboxContextMenuItemClicked(event, args) {
         this.grid.Dispatch('RowsCheckboxContextMenuItemClicked', Object.assign(args, { rows: this, checkbox: this._checkbox }));

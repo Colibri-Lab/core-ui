@@ -32,6 +32,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         this._createContextMenuButton();
 
         this._data = null;
+        this._selected = false;
 
         this.draggable = this.grid?.draggable ?? false;
         this.dropable = this.grid?.dropable ?? false;
@@ -59,6 +60,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
         this.RegisterEvent('RowDisposed', true, 'Поднимается, когда выбирают строку');        
         this.RegisterEvent('RowSelected', true, 'Поднимается, когда выбирают строку');        
+        this.RegisterEvent('RowCheckChanged', true, 'Поднимается, когда выбирают строку');        
         this.RegisterEvent('RowStickyChanged', true, 'Поднимается, когда все ячейки сообщили об изменинии sticky');
 
     }
@@ -141,10 +143,9 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
     }
 
     __checkboxChanged(event, args) {
-        this.Dispatch('RowSelected', { row: this });
-
-        this.header && (this.header.checkbox.thirdState = this.grid?.rowsCount > this.grid?.checked.length);
-        this.group.checkbox.thirdState = this.group.rowsCount > this.group.checked.length;
+        this.header.UpdateCheckedState();
+        this.group.UpdateCheckedState();
+        this.Dispatch('RowCheckChanged');
     }
 
     _renderTemplateRow() {
@@ -320,9 +321,12 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
     }
 
     set selected(value) {
+        const isChanged = this._selected !== value;
         value ? this.AddClass('row-selected') : this.RemoveClass('row-selected');
         this._selected = value;
-        this.Dispatch('RowSelected', {row: this});
+        if(isChanged) {
+            this.Dispatch('RowSelected', {row: this});
+        }
     }
 
     get activated() {
