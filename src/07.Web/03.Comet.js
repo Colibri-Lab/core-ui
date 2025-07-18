@@ -980,7 +980,7 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
                 let msg = messages[0];
                 msg.message = JSON.parse(msg.message);
                 
-                msg = Object.assignRecursive(msg, message);
+                msg = Object.assignRecursive(message, msg);
 
                 msg.message = JSON.stringify(msg.message);
                 this._withStore('readwrite', (store) => {
@@ -1157,7 +1157,7 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
                 let msg = messages[0];
                 msg.message = JSON.parse(msg.message);
                 
-                msg = Object.assignRecursive(msg, message);
+                msg = Object.assignRecursive(message, msg);
 
                 msg.message = JSON.stringify(msg.message);
 
