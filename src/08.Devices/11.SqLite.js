@@ -57,6 +57,7 @@ Colibri.Devices.SqLite = class extends Destructable {
                         const row = rows[i];
 
                         const sqlInsert = 'INSERT INTO ' + name + '("' + Object.keys(row).join('","') + '") VALUES (' + Array.enumerate(0, Object.keys(row).length - 1, (i) => '?') + ')';
+                        console.log(sqlInsert);
                         tx.executeSql(sqlInsert, Object.values(row).map(v => {
                             if(!(v instanceof Date) && (Object.isObject(v) || Array.isArray(v))) {
                                 return JSON.stringify(v);
@@ -85,6 +86,7 @@ Colibri.Devices.SqLite = class extends Destructable {
                     for(let i = 0; i < rows.length; i++) {
                         const row = rows[i];
                         const sqlInsert = 'INSERT INTO ' + name + '("' + Object.keys(row).join('","') + '") VALUES (' + Array.enumerate(0, Object.keys(row).length - 1, (i) => '?') + ')';
+                        console.log(sqlInsert);
                         tx.executeSql(sqlInsert, Object.values(row).map(v => {
                             if(!(v instanceof Date) && (Object.isObject(v) || Array.isArray(v))) {
                                 return JSON.stringify(v);
@@ -112,6 +114,7 @@ Colibri.Devices.SqLite = class extends Destructable {
                     for(let i = 0; i < rows.length; i++) {
                         const row = rows[i];
                         const sqlUpdate = 'UPDATE ' + name + ' SET ' + Object.keys(row).map((key) => key + ' = ?').join(',') + ' WHERE id = ?';
+                        console.log(sqlUpdate);
                         tx.executeSql(sqlUpdate, [...Object.values(row).map(v => {
                             if(Object.isObject(v) || Array.isArray(v)) {
                                 return JSON.stringify(v);
@@ -134,6 +137,7 @@ Colibri.Devices.SqLite = class extends Destructable {
         return new Promise((resolve, reject) => {
             db.transaction(function(tx) {
                 const sqlSelect = 'SELECT ' + fields + ' FROM ' + name + (where ? ' WHERE ' + where : '') + (orderby ? ' ORDER BY ' + orderby : '') + (limit ? ' LIMIT ' + limit : '');
+                console.log(sqlSelect);
                 tx.executeSql(sqlSelect, [], function(tx, results) {
                     const data = [];
                     for(let i = 0; i < results.rows.length; i++) {
@@ -150,6 +154,7 @@ Colibri.Devices.SqLite = class extends Destructable {
         return new Promise((resolve, reject) => {
             db.transaction(function(tx) {
                 const sqlDelete = 'DELETE FROM ' + name + (where ? ' WHERE ' + where : '');
+                console.log(sqlDelete);
                 tx.executeSql(sqlDelete, [], function(tx, results) {
                     resolve(results);
                 }, function(error) {
