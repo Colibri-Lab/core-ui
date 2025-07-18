@@ -556,7 +556,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         return new Promise((resolve, reject) => {
             this._storage.Update({message: Array.isArray(textOrFiles) ? {files: textOrFiles} : {text: textOrFiles}}, id).then((msg) => {
                 this._transferToModuleStore();
-                this.Dispatch('MessageUpdated', msg);
+                this.Dispatch('MessageUpdated', {message: msg});
             }).catch(error => reject(error));
         });
     }
@@ -565,7 +565,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         return new Promise((resolve, reject) => {
             this._storage.Update({message: {status: status}}, id).then((msg) => {
                 this._transferToModuleStore();
-                this.Dispatch('MessageUpdated', msg);
+                this.Dispatch('MessageUpdated', {message: msg});
             }).catch(error => reject(error));
         });
     }
