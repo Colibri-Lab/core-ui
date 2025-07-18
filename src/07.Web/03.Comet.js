@@ -554,18 +554,18 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     UpdateMessage(id, textOrFiles) {
         return new Promise((resolve, reject) => {
-            this._storage.Update({message: Array.isArray(textOrFiles) ? {files: textOrFiles} : {text: textOrFiles}}, id).then(() => {
+            this._storage.Update({message: Array.isArray(textOrFiles) ? {files: textOrFiles} : {text: textOrFiles}}, id).then((msg) => {
                 this._transferToModuleStore();
-                this.Dispatch('MessageUpdated', {member: user});
+                this.Dispatch('MessageUpdated', msg);
             }).catch(error => reject(error));
         });
     }
 
     UpdateSetStatus(id, status = 'sent') {
         return new Promise((resolve, reject) => {
-            this._storage.Update({message: {status: status}}, id).then(() => {
+            this._storage.Update({message: {status: status}}, id).then((msg) => {
                 this._transferToModuleStore();
-                this.Dispatch('MessageUpdated', {member: user});
+                this.Dispatch('MessageUpdated', msg);
             }).catch(error => reject(error));
         });
     }
@@ -789,9 +789,9 @@ Colibri.Web.InternalStore = class extends Colibri.Common.AbstractMessageStore {
         if(messageIndex !== -1) {
             messages[messageIndex] = Object.assignRecursive(message, messages[messageIndex]);
             App.Browser.Set('comet.messages', JSON.stringify(messages));
-            return Promise.reject('Can not find message');
+            return Promise.resolve(messages[messageIndex]);
         }
-        return Promise.resolve(message);
+        return Promise.reject('Can not find message');
     }
 
      /**
@@ -1184,7 +1184,7 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
                     'messages',
                     [Object.assign({}, msg, {id: id})]
                 ).then(() => {
-                    resolve(message);
+                    resolve(msg);
                 }).catch(error => reject(error));
 
 
