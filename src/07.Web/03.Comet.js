@@ -978,7 +978,7 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
                     return;
                 }
                 let msg = messages[0];
-                msg = Object.assignRecursive(message, msg);
+                msg = Object.assignRecursive(msg, message);
                 this._withStore('readwrite', (store) => {
                     store.put(msg);
                     resolve(msg);
@@ -1151,7 +1151,7 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
                 }
 
                 let msg = messages[0];
-                msg = Object.assignRecursive(message, msg);
+                msg = Object.assignRecursive(msg, message);
 
                 App.Device.SqLite.Update(
                     this._db,
