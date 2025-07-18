@@ -829,6 +829,9 @@ Colibri.Web.InternalStore = class extends Colibri.Common.AbstractMessageStore {
             options.filter = options.filter ?? {};
             options.page = options.page ?? 0;
             options.pagesize = options.pagesize ?? 100;
+            if(!Array.isArray(options.order)) {
+                options.order = [options.order];
+            }
 
             messages.sort((a, b) => {
                 const akey = options.order.map(v => a[v]).join('');
@@ -1003,6 +1006,10 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
         options.filter = options.filter ?? {};
         options.page = options.page ?? 1;
         options.pagesize = options.pagesize ?? 100;
+
+        if(!Array.isArray(options.order)) {
+            options.order = [options.order];
+        }
         
         let filterString = '';
         if(options.filter && (Object.isObject(options.filter) && Object.countKeys(options.filter) > 0 || Array.isArray(options.filter) && options.filter.length > 0)) {
@@ -1223,6 +1230,10 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
             options.filter = options.filter ?? {};
             options.page = options.page ?? 0;
             options.pagesize = options.pagesize ?? 100;
+
+            if(!Array.isArray(options.order)) {
+                options.order = [options.order];
+            }
 
             const limit = options.page > 0 ? options.pagesize + ' offset ' + ((options.page - 1) * options.pagesize) : '';
             const orderby = options.order.map(v => v + ' ' + options.direction).join(',');
