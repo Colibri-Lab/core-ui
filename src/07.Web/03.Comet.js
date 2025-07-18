@@ -1134,6 +1134,14 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
      */
     Add(message) {
         return new Promise((resolve, reject) => {
+            if(message.date instanceof Date) {
+                message.date = message.date.toUnixTime();
+            } else if(typeof message.date === 'string') {
+                message.date = message.date.toDate().toUnixTime();
+            }
+            if(Object.isObject(message.message)) {
+                message.message = JSON.stringify(message.message);
+            }
             
             this.Get({filter: {
                 id: message.id
@@ -1148,6 +1156,12 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
                         this._fields,
                         [message]
                     ).then(() => {
+                        if(typeof message.date == 'number') {
+                            message.date = message.date.toDateFromUnixTime();
+                        }
+                        if(typeof message.message === 'string') {
+                            message.message = JSON.parse(message.message);
+                        }
                         resolve(message);
                     }).catch(error => reject(error));
                 }
@@ -1172,19 +1186,31 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
                     return;
                 }
 
-                let msg = messages[0];
-                msg.message = JSON.parse(msg.message);
-                
+                let msg = messages[0];                
                 msg = Object.assignRecursive(message, msg);
 
-                msg.message = JSON.stringify(msg.message);
+                const saveMessage = Object.assign({}, msg, {id: id});
+                if(saveMessage.date instanceof Date) {
+                    saveMessage.date = saveMessage.date.toUnixTime();
+                } else if(typeof saveMessage.date === 'string') {
+                    saveMessage.date = saveMessage.date.toDate().toUnixTime();
+                }
+                if(Object.isObject(saveMessage.message)) {
+                    saveMessage.message = JSON.stringify(saveMessage.message);
+                }
 
                 App.Device.SqLite.Update(
                     this._db,
                     'messages',
-                    [Object.assign({}, msg, {id: id})]
+                    [saveMessage]
                 ).then(() => {
-                    resolve(msg);
+                    if(typeof saveMessage.date == 'number') {
+                        saveMessage.date = saveMessage.date.toDateFromUnixTime();
+                    }
+                    if(typeof saveMessage.message === 'string') {
+                        saveMessage.message = JSON.parse(saveMessage.message);
+                    }
+                    resolve(saveMessage);
                 }).catch(error => reject(error));
 
 
@@ -1199,6 +1225,16 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
      * @returns {Promise} A promise that resolves when the messages are stored.
      */
     Store(messages) {
+        messages.forEach((m) => {
+            if(m.date instanceof Date) {
+                m.date = m.date.toUnixTime();
+            } else if(typeof m.date === 'string') {
+                m.date = m.date.toDate().toUnixTime();
+            }
+            if(Object.isObject(m.message)) {
+                m.message = JSON.stringify(m.message);
+            }
+        });
         return new Promise((resolve, reject) => {
             App.Device.SqLite.CreateTable(
                 this._db,
@@ -1206,6 +1242,14 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
                 this._fields,
                 messages
             ).then(() => {
+                messages.forEach(m => {
+                    if(typeof m.date == 'number') {
+                        m.date = m.date.toDateFromUnixTime();
+                    }
+                    if(typeof m.message === 'string') {
+                        m.message = JSON.parse(m.message);
+                    }
+                });
                 resolve(messages);
             }).catch(error => reject(error));
         });
@@ -1251,6 +1295,14 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
                 orderby,
                 limit
             )).then((messages) => {
+                messages.forEach(m => {
+                    if(typeof m.date == 'number') {
+                        m.date = m.date.toDateFromUnixTime();
+                    }
+                    if(typeof m.message === 'string') {
+                        m.message = JSON.parse(m.message);
+                    }
+                });
                 resolve(messages);
             }).catch(error => reject(error));
 
