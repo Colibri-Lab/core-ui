@@ -520,7 +520,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             }
             Promise.all(promises).then(() => {
                 this._transferToModuleStore();
-                this.Dispatch('MessagesMarkedAsRead', {});
+                this.Dispatch('MessagesMarkedAsRead', {ids: ids});
                 resolve();            
             }).catch(error => reject(error));
         });
@@ -977,12 +977,10 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
                     reject('Message not found');
                     return;
                 }
+
                 let msg = messages[0];
-                msg.message = JSON.parse(msg.message);
-                
                 msg = Object.assignRecursive(message, msg);
 
-                msg.message = JSON.stringify(msg.message);
                 this._withStore('readwrite', (store) => {
                     store.put(msg);
                     resolve(msg);
@@ -1005,6 +1003,11 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
         options.filter = options.filter ?? {};
         options.page = options.page ?? 1;
         options.pagesize = options.pagesize ?? 100;
+        
+        let filterString = '';
+        if(options.filter && (Object.isObject(options.filter) && Object.countKeys(options.filter) > 0 || Array.isArray(options.filter) && options.filter.length > 0)) {
+            filterString = window.convertFilterToString(options.filter);
+        }
 
         return this._withStore('readonly', (store) => {
             return new Promise((resolve, reject) => {
@@ -1013,31 +1016,37 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
                 req.onsuccess = (e) => {
                     const cursor = e.target.result;
                     if (cursor) {
-                        const val = cursor.value;
-                        let match = false;
 
-                        if (Array.isArray(options.filter)) {
-                            match = options.filter.some(cond =>
-                                Object.entries(cond).every(([k, v]) => val[k] === v)
-                            );
-                        } else {
-                            match = Object.entries(options.filter).every(([k, v]) => val[k] === v);
+                        const row = cursor.value;
+                        let res = !!filterString;
+                        if(filterString) {
+                            eval('res = ' + filterString + ';');
                         }
-
-                        if (match) result.push(val);
+                        if(res) {
+                            result.push(row);
+                        }
                         cursor.continue();
+                        
                     } else {
-                        const sorted = result.sort((a, b) => {
-                            const key = options.order[0];
-                            return options.direction === 'asc' ? a[key] - b[key] : b[key] - a[key];
+
+                        result.sort((a, b) => {
+                            const akey = options.order.map(v => a[v]).join('');
+                            const bkey = options.order.map(v => b[v]).join('');
+                            if(options.direction === 'desc') {
+                                return akey < bkey ? 1 : (akey > bkey ? -1 : 0);
+                            } else {
+                                return akey < bkey ? -1 : (akey > bkey ? 1 : 0);
+                            }
                         });
+
                         if(options.page > 0) {
                             const offset = (options.page - 1) * options.pagesize;
-                            const paged = sorted.slice(offset, offset + options.pagesize);
+                            const paged = result.slice(offset, offset + options.pagesize);
                             resolve(paged);
                         } else {
-                            resolve(sorted);
+                            resolve(result);
                         }
+
                     }
                 };
                 req.onerror = e => reject(e.target.error);
@@ -1052,24 +1061,26 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
     }
 
     Delete(options) {
+        
+        let filterString = '';
+        if(options.filter && (Object.isObject(options.filter) && Object.countKeys(options.filter) > 0 || Array.isArray(options.filter) && options.filter.length > 0)) {
+            filterString = window.convertFilterToString(options.filter);
+        }
+
         return this._withStore('readwrite', (store) => {
             return new Promise((resolve, reject) => {
                 const req = store.openCursor();
                 req.onsuccess = (e) => {
                     const cursor = e.target.result;
                     if (cursor) {
-                        const val = cursor.value;
-                        let match = false;
-
-                        if (Array.isArray(options.filter)) {
-                            match = options.filter.some(cond =>
-                                Object.entries(cond).every(([k, v]) => val[k] === v)
-                            );
-                        } else {
-                            match = Object.entries(options.filter).every(([k, v]) => val[k] === v);
+                        const row = cursor.value;
+                        let res = !!filterString;
+                        if(filterString) {
+                            eval('res = ' + filterString + ';');
                         }
-
-                        if (match) cursor.delete();
+                        if(res) {
+                            cursor.delete();
+                        }
                         cursor.continue();
                     } else {
                         resolve();

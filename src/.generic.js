@@ -294,6 +294,36 @@ Array.prototype.toObjectFromKeys = function () {
     return ret;
 }
 
+Array.prototype.indexOfCondition = function(value, condition = '==') {
+    for (let i = 0; i < this.length; i++) {
+        if (condition === '==' && this[i] == value) {
+            return i;
+        }
+        if (condition === '===' && this[i] === value) {
+            return i;
+        }
+        if (condition === '!=' && this[i] != value) {
+            return i;
+        }
+        if (condition === '!==' && this[i] !== value) {
+            return i;
+        }
+        if (condition === '<' && this[i] < value) {
+            return i;
+        }
+        if (condition === '<=' && this[i] <= value) {
+            return i;
+        }
+        if (condition === '>' && this[i] > value) {
+            return i;
+        }
+        if (condition === '>=' && this[i] >= value) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 /**
  * Returns the last 'n' elements of the array and removes them from the original array.
  * @param {number} n - The number of elements to return.
@@ -3951,6 +3981,8 @@ window.convertFilterToString = function (filter) {
                     andConditions.push('(new Date(row[\'' + key + '\']) ' + condition + ' new Date(\'' + value + '\'))');
                 } else if (typeof value === 'boolean') {
                     andConditions.push('(row[\'' + key + '\'] ' + condition + ' ' + value + ')');
+                } else if (Array.isArray(value)) {
+                    andConditions.push('([\'' + value.join('\',\'') + '\'].indexOf(row[\'' + key + '\'] + \'\') !== -1)');
                 } else {
                     andConditions.push('(row[\'' + key + '\'] ' + condition + ' \'' + value + '\')');
                 }
@@ -3959,6 +3991,8 @@ window.convertFilterToString = function (filter) {
                     andConditions.push('(new Date(row[\'' + key + '\']) ' + condition + ' new Date(\'' + value + '\'))');
                 } else if (typeof value === 'boolean') {
                     andConditions.push('(row[\'' + key + '\'] ' + condition + ' ' + value + ')');
+                } else if (Array.isArray(value)) {
+                    andConditions.push('([\'' + value.join('\',\'') + '\'].indexOf(row[\'' + key + '\'] + \'\') !== -1)');
                 } else {
                     andConditions.push('(row[\'' + key + '\'] ' + condition + ' \'' + value + '\')');
                 }
@@ -3989,7 +4023,7 @@ window.convertFilterToStringForSql = function (filter) {
         let andConditions = [];
         Object.forEach(filter, (key, value) => {
 
-            let condition = '==';
+            let condition = '=';
             if (Array.isArray(value)) {
                 condition = value[0];
                 value = value[1];
@@ -3997,6 +4031,8 @@ window.convertFilterToStringForSql = function (filter) {
                     andConditions.push('("' + key + '" ' + condition + ' ' + value.toDate().toUnixTime() + ')');
                 } else if (typeof value === 'boolean') {
                     andConditions.push('("' + key + '" ' + condition + ' ' + value + ')');
+                } else if (Array.isArray(value)) {
+                    andConditions.push('("' + key + '" ' + condition + ' (\'' + value.join('\',\'') + '\'))');
                 } else {
                     andConditions.push('("' + key + '" ' + condition + ' \'' + value + '\')');
                 }
@@ -4005,6 +4041,8 @@ window.convertFilterToStringForSql = function (filter) {
                     andConditions.push('("' + key + '" ' + condition + ' ' + value.toDate().toUnixTime() + ')');
                 } else if (typeof value === 'boolean') {
                     andConditions.push('("' + key + '" ' + condition + ' ' + value + ')');
+                } else if (Array.isArray(value)) {
+                    andConditions.push('("' + key + '" ' + condition + ' (\'' + value.join('\',\'') + '\'))');
                 } else {
                     andConditions.push('("' + key + '" ' + condition + ' \'' + value + '\')');
                 }
