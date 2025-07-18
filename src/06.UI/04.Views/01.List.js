@@ -1332,4 +1332,8 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
         super.Dispose();
     }
 
+    get content() {
+        return this._content;
+    }
+
 }
