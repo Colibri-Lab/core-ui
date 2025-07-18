@@ -509,7 +509,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     /**
      * Marks all messages as read.
      */
-    MarkAsRead(ids = null) {
+    MarkAsRead(ids = null, sendEvent = true) {
         if(!Array.isArray(ids)) {
             ids = [ids];
         }
@@ -520,7 +520,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             }
             Promise.all(promises).then(() => {
                 this._transferToModuleStore();
-                this.Dispatch('MessagesMarkedAsRead', {ids: ids});
+                sendEvent && this.Dispatch('MessagesMarkedAsRead', {ids: ids});
                 resolve();            
             }).catch(error => reject(error));
         });
