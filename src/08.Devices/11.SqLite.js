@@ -113,7 +113,7 @@ Colibri.Devices.SqLite = class extends Destructable {
                 if(rows.length > 0) {
                     for(let i = 0; i < rows.length; i++) {
                         const row = rows[i];
-                        const sqlUpdate = 'UPDATE ' + name + ' SET ' + Object.keys(row).map((key) => key + ' = ?').join(',') + ' WHERE id = ?';
+                        const sqlUpdate = 'UPDATE ' + name + ' SET ' + Object.keys(row).map((key) => '"' + key + '" = ?').join(',') + ' WHERE "id" = ?';
                         console.log(sqlUpdate);
                         tx.executeSql(sqlUpdate, [...Object.values(row).map(v => {
                             if(Object.isObject(v) || Array.isArray(v)) {
