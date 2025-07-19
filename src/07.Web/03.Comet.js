@@ -54,6 +54,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('MessagesMarkedAsRead', false, 'When all messages marked as read');
         this.RegisterEvent('MessageRemoved', false, 'When message is removed');
         this.RegisterEvent('ChatCleared', false, 'When chat with user is removed');
+        this.RegisterEvent('MessagesCleared', false, 'When all messages are cleared');
         this.RegisterEvent('EventReceived', false, 'When event is received');
         this.RegisterEvent('ConnectionError', false, 'When we can not connect to server');
         this.RegisterEvent('Connected', false, 'When we connected to server');
@@ -496,6 +497,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         return new Promise((resolve, reject) => {
             const res = () => {
                 this._transferToModuleStore();
+                this.Dispatch('MessagesCleared', {});
                 resolve();
             };
             if(!date) {
