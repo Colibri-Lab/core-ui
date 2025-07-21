@@ -512,6 +512,9 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * Marks all messages as read.
      */
     MarkAsRead(ids = null, sendEvent = true) {
+        if(!ids) {
+            return Promise.resolve();
+        }
         if(!Array.isArray(ids)) {
             ids = [ids];
         }
