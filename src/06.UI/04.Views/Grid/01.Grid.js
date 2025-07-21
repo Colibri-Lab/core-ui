@@ -1045,6 +1045,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     __rowsRowCheckChanged(event, args) {
         this._massActionsMenuObject && (this._massActionsMenuObject.selectedItems = this.checked);
+        this.Dispatch('CheckChanged', args);
     }
 
     __columnColumnMoved(event, args) {

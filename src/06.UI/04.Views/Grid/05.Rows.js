@@ -122,7 +122,7 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
     UpdateCheckedState() {
         this.checkbox.checked = this.checked.length > 0;
-        this.checkbox.thirdState = this.rowsCount > this.group.checked.length;
+        this.checkbox.thirdState = this.rowsCount > this.checked.length;
                 
     }
 
