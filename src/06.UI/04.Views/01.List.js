@@ -671,7 +671,12 @@ Colibri.UI.List.SearchBox = class extends Colibri.UI.Pane {
         this._input = new Colibri.UI.Input(this.name + '-input', this);
         this._input.shown = true;
         this._input.AddHandler(['Filled', 'Cleared'], this.__inputChangedOrFilled, false, this);
+        this._input.AddHandler('KeyDown', this.__inputKeyDown, false, this);
 
+    }
+
+    __inputKeyDown(event, args) {
+        args.domEvent.stopPropagation();
     }
 
     __inputChangedOrFilled(event, args) {
