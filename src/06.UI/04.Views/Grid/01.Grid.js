@@ -62,11 +62,11 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     _registerEvents() {
         super._registerEvents();
 
-        this.RegisterEvent('HighlightedItemChanged', false, 'Поднимается, когда меняется подствеченный элемент');
-        this.RegisterEvent('SelectionChanged', false, 'Поднимается, когда выбирают элемент');
-        this.RegisterEvent('CheckChanged', false, 'Поднимается, когда изменяется выбор галочек');
+        this.RegisterEvent('HighlightedItemChanged', false, 'When item is highlighted');
+        this.RegisterEvent('SelectionChanged', false, 'When selection is changed');
+        this.RegisterEvent('CheckChanged', false, 'When checks are changed');
         this.RegisterEvent('SortChanged', false, 'When sort column or order is changed');
-        this.RegisterEvent('ScrolledToBottom', false, 'Поднимается, когда грид доскролили до конца');
+        this.RegisterEvent('ScrolledToBottom', false, 'When scrolled to bottom of grid');
 
         this.RegisterEvent('RowsCheckboxClicked', false, 'Rows checkbox clicked');
         this.RegisterEvent('RowsCheckboxContextMenuItemClicked', false, 'Rows checkbox contextmenu clicked');
@@ -74,24 +74,22 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
         this.RegisterEvent('HeaderCheckboxChanged', false, 'When header checkbox state changed');
         this.RegisterEvent('ColumnPropertyChanged', false, 'When changed the column property');
-        this.RegisterEvent('ColumnClicked', false, 'Поднимается, когда щелкнули по колонке в заголовке');
-        this.RegisterEvent('ColumnDisposed', false, 'Поднимается, когда удаляют колонку');
-        this.RegisterEvent('ColumnEditorChanged', false, 'Когда изменился редактор в колонке');
-        this.RegisterEvent('ColumnViewerChanged', false, 'Когда изменился компонент отображения в колонке');
-        this.RegisterEvent('ColumnAdded', false, 'Поднимается, когда обновилась строка');
-        this.RegisterEvent('ColumnMoved', false, 'Поднимается, когда обновилась строка');
+        this.RegisterEvent('ColumnClicked', false, 'When column header is clicked');
+        this.RegisterEvent('ColumnDisposed', false, 'When column is disposed');
+        this.RegisterEvent('ColumnAdded', false, 'When column is added');
+        this.RegisterEvent('ColumnMoved', false, 'When column is moved');
 
 
-        this.RegisterEvent('RowStickyChanged', false, 'Поднимается, когда строка меняет липкость');
-        this.RegisterEvent('RowCheckChanged', false, 'Поднимается, когда строка меняет липкость');
-        this.RegisterEvent('RowSelected', false, 'Поднимается, когда выбирают строку');
-        this.RegisterEvent('RowDisposed', false, 'Поднимается, когда удаляют строку');
-        this.RegisterEvent('RowAdded', false, 'Поднимается, когда добавилась строка');
-        this.RegisterEvent('RowUpdated', false, 'Поднимается, когда обновилась строка');
-        
-        this.RegisterEvent('CellViewerClicked', false, 'Когда кникнули на компонент отображения в колонке');
-        this.RegisterEvent('CellEditorChanged', false, 'Когда редактирование ячейки завершено');
-        this.RegisterEvent('MassActionsMenuActionClicked', false, 'Когда кликнули на кнопку внутри меню массовых операций');
+        this.RegisterEvent('RowStickyChanged', false, 'When row sticky state changed');
+        this.RegisterEvent('RowCheckChanged', false, 'When row check state changed');
+        this.RegisterEvent('RowSelected', false, 'When row is selected');
+        this.RegisterEvent('RowDisposed', false, 'When row is disposed');
+        this.RegisterEvent('RowAdded', false, 'When row is added');
+        this.RegisterEvent('RowUpdated', false, 'When row is updated');
+
+        this.RegisterEvent('CellViewerClicked', false, 'When clicked on cell viewer component');
+        this.RegisterEvent('CellEditorChanged', false, 'When cell editor is changed');
+        this.RegisterEvent('MassActionsMenuActionClicked', false, 'When clicked on button inside mass actions menu');
 
     }
 
