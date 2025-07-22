@@ -275,7 +275,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @returns 
      */
     _convertProperty(type, value) {
-        if(typeof value === 'function' && type != 'Function') {
+        if(typeof value === 'function' && !Object.isClass(value) && type != 'Function') {
             return value(value, this);
         } else if((value === 'true' || value === 'false') && type === 'Boolean') {
             return value === 'true';

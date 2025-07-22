@@ -990,6 +990,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
         this.header.checkbox.thirdState = this.rowsCount > this.checked.length;
         this.Dispatch('RowSelected');
+        this.Dispatch('CheckChanged');
     }
 
     _setSortAndOrder(column) {

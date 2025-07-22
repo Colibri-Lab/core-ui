@@ -10,20 +10,17 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
         super(name, container, Element.create('tr'));
         this.AddClass('app-ui-header-columns');
 
-        if(createCheckBox) {
-            this._checkboxContainer = new Colibri.UI.Grid.Column('checkbox-column', this, null, {value: '', shown: false});
-            this._checkboxContainer.shown = false;
+        this._checkboxContainer = new Colibri.UI.Grid.Column('checkbox-column', this, null, {value: '', shown: false});
+        this._checkboxContainer.shown = false;
 
-            this._checkbox = new Colibri.UI.Checkbox('checkbox', this._checkboxContainer);
-            this._checkbox.hasThirdState = true;
-            this._checkbox.shown = true;
+        this._checkbox = new Colibri.UI.Checkbox('checkbox', this._checkboxContainer);
+        this._checkbox.hasThirdState = true;
+        this._checkbox.shown = true;
 
-            this._checkbox.AddHandler('Changed', this.__thisCheckboxChanged, false, this);
+        this._checkbox.AddHandler('Changed', this.__thisCheckboxChanged, false, this);
 
-            this._contextmenuContainer = new Colibri.UI.Grid.Column('contextmenu-column', this, null, {value: '', shown: true, width: 20});
-            this._contextmenuContainer.shown = false;
-
-        }
+        this._contextmenuContainer = new Colibri.UI.Grid.Column('contextmenu-column', this, null, {value: '', shown: true, width: 20});
+        this._contextmenuContainer.shown = false;
 
     }
 

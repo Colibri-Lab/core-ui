@@ -1043,6 +1043,11 @@ Object.pluck = function (obj, keys) {
     return nobj;
 }
 
+Object.isClass = function (fn) {
+  return typeof fn === 'function' &&
+         /^class\s/.test(Function.prototype.toString.call(fn));
+}
+
 Object.assignRecursive = function (source, target) {
     if (source instanceof Object && target instanceof Object) {
         for (const key in source) {
