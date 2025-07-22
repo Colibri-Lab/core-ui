@@ -775,12 +775,33 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             return;
         }
 
-        if(Array.isArray(component)) {
-            for(const c of component) {
-                c.Dispatch(enames.length === 1 ? enames[0] : enames, {domEvent: e});                
+        let delay = null;
+        if(window.__delayMap.get(this)) {
+            delay = window.__delayMap.get(this);
+            window.__delayMap.delete(this);
+        }
+
+        const performHandler = (component, enames, e) => {
+            
+            if(!this.isConnected) {
+                return false;
             }
+
+            if(Array.isArray(component)) {
+                for(const c of component) {
+                    c.Dispatch(enames.length === 1 ? enames[0] : enames, {domEvent: e});                
+                }
+            } else {
+                return component?.Dispatch(enames.length === 1 ? enames[0] : enames, {domEvent: e});
+            }
+        };
+
+        if(delay) {
+            setTimeout(() => {
+                performHandler(component, enames, e)
+            }, delay);
         } else {
-            return component?.Dispatch(enames.length === 1 ? enames[0] : enames, {domEvent: e});
+            performHandler(component, enames, e)
         }
 
     }
@@ -804,11 +825,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         let {domEvent, respondent, delay, handler, capture} = args;
         respondent = respondent ? respondent : this._element;
 
-        if(delay) {
-            handler = this.__delayedEventHandler;
-        } else {
-            handler = handler ? handler : this.__eventHandler;
-        } 
+        handler = handler ? handler : this.__eventHandler;
 
         this.__domHandlersAttached[eventName] = {
             domEvent,
@@ -820,7 +837,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             respondent.mapToUIComponent(this);
         }
 
-        respondent.addEventListener(domEvent, handler, capture || false);
+        respondent.addEventListener(domEvent, handler, capture || false, delay);
     }
 
     /**

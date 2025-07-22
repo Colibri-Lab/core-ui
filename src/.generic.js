@@ -4070,9 +4070,10 @@ window.isPureTouchDevice = function() {
 window.__originalAdd = EventTarget.prototype.addEventListener;
 window.__originalRemove = EventTarget.prototype.removeEventListener;
 window.__listenersMap = new WeakMap();
+window.__delayMap = new WeakMap();
 window.__elToInstance = new WeakMap();
 
-EventTarget.prototype.addEventListener = function (type, listener, options, component = null) {
+EventTarget.prototype.addEventListener = function (type, listener, options, delay = null) {
     
     if(window.isPureTouchDevice() && ['mouseenter','mouseleave','mouseover','mouseout','mousemove'].includes(type)) {
         // nothing to do
@@ -4087,6 +4088,9 @@ EventTarget.prototype.addEventListener = function (type, listener, options, comp
     }
 
     __listenersMap.get(this).push({ type, listener, options });
+    if(delay) {
+        window.__delayMap.set(this, delay);
+    }
 
     return window.__originalAdd.call(this, type, listener, options);
 
