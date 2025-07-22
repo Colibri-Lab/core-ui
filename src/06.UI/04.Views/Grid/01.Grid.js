@@ -980,15 +980,19 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     __headerCheckboxChanged(event, args) {
 
-        for(const group of Object.values(this.groups)) {
-            group.ForEveryRow((name, row) => {
-                row.checked = row.shown && args.value;
-            });
-            group.checkbox.checked = args.value;
-            group.checkbox.thirdState = group.rowsCount > group.checked.length;
+        if(!args.value) {
+            this.UncheckAllRows();
+        } else {
+            for(const group of Object.values(this.groups)) {
+                group.ForEveryRow((name, row) => {
+                    row.checked = row.shown && args.value;
+                });
+                group.checkbox.checked = args.value;
+                group.checkbox.thirdState = group.rowsCount > group.checked.length;
+            }
+            this.header.checkbox.thirdState = this.rowsCount > this.checked.length;
         }
 
-        this.header.checkbox.thirdState = this.rowsCount > this.checked.length;
         this.Dispatch('RowSelected');
         this.Dispatch('CheckChanged');
     }
