@@ -393,8 +393,10 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         }
 
         this.ForEach((name, row) => {
-            if(existing.indexOf(row.value.id) === -1) {
-                row.Dispose();
+            if(row instanceof Colibri.UI.Grid.Row) {
+                if(existing.indexOf(row.value.id) === -1) {
+                    row.Dispose();
+                }
             }
         });
 
