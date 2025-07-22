@@ -167,7 +167,10 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
         for(let i=0; i < routePatters.length; i++) {
             const pattern = routePatters[i];
             const rex = new RegExp(pattern);
-            const u = this._url + (Object.countKeys(this._options) > 0 ? '?' + String.fromObject(this._options, ['&', '=']) : '');
+            let u = this._url + (Object.countKeys(this._options) > 0 ? '?' + String.fromObject(this._options, ['&', '=']) : '');
+            if(u === '') {
+                u = '/';
+            }
             if(rex.test(u)) {
                 const handlers = this._routeHandlers[pattern];
                 for(let j=0; j < handlers.length; j++) {
