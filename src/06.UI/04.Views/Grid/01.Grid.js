@@ -1057,7 +1057,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             if(cell) {
                 const fromIndex = cell.childIndex;
                 const toIndex = args.column.childIndex;
-                row.MoveChild(cell, fromIndex, toIndex + 1, false);
+                row.MoveChild(cell, fromIndex, toIndex, false);
             } 
         });
         this.RecalculateCellPositions();
