@@ -295,7 +295,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             Promise.all(promises).then((statuses) => {
                 const hasPermissions = [];
                 for(const status of statuses) {
-                    if(!status.hasPermission) {
+                    if(!status?.hasPermission) {
                         hasPermissions.push(status);
                     }
                 }
