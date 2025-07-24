@@ -754,6 +754,16 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
                         resolve(token);
                     }
                 );
+            } else if(this.isWeb) {
+                const notification = new Notification(title, {
+                    body: text,
+                    icon: photo,
+                    data: contact
+                });
+                notification.onclick = (e) => {
+                    e.preventDefault();
+                    resolve(notification.data);
+                };
             }
             // else if(this.isWindows) {
             //     const notification = new Notification(
