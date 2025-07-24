@@ -1735,15 +1735,15 @@ String.prototype.toObject = function (delimiters, callback, keyCallback) {
         return ret;
     }
 
-    let parts = this.split(delimiters[0]).filter(v => v != '').map(v => v.trimString());
+    let parts = this.split(delimiters[0]).filter(v => v != '').map(v => (v + '').trimString());
     if (parts.length == 0) {
         return ret;
     }
 
     parts.forEach((part) => {
         part = part.split(delimiters[1]);
-        part[0] = part[0].trimString();
-        part[1] = part[1].trimString();
+        part[0] = (part[0] ?? '').trimString();
+        part[1] = (part[1] ?? '').trimString();
         ret[keyCallback ? keyCallback(part[0]) : part[0]] = callback ? callback(part[1]) : part[1];
     });
 
