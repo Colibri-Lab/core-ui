@@ -438,6 +438,11 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         super.Dispose();
     }
 
+    destructor() {
+        this.Dispose();
+        super.destructor();
+    }
+
     /**
      * 
      * @type {Colibri.UI.ToolTip}
