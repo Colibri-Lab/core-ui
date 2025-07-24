@@ -651,14 +651,13 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
      * @type {boolean}
      */
     set shown(value) {
-        this._element.style.visibility = 'hidden';
+
         super.shown = value;
         if(value) {
             this.BringToFront();
-            Colibri.Common.Delay(0).then(() => {
+            this._element.hideShowProcess(() => {
                 this._updateStyleVariables();
-                this._element.style.visibility = 'unset';
-            });
+            }, 100);
         }
         else {
             this.SendToBack();
