@@ -755,15 +755,19 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
                     }
                 );
             } else if(this.isWeb) {
-                const notification = new Notification(title, {
-                    body: text,
-                    icon: photo,
-                    data: contact
+                Notification.requestPermission().then((permission) => {
+                    if (permission === "granted") {
+                        const notification = new Notification(title, {
+                            body: text,
+                            icon: photo,
+                            data: contact
+                        });
+                        notification.onclick = (e) => {
+                            e.preventDefault();
+                            resolve(notification.data);
+                        }
+                    }
                 });
-                notification.onclick = (e) => {
-                    e.preventDefault();
-                    resolve(notification.data);
-                };
             }
             // else if(this.isWindows) {
             //     const notification = new Notification(
