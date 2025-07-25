@@ -709,7 +709,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                     }
                     const msgToSend = msg.clone();
                     this.DispatchHandlers('FilesSending', {message: msgToSend}).then((responses) => {
-                        this._send(msgToSend.toJson(), resolve, reject);
+                        this._send(msgToSend, resolve, reject);
                     }).catch(error => {
                         this.Dispatch('MessageError', {error: error});
                         reject(error);
@@ -737,7 +737,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             try {
                 if(this._ws.readyState === 1) {
                     const msg = Colibri.Common.CometMessage.CreateForFilesSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, files, {contact: contact.name, photo: contact.photo}, activate, wakeup);
-                    this._send(msg.toJson(), resolve, reject);
+                    this._send(msg, resolve, reject);
                     this.Dispatch('MessageSent', {message: msg});
                 }
                 else {
