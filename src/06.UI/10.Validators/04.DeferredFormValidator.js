@@ -35,14 +35,14 @@ Colibri.UI.DeferredFormValidator = class {
         }
         Object.forEach(fields, (name, field) => {
             field.field.params && (field.field.params.validated = 'not-validated-yet');
-            field.AddHandler('Changed', this.__fieldClicked, false, this);
+            field.AddHandler('Changed', this.__fieldChanged, false, this);
             field.AddHandler('FieldsRendered', this.__fieldFieldsRendered, false, this);
             this._init(field.Fields ? field.Fields() : []);
         });
     }
 
-    __fieldClicked(event, args) {
-        return this.__validateField(field);
+    __fieldChanged(event, args) {
+        return this.__validateField(event.sender);
     }
 
     __fieldFieldsRendered(event, args) {
@@ -54,7 +54,6 @@ Colibri.UI.DeferredFormValidator = class {
      * @param {object} field field object
      */
     __validateField(field, showMessages = true) {
-
 
         field.field.params && (field.field.params.validated = 'success');
         field.message = '';
@@ -73,7 +72,7 @@ Colibri.UI.DeferredFormValidator = class {
         field.__validating = true;
 
         for (const v of validate) {
-            const message = v.message instanceof Function ? v.message(field, this) : v.message;
+            const message = v.message;
             const method = typeof v.method !== 'function' ? eval(v.method) : v.method;
             let res = method(field, this);
             if (!(res instanceof Promise)) {

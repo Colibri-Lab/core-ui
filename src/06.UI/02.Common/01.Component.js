@@ -1285,7 +1285,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     set readonly(value) {
         value = value === true || value === 'true';
-        this._element.attr('readonly', value ? 'readonly' : null);
+        this._element && this._element.attr('readonly', value ? 'readonly' : null);
         this.Dispatch('ReadonlyStateChanged');
     }
 

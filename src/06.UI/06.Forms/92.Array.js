@@ -122,7 +122,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         object.shown = true;
         object.title = '';
         object.enabled = this.enabled;
-        if (this._fieldData.params && this._fieldData.params.removelink !== false && !this.readonly && this.enabled) {
+        if (this._fieldData.params && this._fieldData.params.removelink !== false && !this.readonly && this.enabled && (!!this._fieldData.params?.mincount && this._fieldData.params?.mincount < Object.countKeys(this.Fields()))) {
             object.AddRemoveLink(() => {
 
                 if (this.readonly || !this.enabled) {

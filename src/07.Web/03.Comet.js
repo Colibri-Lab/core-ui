@@ -57,7 +57,11 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('MessagesCleared', false, 'When all messages are cleared');
         this.RegisterEvent('EventReceived', false, 'When event is received');
         this.RegisterEvent('ConnectionError', false, 'When we can not connect to server');
-        this.RegisterEvent('Connected', false, 'When we connected to server');
+        this.RegisterEvent('Registered', false, 'When we registered to server');
+        this.RegisterEvent('FirebaseRegistered', false, 'When we registered with firebase to server');
+        this.RegisterEvent('Subscribed', false, 'When we subscribed to channel');
+        this.RegisterEvent('Unsubscribed', false, 'When we unsubscribed from channel');
+        this.RegisterEvent('RegistrationError', false, 'When we can not register to server');
         this.RegisterEvent('MessageError', false, 'When can not send message, or message sending error');
         
     }
@@ -310,6 +314,14 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    Subscribe(channelGuid, params = {}) {
+        this.Command(channelGuid, 'subscribe', params);        
+    }
+
+    Unsubscribe(channelGuid, params = {}) {
+        this.Command(channelGuid, 'unsubscribe', params);
+    }
+
     /**
      * Handles incoming messages from the Comet server.
      * @private
@@ -319,17 +331,29 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         message = JSON.parse(message.data);
         if(message.action == 'connection-success') {
             console.log('Connection to Comet Server ok');
+            this.Dispatch('Connected');
         }
         else if(message.action == 'register-success') {
             this._registeredSuccess = true;
             console.log('User registered successfuly');
+            this.Dispatch('Registered');
         }
         else if(message.action == 'firebase-success') {
             console.log('Firebase registered successfuly');
+            this.Dispatch('FirebaseRegistered');
+        }
+        else if(message.action == 'subscribe-success') {
+            console.log('Subscribed successfuly');
+            this.Dispatch('Subscribed');
+        }
+        else if(message.action == 'unsubscribe-success') {
+            console.log('Unsubscribed successfuly');
+            this.Dispatch('Unsubscribed');
         }
         else if(message.action == 'register-error') {
             this._registeredSuccess = false;
             console.log('User registration error');
+            this.Dispatch('RegistrationError', {message: message.message});
         }
         else if(message.action == 'debug-response') {
             console.log('Debug', message.message);
@@ -359,14 +383,14 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                 if(responses.filter(v => v === false).length > 0) {
                     return;
                 }
-                const msg = Colibri.Common.CometMessage.FromReceivedObject(message.domain, message.from, message.message, message.delivery, message.broadcast);
+                const msg = Colibri.Common.CometMessage.FromReceivedObject(message);
                 this.AddLocalMessage(msg).then(() => {
                     this.Dispatch('MessageReceived', {message: msg});
                 });
             });
         }
         else {
-            const msg = Colibri.Common.CometEvent.FromReceivedObject(message.action, message.domain, message.from, message.message, message.delivery, message.broadcast);
+            const msg = Colibri.Common.CometEvent.FromReceivedObject(message);
             this.DispatchHandlers('EventReceiving', {message: msg}).then((responses) => {
                 this.Dispatch('EventReceived', {event: msg});
                 if(this.__eventHandlers[msg.action]) {
@@ -628,7 +652,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {object} contact - The name of the contact.
      * @returns {string|null} - The ID of the sent message.
      */
-    SendTo(userGuid, message = null, contact = null, activate = false, wakeup = false) {
+    SendTo(userGuid, message = null, contact = null, activate = false, wakeup = false, addLocal = true) {
         return new Promise((resolve, reject) => {
             try {
 
@@ -646,7 +670,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                             this.Dispatch('MessageError', {error: error});
                         });
                     };
-                    if(msg.from !== msg.recipient) {
+                    if(msg.from !== msg.recipient && addLocal) {
                         this.AddLocalMessage(msg).then(realSend);
                     } else {
                         realSend();

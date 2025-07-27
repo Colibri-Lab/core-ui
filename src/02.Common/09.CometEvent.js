@@ -84,16 +84,16 @@ Colibri.Common.CometEvent = class {
         return msg;
     }
 
-    static FromReceivedObject(action, domain, from, message, delivery = 'untrusted', broadcast = false, activate = false, wakeup = false) {
+    static FromReceivedObject(eventReceived) {
         const msg = new Colibri.Common.CometEvent();
-        msg.action = action;
-        msg.domain = domain;
-        msg.from = from;    
-        msg.message = message;
-        msg.broadcast = broadcast;
-        msg.delivery = delivery;
-        msg.activate = activate;
-        msg.wakeup = wakeup;
+        msg.action = eventReceived.action;
+        msg.domain = eventReceived.domain;
+        msg.from = eventReceived.from;
+        msg.message = eventReceived.message;
+        msg.broadcast = eventReceived.broadcast ?? false;
+        msg.delivery = eventReceived.delivery ?? 'untrusted';
+        msg.activate = eventReceived.activate ?? false;
+        msg.wakeup = eventReceived.wakeup ?? false;
         return msg;
     }
 

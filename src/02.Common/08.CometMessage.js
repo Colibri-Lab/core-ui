@@ -91,17 +91,17 @@ Colibri.Common.CometMessage = class {
         return msg;
     }
 
-    static FromReceivedObject(domain, from, message, delivery = 'untrusted', broadcast = false, activate = true, wakeup = true) {
+    static FromReceivedObject(messageReceived) {
         const msg = new Colibri.Common.CometMessage();
-        msg.id = message.id || msg.id;
-        msg.domain = domain === 'unknown' ? Colibri.Web.Comet.Options.origin : domain;
-        msg.from = from === 'unknown' ? 'system' : from;    
-        msg.message = Object.assign(message, {id: msg.id, status: 'received'});
-        msg.broadcast = broadcast;
-        msg.delivery = delivery;
-        msg.recipient = App.Comet.User;
-        msg.activate = activate;
-        msg.wakeup = wakeup;
+        msg.id = messageReceived.message.id ?? msg.id;
+        msg.domain = messageReceived.domain === 'unknown' ? Colibri.Web.Comet.Options.origin : messageReceived.domain;
+        msg.from = messageReceived.from === 'unknown' ? 'system' : messageReceived.from;    
+        msg.message = Object.assign(messageReceived.message, {id: msg.id, status: 'received'});
+        msg.broadcast = messageReceived.broadcast ?? false;
+        msg.delivery = messageReceived.delivery ?? 'untrusted';
+        msg.recipient = messageReceived.recipient ?? App.Comet.User;
+        msg.activate = messageReceived.activate ?? true;
+        msg.wakeup = messageReceived.wakeup ?? true;
         return msg;
     }
 
