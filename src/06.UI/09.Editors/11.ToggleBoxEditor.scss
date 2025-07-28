@@ -1,0 +1,17 @@
+.app-togglebox-editor-component {
+
+    width: 100%;
+    height: 100%;
+
+    &.-invalid {
+        background: transparentize(#ED3545, .8);
+    }
+
+}
+
+.-halign-center .app-togglebox-editor-component {
+    justify-content: center;
+    &.app-component-shown {
+        display: flex;
+    }
+}

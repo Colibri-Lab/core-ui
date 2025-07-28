@@ -345,6 +345,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
      */
     set halign(value) {
         this._element.css('text-align', value || 'left');
+        this.AddClass('-halign-' + value );
     }
 
     /**

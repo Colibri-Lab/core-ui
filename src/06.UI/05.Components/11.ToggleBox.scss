@@ -35,6 +35,9 @@
         font-weight: normal;
         font-size: 14px;
         line-height: 20px;
+        &:empty {
+            display: none;
+        }
     }
 
     &.-selected {
