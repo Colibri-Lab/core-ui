@@ -645,21 +645,23 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         });
     }
 
-    Send(userGuids, msg) {
+    SendFor(msg, userGuids) {
         return new Promise((resolve, reject) => {
             try {
                 if(this._ws.readyState === 1) {
                     for(const userGuid of userGuids) {
                         const msgToSend = msg.clone();
-                        msgToSend.recipient = userGuid;
+                        msgToSend.message.for = userGuid;
                         this.DispatchHandlers('MessageSending', {message: msgToSend}).then((responses) => {
                             this._send(msgToSend, resolve, reject);
                         }).catch(error => {
                             this.Dispatch('MessageError', {error: error});
                         });
                     }
+
                     const msgToSend = msg.clone();
-                    msgToSend.recipient = this.User;
+                    msgToSend.message.for = this._user;
+                    msgToSend.MarkAsRead();
                     this.AddLocalMessage(msgToSend).then(() => {
                         this.Dispatch('MessageSent', {message: msgToSend});
                     });
@@ -691,6 +693,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                     msg.MarkAsRead();
 
                     const realSend = () => {
+                        console.log('Sending message', msg);
                         this.Dispatch('MessageSent', {message: msg});
                         
                         const msgToSend = msg.clone();
@@ -699,7 +702,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                         }).catch(error => {
                             this.Dispatch('MessageError', {error: error});
                         });
-                        
+
                     };
                     if(msg.from !== msg.recipient && addLocal) {
                         this.AddLocalMessage(msg).then(realSend);
