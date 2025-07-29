@@ -645,6 +645,36 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    Send(userGuids, msg) {
+        return new Promise((resolve, reject) => {
+            try {
+                if(this._ws.readyState === 1) {
+                    for(const userGuid of userGuids) {
+                        const msgToSend = msg.clone();
+                        msgToSend.recipient = userGuid;
+                        this.DispatchHandlers('MessageSending', {message: msgToSend}).then((responses) => {
+                            this._send(msgToSend, resolve, reject);
+                        }).catch(error => {
+                            this.Dispatch('MessageError', {error: error});
+                        });
+                    }
+                    const msgToSend = msg.clone();
+                    msgToSend.recipient = this.User;
+                    this.AddLocalMessage(msgToSend).then(() => {
+                        this.Dispatch('MessageSent', {message: msgToSend});
+                    });
+
+                }
+                else {
+                    reject('server goes away');
+                }
+            }
+            catch(e) {
+                reject(e);
+            }
+        });
+    }
+
     /**
      * Sends a message to a specific user.
      * @param {string} userGuid - The GUID of the recipient user.
@@ -657,7 +687,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             try {
 
                 if(this._ws.readyState === 1) {
-                    const msg = Colibri.Common.CometMessage.CreateForSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, message, {contact: contact.name, photo: contact.photo}, activate, wakeup);
+                    const msg = Colibri.Common.CometMessage.CreateForSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, message, contact, activate, wakeup);
                     msg.MarkAsRead();
 
                     const realSend = () => {
@@ -669,6 +699,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                         }).catch(error => {
                             this.Dispatch('MessageError', {error: error});
                         });
+                        
                     };
                     if(msg.from !== msg.recipient && addLocal) {
                         this.AddLocalMessage(msg).then(realSend);
@@ -698,7 +729,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         return new Promise((resolve, reject) => {
             try {
                 if(this._ws.readyState === 1) {
-                    const msg = Colibri.Common.CometMessage.CreateForSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, text, {contact: contact.name, photo: contact.photo}, activate, wakeup);
+                    const msg = Colibri.Common.CometMessage.CreateForSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, text, contact, activate, wakeup);
                     this._send(msg, resolve, reject);
                     this.Dispatch('MessageSent', {message: msg});
                 }
@@ -724,7 +755,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         return new Promise((resolve, reject) => {
             try {
                 if(this._ws.readyState === 1) {
-                    const msg = Colibri.Common.CometMessage.CreateForFilesSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, files, {contact: contact.name, photo: contact.photo}, activate, wakeup);
+                    const msg = Colibri.Common.CometMessage.CreateForFilesSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, files, contact, activate, wakeup);
                     msg.MarkAsRead();
                     if(msg.from !== msg.recipient) {
                         this.AddLocalMessage(msg).then(() => {
@@ -760,7 +791,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         return new Promise((resolve, reject) => {
             try {
                 if(this._ws.readyState === 1) {
-                    const msg = Colibri.Common.CometMessage.CreateForFilesSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, files, {contact: contact.name, photo: contact.photo}, activate, wakeup);
+                    const msg = Colibri.Common.CometMessage.CreateForFilesSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, files, contact, activate, wakeup);
                     this._send(msg, resolve, reject);
                     this.Dispatch('MessageSent', {message: msg});
                 }
