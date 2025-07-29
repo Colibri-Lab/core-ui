@@ -138,7 +138,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                 this._authDomain = '';
             }
     
-            this._actions = new Colibri.Common.HashActions(); 
+            this._actions = new Colibri.Common.HashActions();  
             this._store = new Colibri.Storages.Store('app', {});
             this._request = new Colibri.Web.Request();
             this._router = new Colibri.Web.Router(routerType);
