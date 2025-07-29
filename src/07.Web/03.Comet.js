@@ -409,7 +409,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      */
     _send(msg, resolve, reject) {
 
-        if(['register', 'firebase', 'debug'].indexOf(msg.action) !== -1) {
+        if(['register', 'firebase', 'debug', 'subscribe', 'unsubscribe'].indexOf(msg.action) !== -1) {
             this._ws.send(msg.toJson());
             resolve({id: msg.id, message: 'message sent'});
             return;
