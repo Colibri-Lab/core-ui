@@ -415,7 +415,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             return;
         }
 
-        this.__sentMessages[msg.id] = { 
+        this.__sentMessages[msg.id] = {  
             resolve, 
             reject, 
             rejectTimeout: setTimeout(() => {
