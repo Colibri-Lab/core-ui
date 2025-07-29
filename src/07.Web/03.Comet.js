@@ -650,6 +650,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             try {
                 if(this._ws.readyState === 1) {
                     for(const userGuid of userGuids) {
+
                         const msgToSend = msg.clone();
                         msgToSend.message.for = userGuid;
                         this.DispatchHandlers('MessageSending', {message: msgToSend}).then((responses) => {
@@ -660,11 +661,17 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
                     }
 
                     const msgToSend = msg.clone();
-                    msgToSend.message.for = this._user;
+                    msgToSend.message.for = App.Comet.User;
                     msgToSend.MarkAsRead();
-                    this.AddLocalMessage(msgToSend).then(() => {
-                        this.Dispatch('MessageSent', {message: msgToSend});
+                    this.DispatchHandlers('MessageSending', {message: msgToSend}).then((responses) => {
+                        this._send(msgToSend, resolve, reject);
+                    }).catch(error => {
+                        this.Dispatch('MessageError', {error: error});
                     });
+
+                    // this.AddLocalMessage(msgToSend).then(() => {
+                    //     this.Dispatch('MessageSent', {message: msgToSend});
+                    // });
 
                 }
                 else {
