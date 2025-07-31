@@ -609,26 +609,28 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
 
     __bodyTouchStart(e) {
         if (document.body.scrollTop === 0 || document.documentElement.scrollTop === 0) {
-            this._startY = e.touches[0].pageY;
+            document.body._startY = e.touches[0].pageY;
         }
     }
 
     __bodyTouchMove(e) {
         const currentY = e.touches[0].pageY;
         const deltaY = currentY - document.body._startY;
-
-        if (deltaY > 100 && !document.body._refreshing) {
-            document.body._refreshing = true;
-            App.Dispatch('RefreshCheck', {});
-        } else {
-            App.Dispatch('RefreshPosition', {place: deltaY});
+        if (deltaY > 50) {
+            if(!document.body._refreshing) {
+                document.body._refreshing = true;
+                App.Dispatch('RefreshCheck', {});
+            } else {
+                App.Dispatch('RefreshPosition', {place: deltaY});
+            }
         }
     }
 
     __bodyTouchEnd(e) {
         if(document.body._refreshing) {
+            document.body._startY = 0;
             document.body._refreshing = false;
-            App.Dispatch('RefreshRequested', {});        
+            App.Dispatch('RefreshRequested', {});
         }
     }
 
