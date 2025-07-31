@@ -46,4 +46,13 @@
         }
     }
 
+    &.-refreshing {
+        
+        right: unset;
+        bottom: unset;
+        top: 20px;
+        left: 50%;
+        margin-left: -10px;
+
+    }
 }
