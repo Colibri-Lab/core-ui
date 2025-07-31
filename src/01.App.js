@@ -626,8 +626,10 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     }
 
     __bodyTouchEnd(e) {
-        document.body._refreshing = false;
-        App.Dispatch('RefreshRequested', {});        
+        if(document.body._refreshing) {
+            document.body._refreshing = false;
+            App.Dispatch('RefreshRequested', {});        
+        }
     }
 
     StartPullToRefresh() {
