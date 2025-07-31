@@ -71,6 +71,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('DocumentHidden', false, 'Document hidden');
         this.RegisterEvent('DocumentUnloaded', false, 'Document well be unloaded');
         this.RegisterEvent('RefreshCheck', false, 'Pull to refresh check event');
+        this.RegisterEvent('RefreshPosition', false, 'Pull to refresh touch position');
         this.RegisterEvent('RefreshRequested', false, 'Pull to refresh check event');
     }
 
@@ -619,6 +620,8 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         if (deltaY > 100 && !document.body._refreshing) {
             document.body._refreshing = true;
             App.Dispatch('RefreshCheck', {});
+        } else {
+            App.Dispatch('RefreshPosition', {place: deltaY});
         }
     }
 
