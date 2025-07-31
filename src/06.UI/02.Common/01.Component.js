@@ -3014,37 +3014,39 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     __bodyTouchMove(event, args) {
-        const currentY = args.domEvent.touches[0].pageY;
-        const deltaY = currentY - this._startY;
-        if (deltaY > 50) {
-            if(!this._refreshing) {
-                this._refreshing = true;
-                this.Dispatch('RefreshCheck', {});
-            } else {
-                this.Dispatch('RefreshPosition', {place: deltaY});
+        if(this._startY !== null) {
+            const currentY = args.domEvent.touches[0].pageY;
+            const deltaY = currentY - this._startY;
+            if (deltaY > 50) {
+                if(!this._refreshing) {
+                    this._refreshing = true;
+                    this.Dispatch('RefreshCheck', {});
+                } else {
+                    this.Dispatch('RefreshPosition', {place: deltaY});
+                }
             }
         }
     }
 
     __bodyTouchEnd(event, args) {
         if(this._refreshing) {
-            this._startY = 0;
+            this._startY = null;
             this._refreshing = false;
             this.Dispatch('RefreshRequested', {});
         }
     }
 
     StartPullToRefresh() {
-        this._element._startY = 0;
-        this._element._refreshing = false;
+        this._startY = null;
+        this._refreshing = false;
         this.AddHandler('TouchStarted', this.__bodyTouchStart, false, this);
         this.AddHandler('TouchMoved', this.__bodyTouchMove, false, this);
         this.AddHandler('TouchEnded', this.__bodyTouchEnd, false, this);
     }
 
     StopPullToRefresh() {
-        this._element._startY = 0;
-        this._element._refreshing = false;
+        this._startY = null;
+        this._refreshing = false;
         this.RemoveHandler('TouchStarted', this.__bodyTouchStart, this);
         this.RemoveHandler('TouchMoved', this.__bodyTouchMove, this);
         this.RemoveHandler('TouchEnded', this.__bodyTouchEnd, this);
