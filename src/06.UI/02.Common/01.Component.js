@@ -3008,29 +3008,29 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     
     __bodyTouchStart(e) {
-        if (document.body.scrollTop === 0 || document.documentElement.scrollTop === 0) {
-            document.body._startY = e.touches[0].pageY;
+        if (this._element.scrollTop === 0) {
+            this._element._startY = e.touches[0].pageY;
         }
     }
 
     __bodyTouchMove(e) {
         const currentY = e.touches[0].pageY;
-        const deltaY = currentY - document.body._startY;
+        const deltaY = currentY - this._element._startY;
         if (deltaY > 50) {
-            if(!document.body._refreshing) {
-                document.body._refreshing = true;
-                App.Dispatch('RefreshCheck', {});
+            if(!this._element._refreshing) {
+                this._element._refreshing = true;
+                this.Dispatch('RefreshCheck', {});
             } else {
-                App.Dispatch('RefreshPosition', {place: deltaY});
+                this.Dispatch('RefreshPosition', {place: deltaY});
             }
         }
     }
 
     __bodyTouchEnd(e) {
         if(document.body._refreshing) {
-            document.body._startY = 0;
-            document.body._refreshing = false;
-            App.Dispatch('RefreshRequested', {});
+            this._element._startY = 0;
+            this._element._refreshing = false;
+            this.Dispatch('RefreshRequested', {});
         }
     }
 
