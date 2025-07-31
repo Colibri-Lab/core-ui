@@ -72,7 +72,9 @@ Colibri.UI.TextAreaEditor = class extends Colibri.UI.Editor {
      * @type {boolean}
      */
     set readonly(value) {
-        this._fieldData.readonly = value === true || value === 'true';
+        if(this._fieldData) {
+            this._fieldData.readonly = value === true || value === 'true';
+        }
         if(value === true || value === 'true') {
             this._element.attr('readonly', 'readonly');
         }

@@ -34,7 +34,7 @@ Colibri.UI.CheckboxEditor = class extends Colibri.UI.Editor {
      * @type {boolean}
      */
     get readonly() {
-        return this._fieldData.readonly;
+        return this._input.readonly;
     }  
  
     /**
@@ -42,7 +42,9 @@ Colibri.UI.CheckboxEditor = class extends Colibri.UI.Editor {
      * @type {boolean}
      */
     set readonly(value) {
-        this._fieldData.readonly = value === true || value === 'true';
+        if(this._fieldData) {
+            this._fieldData.readonly = value === true || value === 'true';
+        }
         this._input.readonly = value === true || value === 'true';
     }
 

@@ -56,7 +56,7 @@ Colibri.UI.TextEditor = class extends Colibri.UI.Editor {
      * Remove focus from editor
      */
     Blur() {
-        this?.parent?.parent?.RemoveClass('-focused');
+        return this._element.attr('readonly') === 'readonly';
     }
 
     /**
@@ -64,7 +64,7 @@ Colibri.UI.TextEditor = class extends Colibri.UI.Editor {
      * @type {boolean}
      */
     get readonly() {
-        return this._fieldData.readonly;
+        return this._fieldData?.readonly;
     }  
  
     /**
@@ -72,7 +72,9 @@ Colibri.UI.TextEditor = class extends Colibri.UI.Editor {
      * @type {boolean}
      */
     set readonly(value) {
-        this._fieldData.readonly = value === true || value === 'true';
+        if(this._fieldData) {
+            this._fieldData.readonly = value === true || value === 'true';
+        }
         if(value === true || value === 'true') {
             this._element.attr('readonly', 'readonly');
         }
