@@ -622,7 +622,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.RegisterEvent('TouchStarted', false, 'When a finger was pressed on the screen');
         this.RegisterEvent('TouchEnded', false, 'When the finger is removed from the screen');
         this.RegisterEvent('TouchMoved', false, 'When they swipe their finger on the screen');
-        
+        this.RegisterEvent('RefreshCheck', false, 'Pull to refresh check event');
+        this.RegisterEvent('RefreshPosition', false, 'Pull to refresh touch position');
+        this.RegisterEvent('RefreshRequested', false, 'Pull to refresh check event');
+
         this.RegisterEvent('__Resize', false, 'When the window resizing (fake event internal use only)');
         this.RegisterEvent('__Resized', false, 'When the window resized (fake event internal use only)');
         this.RegisterEvent('__ClickedOut', false, 'When clicked out (fake event internal use only)');
@@ -3002,5 +3005,50 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     get scrollDirection() {
         return this._scrollDirection;
     } 
+
+    
+    __bodyTouchStart(e) {
+        if (document.body.scrollTop === 0 || document.documentElement.scrollTop === 0) {
+            document.body._startY = e.touches[0].pageY;
+        }
+    }
+
+    __bodyTouchMove(e) {
+        const currentY = e.touches[0].pageY;
+        const deltaY = currentY - document.body._startY;
+        if (deltaY > 50) {
+            if(!document.body._refreshing) {
+                document.body._refreshing = true;
+                App.Dispatch('RefreshCheck', {});
+            } else {
+                App.Dispatch('RefreshPosition', {place: deltaY});
+            }
+        }
+    }
+
+    __bodyTouchEnd(e) {
+        if(document.body._refreshing) {
+            document.body._startY = 0;
+            document.body._refreshing = false;
+            App.Dispatch('RefreshRequested', {});
+        }
+    }
+
+    StartPullToRefresh() {
+        this._element._startY = 0;
+        this._element._refreshing = false;
+        this._element.addEventListener('touchstart', this.__bodyTouchStart);
+        this._element.addEventListener('touchmove', this.__bodyTouchMove);
+        this._element.addEventListener('touchend', this.__bodyTouchEnd);
+    }
+
+    StopPullToRefresh() {
+        this._element._startY = 0;
+        this._element._refreshing = false;
+        this._element.removeEventListener('touchstart', this.__bodyTouchStart);
+        this._element.removeEventListener('touchmove', this.__bodyTouchMove);
+        this._element.removeEventListener('touchend', this.__bodyTouchEnd);
+    }
+    
 
 }

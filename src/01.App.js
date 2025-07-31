@@ -70,9 +70,6 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('DocumentShown', false, 'Document shown');
         this.RegisterEvent('DocumentHidden', false, 'Document hidden');
         this.RegisterEvent('DocumentUnloaded', false, 'Document well be unloaded');
-        this.RegisterEvent('RefreshCheck', false, 'Pull to refresh check event');
-        this.RegisterEvent('RefreshPosition', false, 'Pull to refresh touch position');
-        this.RegisterEvent('RefreshRequested', false, 'Pull to refresh check event');
     }
 
     /**
@@ -607,49 +604,6 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         });
     }
 
-    __bodyTouchStart(e) {
-        if (document.body.scrollTop === 0 || document.documentElement.scrollTop === 0) {
-            document.body._startY = e.touches[0].pageY;
-        }
-    }
-
-    __bodyTouchMove(e) {
-        const currentY = e.touches[0].pageY;
-        const deltaY = currentY - document.body._startY;
-        if (deltaY > 50) {
-            if(!document.body._refreshing) {
-                document.body._refreshing = true;
-                App.Dispatch('RefreshCheck', {});
-            } else {
-                App.Dispatch('RefreshPosition', {place: deltaY});
-            }
-        }
-    }
-
-    __bodyTouchEnd(e) {
-        if(document.body._refreshing) {
-            document.body._startY = 0;
-            document.body._refreshing = false;
-            App.Dispatch('RefreshRequested', {});
-        }
-    }
-
-    StartPullToRefresh() {
-        document.body._startY = 0;
-        document.body._refreshing = false;
-        document.addEventListener('touchstart', this.__bodyTouchStart);
-        document.addEventListener('touchmove', this.__bodyTouchMove);
-        document.addEventListener('touchend', this.__bodyTouchEnd);
-    }
-
-    StopPullToRefresh() {
-        document.body._startY = 0;
-        document.body._refreshing = false;
-        document.removeEventListener('touchstart', this.__bodyTouchStart);
-        document.removeEventListener('touchmove', this.__bodyTouchMove);
-        document.removeEventListener('touchend', this.__bodyTouchEnd);
-    }
-    
 
 }
 
