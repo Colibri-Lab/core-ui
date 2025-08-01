@@ -133,7 +133,7 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * @param {object} args - Arguments for the event.
      * @returns {Colibri.Events.Dispatcher}
      */
-    Dispatch(event, args = null) {
+    async Dispatch(event, args = null) {
 
         if(Array.isArray(event)) {
             for(const e of event) {
@@ -163,8 +163,14 @@ Colibri.Events.Dispatcher = class extends Destructable {
 
             for (var j = 0; j < eventHandlers.length; j++) {
                 const handlerObject = eventHandlers[j];
-                if (handlerObject && handlerObject.handler.apply(handlerObject.respondent, [event, args]) === false) {
-                    return false;
+                if (handlerObject && handlerObject.handler.isAsync()) {
+                    if (await (handlerObject.handler).apply(handlerObject.respondent, [event, args]) === false) {
+                        return false;
+                    }
+                } else if(handlerObject && !handlerObject.handler.isAsync()) {
+                    if (handlerObject.handler.apply(handlerObject.respondent, [event, args]) === false) {
+                        return false;
+                    }
                 }
             }
         }

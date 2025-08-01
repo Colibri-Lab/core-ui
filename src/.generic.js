@@ -3966,6 +3966,10 @@ String.prototype.spkiPem2spkiDer = function () {
     return binaryDerString.toArrayBuffer();
 }
 
+Function.prototype.isAsync = function() {
+    return this.constructor.name === 'AsyncFunction';
+};
+
 window.convertFilterToString = function (filter) {
 
     if (Array.isArray(filter) && filter.length > 0) {
