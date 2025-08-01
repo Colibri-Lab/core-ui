@@ -18,6 +18,14 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         Windows: 'electron'
     };
 
+    static Browser = {
+        Safari: 'safari',
+        Chrome: 'chrome',
+        Firefox: 'firefox',
+        Edge: 'edge',
+        Opera: 'opera',
+    };
+
     /**
      * Represents the theme types.
      * @readonly
@@ -62,6 +70,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     constructor() {
         super();
         this._detect();        
+        this._detectBrowser();
         this._registerEvents();
         this._bindDeviceEvents();
 
@@ -222,6 +231,23 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             document.body.classList.add('-windows');
         }
 
+
+    }
+
+    _detectBrowser() {
+        const ua = navigator.userAgent;
+
+        this._isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+        
+        const isSafari = /Safari/.test(ua) && !/Chrome|CriOS|FxiOS|OPiOS|EdgiOS/.test(ua);
+        const isChrome = /Chrome/.test(ua) || /CriOS/.test(ua);
+        const isFirefox = /Firefox/.test(ua) || /FxiOS/.test(ua);
+        const isEdge = /Edg/.test(ua) || /EdgiOS/.test(ua);
+        const isOpera = /OPR/.test(ua) || /OPiOS/.test(ua);
+
+        this._browser = isSafari ? 'safari' : isChrome ? 'chrome' : isFirefox ? 'firefox' : isEdge ? 'edge' : isOpera ? 'opera' : 'unknown';
+        this._isStandalone = isStandalone;
+
     }
 
     ClearNotifications() {
@@ -342,6 +368,29 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
      */
     get isWeb() {
         return this._platform === Colibri.Devices.Device.Platform.Web;
+    }
+
+    get browser() {
+        return this._browser;
+    }
+
+    get isStandalone() {
+        return this._isStandalone;
+    }
+    get isSafari() {
+        return this.browser = App.Devices.Device.Safari;
+    }
+    get isChrome() {
+        return this.browser = App.Devices.Device.Chrome;
+    }
+    get isFirefox() {
+        return this.browser = App.Devices.Device.Firefox;
+    }
+    get isEdge() {  
+        return this.browser = App.Devices.Device.Edge; 
+    }
+    get isOpera() {
+        return this.browser = App.Devices.Device.Opera;
     }
 
     get autoStart() {
