@@ -245,7 +245,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         const isEdge = /Edg/.test(ua) || /EdgiOS/.test(ua);
         const isOpera = /OPR/.test(ua) || /OPiOS/.test(ua);
 
-        this._browser = isSafari ? 'safari' : isChrome ? 'chrome' : isFirefox ? 'firefox' : isEdge ? 'edge' : isOpera ? 'opera' : 'unknown';
+        this._browser = isSafari ? 'safari' : (isChrome ? 'chrome' : (isFirefox ? 'firefox' : (isEdge ? 'edge' : (isOpera ? 'opera' : 'unknown'))));
         this._isStandalone = isStandalone;
 
     }
