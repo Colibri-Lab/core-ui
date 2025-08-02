@@ -38,6 +38,8 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
      * @private
      */
     _fileSystem = null;
+
+    _browser = null;
     /**
      * Represents the theme of the device.
      * @private
@@ -61,7 +63,8 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
      */
     constructor() {
         super();
-        this._detect();        
+        this._detect();     
+        this._detectBrowser();  
         this._registerEvents();
         this._bindDeviceEvents();
 
@@ -222,6 +225,44 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
             document.body.classList.add('-windows');
         }
 
+    }
+
+    _detectBrowser() {
+        if(navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') === -1) {
+            this._browser = 'safari';
+        } else if(navigator.userAgent.indexOf('Chrome') > -1) {
+            this._browser = 'chrome';
+        } else if(navigator.userAgent.indexOf('Firefox') > -1) {
+            this._browser = 'firefox';
+        } else if(navigator.userAgent.indexOf('Edg') > -1) {
+            this._browser = 'edge';
+        } else if(navigator.userAgent.indexOf('Opera') > -1) {
+            this._browser = 'opera';
+        }
+    }
+
+    get browser() {
+        return this._browser;
+    }
+
+    get isSafari() {
+        return this._browser === 'safari';
+    }
+
+    get isFirefox() {
+        return this._browser === 'firefox';
+    }
+
+    get isEdge() {
+        return this._browser === 'edge';
+    }
+
+    get isOpera() {
+        return this._browser === 'opera';
+    }
+
+    get isStandalone() {
+        return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     }
 
     ClearNotifications() {

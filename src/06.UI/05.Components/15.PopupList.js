@@ -93,6 +93,9 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
 
         try {
             if(this.__renderElement !== null) {
+                if(typeof this.__renderElement === 'string') {
+                    this.__renderElement = eval(this.__renderElement);
+                }
                 html = this.__renderElement(itemData, item);
             } else if(itemData[this._titleField ?? 'title'] !== null) {
                 html = Lang ? Lang.Translate(itemData[this._titleField ?? 'title']) : itemData[this._titleField ?? 'title'];

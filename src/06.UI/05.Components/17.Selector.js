@@ -353,6 +353,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * @return {Array|Object|boolean}
      */
     set value(value) {
+        debugger;
         this._setValue(value);
         this._renderValue();
     }
@@ -404,6 +405,11 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                 if (_found) {
                     this._value.push(_found);
                     this._lastValue = _found;
+                } else {
+                    const ff = {};
+                    ff[this._valueField] = value;
+                    this._value.push(ff);
+                    this._lastValue = ff;                    
                 }
 
             }
@@ -415,6 +421,11 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                     if (_found) {
                         this._value.push(_found);
                         this._lastValue = _found;
+                    } else {
+                        const ff = {};
+                        ff[this._valueField] = v;
+                        this._value.push(ff);
+                        this._lastValue = ff;
                     }
                 }
             }
@@ -446,6 +457,13 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         return foundValue;
     }
 
+    _getRenderMethod() {
+        if(typeof this.__render === 'string') {
+            return eval(this.__render);
+        }
+        return this.__render;
+    }
+
     /**
      * Render values
      * @private
@@ -453,26 +471,33 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     _renderValue(renderValue = true) {
         if (!this.multiple) {
             if (renderValue) {
-                let v = '';
-                if (Array.isArray(this._value)) {
-                    v = (this._value[0] !== '' && this._value[0] !== null && this._value[0] !== undefined ? (this._value[0][this._titleField] ?? this._value[0] ?? '') : '');
-                    if (Object.isObject(v)) {
-                        try { v = v[Lang.Current] } catch (e) { v = ''; };
-                    }
-                    else {
-                        v = (v + '').stripHtml();
-                    }
-                }
-                else {
-                    if (Object.isObject(this._value)) {
-                        try { v = this._value[Lang.Current] } catch (e) { v = ''; };
-                    }
-                    else {
-                        v = (this._value + '').stripHtml();
-                    }
-                }
 
-                this._input.value = v;
+                const f = this._getRenderMethod();
+                if(f) {
+                    this._input.value = f(Array.isArray(this._value) ? this._value[0] : this._value, this);
+                } else {
+ 
+                    let v = '';
+                    if (Array.isArray(this._value)) {
+                        v = (this._value[0] !== '' && this._value[0] !== null && this._value[0] !== undefined ? (this._value[0][this._titleField] ?? this._value[0] ?? '') : '');
+                        if (Object.isObject(v)) {
+                            try { v = v[Lang.Current] } catch (e) { v = ''; };
+                        }
+                        else {
+                            v = (v + '').stripHtml();
+                        }
+                    }
+                    else {
+                        if (Object.isObject(this._value)) {
+                            try { v = this._value[Lang.Current] } catch (e) { v = ''; };
+                        }
+                        else {
+                            v = (this._value + '').stripHtml();
+                        }
+                    }
+
+                    this._input.value = v;
+                }
             }
 
             if (!this._placeholderempty || this.HaveValues()) {
@@ -623,6 +648,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      */
     set placeholderinfo(value) {
         this._placeholderinfo = value;
+        const f = this._getRenderMethod();
         this._renderValue(false);
     }
 
@@ -873,7 +899,9 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      */
     set showToolTip(value) {
         this._showToolTip = value === true || value === 'true';
+        const f = this._getRenderMethod();
         this._renderValue();
+
     }
 
     /**
