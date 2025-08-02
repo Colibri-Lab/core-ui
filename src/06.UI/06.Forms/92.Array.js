@@ -175,7 +175,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         object.AddHandler('Changed', this.__objectChanged, false, this);
         this._itemsContainer.Children(object.name, object);
         if (this._fieldData.params && this._fieldData.params.title !== null) {
-            const f = eval(this._fieldData.params.title);
+            const f = typeof this._fieldData.params.title == 'string' ? eval(this._fieldData.params.title) : this._fieldData.params.title;
             f && f(object, this);
         }
 

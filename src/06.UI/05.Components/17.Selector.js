@@ -353,7 +353,6 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * @return {Array|Object|boolean}
      */
     set value(value) {
-        debugger;
         this._setValue(value);
         this._renderValue();
     }
