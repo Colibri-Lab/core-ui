@@ -650,10 +650,12 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             try {
                 if(this._ws.readyState === 1) {
                     for(const userGuid of userGuids) {
-
                         const msgToSend = msg.clone();
                         msgToSend.message.for = userGuid;
-                        this.DispatchHandlers('MessageSending', {message: msgToSend}).then((responses) => {
+                        this.DispatchHandlers(
+                            msgToSend.message?.files ? 'FilesSending' : 'MessageSending', 
+                            {message: msgToSend}
+                        ).then((responses) => {
                             this._send(msgToSend, resolve, reject);
                         }).catch(error => {
                             this.Dispatch('MessageError', {error: error});
@@ -666,7 +668,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
                     this.AddLocalMessage(msgToSend).then(() => {
                         this.Dispatch('MessageSent', {message: msgToSend});
-                        this.DispatchHandlers('MessageSending', {message: msgToSend}).then((responses) => {
+                        this.DispatchHandlers(
+                            msgToSend.message?.files ? 'FilesSending' : 'MessageSending', 
+                            {message: msgToSend}
+                        ).then((responses) => {
                             this._send(msgToSend, resolve, reject);
                         }).catch(error => {
                             this.Dispatch('MessageError', {error: error});
