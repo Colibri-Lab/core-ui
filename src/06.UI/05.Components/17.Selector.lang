@@ -6,6 +6,7 @@ ui-selector-nothingchoosed:
   hy: Նոյինգ սելեկտեդ
   kk: Ештеңе таңдалмады
   uz: Hech narsa tanlanmadi
+  cz: Nic nebylo vybráno
 ui-selector-choosed:
   ru: Выбрано %s1 %s2
   en: Selected %s1 items of %s2
@@ -14,3 +15,4 @@ ui-selector-choosed:
   hy: Սելեկտեդ %s1 %s2
   kk: Таңдалған %s1 элемент %s2
   uz: Tanlangan %s1 element %s2
+  cz: Vybráno %s1 položek z %s2

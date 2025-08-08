@@ -6,6 +6,7 @@ ui-viewers-document:
   es: Documento
   kk: Құжат
   uz: Hujjat
+  cz: Dokument
 ui-viewers-document-unknownformat:
   ru: Неизвестный формат документа
   en: Unknown format
@@ -14,3 +15,4 @@ ui-viewers-document-unknownformat:
   es: Formato desconocido
   kk: Белгісіз формат
   uz: Noma'lum format
+  cz: Neznámý formát

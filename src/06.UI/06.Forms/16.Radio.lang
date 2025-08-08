@@ -6,6 +6,7 @@ ui-fields-radio:
   es: Botones de radio
   kk: Радио түймелері
   uz: Radio tugmalari
+  cz: Rádio tlačítka
 ui-fields-radio-clear:
   ru: Очистить
   en: Clear
@@ -14,3 +15,4 @@ ui-fields-radio-clear:
   es: Claro
   kk: Тазалау
   uz: Tozalash
+  cz: Vymazat

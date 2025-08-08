@@ -6,6 +6,7 @@ ui-renderer-error1:
   es: Pasa un objeto al constructor para renderizar
   kk: Конструкторға көрсету үшін объектіні беріңіз
   uz: Ko'rsatish uchun konstruktorga obyektni o'tkazing
+  cz: Předat objekt konstruktoru k vykreslení
 ui-renderer-error2:
   ru: Передайнный обьект не компонент
   en: The passed object is not a component
@@ -14,6 +15,7 @@ ui-renderer-error2:
   es: El objeto pasado no es un componente
   kk: Берілген объект компонент емес
   uz: Berilgan obyekt komponent emas
+  cz: Předaný objekt není komponenta
 ui-renderer-error3:
   ru: Передайте данные для отображения
   en: Pass data to display
@@ -22,6 +24,7 @@ ui-renderer-error3:
   es: Pasa los datos para mostrar
   kk: Көрсету үшін деректерді беріңіз
   uz: Ko'rsatish uchun ma'lumotlarni o'tkazing
+  cz: Předat data k zobrazení
 ui-renderer-error4:
   ru: Необходимо переопределить этот метод
   en: You need to override this method
@@ -30,3 +33,4 @@ ui-renderer-error4:
   es: Necesitas sobrescribir este método
   kk: Бұл әдісті қайта анықтау қажет
   uz: Ushbu usulni qayta aniqlash kerak
+  cz: Je třeba tuto metodu přepsat

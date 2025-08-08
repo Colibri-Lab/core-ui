@@ -6,6 +6,7 @@ ui-link-opennewtab:
   kk: Жаңа тақтада ашу
   uz: Yangi oynada ochish
   es: Abrir en una nueva pestaña
+  cz: Otevřít v nové záložce
 ui-link-open:
   ru: Открыть
   en: Open
@@ -14,3 +15,4 @@ ui-link-open:
   kk: Ашу
   uz: Ochish
   es: Abrir
+  cz: Otevřít

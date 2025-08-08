@@ -6,6 +6,7 @@ ui-filesdragdrop-choosefiles:
   es: Selecciona o arrastra los archivos
   kk: Файлдарды таңдаңыз немесе сүйреңіз
   uz: Fayllarni tanlang yoki torting
+  cz: Vyberte nebo přetáhněte soubory
 ui-filesdragdrop-choosefile:
   ru: Выберите или перетащите файл
   en: Select or drag a file
@@ -14,3 +15,4 @@ ui-filesdragdrop-choosefile:
   es: Selecciona o arrastra un archivo
   kk: Файлды таңдаңыз немесе сүйреңіз
   uz: Faylni tanlang yoki torting
+  cz: Vyberte nebo přetáhněte soubor

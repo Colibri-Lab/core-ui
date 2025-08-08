@@ -6,6 +6,7 @@ ui-email-validation-message:
   es: Por favor, introduzca un correo electrónico válido
   kk: Дұрыс email енгізіңіз
   uz: Iltimos, to'g'ri email kiriting
+  cz: Zadejte platný e-mail
 ui-fields-email:
   ru: Эл. адрес
   en: Email
@@ -14,3 +15,4 @@ ui-fields-email:
   es: Correo electrónico
   kk: Электрондық пошта
   uz: Elektron pochta
+  cz: E-mail

@@ -6,6 +6,7 @@ ui-toggle-button-expand:
   es: Expandir
   kk: Кеңейту
   uz: Kengaytirish
+  cz: Rozbalit
 ui-toggle-button-collapse:
   ru: Свернуть
   en: Collapse
@@ -14,3 +15,4 @@ ui-toggle-button-collapse:
   es: Colapsar
   kk: Қысқарту
   uz: Qisqartirish
+  cz: Sbalit

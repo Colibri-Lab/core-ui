@@ -6,6 +6,7 @@ ui-prompt-ok:
   es: Continuar
   kk: Жалғастыру
   uz: Davom etish
+  cz: Pokračovat
 ui-prompt-cancel:
   ru: Отмена
   en: Cancel
@@ -14,3 +15,4 @@ ui-prompt-cancel:
   es: Cancelar
   kk: Болдырмау
   uz: Bekor qilish
+  cz: Zrušit

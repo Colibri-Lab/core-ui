@@ -6,6 +6,7 @@ ui-monthselector-yanuary:
   es: Enero
   kk: Қаңтар
   uz: Yanvar
+  cz: Leden
 ui-monthselector-february:
   ru: Февраль
   en: February
@@ -14,6 +15,7 @@ ui-monthselector-february:
   es: Febrero
   kk: Ақпан
   uz: Fevral
+  cz: Únor
 ui-monthselector-march:
   ru: Март
   en: March
@@ -22,6 +24,7 @@ ui-monthselector-march:
   es: Marzo
   kk: Наурыз
   uz: Mart
+  cz: Březen
 ui-monthselector-april:
   ru: Апрель
   en: April
@@ -30,6 +33,7 @@ ui-monthselector-april:
   es: Abril
   kk: Сәуір
   uz: Aprel
+  cz: Duben
 ui-monthselector-may:
   ru: Май
   en: May
@@ -38,6 +42,7 @@ ui-monthselector-may:
   es: Mayo
   kk: Мамыр
   uz: May
+  cz: Květen
 ui-monthselector-jun:
   ru: Июнь
   en: June
@@ -46,6 +51,7 @@ ui-monthselector-jun:
   es: Junio
   kk: Маусым
   uz: Iyun
+  cz: Červen
 ui-monthselector-july:
   ru: Июль
   en: July
@@ -54,6 +60,7 @@ ui-monthselector-july:
   es: Julio
   kk: Шілде
   uz: Iyul
+  cz: Červenec
 ui-monthselector-august:
   ru: Август
   en: August
@@ -62,6 +69,7 @@ ui-monthselector-august:
   es: Agosto
   kk: Тамыз
   uz: Avgust
+  cz: Srpen
 ui-monthselector-september:
   ru: Сентябрь
   en: September
@@ -70,6 +78,7 @@ ui-monthselector-september:
   es: Septiembre
   kk: Қыркүйек
   uz: Sentabr
+  cz: Září
 ui-monthselector-october:
   ru: Октябрь
   en: October
@@ -78,6 +87,7 @@ ui-monthselector-october:
   es: Octubre
   kk: Қазан
   uz: Oktabr
+  cz: Říjen
 ui-monthselector-november:
   ru: Ноябрь
   en: November
@@ -86,6 +96,7 @@ ui-monthselector-november:
   es: Noviembre
   kk: Қараша
   uz: Noyabr
+  cz: Listopad
 ui-monthselector-december:
   ru: Декабрь
   en: December
@@ -94,3 +105,4 @@ ui-monthselector-december:
   es: Diciembre
   kk: Желтоқсан
   uz: Dekabr
+  cz: Prosinec

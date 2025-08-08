@@ -6,6 +6,8 @@ ui-editors-files-message:
   es: Puede seleccionar hasta %s archivos
   kk: Сіз %s файлға дейін таңдай аласыз
   uz: Siz %s tagacha fayl tanlashingiz mumkin
+  cz: Můžete vybrat až %s souborů
+
 ui-editors-files-message3:
   ru: Файл %s слишком большой
   en: File %s is too large
@@ -14,6 +16,8 @@ ui-editors-files-message3:
   es: El archivo %s es demasiado grande
   kk: "%s файлы тым үлкен"
   uz: "%s fayl juda katta"
+  cz: Soubor %s je příliš velký
+
 ui-editors-files-message5:
   ru: Недопустимый формат файла
   en: Invalid file format
@@ -22,6 +26,8 @@ ui-editors-files-message5:
   es: Formato de archivo no válido
   kk: Жарамсыз файл форматы
   uz: Noto'g'ri fayl formati
+  cz: Neplatný formát souboru
+
 ui-editors-files:
   ru: Файлы
   en: Files
@@ -30,3 +36,4 @@ ui-editors-files:
   es: Archivos
   kk: Файлдар
   uz: Fayllar
+  cz: Soubory

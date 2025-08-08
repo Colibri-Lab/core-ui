@@ -6,6 +6,7 @@ ui-files-sign:
   es: Firmar
   kk: Қол қою
   uz: Imzo qo'yish
+  cz: Podepsat
 ui-files-about:
   ru: до
   en: up to
@@ -14,6 +15,7 @@ ui-files-about:
   es: hasta
   kk: дейін
   uz: gacha
+  cz: až do
 ui-files-files:
   ru: файлов
   en: files
@@ -22,6 +24,7 @@ ui-files-files:
   es: archivos
   kk: файлдар
   uz: fayllar
+  cz: soubory
 ui-files-more:
   ru: не больше
   it: non più di
@@ -30,6 +33,7 @@ ui-files-more:
   hy: ոչ ավելի
   kk: артық емес
   uz: ko'proq emas
+  cz: ne více než
 ui-files-everyone:
   ru: каждый
   en: each
@@ -38,6 +42,7 @@ ui-files-everyone:
   es: cada
   kk: әрқайсысы
   uz: har biri
+  cz: každý
 ui-files-choosenomore:
   ru: Можно выбрать не более
   en: You can select no more than
@@ -46,6 +51,7 @@ ui-files-choosenomore:
   es: Puede seleccionar hasta
   kk: Сіз ең көбі таңдай аласыз
   uz: Siz ko'pi bilan tanlashingiz mumkin
+  cz: Můžete vybrat nejvýše
 ui-files-file:
   ru: Файл
   en: File
@@ -54,6 +60,7 @@ ui-files-file:
   es: Archivo
   kk: Файл
   uz: Fayl
+  cz: Soubor
 ui-files-verybig:
   ru: слишком большой
   en: is too large
@@ -62,6 +69,7 @@ ui-files-verybig:
   es: es demasiado grande
   kk: тым үлкен
   uz: juda katta
+  cz: je příliš velký
 ui-files-format:
   ru: Недопустимый формат файла
   en: Invalid file format
@@ -70,6 +78,7 @@ ui-files-format:
   es: Formato de archivo no válido
   kk: Жарамсыз файл форматы
   uz: Noto'g'ri fayl formati
+  cz: Neplatný formát souboru
 ui-fields-files:
   ru: Список файлов
   en: Files list
@@ -78,6 +87,7 @@ ui-fields-files:
   es: Lista de archivos
   kk: Файлдар тізімі
   uz: Fayllar ro'yxati
+  cz: Seznam souborů
 ui-files-filescount:
   ru: до %s файлов
   en: up to %s files
@@ -86,6 +96,7 @@ ui-files-filescount:
   es: hasta %s archivos
   kk: "%s файлға дейін"
   uz: "%s faylgacha"
+  cz: až %s souborů
 ui-files-size:
   ru: не больше %s
   en: no more than %s
@@ -94,6 +105,7 @@ ui-files-size:
   es: no más de %s
   kk: "%s артық емес"
   uz: "%s ko'proq emas"
+  cz: ne více než %s
 ui-files-filescount2:
   ru: Можно выбрать не больше %s файлов
   en: You can select no more than %s files
@@ -102,6 +114,7 @@ ui-files-filescount2:
   es: Puede seleccionar hasta %s archivos
   kk: Сіз ең көбі %s файл таңдай аласыз
   uz: Siz ko'pi bilan %s fayl tanlashingiz mumkin
+  cz: Můžete vybrat nejvýše %s souborů
 ui-files-filehuge:
   ru: Файл %s слишком большой
   en: File %s is too large
@@ -110,3 +123,4 @@ ui-files-filehuge:
   es: El archivo %s es demasiado grande
   kk: "%s файлы тым үлкен"
   uz: "%s fayli juda katta"
+  cz: Soubor %s je příliš velký

@@ -6,6 +6,7 @@ ui-fields-numberrange:
   es: Número de/a
   kk: Саннан/дейін
   uz: Raqam dan/gacha
+  cz: Number from/to
 ui-fields-numberrange-from:
   ru: от
   en: from
@@ -14,6 +15,7 @@ ui-fields-numberrange-from:
   es: de
   kk: бастап
   uz: dan
+  cz: from
 ui-fields-numberrange-to:
   ru: до
   en: to
@@ -22,3 +24,4 @@ ui-fields-numberrange-to:
   es: a
   kk: дейін
   uz: gacha
+  cz: to

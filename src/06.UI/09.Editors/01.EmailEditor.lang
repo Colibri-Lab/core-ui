@@ -6,6 +6,7 @@ ui-editors-email-message:
   es: Por favor, introduzca un correo electrónico válido
   kk: Дұрыс email енгізіңіз
   uz: Iltimos, to'g'ri email kiriting
+  cz: Zadejte platný e-mail
 ui-editors-email:
   ru: Эл. почта
   en: Email
@@ -14,3 +15,4 @@ ui-editors-email:
   es: Correo electrónico
   kk: Электрондық пошта
   uz: Elektron pochta
+  cz: E-mail

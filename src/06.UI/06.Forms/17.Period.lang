@@ -6,6 +6,7 @@ ui-period-day1:
   es: día
   kk: күн
   uz: kun
+  cz: day
 ui-period-day2:
   ru: дня
   en: days
@@ -14,6 +15,7 @@ ui-period-day2:
   es: días
   kk: күндер
   uz: kunlar
+  cz: days
 ui-period-day3:
   ru: дней
   en: days
@@ -22,6 +24,7 @@ ui-period-day3:
   es: días
   kk: күндер
   uz: kunlar
+  cz: days
 ui-fields-period:
   ru: Период
   en: Period
@@ -30,3 +33,4 @@ ui-fields-period:
   es: Período
   kk: Период
   uz: Davr
+  cz: Period

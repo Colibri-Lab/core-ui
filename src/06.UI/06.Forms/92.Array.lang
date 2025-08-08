@@ -6,6 +6,7 @@ ui-array-add:
   es: Añadir nuevo
   kk: Жаңа қосу
   uz: Yangi qo'shish
+  cz: Add new
 ui-fields-array:
   ru: Массив обьектов
   en: Array of objects
@@ -14,3 +15,4 @@ ui-fields-array:
   es: Matriz de objetos
   kk: Объектілер массиві
   uz: Obyektlar massivi
+  cz: Array of objects

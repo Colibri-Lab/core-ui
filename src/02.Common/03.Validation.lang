@@ -6,6 +6,7 @@ ui-validation-bik-error1:
   es: El BIC solo puede consistir en números
   kk: БИК тек сандардан тұруы мүмкін
   uz: BIC faqat raqamlardan iborat bo'lishi mumkin
+  cz: BIC může obsahovat pouze číslice
 ui-validation-bik-error2:
   ru: БИК может состоять только из 9 цифр
   en: BIC can only consist of 9 digits
@@ -14,6 +15,7 @@ ui-validation-bik-error2:
   es: El BIC solo puede consistir en 9 dígitos
   kk: БИК тек 9 саннан тұруы мүмкін
   uz: BIC faqat 9 raqamdan iborat bo'lishi mumkin
+  cz: BIC může obsahovat pouze 9 číslic
 ui-validation-inn-error1:
   ru: ИНН пуст
   en: TIN is empty
@@ -22,6 +24,7 @@ ui-validation-inn-error1:
   es: El TIN está vacío
   kk: СТН бос
   uz: STIR bo'sh
+  cz: DIČ je prázdné
 ui-validation-inn-error2:
   ru: ИНН может состоять только из цифр
   en: TIN can only consist of numbers
@@ -30,6 +33,7 @@ ui-validation-inn-error2:
   es: El TIN solo puede consistir en números
   kk: СТН тек сандардан тұруы мүмкін
   uz: STIR faqat raqamlardan iborat bo'lishi mumkin
+  cz: DIČ může obsahovat pouze číslice
 ui-validation-inn-error3:
   ru: ИНН может состоять только из 10 или 12 цифр
   en: TIN can only consist of 10 or 12 digits
@@ -38,6 +42,7 @@ ui-validation-inn-error3:
   es: El TIN solo puede consistir en 10 o 12 dígitos
   kk: СТН тек 10 немесе 12 саннан тұруы мүмкін
   uz: STIR faqat 10 yoki 12 raqamdan iborat bo'lishi mumkin
+  cz: DIČ může obsahovat pouze 10 nebo 12 číslic
 ui-validation-inn-error4:
   ru: Неправильное контрольное число
   en: Wrong check digit
@@ -46,6 +51,7 @@ ui-validation-inn-error4:
   es: Dígito de control incorrecto
   kk: Қате бақылау саны
   uz: Noto'g'ri nazorat raqami
+  cz: Nesprávná kontrolní číslice
 ui-validation-kpp-error1:
   ru: КПП пуст
   en: KPP is empty
@@ -54,6 +60,7 @@ ui-validation-kpp-error1:
   es: El KPP está vacío
   kk: КБК бос
   uz: KPP bo'sh
+  cz: KPP je prázdné
 ui-validation-kpp-error2:
   ru: КПП может состоять только из 9 знаков (цифр или заглавных букв латинского алфавита от A до Z)
   en: The KPP can only consist of 9 characters (numbers or capital letters of the Latin alphabet from A to Z)
@@ -62,6 +69,7 @@ ui-validation-kpp-error2:
   es: El KPP solo puede consistir en 9 caracteres (números o letras mayúsculas del alfabeto latino de la A a la Z)
   kk: КБК тек 9 таңбадан тұруы мүмкін (сандар немесе латын әліпбиінің бас әріптері A-дан Z-ге дейін)
   uz: KPP faqat 9 belgidan iborat bo'lishi mumkin (raqamlar yoki lotin alifbosining bosh harflari A dan Z gacha)
+  cz: KPP může obsahovat pouze 9 znaků (číslice nebo velká písmena latinské abecedy od A do Z)
 ui-validation-kpp-error3:
   ru: Неправильный формат КПП
   en: Wrong KPP format
@@ -70,6 +78,7 @@ ui-validation-kpp-error3:
   es: Formato KPP incorrecto
   kk: КБК форматы қате
   uz: Noto'g'ri KPP formati
+  cz: Nesprávný formát KPP
 ui-validation-ks-error1:
   ru: Корреспондентский счет может состоять только из цифр
   en: Correspondent account can only consist of numbers
@@ -78,6 +87,7 @@ ui-validation-ks-error1:
   es: La cuenta de corresponsalía solo puede consistir en números
   kk: Корреспонденттік шот тек сандардан тұруы мүмкін
   uz: Korrespondent hisob faqat raqamlardan iborat bo'lishi mumkin
+  cz: Korespondenční účet může obsahovat pouze číslice
 ui-validation-ks-error2:
   ru: Корреспондентский счет может состоять только из 20 цифр
   en: Correspondent account can only consist of 20 digits
@@ -86,6 +96,7 @@ ui-validation-ks-error2:
   es: La cuenta de corresponsalía solo puede consistir en 20 dígitos
   kk: Корреспонденттік шот тек 20 саннан тұруы мүмкін
   uz: Korrespondent hisob faqat 20 raqamdan iborat bo'lishi mumkin
+  cz: Korespondenční účet může obsahovat pouze 20 číslic
 ui-validation-ks-error3:
   ru: Неправильное контрольное число
   en: Wrong check digit
@@ -94,6 +105,7 @@ ui-validation-ks-error3:
   es: Dígito de control incorrecto
   kk: Қате бақылау саны
   uz: Noto'g'ri nazorat raqami
+  cz: Nesprávná kontrolní číslice
 ui-validation-ogrn-error1:
   ru: ОГРН пуст
   en: OGRN is empty
@@ -102,6 +114,7 @@ ui-validation-ogrn-error1:
   es: El OGRN está vacío
   kk: ОГРН бос
   uz: OGRN bo'sh
+  cz: OGRN je prázdné
 ui-validation-ogrn-error2:
   ru: ОГРН может состоять только из цифр
   en: OGRN can only consist of numbers
@@ -110,6 +123,7 @@ ui-validation-ogrn-error2:
   es: El OGRN solo puede consistir en números
   kk: ОГРН тек сандардан тұруы мүмкін
   uz: OGRN faqat raqamlardan iborat bo'lishi mumkin
+  cz: OGRN může obsahovat pouze číslice
 ui-validation-ogrn-error3:
   ru: ОГРН может состоять только из 13 цифр
   en: OGRN can only consist of 13 digits
@@ -118,6 +132,7 @@ ui-validation-ogrn-error3:
   es: El OGRN solo puede consistir en 13 dígitos
   kk: ОГРН тек 13 саннан тұруы мүмкін
   uz: OGRN faqat 13 raqamdan iborat bo'lishi mumkin
+  cz: OGRN může obsahovat pouze 13 číslic
 ui-validation-ogrn-error4:
   ru: Неправильное контрольное число
   en: Wrong check digit
@@ -126,6 +141,7 @@ ui-validation-ogrn-error4:
   es: Dígito de control incorrecto
   kk: Қате бақылау саны
   uz: Noto'g'ri nazorat raqami
+  cz: Nesprávná kontrolní číslice
 ui-validation-ogrnip-error1:
   ru: ОГРНИП пуст
   en: OGRNIP is empty
@@ -134,6 +150,7 @@ ui-validation-ogrnip-error1:
   es: El OGRNIP está vacío
   kk: ОГРНИП бос
   uz: OGRNIP bo'sh
+  cz: OGRNIP je prázdné
 ui-validation-ogrnip-error2:
   ru: ОГРНИП может состоять только из цифр
   en: OGRNIP can only consist of numbers
@@ -142,6 +159,7 @@ ui-validation-ogrnip-error2:
   es: El OGRNIP solo puede consistir en números
   kk: ОГРНИП тек сандардан тұруы мүмкін
   uz: OGRNIP faqat raqamlardan iborat bo'lishi mumkin
+  cz: OGRNIP může obsahovat pouze číslice
 ui-validation-ogrnip-error3:
   ru: ОГРНИП может состоять только из 15 цифр
   en: OGRNIP can only consist of 15 digits
@@ -150,6 +168,7 @@ ui-validation-ogrnip-error3:
   es: El OGRNIP solo puede consistir en 15 dígitos
   kk: ОГРНИП тек 15 саннан тұруы мүмкін
   uz: OGRNIP faqat 15 raqamdan iborat bo'lishi mumkin
+  cz: OGRNIP může obsahovat pouze 15 číslic
 ui-validation-ogrnip-error4:
   ru: Неправильное контрольное число
   en: Wrong check digit
@@ -158,6 +177,7 @@ ui-validation-ogrnip-error4:
   es: Dígito de control incorrecto
   kk: Қате бақылау саны
   uz: Noto'g'ri nazorat raqami
+  cz: Nesprávná kontrolní číslice
 ui-validation-rs-error1:
   ru: Расчетный счет пуст
   en: Current account is empty
@@ -166,6 +186,7 @@ ui-validation-rs-error1:
   es: La cuenta corriente está vacía
   kk: Есеп айырысу шоты бос
   uz: Hisob raqami bo'sh
+  cz: Běžný účet je prázdný
 ui-validation-rs-error2:
   ru: Расчетный счет может состоять только из цифр
   en: Current account can only consist of numbers
@@ -174,6 +195,7 @@ ui-validation-rs-error2:
   es: La cuenta corriente solo puede consistir en números
   kk: Есеп айырысу шоты тек сандардан тұруы мүмкін
   uz: Hisob raqami faqat raqamlardan iborat bo'lishi mumkin
+  cz: Běžný účet může obsahovat pouze číslice
 ui-validation-rs-error3:
   ru: Расчетный счет может состоять только из 20 цифр
   en: Current account can only consist of 20 digits
@@ -182,6 +204,7 @@ ui-validation-rs-error3:
   es: La cuenta corriente solo puede consistir en 20 dígitos
   kk: Есеп айырысу шоты тек 20 саннан тұруы мүмкін
   uz: Hisob raqami faqat 20 raqamdan iborat bo'lishi mumkin
+  cz: Běžný účet může obsahovat pouze 20 číslic
 ui-validation-rs-error4:
   ru: Неправильное контрольное число
   en: Wrong check digit
@@ -190,6 +213,7 @@ ui-validation-rs-error4:
   es: Dígito de control incorrecto
   kk: Қате бақылау саны
   uz: Noto'g'ri nazorat raqami
+  cz: Nesprávná kontrolní číslice
 ui-validation-snils-error1:
   ru: СНИЛС пуст
   en: SNILS is empty
@@ -198,6 +222,7 @@ ui-validation-snils-error1:
   es: El SNILS está vacío
   kk: СНИЛС бос
   uz: SNILS bo'sh
+  cz: SNILS je prázdné
 ui-validation-snils-error2:
   ru: СНИЛС может состоять только из цифр
   en: SNILS can only consist of numbers
@@ -206,6 +231,7 @@ ui-validation-snils-error2:
   es: El SNILS solo puede consistir en números
   kk: СНИЛС тек сандардан тұруы мүмкін
   uz: SNILS faqat raqamlardan iborat bo'lishi mumkin
+  cz: SNILS může obsahovat pouze číslice
 ui-validation-snils-error3:
   ru: СНИЛС может состоять только из 11 цифр
   en: SNILS can only consist of 11 digits
@@ -214,6 +240,7 @@ ui-validation-snils-error3:
   es: El SNILS solo puede consistir en 11 dígitos
   kk: СНИЛС тек 11 саннан тұруы мүмкін
   uz: SNILS faqat 11 raqamdan iborat bo'lishi mumkin
+  cz: SNILS může obsahovat pouze 11 číslic
 ui-validation-snils-error4:
   ru: Неправильное контрольное число
   en: Wrong check digit
@@ -222,6 +249,7 @@ ui-validation-snils-error4:
   es: Dígito de control incorrecto
   kk: Қате бақылау саны
   uz: Noto'g'ri nazorat raqami
+  cz: Nesprávná kontrolní číslice
 ui-validation-ks-error0:
   ru: Корреспондентский счет пуст
   en: Correspondent account empty
@@ -230,3 +258,4 @@ ui-validation-ks-error0:
   es: La cuenta de corresponsalía está vacía
   kk: Корреспонденттік шот бос
   uz: Korrespondent hisob bo'sh
+  cz: Korespondenční účet je prázdný

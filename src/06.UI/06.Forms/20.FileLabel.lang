@@ -6,6 +6,7 @@ ui-filelabel-download:
   es: Descargar
   kk: Жүктеу
   uz: Yuklab olish
+  cz: Stáhnout
 ui-fields-filelabel:
   ru: Ссылка на файл
   en: Link to file
@@ -14,3 +15,4 @@ ui-fields-filelabel:
   es: Enlace al archivo
   kk: Файлға сілтеме
   uz: Faylga havola
+  cz: Odkaz na soubor
