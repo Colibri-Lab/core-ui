@@ -9,6 +9,7 @@ ui-files-sign:
   cz: Podepsat
   de: Unterschreiben
   tr: İmza
+  zh: 签名
 ui-files-about:
   ru: до
   en: up to
@@ -20,6 +21,7 @@ ui-files-about:
   cz: až do
   de: bis zu
   tr: kadar
+  zh: 最多
 ui-files-files:
   ru: файлов
   en: files
@@ -31,6 +33,7 @@ ui-files-files:
   cz: soubory
   de: Dateien
   tr: dosya
+  zh: 文件
 ui-files-more:
   ru: не больше
   it: non più di
@@ -42,6 +45,7 @@ ui-files-more:
   cz: ne více než
   de: nicht mehr als
   tr: en fazla
+  zh: 不超过
 ui-files-everyone:
   ru: каждый
   en: each
@@ -53,6 +57,7 @@ ui-files-everyone:
   cz: každý
   de: jede
   tr: her biri
+  zh: 每个
 ui-files-choosenomore:
   ru: Можно выбрать не более
   en: You can select no more than
@@ -64,6 +69,7 @@ ui-files-choosenomore:
   cz: Můžete vybrat nejvýše
   de: Sie können nicht mehr als auswählen
   tr: En fazla seçebilirsiniz
+  zh: 最多只能选择
 ui-files-file:
   ru: Файл
   en: File
@@ -75,6 +81,7 @@ ui-files-file:
   cz: Soubor
   de: Datei
   tr: Dosya
+  zh: 文件
 ui-files-verybig:
   ru: слишком большой
   en: is too large
@@ -86,6 +93,7 @@ ui-files-verybig:
   cz: je příliš velký
   de: ist zu groß
   tr: çok büyük
+  zh: 太大
 ui-files-format:
   ru: Недопустимый формат файла
   en: Invalid file format
@@ -97,6 +105,7 @@ ui-files-format:
   cz: Neplatný formát souboru
   de: Ungültiges Dateiformat
   tr: Geçersiz dosya formatı
+  zh: 文件格式无效
 ui-fields-files:
   ru: Список файлов
   en: Files list
@@ -108,6 +117,7 @@ ui-fields-files:
   cz: Seznam souborů
   de: Dateiliste
   tr: Dosya listesi
+  zh: 文件列表
 ui-files-filescount:
   ru: до %s файлов
   en: up to %s files
@@ -119,6 +129,7 @@ ui-files-filescount:
   cz: až %s souborů
   de: bis zu %s Dateien
   tr: en fazla %s dosya
+  zh: 最多%s个文件
 ui-files-size:
   ru: не больше %s
   en: no more than %s
@@ -130,6 +141,7 @@ ui-files-size:
   cz: ne více než %s
   de: nicht mehr als %s
   tr: en fazla %s
+  zh: 不超过%s
 ui-files-filescount2:
   ru: Можно выбрать не больше %s файлов
   en: You can select no more than %s files
@@ -141,6 +153,7 @@ ui-files-filescount2:
   cz: Můžete vybrat nejvýše %s souborů
   de: Sie können nicht mehr als %s Dateien auswählen
   tr: En fazla %s dosya seçebilirsiniz
+  zh: 最多只能选择%s个文件
 ui-files-filehuge:
   ru: Файл %s слишком большой
   en: File %s is too large
@@ -152,3 +165,4 @@ ui-files-filehuge:
   cz: Soubor %s je příliš velký
   de: Datei %s ist zu groß
   tr: "%s dosyası çok büyük"
+  zh: 文件%s太大

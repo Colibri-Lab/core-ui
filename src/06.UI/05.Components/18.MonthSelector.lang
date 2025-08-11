@@ -9,6 +9,7 @@ ui-monthselector-yanuary:
   cz: Leden
   de: Januar
   tr: Ocak
+  zh: 一月
 ui-monthselector-february:
   ru: Февраль
   en: February
@@ -20,6 +21,7 @@ ui-monthselector-february:
   cz: Únor
   de: Februar
   tr: Şubat
+  zh: 二月
 ui-monthselector-march:
   ru: Март
   en: March
@@ -31,6 +33,7 @@ ui-monthselector-march:
   cz: Březen
   de: März
   tr: Mart
+  zh: 三月
 ui-monthselector-april:
   ru: Апрель
   en: April
@@ -42,6 +45,7 @@ ui-monthselector-april:
   cz: Duben
   de: April
   tr: Nisan
+  zh: 四月
 ui-monthselector-may:
   ru: Май
   en: May
@@ -53,6 +57,7 @@ ui-monthselector-may:
   cz: Květen
   de: Mai
   tr: Mayıs
+  zh: 五月
 ui-monthselector-jun:
   ru: Июнь
   en: June
@@ -64,6 +69,7 @@ ui-monthselector-jun:
   cz: Červen
   de: Juni
   tr: Haziran
+  zh: 六月
 ui-monthselector-july:
   ru: Июль
   en: July
@@ -75,6 +81,7 @@ ui-monthselector-july:
   cz: Červenec
   de: Juli
   tr: Temmuz
+  zh: 七月
 ui-monthselector-august:
   ru: Август
   en: August
@@ -86,6 +93,7 @@ ui-monthselector-august:
   cz: Srpen
   de: August
   tr: Ağustos
+  zh: 八月
 ui-monthselector-september:
   ru: Сентябрь
   en: September
@@ -97,6 +105,7 @@ ui-monthselector-september:
   cz: Září
   de: September
   tr: Eylül
+  zh: 九月
 ui-monthselector-october:
   ru: Октябрь
   en: October
@@ -108,6 +117,7 @@ ui-monthselector-october:
   cz: Říjen
   de: Oktober
   tr: Ekim
+  zh: 十月
 ui-monthselector-november:
   ru: Ноябрь
   en: November
@@ -119,6 +129,7 @@ ui-monthselector-november:
   cz: Listopad
   de: November
   tr: Kasım
+  zh: 十一月
 ui-monthselector-december:
   ru: Декабрь
   en: December
@@ -130,3 +141,4 @@ ui-monthselector-december:
   cz: Prosinec
   de: Dezember
   tr: Aralık
+  zh: 十二月

@@ -17,6 +17,7 @@ ui-filedropmanager-message:
   de: Bitte lassen Sie die Dateien in diesem Bereich los. Der Download erfolgt im
     ausgewählten Ordner
   tr: Lütfen dosyaları bu alana bırakın. İndirme seçilen klasöre yapılacaktır
+  zh: 请在此区域释放文件。文件将下载到所选文件夹
 ui-filedropmanager-error1:
   ru: Файл слишком большой или не подходящего типа.
   en: The file is too large or of the wrong type.
@@ -28,6 +29,7 @@ ui-filedropmanager-error1:
   cz: Soubor je příliš velký nebo má nesprávný typ.
   de: Die Datei ist zu groß oder hat einen falschen Typ.
   tr: Dosya çok büyük veya yanlış türde.
+  zh: 文件过大或类型不正确
 ui-renderer-allowed:
   ru: "Разрешено: %s"
   en: "Allowed: %s"
@@ -39,6 +41,7 @@ ui-renderer-allowed:
   cz: "Povoleno: %s"
   de: "Erlaubt: %s"
   tr: "İzin verilen: %s"
+  zh: 允许：%s
 ui-renderer-max:
   ru: максимум %s
   en: "%s maximum"
@@ -50,3 +53,4 @@ ui-renderer-max:
   cz: "%s maximálně"
   de: "%s maximal"
   tr: En fazla %s
+  zh: 最多%s

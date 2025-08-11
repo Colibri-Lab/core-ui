@@ -9,6 +9,7 @@ ui-fields-numberrange:
   cz: Number from/to
   de: Zahl von/bis
   tr: Sayı (başlangıç/bitiş)
+  zh: 数字范围
 ui-fields-numberrange-from:
   ru: от
   en: from
@@ -20,6 +21,7 @@ ui-fields-numberrange-from:
   cz: from
   de: von
   tr: başlangıç
+  zh: 从
 ui-fields-numberrange-to:
   ru: до
   en: to
@@ -31,3 +33,4 @@ ui-fields-numberrange-to:
   cz: to
   de: bis
   tr: bitiş
+  zh: 到

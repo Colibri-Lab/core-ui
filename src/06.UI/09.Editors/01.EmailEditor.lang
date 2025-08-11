@@ -9,6 +9,7 @@ ui-editors-email-message:
   cz: Zadejte platný e-mail
   de: Bitte geben Sie eine gültige E-Mail-Adresse ein
   tr: Lütfen geçerli bir e-posta girin
+  zh: 请输入有效的邮箱
 ui-editors-email:
   ru: Эл. почта
   en: Email
@@ -20,3 +21,4 @@ ui-editors-email:
   cz: E-mail
   de: E-Mail
   tr: E-posta
+  zh: 邮箱

@@ -9,6 +9,7 @@ ui-fields-datetimerage:
   cz: Date and time (from/to)
   de: Datum und Uhrzeit (von/bis)
   tr: Tarih ve saat (başlangıç/bitiş)
+  zh: 日期和时间（从/到）
 ui-fields-datetimerage-from:
   ru: от
   en: from
@@ -20,6 +21,7 @@ ui-fields-datetimerage-from:
   cz: from
   de: von
   tr: başlangıç
+  zh: 从
 ui-fields-datetimerage-to:
   ru: до
   en: to
@@ -31,3 +33,4 @@ ui-fields-datetimerage-to:
   cz: to
   de: bis
   tr: bitiş
+  zh: 到

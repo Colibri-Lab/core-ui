@@ -9,6 +9,7 @@ ui-viewers-document:
   cz: Dokument
   de: Dokument
   tr: Belge
+  zh: 文档
 ui-viewers-document-unknownformat:
   ru: Неизвестный формат документа
   en: Unknown format
@@ -20,3 +21,4 @@ ui-viewers-document-unknownformat:
   cz: Neznámý formát
   de: Unbekanntes Format
   tr: Bilinmeyen format
+  zh: 未知格式

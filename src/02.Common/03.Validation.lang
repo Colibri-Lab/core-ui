@@ -9,6 +9,7 @@ ui-validation-bik-error1:
   cz: BIC může obsahovat pouze číslice
   de: BIC kann nur aus Zahlen bestehen
   tr: BIC yalnızca rakamlardan oluşabilir
+  zh: BIC只能由数字组成
 ui-validation-bik-error2:
   ru: БИК может состоять только из 9 цифр
   en: BIC can only consist of 9 digits
@@ -20,6 +21,7 @@ ui-validation-bik-error2:
   cz: BIC může obsahovat pouze 9 číslic
   de: BIC kann nur aus 9 Ziffern bestehen
   tr: BIC yalnızca 9 rakamdan oluşabilir
+  zh: BIC只能由9位数字组成
 ui-validation-inn-error1:
   ru: ИНН пуст
   en: TIN is empty
@@ -31,6 +33,7 @@ ui-validation-inn-error1:
   cz: DIČ je prázdné
   de: TIN ist leer
   tr: VKN boş
+  zh: 纳税人识别号为空
 ui-validation-inn-error2:
   ru: ИНН может состоять только из цифр
   en: TIN can only consist of numbers
@@ -42,6 +45,7 @@ ui-validation-inn-error2:
   cz: DIČ může obsahovat pouze číslice
   de: TIN darf nur aus Zahlen bestehen
   tr: VKN yalnızca rakamlardan oluşabilir
+  zh: 纳税人识别号只能由数字组成
 ui-validation-inn-error3:
   ru: ИНН может состоять только из 10 или 12 цифр
   en: TIN can only consist of 10 or 12 digits
@@ -53,6 +57,7 @@ ui-validation-inn-error3:
   cz: DIČ může obsahovat pouze 10 nebo 12 číslic
   de: TIN darf nur aus 10 oder 12 Ziffern bestehen
   tr: VKN yalnızca 10 veya 12 rakamdan oluşabilir
+  zh: 纳税人识别号只能由10或12位数字组成
 ui-validation-inn-error4:
   ru: Неправильное контрольное число
   en: Wrong check digit
@@ -64,6 +69,7 @@ ui-validation-inn-error4:
   cz: Nesprávná kontrolní číslice
   de: Falsche Prüfziffer
   tr: Hatalı kontrol rakamı
+  zh: 校验位错误
 ui-validation-kpp-error1:
   ru: КПП пуст
   en: KPP is empty
@@ -75,6 +81,7 @@ ui-validation-kpp-error1:
   cz: KPP je prázdné
   de: KPP ist leer
   tr: KPP boş
+  zh: KPP为空
 ui-validation-kpp-error2:
   ru: КПП может состоять только из 9 знаков (цифр или заглавных букв латинского
     алфавита от A до Z)
@@ -96,6 +103,7 @@ ui-validation-kpp-error2:
     lateinischen Alphabets von A bis Z)
   tr: KPP yalnızca 9 karakterden oluşabilir (rakamlar veya A'dan Z'ye büyük
     harfler)
+  zh: KPP只能由9个字符组成（数字或大写拉丁字母A-Z）
 ui-validation-kpp-error3:
   ru: Неправильный формат КПП
   en: Wrong KPP format
@@ -107,6 +115,7 @@ ui-validation-kpp-error3:
   cz: Nesprávný formát KPP
   de: Falsches KPP-Format
   tr: Hatalı KPP formatı
+  zh: KPP格式错误
 ui-validation-ks-error1:
   ru: Корреспондентский счет может состоять только из цифр
   en: Correspondent account can only consist of numbers
@@ -118,6 +127,7 @@ ui-validation-ks-error1:
   cz: Korespondenční účet může obsahovat pouze číslice
   de: Das Korrespondenzkonto darf nur aus Zahlen bestehen
   tr: Muhabir hesap yalnızca rakamlardan oluşabilir
+  zh: 往来账户只能由数字组成
 ui-validation-ks-error2:
   ru: Корреспондентский счет может состоять только из 20 цифр
   en: Correspondent account can only consist of 20 digits
@@ -129,6 +139,7 @@ ui-validation-ks-error2:
   cz: Korespondenční účet může obsahovat pouze 20 číslic
   de: Das Korrespondenzkonto darf nur aus 20 Ziffern bestehen
   tr: Muhabir hesap yalnızca 20 rakamdan oluşabilir
+  zh: 往来账户只能由20位数字组成
 ui-validation-ks-error3:
   ru: Неправильное контрольное число
   en: Wrong check digit
@@ -140,6 +151,7 @@ ui-validation-ks-error3:
   cz: Nesprávná kontrolní číslice
   de: Falsche Prüfziffer
   tr: Hatalı kontrol rakamı
+  zh: 校验位错误
 ui-validation-ogrn-error1:
   ru: ОГРН пуст
   en: OGRN is empty
@@ -151,6 +163,7 @@ ui-validation-ogrn-error1:
   cz: OGRN je prázdné
   de: OGRN ist leer
   tr: OGRN boş
+  zh: OGRN为空
 ui-validation-ogrn-error2:
   ru: ОГРН может состоять только из цифр
   en: OGRN can only consist of numbers
@@ -162,6 +175,7 @@ ui-validation-ogrn-error2:
   cz: OGRN může obsahovat pouze číslice
   de: OGRN darf nur aus Zahlen bestehen
   tr: OGRN yalnızca rakamlardan oluşabilir
+  zh: OGRN只能由数字组成
 ui-validation-ogrn-error3:
   ru: ОГРН может состоять только из 13 цифр
   en: OGRN can only consist of 13 digits
@@ -173,6 +187,7 @@ ui-validation-ogrn-error3:
   cz: OGRN může obsahovat pouze 13 číslic
   de: OGRN darf nur aus 13 Ziffern bestehen
   tr: OGRN yalnızca 13 rakamdan oluşabilir
+  zh: OGRN只能由13位数字组成
 ui-validation-ogrn-error4:
   ru: Неправильное контрольное число
   en: Wrong check digit
@@ -184,6 +199,7 @@ ui-validation-ogrn-error4:
   cz: Nesprávná kontrolní číslice
   de: Falsche Prüfziffer
   tr: Hatalı kontrol rakamı
+  zh: 校验位错误
 ui-validation-ogrnip-error1:
   ru: ОГРНИП пуст
   en: OGRNIP is empty
@@ -195,6 +211,7 @@ ui-validation-ogrnip-error1:
   cz: OGRNIP je prázdné
   de: OGRNIP ist leer
   tr: OGRNIP boş
+  zh: OGRNIP为空
 ui-validation-ogrnip-error2:
   ru: ОГРНИП может состоять только из цифр
   en: OGRNIP can only consist of numbers
@@ -206,6 +223,7 @@ ui-validation-ogrnip-error2:
   cz: OGRNIP může obsahovat pouze číslice
   de: OGRNIP darf nur aus Zahlen bestehen
   tr: OGRNIP yalnızca rakamlardan oluşabilir
+  zh: OGRNIP只能由数字组成
 ui-validation-ogrnip-error3:
   ru: ОГРНИП может состоять только из 15 цифр
   en: OGRNIP can only consist of 15 digits
@@ -217,6 +235,7 @@ ui-validation-ogrnip-error3:
   cz: OGRNIP může obsahovat pouze 15 číslic
   de: OGRNIP darf nur aus 15 Ziffern bestehen
   tr: OGRNIP yalnızca 15 rakamdan oluşabilir
+  zh: OGRNIP只能由15位数字组成
 ui-validation-ogrnip-error4:
   ru: Неправильное контрольное число
   en: Wrong check digit
@@ -228,6 +247,7 @@ ui-validation-ogrnip-error4:
   cz: Nesprávná kontrolní číslice
   de: Falsche Prüfziffer
   tr: Hatalı kontrol rakamı
+  zh: 校验位错误
 ui-validation-rs-error1:
   ru: Расчетный счет пуст
   en: Current account is empty
@@ -239,6 +259,7 @@ ui-validation-rs-error1:
   cz: Běžný účet je prázdný
   de: Das Girokonto ist leer
   tr: Cari hesap boş
+  zh: 账户为空
 ui-validation-rs-error2:
   ru: Расчетный счет может состоять только из цифр
   en: Current account can only consist of numbers
@@ -250,6 +271,7 @@ ui-validation-rs-error2:
   cz: Běžný účet může obsahovat pouze číslice
   de: Das Girokonto darf nur aus Zahlen bestehen
   tr: Cari hesap yalnızca rakamlardan oluşabilir
+  zh: 账户只能由数字组成
 ui-validation-rs-error3:
   ru: Расчетный счет может состоять только из 20 цифр
   en: Current account can only consist of 20 digits
@@ -261,6 +283,7 @@ ui-validation-rs-error3:
   cz: Běžný účet může obsahovat pouze 20 číslic
   de: Das Girokonto darf nur aus 20 Ziffern bestehen
   tr: Cari hesap yalnızca 20 rakamdan oluşabilir
+  zh: 账户只能由20位数字组成
 ui-validation-rs-error4:
   ru: Неправильное контрольное число
   en: Wrong check digit
@@ -272,6 +295,7 @@ ui-validation-rs-error4:
   cz: Nesprávná kontrolní číslice
   de: Falsche Prüfziffer
   tr: Hatalı kontrol rakamı
+  zh: 校验位错误
 ui-validation-snils-error1:
   ru: СНИЛС пуст
   en: SNILS is empty
@@ -283,6 +307,7 @@ ui-validation-snils-error1:
   cz: SNILS je prázdné
   de: SNILS ist leer
   tr: SNILS boş
+  zh: SNILS为空
 ui-validation-snils-error2:
   ru: СНИЛС может состоять только из цифр
   en: SNILS can only consist of numbers
@@ -294,6 +319,7 @@ ui-validation-snils-error2:
   cz: SNILS může obsahovat pouze číslice
   de: SNILS darf nur aus Zahlen bestehen
   tr: SNILS yalnızca rakamlardan oluşabilir
+  zh: SNILS只能由数字组成
 ui-validation-snils-error3:
   ru: СНИЛС может состоять только из 11 цифр
   en: SNILS can only consist of 11 digits
@@ -305,6 +331,7 @@ ui-validation-snils-error3:
   cz: SNILS může obsahovat pouze 11 číslic
   de: SNILS darf nur aus 11 Ziffern bestehen
   tr: SNILS yalnızca 11 rakamdan oluşabilir
+  zh: SNILS只能由11位数字组成
 ui-validation-snils-error4:
   ru: Неправильное контрольное число
   en: Wrong check digit
@@ -316,6 +343,7 @@ ui-validation-snils-error4:
   cz: Nesprávná kontrolní číslice
   de: Falsche Prüfziffer
   tr: Hatalı kontrol rakamı
+  zh: 校验位错误
 ui-validation-ks-error0:
   ru: Корреспондентский счет пуст
   en: Correspondent account empty
@@ -327,3 +355,4 @@ ui-validation-ks-error0:
   cz: Korespondenční účet je prázdný
   de: Korrespondenzkonto ist leer
   tr: Muhabir hesap boş
+  zh: 往来账户为空

@@ -9,6 +9,7 @@ ui-fields-radio:
   cz: Rádio tlačítka
   de: Optionsfelder
   tr: Radyo düğmeleri
+  zh: 单选按钮
 ui-fields-radio-clear:
   ru: Очистить
   en: Clear
@@ -20,3 +21,4 @@ ui-fields-radio-clear:
   cz: Vymazat
   de: Löschen
   tr: Temizle
+  zh: 清除

@@ -9,6 +9,7 @@ ui-filelabel-download:
   cz: Stáhnout
   de: Herunterladen
   tr: İndir
+  zh: 下载
 ui-fields-filelabel:
   ru: Ссылка на файл
   en: Link to file
@@ -20,3 +21,4 @@ ui-fields-filelabel:
   cz: Odkaz na soubor
   de: Link zur Datei
   tr: Dosya bağlantısı
+  zh: 文件链接

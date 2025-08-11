@@ -9,3 +9,4 @@ ui-viewers-bool:
   cz: Boolean
   de: Wahr/Falsch
   tr: Mantıksal
+  zh: 布尔值

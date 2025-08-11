@@ -9,6 +9,7 @@ ui-editors-link-download:
   cz: (stáhnout)
   de: (herunterladen)
   tr: (indir)
+  zh: （下载）
 ui-editors-link:
   ru: Ссылка
   en: Link
@@ -20,3 +21,4 @@ ui-editors-link:
   cz: Odkaz
   de: Link
   tr: Bağlantı
+  zh: 链接

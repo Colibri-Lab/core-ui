@@ -9,3 +9,4 @@ ui-fields-object:
   cz: Object with sub properties
   de: Objekt mit Untereigenschaften
   tr: Alt özelliklere sahip nesne
+  zh: 带子属性的对象

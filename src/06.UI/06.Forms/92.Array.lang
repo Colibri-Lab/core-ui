@@ -9,6 +9,7 @@ ui-array-add:
   cz: Add new
   de: Neu hinzufügen
   tr: Yeni ekle
+  zh: 新增
 ui-fields-array:
   ru: Массив обьектов
   en: Array of objects
@@ -20,3 +21,4 @@ ui-fields-array:
   cz: Array of objects
   de: Objekt-Array
   tr: Nesne dizisi
+  zh: 对象数组

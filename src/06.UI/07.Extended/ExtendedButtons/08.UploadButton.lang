@@ -9,6 +9,7 @@ ui-uploadbutton-error1:
   cz: Soubor je příliš velký nebo má nesprávný typ.
   de: Die Datei ist zu groß oder vom falschen Typ.
   tr: Dosya çok büyük veya yanlış türde.
+  zh: 文件过大或类型不正确
 ui-uploadbutton-allow:
   ru: Разрешены %s
   en: Allowed %s
@@ -20,6 +21,7 @@ ui-uploadbutton-allow:
   cz: Povolené %s
   de: Erlaubt %s
   tr: İzin verilen %s
+  zh: 允许%s
 ui-uploadbutton-max:
   ru: максимум %s
   en: "%s maximum"
@@ -31,3 +33,4 @@ ui-uploadbutton-max:
   cz: "%s maximum"
   de: "%s maximal"
   tr: En fazla %s
+  zh: 最多%s

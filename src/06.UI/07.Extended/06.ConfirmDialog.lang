@@ -9,6 +9,7 @@ ui-confirm-ok:
   cz: Pokračovat
   de: Fortfahren
   tr: Devam et
+  zh: 继续
 ui-confirm-cancel:
   ru: Отмена
   en: Cancel
@@ -20,3 +21,4 @@ ui-confirm-cancel:
   cz: Zrušit
   de: Abbrechen
   tr: İptal
+  zh: 取消

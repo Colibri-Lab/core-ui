@@ -9,6 +9,7 @@ ui-selector-nothingchoosed:
   cz: Nic nebylo vybráno
   de: Nichts ausgewählt
   tr: Seçim yapılmadı
+  zh: 未选择任何内容
 ui-selector-choosed:
   ru: Выбрано %s1 %s2
   en: Selected %s1 items of %s2
@@ -20,3 +21,4 @@ ui-selector-choosed:
   cz: Vybráno %s1 položek z %s2
   de: "%s1 von %s2 ausgewählt"
   tr: "%s2 öğeden %s1 seçildi"
+  zh: 已选择%s2中的%s1项

@@ -9,6 +9,7 @@ ui-renderer-error1:
   cz: Předat objekt konstruktoru k vykreslení
   de: Übergeben Sie ein Objekt an den Konstruktor, um es darzustellen
   tr: Oluşturmak için yapıcıya bir nesne iletin
+  zh: 请向构造函数传递对象以渲染
 ui-renderer-error2:
   ru: Передайнный обьект не компонент
   en: The passed object is not a component
@@ -20,6 +21,7 @@ ui-renderer-error2:
   cz: Předaný objekt není komponenta
   de: Das übergebene Objekt ist keine Komponente
   tr: Geçilen nesne bir bileşen değil
+  zh: 传递的对象不是组件
 ui-renderer-error3:
   ru: Передайте данные для отображения
   en: Pass data to display
@@ -31,6 +33,7 @@ ui-renderer-error3:
   cz: Předat data k zobrazení
   de: Übergeben Sie Daten zur Anzeige
   tr: Görüntülenecek verileri iletin
+  zh: 请传递要显示的数据
 ui-renderer-error4:
   ru: Необходимо переопределить этот метод
   en: You need to override this method
@@ -42,3 +45,4 @@ ui-renderer-error4:
   cz: Je třeba tuto metodu přepsat
   de: Sie müssen diese Methode überschreiben
   tr: Bu yöntemi geçersiz kılmanız gerekiyor
+  zh: 需要重写此方法

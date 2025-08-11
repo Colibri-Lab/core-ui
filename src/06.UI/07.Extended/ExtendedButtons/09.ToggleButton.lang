@@ -9,6 +9,7 @@ ui-toggle-button-expand:
   cz: Rozbalit
   de: Erweitern
   tr: Genişlet
+  zh: 展开
 ui-toggle-button-collapse:
   ru: Свернуть
   en: Collapse
@@ -20,3 +21,4 @@ ui-toggle-button-collapse:
   cz: Sbalit
   de: Reduzieren
   tr: Daralt
+  zh: 收起

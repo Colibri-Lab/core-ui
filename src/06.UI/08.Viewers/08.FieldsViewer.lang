@@ -9,6 +9,7 @@ ui-viewers-fields:
   cz: Fields viewer
   de: Felderanzeige
   tr: Alan görüntüleyici
+  zh: 字段查看器
 ui-viewers-fields-expand:
   ru: Развернуть
   en: Expand
@@ -20,6 +21,7 @@ ui-viewers-fields-expand:
   cz: Expand
   de: Erweitern
   tr: Genişlet
+  zh: 展开
 ui-viewers-fields-collapse:
   ru: Свернуть
   en: Collapse
@@ -31,3 +33,4 @@ ui-viewers-fields-collapse:
   cz: Collapse
   de: Reduzieren
   tr: Daralt
+  zh: 收起

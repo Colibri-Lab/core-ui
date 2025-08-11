@@ -9,6 +9,7 @@ ui-arraygrid-add:
   cz: Přidat
   de: Hinzufügen
   tr: Ekle
+  zh: 添加
 ui-arraygrid-contextmenu-edit:
   ru: Редактировать
   en: Edit
@@ -20,6 +21,7 @@ ui-arraygrid-contextmenu-edit:
   cz: Upravit
   de: Bearbeiten
   tr: Düzenle
+  zh: 编辑
 ui-arraygrid-contextmenu-remove:
   ru: Удалить
   en: Delete
@@ -31,6 +33,7 @@ ui-arraygrid-contextmenu-remove:
   cz: Smazat
   de: Löschen
   tr: Sil
+  zh: 删除
 ui-arraygrid-massactions-remove:
   ru: удалить
   en: remove
@@ -41,6 +44,7 @@ ui-arraygrid-massactions-remove:
   cz: odstranit
   de: entfernen
   tr: kaldır
+  zh: 移除
 ui-arraygrid-errors:
   ru: Передайте массив
   en: Pass an array
@@ -52,6 +56,7 @@ ui-arraygrid-errors:
   cz: Předat pole
   de: Ein Array übergeben
   tr: Bir dizi iletin
+  zh: 传递一个数组
 ui-arraygrid-save:
   ru: Сохранить
   en: Save
@@ -63,6 +68,7 @@ ui-arraygrid-save:
   cz: Uložit
   de: Speichern
   tr: Kaydet
+  zh: 保存
 ui-fields-arraygrid:
   ru: Массив в виде грида
   en: Array as Grid
@@ -74,6 +80,7 @@ ui-fields-arraygrid:
   cz: Pole jako mřížka
   de: Array als Tabelle
   tr: Dizi (Tablo)
+  zh: 网格数组
 ui-arraygrid-title:
   ru: Добавить/Редактировать элемент
   en: Add/Edit element
@@ -85,6 +92,7 @@ ui-arraygrid-title:
   cz: Přidat/Upravit prvek
   de: Element hinzufügen/bearbeiten
   tr: Eleman ekle/düzenle
+  zh: 添加/编辑元素
 ui-arraygrid-contextmenu-up:
   ru: Вверх
   en: Up
@@ -96,6 +104,7 @@ ui-arraygrid-contextmenu-up:
   cz: Nahoru
   de: Nach oben
   tr: Yukarı
+  zh: 上移
 ui-arraygrid-contextmenu-down:
   ru: Вниз
   en: Down
@@ -107,3 +116,4 @@ ui-arraygrid-contextmenu-down:
   cz: Dolů
   de: Nach unten
   tr: Aşağı
+  zh: 下移
