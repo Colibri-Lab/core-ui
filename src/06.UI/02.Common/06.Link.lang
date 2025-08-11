@@ -8,6 +8,7 @@ ui-link-opennewtab:
   es: Abrir en una nueva pestaña
   cz: Otevřít v nové záložce
   de: In neuem Tab öffnen
+  tr: Yeni sekmede aç
 ui-link-open:
   ru: Открыть
   en: Open
@@ -18,3 +19,4 @@ ui-link-open:
   es: Abrir
   cz: Otevřít
   de: Öffnen
+  tr: Aç

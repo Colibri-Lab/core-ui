@@ -8,6 +8,7 @@ ui-toggle-button-expand:
   uz: Kengaytirish
   cz: Rozbalit
   de: Erweitern
+  tr: Genişlet
 ui-toggle-button-collapse:
   ru: Свернуть
   en: Collapse
@@ -18,3 +19,4 @@ ui-toggle-button-collapse:
   uz: Qisqartirish
   cz: Sbalit
   de: Reduzieren
+  tr: Daralt

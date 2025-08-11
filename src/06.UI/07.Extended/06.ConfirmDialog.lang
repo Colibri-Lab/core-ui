@@ -8,6 +8,7 @@ ui-confirm-ok:
   uz: Davom etish
   cz: Pokračovat
   de: Fortfahren
+  tr: Devam et
 ui-confirm-cancel:
   ru: Отмена
   en: Cancel
@@ -18,3 +19,4 @@ ui-confirm-cancel:
   uz: Bekor qilish
   cz: Zrušit
   de: Abbrechen
+  tr: İptal

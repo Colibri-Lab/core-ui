@@ -8,6 +8,7 @@ ui-editors-remotefile:
   it: Seleziona file
   cz: Vybrat soubor
   de: Datei auswählen
+  tr: Dosya seç
 ui-editors-remotefile-text:
   ru: Выбор файла
   en: File selection
@@ -18,3 +19,4 @@ ui-editors-remotefile-text:
   it: Selezione file
   cz: Výběr souboru
   de: Dateiauswahl
+  tr: Dosya seçimi

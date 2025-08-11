@@ -8,6 +8,7 @@ ui-viewers-document:
   uz: Hujjat
   cz: Dokument
   de: Dokument
+  tr: Belge
 ui-viewers-document-unknownformat:
   ru: Неизвестный формат документа
   en: Unknown format
@@ -18,3 +19,4 @@ ui-viewers-document-unknownformat:
   uz: Noma'lum format
   cz: Neznámý formát
   de: Unbekanntes Format
+  tr: Bilinmeyen format

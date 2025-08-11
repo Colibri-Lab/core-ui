@@ -8,6 +8,7 @@ ui-fields-keyvalueobject-add:
   uz: Qo'shish
   cz: Add
   de: Hinzufügen
+  tr: Ekle
 ui-fields-keyvalueobject:
   ru: Обьект (ключ/значение)
   en: Object (key/value)
@@ -18,6 +19,7 @@ ui-fields-keyvalueobject:
   uz: Ob'ekt (kalit/qiymat)
   cz: Object (key/value)
   de: Objekt (Schlüssel/Wert)
+  tr: Nesne (anahtar/değer)
 ui-fields-keyvalueobject-key:
   ru: Ключ
   en: Key
@@ -28,6 +30,7 @@ ui-fields-keyvalueobject-key:
   uz: Kalit
   cz: Key
   de: Schlüssel
+  tr: Anahtar
 ui-fields-keyvalueobject-value:
   ru: Значение
   en: Value
@@ -38,6 +41,7 @@ ui-fields-keyvalueobject-value:
   uz: Qiymat
   cz: Value
   de: Wert
+  tr: Değer
 ui-fields-keyvalueobject-remove:
   ru: Удалить
   en: Delete
@@ -48,3 +52,4 @@ ui-fields-keyvalueobject-remove:
   uz: O'chirish
   cz: Delete
   de: Löschen
+  tr: Sil

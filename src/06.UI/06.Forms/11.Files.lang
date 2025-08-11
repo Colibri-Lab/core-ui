@@ -8,6 +8,7 @@ ui-files-sign:
   uz: Imzo qo'yish
   cz: Podepsat
   de: Unterschreiben
+  tr: İmza
 ui-files-about:
   ru: до
   en: up to
@@ -18,6 +19,7 @@ ui-files-about:
   uz: gacha
   cz: až do
   de: bis zu
+  tr: kadar
 ui-files-files:
   ru: файлов
   en: files
@@ -28,6 +30,7 @@ ui-files-files:
   uz: fayllar
   cz: soubory
   de: Dateien
+  tr: dosya
 ui-files-more:
   ru: не больше
   it: non più di
@@ -38,6 +41,7 @@ ui-files-more:
   uz: ko'proq emas
   cz: ne více než
   de: nicht mehr als
+  tr: en fazla
 ui-files-everyone:
   ru: каждый
   en: each
@@ -48,6 +52,7 @@ ui-files-everyone:
   uz: har biri
   cz: každý
   de: jede
+  tr: her biri
 ui-files-choosenomore:
   ru: Можно выбрать не более
   en: You can select no more than
@@ -58,6 +63,7 @@ ui-files-choosenomore:
   uz: Siz ko'pi bilan tanlashingiz mumkin
   cz: Můžete vybrat nejvýše
   de: Sie können nicht mehr als auswählen
+  tr: En fazla seçebilirsiniz
 ui-files-file:
   ru: Файл
   en: File
@@ -68,6 +74,7 @@ ui-files-file:
   uz: Fayl
   cz: Soubor
   de: Datei
+  tr: Dosya
 ui-files-verybig:
   ru: слишком большой
   en: is too large
@@ -78,6 +85,7 @@ ui-files-verybig:
   uz: juda katta
   cz: je příliš velký
   de: ist zu groß
+  tr: çok büyük
 ui-files-format:
   ru: Недопустимый формат файла
   en: Invalid file format
@@ -88,6 +96,7 @@ ui-files-format:
   uz: Noto'g'ri fayl formati
   cz: Neplatný formát souboru
   de: Ungültiges Dateiformat
+  tr: Geçersiz dosya formatı
 ui-fields-files:
   ru: Список файлов
   en: Files list
@@ -98,6 +107,7 @@ ui-fields-files:
   uz: Fayllar ro'yxati
   cz: Seznam souborů
   de: Dateiliste
+  tr: Dosya listesi
 ui-files-filescount:
   ru: до %s файлов
   en: up to %s files
@@ -108,6 +118,7 @@ ui-files-filescount:
   uz: "%s faylgacha"
   cz: až %s souborů
   de: bis zu %s Dateien
+  tr: en fazla %s dosya
 ui-files-size:
   ru: не больше %s
   en: no more than %s
@@ -118,6 +129,7 @@ ui-files-size:
   uz: "%s ko'proq emas"
   cz: ne více než %s
   de: nicht mehr als %s
+  tr: en fazla %s
 ui-files-filescount2:
   ru: Можно выбрать не больше %s файлов
   en: You can select no more than %s files
@@ -128,6 +140,7 @@ ui-files-filescount2:
   uz: Siz ko'pi bilan %s fayl tanlashingiz mumkin
   cz: Můžete vybrat nejvýše %s souborů
   de: Sie können nicht mehr als %s Dateien auswählen
+  tr: En fazla %s dosya seçebilirsiniz
 ui-files-filehuge:
   ru: Файл %s слишком большой
   en: File %s is too large
@@ -138,3 +151,4 @@ ui-files-filehuge:
   uz: "%s fayli juda katta"
   cz: Soubor %s je příliš velký
   de: Datei %s ist zu groß
+  tr: "%s dosyası çok büyük"

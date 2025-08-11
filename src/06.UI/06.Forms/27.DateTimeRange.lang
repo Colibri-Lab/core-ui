@@ -8,6 +8,7 @@ ui-fields-datetimerage:
   uz: Sana va vaqt (dan/gacha)
   cz: Date and time (from/to)
   de: Datum und Uhrzeit (von/bis)
+  tr: Tarih ve saat (başlangıç/bitiş)
 ui-fields-datetimerage-from:
   ru: от
   en: from
@@ -18,6 +19,7 @@ ui-fields-datetimerage-from:
   uz: dan
   cz: from
   de: von
+  tr: başlangıç
 ui-fields-datetimerage-to:
   ru: до
   en: to
@@ -28,3 +30,4 @@ ui-fields-datetimerage-to:
   uz: gacha
   cz: to
   de: bis
+  tr: bitiş

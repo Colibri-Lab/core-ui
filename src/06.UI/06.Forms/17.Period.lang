@@ -8,6 +8,7 @@ ui-period-day1:
   uz: kun
   cz: day
   de: Tag
+  tr: gün
 ui-period-day2:
   ru: дня
   en: days
@@ -18,6 +19,7 @@ ui-period-day2:
   uz: kunlar
   cz: days
   de: Tage
+  tr: gün
 ui-period-day3:
   ru: дней
   en: days
@@ -28,6 +30,7 @@ ui-period-day3:
   uz: kunlar
   cz: days
   de: Tage
+  tr: gün
 ui-fields-period:
   ru: Период
   en: Period
@@ -38,3 +41,4 @@ ui-fields-period:
   uz: Davr
   cz: Period
   de: Zeitraum
+  tr: Dönem

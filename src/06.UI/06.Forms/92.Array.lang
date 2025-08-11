@@ -8,6 +8,7 @@ ui-array-add:
   uz: Yangi qo'shish
   cz: Add new
   de: Neu hinzufügen
+  tr: Yeni ekle
 ui-fields-array:
   ru: Массив обьектов
   en: Array of objects
@@ -18,3 +19,4 @@ ui-fields-array:
   uz: Obyektlar massivi
   cz: Array of objects
   de: Objekt-Array
+  tr: Nesne dizisi

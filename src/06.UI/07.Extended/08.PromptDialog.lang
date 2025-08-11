@@ -8,6 +8,7 @@ ui-prompt-ok:
   uz: Davom etish
   cz: Pokračovat
   de: Fortfahren
+  tr: Devam et
 ui-prompt-cancel:
   ru: Отмена
   en: Cancel
@@ -18,3 +19,4 @@ ui-prompt-cancel:
   uz: Bekor qilish
   cz: Zrušit
   de: Abbrechen
+  tr: İptal

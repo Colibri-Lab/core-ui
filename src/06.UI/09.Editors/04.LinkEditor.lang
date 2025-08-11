@@ -8,6 +8,7 @@ ui-editors-link-download:
   uz: (yuklab olish)
   cz: (stáhnout)
   de: (herunterladen)
+  tr: (indir)
 ui-editors-link:
   ru: Ссылка
   en: Link
@@ -18,3 +19,4 @@ ui-editors-link:
   uz: Havola
   cz: Odkaz
   de: Link
+  tr: Bağlantı

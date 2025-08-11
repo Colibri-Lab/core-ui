@@ -8,6 +8,7 @@ ui-filesdragdrop-choosefiles:
   uz: Fayllarni tanlang yoki torting
   cz: Vyberte nebo přetáhněte soubory
   de: Dateien auswählen oder ziehen
+  tr: Dosya seçin veya sürükleyin
 ui-filesdragdrop-choosefile:
   ru: Выберите или перетащите файл
   en: Select or drag a file
@@ -18,3 +19,4 @@ ui-filesdragdrop-choosefile:
   uz: Faylni tanlang yoki torting
   cz: Vyberte nebo přetáhněte soubor
   de: Datei auswählen oder ziehen
+  tr: Bir dosya seçin veya sürükleyin

@@ -8,6 +8,7 @@ ui-yearquarter-selector-1:
   uz: I chorak
   cz: I čtvrtletí
   de: I Quartal
+  tr: I. çeyrek
 ui-yearquarter-selector-2:
   ru: II квартал
   en: II quarter
@@ -18,6 +19,7 @@ ui-yearquarter-selector-2:
   uz: II chorak
   cz: II čtvrtletí
   de: II Quartal
+  tr: II. çeyrek
 ui-yearquarter-selector-3:
   ru: III квартал
   en: III quarter
@@ -28,6 +30,7 @@ ui-yearquarter-selector-3:
   uz: III chorak
   cz: III čtvrtletí
   de: III Quartal
+  tr: III. çeyrek
 ui-yearquarter-selector-4:
   ru: IV квартал
   en: IV quarter
@@ -38,3 +41,4 @@ ui-yearquarter-selector-4:
   uz: IV chorak
   cz: IV čtvrtletí
   de: IV Quartal
+  tr: IV. çeyrek

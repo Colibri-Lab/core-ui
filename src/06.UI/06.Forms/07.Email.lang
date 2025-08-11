@@ -8,6 +8,7 @@ ui-email-validation-message:
   uz: Iltimos, to'g'ri email kiriting
   cz: Zadejte platný e-mail
   de: Bitte geben Sie eine gültige E-Mail-Adresse ein
+  tr: Lütfen geçerli bir e-posta girin
 ui-fields-email:
   ru: Эл. адрес
   en: Email
@@ -18,3 +19,4 @@ ui-fields-email:
   uz: Elektron pochta
   cz: E-mail
   de: E-Mail
+  tr: E-posta

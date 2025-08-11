@@ -8,6 +8,7 @@ ui-editors-files-message:
   uz: Siz %s tagacha fayl tanlashingiz mumkin
   cz: Můžete vybrat až %s souborů
   de: Sie können bis zu %s Dateien auswählen
+  tr: En fazla %s dosya seçebilirsiniz
 ui-editors-files-message3:
   ru: Файл %s слишком большой
   en: File %s is too large
@@ -18,6 +19,7 @@ ui-editors-files-message3:
   uz: "%s fayl juda katta"
   cz: Soubor %s je příliš velký
   de: Datei %s ist zu groß
+  tr: "%s dosyası çok büyük"
 ui-editors-files-message5:
   ru: Недопустимый формат файла
   en: Invalid file format
@@ -28,6 +30,7 @@ ui-editors-files-message5:
   uz: Noto'g'ri fayl formati
   cz: Neplatný formát souboru
   de: Ungültiges Dateiformat
+  tr: Geçersiz dosya formatı
 ui-editors-files:
   ru: Файлы
   en: Files
@@ -38,3 +41,4 @@ ui-editors-files:
   uz: Fayllar
   cz: Soubory
   de: Dateien
+  tr: Dosyalar

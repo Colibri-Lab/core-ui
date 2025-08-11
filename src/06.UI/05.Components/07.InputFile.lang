@@ -8,6 +8,7 @@ ui-files-choosefiles:
   uz: Fayllarni tanlash
   cz: Vybrat soubory
   de: Dateien auswählen
+  tr: Dosya seç
 ui-files-choosefile:
   ru: Выбрать файл
   en: Select a file
@@ -18,3 +19,4 @@ ui-files-choosefile:
   uz: Faylni tanlash
   cz: Vybrat soubor
   de: Datei auswählen
+  tr: Bir dosya seç
