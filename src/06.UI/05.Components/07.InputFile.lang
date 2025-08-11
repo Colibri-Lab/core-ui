@@ -7,6 +7,7 @@ ui-files-choosefiles:
   kk: Файлдарды таңдау
   uz: Fayllarni tanlash
   cz: Vybrat soubory
+  de: Dateien auswählen
 ui-files-choosefile:
   ru: Выбрать файл
   en: Select a file
@@ -16,3 +17,4 @@ ui-files-choosefile:
   kk: Файлды таңдау
   uz: Faylni tanlash
   cz: Vybrat soubor
+  de: Datei auswählen

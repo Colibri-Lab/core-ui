@@ -7,6 +7,7 @@ ui-confirm-ok:
   kk: Жалғастыру
   uz: Davom etish
   cz: Pokračovat
+  de: Fortfahren
 ui-confirm-cancel:
   ru: Отмена
   en: Cancel
@@ -16,3 +17,4 @@ ui-confirm-cancel:
   kk: Болдырмау
   uz: Bekor qilish
   cz: Zrušit
+  de: Abbrechen

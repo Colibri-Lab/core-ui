@@ -7,6 +7,7 @@ ui-files-error-max:
   kk: Сіз %s файлға дейін таңдай аласыз
   uz: Siz %s tagacha fayl tanlashingiz mumkin
   cz: Můžete vybrat až %s souborů
+  de: Sie können bis zu %s Dateien auswählen
 ui-files-error-format:
   ru: Недопустимый формат файла
   en: Invalid file format
@@ -16,6 +17,7 @@ ui-files-error-format:
   kk: Жарамсыз файл форматы
   uz: Noto'g'ri fayl formati
   cz: Neplatný formát souboru
+  de: Ungültiges Dateiformat
 ui-files-error-size:
   ru: Выбранный файл слишком большой
   en: Selected file is too large
@@ -25,6 +27,7 @@ ui-files-error-size:
   kk: Таңдалған файл тым үлкен
   uz: Tanlangan fayl juda katta
   cz: Vybraný soubor je příliš velký
+  de: Die ausgewählte Datei ist zu groß
 ui-fields-file:
   ru: Файл
   en: File
@@ -34,3 +37,4 @@ ui-fields-file:
   kk: Файл
   uz: Fayl
   cz: Soubor
+  de: Datei

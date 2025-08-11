@@ -7,6 +7,7 @@ ui-uploadbutton-error1:
   kk: Файл тым үлкен немесе дұрыс емес түрі.
   uz: Fayl juda katta yoki noto'g'ri turi.
   cz: Soubor je příliš velký nebo má nesprávný typ.
+  de: Die Datei ist zu groß oder vom falschen Typ.
 ui-uploadbutton-allow:
   ru: Разрешены %s
   en: Allowed %s
@@ -16,6 +17,7 @@ ui-uploadbutton-allow:
   kk: Рұқсат етілген %s
   uz: Ruxsat etilgan %s
   cz: Povolené %s
+  de: Erlaubt %s
 ui-uploadbutton-max:
   ru: максимум %s
   en: "%s maximum"
@@ -25,3 +27,4 @@ ui-uploadbutton-max:
   kk: "%s максимум"
   uz: "%s maksimal"
   cz: "%s maximum"
+  de: "%s maximal"

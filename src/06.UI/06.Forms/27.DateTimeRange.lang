@@ -7,6 +7,7 @@ ui-fields-datetimerage:
   kk: Күні мен уақыты (бастап/дейін)
   uz: Sana va vaqt (dan/gacha)
   cz: Date and time (from/to)
+  de: Datum und Uhrzeit (von/bis)
 ui-fields-datetimerage-from:
   ru: от
   en: from
@@ -16,6 +17,7 @@ ui-fields-datetimerage-from:
   kk: бастап
   uz: dan
   cz: from
+  de: von
 ui-fields-datetimerage-to:
   ru: до
   en: to
@@ -25,3 +27,4 @@ ui-fields-datetimerage-to:
   kk: дейін
   uz: gacha
   cz: to
+  de: bis

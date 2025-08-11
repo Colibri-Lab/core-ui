@@ -1,13 +1,21 @@
 ui-filedropmanager-message:
-  ru: Пожалуйста, отпустите файлы в этой области. Загрузка будет произведена в выбранную папку
-  en: Please release files in this area. The download will be made in the selected folder
-  hy: "Խնդրում ենք թողարկել այս տարածքում գտնվող ֆայլերը: Ներբեռնումը կկատարվի ընտրված պանակում"
-  it: Per favore rilascia i file in questa area. Il download verrà effettuato nella cartella selezionata
-  es: Por favor, suelta los archivos en esta área. La descarga se realizará en la carpeta seleccionada
+  ru: Пожалуйста, отпустите файлы в этой области. Загрузка будет произведена в
+    выбранную папку
+  en: Please release files in this area. The download will be made in the selected
+    folder
+  hy: "Խնդրում ենք թողարկել այս տարածքում գտնվող ֆայլերը: Ներբեռնումը կկատարվի
+    ընտրված պանակում"
+  it: Per favore rilascia i file in questa area. Il download verrà effettuato
+    nella cartella selezionata
+  es: Por favor, suelta los archivos en esta área. La descarga se realizará en la
+    carpeta seleccionada
   kk: Файлдарды осы аймаққа тастаңыз. Жүктеу таңдалған қалтаға жасалады
-  uz: Fayllarni ushbu hududga tashlang. Yuklab olish tanlangan papkaga amalga oshiriladi
-  cz: Prosím, pusťte soubory do této oblasti. Stažení bude provedeno do vybrané složky
-
+  uz: Fayllarni ushbu hududga tashlang. Yuklab olish tanlangan papkaga amalga
+    oshiriladi
+  cz: Prosím, pusťte soubory do této oblasti. Stažení bude provedeno do vybrané
+    složky
+  de: Bitte lassen Sie die Dateien in diesem Bereich los. Der Download erfolgt im
+    ausgewählten Ordner
 ui-filedropmanager-error1:
   ru: Файл слишком большой или не подходящего типа.
   en: The file is too large or of the wrong type.
@@ -17,7 +25,7 @@ ui-filedropmanager-error1:
   kk: Файл тым үлкен немесе дұрыс емес түрі.
   uz: Fayl juda katta yoki noto'g'ri turdagi.
   cz: Soubor je příliš velký nebo má nesprávný typ.
-
+  de: Die Datei ist zu groß oder hat einen falschen Typ.
 ui-renderer-allowed:
   ru: "Разрешено: %s"
   en: "Allowed: %s"
@@ -27,7 +35,7 @@ ui-renderer-allowed:
   kk: "Рұқсат етілген: %s"
   uz: "Ruxsat etilgan: %s"
   cz: "Povoleno: %s"
-
+  de: "Erlaubt: %s"
 ui-renderer-max:
   ru: максимум %s
   en: "%s maximum"
@@ -37,3 +45,4 @@ ui-renderer-max:
   kk: максимум %s
   uz: maksimum %s
   cz: "%s maximálně"
+  de: "%s maximal"
