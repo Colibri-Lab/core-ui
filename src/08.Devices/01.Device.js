@@ -71,6 +71,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         this._deviceLocked = false;
         this._applicationActivated = true;
         this._proximityState = 'far';
+        this._audioDevice = 'default';
         
         try {
             this._currentOrientation = screen.orientation.type;
@@ -699,19 +700,26 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    AudioDevice() {
+        return this._audioDevice;
+    }
+
     SetAudioToDefault() {
         if(window['AudioToggle'] !== undefined) {
             window['AudioToggle'].setAudioMode(AudioToggle.NORMAL); 
+            this._audioDevice = 'default';
         }
     }
     SetAudioToSpeakers() {
         if(window['AudioToggle'] !== undefined) {
             window['AudioToggle'].setAudioMode(AudioToggle.SPEAKER);
+            this._audioDevice = 'speakers';
         }
     }
     SetAudioToEarpiece() {
         if(window['AudioToggle'] !== undefined) {
             window['AudioToggle'].setAudioMode(AudioToggle.EARPIECE);
+            this._audioDevice = 'earpiece';
         }
     }
 
