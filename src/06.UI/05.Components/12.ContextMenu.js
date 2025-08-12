@@ -47,6 +47,12 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
         this.Dispatch('Clicked', { menuData: null, menu: null });
     }
 
+    Hide() {
+        this._childContextMenu?.Dispose();
+        this._childContextMenu = null;
+        super.Hide();
+    }
+
     /**
      * Orientation 
      * @type {string}
@@ -116,7 +122,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
 
             // показываем дочернее меню
             this._childContextMenu = new Colibri.UI.ContextMenu(itemObject.name + '_contextmenu', document.body, [Colibri.UI.ContextMenu.RT, Colibri.UI.ContextMenu.LT]);
-            this._childContextMenu.Show(item.children, itemObject);
+            this._childContextMenu.Show(itemObject.tag.children, itemObject);
             this._childContextMenu.hasShadow = false;
             this._childContextMenu.AddHandler('Clicked', this.__childContextMenuClicked, false, this);
             if (this._addedClasses.length > 0) {

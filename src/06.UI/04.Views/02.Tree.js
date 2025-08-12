@@ -540,7 +540,7 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
     /** @protected */
     _handleEvents() {
         this.AddHandler('Clicked', this.__thisClicked);
-        this.AddHandler('DoubleClicked', this.__thisDoubelClicked);
+        this.AddHandler('DoubleClicked', this.__thisDoubleClicked);
 
         this.AddHandler('ContextMenuItemClicked', this.__thisContextMenuItemClicked);
         this.AddHandler('DoubleClicked', this.__thisDoubleClicked2);
