@@ -2861,7 +2861,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     _unregisterPositionObserver() {
-        this._positionObserver.unobserve();
+        this._positionObserver?.unobserve();
         this._positionObserver = null;
     }
 
