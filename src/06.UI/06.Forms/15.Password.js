@@ -158,7 +158,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
 
             if (cls === 'strong') {
                 this._hidePasswordTip();
-            } else if (this.value.length > 0 && this.elementIsInOffset) {
+            } else if (this.value.length >= 0 && this.elementIsInOffset) {
                 this._passwordTip.Show(this.contentContainer, true);
                 this.handleContainerScroll = true;
                 this.handleResize = true;
