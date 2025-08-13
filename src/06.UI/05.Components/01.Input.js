@@ -100,13 +100,12 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
             return false;
         });
 
-        const pasteEventHandler = (e) => {
+
+        this._input.addEventListener('paste', (e) => {
             Colibri.Common.Delay(100).then(() => {
                 this.Dispatch('Pasted', { domEvent: e });
             });
-        };
-
-        this._input.addEventListener('paste', pasteEventHandler);
+        });
 
         this.Children('clear').AddHandler('Clicked', this.__clearClicked, false, this);
 
