@@ -25,7 +25,6 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         this._state = 'normal';
         this._minimizedPosition = [20, 20];
         this._minimizedSize = [200, 50];
-        this._minimizedGetContentMethod = () => { return null; };
 
         /* меняем размеры отрисованого окна если передали параметры */
         !!width && (this.width = width);
@@ -196,19 +195,11 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
     }
 
-    get minimizedcontent() {
-        return this._minimizedContent;
-    }
-
     /**
      * Toggle minimize state
      */
     MinimizeToggle() {
-        const content = this._minimizedGetContentMethod(this);
-        if(content) {
-            this._minimizedContent.html(content);
-        }
-
+        
         if(this._minimizable && this._state === 'normal') {
 
             this.AddClass('-minimized');
@@ -236,9 +227,8 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      * @param {*} args event arguments
      */ 
     __MouseUp(event, args) {
-        const domEvent = args.domEvent;
-        domEvent.stopPropagation();
-        domEvent.preventDefault();
+э        args.domEvent.stopPropagation();
+        args.domEvent.preventDefault();
         return false;
     }
 
@@ -248,8 +238,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      * @param {*} args event arguments
      */ 
     __MouseDown(event, args) {
-        const domEvent = args.domEvent;
-        if (domEvent.target == this._element && !Colibri.UI.Resizing && this._closableOnShadow) {
+        if (args.domEvent.target == this._element && !Colibri.UI.Resizing && this._closableOnShadow) {
             this.__CloseClicked();
         }
     }
@@ -260,9 +249,8 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      * @param {*} args event arguments
      */ 
     __KeyDown(event, args) {
-        const domEvent = args.domEvent;
-        if(domEvent.code === 'Escape') {
-            this.Children('closebutton').Dispatch('Clicked', {domEvent: domEvent});
+        if(args.domEvent.code === 'Escape') {
+            this.Children('closebutton').Dispatch('Clicked', {domEvent: args.domEvent});
             return false;
         }
         return true;
@@ -296,6 +284,18 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     get container() {
         return this._content;
     }
+
+    /**
+     * Minimized content element
+     * @type {Element}
+     * @readonly
+     * @description This element is used to show minimized content of the window.
+     * It can be used to display a small icon or text when the window is minimized.
+     */
+    get minimizedcontent() {
+        return this._minimizedContent;
+    }
+
 
     /**
      * Footer element
@@ -494,7 +494,6 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     set closable(value) {
         this._closable = value;
         this.Children('closebutton').shown = this._closable;
-        this._titleContainer.showElement();
     }
 
     /**
@@ -598,7 +597,6 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             super.right = null;
             super.bottom = null;
             this._state = 'normal';
-            this._titleContainer.showElement();
         }
     }
 
