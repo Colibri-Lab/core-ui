@@ -84,8 +84,14 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
                 return false;
             }
 
+            const clientX = isTouch ? e.touches[0].clientX : e.pageX;
+            const clientY = isTouch ? e.touches[0].clientY : e.pageY;
+
             this.moving = true;
-            this.movingPoint = {left: e.layerX, top: e.layerY};
+            this._movingPoint = {
+                left: clientX - this._element[0].getBoundingClientRect().left,
+                top: clientY - this._element[0].getBoundingClientRect().top
+            };
             
             if (this._state === 'minimized') {
                 document.body?.addEventListener(isTouch ? 'touchmove' : 'mousemove', this._movingHandler, {passive: false});
