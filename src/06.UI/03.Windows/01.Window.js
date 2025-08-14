@@ -248,16 +248,22 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             this.AddClass('-minimized');
             super.width = this._minimizedSize[0];
             super.height = this._minimizedSize[1];
-            if(this._minimizedBind === 'rightbottom') {
-                super.right = this._minimizedPosition[0];
-                super.bottom = this._minimizedPosition[1];
-                this._windowContainer.css('right', null);
-                this._windowContainer.css('bottom', null);
+            this._lastNormalPosition = this._windowContainer.bounds();
+            if(this._lastMinimizedPosition) {
+                this._windowContainer.css('left', this._lastMinimizedPosition.left + 'px');
+                this._windowContainer.css('top', this._lastMinimizedPosition.top + 'px');
             } else {
-                super.left = this._minimizedPosition[0];
-                super.top = this._minimizedPosition[1];
-                this._windowContainer.css('left', null);
-                this._windowContainer.css('top', null);
+                if(this._minimizedBind === 'rightbottom') {
+                    super.right = this._minimizedPosition[0];
+                    super.bottom = this._minimizedPosition[1];
+                    this._windowContainer.css('right', null);
+                    this._windowContainer.css('bottom', null);
+                } else {
+                    super.left = this._minimizedPosition[0];
+                    super.top = this._minimizedPosition[1];
+                    this._windowContainer.css('left', null);
+                    this._windowContainer.css('top', null);
+                }
             }
             this._state = 'minimized';
 
@@ -270,6 +276,11 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             super.left = null;
             super.top = null;
             super.bottom = null;
+            
+            if(this._lastNormalPosition) {
+                this._windowContainer.css('left', this._lastNormalPosition.left + 'px');
+                this._windowContainer.css('top', this._lastNormalPosition.top + 'px');
+            }
             this._state = 'normal';
 
         }
