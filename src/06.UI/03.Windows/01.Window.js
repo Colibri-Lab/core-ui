@@ -108,8 +108,8 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             const left = (e.pageX - point.left - parseInt(this._windowContainer.css('margin-left')));
             const top = (e.pageY - point.top - parseInt(this._windowContainer.css('margin-top')));
             if(this._state === 'minimized') {
-                this.css('left', left + 'px');
-                this.css('top', top + 'px');
+                this.left = left;
+                this.top = top;
             } else {
                 this._windowContainer?.css('left', left + 'px');
                 this._windowContainer?.css('top', top + 'px');
