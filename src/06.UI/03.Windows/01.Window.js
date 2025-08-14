@@ -227,7 +227,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      * @param {*} args event arguments
      */ 
     __MouseUp(event, args) {
-э        args.domEvent.stopPropagation();
+        args.domEvent.stopPropagation();
         args.domEvent.preventDefault();
         return false;
     }
