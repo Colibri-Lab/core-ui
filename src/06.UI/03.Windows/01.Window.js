@@ -88,6 +88,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             if(this._state === 'minimized') {
                 document.body?.addEventListener('mousemove', this._movingHandler);
                 document.body?.addEventListener('mouseup', this._movingStopHandler);
+                this._element?.addEventListener('mouseup', this._movingStopHandler);
             } else {
                 this._element?.addEventListener('mousemove', this._movingHandler);
                 this._element?.addEventListener('mouseup', this._movingStopHandler);
