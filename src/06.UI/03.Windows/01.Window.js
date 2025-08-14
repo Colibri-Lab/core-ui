@@ -494,6 +494,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     set closable(value) {
         this._closable = value;
         this.Children('closebutton').shown = this._closable;
+        this._titleContainer.showElement();
     }
 
     /**
@@ -597,6 +598,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             super.right = null;
             super.bottom = null;
             this._state = 'normal';
+            this._titleContainer.showElement();
         }
     }
 
