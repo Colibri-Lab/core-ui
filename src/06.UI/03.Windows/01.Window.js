@@ -78,20 +78,22 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
         /** @private */
         this._movingStartHandler = (e) => {
-            if(e.target.is('button')) {
+            const isTouch = e.type.startsWith('touch');
+            const target = isTouch ? e.target : e.target;
+            if (target.is && target.is('button')) {
                 return false;
             }
 
             this.moving = true;
             this.movingPoint = {left: e.layerX, top: e.layerY};
             
-            if(this._state === 'minimized') {
-                document.body?.addEventListener('mousemove', this._movingHandler);
-                document.body?.addEventListener('mouseup', this._movingStopHandler);
-                this._element?.addEventListener('mouseup', this._movingStopHandler);
+            if (this._state === 'minimized') {
+                document.body?.addEventListener(isTouch ? 'touchmove' : 'mousemove', this._movingHandler, {passive: false});
+                document.body?.addEventListener(isTouch ? 'touchend' : 'mouseup', this._movingStopHandler);
+                this._element?.addEventListener(isTouch ? 'touchend' : 'mouseup', this._movingStopHandler);
             } else {
-                this._element?.addEventListener('mousemove', this._movingHandler);
-                this._element?.addEventListener('mouseup', this._movingStopHandler);
+                this._element?.addEventListener(isTouch ? 'touchmove' : 'mousemove', this._movingHandler, {passive: false});
+                this._element?.addEventListener(isTouch ? 'touchend' : 'mouseup', this._movingStopHandler);
             }
         }
 
@@ -105,22 +107,34 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             document.body?.removeEventListener('mouseup', this._movingStopHandler);
             this._element?.removeEventListener('mousemove', this._movingHandler);
             this._element?.removeEventListener('mouseup', this._movingStopHandler);
+
+            document.body?.removeEventListener('touchmove', this._movingHandler);
+            document.body?.removeEventListener('touchend', this._movingStopHandler);
+            this._element?.removeEventListener('touchmove', this._movingHandler);
+            this._element?.removeEventListener('touchend', this._movingStopHandler);
         }
 
          /** @private */
         this._movingHandler = (e) => {
-            if(!this.isConnected) {
+            if (!this.isConnected || !this.moving) {
                 return;
             }
+            const isTouch = e.type.startsWith('touch');
+            const clientX = isTouch ? e.touches[0].clientX : e.pageX;
+            const clientY = isTouch ? e.touches[0].clientY : e.pageY;
+            
             const point = this._movingPoint;
-            const left = (e.pageX - point.left - parseInt(this._windowContainer.css('margin-left')));
-            const top = (e.pageY - point.top - parseInt(this._windowContainer.css('margin-top')));
+            const left = (clientX - point.left - parseInt(this._windowContainer.css('margin-left')));
+            const top = (clientY - point.top - parseInt(this._windowContainer.css('margin-top')));
             if(this._state === 'minimized') {
                 this._element?.css('left', left + 'px');
                 this._element?.css('top', top + 'px');
             } else {
                 this._windowContainer?.css('left', left + 'px');
                 this._windowContainer?.css('top', top + 'px');
+            }
+            if (isTouch) {
+                e.preventDefault();
             }
         }
 
@@ -134,6 +148,11 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
                 document.body?.removeEventListener('mouseup', this._movingStopHandler);            
                 this._element?.removeEventListener('mousemove', this._movingHandler);
                 this._element?.removeEventListener('mouseup', this._movingStopHandler);
+
+                document.body?.removeEventListener('touchmove', this._movingHandler);
+                document.body?.removeEventListener('touchend', this._movingStopHandler);
+                this._element?.removeEventListener('touchmove', this._movingHandler);
+                this._element?.removeEventListener('touchend', this._movingStopHandler);
             }
         }
 
@@ -151,9 +170,13 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         document.addEventListener('mouseout', this.__movingMouseOutHandler);
         this._titleContainer.removeEventListener('mousedown', this._movingStartHandler);
         this._windowContainer.removeEventListener('mousedown', this._movingStartHandler);
+        this._titleContainer.removeEventListener('touchstart', this._movingStartHandler);
+        this._windowContainer.removeEventListener('touchstart', this._movingStartHandler);
         if(value) {
             (this._movablePoint === 'title' ? this._titleContainer : this._windowContainer)
                 .addEventListener('mousedown', this._movingStartHandler);
+            (this._movablePoint === 'title' ? this._titleContainer : this._windowContainer)
+                .addEventListener('touchstart', this._movingStartHandler);
         }
         
     }
