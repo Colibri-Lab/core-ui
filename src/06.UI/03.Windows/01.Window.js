@@ -184,11 +184,6 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             this.Dispatch('WindowClosed', {});
         }
     }
-
-    /** @private */
-    __getMinimizedContent() {
-        return Promise.resolve(null);
-    }
     
     /**
      * @private
@@ -201,7 +196,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
     }
 
-    get minimizedContent() {
+    get minimizedcontent() {
         return this._minimizedContent;
     }
 
