@@ -91,7 +91,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
         /** @private */
         this._movingStopHandler = (e) => {
-            if(!this._isConnected) {
+            if(!this.isConnected) {
                 return;
             }
             this.moving = false;
@@ -101,7 +101,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
          /** @private */
         this._movingHandler = (e) => {
-            if(!this._isConnected) {
+            if(!this.isConnected) {
                 return;
             }
             const point = this._movingPoint;
@@ -111,7 +111,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         }
 
         this.__movingMouseOutHandler = (e) => {
-            if(!this._isConnected) {
+            if(!this.isConnected) {
                 return;
             }
             if (!e.relatedTarget || e.relatedTarget.nodeName === "HTML") {
@@ -190,9 +190,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      * @param {*} args event arguments
      */ 
     __MinimizeClicked(event, args) {
-        
         this.MinimizeToggle();
-
     }
 
     /**
