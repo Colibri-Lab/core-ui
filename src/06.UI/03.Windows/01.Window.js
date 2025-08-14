@@ -85,8 +85,13 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             this.moving = true;
             this.movingPoint = {left: e.layerX, top: e.layerY};
             
-            this._element?.addEventListener('mousemove', this._movingHandler);
-            this._element?.addEventListener('mouseup', this._movingStopHandler);
+            if(this._state === 'minimized') {
+                document.body?.addEventListener('mousemove', this._movingHandler);
+                document.body?.addEventListener('mouseup', this._movingStopHandler);
+            } else {
+                this._element?.addEventListener('mousemove', this._movingHandler);
+                this._element?.addEventListener('mouseup', this._movingStopHandler);
+            }
         }
 
         /** @private */
@@ -95,6 +100,8 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
                 return;
             }
             this.moving = false;
+            document.body?.removeEventListener('mousemove', this._movingHandler);
+            document.body?.removeEventListener('mouseup', this._movingStopHandler);
             this._element?.removeEventListener('mousemove', this._movingHandler);
             this._element?.removeEventListener('mouseup', this._movingStopHandler);
         }
@@ -122,6 +129,8 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             }
             if (!e.relatedTarget || e.relatedTarget.nodeName === "HTML") {
                 this.moving = false;
+                document.body?.removeEventListener('mousemove', this._movingHandler);
+                document.body?.removeEventListener('mouseup', this._movingStopHandler);            
                 this._element?.removeEventListener('mousemove', this._movingHandler);
                 this._element?.removeEventListener('mouseup', this._movingStopHandler);
             }
