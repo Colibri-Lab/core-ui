@@ -105,9 +105,15 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
                 return;
             }
             const point = this._movingPoint;
-
-            this._windowContainer?.css('left', (e.pageX - point.left - parseInt(this._windowContainer.css('margin-left'))) + 'px');
-            this._windowContainer?.css('top', (e.pageY - point.top - parseInt(this._windowContainer.css('margin-top'))) + 'px');
+            const left = (e.pageX - point.left - parseInt(this._windowContainer.css('margin-left')));
+            const top = (e.pageY - point.top - parseInt(this._windowContainer.css('margin-top')));
+            if(this._state === 'minimized') {
+                this.css('left', left + 'px');
+                this.css('top', top + 'px');
+            } else {
+                this._windowContainer?.css('left', left + 'px');
+                this._windowContainer?.css('top', top + 'px');
+            }
         }
 
         this.__movingMouseOutHandler = (e) => {
@@ -203,8 +209,13 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             this.AddClass('-minimized');
             super.width = this._minimizedSize[0];
             super.height = this._minimizedSize[1];
-            super.right = this._minimizedPosition[0];
-            super.bottom = this._minimizedPosition[1];
+            if(this._minimizedBind === 'rightbottom') {
+                super.right = this._minimizedPosition[0];
+                super.bottom = this._minimizedPosition[1];
+            } else {
+                super.left = this._minimizedPosition[0];
+                super.top = this._minimizedPosition[1];
+            }
             this._state = 'minimized';
 
 
@@ -213,6 +224,8 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             super.width = null;
             super.height = null;
             super.right = null;
+            super.left = null;
+            super.top = null;
             super.bottom = null;
             this._state = 'normal';
 
@@ -596,6 +609,21 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             super.bottom = null;
             this._state = 'normal';
         }
+    }
+
+    /**
+     * Binding of the minimized window
+     * @type {rightbottom,lefttop}
+     */
+    get minimizedBind() {
+        return this._minimizedBind;
+    }
+    /**
+     * Binding of the minimized window
+     * @type {rightbottom,lefttop}
+     */
+    set minimizedBind(value) {
+        this._minimizedBind = value;
     }
 
     /**
