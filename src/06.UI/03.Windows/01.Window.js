@@ -201,6 +201,10 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
     }
 
+    get minimizedContent() {
+        return this._minimizedContent;
+    }
+
     /**
      * Toggle minimize state
      */
@@ -465,7 +469,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      */
     set title(value) {
         this._element.querySelector('.app-component-window-title > span').innerHTML = value;
-        if(!value) {
+        if(!value && !this.minimizable && !this.closable) {
             this._element.querySelector('.app-component-window-title').hideElement();
         }
         else {
