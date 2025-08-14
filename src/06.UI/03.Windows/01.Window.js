@@ -108,8 +108,8 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             const left = (e.pageX - point.left - parseInt(this._windowContainer.css('margin-left')));
             const top = (e.pageY - point.top - parseInt(this._windowContainer.css('margin-top')));
             if(this._state === 'minimized') {
-                this.left = left;
-                this.top = top;
+                this._element?.css('left', left + 'px');
+                this._element?.css('top', top + 'px');
             } else {
                 this._windowContainer?.css('left', left + 'px');
                 this._windowContainer?.css('top', top + 'px');
@@ -212,9 +212,13 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             if(this._minimizedBind === 'rightbottom') {
                 super.right = this._minimizedPosition[0];
                 super.bottom = this._minimizedPosition[1];
+                this._windowContainer.css('right', null);
+                this._windowContainer.css('bottom', null);
             } else {
                 super.left = this._minimizedPosition[0];
                 super.top = this._minimizedPosition[1];
+                this._windowContainer.css('left', null);
+                this._windowContainer.css('top', null);
             }
             this._state = 'minimized';
 
