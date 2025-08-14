@@ -89,8 +89,8 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
             this.moving = true;
             this._movingPoint = {
-                left: clientX - this._element.getBoundingClientRect().left,
-                top: clientY - this._element.getBoundingClientRect().top
+                left: clientX,
+                top: clientY
             };
             
             if (this._state === 'minimized') {
