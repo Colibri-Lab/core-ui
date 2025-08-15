@@ -253,8 +253,8 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             super.width = this._minimizedSize[0];
             super.height = this._minimizedSize[1];
             if(this._lastMinimizedPosition) {
-                this._windowContainer.css('left', this._lastMinimizedPosition.left + 'px');
-                this._windowContainer.css('top', this._lastMinimizedPosition.top + 'px');
+                this._element.css('left', this._lastMinimizedPosition.left + 'px');
+                this._element.css('top', this._lastMinimizedPosition.top + 'px');
             } else {
                 if(this._minimizedBind === 'rightbottom') {
                     super.right = this._minimizedPosition[0];
