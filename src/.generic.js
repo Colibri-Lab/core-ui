@@ -1742,9 +1742,9 @@ String.prototype.toObject = function (delimiters, callback, keyCallback) {
 
     parts.forEach((part) => {
         part = part.split(delimiters[1]);
-        const key = parts.splice(0, 1).trimString();
-        const value = parts.join(':').trimString();
-        ret[keyCallback ? keyCallback(part[0]) : key] = callback ? callback(value) : value;
+        const key = part.shift().trimString();
+        const value = part.join(':').trimString();
+        ret[keyCallback ? keyCallback(key) : key] = callback ? callback(value) : value;
     });
 
     return ret;
@@ -2044,6 +2044,13 @@ String.MD5 = function (e) {
  */
 String.GUID = function () {
     return (Number.Rnd4() + Number.Rnd4() + Number.Rnd4() + Number.Rnd4() + Number.Rnd4() + Number.Rnd4() + Number.Rnd4() + Number.Rnd4());
+};
+/**
+ * Checks if the string is a valid GUID.
+ * @returns {boolean} True if the string is a valid GUID, false otherwise.
+ */
+String.prototype.isGUID = function() {
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(this);
 };
 /**
  * Generates a random password of the specified length.
