@@ -247,11 +247,11 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     MinimizeToggle() {
         
         if(this._minimizable && this._state === 'normal') {
+            this._lastNormalPosition = this._windowContainer.bounds();
 
             this.AddClass('-minimized');
             super.width = this._minimizedSize[0];
             super.height = this._minimizedSize[1];
-            this._lastNormalPosition = this._windowContainer.bounds();
             if(this._lastMinimizedPosition) {
                 this._windowContainer.css('left', this._lastMinimizedPosition.left + 'px');
                 this._windowContainer.css('top', this._lastMinimizedPosition.top + 'px');
@@ -272,6 +272,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
 
         } else if(this._minimizable && this._state === 'minimized') {
+            this._lastMinimizedPosition = this._element.bounds();
             this.RemoveClass('-minimized');   
             super.width = null;
             super.height = null;
