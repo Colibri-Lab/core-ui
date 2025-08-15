@@ -1741,10 +1741,10 @@ String.prototype.toObject = function (delimiters, callback, keyCallback) {
     }
 
     parts.forEach((part) => {
-        part = part.split(delimiters[1], 2); // <-- только первый разделитель
-        part[0] = (part[0] ?? '').trimString();
-        part[1] = (part[1] ?? '').trimString();
-        ret[keyCallback ? keyCallback(part[0]) : part[0]] = callback ? callback(part[1]) : part[1];
+        part = part.split(delimiters[1]);
+        const key = parts.splice(0, 1).trimString();
+        const value = parts.join(':').trimString();
+        ret[keyCallback ? keyCallback(part[0]) : key] = callback ? callback(value) : value;
     });
 
     return ret;
