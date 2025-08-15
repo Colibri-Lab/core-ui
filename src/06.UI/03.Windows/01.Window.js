@@ -139,8 +139,8 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
                 this._element?.css('left', (clientX - delta.left) + 'px');
                 this._element?.css('top', (clientY - delta.top) + 'px');
             } else {
-                this._windowContainer?.css('left', (clientX - delta.left) + 'px');
-                this._windowContainer?.css('top', (clientY - delta.top) + 'px');
+                this._windowContainer?.css('left', (clientX - delta.left - parseInt(this._windowContainer.css('margin-left'))) + 'px');
+                this._windowContainer?.css('top', (clientY - delta.top - parseInt(this._windowContainer.css('margin-top'))) + 'px');
             }
             if (isTouch) {
                 e.preventDefault();
