@@ -88,16 +88,20 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             const clientY = isTouch ? e.touches[0].clientY : e.pageY;
 
             this.moving = true;
-            this._movingPoint = {
-                left: clientX,
-                top: clientY
-            };
-            
+
             if (this._state === 'minimized') {
+                this._movingDelta = {
+                    left: clientX - this._element.bounds().left,
+                    top: clientY - this._element.bounds().top
+                };
                 document.body?.addEventListener(isTouch ? 'touchmove' : 'mousemove', this._movingHandler, {passive: false});
                 document.body?.addEventListener(isTouch ? 'touchend' : 'mouseup', this._movingStopHandler);
                 this._element?.addEventListener(isTouch ? 'touchend' : 'mouseup', this._movingStopHandler);
             } else {
+                this._movingDelta = {
+                    left: clientX - this._windowContainer.bounds().left,
+                    top: clientY - this._windowContainer.bounds().top
+                };
                 this._element?.addEventListener(isTouch ? 'touchmove' : 'mousemove', this._movingHandler, {passive: false});
                 this._element?.addEventListener(isTouch ? 'touchend' : 'mouseup', this._movingStopHandler);
             }
@@ -129,15 +133,14 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             const clientX = isTouch ? e.touches[0].clientX : e.pageX;
             const clientY = isTouch ? e.touches[0].clientY : e.pageY;
             
-            const point = this._movingPoint;
-            const left = (clientX - point.left - parseInt(this._windowContainer.css('margin-left')));
-            const top = (clientY - point.top - parseInt(this._windowContainer.css('margin-top')));
+            const delta = this._movingDelta;
+
             if(this._state === 'minimized') {
-                this._element?.css('left', left + 'px');
-                this._element?.css('top', top + 'px');
+                this._element?.css('left', (clientX - delta.left) + 'px');
+                this._element?.css('top', (clientY - delta.top) + 'px');
             } else {
-                this._windowContainer?.css('left', left + 'px');
-                this._windowContainer?.css('top', top + 'px');
+                this._windowContainer?.css('left', (clientX - movingDelta.left) + 'px');
+                this._windowContainer?.css('top', (clientY - movingDelta.top) + 'px');
             }
             if (isTouch) {
                 e.preventDefault();
@@ -430,11 +433,11 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     }
 
     set movingPoint(value) {
-        this._movingPoint = value;
+        this._movingDelta = value;
     }
 
     get movingPoint() {
-        return this._movingPoint;
+        return this._movingDelta;
     }
 
     /**
