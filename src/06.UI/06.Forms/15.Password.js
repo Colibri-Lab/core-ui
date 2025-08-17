@@ -392,13 +392,14 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         const icon = new Colibri.UI.Icon(this._name + '-eyeicon', contentContainer);
         icon.value = Colibri.UI.Forms.Password.EyeIconOpen;
         icon.shown = true;
-        icon.AddHandler('Clicked', this.__iconClicked, false, this)
+        icon.AddHandler('Clicked', this.__eyeIconClicked, false, this);
 
         this.AddClass('-has-eye-icon');
     }
 
-    __iconClicked(event, args) {
-        const icon = this.Children(this._name + '-eyeicon');
+    __eyeIconClicked(event, args) {
+        const contentContainer = this.contentContainer;
+        const icon = contentContainer.Children(this._name + '-eyeicon');
         if (this._input.attr('type') === 'password') {
             icon.value = Colibri.UI.Forms.Password.EyeIconClose;
             this._input.attr('type', 'text');
