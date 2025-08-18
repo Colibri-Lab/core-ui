@@ -473,7 +473,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
                 const f = this._getRenderMethod();
                 if(f) {
-                    this._input.value = f(Array.isArray(this._value) ? this._value[0] : this._value, this).stripHtml();
+                    this._input.value = f(Array.isArray(this._value) ? (this._value[0] === null ? '' : this._value[0]) : this._value, this).stripHtml();
                 } else {
  
                     let v = '';
