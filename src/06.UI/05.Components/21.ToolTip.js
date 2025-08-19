@@ -87,6 +87,9 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
     /** @private */
     _findPointOnParent() {
         const parent = this._findParent();
+        if(!parent) {
+            return {left: 0, top: 0};
+        }
         const ori = this._orientation[0];
         const parentBounds = parent.container.bounds(true, true);
         switch(ori) {
