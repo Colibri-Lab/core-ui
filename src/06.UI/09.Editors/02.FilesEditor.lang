@@ -10,6 +10,8 @@ ui-editors-files-message:
   de: Sie können bis zu %s Dateien auswählen
   tr: En fazla %s dosya seçebilirsiniz
   zh: 最多可选择%s个文件
+  fa: شما می‌توانید تا %s فایل انتخاب کنید
+
 ui-editors-files-message3:
   ru: Файл %s слишком большой
   en: File %s is too large
@@ -22,6 +24,8 @@ ui-editors-files-message3:
   de: Datei %s ist zu groß
   tr: "%s dosyası çok büyük"
   zh: 文件%s太大
+  fa: فایل %s خیلی بزرگ است
+
 ui-editors-files-message5:
   ru: Недопустимый формат файла
   en: Invalid file format
@@ -34,6 +38,8 @@ ui-editors-files-message5:
   de: Ungültiges Dateiformat
   tr: Geçersiz dosya formatı
   zh: 文件格式无效
+  fa: فرمت فایل نامعتبر است
+
 ui-editors-files:
   ru: Файлы
   en: Files
@@ -46,3 +52,4 @@ ui-editors-files:
   de: Dateien
   tr: Dosyalar
   zh: 文件
+  fa: فایل‌ها

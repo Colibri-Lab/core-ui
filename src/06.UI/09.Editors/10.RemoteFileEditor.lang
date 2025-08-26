@@ -10,6 +10,7 @@ ui-editors-remotefile:
   de: Datei auswählen
   tr: Dosya seç
   zh: 选择文件
+  fa: انتخاب فایل
 ui-editors-remotefile-text:
   ru: Выбор файла
   en: File selection
@@ -22,3 +23,4 @@ ui-editors-remotefile-text:
   de: Dateiauswahl
   tr: Dosya seçimi
   zh: 文件选择
+  fa: انتخاب فایل
