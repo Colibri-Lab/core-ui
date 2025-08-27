@@ -10,6 +10,7 @@ ui-files-choosefiles:
   de: Dateien auswählen
   tr: Dosya seç
   zh: 选择文件
+  fa: چند فایل انتخاب کنید
 ui-files-choosefile:
   ru: Выбрать файл
   en: Select a file
@@ -22,3 +23,4 @@ ui-files-choosefile:
   de: Datei auswählen
   tr: Bir dosya seç
   zh: 选择一个文件
+  fa: یک فایل انتخاب کنید

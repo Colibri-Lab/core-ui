@@ -10,6 +10,7 @@ ui-files-error-max:
   de: Sie können bis zu %s Dateien auswählen
   tr: En fazla %s dosya seçebilirsiniz
   zh: 最多可选择%s个文件
+  fa: حداکثر می‌توانید انتخاب کنید
 ui-files-error-format:
   ru: Недопустимый формат файла
   en: Invalid file format
@@ -22,6 +23,7 @@ ui-files-error-format:
   de: Ungültiges Dateiformat
   tr: Geçersiz dosya formatı
   zh: 文件格式无效
+  fa: فرمت فایل نامعتبر است
 ui-files-error-size:
   ru: Выбранный файл слишком большой
   en: Selected file is too large
@@ -34,6 +36,7 @@ ui-files-error-size:
   de: Die ausgewählte Datei ist zu groß
   tr: Seçilen dosya çok büyük
   zh: 所选文件过大
+  fa: فایل انتخاب شده بسیار بزرگ است
 ui-fields-file:
   ru: Файл
   en: File
@@ -46,3 +49,4 @@ ui-fields-file:
   de: Datei
   tr: Dosya
   zh: 文件
+  fa: فایل

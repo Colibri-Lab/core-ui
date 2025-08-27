@@ -10,6 +10,7 @@ ui-fields-keyvalueobject-add:
   de: Hinzufügen
   tr: Ekle
   zh: 添加
+  fa: افزودن
 ui-fields-keyvalueobject:
   ru: Обьект (ключ/значение)
   en: Object (key/value)
@@ -22,6 +23,7 @@ ui-fields-keyvalueobject:
   de: Objekt (Schlüssel/Wert)
   tr: Nesne (anahtar/değer)
   zh: 键值对象
+  fa: شیء (کلید/مقدار)
 ui-fields-keyvalueobject-key:
   ru: Ключ
   en: Key
@@ -34,6 +36,7 @@ ui-fields-keyvalueobject-key:
   de: Schlüssel
   tr: Anahtar
   zh: 键
+  fa: کلید
 ui-fields-keyvalueobject-value:
   ru: Значение
   en: Value
@@ -46,6 +49,7 @@ ui-fields-keyvalueobject-value:
   de: Wert
   tr: Değer
   zh: 值
+  fa: مقدار
 ui-fields-keyvalueobject-remove:
   ru: Удалить
   en: Delete
@@ -58,3 +62,4 @@ ui-fields-keyvalueobject-remove:
   de: Löschen
   tr: Sil
   zh: 删除
+  fa: حذف

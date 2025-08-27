@@ -10,6 +10,7 @@ ui-prompt-ok:
   de: Fortfahren
   tr: Devam et
   zh: 继续
+  fa: ادامه
 ui-prompt-cancel:
   ru: Отмена
   en: Cancel
@@ -22,3 +23,4 @@ ui-prompt-cancel:
   de: Abbrechen
   tr: İptal
   zh: 取消
+  fa: لغو

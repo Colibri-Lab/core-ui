@@ -10,6 +10,7 @@ ui-filesdragdrop-choosefiles:
   de: Dateien auswählen oder ziehen
   tr: Dosya seçin veya sürükleyin
   zh: 选择或拖拽文件
+  fa: فایل‌ها را انتخاب کنید یا بکشید
 ui-filesdragdrop-choosefile:
   ru: Выберите или перетащите файл
   en: Select or drag a file
@@ -22,3 +23,4 @@ ui-filesdragdrop-choosefile:
   de: Datei auswählen oder ziehen
   tr: Bir dosya seçin veya sürükleyin
   zh: 选择或拖拽一个文件
+  fa: فایل را انتخاب کنید یا بکشید

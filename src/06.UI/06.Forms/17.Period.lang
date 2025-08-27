@@ -10,6 +10,7 @@ ui-period-day1:
   de: Tag
   tr: gün
   zh: 天
+  fa: روز
 ui-period-day2:
   ru: дня
   en: days
@@ -22,6 +23,7 @@ ui-period-day2:
   de: Tage
   tr: gün
   zh: 天
+  fa: روزها
 ui-period-day3:
   ru: дней
   en: days
@@ -34,6 +36,7 @@ ui-period-day3:
   de: Tage
   tr: gün
   zh: 天
+  fa: روزها
 ui-fields-period:
   ru: Период
   en: Period
@@ -46,3 +49,4 @@ ui-fields-period:
   de: Zeitraum
   tr: Dönem
   zh: 时段
+  fa: دوره

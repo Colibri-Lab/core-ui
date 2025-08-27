@@ -10,6 +10,7 @@ ui-selector-nothingchoosed:
   de: Nichts ausgewählt
   tr: Seçim yapılmadı
   zh: 未选择任何内容
+  fa: هیچ چیزی انتخاب نشده است
 ui-selector-choosed:
   ru: Выбрано %s1 %s2
   en: Selected %s1 items of %s2
@@ -22,3 +23,4 @@ ui-selector-choosed:
   de: "%s1 von %s2 ausgewählt"
   tr: "%s2 öğeden %s1 seçildi"
   zh: 已选择%s2中的%s1项
+  fa: انتخاب شده %s1 مورد از %s2

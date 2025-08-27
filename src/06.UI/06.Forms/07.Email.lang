@@ -10,6 +10,7 @@ ui-email-validation-message:
   de: Bitte geben Sie eine gültige E-Mail-Adresse ein
   tr: Lütfen geçerli bir e-posta girin
   zh: 请输入有效的邮箱
+  fa: لطفا یک ایمیل معتبر وارد کنید
 ui-fields-email:
   ru: Эл. адрес
   en: Email
@@ -22,3 +23,4 @@ ui-fields-email:
   de: E-Mail
   tr: E-posta
   zh: 邮箱
+  fa: ایمیل

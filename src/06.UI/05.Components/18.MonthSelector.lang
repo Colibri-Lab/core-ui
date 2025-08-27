@@ -10,6 +10,7 @@ ui-monthselector-yanuary:
   de: Januar
   tr: Ocak
   zh: 一月
+  fa: ژانویه
 ui-monthselector-february:
   ru: Февраль
   en: February
@@ -22,6 +23,7 @@ ui-monthselector-february:
   de: Februar
   tr: Şubat
   zh: 二月
+  fa: فوریه
 ui-monthselector-march:
   ru: Март
   en: March
@@ -34,6 +36,7 @@ ui-monthselector-march:
   de: März
   tr: Mart
   zh: 三月
+  fa: مارس
 ui-monthselector-april:
   ru: Апрель
   en: April
@@ -46,6 +49,7 @@ ui-monthselector-april:
   de: April
   tr: Nisan
   zh: 四月
+  fa: آوریل
 ui-monthselector-may:
   ru: Май
   en: May
@@ -58,6 +62,7 @@ ui-monthselector-may:
   de: Mai
   tr: Mayıs
   zh: 五月
+  fa: مهربان
 ui-monthselector-jun:
   ru: Июнь
   en: June
@@ -70,6 +75,7 @@ ui-monthselector-jun:
   de: Juni
   tr: Haziran
   zh: 六月
+  fa: خرداد
 ui-monthselector-july:
   ru: Июль
   en: July
@@ -82,6 +88,7 @@ ui-monthselector-july:
   de: Juli
   tr: Temmuz
   zh: 七月
+  fa: تیر
 ui-monthselector-august:
   ru: Август
   en: August
@@ -94,6 +101,7 @@ ui-monthselector-august:
   de: August
   tr: Ağustos
   zh: 八月
+  fa: مرداد
 ui-monthselector-september:
   ru: Сентябрь
   en: September
@@ -104,8 +112,9 @@ ui-monthselector-september:
   uz: Sentabr
   cz: Září
   de: September
-  tr: Eylül
+  tr: Eyl
   zh: 九月
+  fa: سپتامبر
 ui-monthselector-october:
   ru: Октябрь
   en: October
@@ -118,6 +127,7 @@ ui-monthselector-october:
   de: Oktober
   tr: Ekim
   zh: 十月
+  fa: اکتبر
 ui-monthselector-november:
   ru: Ноябрь
   en: November
@@ -130,6 +140,7 @@ ui-monthselector-november:
   de: November
   tr: Kasım
   zh: 十一月
+  fa: آبان
 ui-monthselector-december:
   ru: Декабрь
   en: December
@@ -142,3 +153,4 @@ ui-monthselector-december:
   de: Dezember
   tr: Aralık
   zh: 十二月
+  fa: آذر

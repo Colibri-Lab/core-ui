@@ -10,6 +10,7 @@ ui-fields-radio:
   de: Optionsfelder
   tr: Radyo düğmeleri
   zh: 单选按钮
+  fa: دکمه‌های رادیویی
 ui-fields-radio-clear:
   ru: Очистить
   en: Clear
@@ -22,3 +23,4 @@ ui-fields-radio-clear:
   de: Löschen
   tr: Temizle
   zh: 清除
+  fa: پاک کردن

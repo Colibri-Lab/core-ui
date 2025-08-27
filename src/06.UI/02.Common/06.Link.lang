@@ -10,6 +10,7 @@ ui-link-opennewtab:
   de: In neuem Tab öffnen
   tr: Yeni sekmede aç
   zh: 在新标签页中打开
+  fa: باز کردن در زبانه جدید
 ui-link-open:
   ru: Открыть
   en: Open
@@ -22,3 +23,4 @@ ui-link-open:
   de: Öffnen
   tr: Aç
   zh: 打开
+  fa: باز کردن

@@ -10,6 +10,7 @@ ui-yearquarter-selector-1:
   de: I Quartal
   tr: I. çeyrek
   zh: 第一季度
+  fa: سه‌ماهه اول
 ui-yearquarter-selector-2:
   ru: II квартал
   en: II quarter
@@ -22,6 +23,7 @@ ui-yearquarter-selector-2:
   de: II Quartal
   tr: II. çeyrek
   zh: 第二季度
+  fa: سه‌ماهه دوم
 ui-yearquarter-selector-3:
   ru: III квартал
   en: III quarter
@@ -34,6 +36,7 @@ ui-yearquarter-selector-3:
   de: III Quartal
   tr: III. çeyrek
   zh: 第三季度
+  fa: سه‌ماهه سوم
 ui-yearquarter-selector-4:
   ru: IV квартал
   en: IV quarter
@@ -46,3 +49,4 @@ ui-yearquarter-selector-4:
   de: IV Quartal
   tr: IV. çeyrek
   zh: 第四季度
+  fa: سه‌ماهه چهارم
