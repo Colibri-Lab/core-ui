@@ -1473,6 +1473,13 @@ String.prototype.words = function (l) {
         return this.substring(0, l) + '...';
     }
 };
+String.prototype.breakAll = function (chunkSize = 100) {
+    if (chunkSize <= 0) return this.toString();
+    return this.replace(
+        new RegExp(`(.{${chunkSize}})`, 'g'),
+        '$1\u200B'   // невидимый "zero-width space", браузеры его переносят
+    );
+};
 /**
  * Replaces all occurrences of a substring with another substring in the string.
  * @param {string} from - The substring to replace.
