@@ -70,10 +70,10 @@ Colibri.UI.Forms.MonthYear = class extends Colibri.UI.Forms.Field {
      */
     set value(value) {
 
-        const parts = value.split('-');
+        const parts = (value + '').split('-');
 
-        this._month.value = parts[0];
-        this._year.value = parts[1];
+        this._month.value = parts[0] ?? '';
+        this._year.value = parts[1] ?? '';
     }
 
     /**

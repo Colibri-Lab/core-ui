@@ -18,7 +18,6 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
         this._templateElement = null;
 
-        this.cells = 0;
         this._tempCountCellsReportedChange = 0;
 
         this._heightPrevStickyRow = this.header?.shown ? this.header.height : 0;
@@ -79,6 +78,9 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
     }
 
     __thisChildAdded(event, args) {
+        // if(args.cell) {
+        //     args.cell.minWidth = args.cell.parentColumn.width;
+        // }
         if(this._contextmenuContainer) {
             this.MoveChild(this._contextmenuContainer, this._contextmenuContainer.childIndex, this.children, false);
         }
@@ -129,7 +131,6 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         }
     }
 
-
     __contextMenuIconClickedOrDoubleClicked(event, args) {
         if(event.name === 'ContextMenu') {
             args.isContextMenuEvent = true;
@@ -157,7 +158,8 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
             this._templateElement = Element.create('tr', { class: 'app-ui-row-template' });
             this._element.after(this._templateElement);
-            this._templateElement.append(Element.create('td', { colspan: this._element.children.length - (this.grid?.showCheckboxes ? 0 : 1) }))
+            
+            this._templateElement.append(Element.create('td', { colspan: this.allCells, style: 'grid-column: span ' + this.allCells }))
 
             const comp = eval(this.grid?.rowTemplateComponent);
             const templateObject = new comp(this.name + '-template', this._templateElement.querySelector('td'));
@@ -439,6 +441,16 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
             return this._contextmenuContainer.Children(this.lastCell.name + '-contextmenu-icon-parent/' + this.lastCell.name + '-contextmenu-icon');
         }
         return null;
+    }
+
+    get cells() {
+        let count = 0;
+        this.ForEach((name, cell) => cell instanceof Colibri.UI.Grid.Cell ? count++ : 0);
+        return count;
+    }
+
+    get allCells() {
+        return this.Children().length;
     }
 
 

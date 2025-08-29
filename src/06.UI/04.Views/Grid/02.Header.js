@@ -94,7 +94,20 @@ Colibri.UI.Grid.Header = class extends Colibri.UI.Component {
         return found;
     }
 
+    FindColumnsWithWidth() {
+        let ret = [];
+        this.ForEach((name, columns) => {
+            columns.ForEach((n, col) => {
+                if (n != 'checkbox-column' && n != 'contextmenu-column' && (col?.colspan || 1) == 1) {
+                    ret.push(col);
+                }
+            });
+        });
+        return ret;
+    }
+
     FindAllColumns() {
+
         let ret = {};
         this.ForEach((name, columns) => {
             columns.ForEach((n, col) => {

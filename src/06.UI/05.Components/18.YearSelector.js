@@ -22,7 +22,7 @@ Colibri.UI.YearSelector = class extends Colibri.UI.Selector {
             Array.enumerateRev(startYear, endYear, c => {return {title: c, value: c}}), 
             endYear, 
             'title', 'value', null,
-            itemData => itemData.title);
+            itemData => itemData?.title ?? '');
 
         this.width = 125;
     }

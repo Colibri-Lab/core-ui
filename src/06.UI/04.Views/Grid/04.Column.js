@@ -153,6 +153,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         this._stopClick = (e) => { e.preventDefault(); e.stopPropagation(); return false; };
 
         this._startResize = this._startResize ?? ((e) => {
+
             this._resizing = true;
             Colibri.UI.Resizing = true;
             
@@ -161,16 +162,15 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
             if(!next) {
                 return false;
             }
-            const parentBounds = this.parent.container.bounds();
+            const parentBounds = this.grid.container.bounds();
 
             this._resizeData = {width: this.container.bounds().outerWidth, nextWidth: next.container.bounds().outerWidth, full: parentBounds.outerWidth, x: e.pageX};
-
             // ставим на документ, чтобы точно перехватить        
-            document.addEventListener("touchend", this._stopResize, {capture: true});
-            document.addEventListener("mouseup", this._stopResize, {capture: true});
+            document.addEventListener("touchend", this._stopResize);
+            document.addEventListener("mouseup", this._stopResize);
 
-            document.addEventListener("touchmove", this._doResize, {capture: true});
-            document.addEventListener("mousemove", this._doResize, {capture: true});
+            document.addEventListener("touchmove", this._doResize);
+            document.addEventListener("mousemove", this._doResize);
 
             e.preventDefault();
             e.stopPropagation();
@@ -185,11 +185,11 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
             this._resizing = false;
             Colibri.UI.Resizing = false;
 
-            document.removeEventListener("touchend", this._stopResize, {capture: true});
-            document.removeEventListener("mouseup", this._stopResize, {capture: true});
+            document.removeEventListener("touchend", this._stopResize);
+            document.removeEventListener("mouseup", this._stopResize);
     
-            document.removeEventListener("touchmove", this._doResize, {capture: true});
-            document.removeEventListener("mousemove", this._doResize, {capture: true});
+            document.removeEventListener("touchmove", this._doResize);
+            document.removeEventListener("mousemove", this._doResize);
 
             return false;
 
@@ -200,26 +200,25 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
                 e.preventDefault();
                 e.stopPropagation();
 
-                // const next = this.container.next().getUIComponent();
                 const next = this.container.next().getUIComponent();
                 const newWidth = (this._resizeData.width + (e.pageX - this._resizeData.x)).percentOf(this._resizeData.full);
                 const newNextWidth = (this._resizeData.nextWidth - (e.pageX - this._resizeData.x)).percentOf(this._resizeData.full);
 
-                if(newWidth < 1 || newNextWidth < 1) {
+                if(newWidth < 2 || newNextWidth < 2) { 
                     return false;
                 }
 
-                this.container.css('width', newWidth.toFixed(2) + '%');
-                next.container.css('width', newNextWidth.toFixed(2) + '%'); 
+                this.width = parseFloat(newWidth.toFixed(2)) + '%';
+                next.width = parseFloat(newNextWidth.toFixed(2)) + '%'; 
 
                 return false;
             }
         });
 
-        this._resizeHandler.addEventListener("touchstart", this._startResize, false);
-        this._resizeHandler.addEventListener("mousedown", this._startResize, false);
-        this._resizeHandler.addEventListener("click", this._stopClick, false);
-        this._resizeHandler.addEventListener("dblclick", this._stopClick, false);
+        this._resizeHandler.addEventListener("touchstart", this._startResize);
+        this._resizeHandler.addEventListener("mousedown", this._startResize);
+        this._resizeHandler.addEventListener("click", this._stopClick);
+        this._resizeHandler.addEventListener("dblclick", this._stopClick);
 
     }
 
@@ -231,10 +230,10 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
 
     _removeResizeHandler() {
         
-        this._resizeHandler && document.removeEventListener("touchend", this._stopResize, {capture: true});
-        this._resizeHandler && document.removeEventListener("mouseup", this._stopResize, {capture: true});
-        this._resizeHandler && document.removeEventListener("touchmove", this._doResize, {capture: true});
-        this._resizeHandler && document.removeEventListener("mousemove", this._doResize, {capture: true});
+        this._resizeHandler && document.removeEventListener("touchend", this._stopResize);
+        this._resizeHandler && document.removeEventListener("mouseup", this._stopResize);
+        this._resizeHandler && document.removeEventListener("touchmove", this._doResize);
+        this._resizeHandler && document.removeEventListener("mousemove", this._doResize);
         this._resizeHandler && this._resizeHandler.removeEventListener("touchstart", this._startResize, false);
         this._resizeHandler && this._resizeHandler.removeEventListener("mousedown", this._startResize, false);
         this._resizeHandler && this._resizeHandler.removeEventListener("click", this._stopClick, false);
@@ -382,6 +381,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      */
     set rowspan(value) {
         this._element.attr('rowspan', value);
+        this._element.css('grid-row', 'span ' + value);
         this.grid?.Dispatch('ColumnPropertyChanged', {property: 'rowspan', column: this});
     }
 
@@ -398,6 +398,7 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
      */
     set colspan(value) {
         this._element.attr('colspan', value);
+        this._element.css('grid-column', 'span ' + value);
         this.grid?.Dispatch('ColumnPropertyChanged', {property: 'colspan', column: this});
     }
 
@@ -488,6 +489,21 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         this._valueContainer.html(value);
     }
 
-
+    /**
+     * Width of column
+     * @type {Number|String}
+     */
+    get width() {
+        return this._width;
+    }
+    /**
+     * Width of column
+     * @type {Number|String}
+     */
+    set width(value) {
+        this._width = value;
+        // super.minWidth = value;
+        this.grid?.Dispatch('ColumnPropertyChanged', {property: 'width', column: this});
+    }
 
 }

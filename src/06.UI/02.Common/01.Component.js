@@ -1072,6 +1072,63 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
+     * Minimum width of component
+     * @type {Number|String}
+     */
+    get minWidth() {
+        return this._element.css('min-width');
+    }
+    /**
+     * Minimum width of component
+     * @type {Number|String}
+     */
+    set minWidth(value) {
+        if(value === null) {
+            this._element.css('min-width', null);
+        }
+        else if(typeof value == 'string' && (value.indexOf('%') !== -1 || value.includes('calc'))) {
+            this._element.css('min-width', value);
+        }
+        else {
+            const style = this._element.css();
+            if(style.boxSizing == 'content-box') {
+                value -= (parseInt(style.paddingTop) || 0) - (parseInt(style.paddingBottom) || 0);
+            }
+            this._element.css('min-width', (value) + 'px');
+        }
+    }
+
+    
+    /**
+     * Minimum width of component
+     * @type {Number|String}
+     */
+    get minHeight() {
+        return this._element.css('min-height');
+    }
+    /**
+     * Minimum width of component
+     * @type {Number|String}
+     */
+    set minHeight(value) {
+        if(value === null) {
+            this._element.css('min-height', null);
+        }
+        else if(typeof value == 'string' && (value.indexOf('%') !== -1 || value.includes('calc'))) {
+            this._element.css('min-height', value);
+        }
+        else {
+            const style = this._element.css();
+            if(style.boxSizing == 'content-box') {
+                value -= (parseInt(style.paddingTop) || 0) - (parseInt(style.paddingBottom) || 0);
+            }
+            this._element.css('min-height', (value) + 'px');
+        }
+
+    }
+
+
+    /**
      * Element left position
      * @type {Number}
      */

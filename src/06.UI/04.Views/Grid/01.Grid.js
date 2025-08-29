@@ -55,6 +55,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this.handleScrollProperties = true;
 
         this.tabIndex = 0;
+
+        
     }
 
 
@@ -117,7 +119,17 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this.AddHandler('ColumnClicked', this.__headerColumnClicked);
 
         this.AddHandler('VerticalAlignChanged', this.__thisVerticalAlignChanged);
+        this.AddHandler('ChildsProcessed', this.__thisChildsProcessed);
+        this.AddHandler('ComponentRendered', this.__thisComponentRendered);
 
+    }
+
+    __thisChildsProcessed(event, args) {
+        this._completeRender();
+    }
+
+    __thisComponentRendered(event, args) {
+        this._completeRender();
     }
 
     RegisterCheckbox(container) {
@@ -816,7 +828,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         let tempWidth = 0;
         let tempWidthPrevStickyCell = 0;
         let col = null;
-
+        let colcount = 0;
         Object.forEach(this.header.FindAllColumns(), (nameColumn, column) => {
             column._widthPrevStickyCell = tempWidthPrevStickyCell;
             if (column.sticky) {
@@ -847,7 +859,6 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                 });
             });
         });
-
 
     }
 
@@ -1068,6 +1079,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this.ForEveryRow((name, row) => {
             row.Add(row.value[column.name] ?? null, column);
         });
+        this._completeRender();
         this.RecalculateCellPositions();
     }
 
@@ -1079,18 +1091,47 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         Object.forEach(this.groups, (name, rows) => {
             rows.columns = this.header.columnsCount;
         });
+        this._completeRender();
+        this.RecalculateCellPositions();
+    }
+
+    _completeRender() {
+        if(this.header) {
+            let cols = [];
+            if(this.hasContextMenu) {
+                cols.push('40px');
+            } 
+
+            const columns = this.header.FindColumnsWithWidth();
+            for(const column of columns) {
+                let width = column.width || 'auto';
+                if(width.isNumeric()) {
+                    width = width + 'px';
+                }
+                cols.push(width);
+            }
+
+            // cols.push('repeat(' + this.header.columnsCount + ', auto)');
+            if(this.showCheckboxes) {
+                cols.push('20px');
+            }
+            this._gridContent.container.css('grid-template-columns', cols.join(' '));
+        }
     }
 
     __thisColumnPropertyChanged(event, args) {
         if(args.property === 'sticky') {
             this.RecalculateCellPositions();
-        } else if(['shown', 'editor', 'viewer', 'valign', 'halign'].indexOf(args.property) !== -1) {
+        } else if(['shown', 'editor', 'viewer', 'valign', 'halign', 'width'].indexOf(args.property) !== -1) {
             this.ForEveryRow((n, row) => {
                 if(row.Cell(args.column.name)) {
                     row.Cell(args.column.name)[args.property] = args.column[args.property];
                 }
             });
             this.RecalculateCellVisibility(args.column);
+            if(args.property === 'width') {
+                this._completeRender();
+            }
         }
     }
 

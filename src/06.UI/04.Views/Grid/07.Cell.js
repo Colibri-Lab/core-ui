@@ -584,6 +584,21 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         super.Dispose();
 
     }
+    
+    /**
+     * Widht ot a cell
+     * @type {Number|String} Width in percent or pixels (20% | 200px)   
+     */
+    get width() {
+        return this._width;
+    }
+    /**
+     * Widht ot a cell
+     * @type {Number|String} Width in percent or pixels (20% | 200px)   
+     */
+    set width(value) {
+        this._width = value;
+    }
 
 
 
