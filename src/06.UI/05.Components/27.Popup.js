@@ -89,6 +89,9 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
 
         if(this.parent && this._positionOnParent) {
             this.container.hideShowProcess(() => {
+                if(!this.isConnected) {
+                    return;
+                }
                 if(this.parent) {
                     const bounds = this.parent.container.bounds();
                     const thisBounds = this.container.bounds();
@@ -140,6 +143,9 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
         }
 
         if(!super.shown && this._connectToBody) {
+            if(!this.isConnected) {
+                return;
+            }
             this.Disconnect();
             this?.parent?.container && this.ConnectTo(this?.parent?.container);
             this.hasShadow = value;
