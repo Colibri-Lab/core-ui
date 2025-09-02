@@ -15,13 +15,13 @@
         outline: none;
 
         &.app-component-shown {
-            display: table;            
+            display: grid;            
         }
-        table-layout: fixed;
-        border-collapse: separate;
+        // table-layout: fixed;
+        // border-collapse: separate;
 
         [data-object-name="checkbox-column"] {
-            width: 40px;
+            min-width: 40px;
             left: 0;
             vertical-align: middle;
         }
@@ -32,39 +32,44 @@
             vertical-align: middle;
         }
 
+        // .value-container {
+        //     display: block;
+        //     text-overflow: ellipsis;
+        //     overflow: hidden;
+        // }
+
         .app-ui-grid-head {
-            background-color: white;
             position: sticky;
             top: 0;
             z-index: 10;
 
             &.app-component-shown {
-                display: table-header-group;
+                display: contents;
             }
 
             .app-ui-header-columns {
                 background-color: inherit;
 
                 &.app-component-shown {
-                    display: table-row;
+                    display: contents;
                 }
 
                 .app-ui-column {
+                    background-color: white;
                     overflow: hidden;
                     white-space: nowrap;
                     text-overflow: ellipsis;
+                    align-content: center;
 
                     &.app-component-shown {
-                        display: table-cell;
+                        display: block;
                     }
 
                     color: #9DA5BE;
                     vertical-align: middle;
 
                     padding: 10px;
-                    margin: 10px;
                     border-bottom: 1px solid #EAEBF1;
-                    background-color: inherit;
                     top: 0;
 
                     .resize-border {
@@ -111,7 +116,7 @@
         .app-ui-grid-rows {
             
             &.app-component-shown {
-                display: table-row-group;
+                display: contents;
             }
 
             &.-closed {
@@ -129,14 +134,14 @@
 
             .app-ui-rows-group {
                 &.app-component-shown {
-                    display: table-row;
+                    display: contents;
                 }
                 background: #EDEFF5;
                 border-radius: 3px;
                 cursor: pointer;
                 td {
                     &.app-component-shown {
-                        display: table-cell;
+                        display: block;
                     }
                     vertical-align: middle;
                     padding: 5px 10px;
@@ -154,7 +159,7 @@
 
             .app-ui-row {
                 &.app-component-shown {
-                    display: table-row;
+                    display: contents;
                 }
                 &.app-drop-target-component {
                     border-top: 2px dashed #c0c0c0;
@@ -183,9 +188,10 @@
 
                 .app-ui-row-cell {
                     color: #435466;
+                    align-content: center;
 
                     &.app-component-shown {
-                        display: table-cell;
+                        display: block;
                     }
 
                     &.cell-active {
@@ -238,7 +244,9 @@
             }
 
             .app-ui-row-template {
+                display: none;
                 > td {
+                    display: block;
                     color: #435466;
                     padding: 10px;
                     border-bottom: 1px solid #EAEBF1;
@@ -247,6 +255,11 @@
                     overflow: hidden;
                 }
             }
+            .row-selected + .app-ui-row-template {
+                display: contents;
+            }
+
+
             
             .app-ui-row:hover + .app-ui-row-template, .app-ui-row-template:hover {
                 background: rgba(209, 215, 233, 0.15);
@@ -266,17 +279,34 @@
             z-index: 1;
         }
 
+        .app-ui-grid-head {
+            .position-sticky-y {
+                z-index: 11;
+            }
+        }
+
         .position-sticky-x {
             position: sticky;
             z-index: 1;
             background: inherit;
-
         }
+
+        .app-ui-grid-head {
+            .position-sticky-x {
+                z-index: 11;
+            }
+        }
+
 
         .position-sticky-y.position-sticky-x {
             z-index: 2;
         }
 
+        .app-ui-grid-head {
+            .position-sticky-y.position-sticky-x {
+                z-index: 12;
+            }
+        }
     }
 
     .app-ui-grid-footer {

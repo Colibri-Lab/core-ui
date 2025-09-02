@@ -489,21 +489,5 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         this._valueContainer.html(value);
     }
 
-    /**
-     * Width of column
-     * @type {Number|String}
-     */
-    get width() {
-        return this._width;
-    }
-    /**
-     * Width of column
-     * @type {Number|String}
-     */
-    set width(value) {
-        this._width = value;
-        // super.minWidth = value;
-        this.grid?.Dispatch('ColumnPropertyChanged', {property: 'width', column: this});
-    }
 
 }

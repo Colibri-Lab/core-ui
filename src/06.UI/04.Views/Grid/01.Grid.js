@@ -1097,6 +1097,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     _completeRender(disposedName = null) {
+        return;
         if(this.header) {
             let cols = [];
             if(this.hasContextMenu) {
