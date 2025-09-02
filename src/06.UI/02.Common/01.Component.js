@@ -2800,8 +2800,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @private
      */
     _setSpanning() {
-        this._element.css('grid-row-start', this._rowspan ? 'span ' + this._rowspan : 'auto');
-        this._element.css('grid-column-start', this._colspan ? 'span ' + this._colspan : 'auto');
+        if(this._rowspan) {
+            this._element.css('grid-row', this._rowspan ? 'span ' + this._rowspan : 'auto');
+        }
+        if(this._colspan) {
+            this._element.css('grid-column', this._colspan ? 'span ' + this._colspan : 'auto');
+        }
     }
 
     /**

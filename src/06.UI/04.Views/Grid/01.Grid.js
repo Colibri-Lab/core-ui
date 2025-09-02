@@ -1071,6 +1071,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                 row.MoveChild(cell, fromIndex, toIndex, false);
             } 
         });
+        this._completeRender();
         this.RecalculateCellPositions();
     }
 
@@ -1091,11 +1092,11 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         Object.forEach(this.groups, (name, rows) => {
             rows.columns = this.header.columnsCount;
         });
-        this._completeRender();
+        this._completeRender(column.name);
         this.RecalculateCellPositions();
     }
 
-    _completeRender() {
+    _completeRender(disposedName = null) {
         if(this.header) {
             let cols = [];
             if(this.hasContextMenu) {
@@ -1104,6 +1105,9 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
             const columns = this.header.FindColumnsWithWidth();
             for(const column of columns) {
+                if(disposedName && column.name === disposedName) {
+                    continue;
+                }
                 let width = column.width || 'auto';
                 if(width.isNumeric()) {
                     width = width + 'px';
@@ -1116,7 +1120,15 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                 cols.push('20px');
             }
             this._gridContent.container.css('grid-template-columns', cols.join(' '));
+
+            for(const group of Object.values(this.groups)) {
+                group.titleCell.colspan = cols.length;
+            }
+
         }
+
+        
+
     }
 
     __thisColumnPropertyChanged(event, args) {
