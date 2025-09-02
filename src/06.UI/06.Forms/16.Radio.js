@@ -147,7 +147,7 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
     }
 
     __iconClicked(event, args) {
-        contentContainer.container.querySelectorAll('input').forEach(input => input.checked = false);
+        this.contentContainer.container.querySelectorAll('input').forEach(input => input.checked = false);
         this._value = null;
         this.Dispatch('Changed', { domEvent: args.domEvent, component: this });
     }
