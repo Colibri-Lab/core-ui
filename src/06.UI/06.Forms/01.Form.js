@@ -407,6 +407,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         const root = this.root || this;
         const component = Colibri.UI.Forms.Field.Create(name, this, fieldData, null, root);
         if (!component) {
+            console.log('Can not create component ', fieldData);
             console.trace();
             throw new Error('component ' + name + ' not found');
         }

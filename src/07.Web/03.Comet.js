@@ -244,11 +244,12 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {String} handlerName 
      * @param {Function} handler 
      */
-    RegisterHandler(handlerName, handler) {
+    RegisterHandler(handlerName, handler, respondent) {
         if(!this.__specificHandlers[handlerName]) {
             this.__specificHandlers[handlerName] = [];
         }
-        this.__specificHandlers[handlerName].push(handler);
+        this.UnRegisterHandler(handlerName, handler, respondent);
+        this.__specificHandlers[handlerName].push([handler, respondent]);
     }
 
 
@@ -257,10 +258,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {String} handlerName 
      * @param {Function} handler 
      */
-    UnRegisterHandler(handlerName, handler) {
+    UnRegisterHandler(handlerName, handler, respondent) {
         if(this.__specificHandlers[handlerName]) {
             for (let i = 0; i < this.__specificHandlers[handlerName].length; i++) {
-                if(this.__specificHandlers[handlerName][i] === handler) {
+                if(this.__specificHandlers[handlerName][i][0] === handler && this.__specificHandlers[handlerName][i][1] === respondent) {
                     this.__specificHandlers[handlerName].splice(i, 1);
                     break;
                 }
@@ -268,22 +269,17 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         }
     }
 
-    DispatchHandlers(handlerName, args) {
-        return new Promise((resolve, reject) => {
-            const promises = [];
-            if(this.__specificHandlers[handlerName] && isIterable(this.__specificHandlers[handlerName])) {
-                for(const handler of this.__specificHandlers[handlerName]) {
-                    promises.push(handler(args));
-                }
+    async DispatchHandlers(handlerName, args) {
+
+        const responses = [];
+        if(this.__specificHandlers[handlerName] && isIterable(this.__specificHandlers[handlerName])) {
+            for(const handler of this.__specificHandlers[handlerName]) {
+                const han = handler[0];
+                const res = handler[1] || this;
+                responses.push(await han.apply(res, [args]));
             }
-            if(promises.length === 0) {
-                resolve([]);
-            } else {
-                Promise.all(promises).then((responses) => {
-                    resolve(responses);
-                });
-            }
-        });
+        }
+        return responses;
     }
 
     /**
@@ -393,11 +389,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             const msg = Colibri.Common.CometEvent.FromReceivedObject(message);
             this.DispatchHandlers('EventReceiving', {message: msg}).then((responses) => {
                 this.Dispatch('EventReceived', {event: msg});
-                if(this.__eventHandlers[msg.action]) {
-                    for(const handler of this.__eventHandlers[msg.action]) {
-                        handler(msg);
-                    }
-                }
+                this.DispatchEvent(msg);
             });
         }
     }
@@ -428,23 +420,44 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
         this._ws.send(msg.toJson());
     }
 
-    UnwaitForEvent(eventName, handler) {
+    UnwaitForEvent(eventName, handler, respondent) {
         if(!this.__eventHandlers[eventName]) {
             this.__eventHandlers[eventName] = [];
         }
 
-        const index = this.__eventHandlers[eventName].indexOf(handler);
-        if(index > -1) {
-            this.__eventHandlers[eventName].splice(index, 1);
+        const newHandlers = [];
+        for(const h of this.__eventHandlers[eventName]) {
+            if(!(h[0] === handler && h[1] === respondent)) {
+                newHandlers.push(h);
+            }
         }
+        this.__eventHandlers[eventName] = newHandlers;
 
     }
 
-    WaitForEvent(eventName, handler) {
+    WaitForEvent(eventName, handler, respondent) {
         if(!this.__eventHandlers[eventName]) {
             this.__eventHandlers[eventName] = [];
         }
-        this.__eventHandlers[eventName].push(handler);
+        this.UnwaitForEvent(eventName, handler, respondent);
+        this.__eventHandlers[eventName].push([handler, respondent]);
+    }
+
+    async DispatchEvent(msg) {
+        if(this.__eventHandlers[msg.action]) {
+            for(const handler of this.__eventHandlers[msg.action]) {
+                const han = handler[0];
+                let resp = handler[1];
+                if(!resp) {
+                    resp = this;
+                }
+                if(han.isAsync()) {
+                    await han.apply(resp, [msg]);
+                } else {
+                    han.apply(resp, [msg]);
+                }
+            }
+        }
     }
 
     /**

@@ -20,6 +20,7 @@ Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
         this._list.shown = true;
         
         this._list.AddHandler('SelectionChanged', this.__thisBubbleWithComponent, false, this);
+        this._list.AddHandler('SelectionChanged', this.__selectionChangedToChanged, false, this);
         this._list.AddHandler('KeyUp', this.__thisBubble, false, this);
         this._list.AddHandler('KeyDown', this.__thisBubble, false, this);
 
@@ -31,13 +32,17 @@ Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
             };
         }
 
-        this.ReloadValues();
-
         if(this._fieldData?.params?.readonly === undefined) {
             this.readonly = false;    
         }
         else {
             this.readonly = this._fieldData?.params?.readonly;
+        }
+        if(this._fieldData?.params?.multiple === undefined) {
+            this.multiple = false;    
+        }
+        else {
+            this.multiple = this._fieldData?.params?.multiple;
         }
         if(this._fieldData?.params?.enabled === undefined) {
             this.enabled = true;
@@ -46,23 +51,72 @@ Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
             this.enabled = this._fieldData.params.enabled;
         }
 
+        this.ReloadValues();
+
 
     } 
+
+    __selectionChangedToChanged(event, args) {
+        return this.Dispatch('Changed', args);
+    }
+
+    /** @protected */
+    _getDependsValue(type = null) {
+        if (this.root && this._fieldData?.lookup) {
+
+            if((type && !this._fieldData.lookup[type]['depends']) || (!type && !this._fieldData.lookup['depends'])) {
+                return;
+            }
+
+            let dependsField = type ? this._fieldData.lookup[type]['depends'] : this._fieldData.lookup['depends'];
+            if (dependsField) {
+                dependsField = dependsField.replaceAll('{', '').replaceAll('}', '');
+                let rootValues = this.root?.value;
+                if(eval(`typeof rootValues?.${dependsField}`) !== 'undefined') {
+                    return eval(`rootValues.${dependsField}`);
+                }
+                const parentValues = this.parentField?.value;
+                if(eval(`typeof parentValues?.${dependsField}`) !== 'undefined') {
+                    return eval(`parentValues.${dependsField}`);
+                }
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Run lookup
+     * @param {(Object|function)} value
+     */
+    _setLookup(value) {
+        this._lookup = value;
+        return Colibri.UI.GetLookupPromise(this, this._lookup, '', (type = null) => {
+            return this._getDependsValue(type);
+        });
+    }
 
     /**
      * Reload values to component
      */
     ReloadValues() {
-
-        let values = this._fieldData.values;
-        if(this._fieldData.lookup && typeof this._fieldData.lookup == 'function') {
-            values = this._fieldData.lookup();
+        this.loading = true;
+        if(this._fieldData?.values) {
+            this.values = this._fieldData?.values;
+        } else {
+            this._setLookup(this._fieldData.lookup).then((response) => {
+                this.values = response.result || response;
+            }).finally(() => {
+                this.loading = false;
+                if(this._lastValue) {
+                    this.value = this._lastValue;
+                    this._lastValue = [];
+                } else {
+                    this._list.selectedValue = [];
+                }
+                this.RemoveClass('app-select-loading');
+                this.Dispatch('LookupCompleted');
+            });
         }
-
-        this._group.Clear();
-        Object.values(values).forEach((item) => {
-            this._group.AddItem(item);
-        });
 
     }
 
@@ -78,7 +132,11 @@ Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
      * @type {Object|string}
      */
     get value() {
-        return this._list.selectedValue;
+        try {
+            return this._list.selectedValue.map(v => v[this._fieldData?.selector?.value ?? 'value']);
+        } catch(e) {
+            return this.multiple ? [] : null;
+        }
     }
 
     /**
@@ -86,10 +144,17 @@ Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
      * @type {Object|string}
      */
     set value(value) {
-        if(!Object.isObject(value)) {
-            this._list.selectedValue = Array.findObject(this._fieldData.values, 'value', value);
+        if(this.loading === true) {
+            this._lastValue = value;
         } else {
-            this._list.selectedValue = value;
+            if(!this.multiple) {
+                this._list.selectedValue = Array.findObject(this.values ?? [], this._fieldData?.selector?.value ?? 'value', value);
+            } else {
+                this._list.selectedValue = value.map(v => {
+                    return Array.findObject(this.values ?? [], this._fieldData?.selector?.value ?? 'value', v);
+                });
+                
+            }
         }
     }
 
@@ -107,5 +172,39 @@ Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
     set tabIndex(value) {
         this._list.tabIndex = value === true ? Colibri.UI.tabIndex++ : value;
     }
+
+    /**
+     * Array of values
+     * @type {Array}
+     */
+    get values() {
+        return this._values;
+    }
+    /**
+     * Array of values
+     * @type {Array}
+     */
+    set values(value) {
+        this._values = value;
+        for(const v of value) {
+            this._group.AddItem(v);
+        }
+    }
+
+    /**
+     * Is list multiple
+     * @type {Boolean}
+     */
+    get multiple() {
+        return this._list.multiple;
+    }
+    /**
+     * Is list multiple
+     * @type {Boolean}
+     */
+    set multiple(value) {
+        this._list.multiple = value;
+    }
+
 }
 Colibri.UI.Forms.Field.RegisterFieldComponent('List', 'Colibri.UI.Forms.List', '#{ui-fields-list}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler'])

@@ -81,6 +81,10 @@
             &:hover {
                 background: #D6EEFF;
             }
+
+            &.app-component-selected {
+                background: #e6e6e6;
+            }
         
         }
     }

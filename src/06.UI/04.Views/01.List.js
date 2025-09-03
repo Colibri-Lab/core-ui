@@ -264,7 +264,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
     /** 
      * Selected Item value
-     * @type {Object} 
+     * @type {Object|Array} 
      */
     get selectedValue() {
         let values = [];
@@ -276,29 +276,49 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
     /** 
      * Selected Item value
-     * @type {Object} 
+     * @type {Object|Array} 
      */
     set selectedValue(value) {
 
+        if(!this._multiple && Array.isArray(value)) {
+            return;
+        }
+        
         const currentSelection = JSON.stringify(this.selectedIndex);
         const currentGroupSelection = JSON.stringify(this.selectedItemGroupIndex);
 
         // value обьект значения
-        let selected = null;
+        let selected = this._multiple ? [] : null;
         this.ForEach((name, group) => {
             group.ForEach((n, item) => {
-                if((item.value?.id ?? item.value) == (value?.id ?? value)) {
-                    selected = item;
-                    return false;
+                if(this._multiple) {
+                    const v = (item.value?.id ?? item.value);
+                    for(const vv of value) {
+                        if(v == (vv.id ?? vv)) {
+                            selected.push(item);
+                            break;
+                        }
+                    }
+                } else {
+                    if((item.value?.id ?? item.value) == (value?.id ?? value)) {
+                        selected = item;
+                        return false;
+                    }
                 }
             });
         });
 
-        if(!selected) {
+        if(!selected || selected?.length === 0) {
             return;
         }
 
-        this.SelectItem(selected);
+        if(this._multiple) {
+            for(const s of selected) {
+                this.SelectItem(s);
+            }
+        } else {
+            this.SelectItem(selected);
+        }
 
         if(JSON.stringify(this.selectedIndex) != currentSelection || JSON.stringify(this.selectedItemGroupIndex) != currentGroupSelection) {
             this.Dispatch('SelectionChanged', {selected: this.selected});
