@@ -3707,7 +3707,7 @@ Element.prototype.insertText = function (text) {
 Element.prototype.insertElement = function (element) {
     this.preventFocusEvent = true;
     
-    if ((App.Device.isWeb || App.Device.isWindows) && document.queryCommandSupported('insertHTML')) {
+    if ((App.Device.isWeb || App.Device.isElectron) && document.queryCommandSupported('insertHTML')) {
         document.execCommand('insertHTML', false, element?.outerHtml ? element?.outerHtml() : element.textContent);
     } else {
         

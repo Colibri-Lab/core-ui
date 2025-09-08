@@ -149,6 +149,22 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
         this._current = value;
     }
 
+    /**
+     * Component shown when route not found
+     * @type {String|Colibri.UI.Component}
+     */
+    get ifNotFound() {
+        return this._ifNotFound;
+    }
+    /**
+     * Component shown when route not found
+     * @type {String|Colibri.UI.Component}
+     */
+    set ifNotFound(value) {
+        value = this._convertProperty('Function', value);
+        this._ifNotFound = value;
+    }
+
     GetCurrentRoute() {
         return this._currentRoute;
     }
@@ -160,6 +176,10 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
      */ 
     __appRouteChanged(event, args) {
         if(args.url.substring(0, this._current.length) === this._current) {
+            let found = false;
+            if(this._ifNotFoundComponent) {
+                this._ifNotFoundComponent.KeepInMind();
+            }
             if(this._structure) {
                 for(const pattern of Object.keys(this._structure).sort().reverse()) {
                     const route = this._structure[pattern];
@@ -186,6 +206,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
                                 component.ConnectTo(this, null, true);
                             }
                             component.__processChangeOnRouteSwitch(match);
+                            found = true;
                             break;
 
                         }
@@ -206,12 +227,23 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
                             component.ConnectTo(this, null, true);
                         }
                         component.__processChangeOnRouteSwitch(match);
+                        found = true;                        
                     } else {
                         if(component.isConnected) {
                             component.Disconnect();
                         }
                     }
                 });
+            }
+
+            if(!found && this._ifNotFound) {
+                if(this._ifNotFoundComponent) {
+                    this._ifNotFoundComponent.Retrieve();
+                } else {
+                    const c = this._ifNotFound;
+                    this._ifNotFoundComponent = new c('not-found', this);
+                    this._ifNotFoundComponent.shown = true;
+                }
             }
 
         }

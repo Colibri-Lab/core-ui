@@ -133,7 +133,7 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
      * Perform click on button
      */
     ClickOnButton() {
-        if(App.Device.isWeb || App.Device.isWindows) {
+        if(App.Device.isWeb || App.Device.isElectron) {
             this._input.click();
         } else if (App.Device.isAndroid || App.Device.isAndroid) {
             this._loadOnDevice().then((result) => {

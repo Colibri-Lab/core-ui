@@ -15,7 +15,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         Web: 'web',
         IOs: 'ios',
         Android: 'android',
-        Windows: 'electron'
+        Electron: 'electron'
     };
 
     /**
@@ -374,8 +374,8 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
      * Checks if the device platform is Windows.
      * @returns {boolean} True if the device platform is Windows, otherwise false.
      */
-    get isWindows() {
-        return this._platform === Colibri.Devices.Device.Platform.Windows;
+    get isElectron() {
+        return this._platform === Colibri.Devices.Device.Platform.Electron;
     }
 
     /**

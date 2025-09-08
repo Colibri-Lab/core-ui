@@ -281,15 +281,15 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                 fieldContainer.AddClass('app-field-' + shortComponentName);
                 fieldContainer.shown = field.hidden === undefined || field.hidden === true;
 
-                if (field.component == 'Colibri.UI.Forms.Array') {
+                if (field.component == 'Colibri.UI.Forms.Array' && !field?.viewer && !field?.params?.viewer && !field?.params?.editor) {
                     if (Object.isObject(value[name])) {
                         value[name] = Object.values(value[name]);
                     }
-                    value[name].forEach((v) => {
+                    (value[name] ?? []).forEach((v) => {
                         this._createFields(field.fields, v, fieldContainer, false);
                     });
                 }
-                else if (field.component == 'Colibri.UI.Forms.Object' && !field.params && !field.params.single) {
+                else if (field.component == 'Colibri.UI.Forms.Object' && !field?.viewer && !field?.params?.viewer && !field?.params?.editor && !field.params && !field.params.single) {
                     this._createFields(field.fields, value[name], fieldContainer, false);
                 }
                 else {
