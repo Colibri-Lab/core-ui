@@ -435,12 +435,12 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     }
 
-    WaitForEvent(eventName, handler, respondent) {
+    WaitForEvent(eventName, handler, respondent, args = {}) {
         if(!this.__eventHandlers[eventName]) {
             this.__eventHandlers[eventName] = [];
         }
         this.UnwaitForEvent(eventName, handler, respondent);
-        this.__eventHandlers[eventName].push([handler, respondent]);
+        this.__eventHandlers[eventName].push([handler, respondent, args]);
     }
 
     async DispatchEvent(msg) {
@@ -448,13 +448,14 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             for(const handler of this.__eventHandlers[msg.action]) {
                 const han = handler[0];
                 let resp = handler[1];
+                let args = handler[2];
                 if(!resp) {
                     resp = this;
                 }
                 if(han.isAsync()) {
-                    await han.apply(resp, [msg]);
+                    await han.apply(resp, [msg, args]);
                 } else {
-                    han.apply(resp, [msg]);
+                    han.apply(resp, [msg, args]);
                 }
             }
         }
