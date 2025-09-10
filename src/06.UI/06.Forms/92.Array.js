@@ -124,7 +124,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
             fieldData.params.validate = [{ message: '', method: () => true }];
         }
         fieldData = this.__updateObjectFields(fieldData);
-        const object = new Colibri.UI.Forms.Object('object-' + Date.Now().getTime(), this._itemsContainer, fieldData, this, this.root);
+        const object = new Colibri.UI.Forms.Object('object-' + Date.Mc(), this._itemsContainer, fieldData, this, this.root);
         object.shown = true;
         object.title = '';
         object.enabled = this.enabled;
