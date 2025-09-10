@@ -36,6 +36,12 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         else {
             this.enabled = this._fieldData.params.enabled;
         }
+        
+        if(this._fieldData?.params?.hasscroll === false) {
+            this.AddClass('app-field-noscroll');
+        } else {
+            this.RemoveClass('app-field-noscroll');
+        }
 
         this.RegisterEvent('ObjectRemoved', false, 'Object in array removed');
 

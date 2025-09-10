@@ -46,6 +46,14 @@
         }
     }
 
+    &.app-field-noscroll {
+        [data-object-name$="-items"] {                
+            max-height: none !important;
+            overflow-y: visible !important;
+            overflow-x: visible !important;
+        }
+    }
+
     &.app-field-vertical {
         .app-component-object-field {
             &:first-child {
