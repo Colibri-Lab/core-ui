@@ -818,7 +818,7 @@ Object.lastValue = function (o) {
 Object.sumInternal = function (o, field) {
     let s = 0;
     Object.forEach(o, (key, value) => {
-        s += parseFloat(value[field]);
+        s += parseFloat(value[field] ?? 0);
     });
     return s;
 }
