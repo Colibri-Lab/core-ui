@@ -73,7 +73,8 @@ Colibri.UI.Maps.VectorTiles = class extends Colibri.UI.Pane {
             container: this._element,
             style: this._settings.style ?? 'https://demotiles.maplibre.org/style.json',
             center: [this._settings.lat ?? 44.5035, this._settings.lng ?? 40.1772],
-            zoom: this._settings.zoom ?? 13
+            zoom: this._settings.zoom ?? 13,
+            bounds: this._settings.bounds ?? []
         };
 
         if (this._settings.sources) {
