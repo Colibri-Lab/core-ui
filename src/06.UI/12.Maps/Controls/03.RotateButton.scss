@@ -1,0 +1,17 @@
+.colibri-ui-maps-controls-rotatebutton {
+    
+    &.-rotating {
+        background: #636363;
+            
+        [data-object-name="icon"] {
+            width: 20px;
+            height: 20px;
+            svg {
+                path[fill="black"], rect[fill="black"] {
+                    fill: #ffffff;
+                }
+            }
+        }
+    }
+
+}

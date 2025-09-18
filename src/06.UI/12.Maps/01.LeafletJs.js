@@ -4,7 +4,7 @@
  * @extends Colibri.UI.FlexBox
  * @memberof Colibri.UI.Maps
  */
-Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.FlexBox {
+Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.Pane {
     
     /**
      * @constructor
@@ -21,9 +21,31 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.FlexBox {
         this._objects = {};
         this._icons = {};
 
+        this._zoomZoomIn = this.Children('zoom/zoom-in');
+        this._zoomZoomOut = this.Children('zoom/zoom-out');
+        this._zoomRotate = this.Children('zoom/rotate');
+        
+
+        this._mapContainer = this.Children('map-container');
+        
+
         this._loadMap();        
 
+        this._zoomZoomIn.AddHandler('Clicked', this.__zoomZoomInClicked, false, this);
+        this._zoomZoomOut.AddHandler('Clicked', this.__zoomZoomOutClicked, false, this);
+        this._zoomRotate.AddHandler('Rotated', this.__zoomRotateRotated, false, this);  
+    }
 
+    __zoomRotateRotated(event, args) {
+        this._map.setBearing(args.angle);
+    }
+
+    __zoomZoomInClicked(event, args) {
+        this._map.zoomIn();
+    }
+
+    __zoomZoomOutClicked(event, args) {
+        this._map.zoomOut();
     }
 
     /**
@@ -76,7 +98,20 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.FlexBox {
             Colibri.Common.LoadScript('https://cdn.jsdelivr.net/npm/@turf/turf@7.2.0/turf.min.js'),
         ]).then(() => {
             this._loaded = true;
-            this._map = L.map(this._element, {rotate: true});
+            this._map = L.map(this._mapContainer.container, {
+                rotate: true, 
+                zoomControl: false,
+                preferCanvas: true,
+                doubleClickZoom: true,
+                touchRotate: true,
+                touchZoom: true
+            });
+            
+            // new L.Control.Zoom({ position: 'topright' })
+            //     .addTo(this._map);
+            // new L.Control.Rotate({ position: 'topright', closeOnZeroBearing: false })
+            //     .addTo(this._map);
+
             this.Dispatch('Loaded', {});
         });
     }
@@ -260,15 +295,12 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.FlexBox {
         }
     }
 
-    AddGeoLine(name, latLngLike, azimuth, color = 'red', weight = 1, popup = '') {
+    AddGeoLine(name, latLngLike, azimuth, color = 'red', weight = 1) {
         const distance = 10_000_000; // "infinity" 10,000 km
         const end = this._destinationPoint(latLngLike.lng, latLngLike.lat, distance, azimuth);
         const line = turf.greatCircle([latLngLike.lng, latLngLike.lat], [end.lng, end.lat], { npoints: 100 });
 
         this.AddPolyline(name, line.geometry.coordinates.map(v => ([v[1],v[0]])), color, weight);
-        if(popup) {
-            this.AddPopup(name, popup);
-        }
 
         return {
             start: latLngLike,

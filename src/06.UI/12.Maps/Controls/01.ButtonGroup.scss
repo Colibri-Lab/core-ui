@@ -1,0 +1,39 @@
+.colibri-ui-maps-controls-buttongroup {
+    
+    position: absolute;
+    z-index: 10;
+    width: auto;
+    height: auto;
+    gap: 10px;
+
+    &.-lefttop {
+        left: 20px;
+        top: 20px;
+    }
+
+    &.-righttop {
+        right: 20px;
+        top: 20px;
+    }
+
+    &.-leftbottom {
+        left: 20px;
+        bottom: 20px;
+    }
+
+    &.-rightbottom {
+        right: 20px;
+        bottom: 20px;
+    }
+
+    &.-horizontal {
+        flex-direction: row;
+    }
+
+    &.-vertical {
+        flex-direction: column;
+    }
+
+
+
+}

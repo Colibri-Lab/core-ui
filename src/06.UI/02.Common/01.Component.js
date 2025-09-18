@@ -3112,6 +3112,29 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.RemoveHandler('TouchMoved', this.__bodyTouchMove, this);
         this.RemoveHandler('TouchEnded', this.__bodyTouchEnd, this);
     }
-    
+
+    /**
+     * Rotation of component
+     * @type {Number}
+     */
+    get rotation() {
+        return this._rotation;
+    }
+    /**
+     * Rotation of component
+     * @type {Number}
+     */
+    set rotation(value) {
+        this._rotation = value;
+        this._showRotation();
+    }
+    _showRotation() {
+        if(this._rotation === 0 || this._rotation === null) {
+            this.styles = {'transform':  null};
+        } else {
+            this.styles = {'transform': 'rotate(' + this._rotation + 'deg)'};
+        }
+        
+    }
 
 }
