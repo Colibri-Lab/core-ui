@@ -1707,7 +1707,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     MoveEnd(raiseEvent = true) {
-        this.parent.MoveChild(this, this.childIndex, this.children, false);
+        this.parent.MoveChild(this, this.childIndex, this.parent.children, false);
         if(raiseEvent) {
             this.Dispatch('ComponentMoved', {direction: 'end'});
         }
@@ -1742,9 +1742,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @param {number} index move to this index
      */
     _moveInDom(insertedElement, parentElement, index) {
-        insertedElement.remove();
-        if(parentElement.children[index]) {
-            parentElement.insertBefore(insertedElement, parentElement.children[index]);
+        // insertedElement.remove();
+        if(parentElement.children[index + 1]) {
+            parentElement.insertBefore(insertedElement, parentElement.children[index + 1]);
         } else {
             parentElement.appendChild(insertedElement);
         }

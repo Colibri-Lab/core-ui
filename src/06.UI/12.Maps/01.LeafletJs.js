@@ -20,20 +20,27 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.Pane {
         this._map = null;
         this._objects = {};
         this._icons = {};
+        this._tilesLoaded = {};
+        this._layers = {};
 
         this._zoomZoomIn = this.Children('zoom/zoom-in');
         this._zoomZoomOut = this.Children('zoom/zoom-out');
         this._zoomRotate = this.Children('zoom/rotate');
+        this._zoomSetCenter = this.Children('zoom/set-center');
+        this._layersSwitch = this.Children('layers/switch');
         
-
         this._mapContainer = this.Children('map-container');
-        
 
         this._loadMap();        
 
         this._zoomZoomIn.AddHandler('Clicked', this.__zoomZoomInClicked, false, this);
         this._zoomZoomOut.AddHandler('Clicked', this.__zoomZoomOutClicked, false, this);
         this._zoomRotate.AddHandler('Rotated', this.__zoomRotateRotated, false, this);  
+        this._zoomSetCenter.AddHandler('Clicked', this.__zoomSetCenterClicked, false, this);
+    }
+
+    __zoomSetCenterClicked(event, args) {
+        this._map.flyTo(this._center, this._zoom);
     }
 
     __zoomRotateRotated(event, args) {
@@ -122,7 +129,7 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.Pane {
      * @type {Object|String}
      */
     get center() {
-        return this._viewAndZoom;
+        return this._center;
     }
     /**
      * Initial view and zoom
@@ -170,27 +177,38 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.Pane {
 
     /**
      * Tiles string in format https://tile.openstreetmap.org/{z}/{x}/{y}.png
-     * @type {String}
+     * @type {Object}
      */
     get tiles() {
         return this._tiles;
     }
     /**
      * Tiles string in format https://tile.openstreetmap.org/{z}/{x}/{y}.png
-     * @type {String}
+     * @type {Object}
      */
     set tiles(value) {
+        value = this._convertProperty('Object', value);
         this._tiles = value;
         this._showTiles();
     }
     _showTiles() {
         Colibri.Common.Wait(() => this._loaded).then(() => {
-            this.AddTiles(this._tiles);
+            Object.forEach(this._tiles, (name, tileUrl) => {
+                this.AddTiles(tileUrl, name);
+            });
+            this.SwitchToLayer(Object.keys(this._layers)[0]);
         });
     }
 
-    AddTiles(tileUrl) {
-        L.tileLayer(tileUrl).addTo(this._map);
+    AddTiles(tileUrl, name = 'default') {
+        this._layers[name] = L.tileLayer(tileUrl);
+        this._layers[name].on('tileload', (e) => {
+            if(!this._tilesLoaded[name]) {
+                this._tilesLoaded[name] = [];
+            }
+            this._tilesLoaded[name].push(e.tile.src);
+        });
+        this._layersSwitch.AddLayer(name);
     }
 
     MarkerPosition(name) {
@@ -347,7 +365,12 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.Pane {
         this._objects[name].addTo(this._map);        
     }
 
-    
+    SwitchToLayer(name) {
+        Object.forEach(this._layers, (name, layer) => {
+            this._map.removeLayer(layer);
+        });
+        this._layers[name].addTo(this._map);
+    }
 
 
 }
