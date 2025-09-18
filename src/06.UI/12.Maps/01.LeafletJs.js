@@ -157,6 +157,18 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.FlexBox {
         L.tileLayer(tileUrl).addTo(this._map);
     }
 
+    MarkerPosition(name) {
+        if(this._objects[name]) {
+            const ll = this._objects[name].getLatLng();
+            return {
+                lat: ll.lat,
+                lng: ll.lng,
+                alt: ll.alt
+            };
+        } 
+        return null;
+    }
+
     AddMarker(name, latLngLike, icon = null, opacity = 1, azimuth = 0) {
         if(this._objects[name]) {
             this.UpdateMarker(name, latLngLike, icon, opacity);
@@ -196,7 +208,24 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.FlexBox {
         if(!object) {
             return;
         }
-        object.bindPopup(popupHtml);
+        if(object.getPopup()) {
+            object.getPopup().setTooltipContent(toolTipHtml);
+        } else {
+            object.bindPopup(popupHtml);
+        }
+    }
+
+    
+    AddTooltip(name, toolTipHtml) {
+        const object = this._objects[name];
+        if(!object) {
+            return;
+        }
+        if(object.getTooltip()) {
+            object.getTooltip().setTooltipContent(toolTipHtml);
+        } else {
+            object.bindTooltip(toolTipHtml);
+        }
     }
 
     OpenPopup(name) {
@@ -206,6 +235,15 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.FlexBox {
         }
         object.openPopup();
     }
+
+    OpenTooltip(name) {
+        const object = this._objects[name];
+        if(!object) {
+            return;
+        }
+        object.openTooltip();
+    }
+
 
     AddPolyline(name, latLngArray, color = 'red', weight = 1) {
         if(this._objects[name]) {
@@ -258,6 +296,10 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.FlexBox {
         delete this._objects[name];
     }
 
+    Exists(name) {
+        return !!this._objects[name];
+    }
+
     Detach(name) {
         if(!this._objects[name]) {
             return;
@@ -271,5 +313,8 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.FlexBox {
         }
         this._objects[name].addTo(this._map);        
     }
+
+    
+
 
 }
