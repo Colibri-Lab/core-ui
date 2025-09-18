@@ -16,20 +16,49 @@ Colibri.UI.Maps.Controls.LayersButton = class extends Colibri.UI.FlexBox {
         super(name, container, Colibri.UI.Templates['Colibri.UI.Maps.Controls.LayersButton']);
         this.AddClass('colibri-ui-maps-controls-layersbutton');
 
+        this._colors = ['#1C274C','#321c4cff','#1c424cff','#1c4c26ff','#4c491cff', '#4c1c1cff'];
         this.AddHandler('Clicked', this.__thisClicked);
         
+    }
+
+    /**
+     * Register events
+     * @protected
+     */
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('Changed', false, 'When current layer is changed');
+    }
+
+    /**
+     * Layer colors
+     * @type {Array}
+     */
+    get colors() {
+        return this._colors;
+    }
+    /**
+     * Layer colors
+     * @type {Array}
+     */
+    set colors(value) {
+        value = this._convertProperty('Array', value);
+        this._colors = value;
+        this._reposition();
     }
 
     __thisClicked(event, args) {
         const component = this.Children('firstChild')
         component.MoveEnd();
         this._reposition();
+        this.Dispatch('Changed', {current: this.Children('firstChild').name})
     }
 
     AddLayer(name) {
         const icon = new Colibri.UI.Icon(name, this);
         icon.shown = true;
         icon.iconSVG = 'Colibri.UI.Maps.Controls.LayersButton.Icon';
+        icon.styles = {fill: this._colors[icon.index]};
         this._reposition();
     }
 
@@ -38,7 +67,7 @@ Colibri.UI.Maps.Controls.LayersButton = class extends Colibri.UI.FlexBox {
         let pos = 10;
         let nextPos = height / this.children;
         let zindex = this.children;
-        this.ForEach((name, component) => {
+        this.ForEach((name, component, index) => {
             component.styles = {top: pos + 'px', zIndex: zindex};
             pos += nextPos;
             zindex--;            

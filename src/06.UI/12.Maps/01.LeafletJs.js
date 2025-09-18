@@ -37,6 +37,11 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.Pane {
         this._zoomZoomOut.AddHandler('Clicked', this.__zoomZoomOutClicked, false, this);
         this._zoomRotate.AddHandler('Rotated', this.__zoomRotateRotated, false, this);  
         this._zoomSetCenter.AddHandler('Clicked', this.__zoomSetCenterClicked, false, this);
+        this._layersSwitch.AddHandler('Changed', this.__layersSwitchChanged, false, this);
+    }
+
+    __layersSwitchChanged(event, args) {
+        this.SwitchToLayer(args.current);
     }
 
     __zoomSetCenterClicked(event, args) {
