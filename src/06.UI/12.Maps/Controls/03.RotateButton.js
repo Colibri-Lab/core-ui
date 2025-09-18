@@ -62,11 +62,11 @@ Colibri.UI.Maps.Controls.RotateButton = class extends Colibri.UI.Maps.Controls.B
 
             let speed = 1;
             if(e.movementY > 5) {
-                speed = 5;
+                speed = 2;
             } else if(e.movementY > 20) {
-                speed = 10;
+                speed = 5;
             } else {
-                speed = 20;
+                speed = 10;
             }
 
             this._rotationAngle = this._rotationAngle + direction * speed;

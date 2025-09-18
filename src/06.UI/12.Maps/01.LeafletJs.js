@@ -101,6 +101,7 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.Pane {
             this._map = L.map(this._mapContainer.container, {
                 rotate: true, 
                 zoomControl: false,
+                rotateControl: false,
                 preferCanvas: true,
                 doubleClickZoom: true,
                 touchRotate: true,
