@@ -1,0 +1,53 @@
+.colibri-ui-timeline {
+    padding: 10px 0px;
+    gap: 20px;
+    
+    [data-object-name="form"] {
+        
+        &.app-component-shown {
+            display: flex;
+        }
+        gap: 10px;
+        flex-wrap: nowrap;
+        .app-component-field {
+            &.app-component-shown {
+                display: flex;
+            }
+            gap: 10px;
+            margin-bottom: 0px;
+            flex-wrap: nowrap;
+            align-items: center;
+            [data-object-name$="-title"] {
+                min-height: 0;
+                padding: 0px;
+                margin: 0px;
+                white-space: nowrap;
+            }
+        }        
+
+    }
+
+    [data-object-name="timeline-pane"] {
+        width: 100%;
+        padding: 0px 10px;
+        [data-object-name="start"], [data-object-name="end"] {
+            height: 100%;
+            width: 40px;
+            &.app-component-shown {
+                display: flex;
+            }
+            padding: 5px;
+            align-items: flex-end;
+            justify-content: center;
+            border: 1px solid #D9D9D9;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        [data-object-name="end"] {
+            
+        }
+
+    }
+
+}

@@ -1,0 +1,30 @@
+<div ComponentName="Colibri.UI.Timeline">
+    <!-- ui-timeline -->
+    
+    <Forms.Form shown="true" name="form">
+        <fields>
+            {
+                dts: {
+                    component: 'Date',
+                    desc: '#{ui-timeline-dts}',
+                    default: Date.Now().toShortDateString()
+                },
+                dte: {
+                    component: 'Date',
+                    desc: '#{ui-timeline-dte}',
+                    default: Date.Now().toShortDateString()
+                },
+            }
+        </fields>
+    </Forms.Form>
+
+    <Pane shown="true" name="timeline-pane">
+        <Pane shown="true" name="start">
+            <svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 0L17.6603 15H0.339746L9 0Z" fill="#4D4D4D"/></svg>
+        </Pane>
+        <Pane shown="true" name="end">
+            <svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 0L17.6603 15H0.339746L9 0Z" fill="#4D4D4D"/></svg>
+        </Pane>
+    </Pane>
+
+</div>

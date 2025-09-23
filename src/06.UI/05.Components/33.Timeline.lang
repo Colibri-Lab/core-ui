@@ -1,0 +1,26 @@
+ui-timeline-dts:
+  en: Time start
+  ru: Время начала
+  hy: Ժամը սկսվում է
+  it: Ora inizio
+  es: Hora de inicio
+  de: Startzeit
+  tr: Başlangıç zamanı
+  zh: 开始时间
+  cz: Čas začátku
+  fa: زمان شروع
+  kk: Басталу уақыты
+  uz: Boshlanish vaqti
+ui-timeline-dte:
+  en: Time end
+  ru: Время окончания
+  hy: Ժամը ավարտվում է
+  it: Ora fine
+  es: Hora de finalización
+  de: Endzeit
+  tr: Bitiş zamanı
+  zh: 结束时间
+  cz: Čas konce
+  fa: زمان پایان
+  kk: Аяқталу уақыты
+  uz: Tugash vaqti
