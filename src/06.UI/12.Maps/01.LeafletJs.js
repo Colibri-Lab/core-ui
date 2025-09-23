@@ -67,6 +67,7 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.Pane {
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Loaded', false, 'When map is fully loaded');
+        this.RegisterEvent('Changed', false, 'When zoom or move event is faired');
     }
 
 
@@ -114,7 +115,7 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.Pane {
                 rotate: true, 
                 zoomControl: false,
                 rotateControl: false,
-                preferCanvas: false,
+                preferCanvas: true,
                 doubleClickZoom: true,
                 touchRotate: true,
                 touchZoom: true
@@ -124,6 +125,18 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.Pane {
             //     .addTo(this._map);
             // new L.Control.Rotate({ position: 'topright', closeOnZeroBearing: false })
             //     .addTo(this._map);
+
+            this._map.on('zoomend', (e) => {
+                this._zoom = this._map.getZoom();
+                console.log(this._zoom);
+                this.Dispatch('Changed', {});
+            });
+            this._map.on('moveend', (e) => {
+                const bounds = this._map.getBounds();
+                this._bbox = [[bounds.getSouthWest().lat, bounds.getSouthWest().lng], [bounds.getNorthEast().lat, bounds.getNorthEast().lng]];
+                console.log(this._bbox);
+                this.Dispatch('Changed', {});
+            });
 
             this.Dispatch('Loaded', {});
         });
@@ -181,6 +194,31 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.Pane {
     }
 
     /**
+     * Bounding box [[southWestLat, southWestLng], [northEastLat, northEastLng]]
+     * @type {Array}
+     */
+    get bbox() {
+        return this._bbox;
+    }
+    /**
+     * Bounding box [[southWestLat, southWestLng], [northEastLat, northEastLng]]
+     * @type {Array}
+     */
+    set bbox(value) {
+        this._bbox = value;
+        this._showBbox();
+    }
+    _showBbox() {
+        Colibri.Common.Wait(() => this._loaded).then(() => {
+            this.SetBBox(this._bbox);
+        });
+    }
+
+    SetBBox(bbox) {
+        this._map.fitBounds(bbox);
+    }
+
+    /**
      * Tiles string in format https://tile.openstreetmap.org/{z}/{x}/{y}.png
      * @type {Object}
      */
@@ -230,7 +268,7 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.Pane {
 
     AddMarker(name, latLngLike, icon = null, opacity = 1, azimuth = 0) {
         if(this._objects[name]) {
-            this.UpdateMarker(name, latLngLike, icon, opacity);
+            this.UpdateMarker(name, latLngLike, icon, opacity, azimuth);
         } else {
             const options = {};
             if(icon) {
@@ -256,7 +294,6 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.Pane {
                 this._objects[name].setOpacity(opacity);
             }
             if(azimuth) {
-                console.log(azimuth);
                 this._objects[name].setRotation(this._degToRad(azimuth));
             }
         }
