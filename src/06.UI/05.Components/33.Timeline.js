@@ -23,7 +23,24 @@ Colibri.UI.Timeline = class extends Colibri.UI.PaneGrid {
         this._timelinePane = this.Children('timeline-pane');
         this._timelinePaneStart = this.Children('timeline-pane/start');
         this._timelinePaneEnd = this.Children('timeline-pane/end');
+
+        this._form.AddHandler('Changed', this.__formChanged, false, this);
         
+    }
+
+    /**
+     * Register events
+     * @protected
+     */
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('Changed', false, 'When timeline is changed');
+    }
+
+    __formChanged(event, args) {
+        this._dts = this._form.value.dts;
+        this._dte = this._form.value.dte;
+        this.Dispatch('Changed', {value: this._form.value});
     }
 
     /**

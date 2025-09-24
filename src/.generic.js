@@ -2302,7 +2302,7 @@ Number.prototype.intlFormat = function (type, decimal = 2, unit = null, currency
  * @param {boolean} [trim00=true] - Whether to trim leading '00' and ':' characters.
  * @returns {string} The formatted time string.
  */
-Number.prototype.toTimeString = function (daySplitter, trim00 = true) {
+Number.prototype.toTimeString = function (daySplitter, trim00 = true, hasSeconds = true) {
     let days = 0;
     let hours = 0;
     let mins = 0;
@@ -2351,6 +2351,10 @@ Number.prototype.toTimeString = function (daySplitter, trim00 = true) {
     else if (daySplitter && txt.split(':').length > 3) {
         // day exists
         txt = txt.replace(':', daySplitter);
+    }
+
+    if(!hasSeconds) {
+        txt = txt.split(daySplitter).splice(2, 1).join(daySplitter);
     }
 
     return txt;

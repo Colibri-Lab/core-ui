@@ -5,14 +5,20 @@
         <fields>
             {
                 dts: {
-                    component: 'Date',
+                    component: 'DateTime',
                     desc: '#{ui-timeline-dts}',
-                    default: Date.Now().toShortDateString()
+                    default: Date.Now().toShortDateString(),
+                    params: {
+                        time_format: '99:99'
+                    }
                 },
                 dte: {
-                    component: 'Date',
+                    component: 'DateTime',
                     desc: '#{ui-timeline-dte}',
-                    default: Date.Now().toShortDateString()
+                    default: Date.Now().toShortDateString(),
+                    params: {
+                        time_format: '99:99'
+                    }
                 },
             }
         </fields>

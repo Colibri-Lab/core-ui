@@ -26,6 +26,9 @@ Colibri.UI.Forms.DateTime = class extends Colibri.UI.Forms.Field {
         this._time.hasIcon = false;
         this._time.hasClearIcon = false;
         this._time.mask = '99:99:99';
+        this._time.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
+        // this._time.AddHandler('KeyUp', this.__thisBubble, false, this);
+        // this._time.AddHandler('Clicked', this.__thisBubbleWithFocus, false, this);
 
         this._icon = new Colibri.UI.Icon(this.name + '-clear', contentContainer);
         this._icon.shown = true;
@@ -43,6 +46,10 @@ Colibri.UI.Forms.DateTime = class extends Colibri.UI.Forms.Field {
         }
         else {
             this.enabled = this._fieldData.params.enabled;
+        }
+
+        if(this._fieldData?.params?.time_format) {
+            this._time.mask = this._fieldData?.params?.time_format;
         }
 
     }
@@ -116,7 +123,7 @@ Colibri.UI.Forms.DateTime = class extends Colibri.UI.Forms.Field {
             value = new Date(value);
         }
         this._input.value = value;
-        this._time.value = value instanceof Date ? value.toTimeString() : '';
+        this._time.value = value instanceof Date ? value.toTimeString(this._time.mask.split(':').length > 2) : '';
     }
 
     /**

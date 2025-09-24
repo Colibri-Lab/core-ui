@@ -82,7 +82,40 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.Pane {
         return (angle + 360) % 360;
     }
 
-    _destinationPoint(lng, lat, distance, bearing) {
+    _destinationPoint(lng, lat, bearing) {
+
+        const bounds = this._map.getBounds();
+        const point = turf.point([lng, lat]);
+
+        // bbox карты [minX, minY, maxX, maxY]
+        const bbox = [
+            bounds.getWest(),
+            bounds.getSouth(),
+            bounds.getEast(),
+            bounds.getNorth()
+        ];
+
+        // создаем длинную линию по азимуту (1000 км должно хватить)
+        const dest = turf.destination(point, 1000000, bearing, { units: "kilometers" });
+        const line = turf.lineString([point.geometry.coordinates, dest.geometry.coordinates]);
+
+        // превращаем bbox в polygon
+        const poly = turf.bboxPolygon(bbox);
+
+        // ищем пересечение линии и границы bbox
+        const intersection = turf.lineIntersect(line, poly);
+
+        if (intersection.features.length > 0) {
+            const coords = intersection.features[0].geometry.coordinates; // [lng, lat]
+            return {lng: coords[0], lat: coords[1]};
+        } else {
+            return {lng: lng, lat: lat};
+        }
+    }
+
+
+    _destinationPoint2(lng, lat, bearing) {
+        const distance = 10_000_000;
         const R = 6378137; // Earth radius in meters
         const brng = bearing * Math.PI / 180; // to radians
         const phi1 = lat * Math.PI / 180;
@@ -109,6 +142,7 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.Pane {
             Colibri.Common.LoadStyles('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'),
             Colibri.Common.LoadScript('https://unpkg.com/leaflet-rotate@0.2.8/dist/leaflet-rotate-src.js'),
             Colibri.Common.LoadScript('https://cdn.jsdelivr.net/npm/@turf/turf@7.2.0/turf.min.js'),
+            Colibri.Common.LoadScript('https://unpkg.com/leaflet.glify@3.3.1/dist/glify.js')
         ]).then(() => {
             this._loaded = true;
             this._map = L.map(this._mapContainer.container, {
@@ -240,6 +274,7 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.Pane {
                 this.AddTiles(tileUrl, name);
             });
             this.SwitchToLayer(Object.keys(this._layers)[0]);
+            this._map.getRenderer(this._layers.default);
         });
     }
 
@@ -287,13 +322,13 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.Pane {
     UpdateMarker(name, latLngLike, icon = null, opacity = 1, azimuth = 0) {
         if(this._objects[name]) {
             this._objects[name].setLatLng(latLngLike);
-            if(icon) {
+            if(icon && this._objects[name] && this._objects[name]?.getIcon && this._objects[name].getIcon() != this._icons[icon]) {
                 this._objects[name].setIcon(this._icons[icon]);
             }
-            if(opacity) {
+            if(opacity && this._objects[name] && this._objects[name]._opacity != opacity && this._objects[name].setOpacity) {
                 this._objects[name].setOpacity(opacity);
             }
-            if(azimuth) {
+            if(azimuth && this._objects[name] && this._objects[name].options.rotation != this._degToRad(azimuth) && this._objects[name].setRotation) {
                 this._objects[name].setRotation(this._degToRad(azimuth));
             }
         }
@@ -350,15 +385,36 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.Pane {
     }
 
     UpdatePolyline(name, latLngArray, color = 'red', weight = 1) {
-        if(this._objects[name]) {
+        if(this._objects[name] && JSON.stringify(this._objects[name].getLatLngs()) != JSON.stringify(latLngArray)) {
             this._objects[name].setLatLngs(latLngArray);
+        }
+        if(this._objects[name] && JSON.stringify(this._objects[name].getStyle()) != JSON.stringify({color: color, weight: weight})) {
             this._objects[name].setStyle({color: color, weight: weight});
         }
     }
 
+    UpdateCircle(name, latLngLike, radius, color = 'red') {
+        if(this._objects[name]) {
+            this._objects[name].setLatLng(latLngLike);
+            this._objects[name].setRadius(radius);
+            this._objects[name].setStyle({color: color});
+        }
+    }
+
+    AddCircle(name, latLngLike, radius, color = 'red') {
+        if(this._objects[name]) {
+            this.UpdateCircle(name, latLngLike, radius, color);
+        } else {
+            this._objects[name] = L.circleMarker(latLngLike, {radius: radius, color: color}).addTo(this._map);
+        }
+    }
+
     AddGeoLine(name, latLngLike, azimuth, color = 'red', weight = 1) {
-        const distance = 10_000_000; // "infinity" 10,000 km
-        const end = this._destinationPoint(latLngLike.lng, latLngLike.lat, distance, azimuth);
+        const end = this._destinationPoint2(latLngLike.lng, latLngLike.lat, azimuth);
+        if(!end) {
+            console.log('Can not obtain ending point');
+            return {};
+        }
         const line = turf.greatCircle([latLngLike.lng, latLngLike.lat], [end.lng, end.lat], { npoints: 100 });
 
         this.AddPolyline(name, line.geometry.coordinates.map(v => ([v[1],v[0]])), color, weight);
@@ -381,12 +437,30 @@ Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.Pane {
         });
     }
 
+    AddDivIcon(iconName, className, width, height) {
+        this._icons[iconName] = L.divIcon({
+            className: className,
+            iconSize: [width, height],
+            iconAnchor: [width / 2, height / 2],
+            popupAnchor: [-3, -3]
+        });
+    }
+
     DeleteByName(name) {
         if(!this._objects[name]) {
             return;
         }
         this._objects[name].remove();
         delete this._objects[name];
+    }
+
+    DeleteByNameLike(nameLike) {
+        Object.forEach(this._objects, (name, o) =>{
+            if(name.indexOf(nameLike) !== -1) {
+                o.remove();
+                delete this._objects[name];
+            }
+        });
     }
 
     Exists(name) {
