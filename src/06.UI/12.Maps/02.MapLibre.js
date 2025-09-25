@@ -60,8 +60,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             this._map.on('moveend', () => {
                 const bounds = this._map.getBounds();
                 this._bbox = [
-                    [bounds.getSouth(), bounds.getWest()],
-                    [bounds.getNorth(), bounds.getEast()]
+                    [bounds.getWest(), bounds.getSouth()],
+                    [bounds.getEast(), bounds.getNorth()]
                 ];
                 this.Dispatch('Changed', {});
             });
@@ -222,7 +222,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     AddMarker(name, latLngLike, icon = null, opacity = 1, azimuth = 0) {
         if(this.Exists(name)) {
-            // this.UpdateMarker(name, latLngLike, icon, opacity, azimuth);
+            // this._map.getSource(name).setData()
         } else {
 
             this._map.addSource(name, {
@@ -253,22 +253,6 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         }
     }
 
-    UpdateMarker(name, latLngLike, icon = null, opacity = 1, azimuth = 0) {
-        // if(this._objects[name]) {
-        //     this._map.getSource(name).setData({
-        //         type: 'FeatureCollection',
-        //         features: [{
-        //             type: 'Feature',
-        //             geometry: { type: 'Point', coordinates: [latLngLike.lng, latLngLike.lat] },
-        //             properties: { angle: azimuth }
-        //         }]
-        //     });
-
-        //     // this._map.getLayer(name).
-            
-        // }
-    }
-
     AddPopup(name, popupHtml) {
         // const object = this._objects[name];
         // if(!object) return;
@@ -293,7 +277,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     AddPolyline(name, latLngArray, color = 'red', weight = 1) {
         if(this.Exists(name)) {
-            // this.UpdatePolyline(name, latLngArray, color, weight);
+            this._map.getSource(name).setData({
+                type: 'LineString',
+                coordinates: latLngArray.map(ll => [ll?.lng || ll[1], ll?.lat || ll[0]])
+            });
         } else {
 
             this._map.addSource(name, {
@@ -318,27 +305,14 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         }
     }
 
-    UpdatePolyline(name, latLngArray, color = 'red', weight = 1) {
-        if(this._map.getSource(name)) {
-            this._map.getSource(name).setData({
-                type: 'Feature',
-                geometry: {
-                    type: 'LineString',
-                    coordinates: latLngArray.map(ll => [ll.lng || ll[1], ll.lat || ll[0]])
-                }
-            });
-            this._map.setPaintProperty(name, 'line-color', color);
-            this._map.setPaintProperty(name, 'line-width', weight);
-        }
-    }
-
     AddCircle(name, latLngLike, radius, color = 'red') {
         
         if(this.Exists(name)) {
             
-            // this._map.getSource(name).setData({
-
-            // });
+            this._map.getSource(name).setData({
+                type: 'Point',
+                coordinates: [latLngLike.lng, latLngLike.lat]
+            });
 
         } else {
             this._map.addSource(name, {
@@ -366,6 +340,29 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 }
             });
 
+        }
+    }
+
+    AddLineFromGeo(name, geolineObject, color = 'red', weight = 1) {
+        if(this.Exists(name)) {
+            this._map.getSource(name).setData(geolineObject);
+        } else {
+            this._map.addSource(name, {
+                type: 'geojson',
+                data: {
+                    type: 'Feature',
+                    geometry: geolineObject
+                }
+            });
+            this._map.addLayer({
+                id: name,
+                type: 'line',
+                source: name,
+                paint: {
+                    'line-color': color,
+                    'line-width': weight
+                }
+            });
         }
     }
 
@@ -398,10 +395,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._map.removeSource(name);
     }
 
-    DeleteByNameLike(nameLike) {
+    DeleteByNameLike(nameLike, except = []) {
         const names = Object.keys(this._map.getStyle().sources);
         for(const name of names) {
-            if(name.indexOf(nameLike) !== -1) {
+            if(name.indexOf(nameLike) !== -1 && except.indexOf(name) === -1) {
                 this.DeleteByName(name);
             };
         }
