@@ -547,6 +547,10 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         return rows;
     }
 
+    Groups(name) {
+        return this._gridContent.Children(name);
+    }
+
     __rowsRowDisposed(event, args) {
         Object.forEach(this.groups, (name, rows) => {
             rows.columns = this.header.columnsCount;

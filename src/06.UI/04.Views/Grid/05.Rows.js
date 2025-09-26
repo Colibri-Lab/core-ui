@@ -116,6 +116,7 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         }
 
         this.grid.Dispatch('RowAdded', {row: newRow});
+        newRow.AddHandler('RowDisposed', this.__rowDisposed, false, this);
 
         return newRow;
     }
@@ -124,6 +125,12 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         this.checkbox.checked = this.checked.length > 0;
         this.checkbox.thirdState = this.rowsCount > this.checked.length;
                 
+    }
+
+    __rowDisposed(event, args) {
+        if(this._titleCellCountSpan) {
+            this._titleCellCountSpan.value = ' (' + this.rowsCount + ')';
+        }
     }
 
     __childAdded(event, args) {

@@ -1412,7 +1412,7 @@ String.prototype.toDate = function () {
     let parts = t.split(' ');
     let dateParts = parts[0].split('-');
     let timeParts = parts[1] ? parts[1].split(':') : ['0', '0', '0'];
-    return new Date((dateParts[0] + '').toInt(), (dateParts[1] + '').toInt() - 1, (dateParts[2] + '').toInt(), (timeParts[0] + '').toInt(), (timeParts[1] + '').toInt(), (timeParts[2] + '').toInt());
+    return new Date((dateParts[0] + '').toInt(), (dateParts[1] + '').toInt() - 1, (dateParts[2] + '').toInt(), (timeParts[0] + '').toInt(), (timeParts[1] + '').toInt(), (timeParts[2] + '').toInt() || 0);
 };
 /**
  * Converts the string from DDMMYYYY format to a Date object.

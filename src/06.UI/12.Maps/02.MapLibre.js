@@ -276,21 +276,24 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     AddPolyline(name, latLngArray, color = 'red', weight = 1) {
+
+        const geoData = {
+            type: 'LineString',
+            coordinates: latLngArray.map(ll => [ll?.lng || ll[1], ll?.lat || ll[0]])
+        };
+
         if(this.Exists(name)) {
-            this._map.getSource(name).setData({
-                type: 'LineString',
-                coordinates: latLngArray.map(ll => [ll?.lng || ll[1], ll?.lat || ll[0]])
-            });
+            const source = this._map.getSource(name);
+            if(!Object.shallowEqual(source._data, geoData)) {
+                source.setData(geoData);
+            }
         } else {
 
             this._map.addSource(name, {
                 type: 'geojson',
                 data: {
                     type: 'Feature',
-                    geometry: {
-                        type: 'LineString',
-                        coordinates: latLngArray.map(ll => [ll?.lng || ll[1], ll?.lat || ll[0]])
-                    }
+                    geometry: geoData
                 }
             });
             this._map.addLayer({
@@ -307,13 +310,16 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     AddCircle(name, latLngLike, radius, color = 'red') {
         
-        if(this.Exists(name)) {
-            
-            this._map.getSource(name).setData({
-                type: 'Point',
-                coordinates: [latLngLike.lng, latLngLike.lat]
-            });
+        const geoData = {
+            type: 'Point',
+            coordinates: [latLngLike.lng, latLngLike.lat]
+        };
 
+        if(this.Exists(name)) {
+            const source = this._map.getSource(name);
+            if(!Object.shallowEqual(source._data, geoData)) {
+                source.setData(geoData);
+            }
         } else {
             this._map.addSource(name, {
                 type: 'geojson',
@@ -321,10 +327,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     type: 'FeatureCollection',
                     features: [{
                         type: 'Feature',
-                        geometry: {
-                            type: 'Point',
-                            coordinates: [latLngLike.lng, latLngLike.lat]
-                        }
+                        geometry: geoData
                     }]
                 }
             });
@@ -345,7 +348,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     AddLineFromGeo(name, geolineObject, color = 'red', weight = 1) {
         if(this.Exists(name)) {
-            this._map.getSource(name).setData(geolineObject);
+            const source = this._map.getSource(name);
+            if(!Object.shallowEqual(source._data, geolineObject)) {
+                source.setData(geolineObject);
+            }
         } else {
             this._map.addSource(name, {
                 type: 'geojson',
