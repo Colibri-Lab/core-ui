@@ -1,6 +1,6 @@
 ui-timeline-dts:
   en: Time start
-  ru: Время начала
+  ru: Начало
   hy: Ժամը սկսվում է
   it: Ora inizio
   es: Hora de inicio
@@ -13,7 +13,7 @@ ui-timeline-dts:
   uz: Boshlanish vaqti
 ui-timeline-dte:
   en: Time end
-  ru: Время окончания
+  ru: Окончание
   hy: Ժամը ավարտվում է
   it: Ora fine
   es: Hora de finalización

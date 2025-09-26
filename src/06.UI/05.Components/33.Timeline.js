@@ -61,7 +61,6 @@ Colibri.UI.Timeline = class extends Colibri.UI.PaneGrid {
 
             
             this._currentDate = this._getDateByPosition(relativeX);
-            console.log(relativeX, this._currentDate)
             if (!this._currentDate) {
                 return;
             }
@@ -129,6 +128,11 @@ Colibri.UI.Timeline = class extends Colibri.UI.PaneGrid {
 
     __formChanged(event, args) {
         if(!!this._movingPoint) {
+            return;
+        }
+
+        if(this._form.value.dte.toDate() < this._form.value.dts.toDate() ) {
+            this._form.value = { dts: this._form.value.dts, dte: this._form.value.dts.toDate().addHours(5).toDbDate() };
             return;
         }
 
