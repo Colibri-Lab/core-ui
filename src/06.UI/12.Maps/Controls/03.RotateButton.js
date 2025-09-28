@@ -34,6 +34,7 @@ Colibri.UI.Maps.Controls.RotateButton = class extends Colibri.UI.Maps.Controls.B
      */
     _registerEvents() {
         super._registerEvents();
+        this.RegisterEvent('Rotating', false, 'When the map must be rotated');
         this.RegisterEvent('Rotated', false, 'When the map must be rotated');
     }
 
@@ -75,7 +76,7 @@ Colibri.UI.Maps.Controls.RotateButton = class extends Colibri.UI.Maps.Controls.B
             }
 
             this._icon.rotation = this._rotationAngle;
-            this.Dispatch('Rotated', {angle: this._icon.rotation});
+            this.Dispatch('Rotating', {angle: this._icon.rotation});
 
             if (e.type.startsWith('touch')) {
                 e.preventDefault();
@@ -94,6 +95,9 @@ Colibri.UI.Maps.Controls.RotateButton = class extends Colibri.UI.Maps.Controls.B
             
             document.body.removeEventListener('mousedown', this._movingEndHandler, true);
             document.body.removeEventListener('touchend', this._movingEndHandler, true);
+            
+            this.Dispatch('Rotated', {angle: this._icon.rotation});
+
         
         };
         
@@ -105,6 +109,10 @@ Colibri.UI.Maps.Controls.RotateButton = class extends Colibri.UI.Maps.Controls.B
 
         // need to detect when to mouse is out the document, and stop all
 
+    }
+
+    get rotating() {
+        return this._rotating;
     }
 
 }

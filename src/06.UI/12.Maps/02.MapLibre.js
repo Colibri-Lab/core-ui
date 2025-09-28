@@ -27,6 +27,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
         this._zoomZoomIn.AddHandler('Clicked', this.__zoomZoomInClicked, false, this);
         this._zoomZoomOut.AddHandler('Clicked', this.__zoomZoomOutClicked, false, this);
+        this._zoomRotate.AddHandler('Rotating', this.__zoomRotateRotating, false, this);
         this._zoomRotate.AddHandler('Rotated', this.__zoomRotateRotated, false, this);
         this._zoomSetCenter.AddHandler('Clicked', this.__zoomSetCenterClicked, false, this);
         this._layersSwitch.AddHandler('Changed', this.__layersSwitchChanged, false, this);
@@ -54,11 +55,18 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 pitch: 0
             });
 
+            this._map.dragRotate.disable();
+            this._map.touchZoomRotate.disableRotation();
+
             this._map.on('load', () => {
                 this.Dispatch('Loaded', {});
             });
 
-            this._map.on('moveend', () => {
+            this._map.on('moveend', (e) => {
+                if(this._zoomRotate.rotating) {
+                    return;
+                }
+
                 const bounds = this._map.getBounds();
                 this._bbox = [
                     [bounds.getWest(), bounds.getSouth()],
@@ -67,9 +75,26 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 this.Dispatch('Changed', {});
             });
 
-            this._map.on('zoomend', () => {
+            this._map.on('zoomend', (e) => {
+                if(this._zoomRotate.rotating) {
+                    return;
+                }
                 this._zoom = this._map.getZoom();
                 this.Dispatch('Changed', {});
+            });
+
+            this._map.on('rotatestart', (e) => {
+                this._rotating = true;
+            });
+
+            this._map.on('rotateend', (e) => {
+                if(this._zoomRotate.rotating) {
+                    return;
+                }
+
+                this._rotation = this._map.getBearing();
+                this.Dispatch('Changed', {});
+                this._rotating = false;
             });
 
             this._map.on('styleimagemissing', async (e) => {
@@ -105,8 +130,12 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     __zoomSetCenterClicked() {
         this._map.flyTo({ center: this._center, zoom: this._zoom });
     }
+    __zoomRotateRotating(event, args) {
+        this._map.rotateTo(args.angle);
+    }
     __zoomRotateRotated(event, args) {
         this._map.rotateTo(args.angle);
+        this.Dispatch('Changed', {});
     }
     __zoomZoomInClicked() {
         if (this.zoom >= 18) {
@@ -212,6 +241,17 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 type: 'raster',
                 source: name
             });
+            try {
+                if(this._map.getLayer('lines')) {
+                    this._map.moveLayer(name, 'lines');
+                }
+                if(this._map.getLayer('points')) {
+                    this._map.moveLayer(name, 'points');
+                }
+                if(this._map.getLayer('objects')) {
+                    this._map.moveLayer(name, 'objects');
+                }
+            } catch(e) {}
             this._currentLayer = name;
 
         }
