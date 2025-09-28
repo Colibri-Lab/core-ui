@@ -278,9 +278,18 @@ Array.prototype.avg = function () {
  * @param {number} l - The number of elements to include in the new array.
  * @returns {Array} Returns a new array containing the first 'l' elements.
  */
-Array.prototype.part = function (l) {
+Array.prototype.part = function (l, start = 0) {
     let ret = [];
-    for (let i = 0; i < l; i++) {
+    for (let i = start; i < l; i++) {
+        ret.push(this[i]);
+    }
+    return ret;
+}
+
+Array.prototype.page = function (page, pagesize) {
+    let ret = [];
+    const start = (page - 1) * pagesize;
+    for (let i = start; i < start + pagesize; i++) {
         ret.push(this[i]);
     }
     return ret;

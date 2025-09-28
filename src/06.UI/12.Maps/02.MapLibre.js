@@ -311,10 +311,31 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         source.setData(data);
     }
 
+    _sourceAddOrUpdateObjects(objectsJson) {
+        const source = this._createObjectSource();
+        const data = source._data;
+        for(const objectJson of objectsJson) {
+            const idx = data.features.findIndex(f => f.id === objectJson.id);
+            if (idx === -1) {
+                data.features.push(objectJson)
+            } else {
+                data.features.splice(idx, 1, objectJson);
+            }
+        }
+        source.setData(data);
+    }
+
     _sourceRemoveObject(objectId) {
         const source = this._createObjectSource();
         const data = source._data;
         data.features = data.features.filter(f => f.id !== objectId);
+        source.setData(data);
+    }
+
+    _sourceRemoveObjects(objectIds) {
+        const source = this._createObjectSource();
+        const data = source._data;
+        data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
         source.setData(data);
     }
 
@@ -334,10 +355,31 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         source.setData(data);
     }
 
+    _sourceAddOrUpdateLines(objectsJson) {
+        const source = this._createLineSource();
+        const data = source._data;
+        for(const objectJson of objectsJson) {
+            const idx = data.features.findIndex(f => f.id === objectJson.id);
+            if (idx === -1) {
+                data.features.push(objectJson)
+            } else {
+                data.features.splice(idx, 1, objectJson);
+            }
+        }
+        source.setData(data);
+    }
+
     _sourceRemoveLine(objectId) {
         const source = this._createLineSource();
         const data = source._data;
         data.features = data.features.filter(f => f.id !== objectId);
+        source.setData(data);
+    }
+
+    _sourceRemoveLines(objectIds) {
+        const source = this._createLineSource();
+        const data = source._data;
+        data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
         source.setData(data);
     }
 
@@ -356,11 +398,31 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         data.features.push(objectJson);
         source.setData(data);
     }
+    _sourceAddOrUpdatePoints(objectsJson) {
+        const source = this._createPointSource();
+        const data = source._data;
+        for(const objectJson of objectsJson) {
+            const idx = data.features.findIndex(f => f.id === objectJson.id);
+            if (idx === -1) {
+                data.features.push(objectJson)
+            } else {
+                data.features.splice(idx, 1, objectJson);
+            }
+        }
+        source.setData(data);
+    }
 
     _sourceRemovePoint(objectId) {
         const source = this._createPointSource();
         const data = source._data;
         data.features = data.features.filter(f => f.id !== objectId);
+        source.setData(data);
+    }
+
+    _sourceRemovePoints(objectIds) {
+        const source = this._createPointSource();
+        const data = source._data;
+        data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
         source.setData(data);
     }
 
@@ -400,6 +462,21 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         } else {
             this._sourceAddObject(geoData);
         }
+    }
+
+    AddMarkers(latLngsLike, icon = null) {
+        this._sourceAddOrUpdateObjects(latLngsLike.map(latLngLike => {
+            if(latLngLike.type === 'Feature') {
+                return latLngLike;
+            } else {
+                return {
+                    type: 'Feature',
+                    id: latLngLike.id,
+                    geometry: { type: 'Point', coordinates: [latLngLike.lng, latLngLike.lat] },
+                    properties: { id: latLngLike.id, angle: latLngLike.azimuth, type: icon }
+                };
+            }
+        }));
     }
 
     AddPopup(name, popupHtml) {
@@ -467,6 +544,48 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         } else {
             this._sourceAddPoint(geoData);
         }
+    }
+
+    AddCircles(latLngsLike, radius, color = 'red') {
+
+        this._sourceAddOrUpdatePoints(latLngsLike.map(latLngLike => {
+            if(latLngLike.type === 'Feature') {
+                return latLngLike;
+            }
+            return {
+                type: 'Feature',
+                id: latLngLike.id,
+                geometry: {
+                    type: 'Point',
+                    coordinates: [latLngLike.lng, latLngLike.lat]
+                },
+                properties: {
+                    id: latLngLike.id,
+                    'radius': radius,
+                    'color': color,
+                    'opacity': 1
+                }
+            };
+        }));
+    }
+
+    AddLinesFromGeo(geolineObjects, color = 'red', weight = 1) {
+        this._sourceAddOrUpdateLines(geolineObjects.map(v => {
+            if(v.type === 'Feature') {
+                return v;
+            } else {
+                return {
+                    type: 'Feature',
+                    id: v.id,
+                    geometry: v,
+                    properties: {
+                        id: v.id,
+                        'color': color,
+                        'weight': weight
+                    }
+                };
+            }
+        }));
     }
 
     AddLineFromGeo(name, geolineObject, color = 'red', weight = 1) {
