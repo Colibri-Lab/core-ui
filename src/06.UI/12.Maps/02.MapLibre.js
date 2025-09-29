@@ -55,6 +55,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 pitch: 0
             });
 
+            this._createLineSource();
+            this._createPointSource();
+            this._createObjectSource();
+
             this._map.dragRotate.disable();
             this._map.touchZoomRotate.disableRotation();
 
@@ -119,6 +123,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 }
                 this._map.addImage(e.id, image);
             });
+
 
         });
     }
@@ -245,12 +250,12 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 if(this._map.getLayer('lines')) {
                     this._map.moveLayer(name, 'lines');
                 }
-                if(this._map.getLayer('points')) {
-                    this._map.moveLayer(name, 'points');
-                }
-                if(this._map.getLayer('objects')) {
-                    this._map.moveLayer(name, 'objects');
-                }
+                // if(this._map.getLayer('points')) {
+                //     this._map.moveLayer(name, 'points');
+                // }
+                // if(this._map.getLayer('objects')) {
+                //     this._map.moveLayer(name, 'objects');
+                // }
             } catch(e) {}
             this._currentLayer = name;
 
