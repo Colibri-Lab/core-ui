@@ -289,6 +289,9 @@ Array.prototype.part = function (l, start = 0) {
 Array.prototype.page = function (page, pagesize) {
     let ret = [];
     const start = (page - 1) * pagesize;
+    if(this.length < start + pagesize) {
+        return this;
+    }
     for (let i = start; i < start + pagesize; i++) {
         ret.push(this[i]);
     }

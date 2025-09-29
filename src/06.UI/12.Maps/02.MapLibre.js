@@ -49,8 +49,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             this._loaded = true;
             this._map = new maplibregl.Map({
                 container: this._mapContainer.container,
-                center: this._center || [37.6173, 55.7558], // lng, lat
-                zoom: this._zoom || 10,
+                // center: {lng: 45.29590878451711, lat: 40.06732341520765}, // lng, lat
+                // zoom: 24,
                 bearing: 0,
                 pitch: 0
             });
@@ -71,11 +71,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     return;
                 }
 
-                const bounds = this._map.getBounds();
-                this._bbox = [
-                    [bounds.getWest(), bounds.getSouth()],
-                    [bounds.getNorth(), bounds.getEast()]
-                ];
+                this._getProperties();
                 this.Dispatch('Changed', {});
             });
 
@@ -83,7 +79,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 if(this._zoomRotate.rotating) {
                     return;
                 }
-                this._zoom = this._map.getZoom();
+                this._getProperties();
                 this.Dispatch('Changed', {});
             });
 
@@ -95,8 +91,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 if(this._zoomRotate.rotating) {
                     return;
                 }
+                this._getProperties();
 
-                this._rotation = this._map.getBearing();
                 this.Dispatch('Changed', {});
                 this._rotating = false;
             });
@@ -128,6 +124,20 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         });
     }
 
+    _getProperties() {
+        const bounds = this._map.getBounds();
+        const southWest = bounds.getSouthWest();
+        const northEast = bounds.getNorthEast();
+
+        this._bbox = [
+            { lng: southWest.lng, lat: southWest.lat },
+            { lng: northEast.lng, lat: northEast.lat }
+        ];
+        this._zoom = this._map.getZoom();
+        this._center = this._map.getCenter();                
+        this._rotation = this._map.getBearing();
+    }
+
     __layersSwitchChanged(event, args) {
         this.SwitchToLayer(args.current);
         this.Dispatch('Changed', {});
@@ -153,6 +163,16 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             return;
         }
         this._map.zoomOut();
+    }
+
+    Fly(center, zoom) {
+        Colibri.Common.Wait(() => this._loaded).then(() => {
+            this._map.flyTo({ center: center, zoom: zoom });
+        });
+    }
+
+    get loaded() {
+        return this._loaded;
     }
 
     get center() { return this._center; }
@@ -195,7 +215,11 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         });
     }
     SetBBox(bbox) {
-        this._map.fitBounds([[bbox[0][1], bbox[0][0]], [bbox[1][1], bbox[1][0]]]);
+        console.log(bbox);
+        this._map.fitBounds([
+            [bbox[0][1], bbox[0][0]], // [lat, lng]
+            [bbox[1][1], bbox[1][0]]  // [lat, lng]
+        ]);
     }
 
     /**
