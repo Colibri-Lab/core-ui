@@ -404,7 +404,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         try {
             vv = Lang.Translate(value[name] ?? field.default ?? '' ?? null);
         } catch (e) {
-            vv = value[name] ?? field.default ?? '' ?? null;
+            vv = value ? (value[name] ?? field.default ?? '' ?? null) : '';
         }
         if (field.params && field.params.valuegenerator) {
             const f = typeof field?.params?.valuegenerator === 'string' ? eval(field?.params?.valuegenerator) : field?.params?.valuegenerator;
