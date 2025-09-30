@@ -1,0 +1,77 @@
+
+.app-component-ecolo-numberpicker-field {
+    border-radius: 5px 5px 0px 0px;
+
+    > .app-component-textspan {
+        background: #EAFBFF;
+        font-style: normal !important;
+        font-weight: 400 !important;
+        font-size: 16px !important;
+        line-height: 18px !important;
+        color: #707070;
+        padding: 20px;
+    }
+
+    .app-input-component {
+        background: #EAFBFF;
+        border: 0px;
+        padding-bottom: 20px;
+        padding-left: 16px;
+        padding-right: 16px;
+        input {
+            font-style: normal;
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 18px;
+            color: #0B1F35;
+            background: transparent;
+        }
+    }
+
+    .app-component-ecolo-numberpicker-flex {
+        flex-direction: column;
+
+        .app-component-ecolo-numberpicker-progress-pane {
+            background: #B5B2B2;
+            height: 4px;
+            > .app-component-pane {
+                position: relative;
+                padding: 0px 0px 0px 8px;
+                background: #1B62FF;
+                height: 4px;
+                width: 0%;
+                > .app-component-pane {
+                    width: 16px;
+                    height: 16px;
+                    top: -6px;
+                    right: -8px;
+                    background: #1B62FF;
+                    border-radius: 50%;
+                    position: absolute;
+                    z-index: 1;
+                    cursor: pointer;
+                    &.app-component-shown {
+                        display: block;
+                    }
+                }
+            }
+        }
+
+    }
+
+    .app-component-ecolo-numberpicker-maxmin {
+        width: 100%;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 13px;
+        .app-component-textspan {
+            font-style: normal;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 18px;
+            color: #1D376B;
+        } 
+    }
+
+}

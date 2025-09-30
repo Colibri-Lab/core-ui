@@ -1,0 +1,87 @@
+
+.app-component-numberrangepicker-field {
+    border-radius: 5px 5px 0px 0px;
+
+    > .app-component-textspan {
+        font-style: normal !important;
+        font-weight: 400 !important;
+        font-size: 16px !important;
+        line-height: 18px !important;
+        color: #000;
+        min-height: auto;
+    }
+
+    .app-input-component {
+        flex: 0 0 50%;
+        border: 0px;
+        padding: 10px 0px;
+        input {
+            padding: 0px;
+            font-style: normal;
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 18px;
+            color: #0B1F35;
+            background: transparent;
+        }
+        &:last-child {
+            input {
+                text-align: right;
+            }
+        }
+    }
+
+    .app-component-numberrangepicker-flex {
+        flex-direction: column;
+
+        .app-component-numberrangepicker-progress-pane {
+            background: #B5B2B2;
+            height: 4px;
+            margin-left: 8px;
+            width: calc(100% - 16px);
+            > .app-component-pane {
+                position: relative;
+                padding: 0px 0px 0px 8px;
+                background: #888;
+                height: 4px;
+                width: 0%;
+                > .app-component-pane {
+                    width: 16px;
+                    height: 16px;
+                    top: -6px;
+                    background: #888;
+                    border-radius: 50%;
+                    position: absolute;
+                    z-index: 1;
+                    cursor: pointer;
+                    &.app-component-shown {
+                        display: block;
+                    }
+                    &:first-child {
+                        left: -8px;
+                    }
+                    &:last-child {
+                        right: -8px;
+                    }
+                }
+            }
+        }
+
+    }
+
+    .app-component-numberrangepicker-maxmin {
+        width: 100%;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 13px;
+        .app-component-textspan {
+            font-style: normal;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 18px;
+            color: #000;
+        } 
+    }
+
+}
