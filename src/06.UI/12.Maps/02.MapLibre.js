@@ -15,6 +15,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._objects = {};
         this._icons = {};
         this._layers = {};
+        this._selectedIds = [];
 
         this._zoomZoomIn = this.Children('zoom/zoom-in');
         this._zoomZoomOut = this.Children('zoom/zoom-out');
@@ -60,6 +61,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             this._createPointSource();
             this._createObjectSource();
 
+            this._map.boxZoom.disable();
             this._map.dragRotate.disable();
             this._map.touchZoomRotate.disableRotation();
 
@@ -127,15 +129,15 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     get layersButtonGroup() {
         return this.Children('layers').container;
-    } 
+    }
 
     get additionalButtonGroup() {
         return this.Children('additional').container;
-    } 
+    }
 
     get filtersButtonGroup() {
         return this.Children('filters').container;
-    } 
+    }
 
     get zoomButtonGroup() {
         return this.Children('zoom').container;
@@ -890,8 +892,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             this.Dispatch('SelectionChanged', { ids: this._selectedIds });
         }
 
-        // мышь
-        this._map.getCanvas().addEventListener('mousedown', (e) => {
+        this._mousedownHandler = this._mousedownHandler || ((e) => {
             if (!e.shiftKey) return true;
 
             this._selectedIds = [];
@@ -913,8 +914,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             return false;
         });
 
-        // палец
-        this._map.getCanvas().addEventListener('touchstart', (e) => {
+        this._touchHandler = this._touchHandler || ((e) => {
             if (e.touches.length !== 1) return true;
             const t = e.touches[0];
             beginSelection(t.clientX, t.clientY);
@@ -934,13 +934,203 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             document.addEventListener('touchend', end);
             return false;
         });
+
+        this._map.getCanvas().addEventListener('mousedown', this._mousedownHandler);
+        this._map.getCanvas().addEventListener('touchstart', this._touchHandler);
+    }
+
+    DisableBoxSelection() {
+        this._map.getCanvas().removeEventListener('mousedown', this._mousedownHandler);
+        this._map.getCanvas().removeEventListener('touchstart', this._touchHandler);
+    }
+
+    EnableSingleSelection() {
+        this._mapClicked = this._mapClicked || ((e) => {
+            const features = this._map.queryRenderedFeatures(e.point, { layers: ['lines', 'points', 'objects'] });
+            const ids = features.map(f => f.properties.id);
+            this._selectedIds = !e.originalEvent.shiftKey ? ids : this._selectedIds.concat(ids);
+            this.Dispatch('SelectionChanged', { ids: this._selectedIds });
+        });
+        this._mapMouseEnter = this._mapMouseEnter || ((e) => {
+            if (e.features.length) {
+                this._map.getCanvas().style.cursor = 'pointer';
+            }
+        });
+        this._mapMouseLeave = this._mapMouseLeave || ((e) => {
+            this._map.getCanvas().style.cursor = "";
+        });
+        this._map.on("mouseenter", "lines", this._mapMouseEnter);
+        this._map.on("mouseleave", "lines", this._mapMouseLeave);
+        this._map.on("mouseenter", "points", this._mapMouseEnter);
+        this._map.on("mouseleave", "points", this._mapMouseLeave);
+        this._map.on("mouseenter", "objects", this._mapMouseEnter);
+        this._map.on("mouseleave", "objects", this._mapMouseLeave);
+        this._map.on('click', this._mapClicked);
+    }
+
+    DisableSingleSelection() {
+        this._map.off("mouseenter", "lines", this._mapMouseEnter);
+        this._map.off("mouseleave", "lines", this._mapMouseLeave);
+        this._map.off("mouseenter", "points", this._mapMouseEnter);
+        this._map.off("mouseleave", "points", this._mapMouseLeave);
+        this._map.off("mouseenter", "objects", this._mapMouseEnter);
+        this._map.off("mouseleave", "objects", this._mapMouseLeave);
+        this._map.off('click', this._mapClicked);
+    }
+
+    EnableClickToMark(icon) {
+        this._mapClickToMarkClicked = this._mapClickToMarkClicked || ((e) => {
+            let name = 'marker';
+            if (e.originalEvent.shiftKey) {
+                name = 'marker-' + Date.Mc();
+            } else {
+                this.DeleteByNameLike('marker-');
+            }
+            this.AddMarker(name, e.lngLat, icon)
+        });
+        this._map.on('click', this._mapClickToMarkClicked);
+    }
+
+    DisableClickToMark() {
+        this.DeleteByNameLike('marker-');
+        this._map.off('click', this._mapClickToMarkClicked);
+    }
+
+    EnableMeasure() {
+        let drawing = false;
+        let lineCoordinates = [];
+        let tempLineSourceId = 'measure-line';
+        this._measurePopup = null;
+
+
+        const beginDrawing = (x, y) => {
+            drawing = true;
+            lineCoordinates = [this._map.unproject([x, y]).toArray()]; // координаты lng/lat
+            this._map.dragPan.disable();
+            if (!this._measurePopup) {
+                this._measurePopup = new maplibregl.Popup({ closeButton: false, closeOnClick: false })
+                    .setLngLat(this._map.unproject([x, y]))
+                    .setHTML('0 км')
+                    .addTo(this._map);
+            }
+        };
+
+        const updateDrawing = (x, y) => {
+            if (!drawing) return;
+
+            const lngLat = this._map.unproject([x, y]).toArray();
+            const coords = [...lineCoordinates, lngLat];
+            const lineCoords = turf.greatCircle([coords[0][0], coords[0][1]], [coords[1][0], coords[1][1]], { npoints: 100 });
+
+            // обновляем линию на карте
+            if (!this._map.getSource(tempLineSourceId)) {
+                this._map.addSource(tempLineSourceId, {
+                    type: 'geojson',
+                    data: lineCoords
+                });
+                this._map.addLayer({
+                    id: tempLineSourceId + '-layer',
+                    type: 'line',
+                    source: tempLineSourceId,
+                    paint: { 'line-color': '#1976d2', 'line-width': 3 }
+                });
+            } else {
+                this._map.getSource(tempLineSourceId).setData(lineCoords);
+            }
+
+            // считаем длину только если больше одной точки
+            let length = 0;
+            if (coords.length > 1) {
+                const line = turf.lineString(coords);
+                length = turf.length(line, { units: 'kilometers' });
+            }
+
+            // обновляем popup
+            this._measurePopup.setLngLat(this._map.unproject([x, y]))
+                .setHTML(length.toFixed(3) + ' км');
+        };
+
+        const finishDrawing = (x, y) => {
+            if (!drawing) return;
+            drawing = false;
+            const lngLat = this._map.unproject([x, y]).toArray();
+            lineCoordinates.push(lngLat);
+
+            // считаем длину через Turf.js
+            const line = turf.lineString(lineCoordinates);
+            const length = turf.length(line, { units: 'kilometers' });
+
+            console.log('Длина линии:', length, 'км');
+
+            this._map.dragPan.enable();
+
+            // оставляем линию на карте, больше ничего не рисуем
+        };
+
+        this._mousedownHandler2 = this._mousedownHandler2 || ((e) => {
+            e.preventDefault();
+            beginDrawing(e.clientX, e.clientY);
+
+            const move = (ev) => updateDrawing(ev.clientX, ev.clientY);
+            const up = (ev) => {
+                document.removeEventListener('mousemove', move);
+                document.removeEventListener('mouseup', up);
+                finishDrawing(ev.clientX, ev.clientY);
+            };
+
+            document.addEventListener('mousemove', move);
+            document.addEventListener('mouseup', up);
+            return false;
+        });
+
+        this._touchHandler2 = this._touchHandler2 || ((e) => {
+            if (e.touches.length !== 1) return true;
+            const t = e.touches[0];
+            beginDrawing(t.clientX, t.clientY);
+
+            const move = (ev) => {
+                if (ev.touches.length !== 1) return;
+                const t2 = ev.touches[0];
+                updateDrawing(t2.clientX, t2.clientY);
+            };
+            const end = (ev) => {
+                document.removeEventListener('touchmove', move);
+                document.removeEventListener('touchend', end);
+                const t2 = (ev.changedTouches && ev.changedTouches[0]) || t;
+                finishDrawing(t2.clientX, t2.clientY);
+            };
+
+            document.addEventListener('touchmove', move);
+            document.addEventListener('touchend', end);
+            return false;
+        });
+
+        this._map.getCanvas().addEventListener('mousedown', this._mousedownHandler2);
+        this._map.getCanvas().addEventListener('touchstart', this._touchHandler2);
+    }
+
+    DisableMeasure() {
+        this._map.getCanvas().removeEventListener('mousedown', this._mousedownHandler2);
+        this._map.getCanvas().removeEventListener('touchstart', this._touchHandler2);
+
+        if(this._measurePopup) {
+            this._measurePopup.remove();
+            this._measurePopup = null;
+        }
+        const tempLineSourceId = 'measure-line';
+        if (this._map.getLayer(tempLineSourceId + '-layer')) {
+            this._map.removeLayer(tempLineSourceId + '-layer');
+        }
+        if (this._map.getSource(tempLineSourceId)) {
+            this._map.removeSource(tempLineSourceId);
+        }
     }
 
     CalcIntersactionPoints(lines) {
         const points = [];
         for (let i = 0; i < lines.length; i++) {
             for (let j = 0; j < lines.length; j++) {
-                if(i === j) {
+                if (i === j) {
                     continue;
                 }
                 const ps = turf.lineIntersect({
@@ -951,11 +1141,11 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     geometry: lines[j]
                 });
 
-                for(const p of ps.features) {
+                for (const p of ps.features) {
                     points.push({
                         id: 'point-' + Date.Mc() + '-' + lines[i].id.split('-')[1] + ':' + lines[j].id.split('-')[1],
                         lng: p.geometry.coordinates[0],
-                        lat: p.geometry.coordinates[1], 
+                        lat: p.geometry.coordinates[1],
                     });
 
                 }
