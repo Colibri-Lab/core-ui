@@ -99,6 +99,30 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     }
 
+    _runGenerateOfFieldData() {
+        Object.forEach(this._fields, (name, fieldData) => {
+            
+            let fieldComponent = this.Children(name);
+            if (!fieldComponent || !fieldComponent.needHideAndShow) {
+                return true;
+            }
+
+            if (fieldData?.params?.fieldgenerator) {
+                const gen = eval(fieldData.params.fieldgenerator);
+                gen(fieldData, fieldComponent, this);
+                if (fieldData?.replace ?? false) {
+                    fieldComponent.Dispose();
+                    fieldComponent = this._renderField(name, fieldData, data[name] ?? null, true);
+                }
+            }
+
+            if (fieldComponent._runGenerateOfFieldData) {
+                fieldComponent._runGenerateOfFieldData();
+            }
+
+        });
+    }
+
     /** @protected */
     _hideAndShow() {
 
@@ -112,15 +136,6 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             let fieldComponent = this.Children(name);
             if (!fieldComponent || !fieldComponent.needHideAndShow) {
                 return true;
-            }
-
-            if (fieldData?.params?.fieldgenerator) {
-                const gen = eval(fieldData.params.fieldgenerator);
-                gen(fieldData, fieldComponent, this);
-                if (fieldData?.replace ?? false) {
-                    fieldComponent.Dispose();
-                    fieldComponent = this._renderField(name, fieldData, data[name] ?? null, true);
-                }
             }
 
             if (fieldData.params && fieldData.params.condition) {
@@ -199,6 +214,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         this.Clear();
         this._renderFields();
         this._hideAndShow();
+        this._runGenerateOfFieldData();
         this._setFilledMark();
     }
     /**

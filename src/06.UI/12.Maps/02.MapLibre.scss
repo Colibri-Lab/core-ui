@@ -14,4 +14,13 @@
         left: 0;
         top: 0;
     }
+
+    [data-object-name="layers"] {
+        
+    }
+
+    [data-object-name="layers"] + [data-object-name="filters"] {
+        margin-top: 80px;
+        
+    }
 }

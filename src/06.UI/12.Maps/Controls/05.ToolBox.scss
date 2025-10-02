@@ -1,0 +1,22 @@
+.colibri-ui-maps-controls-toolbox {
+    
+    gap: 10px;
+
+    &.-vertical {
+
+        flex-direction: column;
+
+    }
+
+    > .app-ui-component.-selected {
+
+        background: #1C274C;
+        svg {
+            path {
+                fill: #ffffff;
+            }
+        }
+
+    }
+
+}

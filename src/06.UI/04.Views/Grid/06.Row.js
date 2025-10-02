@@ -316,8 +316,6 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     }
 
-
-
     get selected() {
         return this._selected;
     }
@@ -359,7 +357,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
      * @readonly
      */
     get grid() {
-        return this?.parent?.parent?.parent;
+        return this?.parent?.grid;
     }
 
     /**

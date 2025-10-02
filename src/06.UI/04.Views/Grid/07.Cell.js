@@ -179,7 +179,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
      * @type {Colibri.UI.Grid}
      */
     get grid() {
-        return this?.parent?.parent?.parent?.parent;
+        return this?.parent?.grid;
     }
 
     /**

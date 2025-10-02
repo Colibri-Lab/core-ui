@@ -15,6 +15,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
         this._renderFields();
         this._hideAndShow();
+        this._runGenerateOfFieldData();
 
         this.AddHandler('Changed', this.__thisChanged);
 
@@ -315,6 +316,33 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
                 }
             }
         });
+    
+    }
+
+    
+    _runGenerateOfFieldData() {
+
+        Object.forEach(this._fields, (name, fieldData) => {
+            
+            let fieldComponent = this.Children(name);
+            if (!fieldComponent || !fieldComponent.needHideAndShow) {
+                return true;
+            }
+
+            if (fieldData?.params?.fieldgenerator) {
+                const gen = eval(fieldData.params.fieldgenerator);
+                gen(fieldData, fieldComponent, this);
+                if (fieldData?.replace ?? false) {
+                    fieldComponent.Dispose();
+                    fieldComponent = this._renderField(name, fieldData, data[name] ?? null, true);
+                }
+            }
+
+            if (fieldComponent._runGenerateOfFieldData) {
+                fieldComponent._runGenerateOfFieldData();
+            }
+
+        });
     }
 
     /** @protected */
@@ -333,15 +361,6 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
             }
 
             let fieldComponent = this.contentContainer.Children(name);
-            if (fieldData?.params?.fieldgenerator) {
-                const gen = eval(fieldData.params.fieldgenerator);
-                gen(fieldData, fieldComponent, this);
-                if (fieldData?.replace ?? false) {
-                    fieldComponent.Dispose();
-                    fieldComponent = this._renderField(name, fieldData, data[name] ?? null, true);
-                }
-            }
-
             if (fieldComponent && fieldData.params && fieldData.params.condition) {
 
                 const condition = fieldData.params.condition;

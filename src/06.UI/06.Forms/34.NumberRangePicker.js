@@ -239,7 +239,9 @@ Colibri.UI.Forms.NumberRangePicker = class extends Colibri.UI.Forms.Field {
         const min = this._fieldData.params.min;
         const step = this._fieldData.params.step;
 
-        if(!Array.isArray(value)) {
+        if(!value) {
+            value = [min, max];
+        } else if(!Array.isArray(value) && value.isNumeric()) {
             value = [value, max];
         }
         

@@ -507,7 +507,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                     }
                 }
                 else if(element.tagName.indexOf('component-') !== -1) {
-                    const tagName = element.tagName.substr('component-'.length);
+                    const tagName = element.tagName.substring('component-'.length).toCamelCase();
                     if(parent instanceof Colibri.UI.Component) {
                         this.ProcessChildren(element.childNodes, parent[tagName], true, root);
                     }

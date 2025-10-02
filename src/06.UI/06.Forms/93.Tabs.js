@@ -20,6 +20,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
         this._renderFields();
         this._hideAndShow();
+        this._runGenerateOfFieldData();
 
         this._tabs.selectedIndex = 0;
 
@@ -205,15 +206,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         
     }
 
-    /** @protected */
-    _hideAndShow() {
-        if(!this.needHideAndShow) {
-            return;
-        }
-
-        const data = this.value;
-        const formData = this.root.value;
-
+    _runGenerateOfFieldData() {
         Object.forEach(this._fieldData.fields, (name, fieldData) => {
             if(!fieldData || !this.contentContainer) {
                 return true;
@@ -229,6 +222,24 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
                 }
 
             } 
+        });
+    }
+
+    /** @protected */
+    _hideAndShow() {
+        if(!this.needHideAndShow) {
+            return;
+        }
+
+        const data = this.value;
+        const formData = this.root.value;
+
+        Object.forEach(this._fieldData.fields, (name, fieldData) => {
+            if(!fieldData || !this.contentContainer) {
+                return true;
+            }
+            
+            let fieldComponent = this.contentContainer.Children(name);
             if(fieldComponent && fieldData.params && fieldData.params.condition) {
                 const condition = fieldData.params.condition;
                 if(condition.field) {        

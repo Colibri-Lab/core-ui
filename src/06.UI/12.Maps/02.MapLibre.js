@@ -6,7 +6,7 @@
  */
 Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
-    constructor(name, container) {
+    constructor(name, container, element) {
         super(name, container, Colibri.UI.Templates['Colibri.UI.Maps.MapLibre']);
         this.AddClass('colibri-ui-maps-maplibre');
 
@@ -31,6 +31,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._zoomRotate.AddHandler('Rotated', this.__zoomRotateRotated, false, this);
         this._zoomSetCenter.AddHandler('Clicked', this.__zoomSetCenterClicked, false, this);
         this._layersSwitch.AddHandler('Changed', this.__layersSwitchChanged, false, this);
+
     }
 
     _registerEvents() {
@@ -122,6 +123,22 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
 
         });
+    }
+
+    get layersButtonGroup() {
+        return this.Children('layers').container;
+    } 
+
+    get additionalButtonGroup() {
+        return this.Children('additional').container;
+    } 
+
+    get filtersButtonGroup() {
+        return this.Children('filters').container;
+    } 
+
+    get zoomButtonGroup() {
+        return this.Children('zoom').container;
     }
 
     _getProperties() {
@@ -649,8 +666,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     geometry: v,
                     properties: {
                         id: v.id,
-                        'color': color,
-                        'weight': weight
+                        'color': v?.color ?? color,
+                        'weight': v?.weight ?? weight
                     }
                 };
             }

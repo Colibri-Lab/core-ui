@@ -163,6 +163,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
                 if (!this.root) {
                     this._hideAndShow();
+                    this._runGenerateOfFieldData();
                 }
 
             });
@@ -404,6 +405,14 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
             return;
         }
         this.ForEveryField((name, component) => component._hideAndShow());
+    }
+
+    /** @private */
+    _runGenerateOfFieldData() {
+        if (!this.needHideAndShow) {
+            return;
+        }
+        this.ForEveryField((name, component) => component._runGenerateOfFieldData());
     }
 
     ClearAllRows() {

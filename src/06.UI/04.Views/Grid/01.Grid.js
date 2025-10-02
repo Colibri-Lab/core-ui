@@ -39,7 +39,10 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this._hasMassActionsMenu = false;
         this._massActionsMenuClass = Colibri.UI.MassActionsMenu;
 
-        this._gridContent = new Colibri.UI.Component('app-ui-grid-content', this, Element.create('table'));
+        this._gridScrollContainer = new Colibri.UI.Component('app-ui-grid-scroll', this, Element.create('div'));
+        this._gridScrollContainer.shown = true;
+
+        this._gridContent = new Colibri.UI.Component('app-ui-grid-content', this._gridScrollContainer, Element.create('table'));
         this._gridContent.shown = true;
 
         this._header = this.AddHeader('header');
