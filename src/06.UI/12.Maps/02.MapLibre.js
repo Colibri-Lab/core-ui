@@ -234,7 +234,6 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         });
     }
     SetBBox(bbox) {
-        console.log(bbox);
         this._map.fitBounds([
             [bbox[0][1], bbox[0][0]], // [lat, lng]
             [bbox[1][1], bbox[1][0]]  // [lat, lng]

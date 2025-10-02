@@ -85,7 +85,6 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
             const startIndex = Math.max(0, Math.floor(scrolledTop / this._rowHeight) - buffer);
             const offsetY = startIndex * this._rowHeight;
             const visibleCount = Math.ceil(visibleHeight / this._rowHeight) - 1 /* header */ + buffer * 2;
-            console.log(startIndex, scrolledTop, visibleHeight, visibleCount, this._rowHeight)
             // this._gridScrollContainer.styles = {transform: `translateY(${offsetY}px)`};
 
             const endIndex = Math.min(this._value.length, startIndex + visibleCount);
