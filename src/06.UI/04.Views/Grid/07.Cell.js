@@ -43,8 +43,8 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
     _registerEventHandlers() {
         super._registerEventHandlers();
         
-
     }
+
 
     _setParentColumnAttrs() {
         this._editor = this._parentColumn?.editor;

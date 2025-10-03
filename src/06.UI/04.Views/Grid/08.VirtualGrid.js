@@ -86,25 +86,36 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
         const visibleHeight = this._element.bounds().outerHeight;
         const scrolledTop = this.scrollTop;
         this._gridScrollContainer.height = gridHeight;
-        
+
         if(visibleHeight > gridHeight) {
             super.value = this._value;
         } else {
 
+            
             const startIndex = Math.max(0, Math.floor(scrolledTop / this._rowHeight));
             const visibleCount = Math.ceil(visibleHeight / this._rowHeight) - 1 /* header */;
-            console.log(startIndex, visibleCount);
+            const lastPageSize = this._value.length % visibleCount;
+            console.log(lastPageSize);
+            this._gridScrollContainer.height = gridHeight - (visibleCount - lastPageSize) * this._rowHeight;
+
             const endIndex = Math.min(this._value.length, startIndex + visibleCount);
             const visibleRows = this._value.slice(startIndex, endIndex);
             this._gridScrollContainer.width = this._gridContent.width;
             
             for(let i=0; i<visibleCount;i++) {
-                if(this.rows.Children('data' + i)) {
-                    this.rows.Children('data' + i).value = visibleRows[i];
+                if(visibleRows[i]) {
+                    if(this.rows.Children('data' + i)) {
+                        this.rows.Children('data' + i).value = visibleRows[i];
+                        this.rows.Children('data' + i).styles = {visibility: 'visible'};
+                    } else {
+                        this.rows.Add('data' + i, visibleRows[i]);
+                    }
+                    this.rows.Children('data' + i).height = this._rowHeight;
                 } else {
-                    this.rows.Add('data' + i, visibleRows[i]);
+                    if(this.rows.Children('data' + i)) {
+                        this.rows.Children('data' + i).styles = {visibility: 'hidden'};
+                    }
                 }
-                this.rows.Children('data' + i).height = this._rowHeight;
             }
 
 

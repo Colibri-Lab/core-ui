@@ -939,24 +939,31 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     DisableBoxSelection() {
-        this._map.getCanvas().removeEventListener('mousedown', this._mousedownHandler);
-        this._map.getCanvas().removeEventListener('touchstart', this._touchHandler);
+        try {
+            this._map.getCanvas().removeEventListener('mousedown', this._mousedownHandler);
+            this._map.getCanvas().removeEventListener('touchstart', this._touchHandler);
+        } catch(e) {
+
+        }
     }
 
     EnableSingleSelection(tolerance = 10) {
+        this._map.getCanvas().style.cursor = 'default';
         this._mapClicked = this._mapClicked || ((e) => {
-            const features = this._map.queryRenderedFeatures(e.point, { layers: ['lines', 'points', 'objects'] });
+            const rect = [
+                [e.point.x - tolerance, e.point.y - tolerance],
+                [e.point.x + tolerance, e.point.y + tolerance]
+            ];
+            const features = this._map.queryRenderedFeatures(rect, { layers: ['lines', 'points', 'objects'] });
             const ids = features.map(f => f.properties.id);
             this._selectedIds = !e.originalEvent.shiftKey ? ids : this._selectedIds.concat(ids);
             this.Dispatch('SelectionChanged', { ids: this._selectedIds });
         });
         this._mapMouseEnter = this._mapMouseEnter || ((e) => {
             if (e.features.length) {
-                this._map.getCanvas().style.cursor = 'pointer';
             }
         });
         this._mapMouseLeave = this._mapMouseLeave || ((e) => {
-            this._map.getCanvas().style.cursor = "";
         });
         this._map.on("mouseenter", "lines", this._mapMouseEnter);
         this._map.on("mouseleave", "lines", this._mapMouseLeave);
@@ -968,13 +975,18 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     DisableSingleSelection() {
-        this._map.off("mouseenter", "lines", this._mapMouseEnter);
-        this._map.off("mouseleave", "lines", this._mapMouseLeave);
-        this._map.off("mouseenter", "points", this._mapMouseEnter);
-        this._map.off("mouseleave", "points", this._mapMouseLeave);
-        this._map.off("mouseenter", "objects", this._mapMouseEnter);
-        this._map.off("mouseleave", "objects", this._mapMouseLeave);
-        this._map.off('click', this._mapClicked);
+        try {
+            this._map.off("mouseenter", "lines", this._mapMouseEnter);
+            this._map.off("mouseleave", "lines", this._mapMouseLeave);
+            this._map.off("mouseenter", "points", this._mapMouseEnter);
+            this._map.off("mouseleave", "points", this._mapMouseLeave);
+            this._map.off("mouseenter", "objects", this._mapMouseEnter);
+            this._map.off("mouseleave", "objects", this._mapMouseLeave);
+            this._map.off('click', this._mapClicked);
+            this._map.getCanvas().style.cursor = "";
+        } catch(e) {
+
+        }
     }
 
     EnableClickToMark(icon) {
@@ -991,8 +1003,12 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     DisableClickToMark() {
-        this.DeleteByNameLike('marker-');
-        this._map.off('click', this._mapClickToMarkClicked);
+        try {
+            this.DeleteByNameLike('marker-');
+            this._map.off('click', this._mapClickToMarkClicked);
+        } catch(e) {
+
+        }
     }
 
     EnableMeasure() {
@@ -1109,19 +1125,23 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     DisableMeasure() {
-        this._map.getCanvas().removeEventListener('mousedown', this._mousedownHandler2);
-        this._map.getCanvas().removeEventListener('touchstart', this._touchHandler2);
-
-        if(this._measurePopup) {
-            this._measurePopup.remove();
-            this._measurePopup = null;
-        }
-        const tempLineSourceId = 'measure-line';
-        if (this._map.getLayer(tempLineSourceId + '-layer')) {
-            this._map.removeLayer(tempLineSourceId + '-layer');
-        }
-        if (this._map.getSource(tempLineSourceId)) {
-            this._map.removeSource(tempLineSourceId);
+        try {
+            this._map.getCanvas().removeEventListener('mousedown', this._mousedownHandler2);
+            this._map.getCanvas().removeEventListener('touchstart', this._touchHandler2);
+    
+            if(this._measurePopup) {
+                this._measurePopup.remove();
+                this._measurePopup = null;
+            }
+            const tempLineSourceId = 'measure-line';
+            if (this._map.getLayer(tempLineSourceId + '-layer')) {
+                this._map.removeLayer(tempLineSourceId + '-layer');
+            }
+            if (this._map.getSource(tempLineSourceId)) {
+                this._map.removeSource(tempLineSourceId);
+            }
+        } catch(e) {
+            
         }
     }
 
