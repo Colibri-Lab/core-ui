@@ -196,7 +196,7 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
      * @readonly
      */
     get grid() {
-        return this?.parent?.parent?.parent;
+        return this?.parent?.parent;
     }
 
     /**

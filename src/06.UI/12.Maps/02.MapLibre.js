@@ -943,7 +943,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._map.getCanvas().removeEventListener('touchstart', this._touchHandler);
     }
 
-    EnableSingleSelection() {
+    EnableSingleSelection(tolerance = 10) {
         this._mapClicked = this._mapClicked || ((e) => {
             const features = this._map.queryRenderedFeatures(e.point, { layers: ['lines', 'points', 'objects'] });
             const ids = features.map(f => f.properties.id);

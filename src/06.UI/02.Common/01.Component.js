@@ -36,6 +36,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         MouseLeave: {
             domEvent: 'mouseleave',
         },
+        MouseWheel: {
+            domEvent: 'wheel',
+            passive: false
+        },
         KeyDown: {
             domEvent: 'keydown',
         },
@@ -825,7 +829,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             return;
         }
 
-        let {domEvent, respondent, delay, handler, capture} = args;
+        let {domEvent, respondent, delay, handler, capture, passive} = args;
         respondent = respondent ? respondent : this._element;
 
         handler = handler ? handler : this.__eventHandler;
@@ -840,7 +844,17 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             respondent.mapToUIComponent(this);
         }
 
-        respondent.addEventListener(domEvent, handler, capture || false, delay);
+        const options = {};
+        if(capture !== undefined) {
+            options.capture = capture;
+        }
+        if(passive !== undefined) {
+            options.passive = passive;
+        }
+        if(domEvent === 'wheel') {
+            console.log(domEvent, options, respondent);
+        }
+        respondent.addEventListener(domEvent, handler, options, delay);
     }
 
     /**

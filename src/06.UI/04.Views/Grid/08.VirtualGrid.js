@@ -17,12 +17,21 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
         super(name, container);
         this.AddClass('app-ui-virtualgrid-container');
 
-        this.animateScroll = true;
-        this.AddHandler('Scrolled', this.__thisScrolled);
+        this._gridScrollContainer = new Colibri.UI.Component('app-ui-grid-scroll', this, Element.create('div'));
+        this._gridScrollContainer.shown = true;
+
+        // this.animateScroll = true;
+        this.handleResize = true;
+        this.AddHandler('Scrolled', this.__thisRecalcCounts);
+        this.AddHandler('Resize', this.__thisRecalcCounts);
 
     }
 
-    __thisScrolled(event, args) {
+    Refresh() {
+        this._showValue();
+    }
+
+    __thisRecalcCounts(event, args) {
         this._showValue();
     }
 
@@ -81,25 +90,23 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
         if(visibleHeight > gridHeight) {
             super.value = this._value;
         } else {
-            const buffer = 3;
-            const startIndex = Math.max(0, Math.floor(scrolledTop / this._rowHeight) - buffer);
-            const offsetY = startIndex * this._rowHeight;
-            const visibleCount = Math.ceil(visibleHeight / this._rowHeight) - 1 /* header */ + buffer * 2;
-            // this._gridScrollContainer.styles = {transform: `translateY(${offsetY}px)`};
 
+            const startIndex = Math.max(0, Math.floor(scrolledTop / this._rowHeight));
+            const visibleCount = Math.ceil(visibleHeight / this._rowHeight) - 1 /* header */;
+            console.log(startIndex, visibleCount);
             const endIndex = Math.min(this._value.length, startIndex + visibleCount);
             const visibleRows = this._value.slice(startIndex, endIndex);
-            
-            // if(this.rows.children === 0) {
-            //     this._generateRows(visibleCount);
-            // }
-
-            for(let i=0; i<visibleCount;i++) {
-                this.rows.Add('data' + i, visibleRows[i]);
-            }
             this._gridScrollContainer.width = this._gridContent.width;
+            
+            for(let i=0; i<visibleCount;i++) {
+                if(this.rows.Children('data' + i)) {
+                    this.rows.Children('data' + i).value = visibleRows[i];
+                } else {
+                    this.rows.Add('data' + i, visibleRows[i]);
+                }
+                this.rows.Children('data' + i).height = this._rowHeight;
+            }
 
-            // super.value = visibleRows;
 
 
         }

@@ -74,7 +74,7 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
             document.removeEventListener("mousemove", this.__doResize, {capture: true});
 
             this.Dispatch('SplitResizeStop');
-
+            
             return false;
 
         };

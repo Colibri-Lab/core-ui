@@ -200,16 +200,27 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
                 e.preventDefault();
                 e.stopPropagation();
 
-                const next = this.container.next().getUIComponent();
-                const newWidth = (this._resizeData.width + (e.pageX - this._resizeData.x)).percentOf(this._resizeData.full);
-                const newNextWidth = (this._resizeData.nextWidth - (e.pageX - this._resizeData.x)).percentOf(this._resizeData.full);
+                if(this.grid.resizeMode === 'percentage') {
+                    const next = this.container.next().getUIComponent();
+                    const newWidth = (this._resizeData.width + (e.pageX - this._resizeData.x)).percentOf(this._resizeData.full);
+                    const newNextWidth = (this._resizeData.nextWidth - (e.pageX - this._resizeData.x)).percentOf(this._resizeData.full);
+    
+                    if(newWidth < 2 || newNextWidth < 2) { 
+                        return false;
+                    }
+    
+                    this.width = parseFloat(newWidth.toFixed(2)) + '%';
+                    next.width = parseFloat(newNextWidth.toFixed(2)) + '%'; 
+                } else {
 
-                if(newWidth < 2 || newNextWidth < 2) { 
-                    return false;
+                    const newWidth = (this._resizeData.width + (e.pageX - this._resizeData.x));
+    
+                    if(newWidth < 10) { 
+                        return false;
+                    }
+    
+                    this.width = parseFloat(newWidth.toFixed(2));
                 }
-
-                this.width = parseFloat(newWidth.toFixed(2)) + '%';
-                next.width = parseFloat(newNextWidth.toFixed(2)) + '%'; 
 
                 return false;
             }

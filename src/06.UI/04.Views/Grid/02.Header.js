@@ -16,7 +16,7 @@ Colibri.UI.Grid.Header = class extends Colibri.UI.Component {
         super(name, container, Element.create('thead'));
 
         this._sticky = true;
-        this._grid = this.parent.parent.parent;
+        this._grid = this.parent.parent;
 
         this._addDefaultColumns();
 
