@@ -17,6 +17,8 @@ Colibri.UI.Maps.Controls.Button = class extends Colibri.UI.FlexBox {
         this.AddClass('colibri-ui-maps-controls-button');
 
         this._icon = this.Children('icon');
+        this._label = this.Children('label');
+        
         
     }
 
@@ -35,6 +37,21 @@ Colibri.UI.Maps.Controls.Button = class extends Colibri.UI.FlexBox {
         this._icon.iconSVG = value;
     }
 
+    /**
+     * Label string
+     * @type {String}
+     */
+    get label() {
+        return this._label.value;
+    }
+    /**
+     * Label string
+     * @type {String}
+     */
+    set label(value) {
+        this._label.shown = !!value;
+        this._label.value = value;
+    }
     
 
 }

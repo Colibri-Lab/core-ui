@@ -135,6 +135,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         return this.Children('additional').container;
     }
 
+    get commandsButtonGroup() {
+        return this.Children('commands').container;
+    }
+
     get filtersButtonGroup() {
         return this.Children('filters').container;
     }
@@ -1004,7 +1008,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     DisableClickToMark() {
         try {
-            this.DeleteByNameLike('marker-');
+            this.DeleteByNameLike('marker');
             this._map.off('click', this._mapClickToMarkClicked);
         } catch(e) {
 
