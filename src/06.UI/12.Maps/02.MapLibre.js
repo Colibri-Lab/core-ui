@@ -54,7 +54,12 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 // center: {lng: 45.29590878451711, lat: 40.06732341520765}, // lng, lat
                 // zoom: 24,
                 bearing: 0,
-                pitch: 0
+                pitch: 0,
+                renderWorldCopies: false,
+                maxBounds: [
+                    [-178, -85], // юго-западная граница (minLng, minLat)
+                    [178, 85] // северо-восточная граница (maxLng, maxLat)
+                ]
             });
 
             this._createLineSource();
@@ -156,6 +161,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             { lng: southWest.lng, lat: southWest.lat },
             { lng: northEast.lng, lat: northEast.lat }
         ];
+        console.log(this._map.getZoom());
         this._zoom = this._map.getZoom();
         this._center = this._map.getCenter();
         this._rotation = this._map.getBearing();
@@ -314,7 +320,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 type: 'geojson',
                 data: {
                     type: 'FeatureCollection',
-                    features: []
+                    features: [],
+                    lineMetrics: true,
+                    wrap: false
                 }
             });
             this._map.addLayer({

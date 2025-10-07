@@ -95,7 +95,6 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
             const startIndex = Math.max(0, Math.floor(scrolledTop / this._rowHeight));
             const visibleCount = Math.ceil(visibleHeight / this._rowHeight) - 1 /* header */;
             const lastPageSize = this._value.length % visibleCount;
-            console.log(lastPageSize);
             this._gridScrollContainer.height = gridHeight - (visibleCount - lastPageSize) * this._rowHeight;
 
             const endIndex = Math.min(this._value.length, startIndex + visibleCount);
