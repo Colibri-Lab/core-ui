@@ -44,8 +44,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _loadMap() {
         Promise.all([
-            Colibri.Common.LoadScript('https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.js'),
-            Colibri.Common.LoadStyles('https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.css'),
+            Colibri.Common.LoadScript('https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js'),
+            Colibri.Common.LoadStyles('https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css'),
             Colibri.Common.LoadScript('https://cdn.jsdelivr.net/npm/@turf/turf@7.2.0/turf.min.js')
         ]).then(() => {
             this._loaded = true;
