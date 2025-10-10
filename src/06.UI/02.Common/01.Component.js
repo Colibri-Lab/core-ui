@@ -1758,7 +1758,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     _moveInDom(insertedElement, parentElement, index) {
         // insertedElement.remove();
         if(parentElement.children[index + 1]) {
-            parentElement.insertBefore(insertedElement, parentElement.children[index + 1]);
+            if(insertedElement === parentElement.children[index + 1]) {
+                parentElement.insertBefore(insertedElement, parentElement.children[index]);
+            } else {
+                parentElement.insertBefore(insertedElement, parentElement.children[index + 1]);
+            }
         } else {
             parentElement.appendChild(insertedElement);
         }

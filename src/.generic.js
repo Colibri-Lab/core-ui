@@ -2597,6 +2597,24 @@ Date.prototype.Copy = function () { let d = new Date(); d.setTime(this.getTime()
  */
 Date.prototype.Diff = function (dt) { return parseInt((dt.getTime() - this.getTime()) / 1000); };
 
+Date.prototype.ResetToFirstDayOfYear = function () {
+    this.setMonth(0);
+    this.setDate(1);
+    this.setHours(0);
+    this.setMinutes(0);
+    this.setSeconds(0);
+    this.setMilliseconds(0);
+    return this;
+}
+Date.prototype.ResetToLastDayOfYear = function () {
+    this.setMonth(11);
+    this.setDate(31);
+    this.setHours(23);
+    this.setMinutes(59);
+    this.setSeconds(59);
+    this.setMilliseconds(999);
+    return this;
+}
 /**
  * Calculates the difference in months between the current date and the specified date.
  * @param {Date} dateTo - The date to compare with.
