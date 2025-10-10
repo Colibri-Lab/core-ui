@@ -1020,12 +1020,16 @@ Object.getValue = function (obj, path, _default = undefined) {
  * @param {Function} func - The mapping function to apply to each key-value pair.
  * @returns {Object} Returns a new object with the mapped key-value pairs.
  */
-Object.map = function (obj, func) {
+Object.map = function (obj, func, usenewValAsKeyValuObject = false) {
     let newObject = {};
     Object.forEach(obj, (key, value) => {
         const newval = func(key, value);
         if (newval) {
-            newObject[key] = newval;
+            if(usenewValAsKeyValuObject) {
+                newObject[Object.keys(newval)[0]] = Object.values(newval)[0];
+            } else {
+                newObject[key] = newval;
+            }
         }
     });
     return newObject;
