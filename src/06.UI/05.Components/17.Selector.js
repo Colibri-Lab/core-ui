@@ -172,7 +172,9 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
             }
             else if (args.domEvent.code === 'Enter') {
-                this._popup.Dispatch('Clicked', { domEvent: args.domEvent });
+                if(this._popup) {
+                    this._popup.Dispatch('Clicked', { domEvent: args.domEvent });
+                }
             }
 
             args.domEvent.stopPropagation();
