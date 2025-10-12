@@ -77,6 +77,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this.RegisterEvent('HeaderCheckboxChanged', false, 'When header checkbox state changed');
         this.RegisterEvent('ColumnPropertyChanged', false, 'When changed the column property');
         this.RegisterEvent('ColumnClicked', false, 'When column header is clicked');
+        this.RegisterEvent('ColumnContextMenu', false, 'When column header contextmenu is clicked');
+        this.RegisterEvent('ColumnContextMenuItemClicked', false, 'When column header contextmenu item is clicked');
         this.RegisterEvent('ColumnDisposed', false, 'When column is disposed');
         this.RegisterEvent('ColumnAdded', false, 'When column is added');
         this.RegisterEvent('ColumnMoved', false, 'When column is moved');
@@ -92,6 +94,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this.RegisterEvent('CellViewerClicked', false, 'When clicked on cell viewer component');
         this.RegisterEvent('CellEditorChanged', false, 'When cell editor is changed');
         this.RegisterEvent('MassActionsMenuActionClicked', false, 'When clicked on button inside mass actions menu');
+        this.RegisterEvent('CustomContextMenuButtonClicked', false, 'When custom context menu button is clicked');
+        this.RegisterEvent('CustomContextMenuButtonContextMenuItemClicked', false, 'When custom context menu button item is clicked');
 
     }
 
@@ -123,6 +127,35 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this.AddHandler('ComponentRendered', this.__thisComponentRendered);
 
     }
+
+    AddCustomContextMenuButton(icon) {
+        if(this._customContextMenuIcon) {
+            return;
+        }        
+
+        this._customContextMenuIcon = new Colibri.UI.Icon('contextmenu-icon', this);
+        this._customContextMenuIcon.AddClass('-custom-contextmenu-icon');
+        this._customContextMenuIcon.iconSVG = icon;
+        this._customContextMenuIcon.shown = true;
+        this._customContextMenuIcon.AddHandler('Clicked', this.__customContextMenuIconClicked, false, this);
+        this._customContextMenuIcon.AddHandler('ContextMenuItemClicked', this.__customContextMenuIconContextMenuItemClicked, false, this);
+
+    }
+    RemoveCustomContextMenuButton() {
+        if(!this._customContextMenuIcon) {
+            return;
+        }
+        this._customContextMenuIcon.Dispose();
+        this._customContextMenuIcon = null;
+    }
+
+    __customContextMenuIconContextMenuItemClicked(event, args) {
+        return this.Dispatch('CustomContextMenuButtonContextMenuItemClicked', Object.assign(args, {icon: this._customContextMenuIcon}));
+    }
+    __customContextMenuIconClicked(event, args) { 
+        return this.Dispatch('CustomContextMenuButtonClicked', Object.assign(args, {icon: this._customContextMenuIcon}));
+    }
+
 
     __thisChildsProcessed(event, args) {
         this._completeRender();

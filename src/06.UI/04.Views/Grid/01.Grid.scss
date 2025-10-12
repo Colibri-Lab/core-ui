@@ -9,6 +9,20 @@
     outline: none;
     overflow: auto;
 
+    position: relative;
+    .-custom-contextmenu-icon {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        z-index: 10;
+        cursor: pointer;
+        svg {
+            path, rect {
+                fill: #9D9D9D;
+            }
+        }
+    }
+
     [data-object-name="app-ui-grid-scroll"] {
         width: 100%;
         height: 100%; 

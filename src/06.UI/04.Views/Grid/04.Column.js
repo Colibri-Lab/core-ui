@@ -45,6 +45,8 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
     _registerEventHandlers() {
         super._registerEventHandlers();
         this.AddHandler('Clicked', this.__thisClicked);
+        this.AddHandler('ContextMenu', this.__thisContextMenu);
+        this.AddHandler('ContextMenuItemClicked', this.__thisContextMenuItemClicked);
         this.AddHandler('ComponentMoved', this.__thisComponentMoved);
     }
 
@@ -54,12 +56,19 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         super.Dispose();
     }
 
+    __thisContextMenuItemClicked(event, args) {
+        this.grid?.Dispatch('ColumnContextMenuItemClicked', Object.assign(args, {column: this}));        
+    }
+
     __thisComponentMoved(event, args) {
         this.grid?.Dispatch('ColumnMoved', {column: this});        
     }
 
     __thisClicked(event, args) {
         this.grid?.Dispatch('ColumnClicked', {column: this})
+    }
+    __thisContextMenu(event, args) {
+        return this.grid?.Dispatch('ColumnContextMenu', Object.assign(args, {column: this}));
     }
     
 
