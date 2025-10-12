@@ -64,6 +64,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
     _createComponent(pattern, route) {
         let component = null;
         let changed = true;
+        const componentName = pattern.replaceAll('/', '_').trimString('_');
         if(route?.component ?? null) {
             let componentObject = route.component;
             if(typeof componentObject === 'string') {
@@ -71,7 +72,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
             }
             if(componentObject) {
                 if(!(this.Children('firstChild') instanceof componentObject)) {
-                    component = new componentObject(route?.name ?? ('component-' + Date.Mc()), this);
+                    component = new componentObject(componentName || route?.name || ('component-' + Date.Mc()), this);
                 } else {
                     component = this.Children('firstChild');
                     changed = false;
@@ -79,7 +80,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
             }
         } else {
             if(route !== this.Children('firstChild')) {
-                component = new route('component-' + Date.Mc(), this);
+                component = new route(componentName || 'component-' + Date.Mc(), this);
             } else {
                 component = this.Children('firstChild');
                 changed = false;
