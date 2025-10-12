@@ -90,6 +90,13 @@ Colibri.UI.Forms.DateRange = class extends Colibri.UI.Forms.Field {
             value = [value ?? '', ''];
         }
 
+        if(!(value[0] instanceof Date)) {
+            value[0] = value[0]?.toDate() ?? null;
+        }
+        if(!(value[1] instanceof Date)) {
+            value[1] = value[1]?.toDate() ?? null;
+        }
+
         this._input1.value = value[0] !== undefined ? value[0] : null;
         this._input2.value = value[1] !== undefined ? value[1] : null;
     }
