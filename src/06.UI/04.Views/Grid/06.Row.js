@@ -448,7 +448,14 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
     }
 
     get allCells() {
-        return this.Children().length;
+        const cellsCount = this.Children().length;
+        if(!this.hasContextMenu) {
+            cellsCount--;
+        }
+        if(!this.checkbox) {
+            cellsCount--;
+        }
+        return cellsCount;
     }
 
 
