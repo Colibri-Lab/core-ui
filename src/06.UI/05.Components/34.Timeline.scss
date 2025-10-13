@@ -1,6 +1,5 @@
-.colibri-ui-rangepicker {
+.colibri-ui-timeline {
     
-
     > .app-component-textspan {
         font-style: normal !important;
         font-weight: 400 !important;
@@ -11,7 +10,7 @@
     }
 
     [data-object-name="input1"], [data-object-name="input2"] {
-        flex: 0 0 120px;
+        flex: 0 0 200px;
         border: 0px;
         padding: 10px 0px;
         input {
@@ -54,6 +53,7 @@
         margin-left: 8px;
         width: calc(100% - 16px);
         > .app-component-pane {
+            max-width: 100%;
             position: relative;
             padding: 0px 0px 0px 8px;
             background: #888;

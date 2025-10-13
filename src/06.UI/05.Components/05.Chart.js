@@ -68,21 +68,26 @@ Colibri.UI.Chart = class extends Colibri.UI.Component {
     }
     _showValue() {
         
+        
         const maxValue = Math.max(...this._value.map(v => v.value));
         const maxPercent = 100;
 
         this.Clear();
 
-        for(const v of this._value) {
+        Colibri.Common.Delay(100).then(() => {
 
-            const percent = (v.value / maxValue) * maxPercent;
+            for(const v of this._value) {
+    
+                const percent = (v.value / maxValue) * maxPercent;
+    
+                let barchart = this.AddBarchart();
+                barchart.textValue = v.title;
+                barchart.title = v.value === 0 ? '' : v.value;
+                barchart.value = percent;
+                barchart.toolTip = v.title + ': ' + v.value;
+            }
+        });
 
-            let barchart = this.AddBarchart();
-            barchart.textValue = v.title;
-            barchart.title = v.value === 0 ? '' : v.value;
-            barchart.value = percent;
-            barchart.toolTip = v.title + ': ' + v.value;
-        }
 
     }
 }

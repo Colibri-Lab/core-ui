@@ -1,0 +1,23 @@
+ui-components-timeline-max:
+  ru: Максимум
+  en: Maximum
+  it: Massimo
+  de: Maximum
+  es: Máximo
+  hy: Մաքսիմում
+  tr: Maksimum
+  fa: حداکثر
+  zh: 最大值
+  uz: Maksimum
+  kk: Максимум
+ui-components-timeline-min:
+  ru: Минимум
+  en: Minimum
+  it: Minimo
+  de: Minimum
+  es: Mínimo
+  hy: Մինիմում
+  tr: Minimum
+  fa: حداقل
+  zh: 最小值
+  uz: Minimum

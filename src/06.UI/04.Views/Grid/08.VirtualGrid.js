@@ -23,7 +23,7 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
         // this.animateScroll = true;
         this.handleResize = true;
         this.AddHandler('Scrolled', this.__thisRecalcCounts);
-        this.AddHandler('Resize', this.__thisRecalcCounts);
+        this.AddHandler('Resized', this.__thisRecalcCounts);
 
     }
 

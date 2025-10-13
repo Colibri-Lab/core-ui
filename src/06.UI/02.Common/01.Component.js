@@ -293,6 +293,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             }
         } else if(typeof value === 'string' && ['Object', 'Function', 'Array'].indexOf(type) !== -1) {
             eval('value = ' + value + ';');
+        } else if(typeof value === 'string' && type === 'Date') {
+            return value.toDate();
         }
         return value;
     }
@@ -790,7 +792,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         const performHandler = (component, enames, e) => {
             
-            if(!this.isConnected) {
+            if(this !== window && !this.isConnected) {
                 return false;
             }
 

@@ -1,10 +1,10 @@
 /**
- * Range picker component
+ * Timeline
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
  */
-Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
+Colibri.UI.Timeline = class extends Colibri.UI.Pane {
     
     /**
      * @constructor
@@ -13,19 +13,20 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
      */
     constructor(name, container) {
         /* создаем компонент и передаем шаблон */
-        super(name, container, Colibri.UI.Templates['Colibri.UI.RangePicker']);
-        this.AddClass('colibri-ui-rangepicker');
+        super(name, container, Colibri.UI.Templates['Colibri.UI.Timeline']);
+        this.AddClass('colibri-ui-timeline');
 
-        this._maxValue = 100;
-        this._minValue = 0;
-        this._stepValue = 1;
-        this._format = 'normal';
-        this._decimal = 0;
-        this._unit = '';
-        this._value = [this._minValue, this._maxValue];
         this._render();
-        this.value = [this._minValue, this._maxValue];
-        
+
+    }
+
+    /**
+     * Register events
+     * @protected
+     */
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('Changed', false, 'When the values are changed');
     }
 
     _render() {
@@ -33,10 +34,10 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         this.Clear();
 
         this._inputFlex = new Colibri.UI.FlexBox('inputflex', this);
-        this._input1 = new Colibri.UI.Input('input1', this._inputFlex);
+        this._input1 = new Colibri.UI.DateTimeSelector('input1', this._inputFlex);
         this._min = new Colibri.UI.TextSpan('min', this._inputFlex);
         this._max = new Colibri.UI.TextSpan('max', this._inputFlex);
-        this._input2 = new Colibri.UI.Input('input2', this._inputFlex);
+        this._input2 = new Colibri.UI.DateTimeSelector('input2', this._inputFlex);
 
         this._pane = new Colibri.UI.Pane('pane', this);        
         this._pane.AddClass('colibri-ui-rangepicker-rangepicker-progress-pane');
@@ -62,6 +63,7 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         this._viewPicker();
         this._addHandlers();
         this._showProgress();
+
     }
 
     _addHandlers() {
@@ -73,27 +75,7 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         this._input2.AddHandler(['LoosesFocus', 'Changed'], this.__input2LoosesFocus, false, this);
     }
 
-    /**
-     * @private
-     * @param {Colibri.Events.Event} event event object
-     * @param {*} args event arguments
-     */ 
-    __visibilityChanged(event, args) {
-        this._showProgress();
-    }
-
-    _span1Moved(newLeft, newTop) {
-        // this._progress.container.css('left', newLeft + 'px');
-        this._calculateValue(newLeft, null);
-        this._showProgress();
-    }
-
-    _span2Moved(newLeft, newTop) {
-        // this._progress.container.css('width', newLeft + 'px');
-        this._calculateValue(null, newLeft);
-        this._showProgress();
-    }
-
+    
     /**
      * @private
      * @param {Colibri.Events.Event} event event object
@@ -132,11 +114,33 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         this._showProgress();
     }
 
+
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
+    __visibilityChanged(event, args) {
+        this._showProgress();
+    }
+
+    _span1Moved(newLeft, newTop) {
+        // this._progress.container.css('left', newLeft + 'px');
+        this._calculateValue(newLeft, null);
+        this._showProgress();
+    }
+
+    _span2Moved(newLeft, newTop) {
+        // this._progress.container.css('width', newLeft + 'px');
+        this._calculateValue(null, newLeft);
+        this._showProgress();
+    }
+
     _setLeftPoint(left) {
         const width = this._pane.width;
         const perc = (left) * 100 / width;
-        const max = this._maxValue;
-        const min = this._minValue;
+        const max = this._maxValue.toUnixTime();
+        const min = this._minValue.toUnixTime();
         const step = this._stepValue;
 
         let newValue = min + ((max - min) * perc / 100);
@@ -147,16 +151,15 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         if(newValue <= min) {
             newValue = min;
         }
-        console.log(newValue);
-        this.value = [newValue, this._value[1]];
+        this.value = [newValue.toDateFromUnixTime(), this._value[1]];
 
     }
 
     _setRightPoint(left) {
         const width = this._pane.width;
         const perc = (left + 8) * 100 / width;
-        const max = this._maxValue;
-        const min = this._minValue;
+        const max = this._maxValue.toUnixTime();
+        const min = this._minValue.toUnixTime();
         const step = this._stepValue;
 
         let newValue = min + ((max - min) * perc / 100);
@@ -168,7 +171,7 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
             newValue = min;
         }
 
-        this.value = [this._value[0], newValue];
+        this.value = [this._value[0], newValue.toDateFromUnixTime()];
 
     }
 
@@ -183,25 +186,32 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
     }
 
     _showProgress() {
-        let value = this._value;
+        try {
 
-        const width = this._pane.width;
-        const max = this._maxValue;
-        const min = this._minValue;
+            let value = this._value;
+    
+            const width = this._pane.width;
+    
+            const max = this._maxValue.toUnixTime();
+            const min = this._minValue.toUnixTime();
+    
+            // max - min = 100
+            // value - min = x
+            // x = (min + value) * 100 / (max - min)
+            const perc1 = (value[0].toUnixTime() - min) * 100 / (max - min);
+            const perc2 = (value[1].toUnixTime() - min) * 100 / (max - min);
+    
+            // width = 100
+            // left = perc
+            
+            const perc = width * perc1 / 100;
+            const percWidth = width * perc2 / 100;
 
-        // max - min = 100
-        // value - min = x
-        // x = (min + value) * 100 / (max - min)
-        const perc1 = (value[0] - min) * 100 / (max - min);
-        const perc2 = (value[1] - min) * 100 / (max - min);
-
-        // width = 100
-        // left = perc
-        
-        const perc = width * perc1 / 100;
-        const percWidth = width * perc2 / 100;
-        this._progress.container.css('width', (percWidth - perc) + 'px');
-        this._progress.container.css('left', perc + 'px');
+            this._progress.container.css('width', (percWidth - perc) + 'px');
+            this._progress.container.css('left', perc + 'px');
+        } catch(e) {
+            
+        }
 
     }
 
@@ -210,8 +220,8 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         const max = this._maxValue;
         const min = this._minValue;
 
-        this._max.value = '#{ui-components-rangepicker-max}: ' + this._formatNumber(max);
-        this._min.value = '#{ui-components-rangepicker-min}: ' + this._formatNumber(min);
+        this._max.value = '#{ui-components-timeline-max}: ' + this._formatDate(max);
+        this._min.value = '#{ui-components-timeline-min}: ' + this._formatDate(min);
 
     }
 
@@ -236,17 +246,16 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
 
     /**
      * 
-     * @type {Array}
+     * @type {Array<Date>}
      */
     get value() {
         return this._value;
     }
     /**
      * 
-     * @type {Array}
+     * @type {Array<Date>}
      */
     set value(value) {
-
         value = this._convertProperty('Array', value);
         this._value = value;
 
@@ -256,23 +265,28 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
 
         if(!value) {
             value = [min, max];
-        } else if(!Array.isArray(value) && value.isNumeric()) {
+        } else if(!Array.isArray(value) && value.isDate()) {
             value = [value, max];
         }
-        
-        let left1 = parseFloat(value[0]);
-        let left2 = parseFloat(value[1]);
 
-        // left1 = Math.ceil(left1 / step) * step;
+        if(!(value[0] instanceof Date)) {
+            value[0] = value[0].toDate();
+        }
+        if(!(value[1] instanceof Date)) {
+            value[1] = value[1].toDate();
+        }
+        
+        let left1 = value[0];
+        let left2 = value[1];
+
         if(left1 >= max) {
             left1 = max;
         }
-        if(left1 <= min) {
+        if(left1 <= min || left1 == 'Invalid Date') {
             left1 = min;
         }
 
-        // left2 = Math.ceil(left2 / step) * step;
-        if(left2 >= max) {
+        if(left2 >= max || left2 == 'Invalid Date') {
             left2 = max;
         }
         if(left2 <= min) {
@@ -290,8 +304,10 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
             this._value = [min, max];
         }
 
-        this._input1.value = this._formatNumber(this._value[0]);
-        this._input2.value = this._formatNumber(this._value[1]);
+        this._input1.value = this._value[0];
+        this._input2.value = this._value[1];
+        console.log(this.value);
+        this.Dispatch('Changed', {value: this.value});
 
     }
 
@@ -311,63 +327,43 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
     }
 
     
-    _formatNumber(v) {
-
-        const unit = Lang.Translate(this._unit);
-        const format = this._format ?? 'normal';
-        const decimal = this._decimal ?? 2;
-
-        v = parseFloat(v);
-
-        if(format === 'money') {
-            const formatter = new Intl.NumberFormat(App.NumberFormat, {style: 'currency', currency: App.Currency.code, maximumFractionDigits: decimal});
-            v = formatter.format(v);
+    _formatDate(v) {
+        if(!v) {
+            return '';
         }
-        else if(format === 'percent') {
-            const formatter = new Intl.NumberFormat(App.NumberFormat, {style: 'percent', maximumFractionDigits: decimal, minimumFractionDigits: decimal});
-            if(v > 1) {
-                v = v / 100;
-            }
-            v = formatter.format(v);
-        }
-        else {
-            v = v.toMoney(decimal);
-            if(unit) {
-                v = v + ' ' + (Array.isArray(unit) ? parseFloat(v).formatSequence(unit) : unit);
-            }
-        }
-
-        return v;
+        return (v instanceof Date ? v : v.toDate())?.intlFormat(true) ?? '';
     }
 
     /**
      * Maximum number of picker
-     * @type {Number}
+     * @type {Date}
      */
     get max() {
         return this._maxValue;
     }
     /**
      * Maximum number of picker
-     * @type {Number}
+     * @type {Date}
      */
     set max(value) {
+        value = this._convertProperty('Date', value);
         this._maxValue = value;
         this._render();
     }
 
     /**
      * Minimum value of picker
-     * @type {Number}
+     * @type {Date}
      */
     get min() {
         return this._minValue;
     }
     /**
      * Minimum value of picker
-     * @type {Number}
+     * @type {Date}
      */
     set min(value) {
+        value = this._convertProperty('Date', value);
         this._minValue = value;
         this._render();
     }
@@ -385,54 +381,6 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
      */
     set step(value) {
         this._stepValue = value;
-        this._render();
-    }
-
-    /**
-     * Unit of value to show
-     * @type {String}
-     */
-    get unit() {
-        return this._unit;
-    }
-    /**
-     * Unit of value to show
-     * @type {String}
-     */
-    set unit(value) {
-        this._unit = value;
-        this._render();
-    }
-
-    /**
-     * Format of value
-     * @type {money,percent,normal}
-     */
-    get format() {
-        return this._format;
-    }
-    /**
-     * Format of value
-     * @type {money,percent,normal}
-     */
-    set format(value) {
-        this._format = value;
-        this._render();
-    }
-
-    /**
-     * Decimal count
-     * @type {Number}
-     */
-    get decimal() {
-        return this._decimal;
-    }
-    /**
-     * Decimal count
-     * @type {Number}
-     */
-    set decimal(value) {
-        this._decimal = value;
         this._render();
     }
 
