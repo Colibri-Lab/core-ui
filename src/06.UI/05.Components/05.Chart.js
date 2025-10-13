@@ -26,14 +26,14 @@ Colibri.UI.Chart = class extends Colibri.UI.Component {
 
     /**
      * Orientation of chart
-     * @type {string}
+     * @type {horizontal,vertical}
      */
     get orientation() {
         return this._orientation;
     }
     /**
      * Orientation of chart
-     * @type {string}
+     * @type {horizontal,vertical}
      */
     set orientation(value) {
         this._orientation = value;
@@ -49,6 +49,41 @@ Colibri.UI.Chart = class extends Colibri.UI.Component {
         let barchart = new Colibri.UI.Chart.Barchart(name, this);
         barchart.orientation = this._orientation;
         return barchart
+    }
+
+    /**
+     * Value Array
+     * @type {Array}
+     */
+    get value() {
+        return this._value;
+    }
+    /**
+     * Value Array
+     * @type {Array}
+     */
+    set value(value) {
+        this._value = value;
+        this._showValue();
+    }
+    _showValue() {
+        
+        const maxValue = Math.max(...this._value.map(v => v.value));
+        const maxPercent = 100;
+
+        this.Clear();
+
+        for(const v of this._value) {
+
+            const percent = (v.value / maxValue) * maxPercent;
+
+            let barchart = this.AddBarchart();
+            barchart.textValue = v.title;
+            barchart.title = v.value === 0 ? '' : v.value;
+            barchart.value = percent;
+            barchart.toolTip = v.title + ': ' + v.value;
+        }
+
     }
 }
 

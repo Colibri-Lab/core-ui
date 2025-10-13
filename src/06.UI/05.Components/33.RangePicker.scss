@@ -11,7 +11,7 @@
     }
 
     .app-input-component {
-        flex: 0 0 50%;
+        flex: 0 0 120px;
         border: 0px;
         padding: 10px 0px;
         input {
@@ -23,6 +23,7 @@
             color: #0B1F35;
             background: transparent;
         }
+        
         &:last-child {
             input {
                 text-align: right;
@@ -31,6 +32,21 @@
     }
 
     flex-direction: column;
+
+    [data-object-name="inputflex"] {
+        width: 100%;
+        align-items: center;
+        .app-component-textspan {
+            font-style: normal;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 18px;
+            color: #c0c0c0;
+        } 
+        [data-object-name="max"] {
+            margin-left: auto;
+        }
+    }
 
     .colibri-ui-rangepicker-rangepicker-progress-pane {
         background: #B5B2B2;
@@ -65,19 +81,5 @@
         }
     }
 
-    .colibri-ui-rangepicker-rangepicker-maxmin {
-        width: 100%;
-        flex-wrap: nowrap;
-        align-items: center;
-        justify-content: space-between;
-        padding-top: 13px;
-        .app-component-textspan {
-            font-style: normal;
-            font-weight: 400;
-            font-size: 16px;
-            line-height: 18px;
-            color: #000;
-        } 
-    }
 
 }

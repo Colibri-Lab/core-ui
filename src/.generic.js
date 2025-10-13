@@ -2280,6 +2280,7 @@ Number.prototype.toMoney = function (digits, force = true, space = ' ', useNulls
     }
     return ret;
 };
+
 /**
  * Formats the number according to the provided type.
  * @param {string} type - The type of formatting ('money', 'percent', or any other).
