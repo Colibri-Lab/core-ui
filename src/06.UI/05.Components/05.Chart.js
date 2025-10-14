@@ -91,7 +91,7 @@ Colibri.UI.Chart = class extends Colibri.UI.Component {
     
                 let barchart = this.AddBarchart();
                 barchart.textValue = v.title;
-                barchart.title = v.value === 0 ? '' : v.value;
+                barchart.title = v?.valueTitle ?? ( v.value === 0 ? '' : v.value );
                 barchart.value = percent;
                 barchart.tag = v?.tag ?? v;
                 barchart.toolTip = v.title + '<br />' + v.value;

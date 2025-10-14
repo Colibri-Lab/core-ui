@@ -1,0 +1,16 @@
+.colibri-ui-maps-controls-togglebutton {
+    
+    &.-checked {
+        
+        background: #1C274C;
+        [data-object-name="label"] {
+            color: white;
+        }
+        svg {
+            path {
+                fill: #ffffff;
+            }
+        }
+    }
+
+}
