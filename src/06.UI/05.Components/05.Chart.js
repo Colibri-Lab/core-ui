@@ -25,6 +25,15 @@ Colibri.UI.Chart = class extends Colibri.UI.Component {
     }
 
     /**
+     * Register events
+     * @protected
+     */
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('BarClicked', false, 'When the bar is clicked');
+    }
+
+    /**
      * Orientation of chart
      * @type {horizontal,vertical}
      */
@@ -84,6 +93,7 @@ Colibri.UI.Chart = class extends Colibri.UI.Component {
                 barchart.textValue = v.title;
                 barchart.title = v.value === 0 ? '' : v.value;
                 barchart.value = percent;
+                barchart.tag = v?.tag ?? v;
                 barchart.toolTip = v.title + ': ' + v.value;
             }
         });
@@ -121,6 +131,12 @@ Colibri.UI.Chart.Barchart = class extends Colibri.UI.Component {
 
         this._textValue = new Colibri.UI.Component('barchart-text-value', this);
         this._textValue.AddClass('barchart-text-value');
+
+        this.AddHandler('Clicked', this.__thisClicked);
+    }
+
+    __thisClicked(event, args) {
+        this.parent.Dispatch('BarClicked', {bar: this});
     }
 
     /**

@@ -16,8 +16,12 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         super(name, container, Colibri.UI.Templates['Colibri.UI.Timeline']);
         this.AddClass('colibri-ui-timeline');
 
+        this._disableChangeEvent = false;
         this._render();
 
+        this._viewPicker();
+        this._addHandlers();
+        this._showProgress();
     }
 
     /**
@@ -27,16 +31,18 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'When the values are changed');
+        this.RegisterEvent('MinChanged', false, 'When the min value is changed');
+        this.RegisterEvent('MaxChanged', false, 'When the max value is changed');
     }
 
     _render() {
         
-        this.Clear();
-
         this._inputFlex = new Colibri.UI.FlexBox('inputflex', this);
         this._input1 = new Colibri.UI.DateTimeSelector('input1', this._inputFlex);
-        this._min = new Colibri.UI.TextSpan('min', this._inputFlex);
-        this._max = new Colibri.UI.TextSpan('max', this._inputFlex);
+        this._minText = new Colibri.UI.TextSpan('min-text', this._inputFlex);
+        this._min = new Colibri.UI.DateTimeSelector('min', this._inputFlex);
+        this._maxText = new Colibri.UI.TextSpan('max-text', this._inputFlex);
+        this._max = new Colibri.UI.DateTimeSelector('max', this._inputFlex);
         this._input2 = new Colibri.UI.DateTimeSelector('input2', this._inputFlex);
 
         this._pane = new Colibri.UI.Pane('pane', this);        
@@ -50,19 +56,13 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         this._input2.shown = this._pane.shown = 
         this._progress.shown = this._span1.shown =
         this._span2.shown =  this._max.shown = 
-        this._min.shown = true;
+        this._min.shown = this._minText.shown = this._maxText.shown = true;
         
-        this._input1.hasIcon = false;
-        this._input1.hasClearIcon = false;
-        this._input2.hasIcon = false;
-        this._input2.hasClearIcon = false;
+        this._input1.hasIcon = this._input2.hasIcon = this._min.hasIcon = this._max.hasIcon = false;
+        this._input1.hasClearIcon = this._input2.hasClearIcon = this._min.hasClearIcon = this._max.hasClearIcon = false;
 
         this._drag1 = new Colibri.UI.Drag(this._span1.container, this._pane.container, (newLeft, newTop) => this._span1Moved(newLeft, newTop));
         this._drag2 = new Colibri.UI.Drag(this._span2.container, this._pane.container, (newLeft, newTop) => this._span2Moved(newLeft, newTop));
-
-        this._viewPicker();
-        this._addHandlers();
-        this._showProgress();
 
     }
 
@@ -73,6 +73,18 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         this._input1.AddHandler(['LoosesFocus', 'Changed'], this.__input1LoosesFocus, false, this);
         this._input2.AddHandler('ReceiveFocus', this.__input2ReceiveFocus, false, this);
         this._input2.AddHandler(['LoosesFocus', 'Changed'], this.__input2LoosesFocus, false, this);
+        this._min.RemoveHandler('Changed', this.__minChanged, this);
+        this._min.AddHandler('Changed', this.__minChanged, false, this);
+        this._max.RemoveHandler('Changed', this.__maxChanged, this);
+        this._max.AddHandler('Changed', this.__maxChanged, false, this);
+    }
+
+    __minChanged(event, args) {
+        this.Dispatch('MinChanged', {min: this._min.value, max: this._max.value});
+    }
+
+    __maxChanged(event, args) {
+        this.Dispatch('MaxChanged', {min: this._min.value, max: this._max.value});
     }
 
     
@@ -91,6 +103,9 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
      * @param {*} args event arguments
      */ 
     __input1LoosesFocus(event, args) {
+        if(this._disableChangeEvent) {
+            return;
+        }
         this.value = [this._input1.value, this._input2.value];
         this._showProgress();
     }
@@ -110,6 +125,9 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
      * @param {*} args event arguments
      */ 
     __input2LoosesFocus(event, args) {
+        if(this._disableChangeEvent) {
+            return;
+        }
         this.value = [this._input1.value, this._input2.value];
         this._showProgress();
     }
@@ -217,11 +235,10 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
 
     _viewPicker() {
 
-        const max = this._maxValue;
-        const min = this._minValue;
-
-        this._max.value = '#{ui-components-timeline-max}: ' + this._formatDate(max);
-        this._min.value = '#{ui-components-timeline-min}: ' + this._formatDate(min);
+        this._maxText.value = '#{ui-components-timeline-max}: ';
+        this._max.value = this._maxValue;
+        this._minText.value = '#{ui-components-timeline-min}: ';
+        this._min.value = this._minValue;
 
     }
 
@@ -304,10 +321,11 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
             this._value = [min, max];
         }
 
+        this._disableChangeEvent = true;
         this._input1.value = this._value[0];
         this._input2.value = this._value[1];
-        console.log(this.value);
-        this.Dispatch('Changed', {value: this.value});
+        this._disableChangeEvent = false;
+        this._showProgress();
 
     }
 
@@ -347,8 +365,13 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
      */
     set max(value) {
         value = this._convertProperty('Date', value);
-        this._maxValue = value;
-        this._render();
+        if(!this._maxValue || this._maxValue.getTime() != value.getTime()) {
+            this._maxValue = value;
+            
+            this._viewPicker();
+            this._addHandlers();
+            this._showProgress();
+        }
     }
 
     /**
@@ -364,8 +387,13 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
      */
     set min(value) {
         value = this._convertProperty('Date', value);
-        this._minValue = value;
-        this._render();
+        if(!this._minValue || value.getTime() != this._minValue.getTime()) {
+            this._minValue = value;
+            
+            this._viewPicker();
+            this._addHandlers();
+            this._showProgress();
+        }
     }
 
     /**
@@ -381,7 +409,10 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
      */
     set step(value) {
         this._stepValue = value;
-        this._render();
+        
+        this._viewPicker();
+        this._addHandlers();
+        this._showProgress();
     }
 
 }

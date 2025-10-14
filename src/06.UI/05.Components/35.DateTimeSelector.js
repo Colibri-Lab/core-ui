@@ -34,14 +34,20 @@ Colibri.UI.DateTimeSelector = class extends Colibri.UI.Component {
 
         this._hiddenElement.addEventListener('click', (e) => { this.Dispatch('Clicked', { domEvent: e }); e.preventDefault(); e.stopPropagation(); return false; });
         this._hiddenElement.addEventListener('change', (e) => {
+            let changed = false;
+            if(this._value != this._hiddenElement.value) {
+                changed = true;
+            } 
             this._showValue();
-            if (this._changeTimeout) {
-                clearTimeout(this._changeTimeout);
-                this._changeTimeout = -1;
+            if(changed) {
+                if (this._changeTimeout) {
+                    clearTimeout(this._changeTimeout);
+                    this._changeTimeout = -1;
+                }
+                this._changeTimeout = setTimeout(() => {
+                    this.Dispatch('Changed', {component: this});
+                }, 500);
             }
-            this._changeTimeout = setTimeout(() => {
-                this.Dispatch('Changed');
-            }, 500);
 
             e.preventDefault();
         });
@@ -307,10 +313,10 @@ Colibri.UI.DateTimeSelector = class extends Colibri.UI.Component {
         }
         this._showValue();
         if (oldValue != this._hiddenElement.value) {
-            this.Dispatch('Changed');
+            this.Dispatch('Changed', {component: this});
         }
     }
-
+    
     /**
      * Date value
      * @type {Date|string}
@@ -585,17 +591,19 @@ Colibri.UI.DateTimeSelectorPopup = class extends Colibri.UI.Pane {
                 if (!this.parent) {
                     return;
                 }
-                const bounds = this.parent.container.bounds();
-                const b = this.container.bounds(true, true);
 
-                if(b.top + b.outerHeight > window.innerHeight) {
-                    this.top = bounds.top - b.outerHeight;
-                    this.AddClass('-up');
-                }
-                if(b.left + b.outerWidth > window.innerWidth) {
-                    this.left = bounds.left - b.outerWidth + bounds.outerWidth;
-                    console.log(bounds, b, bounds.left - b.outerWidth + bounds.outerWidth);
-                }
+                try {
+                    const bounds = this.parent.container.bounds();
+                    const b = this.container.bounds(true, true);
+    
+                    if(b.top + b.outerHeight > window.innerHeight) {
+                        this.top = bounds.top - b.outerHeight;
+                        this.AddClass('-up');
+                    }
+                    if(b.left + b.outerWidth > window.innerWidth) {
+                        this.left = bounds.left - b.outerWidth + bounds.outerWidth;
+                    }
+                } catch(e) {}
             });
         }
 
