@@ -21,3 +21,27 @@ ui-components-rangepicker-min:
   fa: حداقل
   zh: 最小值
   uz: Minimum
+ui-components-rangepicker-minval:
+  ru: Начальное значение
+  en: Initial value
+  it: Valore iniziale
+  de: Anfangswert
+  es: Valor inicial
+  hy: Սկզբնական արժեք
+  tr: Başlangıç değeri
+  fa: مقدار اولیه
+  zh: 初始值
+  uz: Boshlang'ich qiymat
+  kk: Бастапқы мән
+ui-components-rangepicker-maxval:
+  ru: Конечное значение
+  en: Final value
+  it: Valore finale
+  de: Endwert
+  es: Valor final
+  hy: Վերջնական արժեք
+  tr: Son değer
+  fa: مقدار نهایی
+  zh: 终值
+  uz: Yakuniy qiymat
+  kk: Соңғы мән

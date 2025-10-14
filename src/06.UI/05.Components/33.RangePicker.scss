@@ -11,9 +11,8 @@
     }
 
     [data-object-name="input1"], [data-object-name="input2"], [data-object-name="min"], [data-object-name="max"] {
-        flex: 0 0 120px;
         border: 0px;
-        padding: 10px 0px;
+        padding: 2px 5px;
         input {
             padding: 0px;
             font-style: normal;
@@ -22,20 +21,16 @@
             line-height: 18px;
             color: #0B1F35;
             background: transparent;
-        }
-        
-        &:last-child {
-            input {
-                text-align: right;
-            }
-        }
+        }        
     }
 
     flex-direction: column;
 
     [data-object-name="inputflex"] {
         width: 100%;
+        gap: 10px;
         align-items: center;
+        padding-bottom: 10px;
         .app-component-textspan {
             font-style: normal;
             font-weight: 400;
@@ -43,7 +38,7 @@
             line-height: 18px;
             color: #c0c0c0;
         } 
-        [data-object-name="max-text"] {
+        [data-object-name="input2-text"] {
             margin-left: auto;
         }
     }
@@ -78,6 +73,14 @@
                     right: -8px;
                 }
             }
+        }
+    }
+
+    .app-input-component {
+        border: 1px solid transparent;
+        &.-focused {
+            border: 1px solid #c0c0c0;
+            border-radius: 3px;
         }
     }
 

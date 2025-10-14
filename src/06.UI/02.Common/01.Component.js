@@ -2912,6 +2912,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return this._element.isValueExceeded();
     }
 
+    ExceededValueWidth() {
+        return this._element.getRealWidth();
+    }
+
     /**
      * Handle container scroll
      * @type {Boolean}

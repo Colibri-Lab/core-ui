@@ -49,12 +49,14 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         this.Clear();
 
         this._inputFlex = new Colibri.UI.FlexBox('inputflex', this);
-        this._input1 = new Colibri.UI.Input('input1', this._inputFlex);
         this._minText = new Colibri.UI.TextSpan('min-text', this._inputFlex);
         this._min = new Colibri.UI.Input('min', this._inputFlex);
+        this._input1Text = new Colibri.UI.TextSpan('input1-text', this._inputFlex);
+        this._input1 = new Colibri.UI.Input('input1', this._inputFlex);
+        this._input2Text = new Colibri.UI.TextSpan('input2-text', this._inputFlex);
+        this._input2 = new Colibri.UI.Input('input2', this._inputFlex);
         this._maxText = new Colibri.UI.TextSpan('max-text', this._inputFlex);
         this._max = new Colibri.UI.Input('max', this._inputFlex);
-        this._input2 = new Colibri.UI.Input('input2', this._inputFlex);
 
         this._pane = new Colibri.UI.Pane('pane', this);        
         this._pane.AddClass('colibri-ui-rangepicker-rangepicker-progress-pane');
@@ -63,7 +65,7 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         this._span1 = new Colibri.UI.Pane('span1', this._progress);
         this._span2 = new Colibri.UI.Pane('span2', this._progress);
 
-        this._maxText.shown = this._minText.shown = 
+        this._input1Text.shown = this._input2Text.shown = this._maxText.shown = this._minText.shown = 
         this._inputFlex.shown = this._input1.shown = 
         this._input2.shown = this._pane.shown = 
         this._progress.shown = this._span1.shown =
@@ -72,6 +74,9 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         
         this._input1.hasIcon = this._input1.hasClearIcon = this._max.hasIcon = this._max.hasClearIcon = false;
         this._input2.hasIcon = this._input2.hasClearIcon = this._min.hasIcon = this._min.hasClearIcon = false;
+
+        this._input1.expandByValue = this._input2.expandByValue = this._max.expandByValue = this._min.expandByValue = true;
+        this._input1.expandedMinWidth = this._input2.expandedMinWidth = this._max.expandedMinWidth = this._min.expandedMinWidth = 50;
         
 
         this._drag1 = new Colibri.UI.Drag(this._span1.container, this._pane.container, (newLeft, newTop) => this._span1Moved(newLeft, newTop));
@@ -108,10 +113,10 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
     }
     
     __maxReceiveFocus(event, args) {
-        this._max.value = parseFloat(this._maxValue / (this._unitValue ?? 1)).toMoney(4, true, '', true, '.');
+        this._max.value = parseFloat(this._maxValue / (this._unitValue ?? 1)).toMoney(this._decimal, true, '', false, '.');
     }
     __minReceiveFocus(event, args) {
-        this._min.value = parseFloat(this._minValue / (this._unitValue ?? 1)).toMoney(4, true, '', true, '.');
+        this._min.value = parseFloat(this._minValue / (this._unitValue ?? 1)).toMoney(this._decimal, true, '', false, '.');
     }
 
     __minChanged(event, args) {
@@ -122,6 +127,63 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
     __maxChanged(event, args) {
         this._minValue = parseFloat(this._max.value) * (this._unitValue ?? 1);
         this.Dispatch('MaxChanged', {min: this._minValue, max: this._maxValue});
+    }
+
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
+    __input1ReceiveFocus(event, args) {
+        this._input1.value = parseFloat(this._value[0] / (this._unitValue ?? 1)).toMoney(this._decimal, true, '', false, '.');
+    }
+
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
+    __input1LoosedFocus(event, args) {
+        if(this._disableChangeEvent) {
+            return;
+        }
+
+        this._value[0] = this._input1.value * (this._unitValue ?? 1);
+
+        this._disableChangeEvent = true;
+        this._input1.value = this._formatNumber(this._value[0] / (this._unitValue ?? 1));
+        this._input2.value = this._formatNumber(this._value[1] / (this._unitValue ?? 1));
+        this._disableChangeEvent = false;
+        this._showProgress();
+
+    }
+
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
+    __input2ReceiveFocus(event, args) {
+        this._input2.value = parseFloat(this._value[1] / (this._unitValue ?? 1)).toMoney(this._decimal, true, '', false, '.');
+    }
+
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
+    __input2LoosedFocus(event, args) {
+        if(this._disableChangeEvent) {
+            return;
+        }
+
+        this._value[1] = this._input2.value * (this._unitValue ?? 1);
+
+        this._disableChangeEvent = true;
+        this._input1.value = this._formatNumber(this._value[0] / (this._unitValue ?? 1));
+        this._input2.value = this._formatNumber(this._value[1] / (this._unitValue ?? 1));
+        this._disableChangeEvent = false;
+        this._showProgress();
     }
 
     /**
@@ -142,50 +204,6 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
     _span2Moved(newLeft, newTop) {
         // this._progress.container.css('width', newLeft + 'px');
         this._calculateValue(null, newLeft);
-        this._showProgress();
-    }
-
-    /**
-     * @private
-     * @param {Colibri.Events.Event} event event object
-     * @param {*} args event arguments
-     */ 
-    __input1ReceiveFocus(event, args) {
-        this._input1.value = this._value[0];
-    }
-
-    /**
-     * @private
-     * @param {Colibri.Events.Event} event event object
-     * @param {*} args event arguments
-     */ 
-    __input1LoosedFocus(event, args) {
-        if(this._disableChangeEvent) {
-            return;
-        }
-        this.value = [this._input1.value, this._input2.value];
-        this._showProgress();
-    }
-
-    /**
-     * @private
-     * @param {Colibri.Events.Event} event event object
-     * @param {*} args event arguments
-     */ 
-    __input2ReceiveFocus(event, args) {
-        this._input2.value = this._value[1];
-    }
-
-    /**
-     * @private
-     * @param {Colibri.Events.Event} event event object
-     * @param {*} args event arguments
-     */ 
-    __input2LoosedFocus(event, args) {
-        if(this._disableChangeEvent) {
-            return;
-        }
-        this.value = [this._input1.value, this._input2.value];
         this._showProgress();
     }
 
@@ -284,6 +302,8 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         const max = this._maxValue;
         const min = this._minValue;
 
+        this._input1Text.value = '#{ui-components-rangepicker-minval}: ';
+        this._input2Text.value = '#{ui-components-rangepicker-maxval}: ';
         this._maxText.value = '#{ui-components-rangepicker-max}: ';
         this._max.value = this._formatNumber(max / (this._unitValue ?? 1));
         this._minText.value = '#{ui-components-rangepicker-min}: ';
@@ -367,7 +387,6 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         }
 
         this._disableChangeEvent = true;
-        console.log(this._unitValue, this._value[0], this._value[1]);
         this._input1.value = this._formatNumber(this._value[0] / (this._unitValue ?? 1));
         this._input2.value = this._formatNumber(this._value[1] / (this._unitValue ?? 1));
         this._disableChangeEvent = false;

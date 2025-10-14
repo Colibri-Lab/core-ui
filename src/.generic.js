@@ -2255,7 +2255,7 @@ Number.prototype.toMoney = function (digits, force = true, space = ' ', useNulls
     if (digits == undefined) {
         digits = 2;
     }
-    if (!space) {
+    if (space === null) {
         space = ' ';
     }
 
@@ -2275,8 +2275,8 @@ Number.prototype.toMoney = function (digits, force = true, space = ' ', useNulls
     result = price.substring(0, len - count * 3) + result;
     let ret = (result + (dec ? dotSign + dec : (force ? dotSign + '0'.repeat(digits) : ''))).trimString('.').trimString(',');
     if (!useNulls) {
-        ret = ret.replaceAll('.00', '');
-        ret = ret.replaceAll(',00', '');
+        ret = ret.replaceAll('.' + '0'.repeat(digits), '');
+        ret = ret.replaceAll(',' + '0'.repeat(digits), '');
     }
     return ret;
 };
@@ -3690,7 +3690,7 @@ Element.prototype.emitHtmlEvents = function (eventType) {
  */
 Element.prototype.isValueExceeded = function () {
     const width = this.bounds().outerWidth;
-    if (!width) {
+    if (width === undefined) {
         return false;
     }
     var s = Element.create('span');
@@ -3702,13 +3702,41 @@ Element.prototype.isValueExceeded = function () {
         'font-family': this.css('font-family'),
         'font-size': this.css('font-size'),
         'font-weight': this.css('font-weight'),
-        'font-style': this.css('font-style')
+        'font-style': this.css('font-style'),
+        'padding': this.css('padding')
     });
     s.html(this.value || this.html());
     document.body.append(s);
     var result = s.bounds().outerWidth > width;
     s.remove();
     return result;
+}
+
+Element.prototype.getRealWidth = function () {
+    const width = this.bounds().outerWidth;
+    if (width === undefined) {
+        return false;
+    }
+    var s = Element.create('span');
+    s.css({
+        position: 'absolute',
+        left: -9999,
+        top: -9999,
+        // ensure that the span has same font properties as the element
+        'font-family': this.css('font-family'),
+        'font-size': this.css('font-size'),
+        'font-weight': this.css('font-weight'),
+        'font-style': this.css('font-style'),
+        'padding': this.css('padding')
+    });
+    s.html(this.value || this.html());
+    document.body.append(s);
+    const w = s.bounds().outerWidth;
+    if(w === 177) {
+        debugger;
+    }
+    s.remove();
+    return w;
 }
 
 HTMLDivElement.prototype.select = function () {

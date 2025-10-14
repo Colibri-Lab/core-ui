@@ -92,7 +92,10 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
             this.Dispatch('KeyDown', { value: this.value, domEvent: e });
         });
 
-        this._input.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', { domEvent: e }));
+        this._input.addEventListener('focus', (e) => {
+            this.AddClass('-focused');
+            return this.Dispatch('ReceiveFocus', { domEvent: e });
+        });
 
         this._input.addEventListener('mousedown', (e) => {
             e.target.focus();
@@ -110,7 +113,8 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         this.Children('clear').AddHandler('Clicked', this.__clearClicked, false, this);
 
         this._input.addEventListener('blur', (e) => {
-            this.Dispatch('LoosedFocus', { value: this.value, domEvent: e });
+            this.RemoveClass('-focused');
+            return this.Dispatch('LoosedFocus', { value: this.value, domEvent: e });
         });
 
         this.AddHandler('LoosedFocus', this.__thisLoosedFocus);
@@ -310,6 +314,9 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         if (this.Children('clear') && !this._showClearIconAllways) {
             this.Children('clear').shown = this._hasClearIcon && this._input.value.length > 0;
         }
+        if(this.expandByValue) {
+            this.__expandHandler(null, null);
+        }
     }
 
     /** 
@@ -485,6 +492,12 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
     get isValueExceeded() {
         return this._input.isValueExceeded();
     }
+    
+    ExceededValueWidth() {
+        const style = getComputedStyle(this._element);
+        return this._input.getRealWidth() + (parseInt(style.paddingLeft ?? 0)) + (parseInt(style.paddingRight ?? 0)) + 
+            (parseInt(style.borderLeftWidth ?? 0)) + (parseInt(style.borderRightWidth ?? 0));
+    }
 
     /**
      * Show clear icon allways
@@ -534,6 +547,44 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
      */
     set changeOnKeyUpTimeout(value) {
         this._changeOnKeyUpTimeout = value;
+    }
+
+    /**
+     * Expand input if the value is exceeded
+     * @type {Boolean}
+     */
+    get expandByValue() {
+        return this._expandByValue;
+    }
+    /**
+     * Expand input if the value is exceeded
+     * @type {Boolean}
+     */
+    set expandByValue(value) {
+        this._expandByValue = value;
+        this.RemoveHandler(['KeyUp','Changed'], this.__expandHandler);
+        if(value) {
+            this.AddHandler(['KeyUp','Changed'], this.__expandHandler);
+        }
+    }
+
+    __expandHandler(event, args) {
+        this.width = Math.max(this._expandedMinWidth ?? 0, this.ExceededValueWidth());
+    }
+
+    /**
+     * Minimum with when expanding
+     * @type {Number}
+     */
+    get expandedMinWidth() {
+        return this._expandedMinWidth;
+    }
+    /**
+     * Minimum with when expanding
+     * @type {Number}
+     */
+    set expandedMinWidth(value) {
+        this._expandedMinWidth = value;
     }
 
 }
