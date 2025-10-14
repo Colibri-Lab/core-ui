@@ -16,6 +16,7 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         super(name, container, Colibri.UI.Templates['Colibri.UI.RangePicker']);
         this.AddClass('colibri-ui-rangepicker');
 
+        this._disableChangeEvent = false;
         this._maxValue = 100;
         this._minValue = 0;
         this._stepValue = 1;
@@ -24,8 +25,23 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         this._unit = '';
         this._value = [this._minValue, this._maxValue];
         this._render();
+        
+        this._viewPicker();
+        this._showProgress();
+        
         this.value = [this._minValue, this._maxValue];
         
+    }
+
+    /**
+     * Register events
+     * @protected
+     */
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('Changed', false, 'When the values are changed');
+        this.RegisterEvent('MinChanged', false, 'When the min value is changed');
+        this.RegisterEvent('MaxChanged', false, 'When the max value is changed');
     }
 
     _render() {
@@ -34,8 +50,10 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
 
         this._inputFlex = new Colibri.UI.FlexBox('inputflex', this);
         this._input1 = new Colibri.UI.Input('input1', this._inputFlex);
-        this._min = new Colibri.UI.TextSpan('min', this._inputFlex);
-        this._max = new Colibri.UI.TextSpan('max', this._inputFlex);
+        this._minText = new Colibri.UI.TextSpan('min-text', this._inputFlex);
+        this._min = new Colibri.UI.Input('min', this._inputFlex);
+        this._maxText = new Colibri.UI.TextSpan('max-text', this._inputFlex);
+        this._max = new Colibri.UI.Input('max', this._inputFlex);
         this._input2 = new Colibri.UI.Input('input2', this._inputFlex);
 
         this._pane = new Colibri.UI.Pane('pane', this);        
@@ -45,32 +63,65 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         this._span1 = new Colibri.UI.Pane('span1', this._progress);
         this._span2 = new Colibri.UI.Pane('span2', this._progress);
 
+        this._maxText.shown = this._minText.shown = 
         this._inputFlex.shown = this._input1.shown = 
         this._input2.shown = this._pane.shown = 
         this._progress.shown = this._span1.shown =
         this._span2.shown =  this._max.shown = 
         this._min.shown = true;
         
-        this._input1.hasIcon = false;
-        this._input1.hasClearIcon = false;
-        this._input2.hasIcon = false;
-        this._input2.hasClearIcon = false;
+        this._input1.hasIcon = this._input1.hasClearIcon = this._max.hasIcon = this._max.hasClearIcon = false;
+        this._input2.hasIcon = this._input2.hasClearIcon = this._min.hasIcon = this._min.hasClearIcon = false;
+        
 
         this._drag1 = new Colibri.UI.Drag(this._span1.container, this._pane.container, (newLeft, newTop) => this._span1Moved(newLeft, newTop));
         this._drag2 = new Colibri.UI.Drag(this._span2.container, this._pane.container, (newLeft, newTop) => this._span2Moved(newLeft, newTop));
-
-        this._viewPicker();
         this._addHandlers();
-        this._showProgress();
+
     }
 
     _addHandlers() {
         this.handleVisibilityChange = true;
         this.AddHandler('VisibilityChanged', this.__visibilityChanged);
+        
         this._input1.AddHandler('ReceiveFocus', this.__input1ReceiveFocus, false, this);
-        this._input1.AddHandler(['LoosesFocus', 'Changed'], this.__input1LoosesFocus, false, this);
+        this._input1.AddHandler(['LoosedFocus', 'Changed'], this.__input1LoosedFocus, false, this);
+        
         this._input2.AddHandler('ReceiveFocus', this.__input2ReceiveFocus, false, this);
-        this._input2.AddHandler(['LoosesFocus', 'Changed'], this.__input2LoosesFocus, false, this);
+        this._input2.AddHandler(['LoosedFocus', 'Changed'], this.__input2LoosedFocus, false, this);
+        
+        this._min.AddHandler('ReceiveFocus', this.__minReceiveFocus, false, this);
+        this._min.AddHandler('Changed', this.__minChanged, false, this);
+        this._min.AddHandler('LoosedFocus', this.__minLoosedFocus, false, this);
+
+        this._max.AddHandler('ReceiveFocus', this.__maxReceiveFocus, false, this);
+        this._max.AddHandler('Changed', this.__maxChanged, false, this);
+        this._max.AddHandler('LoosedFocus', this.__maxLoosedFocus, false, this);
+    }
+    
+    __minLoosedFocus(event, args) {
+        this._min.value = this._formatNumber(parseFloat(this._min.value) / (this._unitValue ?? 1));
+    }
+
+    __maxLoosedFocus(event, args) {
+        this._max.value = this._formatNumber(parseFloat(this._max.value) / (this._unitValue ?? 1));
+    }
+    
+    __maxReceiveFocus(event, args) {
+        this._max.value = parseFloat(this._maxValue / (this._unitValue ?? 1)).toMoney(4, true, '', true, '.');
+    }
+    __minReceiveFocus(event, args) {
+        this._min.value = parseFloat(this._minValue / (this._unitValue ?? 1)).toMoney(4, true, '', true, '.');
+    }
+
+    __minChanged(event, args) {
+        this._minValue = parseFloat(this._min.value) * (this._unitValue ?? 1);
+        this.Dispatch('MinChanged', {min: this._minValue, max: this._maxValue});
+    }
+
+    __maxChanged(event, args) {
+        this._minValue = parseFloat(this._max.value) * (this._unitValue ?? 1);
+        this.Dispatch('MaxChanged', {min: this._minValue, max: this._maxValue});
     }
 
     /**
@@ -108,7 +159,10 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
      */ 
-    __input1LoosesFocus(event, args) {
+    __input1LoosedFocus(event, args) {
+        if(this._disableChangeEvent) {
+            return;
+        }
         this.value = [this._input1.value, this._input2.value];
         this._showProgress();
     }
@@ -127,7 +181,10 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
      */ 
-    __input2LoosesFocus(event, args) {
+    __input2LoosedFocus(event, args) {
+        if(this._disableChangeEvent) {
+            return;
+        }
         this.value = [this._input1.value, this._input2.value];
         this._showProgress();
     }
@@ -185,22 +242,39 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
     _showProgress() {
         let value = this._value;
 
-        const width = this._pane.width;
+        const width = this._pane.width ?? 0;
+        if(isNaN(width)) {
+            return;
+        }
+
         const max = this._maxValue;
         const min = this._minValue;
 
         // max - min = 100
         // value - min = x
         // x = (min + value) * 100 / (max - min)
-        const perc1 = (value[0] - min) * 100 / (max - min);
-        const perc2 = (value[1] - min) * 100 / (max - min);
+        let perc1 = (value[0] - min) * 100 / (max - min);
+        let perc2 = (value[1] - min) * 100 / (max - min);
+
+        if(perc1 < 0) {
+            perc1 = 0;
+        }
+
+        if(perc2 < 0) {
+            perc2 = 0;
+        }
+
 
         // width = 100
         // left = perc
-        
         const perc = width * perc1 / 100;
         const percWidth = width * perc2 / 100;
-        this._progress.container.css('width', (percWidth - perc) + 'px');
+        let realWidth = (percWidth - perc);
+        if(realWidth > width) {
+            realWidth = width;
+        }
+        
+        this._progress.container.css('width', realWidth + 'px');
         this._progress.container.css('left', perc + 'px');
 
     }
@@ -210,8 +284,10 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         const max = this._maxValue;
         const min = this._minValue;
 
-        this._max.value = '#{ui-components-rangepicker-max}: ' + this._formatNumber(max);
-        this._min.value = '#{ui-components-rangepicker-min}: ' + this._formatNumber(min);
+        this._maxText.value = '#{ui-components-rangepicker-max}: ';
+        this._max.value = this._formatNumber(max / (this._unitValue ?? 1));
+        this._minText.value = '#{ui-components-rangepicker-min}: ';
+        this._min.value = this._formatNumber(min / (this._unitValue ?? 1));
 
     }
 
@@ -290,8 +366,12 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
             this._value = [min, max];
         }
 
-        this._input1.value = this._formatNumber(this._value[0]);
-        this._input2.value = this._formatNumber(this._value[1]);
+        this._disableChangeEvent = true;
+        console.log(this._unitValue, this._value[0], this._value[1]);
+        this._input1.value = this._formatNumber(this._value[0] / (this._unitValue ?? 1));
+        this._input2.value = this._formatNumber(this._value[1] / (this._unitValue ?? 1));
+        this._disableChangeEvent = false;
+        this._showProgress();
 
     }
 
@@ -352,8 +432,12 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
      * @type {Number}
      */
     set max(value) {
-        this._maxValue = value;
-        this._render();
+        if(!this._maxValue || this._maxValue != value) {
+            this._maxValue = value;
+            
+            this._viewPicker();
+            this._showProgress();
+        }
     }
 
     /**
@@ -368,8 +452,12 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
      * @type {Number}
      */
     set min(value) {
-        this._minValue = value;
-        this._render();
+        if(!this._minValue || value != this._minValue) {
+            this._minValue = value;
+            
+            this._viewPicker();
+            this._showProgress();
+        }
     }
 
     /**
@@ -385,7 +473,9 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
      */
     set step(value) {
         this._stepValue = value;
-        this._render();
+        
+        this._viewPicker();
+        this._showProgress();
     }
 
     /**
@@ -401,7 +491,9 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
      */
     set unit(value) {
         this._unit = value;
-        this._render();
+        
+        this._viewPicker();
+        this._showProgress();
     }
 
     /**
@@ -417,7 +509,9 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
      */
     set format(value) {
         this._format = value;
-        this._render();
+        
+        this._viewPicker();
+        this._showProgress();
     }
 
     /**
@@ -433,7 +527,27 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
      */
     set decimal(value) {
         this._decimal = value;
-        this._render();
+        
+        this._viewPicker();
+        this._showProgress();
+    }
+
+    /**
+     * Value of unit
+     * @type {Number}
+     */
+    get unitValue() {
+        return this._unitValue;
+    }
+    /**
+     * Value of unit
+     * @type {Number}
+     */
+    set unitValue(value) {
+        this._unitValue = value;
+        
+        this._viewPicker();
+        this._showProgress();
     }
 
 }

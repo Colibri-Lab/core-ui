@@ -94,7 +94,7 @@ Colibri.UI.Chart = class extends Colibri.UI.Component {
                 barchart.title = v.value === 0 ? '' : v.value;
                 barchart.value = percent;
                 barchart.tag = v?.tag ?? v;
-                barchart.toolTip = v.title + ': ' + v.value;
+                barchart.toolTip = v.title + '<br />' + v.value;
             }
         });
 

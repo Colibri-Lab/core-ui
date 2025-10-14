@@ -2250,7 +2250,7 @@ Number.prototype.decPlaces = function () {
  * @param {boolean} [useNulls=true] - Whether to remove '.00' from the result.
  * @returns {string} The formatted money string.
  */
-Number.prototype.toMoney = function (digits, force = true, space = ' ', useNulls = true) {
+Number.prototype.toMoney = function (digits, force = true, space = ' ', useNulls = true, dotSign = ',') {
     var result = '';
     if (digits == undefined) {
         digits = 2;
@@ -2273,7 +2273,7 @@ Number.prototype.toMoney = function (digits, force = true, space = ' ', useNulls
     }
 
     result = price.substring(0, len - count * 3) + result;
-    let ret = (result + (dec ? ',' + dec : (force ? ',' + '0'.repeat(digits) : ''))).trimString('.').trimString(',');
+    let ret = (result + (dec ? dotSign + dec : (force ? dotSign + '0'.repeat(digits) : ''))).trimString('.').trimString(',');
     if (!useNulls) {
         ret = ret.replaceAll('.00', '');
         ret = ret.replaceAll(',00', '');

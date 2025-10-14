@@ -10,7 +10,7 @@
         min-height: auto;
     }
 
-    [data-object-name="input1"], [data-object-name="input2"] {
+    [data-object-name="input1"], [data-object-name="input2"], [data-object-name="min"], [data-object-name="max"] {
         flex: 0 0 120px;
         border: 0px;
         padding: 10px 0px;
@@ -43,7 +43,7 @@
             line-height: 18px;
             color: #c0c0c0;
         } 
-        [data-object-name="max"] {
+        [data-object-name="max-text"] {
             margin-left: auto;
         }
     }

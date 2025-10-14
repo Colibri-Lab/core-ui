@@ -20,7 +20,6 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         this._render();
 
         this._viewPicker();
-        this._addHandlers();
         this._showProgress();
     }
 
@@ -63,6 +62,7 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
 
         this._drag1 = new Colibri.UI.Drag(this._span1.container, this._pane.container, (newLeft, newTop) => this._span1Moved(newLeft, newTop));
         this._drag2 = new Colibri.UI.Drag(this._span2.container, this._pane.container, (newLeft, newTop) => this._span2Moved(newLeft, newTop));
+        this._addHandlers();
 
     }
 
@@ -70,9 +70,9 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         this.handleVisibilityChange = true;
         this.AddHandler('VisibilityChanged', this.__visibilityChanged);
         this._input1.AddHandler('ReceiveFocus', this.__input1ReceiveFocus, false, this);
-        this._input1.AddHandler(['LoosesFocus', 'Changed'], this.__input1LoosesFocus, false, this);
+        this._input1.AddHandler(['LoosedFocus', 'Changed'], this.__input1LoosedFocus, false, this);
         this._input2.AddHandler('ReceiveFocus', this.__input2ReceiveFocus, false, this);
-        this._input2.AddHandler(['LoosesFocus', 'Changed'], this.__input2LoosesFocus, false, this);
+        this._input2.AddHandler(['LoosedFocus', 'Changed'], this.__input2LoosedFocus, false, this);
         this._min.RemoveHandler('Changed', this.__minChanged, this);
         this._min.AddHandler('Changed', this.__minChanged, false, this);
         this._max.RemoveHandler('Changed', this.__maxChanged, this);
@@ -102,7 +102,7 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
      */ 
-    __input1LoosesFocus(event, args) {
+    __input1LoosedFocus(event, args) {
         if(this._disableChangeEvent) {
             return;
         }
@@ -124,7 +124,7 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
      */ 
-    __input2LoosesFocus(event, args) {
+    __input2LoosedFocus(event, args) {
         if(this._disableChangeEvent) {
             return;
         }
@@ -369,7 +369,6 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
             this._maxValue = value;
             
             this._viewPicker();
-            this._addHandlers();
             this._showProgress();
         }
     }
@@ -391,7 +390,6 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
             this._minValue = value;
             
             this._viewPicker();
-            this._addHandlers();
             this._showProgress();
         }
     }
@@ -411,7 +409,6 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         this._stepValue = value;
         
         this._viewPicker();
-        this._addHandlers();
         this._showProgress();
     }
 
