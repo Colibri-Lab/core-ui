@@ -144,8 +144,8 @@ Colibri.UI.Forms.NumberRange = class extends Colibri.UI.Forms.Field {
     set placeholder(value) {
         value = this._convertProperty('String', value);
         this._placeholder = value;
-        this._input1.attr('placeholder', this._placeholder + ' (#{ui-fields-numberrange-from})');
-        this._input2.attr('placeholder', this._placeholder + ' (#{ui-fields-numberrange-to})');
+        this._input1.attr('placeholder', this._placeholder ? this._placeholder + ' (#{ui-fields-numberrange-from})' : '#{ui-fields-numberrange-from}');
+        this._input2.attr('placeholder', this._placeholder ? this._placeholder + ' (#{ui-fields-numberrange-to})' : '#{ui-fields-numberrange-to}');
     }
 
     /**

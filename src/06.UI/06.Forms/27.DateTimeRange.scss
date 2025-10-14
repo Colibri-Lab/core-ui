@@ -8,7 +8,7 @@
         } 
         align-items: center;
         justify-content: flex-start;
-        width: 615px;
+        width: 100%;
         gap: 20px;
 
         .app-date-selector-component {
@@ -23,10 +23,7 @@
         }
 
         [data-object-name$="-input1"],[data-object-name$="-input2"] {
-            width: 170px;
-        }
-        [data-object-name$="-time1"],[data-object-name$="-time2"] {
-            width: 100px;
+            width: 100%;
         }
 
         [data-object-name$="-clear"] {
