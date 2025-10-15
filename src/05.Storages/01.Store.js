@@ -29,6 +29,9 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
         this._permanent = permanent ?? false;
         if(this._permanent) {
+            window.onbeforeunload = () => {
+                this.KeepInPermanentStore();
+            };
             App.Db.AddHandler('DatabaseDoesNotExists', this.__appDbDatabaseDoesNotExists, false, this);
             App.Db.AddHandler('DatabaseOpened', this.__appDatabaseOpened, false, this);
             App.Db.Open();
@@ -81,12 +84,14 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      */
     RetreiveFromPermanentStore() {
         if(App.Db.StoreExists(this._name)) {
-            this._data = App?.Db?.GetDataById(this._name, location.hostname);
-            Colibri.Common.StartTimer(this._name + '-store-dump', 15000, () => {
-                this.KeepInPermanentStore();
+            App?.Db?.GetDataById(this._name, location.hostname).then(data => {
+                this._data = data;
+                // Colibri.Common.StartTimer(this._name + '-store-dump', 15000, () => {
+                //     this.KeepInPermanentStore();
+                // });
+                this.Dispatch('StoreRetreived', {});
+                this.Dispatch('StoreUpdated', {});
             });
-            this.Dispatch('StoreRetreived', {});
-            this.Dispatch('StoreUpdated', {});
         }
     }
     
@@ -105,7 +110,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
                     newData[name] = value.ExportData();
                 }
             } else {
-                newData[name] = Object.cloneRecursive(value);
+                newData[name] = Object.isObject(value) ? Object.cloneRecursive(value) : value;
             }
         });
 
@@ -595,6 +600,9 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         if(!nodispatch) {
             this.DispatchPath(path);
             this.Dispatch('StoreUpdated', {path: path, data: d});
+        }
+        if(this.permanent) {
+            this.KeepInPermanentStore();
         }
         return this;
 

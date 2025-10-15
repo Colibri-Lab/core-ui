@@ -24,6 +24,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._layersSwitch = this.Children('layers/switch');
         this._mapContainer = this.Children('map-container');
 
+        this.GenerateChildren(element, this);
+
         this._loadMap();
 
         this._zoomZoomIn.AddHandler('Clicked', this.__zoomZoomInClicked, false, this);

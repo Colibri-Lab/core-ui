@@ -32,6 +32,7 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         this.RegisterEvent('Changed', false, 'When the values are changed');
         this.RegisterEvent('MinChanged', false, 'When the min value is changed');
         this.RegisterEvent('MaxChanged', false, 'When the max value is changed');
+        this.RegisterEvent('ProgressClicked', false, 'When the progress is clicked');
     }
 
     _render() {
@@ -77,14 +78,27 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         this._min.AddHandler('Changed', this.__minChanged, false, this);
         this._max.RemoveHandler('Changed', this.__maxChanged, this);
         this._max.AddHandler('Changed', this.__maxChanged, false, this);
+        this._progress.AddHandler('Clicked', this.__progressClicked, false, this);
+    }
+
+    __progressClicked(event, args) {
+        this.Dispatch('ProgressClicked', Object.assign(args, {value: this.value}));
     }
 
     __minChanged(event, args) {
-        this.Dispatch('MinChanged', {min: this._min.value, max: this._max.value});
+        if(!this._disableChangeEvent) {
+            this._disableChangeEvent = true;
+            this.Dispatch('MinChanged', {min: this._min.value, max: this._max.value});
+            this._disableChangeEvent = false;
+        }
     }
 
     __maxChanged(event, args) {
-        this.Dispatch('MaxChanged', {min: this._min.value, max: this._max.value});
+        if(!this._disableChangeEvent) {
+            this._disableChangeEvent = true;
+            this.Dispatch('MaxChanged', {min: this._min.value, max: this._max.value});
+            this._disableChangeEvent = false;
+        }
     }
 
     
@@ -159,6 +173,16 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
 
     }
 
+    CalculateStepCount(min, max) {
+        if(!(min instanceof Date)) {
+            min = min.toDate();
+        }
+        if(!(max instanceof Date)) {
+            max = max.toDate();
+        }
+        return min.Diff(max);
+    }
+
     _setLeftPoint(left) {
         const width = this._pane.width;
         const perc = (left) * 100 / width;
@@ -210,19 +234,19 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
 
     _showProgress() {
         try {
-
+            
             let value = this._value;
     
-            const width = this._pane.width;
+            const width = parseFloat(this._pane.width);
     
-            const max = this._maxValue.toUnixTime();
-            const min = this._minValue.toUnixTime();
+            const max = parseFloat(this._maxValue.toUnixTime());
+            const min = parseFloat(this._minValue.toUnixTime());
     
             // max - min = 100
             // value - min = x
             // x = (min + value) * 100 / (max - min)
-            const perc1 = (value[0].toUnixTime() - min) * 100 / (max - min);
-            const perc2 = (value[1].toUnixTime() - min) * 100 / (max - min);
+            const perc1 = (parseFloat(value[0].toUnixTime()) - min) * 100 / (max - min);
+            const perc2 = (parseFloat(value[1].toUnixTime()) - min) * 100 / (max - min);
     
             // width = 100
             // left = perc
@@ -234,8 +258,9 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
                 realWidth = width;
             }
 
-            this._progress.container.css('width', realWidth + 'px');
-            this._progress.container.css('left', perc + 'px');
+            this._progress.container.css('width', realWidth.toFixed(4) + 'px');
+            this._progress.container.css('left', perc.toFixed(4) + 'px');
+
         } catch(e) {
             
         }
@@ -402,6 +427,25 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
             this._showProgress();
         }
     }
+
+    Expand(min, max) {
+        if(!(min instanceof Date)) {
+            min = min.toDate();
+        }
+        if(!(max instanceof Date)) {
+            max = max.toDate();
+        }
+        this._disableChangeEvent = true;
+        this._minValue = min;
+        this._maxValue = max;
+        this._stepValue = min.Diff(max);
+        this._value = [min, max];
+        
+        this._viewPicker();
+        this._showProgress();
+        this._disableChangeEvent = false;
+    }
+
 
     /**
      * Step

@@ -307,9 +307,9 @@ Colibri.UI.DateTimeSelector = class extends Colibri.UI.Component {
         } else if (typeof value == 'string') {
             this._hiddenElement.value = value;
         } else if (value instanceof Date) {
-            this._hiddenElement.value = value.toDbDate();
+            this._hiddenElement.value = value.toLocalDateTimeString();
         } else {
-            this._hiddenElement.value = value && value?.date ? value?.date?.toDate()?.toDbDate() : '';
+            this._hiddenElement.value = value && value?.date ? value?.date?.toDate()?.toLocalDateTimeString() : '';
         }
         this._showValue();
         if (oldValue != this._hiddenElement.value) {

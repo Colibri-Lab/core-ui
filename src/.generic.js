@@ -1430,6 +1430,10 @@ String.prototype.toDate = function () {
         return parseInt(this).toDateFromUnixTime();
     }
 
+    if(new Date(this) != 'Invalid Date') {
+        return new Date(this);
+    }
+
     let t = this.replace('T', ' ');
     if (t.indexOf('.') !== -1) {
         t = t.split(/\./);
@@ -2477,7 +2481,19 @@ Number.unique = function () { return (window.performance.getEntries()[0].duratio
  * Formats the date as a string in the 'YYYY-MM-DD HH:mm:ss' format.
  * @returns {string} The formatted date string.
  */
-Date.prototype.toDbDate = function () { if (this.toString() === 'Invalid Date') { return null; } return this.getFullYear() + '-' + ((this.getMonth() + 1) + '').expand('0', 2) + '-' + (this.getDate() + '').expand('0', 2) + ' ' + (this.getHours() + '').expand('0', 2) + ':' + (this.getMinutes() + '').expand('0', 2) + ':' + (this.getSeconds() + '').expand('0', 2); };
+Date.prototype.toDbDate = function () { 
+    if (this.toString() === 'Invalid Date') { 
+        return null; 
+    }
+    return this.toISOString(); 
+    // return this.getFullYear() + '-' + ((this.getMonth() + 1) + '').expand('0', 2) + '-' + (this.getDate() + '').expand('0', 2) + ' ' + (this.getHours() + '').expand('0', 2) + ':' + (this.getMinutes() + '').expand('0', 2) + ':' + (this.getSeconds() + '').expand('0', 2); 
+};
+Date.prototype.toLocalDateTimeString = function() {
+    if (this.toString() === 'Invalid Date') { 
+        return null; 
+    }
+    return this.getFullYear() + '-' + ((this.getMonth() + 1) + '').expand('0', 2) + '-' + (this.getDate() + '').expand('0', 2) + ' ' + (this.getHours() + '').expand('0', 2) + ':' + (this.getMinutes() + '').expand('0', 2) + ':' + (this.getSeconds() + '').expand('0', 2); 
+}
 /**
  * Converts the date to Unix timestamp (seconds since January 1, 1970).
  * @returns {number} The Unix timestamp.

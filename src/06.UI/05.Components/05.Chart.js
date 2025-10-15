@@ -56,8 +56,11 @@ Colibri.UI.Chart = class extends Colibri.UI.Component {
      * @returns {Colibri.UI.Chart.Barchart}
      */
     AddBarchart(name) {
-        let barchart = new Colibri.UI.Chart.Barchart(name, this);
-        barchart.orientation = this._orientation;
+        let barchart = this.Children(name);
+        if(!barchart) {
+            barchart = new Colibri.UI.Chart.Barchart(name, this);
+            barchart.orientation = this._orientation;
+        }
         return barchart
     }
 
@@ -78,28 +81,29 @@ Colibri.UI.Chart = class extends Colibri.UI.Component {
     }
     _showValue() {
         
-        
         const maxValue = Math.max(...this._value.map(v => v.value));
         const maxPercent = 100;
+        
+        const newNames = this._value.map(v => v?.id ?? String.MD5(v.title));
+        const names = this.Children().map(c => c.name);
+        const toDelete = names.filter(x => !newNames.includes(x));
+        if(toDelete.length > 0) {
+            this.Clear();
+        }
 
-        this.Clear();
+        for(const v of this._value) {
 
-        Colibri.Common.Delay(100).then(() => {
+            const percent = (v.value / maxValue) * maxPercent;
 
-            for(const v of this._value) {
-    
-                const percent = (v.value / maxValue) * maxPercent;
-    
-                let barchart = this.AddBarchart();
-                barchart.textValue = v.title;
-                barchart.title = v?.valueTitle ?? ( v.value === 0 ? '' : v.value );
-                barchart.value = percent;
-                barchart.tag = v?.tag ?? v;
-                barchart.toolTip = v.title + '<br />' + v.value;
-            }
-        });
+            let barchart = this.AddBarchart(v?.id ?? String.MD5(v.title));
+            barchart.textValue = v.title;
+            barchart.title = v?.valueTitle ?? ( v.value === 0 ? '' : v.value );
+            barchart.value = percent;
+            barchart.tag = v?.tag ?? v;
+            barchart.toolTip = v.title + '<br />' + v.value;
+        }
 
-
+        console.log(this.container.children.length)
     }
 }
 
@@ -134,16 +138,16 @@ Colibri.UI.Chart.Barchart = class extends Colibri.UI.Component {
         this._textValue.AddClass('barchart-text-value');
 
         this.AddHandler('Clicked', this.__thisClicked);
-        this.AddHandler('DoubleClicked', this.__thisDoubleClicked);
     }
 
-    __thisDoubleClicked(event, args) {
-        this.parent.Dispatch('BarClicked', {bar: this});
-        this.parent.Dispatch('BarDoubleClicked', {bar: this});
+    Dispose() {
+        this.ClearHandlers();
+        super.Dispose();
     }
+
 
     __thisClicked(event, args) {
-        this.parent.Dispatch('BarClicked', {bar: this});
+        this.parent.Dispatch('BarClicked', Object.assign(args, {bar: this}));
     }
 
     /**

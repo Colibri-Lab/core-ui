@@ -42,6 +42,7 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         this.RegisterEvent('Changed', false, 'When the values are changed');
         this.RegisterEvent('MinChanged', false, 'When the min value is changed');
         this.RegisterEvent('MaxChanged', false, 'When the max value is changed');
+        this.RegisterEvent('ProgressClicked', false, 'When the progress is clicked');
     }
 
     _render() {
@@ -102,6 +103,11 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         this._max.AddHandler('ReceiveFocus', this.__maxReceiveFocus, false, this);
         this._max.AddHandler('Changed', this.__maxChanged, false, this);
         this._max.AddHandler('LoosedFocus', this.__maxLoosedFocus, false, this);
+        this._progress.AddHandler('Clicked', this.__progressClicked, false, this);
+    }
+
+    __progressClicked(event, args) {
+        this.Dispatch('ProgressClicked', Object.assign(args, {value: this.value}));
     }
     
     __minLoosedFocus(event, args) {
@@ -120,13 +126,17 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
     }
 
     __minChanged(event, args) {
-        this._minValue = parseFloat(this._min.value) * (this._unitValue ?? 1);
-        this.Dispatch('MinChanged', {min: this._minValue, max: this._maxValue});
+        if(!this._disableChangeEvent) {
+            this._minValue = parseFloat(this._min.value) * (this._unitValue ?? 1);
+            this.Dispatch('MinChanged', {min: this._minValue, max: this._maxValue});
+        }
     }
 
     __maxChanged(event, args) {
-        this._minValue = parseFloat(this._max.value) * (this._unitValue ?? 1);
-        this.Dispatch('MaxChanged', {min: this._minValue, max: this._maxValue});
+        if(!this._disableChangeEvent) {
+            this._minValue = parseFloat(this._max.value) * (this._unitValue ?? 1);
+            this.Dispatch('MaxChanged', {min: this._minValue, max: this._maxValue});
+        }
     }
 
     /**
@@ -264,19 +274,19 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
     _showProgress() {
         let value = this._value;
 
-        const width = this._pane.width ?? 0;
+        const width = parseFloat(this._pane.width) ?? 0;
         if(isNaN(width)) {
             return;
         }
 
-        const max = this._maxValue;
-        const min = this._minValue;
+        const max = parseFloat(this._maxValue);
+        const min = parseFloat(this._minValue);
 
         // max - min = 100
         // value - min = x
         // x = (min + value) * 100 / (max - min)
-        let perc1 = (value[0] - min) * 100 / (max - min);
-        let perc2 = (value[1] - min) * 100 / (max - min);
+        let perc1 = (parseFloat(value[0]) - min) * 100 / (max - min);
+        let perc2 = (parseFloat(value[1]) - min) * 100 / (max - min);
 
         if(perc1 < 0) {
             perc1 = 0;
@@ -296,8 +306,8 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
             realWidth = width;
         }
         
-        this._progress.container.css('width', realWidth + 'px');
-        this._progress.container.css('left', perc + 'px');
+        this._progress.container.css('width', realWidth.toFixed(4) + 'px');
+        this._progress.container.css('left', perc.toFixed(4) + 'px');
 
     }
 
@@ -483,6 +493,18 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         }
     }
 
+    Expand(min, max) {
+        this._disableChangeEvent = true;
+        this._minValue = min;
+        this._maxValue = max;
+        this._stepValue = this._maxValue - this._minValue;
+        this._value = [this._minValue, this._maxValue];
+        
+        this._viewPicker();
+        this._showValue();
+        this._disableChangeEvent = false;
+    }
+
     /**
      * Step
      * @type {Number}
@@ -499,6 +521,10 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         
         this._viewPicker();
         this._showProgress();
+    }
+
+    CalculateStepCount(min, max) {
+        return parseFloat(max) - parseFloat(min);
     }
 
     /**
