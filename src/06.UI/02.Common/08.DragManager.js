@@ -15,46 +15,53 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
         super();
 
         this._current = null;
-
-        this._sources = sources;
-        this._destinations = destinations;
+        this._sources = [];
+        this._destinations = [];
 
         this.RegisterEvent('DragDropComplete', false, 'Когда перетаскивание завершилось');
         this.RegisterEvent('DragDropOver', false, 'Когда произошло наведение');
         this.RegisterEvent('DragDropLeave', false, 'Когда произошел уход из области');
 
-        this._initManager();
+        this.Reinit(sources, destinations);
+    }
+
+    ClearTargets() {
+        this._current = null;
+
+        this._sources.forEach((source) => {
+            source.draggable = false;
+            source.RemoveHandler('DragStart', this.__dragStartFromSources, this);
+            source.RemoveHandler('DragEnd', this.__dragEndFromSources, this);
+        });
+
+        this._destinations.forEach((dest) => {
+            dest.dropable = false;
+            dest.RemoveHandler('DragOver', this.__dragOverTheDestination, this);
+            dest.RemoveHandler('DragLeave', this.__dragLeaveTheDestination, this);
+            dest.RemoveHandler('Drop', this.__dragDropOnTheDestination, this);
+        });
+
+        this._sources = [];
+        this._destinations = [];
     }
     
     /**
      * Dispose the component
      */
     Dispose() {
-        this._current = null;
-
-        this._sources.forEach((source) => {
-            source.draggable = false;
-            source.RemoveHandler('DragStart', this.__dragStartFromSources, false, this);
-            source.RemoveHandler('DragEnd', this.__dragEndFromSources, false, this);
-        });
-
-        this._destinations.forEach((dest) => {
-            dest.dropable = false;
-            dest.RemoveHandler('DragOver', this.__dragOverTheDestination, false, this);
-            dest.RemoveHandler('DragLeave', this.__dragLeaveTheDestination, false, this);
-            dest.RemoveHandler('Drop', this.__dragDropOnTheDestination, false, this);
-        });
-
-        this._sources = [];
-        this._destinations = [];
-
+        this.ClearTargets();
         super.Dispose();
     }
 
     /**
      * @private
      */
-    _initManager() {
+    Reinit(sources, destinations) {
+        
+        this.ClearTargets();
+
+        this._sources = sources;
+        this._destinations = destinations;
 
         this._sources.forEach((source) => {
             source.draggable = true;
@@ -80,6 +87,7 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
         //this._current = args.domEvent.target.closest('[data-object-name][draggable="true"]').getUIComponent();
         this._current = args.domEvent.target.closest('[data-object-name][draggable="true"]').getUIComponent();
         this._current.styles = {overflow: 'hidden'};
+        console.log('__dragStartFromSources', this._current);
     }
 
     /**

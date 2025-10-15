@@ -2802,7 +2802,7 @@ Date.prototype.format = function (formatString) { return this.toString(formatStr
  * @param {boolean} [withoutDay=false] - Whether to exclude day.
  * @returns {string} The formatted date string.
  */
-Date.prototype.intlFormat = function (withTime = false, withoutDay = false) {
+Date.prototype.intlFormat = function (withTime = false, withoutDay = false, withoutYear = false) {
     let dateformat = App.DateFormat || 'ru-RU';
     const params = { day: '2-digit', month: 'short', year: 'numeric' };
     if (withTime) {
@@ -2811,6 +2811,9 @@ Date.prototype.intlFormat = function (withTime = false, withoutDay = false) {
     }
     if (withoutDay) {
         delete params.day;
+    }
+    if (withoutYear) {
+        delete params.year;
     }
     const format = new Intl.DateTimeFormat(dateformat, params);
     if ((this + '') === 'Invalid Date') {

@@ -1739,6 +1739,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
     }
 
+    get IsFirst() {
+        return this.index === 0;
+    }
+
+    get IsLast() {
+        return this.index === this.parent.children - 1;
+    }
+
     /**
      * Returns component by its name
      * @param {string} name name of component
@@ -1762,7 +1770,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     _moveInDom(insertedElement, parentElement, index) {
         // insertedElement.remove();
-        if(parentElement.children[index + 1]) {
+        if(index === 0) {
+            parentElement.insertBefore(insertedElement, parentElement.children[0]);
+        } else if(parentElement.children[index + 1]) {
             if(insertedElement === parentElement.children[index + 1]) {
                 parentElement.insertBefore(insertedElement, parentElement.children[index]);
             } else {
