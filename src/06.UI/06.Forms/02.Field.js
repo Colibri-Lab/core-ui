@@ -723,15 +723,17 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      * @type {Boolean}
      */
     get checkableChecked() {
-        return this._checkableBox.checked;
+        return this._checkableBox?.checked ?? true;
     }
     /**
      * When checkable is checked
      * @type {Boolean}
      */
     set checkableChecked(value) {
-        this._checkableBox.checked = value;
-        this._checkableBox.Dispatch('Changed', {component: this._checkableBox});
+        if(this._checkableBox) {
+            this._checkableBox.checked = value;
+            this._checkableBox.Dispatch('Changed', {component: this._checkableBox});
+        }
     }
 
 }
