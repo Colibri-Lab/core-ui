@@ -34,6 +34,7 @@ Colibri.UI.Maps.Controls.Button = class extends Colibri.UI.FlexBox {
      * @type {String}
      */
     set icon(value) {
+        this._icon.shown = !!value;
         this._icon.iconSVG = value;
     }
 

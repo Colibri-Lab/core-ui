@@ -101,6 +101,36 @@ Colibri.UI.Forms.DateRange = class extends Colibri.UI.Forms.Field {
         this._input2.value = value[1] !== undefined ? value[1] : null;
     }
 
+    
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
+    get enabled() {
+        return this._input1.enabled;
+    }
+
+    /**
+     * Enable/Disable
+     * @type {boolean}
+     */
+    set enabled(value) {
+        value = this._convertProperty('Boolean', value);
+        this._input1.enabled = value;
+        this._input2.enabled = value;
+        if(value) {
+            this.RemoveClass('app-component-disabled');
+            this._input1.RemoveClass('app-component-disabled');
+            this._input2.RemoveClass('app-component-disabled');
+        }
+        else {
+            this.AddClass('app-component-disabled');
+            this._input1.AddClass('app-component-disabled');
+            this._input2.AddClass('app-component-disabled');
+        }
+
+    }
+
 }
 
 Colibri.UI.Forms.Field.RegisterFieldComponent('DateRange', 'Colibri.UI.Forms.DateRange', '#{ui-fields-daterange}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler'])

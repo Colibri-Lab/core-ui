@@ -3,6 +3,14 @@
     margin-bottom: 16px;
     position: relative;
 
+    [data-object-name="checkable-title-container"] {
+        gap: 10px;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: flex-start;
+        padding-bottom: 10px;
+    }
+
     &:last-child {
         margin-bottom: 0px;
     }

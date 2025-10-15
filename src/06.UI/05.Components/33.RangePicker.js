@@ -155,6 +155,7 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         this._input2.value = this._formatNumber(this._value[1] / (this._unitValue ?? 1));
         this._disableChangeEvent = false;
         this._showProgress();
+        this.Dispatch('Changed', {value: this.value});
 
     }
 
@@ -184,6 +185,7 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         this._input2.value = this._formatNumber(this._value[1] / (this._unitValue ?? 1));
         this._disableChangeEvent = false;
         this._showProgress();
+        this.Dispatch('Changed', {value: this.value});
     }
 
     /**
@@ -199,12 +201,14 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         // this._progress.container.css('left', newLeft + 'px');
         this._calculateValue(newLeft, null);
         this._showProgress();
+        this.Dispatch('Changed', {value: this.value});
     }
 
     _span2Moved(newLeft, newTop) {
         // this._progress.container.css('width', newLeft + 'px');
         this._calculateValue(null, newLeft);
         this._showProgress();
+        this.Dispatch('Changed', {value: this.value});
     }
 
     _setLeftPoint(left) {

@@ -108,6 +108,7 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         }
         this.value = [this._input1.value, this._input2.value];
         this._showProgress();
+        this.Dispatch('Changed', {value: this.value});
     }
 
     /**
@@ -130,6 +131,7 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         }
         this.value = [this._input1.value, this._input2.value];
         this._showProgress();
+        this.Dispatch('Changed', {value: this.value});
     }
 
 
@@ -146,12 +148,15 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         // this._progress.container.css('left', newLeft + 'px');
         this._calculateValue(newLeft, null);
         this._showProgress();
+        this.Dispatch('Changed', {value: this.value});
     }
 
     _span2Moved(newLeft, newTop) {
         // this._progress.container.css('width', newLeft + 'px');
         this._calculateValue(null, newLeft);
         this._showProgress();
+        this.Dispatch('Changed', {value: this.value});
+
     }
 
     _setLeftPoint(left) {
@@ -224,8 +229,12 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
             
             const perc = width * perc1 / 100;
             const percWidth = width * perc2 / 100;
+            let realWidth = (percWidth - perc);
+            if(realWidth > width) {
+                realWidth = width;
+            }
 
-            this._progress.container.css('width', (percWidth - perc) + 'px');
+            this._progress.container.css('width', realWidth + 'px');
             this._progress.container.css('left', perc + 'px');
         } catch(e) {
             

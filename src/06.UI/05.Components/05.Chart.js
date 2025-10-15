@@ -31,6 +31,7 @@ Colibri.UI.Chart = class extends Colibri.UI.Component {
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('BarClicked', false, 'When the bar is clicked');
+        this.RegisterEvent('BarDoubleClicked', false, 'When the bar is double clicked');
     }
 
     /**
@@ -133,6 +134,12 @@ Colibri.UI.Chart.Barchart = class extends Colibri.UI.Component {
         this._textValue.AddClass('barchart-text-value');
 
         this.AddHandler('Clicked', this.__thisClicked);
+        this.AddHandler('DoubleClicked', this.__thisDoubleClicked);
+    }
+
+    __thisDoubleClicked(event, args) {
+        this.parent.Dispatch('BarClicked', {bar: this});
+        this.parent.Dispatch('BarDoubleClicked', {bar: this});
     }
 
     __thisClicked(event, args) {

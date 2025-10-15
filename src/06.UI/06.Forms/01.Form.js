@@ -276,6 +276,10 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                             else {
                                 field.value = this._value[name] ?? def ?? null;
                             }
+                            
+                            if(field.value === null) {
+                                field.checkableChecked = false;
+                            }
                         });
                     }
                     else {
@@ -290,7 +294,12 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                         else {
                             component.value = this._value[name] ?? def ?? null;
                         }
+
+                        if(component.value === null || Array.shallowEqual(component.value, [null, null]) || Array.shallowEqual(component.value, ['', ''])) {
+                            component.checkableChecked = false;
+                        }
                     }
+
                 }
             });
 
@@ -315,6 +324,11 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         let data = Object.assign({}, this._value);
         this.ForEach((name, component) => {
             if (component instanceof Colibri.UI.Forms.Field) {
+
+                if(component.hasCheckable && !component.checkableChecked) {
+                    return true;
+                }
+
                 if (name == '_adds') {
                     data = Object.assign(data, component.value);
                 }

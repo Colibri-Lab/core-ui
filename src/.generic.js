@@ -289,7 +289,7 @@ Array.prototype.part = function (l, start = 0) {
 Array.prototype.page = function (page, pagesize) {
     let ret = [];
     const start = (page - 1) * pagesize;
-    if(this.length < start + pagesize) {
+    if (this.length < start + pagesize) {
         return this;
     }
     for (let i = start; i < start + pagesize; i++) {
@@ -306,7 +306,7 @@ Array.prototype.toObjectFromKeys = function () {
     return ret;
 }
 
-Array.prototype.indexOfCondition = function(value, condition = '==') {
+Array.prototype.indexOfCondition = function (value, condition = '==') {
     for (let i = 0; i < this.length; i++) {
         if (condition === '==' && this[i] == value) {
             return i;
@@ -978,6 +978,18 @@ Object.shallowEqual = function (object1, object2) {
     return true;
 };
 
+Array.shallowEqual = function (array1, array2) {
+    if (array1.length != array2.length) {
+        return false;
+    }
+    for (let i = 0; i < array1.length; i++) {
+        if (array1[i] != array2[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 /**
  * Sets the value of a property in an object using dot notation.
  * @param {Object} obj - The object to set the value in.
@@ -1025,7 +1037,7 @@ Object.map = function (obj, func, usenewValAsKeyValuObject = false) {
     Object.forEach(obj, (key, value) => {
         const newval = func(key, value);
         if (newval) {
-            if(usenewValAsKeyValuObject) {
+            if (usenewValAsKeyValuObject) {
                 newObject[Object.keys(newval)[0]] = Object.values(newval)[0];
             } else {
                 newObject[key] = newval;
@@ -1060,8 +1072,8 @@ Object.pluck = function (obj, keys) {
 }
 
 Object.isClass = function (fn) {
-  return typeof fn === 'function' &&
-         /^class\s/.test(Function.prototype.toString.call(fn));
+    return typeof fn === 'function' &&
+        /^class\s/.test(Function.prototype.toString.call(fn));
 }
 
 Object.assignRecursive = function (source, target) {
@@ -2072,7 +2084,7 @@ String.GUID = function () {
  * Checks if the string is a valid GUID.
  * @returns {boolean} True if the string is a valid GUID, false otherwise.
  */
-String.prototype.isGUID = function() {
+String.prototype.isGUID = function () {
     return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(this);
 };
 /**
@@ -2313,6 +2325,21 @@ Number.prototype.intlFormat = function (type, decimal = 2, unit = null, currency
     }
     return v;
 };
+Number.prototype.formatUnits = function (units) {
+    // find the closest smaller or equal unit multiplier
+    const keys = Object.keys(units)
+        .map(Number)
+        .sort((a, b) => a - b);
+
+    let chosen = 1;
+    for (const k of keys) {
+        if (this >= k) chosen = k;
+        else break;
+    }
+
+    const formatted = (this / chosen).toFixed(3).replace(/\.?0+$/, '');
+    return `${formatted} ${Lang.Translate(units[chosen])}`;
+};
 /**
  * Converts the number to a time string.
  * @param {string} [daySplitter] - The character used to separate days from hours.
@@ -2370,7 +2397,7 @@ Number.prototype.toTimeString = function (daySplitter, trim00 = true, hasSeconds
         txt = txt.replace(':', daySplitter);
     }
 
-    if(!hasSeconds) {
+    if (!hasSeconds) {
         txt = txt.split(daySplitter).splice(2, 1).join(daySplitter);
     }
 
@@ -2995,7 +3022,7 @@ Element.prototype.animateHeight = function (height, duration = 1000, callback = 
         if (progress < 1) {
             requestAnimationFrame(tick);
         } else {
-            if(callback) {
+            if (callback) {
                 callback();
             }
         }
@@ -3018,7 +3045,7 @@ Element.prototype.animateHeightDown = function (height, duration = 1000, callbac
         if (progress < 1) {
             requestAnimationFrame(tick);
         } else {
-            if(callback) {
+            if (callback) {
                 callback();
             }
         }
@@ -3632,7 +3659,7 @@ Element.prototype.hideShowProcess = function (callback, timeout = 30) {
     this.css('visibility', 'hidden');
     document.body.css('overflow', 'hidden');
     Colibri.Common.Delay(timeout).then(() => {
-        if(!this || !this.isConnected) {
+        if (!this || !this.isConnected) {
             document.body.css('overflow', null);
             return;
         }
@@ -3732,7 +3759,7 @@ Element.prototype.getRealWidth = function () {
     s.html(this.value || this.html());
     document.body.append(s);
     const w = s.bounds().outerWidth;
-    if(w === 177) {
+    if (w === 177) {
         debugger;
     }
     s.remove();
@@ -3773,16 +3800,16 @@ Element.prototype.insertText = function (text) {
 
 Element.prototype.insertElement = function (element) {
     this.preventFocusEvent = true;
-    
+
     if ((App.Device.isWeb || App.Device.isElectron) && document.queryCommandSupported('insertHTML')) {
         document.execCommand('insertHTML', false, element?.outerHtml ? element?.outerHtml() : element.textContent);
     } else {
-        
+
 
         const sel = window.getSelection();
         const range = sel.getRangeAt(0);
         const el = element.cloneNode(true);
-        
+
         range.deleteContents();
         range.insertNode(el);
 
@@ -4005,19 +4032,19 @@ Math.easeInOutQuad = function (t, b, c, d) {
 // Helper
 //
 
-String.prototype.replaceUrls = function(callback) {
+String.prototype.replaceUrls = function (callback) {
     return new Promise((resolve, reject) => {
         const regex = /https?:\/\/[^\s\"\\<\>']+/g;
         const urls = [...new Set(this.match(regex) || [])];
         let text = this + '';
 
         const promises = [];
-        for(const url of urls) {
+        for (const url of urls) {
             promises.push(callback(url));
         }
 
         Promise.all(promises).then(responses => {
-            for(const urlInfo of responses) {
+            for (const urlInfo of responses) {
                 text = text.replace(urlInfo.url, urlInfo.converted);
             }
             resolve(text);
@@ -4047,7 +4074,7 @@ String.prototype.spkiPem2spkiDer = function () {
     return binaryDerString.toArrayBuffer();
 }
 
-Function.prototype.isAsync = function() {
+Function.prototype.isAsync = function () {
     return this.constructor.name === 'AsyncFunction';
 };
 
@@ -4150,7 +4177,7 @@ window.convertFilterToStringForSql = function (filter) {
 
 }
 
-window.isPureTouchDevice = function() {
+window.isPureTouchDevice = function () {
     const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     // Try to detect mouse presence via media query
@@ -4166,21 +4193,21 @@ window.__delayMap = new WeakMap();
 window.__elToInstance = new WeakMap();
 
 EventTarget.prototype.addEventListener = function (type, listener, options, delay = null) {
-    
-    if(window.isPureTouchDevice() && ['mouseenter','mouseleave','mouseover','mouseout','mousemove'].includes(type)) {
+
+    if (window.isPureTouchDevice() && ['mouseenter', 'mouseleave', 'mouseover', 'mouseout', 'mousemove'].includes(type)) {
         // nothing to do
         return;
-    } else if( !window.isPureTouchDevice() && ['touchstart','touchend','touchmove'].includes(type)) {
+    } else if (!window.isPureTouchDevice() && ['touchstart', 'touchend', 'touchmove'].includes(type)) {
         // nothing to do
         return;
     }
-    
+
     if (!__listenersMap.has(this)) {
         __listenersMap.set(this, []);
     }
 
     __listenersMap.get(this).push({ type, listener, options });
-    if(delay) {
+    if (delay) {
         window.__delayMap.set(this, delay);
     }
 
@@ -4195,7 +4222,7 @@ EventTarget.prototype.removeEventListener = function (type, listener, options) {
             const l = arr[i];
             if (l.type === type && l.listener === listener) {
                 arr.splice(i, 1);
-                if(arr.length > 0) {
+                if (arr.length > 0) {
                     __listenersMap.set(this, arr);
                 } else {
                     __listenersMap.delete(this);
@@ -4214,12 +4241,12 @@ window.getEventListenersFor = function (el) {
 };
 
 Window.prototype.mapToUIComponent = Element.prototype.mapToUIComponent = function (instance) {
-    if(__elToInstance.has(this)) {
+    if (__elToInstance.has(this)) {
         let exists = __elToInstance.get(this);
-        if(!Array.isArray(exists)) {
+        if (!Array.isArray(exists)) {
             exists = [exists];
         }
-        if(!exists.includes(instance)) {
+        if (!exists.includes(instance)) {
             exists.push(instance);
         }
         __elToInstance.set(this, exists);
@@ -4228,11 +4255,11 @@ Window.prototype.mapToUIComponent = Element.prototype.mapToUIComponent = functio
     }
 };
 
-Window.prototype.getUIComponent = Element.prototype.getUIComponent = function() {
+Window.prototype.getUIComponent = Element.prototype.getUIComponent = function () {
     const exists = __elToInstance.get(this);
-    if(!Array.isArray(exists)) {
+    if (!Array.isArray(exists)) {
         return exists;
-    } else if(exists.length === 1) {
+    } else if (exists.length === 1) {
         return exists[0];
     }
     return exists;
@@ -4240,11 +4267,11 @@ Window.prototype.getUIComponent = Element.prototype.getUIComponent = function() 
 
 Element.prototype.delete = function () {
 
-   __elToInstance.delete(this);
+    __elToInstance.delete(this);
 
     try {
         this.remove();
-    } catch(e) { }
+    } catch (e) { }
 
     const events = getEventListenersFor(this);
     if (events) {
@@ -4254,8 +4281,8 @@ Element.prototype.delete = function () {
         __listenersMap.delete(this);
     }
 
-    if(Object.isObject(this._tag)) {
-        for(const key of Object.keys(this._tag)) {
+    if (Object.isObject(this._tag)) {
+        for (const key of Object.keys(this._tag)) {
             delete this._tag[key];
         }
         this._tag = null;
@@ -4264,12 +4291,12 @@ Element.prototype.delete = function () {
 };
 
 const oldStringifyMethod = JSON.stringify;
-JSON.stringify = function(value, replacer, space, escapeUnicode = false) {
+JSON.stringify = function (value, replacer, space, escapeUnicode = false) {
     let v = oldStringifyMethod(value, replacer, space);
-    if(!escapeUnicode) {
+    if (!escapeUnicode) {
         return v;
     }
-    return (v + '').replace(/[\u007F-\uFFFF]/g, function(ch) {
+    return (v + '').replace(/[\u007F-\uFFFF]/g, function (ch) {
         return '\\u' + ch.charCodeAt(0).toString(16).padStart(4, '0');
     });
 };

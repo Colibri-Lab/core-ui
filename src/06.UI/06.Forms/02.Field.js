@@ -154,7 +154,26 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
         this.AddClass('app-component-field');
 
-        this._title = new Colibri.UI.TextSpan(this._name + '-title', this);
+        
+        if (this._fieldData?.params?.checkable && this._fieldData?.params?.checkable === true) {
+            
+            this._checkableTitleContainer = new Colibri.UI.FlexBox('checkable-title-container', this);
+            this._checkableTitleContainer.shown = true;
+
+            this._checkableBox = new Colibri.UI.Checkbox('check', this._checkableTitleContainer);
+            this._checkableBox.shown = true;
+            this._checkableBox.AddHandler('Changed', this.__checkableBoxChanged, false, this);
+            this._checkableBox.checked = true;
+            this.AddClass('-checkable-box');
+            
+            this._title = new Colibri.UI.TextSpan(this._name + '-title', this._checkableTitleContainer);
+            this._title.AddHandler('Clicked', this._titleClicked, false, this);
+
+
+        } else {
+            this._title = new Colibri.UI.TextSpan(this._name + '-title', this);
+        }
+
         this._before = new Colibri.UI.Pane(this._name + '-before', this);
         this._content = new Colibri.UI.Pane(this._name + '-content', this);
         new Colibri.UI.Pane(this._name + '-container', this._content);
@@ -232,19 +251,22 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             this._element.before(Element.create('div', { class: 'break' }, {}));
         }
 
-        if (this._fieldData?.params?.checkable && this._fieldData?.params?.checkable === true) {
-            this._checkableBox = new Colibri.UI.Checkbox('check', this);
-            this._checkableBox.shown = true;
-            this._checkableBox.AddHandler('Changed', this.__checkableBoxChanged, false, this);
-            this.AddClass('-checkable-box');
-        }
 
         this._content.Children(this._name + '-message').AddHandler('Clicked', this.__messageClicked, false, this);
 
     }
 
+    _titleClicked(event, args) {
+        this._checkableBox.Dispatch('Clicked', args);
+    }
+
     __checkableBoxChanged(event, args) {
         this.enabled = this._checkableBox.checked;
+        if(this.enabled) {
+            this.RemoveClass('-checkable-checked');
+        } else {
+            this.AddClass('-checkable-checked');
+        }
     }
 
     __messageClicked(event, args) {
@@ -692,6 +714,9 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         }
     }
 
+    get hasCheckable() {
+        return !!this._checkableBox;
+    }
     
     /**
      * When checkable is checked
@@ -706,6 +731,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      */
     set checkableChecked(value) {
         this._checkableBox.checked = value;
+        this._checkableBox.Dispatch('Changed', {component: this._checkableBox});
     }
 
 }
