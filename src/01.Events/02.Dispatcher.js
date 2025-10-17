@@ -57,7 +57,7 @@ Colibri.Events.Dispatcher = class extends Destructable {
             });
         } else {
             
-            this.RemoveHandler(eventName, handler);
+            this.RemoveHandler(eventName, handler, respondent);
 
             if (!this.__handlers[eventName]) {
                 this.__handlers[eventName] = [];
