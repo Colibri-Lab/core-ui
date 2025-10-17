@@ -702,7 +702,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @param {string} className class name for context menu
      * @param {{top, left}} point point to show contextmenu on
      */
-    ShowContextMenu(orientation = [Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT], className = '', point = null) {
+    ShowContextMenu(orientation = [Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT], className = '', point = null, closeOnClick = true) {
 
 
         this.Children(this._name + '-contextmenu-icon-parent') && this.Children(this._name + '-contextmenu-icon-parent').AddClass('-selected');
@@ -720,11 +720,15 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
         contextMenuObject.AddHandler('Clicked', (event, args) => {
             const component = event.sender.parent;
-            event.sender.Hide();
+            
             component.Dispatch('ContextMenuItemClicked', Object.assign(args, {item: component}));
-            component._contextMenuObject = null;         
-            component.Children(component.name + '-contextmenu-icon-parent') && 
-                component.Children(component.name + '-contextmenu-icon-parent').RemoveClass('-selected');
+            
+            if(closeOnClick) {
+                event.sender.Hide();    
+                component._contextMenuObject = null;         
+                component.Children(component.name + '-contextmenu-icon-parent') && 
+                    component.Children(component.name + '-contextmenu-icon-parent').RemoveClass('-selected');
+            }
             
         });
         
