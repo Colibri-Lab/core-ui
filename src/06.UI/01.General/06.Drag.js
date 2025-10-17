@@ -9,7 +9,7 @@ Colibri.UI.Drag = class {
      * Element for dragging
      * @type {Element}
      */
-    _element = null; 
+    _element = null;
 
     /**
      * Container in wich drag must be realized
@@ -54,39 +54,46 @@ Colibri.UI.Drag = class {
      */
     __start(e) {
         const bounds = this._container.bounds();
-        this._element.tag = {state: true, point: [e.clientX - bounds.left, e.clientY - bounds.top]};
+        this._element.tag = { state: true, point: [e.clientX - bounds.left, e.clientY - bounds.top] };
         document.addEventListener('mouseup', this.__EndHandle, true);
         document.addEventListener('mousemove', this.__MoveHandle, true);
+        e.preventDefault();
+        e.stopPropagation();
     }
 
     /**
      * @private
      */
     __end(e) {
-        this._element.tag = {state: false};
+        this._element.tag = { state: false };
         document.removeEventListener('mouseup', this.__EndHandle, true);
         document.removeEventListener('mousemove', this.__MoveHandle, true);
+        e.preventDefault();
+        e.stopPropagation();
     }
 
     /**
      * @private
      */
     __move(e) {
-        if(this._element.tag.state) {
+        if (this._element.tag.state) {
             // двигаем
             const containerBounds = this._container.bounds();
             const elementBounds = this._element.bounds();
             let newLeft = (e.clientX - containerBounds.left - elementBounds.outerWidth / 2);
             let newTop = (e.clientY - containerBounds.top - elementBounds.outerHeight / 2);
-            
-            if(newLeft < -1 * elementBounds.outerWidth / 2) { newLeft = -1 * elementBounds.outerWidth / 2; }
-            if(newLeft > containerBounds.outerWidth - elementBounds.outerWidth / 2) { newLeft = containerBounds.outerWidth - elementBounds.outerWidth / 2; }
 
-            if(newTop < -1 * elementBounds.outerHeight / 2) { newTop = -1 * elementBounds.outerHeight / 2; }
-            if(newTop > containerBounds.outerHeight - elementBounds.outerHeight / 2) { newTop = containerBounds.outerHeight - elementBounds.outerHeight / 2;}
+            if (newLeft < -1 * elementBounds.outerWidth / 2) { newLeft = -1 * elementBounds.outerWidth / 2; }
+            if (newLeft > containerBounds.outerWidth - elementBounds.outerWidth / 2) { newLeft = containerBounds.outerWidth - elementBounds.outerWidth / 2; }
+
+            if (newTop < -1 * elementBounds.outerHeight / 2) { newTop = -1 * elementBounds.outerHeight / 2; }
+            if (newTop > containerBounds.outerHeight - elementBounds.outerHeight / 2) { newTop = containerBounds.outerHeight - elementBounds.outerHeight / 2; }
 
             this._moveHandler(newLeft, newTop);
-       }
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
 
     }
 

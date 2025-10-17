@@ -103,7 +103,6 @@ Colibri.UI.Chart = class extends Colibri.UI.Component {
             barchart.toolTip = v.title + '<br />' + v.value;
         }
 
-        console.log(this.container.children.length)
     }
 }
 

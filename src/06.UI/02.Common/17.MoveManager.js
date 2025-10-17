@@ -30,19 +30,15 @@ Colibri.UI.MoveManager = class extends Colibri.Events.Dispatcher {
                 this._movingStartHandler(e);
             }, 500);
         })
-        
+
         /** @private */
         this._movingStartHandler = this._movingStartHandler || ((e) => {
             const isTouch = e.type.startsWith('touch');
             
-            const clientX = isTouch ? e.touches[0].clientX : e.pageX;
-            const clientY = isTouch ? e.touches[0].clientY : e.pageY;
-
             this.moving = true;
-
             this._movingDelta = {
-                left: clientX - this._component.container.bounds().left,
-                top: clientY - this._component.container.bounds().top
+                left: isTouch ? e.touches[0].clientX : e.pageX,
+                top: isTouch ? e.touches[0].clientY : e.pageY
             };
             document.body?.addEventListener(isTouch ? 'touchmove' : 'mousemove', this._movingHandler, {passive: false});
             document.body?.addEventListener(isTouch ? 'touchend' : 'mouseup', this._movingStopHandler);
@@ -57,22 +53,13 @@ Colibri.UI.MoveManager = class extends Colibri.Events.Dispatcher {
             if(!this._component.isConnected) {
                 return;
             }
-            
-            const isTouch = e.type.startsWith('touch');
-            const clientX = isTouch ? e.touches[0].clientX : e.pageX;
-            const clientY = isTouch ? e.touches[0].clientY : e.pageY;
 
-            const delta = {
-                left: clientX - this._movingDelta.left,
-                top: clientY - this._movingDelta.top
-            };
-            
             document.body?.removeEventListener('mousemove', this._movingHandler);
             document.body?.removeEventListener('mouseup', this._movingStopHandler);
             document.body?.removeEventListener('touchmove', this._movingHandler);
             document.body?.removeEventListener('touchend', this._movingStopHandler);
 
-            this.Dispatch('MoveComplete', {end: delta});
+            this.Dispatch('MoveComplete', {});
         });
 
          /** @private */
@@ -81,18 +68,20 @@ Colibri.UI.MoveManager = class extends Colibri.Events.Dispatcher {
             if (!this._component.isConnected || !this.moving) {
                 return;
             }
-            const isTouch = e.type.startsWith('touch');
-            const clientX = isTouch ? e.touches[0].clientX : e.pageX;
-            const clientY = isTouch ? e.touches[0].clientY : e.pageY;
             
+            const isTouch = e.type.startsWith('touch');
             const delta = {
-                left: clientX - this._movingDelta.left,
-                top: clientY - this._movingDelta.top
+                left: (isTouch ? e.touches[0].movementX : e.pageX) - this._movingDelta.left,
+                top: (isTouch ? e.touches[0].movementY : e.pageY) - this._movingDelta.top
             };
             if (isTouch) {
                 e.preventDefault();
             }
 
+            this._movingDelta = {
+                left: isTouch ? e.touches[0].clientX : e.pageX,
+                top: isTouch ? e.touches[0].clientY : e.pageY
+            };
             this.Dispatch('Move', {delta: delta});
         });
 
