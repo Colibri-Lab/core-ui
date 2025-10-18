@@ -48,7 +48,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         Promise.all([
             Colibri.Common.LoadScript('https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js'),
             Colibri.Common.LoadStyles('https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css'),
-            Colibri.Common.LoadScript('https://cdn.jsdelivr.net/npm/@turf/turf@7.2.0/turf.min.js')
+            // Colibri.Common.LoadScript('https://cdn.jsdelivr.net/npm/@turf/turf@7.2.0/turf.min.js')
         ]).then(() => {
             this._loaded = true;
             this._map = new maplibregl.Map({
@@ -336,8 +336,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 type: 'line',
                 source: 'line-source',
                 layout: {
-                    // 'line-cap': 'round',
-                    // 'line-join': 'round'
+                    'line-cap': 'round',
+                    'line-join': 'round'
                 },
                 paint: {
                     'line-color': ['get', 'color'],
@@ -712,29 +712,6 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         }
     }
 
-    AddGeoLine(name, latLngLike, azimuth, color = 'red', weight = 1) {
-        const end = this._destinationPoint2(latLngLike.lng, latLngLike.lat, azimuth);
-        if (!end) return {};
-        const line = turf.greatCircle([latLngLike.lng, latLngLike.lat], [end.lng, end.lat], { npoints: 100 });
-        line.id = name;
-        line.properties = {
-            'color': color,
-            'width': weight
-        };
-        if (this.Exists(name)) {
-            this._sourceUpdateLine(name, line);
-        } else {
-            this._sourceAddLine(line);
-        }
-
-        return {
-            start: latLngLike,
-            end: end,
-            line: line,
-            angle: azimuth,
-            lastAngle: this._getAngleBetweenLastSegment(line.geometry.coordinates.map(v => ([v[1], v[0]]))),
-        };
-    }
 
     _getIcons() {
         const ret = [];
@@ -868,6 +845,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
         let start, current, box;
 
+        this._map.getCanvas().style.cursor = 'crosshair';
+
         function beginSelection(x, y) {
             start = [x, y];
             box = document.createElement('div');
@@ -910,7 +889,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         }
 
         this._mousedownHandler = this._mousedownHandler || ((e) => {
-            if (!e.shiftKey) return true;
+            // if (!e.shiftKey) return true;
 
             this._selectedIds = [];
             this.Dispatch('SelectionChanged', { ids: [] });
@@ -958,9 +937,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     DisableBoxSelection() {
         try {
+            this._map.getCanvas().style.cursor = null;
             this._map.getCanvas().removeEventListener('mousedown', this._mousedownHandler);
             this._map.getCanvas().removeEventListener('touchstart', this._touchHandler);
-        } catch(e) {
+        } catch (e) {
 
         }
     }
@@ -1002,7 +982,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             this._map.off("mouseleave", "objects", this._mapMouseLeave);
             this._map.off('click', this._mapClicked);
             this._map.getCanvas().style.cursor = "";
-        } catch(e) {
+        } catch (e) {
 
         }
     }
@@ -1024,7 +1004,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         try {
             this.DeleteByNameLike('marker');
             this._map.off('click', this._mapClickToMarkClicked);
-        } catch(e) {
+        } catch (e) {
 
         }
     }
@@ -1034,8 +1014,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         let lineCoordinates = [];
         let tempLineSourceId = 'measure-line';
         this._measurePopup = null;
-
-
+        const turf = new Colibri.UI.Maps.Turf();
+        this._map.getCanvas().style.cursor = 'crosshair';
         const beginDrawing = (x, y) => {
             drawing = true;
             lineCoordinates = [this._map.unproject([x, y]).toArray()]; // координаты lng/lat
@@ -1146,8 +1126,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         try {
             this._map.getCanvas().removeEventListener('mousedown', this._mousedownHandler2);
             this._map.getCanvas().removeEventListener('touchstart', this._touchHandler2);
-    
-            if(this._measurePopup) {
+
+            if (this._measurePopup) {
                 this._measurePopup.remove();
                 this._measurePopup = null;
             }
@@ -1158,41 +1138,211 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             if (this._map.getSource(tempLineSourceId)) {
                 this._map.removeSource(tempLineSourceId);
             }
-        } catch(e) {
-            
+            this._map.getCanvas().style.cursor = null;
+        } catch (e) {
+
         }
     }
 
     CalcIntersactionPoints(lines) {
-        if(lines.length > 200) {
+        if (lines.length > 200) {
             App.Notices.Add(new Colibri.UI.Notice('#{ui-maplibre-hugelines}'));
             return [];
         }
+
+        const intersector = new Colibri.UI.Maps.Intersactions();
         const points = [];
         for (let i = 0; i < lines.length; i++) {
             for (let j = 0; j < lines.length; j++) {
                 if (i === j) {
                     continue;
                 }
-                const ps = turf.lineIntersect({
-                    type: 'Feature',
-                    geometry: lines[i]
-                }, {
-                    type: 'Feature',
-                    geometry: lines[j]
-                });
 
-                for (const p of ps.features) {
+                const ps = intersector.findIntersections(lines[i].coordinates[0], lines[j].coordinates[0]);
+                for (const p of ps) {
                     points.push({
                         id: 'intersaction-' + Date.Mc() + '-' + lines[i].id.split('-')[1] + ':' + lines[j].id.split('-')[1],
-                        lng: p.geometry.coordinates[0],
-                        lat: p.geometry.coordinates[1],
+                        lng: p[0],
+                        lat: p[1],
                     });
+                }
 
+                if (lines[i].coordinates[1] && lines[j].coordinates[1]) {
+
+                    const ps2 = intersector.findIntersections(lines[i].coordinates[1], lines[j].coordinates[1]);
+                    for (const p of ps2) {
+                        points.push({
+                            id: 'intersaction-' + Date.Mc() + '-' + lines[i].id.split('-')[1] + ':' + lines[j].id.split('-')[1],
+                            lng: p[0],
+                            lat: p[1],
+                        });
+
+                    }
                 }
             }
         }
+
         return points;
     }
 
+}
+
+Colibri.UI.Maps.Intersactions = class {
+
+    // Helper: Check orientation of ordered triplet (p, q, r)
+    orientation(p, q, r) {
+        const val = (q[1] - p[1]) * (r[0] - q[0]) - (q[0] - p[0]) * (r[1] - q[1]);
+        if (val === 0) return 0; // colinear
+        return val > 0 ? 1 : 2; // clock or counterclock wise
+    }
+
+    // Helper: Check if point q lies on segment pr
+    onSegment(p, q, r) {
+        return (
+            q[0] <= Math.max(p[0], r[0]) &&
+            q[0] >= Math.min(p[0], r[0]) &&
+            q[1] <= Math.max(p[1], r[1]) &&
+            q[1] >= Math.min(p[1], r[1])
+        );
+    }
+
+    // Check if two segments (p1,q1) and (p2,q2) intersect
+    doIntersect(p1, q1, p2, q2) {
+        const o1 = this.orientation(p1, q1, p2);
+        const o2 = this.orientation(p1, q1, q2);
+        const o3 = this.orientation(p2, q2, p1);
+        const o4 = this.orientation(p2, q2, q1);
+
+        if (o1 !== o2 && o3 !== o4) return true;
+
+        // Special cases
+        if (o1 === 0 && this.onSegment(p1, p2, q1)) return true;
+        if (o2 === 0 && this.onSegment(p1, q2, q1)) return true;
+        if (o3 === 0 && this.onSegment(p2, p1, q2)) return true;
+        if (o4 === 0 && this.onSegment(p2, q1, q2)) return true;
+
+        return false;
+    }
+
+    // Compute intersection point (if any) using line equations
+    getIntersection(p1, q1, p2, q2) {
+        const [x1, y1] = p1;
+        const [x2, y2] = q1;
+        const [x3, y3] = p2;
+        const [x4, y4] = q2;
+
+        const denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+        if (denom === 0) return null; // parallel or colinear
+
+        const px =
+            ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / denom;
+        const py =
+            ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / denom;
+
+        return [px, py];
+    }
+
+    // Main function: find all intersections between two polylines
+    findIntersections(line1, line2) {
+        const intersections = [];
+
+        for (let i = 0; i < line1.length - 1; i++) {
+            const p1 = line1[i];
+            const q1 = line1[i + 1];
+
+            for (let j = 0; j < line2.length - 1; j++) {
+                const p2 = line2[j];
+                const q2 = line2[j + 1];
+
+                if (this.doIntersect(p1, q1, p2, q2)) {
+                    const pt = this.getIntersection(p1, q1, p2, q2);
+                    if (pt) intersections.push(pt);
+                }
+            }
+        }
+
+        return intersections;
+    }
+
+}
+
+Colibri.UI.Maps.Turf = class {
+
+    lineString(coordinates, properties = {}) {
+        return {
+            type: "Feature",
+            geometry: {
+                type: "LineString",
+                coordinates
+            },
+            properties
+        };
+    }
+
+    greatCircle(start, end, options = {}) {
+        const { npoints = 100, includeEndpoints = true } = options;
+
+        const [lon1, lat1] = start.map(this.deg2rad);
+        const [lon2, lat2] = end.map(this.deg2rad);
+
+        const d = 2 * Math.asin(Math.sqrt(
+            Math.sin((lat2 - lat1) / 2) ** 2 +
+            Math.cos(lat1) * Math.cos(lat2) * Math.sin((lon2 - lon1) / 2) ** 2
+        ));
+
+        const coords = [];
+
+        for (let i = 0; i <= npoints; i++) {
+            const f = i / npoints;
+
+            const A = Math.sin((1 - f) * d) / Math.sin(d);
+            const B = Math.sin(f * d) / Math.sin(d);
+
+            const x = A * Math.cos(lat1) * Math.cos(lon1) + B * Math.cos(lat2) * Math.cos(lon2);
+            const y = A * Math.cos(lat1) * Math.sin(lon1) + B * Math.cos(lat2) * Math.sin(lon2);
+            const z = A * Math.sin(lat1) + B * Math.sin(lat2);
+
+            const lat = Math.atan2(z, Math.sqrt(x * x + y * y));
+            const lon = Math.atan2(y, x);
+
+            if (includeEndpoints || (i > 0 && i < npoints))
+                coords.push([this.rad2deg(lon), this.rad2deg(lat)]);
+        }
+
+        return this.lineString(coords);
+    }
+
+    haversineDistance(a, b) {
+        const [lon1, lat1] = a.map(this.deg2rad);
+        const [lon2, lat2] = b.map(this.deg2rad);
+        const R = 6371; // km
+
+        const dlat = lat2 - lat1;
+        const dlon = lon2 - lon1;
+
+        const h = Math.sin(dlat / 2) ** 2 +
+            Math.cos(lat1) * Math.cos(lat2) * Math.sin(dlon / 2) ** 2;
+
+        return 2 * R * Math.asin(Math.sqrt(h));
+    }
+
+    length(feature, options = {}) {
+        const unit = options.units || "kilometers";
+        const coords = feature.geometry.coordinates;
+        let total = 0;
+
+        for (let i = 0; i < coords.length - 1; i++) {
+            total += this.haversineDistance(coords[i], coords[i + 1]);
+        }
+
+        switch (unit) {
+            case "meters": return total * 1000;
+            case "miles": return total * 0.621371;
+            case "nauticalmiles": return total * 0.539957;
+            default: return total; // kilometers
+        }
+    }
+
+    deg2rad(d) { return d * Math.PI / 180; }
+    rad2deg(r) { return r * 180 / Math.PI; }
 }

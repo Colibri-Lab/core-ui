@@ -82,7 +82,11 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
         this._showValue();
     }
     _showValue() {
-        const gridHeight = this._value.length * this._rowHeight;
+        if(!this.isConnected || !this._value?.length) {
+            return;
+        }
+
+        const gridHeight = (this._value?.length ?? 0) * this._rowHeight;
         const visibleHeight = this._element.bounds().outerHeight;
         const scrolledTop = this.scrollTop;
         this._gridScrollContainer.height = gridHeight;
