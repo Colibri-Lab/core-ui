@@ -19,6 +19,10 @@
         
     }
 
+    [data-object-name="extensions"] {
+        right: 80px;
+    }
+
     [data-object-name="layers"] + [data-object-name="filters"] {
         margin-top: 80px;
         

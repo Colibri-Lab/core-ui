@@ -126,6 +126,11 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this.AddHandler('ChildsProcessed', this.__thisChildsProcessed);
         this.AddHandler('ComponentRendered', this.__thisComponentRendered);
 
+        this.handleResize = true;
+        this.AddHandler('Resized', (event, args) => {
+            this._customContextMenuIcon && (this._customContextMenuIcon.top = this.top - this.parent.top);
+        });
+
     }
 
     AddCustomContextMenuButton(icon) {
@@ -133,10 +138,23 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             return;
         }        
 
-        this._customContextMenuIcon = new Colibri.UI.Icon('contextmenu-icon', this);
-        this._customContextMenuIcon.AddClass('-custom-contextmenu-icon');
-        this._customContextMenuIcon.iconSVG = icon;
-        this._customContextMenuIcon.shown = true;
+        if(icon instanceof Colibri.UI.Component) {
+            this._customContextMenuIcon = icon;
+            this._customContextMenuIcon.parent = this;
+            this._customContextMenuIcon.AddClass('-custom-contextmenu-icon');
+            this._customContextMenuIcon.right = 0;
+            this._customContextMenuIcon.top = this.top - this.parent.top;
+        } else {
+            this._customContextMenuIcon = new Colibri.UI.Icon('contextmenu-icon', this.parent);
+            this._customContextMenuIcon.AddClass('-custom-contextmenu-icon');
+            this._customContextMenuIcon.iconSVG = icon;
+            this._customContextMenuIcon.shown = true;
+            this.parent.styles = {position: 'relative'};
+            this._customContextMenuIcon.right = 0;
+            this._customContextMenuIcon.top = this.top - this.parent.top;
+
+        }
+
         this._customContextMenuIcon.AddHandler('Clicked', this.__customContextMenuIconClicked, false, this);
         this._customContextMenuIcon.AddHandler('ContextMenuItemClicked', this.__customContextMenuIconContextMenuItemClicked, false, this);
 
@@ -145,6 +163,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         if(!this._customContextMenuIcon) {
             return;
         }
+        this.parent.styles = {position: null};
         this._customContextMenuIcon.Dispose();
         this._customContextMenuIcon = null;
     }

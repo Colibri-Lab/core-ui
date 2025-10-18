@@ -28,7 +28,7 @@ Colibri.UI.MoveManager = class extends Colibri.Events.Dispatcher {
             }
             this._startTimer = setTimeout(() => {
                 this._movingStartHandler(e);
-            }, 500);
+            }, 300);
         })
 
         /** @private */
@@ -68,7 +68,7 @@ Colibri.UI.MoveManager = class extends Colibri.Events.Dispatcher {
             if (!this._component.isConnected || !this.moving) {
                 return;
             }
-            
+
             const isTouch = e.type.startsWith('touch');
             const delta = {
                 left: (isTouch ? e.touches[0].movementX : e.pageX) - this._movingDelta.left,

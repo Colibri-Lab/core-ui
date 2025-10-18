@@ -1,2 +1,13 @@
----
-...
+ui-maplibre-hugelines:
+  ru: Слишком много линий. Определение пересечений займет слишком много времени
+  en: Too many lines to process intersections
+  hy: Չափից շատ գծեր հատվածների մշակման համար
+  it: Troppe linee da elaborare
+  es: Demasiadas líneas para procesar intersecciones
+  kk: Көп сызықтар қиылыстарды өңдеу үшін
+  uz: Chiziqlar juda ko'p, kesishmalarni qayta ishlash uchun
+  cz: Příliš mnoho čar pro zpracování průsečíků
+  de: Zu viele Linien, um Schnittpunkte zu verarbeiten
+  tr: Çakışmaları işlemek için çok fazla çizgi
+  zh: 处理交点的线条太多
+  fa: خطوط زیادی برای پردازش تقاطع‌ها وجود دارد

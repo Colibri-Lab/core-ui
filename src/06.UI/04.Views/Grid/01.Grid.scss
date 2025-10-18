@@ -1,7 +1,18 @@
 .grid-container > div > button {
     margin: 10px;
 }
-
+.-custom-contextmenu-icon {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    z-index: 10;
+    cursor: pointer;
+    svg {
+        path, rect {
+            fill: #9D9D9D;
+        }
+    }
+}
 .app-ui-grid-container {
     background-color: white;
     width: 100%;
@@ -10,18 +21,7 @@
     overflow: auto;
 
     position: relative;
-    .-custom-contextmenu-icon {
-        position: absolute;
-        right: 0px;
-        top: 0px;
-        z-index: 10;
-        cursor: pointer;
-        svg {
-            path, rect {
-                fill: #9D9D9D;
-            }
-        }
-    }
+    
 
     [data-object-name="app-ui-grid-scroll"] {
         width: 100%;

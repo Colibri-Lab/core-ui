@@ -83,7 +83,8 @@ Colibri.UI.Chart = class extends Colibri.UI.Component {
         
         const maxValue = Math.max(...this._value.map(v => v.value));
         const maxPercent = 100;
-        
+        const toolTipMethod = this._barchartToolTipMethod ?? ((v) => { return v.title + '<br />' + v.value; });
+
         const newNames = this._value.map(v => v?.id ?? String.MD5(v.title));
         const names = this.Children().map(c => c.name);
         const toDelete = names.filter(x => !newNames.includes(x));
@@ -100,10 +101,42 @@ Colibri.UI.Chart = class extends Colibri.UI.Component {
             barchart.title = v?.valueTitle ?? ( v.value === 0 ? '' : v.value );
             barchart.value = percent;
             barchart.tag = v?.tag ?? v;
-            barchart.toolTip = v.title + '<br />' + v.value;
+            barchart.toolTip = toolTipMethod(v);
+            barchart.toolTipPosition = this._barchartToolTipPosition ?? 'left bottom';
         }
 
     }
+
+    /**
+     * Bar charts tooltip position
+     * @type {left bottom,right bottom,left top,right top}
+     */
+    get barchartToolTipPosition() {
+        return this._barchartToolTipPosition;
+    }
+    /**
+     * Bar charts tooltip position
+     * @type {left bottom,right bottom,left top,right top}
+     */
+    set barchartToolTipPosition(value) {
+        this._barchartToolTipPosition = value;
+    }
+
+    /**
+     * Bar chart tooltip method
+     * @type {Function}
+     */
+    get barchartToolTipMethod() {
+        return this._barchartToolTipMethod;
+    }
+    /**
+     * Bar chart tooltip method
+     * @type {Function}
+     */
+    set barchartToolTipMethod(value) {
+        this._barchartToolTipMethod = value;
+    }
+
 }
 
 /**

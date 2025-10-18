@@ -2172,10 +2172,16 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     __resizedHandler(event, args) {
+        if(!this.isConnected) {
+            return;
+        }
         this.Dispatch('Resized', args);
     }
 
     __resizeHandler(event, args) {
+        if(!this.isConnected) {
+            return;
+        }
         this.Dispatch('Resize', args)
     }
 

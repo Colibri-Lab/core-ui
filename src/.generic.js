@@ -3728,6 +3728,10 @@ Element.prototype.emitHtmlEvents = function (eventType) {
     }
 };
 
+Window.prototype.emitEvent = function(eventType) {
+    window.dispatchEvent(new Event(eventType));
+};
+
 /**
  * Checks if the value or content of the element exceeds its width.
  * @function isValueExceeded

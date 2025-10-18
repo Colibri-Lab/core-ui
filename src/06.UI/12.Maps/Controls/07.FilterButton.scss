@@ -50,6 +50,18 @@
                 }
             }
         }
+    }   
+    
+    &.ui-disabled {
+        background: #f2f2f2;
+        [data-object-name="label"] {
+            color: lightgray;
+        }
+        svg {
+            path {
+                fill: lightgray;
+            }
+        }
     }
     
 }

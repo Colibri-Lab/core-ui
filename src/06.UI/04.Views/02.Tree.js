@@ -395,14 +395,20 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
 
             if(n.nodes.children > 0) {
                 if(n.nodes.allNodesChecked) {
-                    n.checkBox.checked = true;
-                    n.checkBox.thirdState = false;
+                    if(n.checkBox) {
+                        n.checkBox.checked = true;
+                        n.checkBox.thirdState = false;
+                    }
                 } else if(n.nodes.allNodesUnChecked)  {
-                    n.checkBox.checked = false;
-                    n.checkBox.thirdState = false;
+                    if(n.checkBox) {
+                        n.checkBox.checked = false;
+                        n.checkBox.thirdState = false;
+                    }
                 } else {
-                    n.checkBox.checked = true;
-                    n.checkBox.thirdState = true;
+                    if(n.checkBox) {
+                        n.checkBox.checked = true;
+                        n.checkBox.thirdState = true;
+                    }
                 }
             } 
         });
@@ -919,6 +925,39 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         value = this._convertProperty('Boolean', value);
         this._multiple = value;
         if(this._multiple) {
+            this._check.showElement();   
+            if(!this._checkBox) {
+                this._checkBox = new Colibri.UI.Checkbox('checkbox', this._check);
+                this._checkBox.parent = this;
+                this._checkBox.shown = true;
+                this._checkBox.AddHandler('Changed', this.__checkChanged, false, this);
+            }
+        } else {
+            this._check.hideElement();
+            if(this._checkBox) {
+                this._checkBox.Dispose();
+                this._checkBox = null;
+            }
+        }
+    }
+
+    /**
+     * Has checkbox
+     * @type {Boolean}
+     */
+    get hasCheckbox() {
+        return this._hasCheckbox;
+    }
+    /**
+     * Has checkbox
+     * @type {Boolean}
+     */
+    set hasCheckbox(value) {
+        this._hasCheckbox = value;
+        this._showHasCheckbox();
+    }
+    _showHasCheckbox() {
+        if(this._hasCheckbox) {
             this._check.showElement();   
             if(!this._checkBox) {
                 this._checkBox = new Colibri.UI.Checkbox('checkbox', this._check);

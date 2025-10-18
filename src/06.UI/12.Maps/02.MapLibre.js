@@ -150,6 +150,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         return this.Children('filters').container;
     }
 
+    get extensionsButtonGroup() {
+        return this.Children('extensions').container;
+    }
+
     get zoomButtonGroup() {
         return this.Children('zoom').container;
     }
@@ -1160,6 +1164,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     CalcIntersactionPoints(lines) {
+        if(lines.length > 200) {
+            App.Notices.Add(new Colibri.UI.Notice('#{ui-maplibre-hugelines}'));
+            return [];
+        }
         const points = [];
         for (let i = 0; i < lines.length; i++) {
             for (let j = 0; j < lines.length; j++) {
@@ -1176,7 +1184,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
                 for (const p of ps.features) {
                     points.push({
-                        id: 'point-' + Date.Mc() + '-' + lines[i].id.split('-')[1] + ':' + lines[j].id.split('-')[1],
+                        id: 'intersaction-' + Date.Mc() + '-' + lines[i].id.split('-')[1] + ':' + lines[j].id.split('-')[1],
                         lng: p.geometry.coordinates[0],
                         lat: p.geometry.coordinates[1],
                     });

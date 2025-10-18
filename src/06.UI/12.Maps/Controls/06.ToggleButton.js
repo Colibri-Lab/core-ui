@@ -5,7 +5,7 @@
  * @memberof Colibri.UI.Maps.Controls
  */
 Colibri.UI.Maps.Controls.ToggleButton = class extends Colibri.UI.Maps.Controls.Button {
-    
+     
     /**
      * @constructor
      * @param {string} name name of component
@@ -21,6 +21,9 @@ Colibri.UI.Maps.Controls.ToggleButton = class extends Colibri.UI.Maps.Controls.B
     }
 
     __thisClicked(event, args) {
+        if(!this.enabled) {
+            return;
+        }
         this.checked = !this.checked;
         
     }
@@ -37,6 +40,7 @@ Colibri.UI.Maps.Controls.ToggleButton = class extends Colibri.UI.Maps.Controls.B
      * @type {Boolean}
      */
     set checked(value) {
+        value = this._convertProperty('Boolean', value);
         this._checked = value;
         this._showChecked();
     }

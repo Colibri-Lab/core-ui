@@ -158,7 +158,12 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
             return;
         }
 
-        this._value[0] = this._input1.value * (this._unitValue ?? 1);
+        let value = parseFloat(this._input1.value.replaceAll(',', '.'));
+        if(isNaN(value)) {
+            value = parseFloat(this._minValue);
+        }
+
+        this._value[0] = value * (this._unitValue ?? 1);
 
         this._disableChangeEvent = true;
         this._input1.value = this._formatNumber(this._value[0] / (this._unitValue ?? 1));
@@ -186,6 +191,11 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
     __input2LoosedFocus(event, args) {
         if(this._disableChangeEvent) {
             return;
+        }
+
+        let value = parseFloat(this._input2.value.replaceAll(',', '.'));
+        if(isNaN(value)) {
+            value = parseFloat(this._maxValue);
         }
 
         this._value[1] = this._input2.value * (this._unitValue ?? 1);
