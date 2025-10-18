@@ -14,7 +14,7 @@ ui-fields-numberrange:
 ui-fields-numberrange-from:
   ru: от
   en: from
-  hy: -ից
+  hy: սկիզբ
   it: da
   es: de
   kk: бастап
@@ -27,7 +27,7 @@ ui-fields-numberrange-from:
 ui-fields-numberrange-to:
   ru: до
   en: to
-  hy: դեպի
+  hy: վերչ
   it: a
   es: a
   kk: дейін
