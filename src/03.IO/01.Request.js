@@ -334,7 +334,9 @@ Colibri.IO.Request = class extends Destructable {
                 req.setRequestHeader(name, this._headers[name]);
             });
             let data = params;
-            if (typeof params === 'object')  {
+            if(this._headers['Content-Type'] == 'application/json') {
+                data = JSON.stringify(params);
+            } else if (typeof params === 'object')  {
                 if(Colibri.IO.Request.type == Colibri.IO.Request.RequestEncodeTypeEncrypted) {
                     data = this._encryptData(params);
                 }

@@ -216,4 +216,94 @@ Colibri.UI.Utilities.Vincenty = class {
         return [Colibri.UI.Utilities.Vincenty.degrees(phi2), Colibri.UI.Utilities.Vincenty.degrees(lambda2)];
     }
 
+    static InsideBBox(lat, lon, bbox) {
+        if (!bbox) return true;
+        return (
+            lat >= bbox[0].lat &&
+            lat <= bbox[1].lat &&
+            lon >= bbox[0].lng &&
+            lon <= bbox[1].lng
+        );
+    }
+
+    /**
+    * Построение линии из точки [lat, lon] по азимуту и длине.
+    * @param {number} lat - стартовая широта
+    * @param {number} lon - стартовая долгота
+    * @param {number} azimuth - азимут в градусах (0–360)
+    * @param {number} totalDistance - длина линии в метрах
+    * @param {number} steps - количество точек вдоль линии
+    * @returns {[number, number][]} массив точек [lat, lon]
+    */
+    static Line(lat, lon, azimuth, totalDistance, steps = 1000, bbox = null) {
+        const points = [];
+        const stepDistance = totalDistance / steps;
+
+        for (let i = 0; i <= steps; i++) {
+            const dist = i * stepDistance;
+            const [lat2, lon2] = Colibri.UI.Utilities.Vincenty.direct(lat, lon, azimuth, dist);
+            points.push([lon2, lat2]);
+        }
+
+        return {
+            type: "LineString",
+            coordinates: points
+        };
+    }
+
+    /**
+     * Построение линии с разрывами при переходе ±180 долготы
+     * @param {number} lat - стартовая широта
+     * @param {number} lon - стартовая долгота
+     * @param {number} azimuth - азимут в градусах (0–360)
+     * @param {number} totalDistance - длина линии в метрах
+     * @param {number} steps - количество точек вдоль линии
+     * @returns {Array<Array<[number, number]>>} массив сегментов, каждый сегмент массив [lat, lon]
+     */
+    static Wrapped(lat, lon, azimuth, totalDistance, steps = 1000, bbox = null) {
+        const segments = [];
+        let segment = [];
+
+        const stepDistance = totalDistance / steps;
+        let prevLon = lon;
+
+        for (let i = 0; i <= steps; i++) {
+            const dist = i * stepDistance;
+            let [lat2, lon2] = Colibri.UI.Utilities.Vincenty.direct(lat, lon, azimuth, dist);
+
+            // нормализация долготы
+            if (lon2 > 180) lon2 -= 360;
+            if (lon2 < -180) lon2 += 360;
+
+            // переход через ±180
+            if (segment.length > 0 && Math.abs(lon2 - prevLon) > 180) {
+                if (segment.length > 1) segments.push(segment);
+                segment = [];
+            }
+
+            // фильтрация по bbox
+            if (Colibri.UI.Utilities.Vincenty.InsideBBox(lat2, lon2, bbox)) {
+                segment.push([lon2, lat2]);
+            } else {
+                // если текущая точка вне bbox, а предыдущая была внутри — закрываем сегмент
+                if (segment.length > 0) {
+                    segments.push(segment);
+                    segment = [];
+                }
+            }
+
+            prevLon = lon2;
+        }
+
+        if (segment.length > 0) {
+            segments.push(segment);
+        }
+
+        return {
+            type: "MultiLineString",
+            coordinates: segments
+        };
+    }
+
+
 }
