@@ -503,13 +503,16 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         data.features.push(objectJson);
         source.setData(data);
     }
-    _sourceAddOrUpdatePoints(objectsJson) {
+    _sourceAddOrUpdatePoints(objectsJson, searchForUpdate = true) {
         const source = this._createPointSource();
         const data = source._data;
         for (const objectJson of objectsJson) {
-            const idx = data.features.findIndex(f => f.id === objectJson.id);
+            let idx = -1;
+            if(searchForUpdate) {
+                idx = data.features.findIndex(f => f.id === objectJson.id);
+            }
             if (idx === -1) {
-                data.features.push(objectJson)
+                data.features.push(objectJson);
             } else {
                 data.features.splice(idx, 1, objectJson);
             }
@@ -651,7 +654,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         }
     }
 
-    AddCircles(latLngsLike, radius, color = 'red') {
+    AddCircles(latLngsLike, radius, color = 'red', searchForUpdate = true) {
 
         this._sourceAddOrUpdatePoints(latLngsLike.map(latLngLike => {
             if (latLngLike.type === 'Feature') {
@@ -671,7 +674,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     'opacity': 1
                 }
             };
-        }));
+        }), searchForUpdate);
     }
 
     AddLinesFromGeo(geolineObjects, color = 'red', weight = 1) {
@@ -839,6 +842,34 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         const dy = b[1] - a[1];
         const angle = Math.atan2(dy, dx) * 180 / Math.PI;
         return (angle + 360) % 360;
+    }
+
+    EnableDebugger() {
+        this._coordsDiv = document.createElement('div');
+        this._coordsDiv.style.position = 'absolute';
+        this._coordsDiv.style.bottom = '10px';
+        this._coordsDiv.style.right = '10px';
+        this._coordsDiv.style.padding = '6px 10px';
+        this._coordsDiv.style.background = 'rgba(0,0,0,0.6)';
+        this._coordsDiv.style.color = '#fff';
+        this._coordsDiv.style.fontFamily = 'monospace';
+        this._coordsDiv.style.borderRadius = '4px';
+        this._coordsDiv.textContent = 'Move mouse...';
+        this._map.getContainer().appendChild(this._coordsDiv);
+        this._map.getContainer().style.cursor = 'crosshair';
+
+        this._map.on('mousemove', e => {
+            const lat = e.lngLat.lat.toFixed(6);
+            const lng = e.lngLat.lng.toFixed(6);
+            this._coordsDiv.textContent = `Lat: ${lat}, Lng: ${lng}`;
+        });
+    }
+
+    DisableDebugger() {
+        this._map.off('mousemove');
+        this._coordsDiv.remove();
+        this._coordsDiv = null;
+        this._map.getContainer().styles.cursor = null;
     }
 
     EnableBoxSelection() {
@@ -1144,50 +1175,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         }
     }
 
-    CalcIntersactionPoints(lines) {
-        if (lines.length > 200) {
-            App.Notices.Add(new Colibri.UI.Notice('#{ui-maplibre-hugelines}'));
-            return [];
-        }
-
-        const intersector = new Colibri.UI.Maps.Intersactions();
-        const points = [];
-        for (let i = 0; i < lines.length; i++) {
-            for (let j = 0; j < lines.length; j++) {
-                if (i === j) {
-                    continue;
-                }
-
-                const ps = intersector.findIntersections(lines[i].coordinates[0], lines[j].coordinates[0]);
-                for (const p of ps) {
-                    points.push({
-                        id: 'intersaction-' + Date.Mc() + '-' + lines[i].id.split('-')[1] + ':' + lines[j].id.split('-')[1],
-                        lng: p[0],
-                        lat: p[1],
-                    });
-                }
-
-                if (lines[i].coordinates[1] && lines[j].coordinates[1]) {
-
-                    const ps2 = intersector.findIntersections(lines[i].coordinates[1], lines[j].coordinates[1]);
-                    for (const p of ps2) {
-                        points.push({
-                            id: 'intersaction-' + Date.Mc() + '-' + lines[i].id.split('-')[1] + ':' + lines[j].id.split('-')[1],
-                            lng: p[0],
-                            lat: p[1],
-                        });
-
-                    }
-                }
-            }
-        }
-
-        return points;
-    }
 
 }
 
-Colibri.UI.Maps.Intersactions = class {
+Colibri.UI.Maps.Intersections = class {
 
     // Helper: Check orientation of ordered triplet (p, q, r)
     orientation(p, q, r) {
@@ -1264,6 +1255,22 @@ Colibri.UI.Maps.Intersactions = class {
         return intersections;
     }
 
+    static intersections(lines) {
+        const inn = new Colibri.UI.Maps.Intersections();
+        const intersections = [];
+        for(const v1 of lines) {
+            for(const v2 of lines) {
+                if(v1.id != v2.id) {
+                    const ints = inn.findIntersections(v1.coordinates[0], v2.coordinates[0])
+                    if(ints.length > 0) {
+                        intersections.push(...ints.map(pt => ({id1: v1.id, id2: v2.id, lat: pt[0], lng: pt[1]})));
+                    }
+                }
+            }
+        }
+        return intersections;
+    }
+
 }
 
 Colibri.UI.Maps.Turf = class {
@@ -1282,8 +1289,8 @@ Colibri.UI.Maps.Turf = class {
     greatCircle(start, end, options = {}) {
         const { npoints = 100, includeEndpoints = true } = options;
 
-        const [lon1, lat1] = start.map(this.deg2rad);
-        const [lon2, lat2] = end.map(this.deg2rad);
+        const [lon1, lat1] = start.map(Colibri.UI.Utilities.Vincenty.radians);
+        const [lon2, lat2] = end.map(Colibri.UI.Utilities.Vincenty.radians);
 
         const d = 2 * Math.asin(Math.sqrt(
             Math.sin((lat2 - lat1) / 2) ** 2 +
@@ -1306,15 +1313,15 @@ Colibri.UI.Maps.Turf = class {
             const lon = Math.atan2(y, x);
 
             if (includeEndpoints || (i > 0 && i < npoints))
-                coords.push([this.rad2deg(lon), this.rad2deg(lat)]);
+                coords.push([Colibri.UI.Utilities.Vincenty.degrees(lon), Colibri.UI.Utilities.Vincenty.degrees(lat)]);
         }
 
         return this.lineString(coords);
     }
 
     haversineDistance(a, b) {
-        const [lon1, lat1] = a.map(this.deg2rad);
-        const [lon2, lat2] = b.map(this.deg2rad);
+        const [lon1, lat1] = a.map(Colibri.UI.Utilities.Vincenty.radians);
+        const [lon2, lat2] = b.map(Colibri.UI.Utilities.Vincenty.radians);
         const R = 6371; // km
 
         const dlat = lat2 - lat1;
@@ -1342,7 +1349,5 @@ Colibri.UI.Maps.Turf = class {
             default: return total; // kilometers
         }
     }
-
-    deg2rad(d) { return d * Math.PI / 180; }
-    rad2deg(r) { return r * 180 / Math.PI; }
+    
 }
