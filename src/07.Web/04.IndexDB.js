@@ -118,6 +118,9 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
      */
     AddData(storeName, dataObject) {
         return new Promise((resolve, reject) => {
+            if(!this._db) {
+                reject('Db is not opened');
+            }
             let transaction = this._db.transaction(storeName, "readwrite"); 
             let store = transaction.objectStore(storeName);
             let request = store.add(dataObject); 
@@ -144,6 +147,9 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
      */
     UpdateData(storeName, dataObject) {
         return new Promise((resolve, reject) => {
+            if(!this._db) {
+                reject('Db is not opened');
+            }
             let transaction = this._db.transaction(storeName, "readwrite"); 
             let store = transaction.objectStore(storeName);
             let request = store.put(dataObject); 
