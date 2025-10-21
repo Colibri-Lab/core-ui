@@ -540,7 +540,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     ClearLineSource(sourceName) {
-        if(this._linesSources[sourceName]) {
+        if (this._linesSources[sourceName]) {
             const source = this._linesSources[sourceName];
             const data = source._data;
             data.features = [];
@@ -549,7 +549,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     ClearPointsSource(sourceName) {
-        if(this._pointsSources[sourceName]) {
+        if (this._pointsSources[sourceName]) {
             const source = this._pointsSources[sourceName];
             const data = source._data;
             data.features = [];
@@ -558,7 +558,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     ClearObjectsSource(sourceName) {
-        if(this._objectsSources[sourceName]) {
+        if (this._objectsSources[sourceName]) {
             const source = this._objectsSources[sourceName];
             const data = source._data;
             data.features = [];
@@ -806,15 +806,15 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     UpdateFeatures(sourceName, features) {
-        
+
     }
 
     Feature(sourceName, name) {
-        if(this._objectsSources[sourceName]) {
+        if (this._objectsSources[sourceName]) {
             return this.Object(sourceName, name);
-        } else if(this._linesSources[sourceName]) {
+        } else if (this._linesSources[sourceName]) {
             return this.Line(sourceName, name);
-        } else if(this._pointsSources[sourceName]) {
+        } else if (this._pointsSources[sourceName]) {
             return this.Point(sourceName, name);
         }
     }
@@ -870,18 +870,52 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._map.getContainer().appendChild(this._coordsDiv);
         this._map.getContainer().style.cursor = 'crosshair';
 
-        this._map.on('mousemove', e => {
+        this._mousemoveHandler = e => {
             const lat = e.lngLat.lat.toFixed(6);
             const lng = e.lngLat.lng.toFixed(6);
-            this._coordsDiv.textContent = `Lat: ${lat}, Lng: ${lng}`;
-        });
+
+            // Получаем все объекты под курсором
+            const features = this._map.queryRenderedFeatures(e.point);
+            let info = `Lat: ${lat}, Lng: ${lng}`;
+            if (features.length) {
+                // Если есть, выводим ID первого объекта
+                const id = features[0]?.properties?.id ?? 'no-id';
+                info += `, ID: ${id}`;
+            }
+
+            this._coordsDiv.textContent = info;
+        };
+
+        this._clickHandler = e => {
+            const features = this._map.queryRenderedFeatures(e.point);
+            if (features.length) {
+                const id = features[0].properties?.id;
+                if (id != null) {
+                    navigator.clipboard.writeText(id.toString())
+                        .then(() => console.log(`Copied ID: ${id}`))
+                        .catch(err => console.error('Copy failed', err));
+                }
+            }
+        };
+
+        this._map.on('mousemove', this._mousemoveHandler);
+        this._map.on('click', this._clickHandler);
     }
 
     DisableDebugger() {
-        this._map.off('mousemove');
-        this._coordsDiv.remove();
-        this._coordsDiv = null;
-        this._map.getContainer().styles.cursor = null;
+        if (this._mousemoveHandler) {
+            this._map.off('mousemove', this._mousemoveHandler);
+            this._mousemoveHandler = null;
+        }
+        if (this._clickHandler) {
+            this._map.off('click', this._clickHandler);
+            this._clickHandler = null;
+        }
+        if (this._coordsDiv) {
+            this._coordsDiv.remove();
+            this._coordsDiv = null;
+        }
+        this._map.getContainer().style.cursor = '';
     }
 
     EnableBoxSelection() {
@@ -927,7 +961,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             ];
             const features = this._map.queryRenderedFeatures(rect, { layers: [...Object.keys(this._linesSources), ...Object.keys(this._pointsSources), ...Object.keys(this._objectsSources)] });
             features.forEach(f => {
-                if(!this._selectedIds[f.source.replaceAll('-source', '')]) {
+                if (!this._selectedIds[f.source.replaceAll('-source', '')]) {
                     this._selectedIds[f.source.replaceAll('-source', '')] = [];
                 }
                 this._selectedIds[f.source.replaceAll('-source', '')].push(f.properties.id);
@@ -1001,11 +1035,11 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             ];
             const features = this._map.queryRenderedFeatures(rect, { layers: [...Object.keys(this._linesSources), ...Object.keys(this._pointsSources), ...Object.keys(this._objectsSources)] });
             const ids = features.map(f => f.properties.id);
-            if(!e.originalEvent.shiftKey) {
-                this._selectedIds = {};    
+            if (!e.originalEvent.shiftKey) {
+                this._selectedIds = {};
             }
             features.forEach(f => {
-                if(!this._selectedIds[f.source.replaceAll('-source', '')]) {
+                if (!this._selectedIds[f.source.replaceAll('-source', '')]) {
                     this._selectedIds[f.source.replaceAll('-source', '')] = [];
                 }
                 this._selectedIds[f.source.replaceAll('-source', '')].push(f.properties.id);
@@ -1282,12 +1316,12 @@ Colibri.UI.Maps.Intersections = class {
     static intersections(lines) {
         const inn = new Colibri.UI.Maps.Intersections();
         const intersections = [];
-        for(const v1 of lines) {
-            for(const v2 of lines) {
-                if(v1.id != v2.id) {
+        for (const v1 of lines) {
+            for (const v2 of lines) {
+                if (v1.id != v2.id) {
                     const ints = inn.findIntersections(v1.coordinates[0], v2.coordinates[0])
-                    if(ints.length > 0) {
-                        intersections.push(...ints.map(pt => ({id1: v1.id, id2: v2.id, lat: pt[0], lng: pt[1]})));
+                    if (ints.length > 0) {
+                        intersections.push(...ints.map(pt => ({ id1: v1.id, id2: v2.id, lat: pt[0], lng: pt[1] })));
                     }
                 }
             }
@@ -1373,5 +1407,5 @@ Colibri.UI.Maps.Turf = class {
             default: return total; // kilometers
         }
     }
-    
+
 }
