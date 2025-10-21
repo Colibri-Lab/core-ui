@@ -282,7 +282,7 @@ Colibri.UI.Utilities.Vincenty = class {
             }
 
             // фильтрация по bbox
-            if (Colibri.UI.Utilities.Vincenty.InsideBBox(lat2, lon2, bbox)) {
+            if (!bbox || Colibri.UI.Utilities.Vincenty.InsideBBox(lat2, lon2, bbox)) {
                 segment.push([lon2, lat2]);
             } else {
                 // если текущая точка вне bbox, а предыдущая была внутри — закрываем сегмент
