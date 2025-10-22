@@ -24,6 +24,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._layersSwitch = this.Children('layers/switch');
         this._mapContainer = this.Children('map-container');
 
+        this._layersZIndex = [];
         this._objectsSources = {};
         this._linesSources = {};
         this._pointsSources = {};
@@ -306,19 +307,26 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 source: name
             });
             try {
-                if (this._map.getLayer('lines')) {
-                    this._map.moveLayer(name, 'lines');
+                const linesSourceName = this._layersZIndex[0];
+                if (linesSourceName && this._map.getLayer(linesSourceName)) {
+                    this._map.moveLayer(name, linesSourceName);
                 }
-                // if(this._map.getLayer('points')) {
-                //     this._map.moveLayer(name, 'points');
-                // }
-                // if(this._map.getLayer('objects')) {
-                //     this._map.moveLayer(name, 'objects');
-                // }
             } catch (e) { }
             this._currentLayer = name;
 
         }
+    }
+
+    CreateSources(sources) {
+        Object.map(sources, (name, type) => {
+            if(type === 'line') {
+                this._createLineSource(name);
+            } else if(type === 'circle') {
+                this._createPointSource(name);
+            } else if(type === 'symbol') {
+                this._createObjectSource(name);
+            }
+        });
     }
 
     _createLineSource(name) {
@@ -346,6 +354,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     'line-opacity': ['get', 'opacity'],
                 }
             });
+            this._layersZIndex.push(name);
             this._linesSources[name] = this._map.getSource(name + '-source');
         }
         return this._linesSources[name];
@@ -373,6 +382,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 }
             });
 
+            this._layersZIndex.push(name);
             this._pointsSources[name] = this._map.getSource(name + '-source');
         }
 
@@ -402,6 +412,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 }
             });
 
+            this._layersZIndex.push(name);
             this._objectsSources[name] = this._map.getSource(name + '-source');
         }
         return this._objectsSources[name];
