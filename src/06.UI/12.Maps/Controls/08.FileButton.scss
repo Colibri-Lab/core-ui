@@ -1,0 +1,13 @@
+.colibri-ui-maps-controls-filebutton {
+
+
+    
+    input[type=file] {
+        visibility: hidden; 
+        width: 1px; 
+        height: 1px; 
+        outline: none;
+        position: absolute;
+    }
+
+}

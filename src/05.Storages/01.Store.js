@@ -588,7 +588,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         }
 
         if(d !== null) {
-            if(this._data === null) {
+            if(this._data === null || this._data === undefined) {
                 this._data = {};
             }
             eval(realpath + ' = d;');

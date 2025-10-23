@@ -7,7 +7,7 @@
             color: white;
         }
         svg {
-            path {
+            path[fill=black],rect[fill=black] {
                 fill: #ffffff;
             }
         }

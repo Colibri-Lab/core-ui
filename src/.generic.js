@@ -3931,6 +3931,15 @@ function DownloadFileByPath(path, filename) {
         document.body.removeChild(a);
     }
 };
+function DownloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+    a.remove();
+}
 /**
  * Downloads a file to the device's storage.
  * @param {string} path The path of the file.
