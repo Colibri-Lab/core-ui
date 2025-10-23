@@ -7,9 +7,14 @@ Colibri.IO.JsZip = class {
             if(Colibri.IO.JsZip.loaded) {
                 resolve(new JSZip());
             } else {
-                Colibri.Common.LoadScript('https://unpkg.com/jszip@latest/dist/jszip.min.js').then(() => {
+                Colibri.Common.LoadScript('/res/jszip/jszip.min.js').then(() => {
                     Colibri.IO.JsZip.loaded = true;
                     resolve(new JSZip());
+                }).catch(() => {
+                    Colibri.Common.LoadScript('https://unpkg.com/jszip@latest/dist/jszip.min.js').then(() => {
+                        Colibri.IO.JsZip.loaded = true;
+                        resolve(new JSZip());
+                    });
                 });
             }
         });

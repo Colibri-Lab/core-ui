@@ -63,5 +63,17 @@
             }
         }
     }
+
+    &.-active {
+        background: #1C274C;
+        [data-object-name="label"] {
+            color: white;
+        }
+        svg {
+            path[fill=black],rect[fill=black] {
+                fill: #ffffff;
+            }
+        }
+    }
     
 }

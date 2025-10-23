@@ -990,6 +990,11 @@ Array.shallowEqual = function (array1, array2) {
     return true;
 }
 
+Array.shallowEqualObjects = function (a, b) {
+    return a?.length === b?.length &&
+        a.every((v, i) => JSON.stringify(v) === JSON.stringify(b[i]));
+}
+
 /**
  * Sets the value of a property in an object using dot notation.
  * @param {Object} obj - The object to set the value in.
@@ -1430,7 +1435,7 @@ String.prototype.toDate = function () {
         return parseInt(this).toDateFromUnixTime();
     }
 
-    if(new Date(this) != 'Invalid Date') {
+    if (new Date(this) != 'Invalid Date') {
         return new Date(this);
     }
 
@@ -2481,18 +2486,18 @@ Number.unique = function () { return (window.performance.getEntries()[0].duratio
  * Formats the date as a string in the 'YYYY-MM-DD HH:mm:ss' format.
  * @returns {string} The formatted date string.
  */
-Date.prototype.toDbDate = function () { 
-    if (this.toString() === 'Invalid Date') { 
-        return null; 
+Date.prototype.toDbDate = function () {
+    if (this.toString() === 'Invalid Date') {
+        return null;
     }
-    return this.toISOString(); 
+    return this.toISOString();
     // return this.getFullYear() + '-' + ((this.getMonth() + 1) + '').expand('0', 2) + '-' + (this.getDate() + '').expand('0', 2) + ' ' + (this.getHours() + '').expand('0', 2) + ':' + (this.getMinutes() + '').expand('0', 2) + ':' + (this.getSeconds() + '').expand('0', 2); 
 };
-Date.prototype.toLocalDateTimeString = function() {
-    if (this.toString() === 'Invalid Date') { 
-        return null; 
+Date.prototype.toLocalDateTimeString = function () {
+    if (this.toString() === 'Invalid Date') {
+        return null;
     }
-    return this.getFullYear() + '-' + ((this.getMonth() + 1) + '').expand('0', 2) + '-' + (this.getDate() + '').expand('0', 2) + ' ' + (this.getHours() + '').expand('0', 2) + ':' + (this.getMinutes() + '').expand('0', 2) + ':' + (this.getSeconds() + '').expand('0', 2); 
+    return this.getFullYear() + '-' + ((this.getMonth() + 1) + '').expand('0', 2) + '-' + (this.getDate() + '').expand('0', 2) + ' ' + (this.getHours() + '').expand('0', 2) + ':' + (this.getMinutes() + '').expand('0', 2) + ':' + (this.getSeconds() + '').expand('0', 2);
 }
 /**
  * Converts the date to Unix timestamp (seconds since January 1, 1970).
@@ -3728,7 +3733,7 @@ Element.prototype.emitHtmlEvents = function (eventType) {
     }
 };
 
-Window.prototype.emitEvent = function(eventType) {
+Window.prototype.emitEvent = function (eventType) {
     window.dispatchEvent(new Event(eventType));
 };
 

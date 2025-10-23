@@ -14,12 +14,21 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
                     resolve(SQL);
                 });
             } else {
-                Colibri.Common.LoadScript('https://unpkg.com/sql.js@1.8.0/dist/sql-wasm.js').then(() => {
-                    Colibri.Storages.SqlWasm.loaded = true;
+                Colibri.Common.LoadScript('/res/sqlwasm/sql-wasm.js').then(() => {
+                    Colibri.Storages.SqlWasm.loaded = `/res/sqlwasm/${file}`;
                     initSqlJs({
-                        locateFile: file => `https://unpkg.com/sql.js@1.8.0/dist/${file}`
+                        locateFile: file => `/res/sqlwasm/${file}`
                     }).then((SQL) => {
                         resolve(SQL);
+                    });
+                }).catch(() => {                
+                    Colibri.Common.LoadScript('https://unpkg.com/sql.js@1.8.0/dist/sql-wasm.js').then(() => {
+                        Colibri.Storages.SqlWasm.loaded = `/res/sqlwasm/${file}`;
+                        initSqlJs({
+                            locateFile: file => `https://unpkg.com/sql.js@1.8.0/dist/${file}`
+                        }).then((SQL) => {
+                            resolve(SQL);
+                        });
                     });
                 });
             }
@@ -200,7 +209,7 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         }
 
         const steps = [];
-        for (let t = start; t <= end; t += step) {
+        for (let t = start; t < end; t += step) {
             steps.push(t);
         }
 
