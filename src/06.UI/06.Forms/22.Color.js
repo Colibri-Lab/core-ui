@@ -59,11 +59,12 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
     /** @private */
     _showPopup() {
 
-        this._colorPopup = new Colibri.UI.Color(this.name + '_color', document.body);
-        this._colorPopup.parent = this.contentContainer;
-        this._colorPopup.hasShadow = true;
+        this._colorPopupObject = new Colibri.UI.Popup(this.name + '_color_popup', this.contentContainer);
+        this._colorPopupObject.parent = this;
+
+        this._colorPopup = new Colibri.UI.Color(this.name + '_color', this._colorPopupObject);
+        this._colorPopup.styles = { position: 'static' };
         this._colorPopup.shown = true;
-        this._colorPopup.BringToFront();
         this._colorPopup.AddHandler('Changed', this.__coloPopupChanged, false, this);
         this._colorPopup.AddHandler('ShadowClicked', this.__colorPopupShadowClicked, false, this);
         this._colorPopup.value = this._input.value;
@@ -71,11 +72,13 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
         this._colorPopup.left = this._input.left;
         this._colorPopup.width = Math.max(this._input.width, 379);
 
+        this._colorPopupObject.Show(this.contentContainer, true);
+
     }
 
     __colorPopupShadowClicked(event, args) {
         console.log('disposing');
-        this._colorPopup.Dispose();
+        this._colorPopupObject.Dispose();
     }
 
     __coloPopupChanged(event, args) {

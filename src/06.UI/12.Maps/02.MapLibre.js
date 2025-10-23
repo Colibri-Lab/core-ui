@@ -879,6 +879,53 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._sourceUpdatePoint(sourceName, name, geoData);
     }
 
+    EnableHover(callback) {
+        this._infoDiv = document.createElement('div');
+        this._infoDiv.style.position = 'absolute';
+        this._infoDiv.style.bottom = '10px';
+        this._infoDiv.style.right = '10px';
+        this._infoDiv.style.padding = '6px 10px';
+        this._infoDiv.style.background = 'rgba(0,0,0,0.6)';
+        this._infoDiv.style.color = '#fff';
+        this._infoDiv.style.fontFamily = 'monospace';
+        this._infoDiv.style.borderRadius = '4px';
+        this._infoDiv.textContent = '';
+        this._map.getContainer().appendChild(this._infoDiv);
+
+        this._mousemoveHoverHandler = e => {
+            const lat = e.lngLat.lat.toFixed(6);
+            const lng = e.lngLat.lng.toFixed(6);
+
+            // Получаем все объекты под курсором
+            const features = this._map.queryRenderedFeatures(e.point);
+            let info = `Lat: ${lat}, Lng: ${lng}`;
+            if (features.length) {
+                // Если есть, выводим ID первого объекта
+                const id = features[0]?.properties?.id ?? 'no-id';
+                info += `, ID: ${id}`;
+            }
+            if(callback) {
+                info = callback(features, info);
+            } 
+
+            this._infoDiv.html(info);
+        };
+
+        this._map.on('mousemove', this._mousemoveHoverHandler);
+    }
+
+    DisableHover() {
+        if (this._mousemoveHoverHandler) {
+            this._map.off('mousemove', this._mousemoveHoverHandler);
+            this._mousemoveHoverHandler = null;
+        }
+        if (this._infoDiv) {
+            this._infoDiv.remove();
+            this._infoDiv = null;
+        }
+    }
+
+
     EnableDebugger() {
         this._coordsDiv = document.createElement('div');
         this._coordsDiv.style.position = 'absolute';

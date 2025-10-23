@@ -9,13 +9,13 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         return new Promise((resolve, reject) => {
             if (Colibri.Storages.SqlWasm.loaded) {
                 initSqlJs({
-                    locateFile: file => `https://unpkg.com/sql.js@1.8.0/dist/${file}`
+                    locateFile: Colibri.Storages.SqlWasm.loaded
                 }).then((SQL) => {
                     resolve(SQL);
                 });
             } else {
                 Colibri.Common.LoadScript('/res/sqlwasm/sql-wasm.js').then(() => {
-                    Colibri.Storages.SqlWasm.loaded = `/res/sqlwasm/${file}`;
+                    Colibri.Storages.SqlWasm.loaded = file => `/res/sqlwasm/${file}`;
                     initSqlJs({
                         locateFile: file => `/res/sqlwasm/${file}`
                     }).then((SQL) => {
@@ -23,7 +23,7 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
                     });
                 }).catch(() => {                
                     Colibri.Common.LoadScript('https://unpkg.com/sql.js@1.8.0/dist/sql-wasm.js').then(() => {
-                        Colibri.Storages.SqlWasm.loaded = `/res/sqlwasm/${file}`;
+                        Colibri.Storages.SqlWasm.loaded = file => `https://unpkg.com/sql.js@1.8.0/dist/${file}`;
                         initSqlJs({
                             locateFile: file => `https://unpkg.com/sql.js@1.8.0/dist/${file}`
                         }).then((SQL) => {
@@ -142,6 +142,7 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
                 let v = row[f];
                 if (v === undefined) v = null;
                 if (v === true || v === false) v = v ? 1 : 0;
+                if (Object.isObject(v) || Array.isArray(v)) v = JSON.stringify(v);
                 return v;
             });
 
