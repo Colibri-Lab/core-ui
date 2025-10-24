@@ -111,16 +111,21 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
     }
 
 
-    Load(base64) {
-        this.Close();
-        if (base64 instanceof Blob) {
-            base64.arrayBuffer().then(binaryArray => {
+    Open(base64) {
+        return new Promise((resolve, reject) => {
+            this.Close();
+            if (base64 instanceof Blob) {
+                base64.arrayBuffer().then(binaryArray => {
+                    const uint8 = new Uint8Array(binaryArray);
+                    this._db = new this._sql.Database(uint8);
+                    resolve();
+                });
+            } else {
+                const binaryArray = this._base64ToUint8Array(base64);
                 this._db = new this._sql.Database(binaryArray);
-            });
-        } else {
-            const binaryArray = this._base64ToUint8Array(base64);
-            this._db = new this._sql.Database(binaryArray);
-        }
+                resolve();
+            }
+        })
     }
 
     Close() {
@@ -188,6 +193,11 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         } else {
             return this._convertToObjects(this._db.exec(d.query));
         }
+    }
+
+    LoadAll(table) {
+        const query = 'SELECT * FROM "' + table + '"';
+        return this.Query(query, []);
     }
 
     LoadBy(table, filters, order = '') {
@@ -269,8 +279,8 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
             if (name === 'datecreated') {
                 // hack
                 filter.push('"datecreated" BETWEEN [[datecreated1:string]] AND [[datecreated2:string]]');
-                params['datecreated1'] = f[0].toLocalDateTimeString();
-                params['datecreated2'] = f[1].toLocalDateTimeString();
+                params['datecreated1'] = (f[0] instanceof Date ? f[0] : f[0].toDate()).toLocalDateTimeString();
+                params['datecreated2'] = (f[1] instanceof Date ? f[1] : f[1].toDate()).toLocalDateTimeString();
             } else if (Array.isArray(f)) {
                 if (f.length === 2) {
                     filter.push('("' + name + '" BETWEEN [[' + name + '1:string]] AND [[' + name + '2:string]]) OR ("' + name + '" IN (' + f.map(v => v.isNumeric() ? v : '\'' + v + '\'') + '))');
