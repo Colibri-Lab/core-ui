@@ -278,53 +278,82 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         Colibri.Common.Wait(() => this._loaded).then(() => {
             Object.forEach(this._tiles, (name, tileUrl) => {
                 console.log(name);
-                if(Array.isArray(tileUrl)) {
-                    this.AddTiles(tileUrl[0], name, tileUrl[1], tileUrl[2] ?? 256, tileUrl[3] ?? 0, tileUrl[4] ?? 22);
-                } else {
-                    this.AddTiles(tileUrl, name);
-                }
+                this.AddTiles(tileUrl, name);
             });
             this.SwitchToLayer(Object.keys(this._layers)[0]);
         });
     }
 
     AddTiles(tileUrl, name = 'default', type = 'raster', tileSize = 256, minzoom = 0, maxzoom = 22) {
-        this._layers[name] = name;
-        this._map.addSource(name, {
-            type: type,
-            tiles: [tileUrl],
-            tileSize: tileSize,
-            minzoom: minzoom,
-            maxzoom: maxzoom
-        });
-        this._layersSwitch.AddLayer(name);
+
+        if(tileUrl.indexOf('style.json') !== -1) {
+            Colibri.IO.Request.Get(tileUrl, {}, {}, false).then(response => {
+                const style = JSON.parse(response.result);
+                if(style.glyphs) {
+                    const oldstyle = this._map.getStyle();
+                    this._map.setStyle({...oldstyle, glyphs: style.glyphs});
+                }
+                this._layers[name] = style;
+                for (const [sourceId, sourceDef] of Object.entries(style.sources)) {
+                    this._map.addSource(sourceId, sourceDef);
+                }
+                this._layersSwitch.AddLayer(name);
+            });
+            
+        } else {
+            this._layers[name] = tileUrl;
+            this._map.addSource(name, {
+                type: type,
+                tiles: [tileUrl],
+                tileSize: tileSize,
+                minzoom: minzoom,
+                maxzoom: maxzoom
+            });
+            this._layersSwitch.AddLayer(name);
+        }
+
     }
 
     SwitchToLayer(name) {
         if (this._layers[name]) {
 
             if (this._currentLayer) {
-                this._map.removeLayer(this._currentLayer);
-            }
-            const type = !Array.isArray(this._tiles[name]) ? 'raster' : (this._tiles[name][1] ?? 'raster');
-            const layerData = {
-                id: name,
-                type: type,
-                source: name
-            };
-            if(type === 'vector') {
-                layerData['source-layer'] = 'landuse';
-                layerData['type'] = 'fill';
+                (!Array.isArray(this._currentLayer) ? [this._currentLayer] : this._currentLayer).forEach(v => {
+                    this._map.removeLayer(v);
+                });
             }
 
-            this._map.addLayer(layerData);
-            try {
-                const linesSourceName = this._layersZIndex[0];
-                if (linesSourceName && this._map.getLayer(linesSourceName)) {
-                    this._map.moveLayer(name, linesSourceName);
+            if(Object.isObject(this._layers[name])) {
+                const layers = [];
+                const style = this._layers[name];
+                for (const layer of style.layers) {
+                    this._map.addLayer({ ...layer, id: `${name}-${layer.id}` });
+                    try {
+                        const linesSourceName = this._layersZIndex[0];
+                        if (linesSourceName && this._map.getLayer(linesSourceName)) {
+                            this._map.moveLayer(`${name}-${layer.id}`, linesSourceName);
+                        }
+                    } catch (e) { }
+
+                    layers.push(`${name}-${layer.id}`);
                 }
-            } catch (e) { }
-            this._currentLayer = name;
+                this._currentLayer = layers;
+                
+            } else {    
+                this._map.addLayer({
+                    id: name,
+                    type: 'raster',
+                    source: name
+                });
+                this._currentLayer = name;
+                try {
+                    const linesSourceName = this._layersZIndex[0];
+                    if (linesSourceName && this._map.getLayer(linesSourceName)) {
+                        this._map.moveLayer(name, linesSourceName);
+                    }
+                } catch (e) { }
+            }
+
 
         }
     }
