@@ -277,20 +277,25 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     _showTiles() {
         Colibri.Common.Wait(() => this._loaded).then(() => {
             Object.forEach(this._tiles, (name, tileUrl) => {
-                this.AddTiles(tileUrl, name);
+                console.log(name);
+                if(Array.isArray(tileUrl)) {
+                    this.AddTiles(tileUrl[0], name, tileUrl[1], tileUrl[2] ?? 256, tileUrl[3] ?? 0, tileUrl[4] ?? 22);
+                } else {
+                    this.AddTiles(tileUrl, name);
+                }
             });
             this.SwitchToLayer(Object.keys(this._layers)[0]);
         });
     }
 
-    AddTiles(tileUrl, name = 'default') {
+    AddTiles(tileUrl, name = 'default', type = 'raster', tileSize = 256, minzoom = 0, maxzoom = 22) {
         this._layers[name] = name;
         this._map.addSource(name, {
-            type: 'raster',
+            type: type,
             tiles: [tileUrl],
-            tileSize: 256,
-            minzoom: 0,
-            maxzoom: 22
+            tileSize: tileSize,
+            minzoom: minzoom,
+            maxzoom: maxzoom
         });
         this._layersSwitch.AddLayer(name);
     }
@@ -301,11 +306,18 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             if (this._currentLayer) {
                 this._map.removeLayer(this._currentLayer);
             }
-            this._map.addLayer({
+            const type = !Array.isArray(this._tiles[name]) ? 'raster' : (this._tiles[name][1] ?? 'raster');
+            const layerData = {
                 id: name,
-                type: 'raster',
+                type: type,
                 source: name
-            });
+            };
+            if(type === 'vector') {
+                layerData['source-layer'] = 'landuse';
+                layerData['type'] = 'fill';
+            }
+
+            this._map.addLayer(layerData);
             try {
                 const linesSourceName = this._layersZIndex[0];
                 if (linesSourceName && this._map.getLayer(linesSourceName)) {
@@ -627,7 +639,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     type: 'Feature',
                     id: latLngLike.id,
                     geometry: { type: 'Point', coordinates: [latLngLike.lng, latLngLike.lat] },
-                    properties: { id: latLngLike.id, angle: latLngLike.azimuth, type: icon }
+                    properties: { id: latLngLike.id, angle: latLngLike.azimuth, type: latLngLike.type ?? icon }
                 };
             }
         }), updateIfExists);
