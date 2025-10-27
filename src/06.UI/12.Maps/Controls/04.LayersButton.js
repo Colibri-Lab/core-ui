@@ -16,8 +16,11 @@ Colibri.UI.Maps.Controls.LayersButton = class extends Colibri.UI.FlexBox {
         super(name, container, Colibri.UI.Templates['Colibri.UI.Maps.Controls.LayersButton']);
         this.AddClass('colibri-ui-maps-controls-layersbutton');
 
-        this._colors = ['#1C274C','#321c4cff','#1c424cff','#1c4c26ff','#4c491cff', '#4c1c1cff'];
+        this._tiles = [];
+
+        //v this._colors = ['#1C274C','#321c4cff','#1c424cff','#1c4c26ff','#4c491cff', '#4c1c1cff'];
         this.AddHandler('Clicked', this.__thisClicked);
+        this.AddHandler('ContextMenuItemClicked', this.__thisContextMenuItemClicked);
         
     }
 
@@ -30,52 +33,32 @@ Colibri.UI.Maps.Controls.LayersButton = class extends Colibri.UI.FlexBox {
         this.RegisterEvent('Changed', false, 'When current layer is changed');
     }
 
-    /**
-     * Layer colors
-     * @type {Array}
-     */
-    get colors() {
-        return this._colors;
-    }
-    /**
-     * Layer colors
-     * @type {Array}
-     */
-    set colors(value) {
-        value = this._convertProperty('Array', value);
-        this._colors = value;
-        this._reposition();
-    }
-
     __thisClicked(event, args) {
-        const component = this.Children('firstChild')
-        component.MoveEnd();
-        this._reposition();
-        this.Dispatch('Changed', {current: this.Children('firstChild').name})
-    }
+        // const component = this.Children('firstChild')
+        // component.MoveEnd();
+        // this._reposition();
+        // this.Dispatch('Changed', {current: this.Children('firstChild').name})
 
-    AddLayer(name) {
-        const icon = new Colibri.UI.Icon(name, this);
-        icon.shown = true;
-        icon.iconSVG = 'Colibri.UI.Maps.Controls.LayersButton.Icon';
-        icon.styles = {fill: this._colors[icon.index]};
-        this._reposition();
-    }
-
-    _reposition(orders) {
-        const height = this.height - 30;
-        let pos = 10;
-        let nextPos = height / this.children;
-        let zindex = this.children;
-        this.ForEach((name, component, index) => {
-            component.styles = {top: pos + 'px', zIndex: zindex};
-            pos += nextPos;
-            zindex--;            
-        });
+        const contextmenu = [];
+        for(const tile of this._tiles) {
+            contextmenu.push({name: tile.name, title: tile.title});
+        }
+        this.contextmenu = contextmenu;
+        this.ShowContextMenu([Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT]);
 
     }
-    
+
+    __thisContextMenuItemClicked(event, args) {
+        if(args.menuData?.name ?? null) {
+            this.Dispatch('Changed', {current: args.menuData?.name ?? null});
+        }
+    }
+
+    AddLayer(tile) {
+        this._tiles.push(tile);
+    }
+
 
 }
 
-Colibri.UI.Maps.Controls.LayersButton.Icon = '<svg width="51" height="21" viewBox="0 0 51 21" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M0.199997 10.3C0.199997 11.5339 2.68235 12.5268 7.64707 14.5127L14.6682 17.3212C19.6329 19.307 22.1152 20.3 25.2 20.3C28.2847 20.3 30.767 19.307 35.7317 17.3212L42.753 14.5127C47.7177 12.5268 50.2 11.5339 50.2 10.3C50.2 9.06612 47.7177 8.07317 42.753 6.0873L35.7317 3.27882C30.767 1.29295 28.2847 0.299999 25.2 0.299999C22.1152 0.299999 19.6329 1.29295 14.6682 3.27882L7.64707 6.0873C2.68235 8.07317 0.199997 9.06612 0.199997 10.3Z" fill="black"/></svg>';
+Colibri.UI.Maps.Controls.LayersButton.Icon = '<svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.97883 9.68508C2.99294 8.89073 2 8.49355 2 8C2 7.50645 2.99294 7.10927 4.97883 6.31492L7.7873 5.19153C9.77318 4.39718 10.7661 4 12 4C13.2339 4 14.2268 4.39718 16.2127 5.19153L19.0212 6.31492C21.0071 7.10927 22 7.50645 22 8C22 8.49355 21.0071 8.89073 19.0212 9.68508L16.2127 10.8085C14.2268 11.6028 13.2339 12 12 12C10.7661 12 9.77318 11.6028 7.7873 10.8085L4.97883 9.68508Z" fill="#1C274C"/><path fill-rule="evenodd" clip-rule="evenodd" d="M2 8C2 8.49355 2.99294 8.89073 4.97883 9.68508L7.7873 10.8085C9.77318 11.6028 10.7661 12 12 12C13.2339 12 14.2268 11.6028 16.2127 10.8085L19.0212 9.68508C21.0071 8.89073 22 8.49355 22 8C22 7.50645 21.0071 7.10927 19.0212 6.31492L16.2127 5.19153C14.2268 4.39718 13.2339 4 12 4C10.7661 4 9.77318 4.39718 7.7873 5.19153L4.97883 6.31492C2.99294 7.10927 2 7.50645 2 8Z" fill="#1C274C"/><path opacity="0.7" d="M5.76613 10L4.97883 10.3149C2.99294 11.1093 2 11.5065 2 12C2 12.4935 2.99294 12.8907 4.97883 13.6851L7.7873 14.8085C9.77318 15.6028 10.7661 16 12 16C13.2339 16 14.2268 15.6028 16.2127 14.8085L19.0212 13.6851C21.0071 12.8907 22 12.4935 22 12C22 11.5065 21.0071 11.1093 19.0212 10.3149L18.2339 10L16.2127 10.8085C14.2268 11.6028 13.2339 12 12 12C10.7661 12 9.77318 11.6028 7.7873 10.8085L5.76613 10Z" fill="#1C274C"/><path opacity="0.4" d="M5.76613 14L4.97883 14.3149C2.99294 15.1093 2 15.5065 2 16C2 16.4935 2.99294 16.8907 4.97883 17.6851L7.7873 18.8085C9.77318 19.6028 10.7661 20 12 20C13.2339 20 14.2268 19.6028 16.2127 18.8085L19.0212 17.6851C21.0071 16.8907 22 16.4935 22 16C22 15.5065 21.0071 15.1093 19.0212 14.3149L18.2339 14L16.2127 14.8085C14.2268 15.6028 13.2339 16 12 16C10.7661 16 9.77318 15.6028 7.7873 14.8085L5.76613 14Z" fill="#1C274C"/></svg>';

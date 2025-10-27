@@ -16,6 +16,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._icons = {};
         this._layers = {};
         this._selectedIds = [];
+        this._disableChangeEvent = false;
 
         this._zoomZoomIn = this.Children('zoom/zoom-in');
         this._zoomZoomOut = this.Children('zoom/zoom-out');
@@ -47,7 +48,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this.RegisterEvent('Loaded', false, 'When map is fully loaded');
         this.RegisterEvent('Changed', false, 'When zoom or move event is faired');
         this.RegisterEvent('SelectionChanged', false, 'When selection is changed');
+        this.RegisterEvent('MbTilesProtocol', false, 'When mbtiles protocol is requested');
     }
+
+    
 
     _loadMap() {
         Promise.all([
@@ -70,6 +74,20 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 ]
             });
 
+            maplibregl.addProtocol('mbtiles', async (params, abortController) => {
+                const result = await this.Dispatch('MbTilesProtocol', params);
+                if(result) {
+                    const data = params.data;
+                    if(data) {
+                        return {data: data};
+                    } else {
+                        throw new Error(`Tile fetch error: ${t.statusText}`);
+                    }
+                }
+            });
+
+
+
             this._map.boxZoom.disable();
             this._map.dragRotate.disable();
             this._map.touchZoomRotate.disableRotation();
@@ -84,7 +102,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 }
 
                 this._getProperties();
-                this.Dispatch('Changed', {});
+                !this._disableChangeEvent && this.Dispatch('Changed', {});
             });
 
             this._map.on('zoomend', (e) => {
@@ -92,7 +110,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     return;
                 }
                 this._getProperties();
-                this.Dispatch('Changed', {});
+                !this._disableChangeEvent && this.Dispatch('Changed', {});
             });
 
             this._map.on('rotatestart', (e) => {
@@ -105,7 +123,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 }
                 this._getProperties();
 
-                this.Dispatch('Changed', {});
+                !this._disableChangeEvent && this.Dispatch('Changed', {});
                 this._rotating = false;
             });
 
@@ -169,7 +187,6 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             { lng: southWest.lng, lat: southWest.lat },
             { lng: northEast.lng, lat: northEast.lat }
         ];
-        console.log(this._map.getZoom());
         this._zoom = this._map.getZoom();
         this._center = this._map.getCenter();
         this._rotation = this._map.getBearing();
@@ -267,49 +284,53 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
     /**
      * Tiles string in format https://tile.openstreetmap.org/{z}/{x}/{y}.png
-     * @type {Object}
+     * @type {Array<{name, title, url}>}
      */
     set tiles(value) {
-        value = this._convertProperty('Object', value);
+        value = this._convertProperty('Array', value);
         this._tiles = value;
         this._showTiles();
     }
     _showTiles() {
         Colibri.Common.Wait(() => this._loaded).then(() => {
-            Object.forEach(this._tiles, (name, tileUrl) => {
-                console.log(name);
-                this.AddTiles(tileUrl, name);
+            this._tiles.forEach(tile => {
+                this.AddTiles(tile);
             });
             this.SwitchToLayer(Object.keys(this._layers)[0]);
         });
     }
 
-    AddTiles(tileUrl, name = 'default', type = 'raster', tileSize = 256, minzoom = 0, maxzoom = 22) {
+    AddTiles(tile) {
 
-        if(tileUrl.indexOf('style.json') !== -1) {
-            Colibri.IO.Request.Get(tileUrl, {}, {}, false).then(response => {
+        if (typeof tile.url === 'string' && tile.url.indexOf('style.json') !== -1) {
+            Colibri.IO.Request.Get(tile.url, {}, {}, false).then(response => {
                 const style = JSON.parse(response.result);
-                if(style.glyphs) {
+                if (style.glyphs) {
                     const oldstyle = this._map.getStyle();
-                    this._map.setStyle({...oldstyle, glyphs: style.glyphs});
+                    this._map.setStyle({ ...oldstyle, glyphs: style.glyphs });
                 }
-                this._layers[name] = style;
+                tile.style = style;
+                this._layers[tile.name] = tile;
                 for (const [sourceId, sourceDef] of Object.entries(style.sources)) {
+                    this._disableChangeEvent = true;
                     this._map.addSource(sourceId, sourceDef);
+                    this._disableChangeEvent = false;
                 }
-                this._layersSwitch.AddLayer(name);
+                this._layersSwitch.AddLayer(tile);
             });
-            
+
         } else {
-            this._layers[name] = tileUrl;
-            this._map.addSource(name, {
-                type: type,
-                tiles: [tileUrl],
-                tileSize: tileSize,
-                minzoom: minzoom,
-                maxzoom: maxzoom
+            this._layers[tile.name] = tile;
+            this._disableChangeEvent = true;
+            this._map.addSource(tile.name, {
+                type: tile?.type ?? 'raster',
+                tiles: [tile.url],
+                tileSize: tile?.size ?? 256,
+                minzoom: tile?.minzoom ?? 0,
+                maxzoom: tile?.maxzoom ?? 22
             });
-            this._layersSwitch.AddLayer(name);
+            this._disableChangeEvent = false;
+            this._layersSwitch.AddLayer(tile);
         }
 
     }
@@ -323,9 +344,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 });
             }
 
-            if(Object.isObject(this._layers[name])) {
+            if (this._layers[name]?.style) {
                 const layers = [];
-                const style = this._layers[name];
+                const style = this._layers[name]?.style;
                 for (const layer of style.layers) {
                     this._map.addLayer({ ...layer, id: `${name}-${layer.id}` });
                     try {
@@ -338,8 +359,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     layers.push(`${name}-${layer.id}`);
                 }
                 this._currentLayer = layers;
-                
-            } else {    
+
+            } else {
                 this._map.addLayer({
                     id: name,
                     type: 'raster',
@@ -360,11 +381,11 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     CreateSources(sources) {
         Object.map(sources, (name, type) => {
-            if(type === 'line') {
+            if (type === 'line') {
                 this._createLineSource(name);
-            } else if(type === 'circle') {
+            } else if (type === 'circle') {
                 this._createPointSource(name);
-            } else if(type === 'symbol') {
+            } else if (type === 'symbol') {
                 this._createObjectSource(name);
             }
         });
@@ -470,7 +491,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         const source = this._createObjectSource(name);
         const data = source._data;
         for (const objectJson of objectsJson) {
-            if(updateIfExists) {
+            if (updateIfExists) {
                 const idx = data.features.findIndex(f => f.id === objectJson.id);
                 if (idx === -1) {
                     data.features.push(objectJson)
@@ -518,7 +539,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         const source = this._createLineSource(name);
         const data = source._data;
         for (const objectJson of objectsJson) {
-            if(updateIfExists) {
+            if (updateIfExists) {
                 const idx = data.features.findIndex(f => f.id === objectJson.id);
                 if (idx === -1) {
                     data.features.push(objectJson)
@@ -566,7 +587,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         const source = this._createPointSource(name);
         const data = source._data;
         for (const objectJson of objectsJson) {
-            if(updateIfExists) {
+            if (updateIfExists) {
                 let idx = data.features.findIndex(f => f.id === objectJson.id);
                 if (idx === -1) {
                     data.features.push(objectJson);
@@ -945,9 +966,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 const id = features[0]?.properties?.id ?? 'no-id';
                 info += `, ID: ${id}`;
             }
-            if(callback) {
+            if (callback) {
                 info = callback(features, info);
-            } 
+            }
 
             this._infoDiv.html(info);
         };
