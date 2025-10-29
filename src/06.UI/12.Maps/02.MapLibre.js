@@ -49,15 +49,16 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this.RegisterEvent('Changed', false, 'When zoom or move event is faired');
         this.RegisterEvent('SelectionChanged', false, 'When selection is changed');
         this.RegisterEvent('MbTilesProtocol', false, 'When mbtiles protocol is requested');
+        this.RegisterEvent('LayerSwitched', false, 'When mbtiles protocol is requested');
     }
 
-    
+
 
     _loadMap() {
         Promise.all([
             Colibri.Common.LoadScript('https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js'),
             Colibri.Common.LoadStyles('https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css'),
-            Colibri.Common.LoadScript('https://cdn.jsdelivr.net/npm/density-clustering@1.3.0/lib/DBSCAN.min.js'),
+            // Colibri.Common.LoadScript('https://cdn.jsdelivr.net/npm/density-clustering@1.3.0/lib/DBSCAN.min.js'),
             // Colibri.Common.LoadScript('https://cdn.jsdelivr.net/npm/@turf/turf@7.2.0/turf.min.js')
         ]).then(() => {
             this._loaded = true;
@@ -71,21 +72,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 maxBounds: [
                     [-178, -85], // юго-западная граница (minLng, minLat)
                     [178, 85] // северо-восточная граница (maxLng, maxLat)
-                ]
+                ],
             });
-
-            maplibregl.addProtocol('mbtiles', async (params, abortController) => {
-                const result = await this.Dispatch('MbTilesProtocol', params);
-                if(result) {
-                    const data = params.data;
-                    if(data) {
-                        return {data: data};
-                    } else {
-                        throw new Error(`Tile fetch error: ${t.statusText}`);
-                    }
-                }
-            });
-
 
 
             this._map.boxZoom.disable();
@@ -276,6 +264,182 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /**
+     * Set or get administrative data geojson url
+     * @type {String}
+     */
+    get administrativeDataJson() {
+        return this._administrativeDataJson;
+    }
+    /**
+     * Set or get administrative data geojson url
+     * @type {String}
+     */
+    set administrativeDataJson(value) {
+        this._administrativeDataJson = value;
+        this._showAdministrativeDataJson();
+    }
+    _showAdministrativeDataJson() {
+        Colibri.Common.Wait(() => this._loaded).then(() => {
+            if(this._administrativeDataJson?.countries) {
+                this._map.addSource('countries', {
+                    type: 'geojson',
+                    data: this._administrativeDataJson.countries
+                });
+            }
+            let index = 1;
+            for(const roads of this._administrativeDataJson?.roads ?? []) {
+                this._map.addSource('roads' + (index ++), {
+                    type: 'geojson',
+                    data: roads
+                });
+            }
+        });
+    }
+
+    _createLayers(sourceName, styles) {
+        console.log(styles);
+        // Пример: полигоны
+        if(styles?.polygons) {
+            this._map.addLayer({
+                id: sourceName + '-polygons',
+                type: 'fill',
+                source: sourceName,
+                paint: styles?.polygons?.paint ?? {
+                    'fill-color': '#ff0000',
+                    'fill-opacity': 0.05
+                },
+                minzoom: styles?.polygons?.minzoom ?? 0,
+                maxzoom: styles?.polygons?.maxzoom ?? 24
+            });
+        }
+
+        if(styles?.lines) {
+            this._map.addLayer({
+                id: sourceName + '-lines',
+                type: 'line',
+                source: sourceName,
+                paint: styles?.lines?.paint ?? {
+                    'line-color': '#c0c0c0',
+                    'line-width': 1
+                },
+                minzoom: styles?.lines?.minzoom ?? 0,
+                maxzoom: styles?.lines?.maxzoom ?? 24
+            });
+        }
+
+        if(styles?.texts) {
+            this._map.addLayer({
+                id: sourceName + '-points',
+                type: 'symbol',
+                source: sourceName,
+                layout: styles?.texts.layout ?? {
+                    'text-field': ['get', 'name'], // поле name из GeoJSON
+                    'text-font': ['Open Sans Regular'],
+                    'text-size': 12
+                },
+                paint: styles?.texts.paint ?? {
+                    'text-color': '#000000',
+                    'text-halo-color': '#ffffff',
+                    'text-halo-width': 1
+                },
+                minzoom: styles?.texts?.minzoom ?? 0,
+                maxzoom: styles?.texts?.maxzoom ?? 24
+            });
+        }
+    }
+    _removeLayers(sourceName) {
+        
+        if(this._map.getLayer(sourceName + '-polygons')) {
+            this._map.removeLayer(sourceName + '-polygons');
+        }
+        if(this._map.removeLayer(sourceName + '-lines')) {
+            this._map.removeLayer(sourceName + '-lines');
+        }
+        if(this._map.removeLayer(sourceName + '-points')) {
+            this._map.removeLayer(sourceName + '-points');
+        }
+    }
+
+    ShowAdministrativeLayers() {
+            
+        const oldstyle = this._map.getStyle();
+        this._map.setStyle({ ...oldstyle, glyphs: 'https://tiles.tir.atg.loc/fonts/{fontstack}/{range}.pbf' });        
+        if(this._administrativeDataJson?.countries) {
+            this._createLayers('countries', {
+                polygons: {
+                    paint: {
+                        'fill-color': '#ffffff',
+                        'fill-opacity': 0.2
+                    },
+                    minzoom: 0,
+                    maxzoom: 24
+                },
+                lines: {
+                    paint: {
+                        'line-color': '#ffffff',
+                        'line-width': 2,
+                        'line-dasharray': [1, 2]
+                    },
+                    minzoom: 0,
+                    maxzoom: 24
+                },
+                texts: {
+                    layout: {
+                        'text-field': ['get', 'name'], // поле name из GeoJSON
+                        'text-font': ['Open Sans Regular'],
+                        'text-size': 12
+                    },
+                    paint: {
+                        'text-color': '#858585',
+                        'text-halo-color': '#000000',
+                        'text-halo-width': 1
+                    },
+                    minzoom: 0,
+                    maxzoom: 24
+                }
+            });
+        }
+        let index = 1;
+        for(const roads of this._administrativeDataJson?.roads ?? []) {
+            this._createLayers('roads' + (index ++), {
+                lines: {
+                    paint: {
+                        'line-color': '#f0dd89',
+                        'line-width': 4,
+                        'line-opacity': 0.5
+                    },
+                    minzoom: 0,
+                    maxzoom: 24
+                },
+                texts: {
+                    layout: {
+                        'text-field': ['get', 'name'], // поле name из GeoJSON
+                        'text-font': ['Open Sans Regular'],
+                        'text-size': 8
+                    },
+                    paint: {
+                        'text-color': '#000000',
+                        'text-halo-color': '#727272ff',
+                        'text-halo-width': 1
+                    },
+                    minzoom: 0,
+                    maxzoom: 24
+                }
+            });
+        }
+    }
+
+    HideAdministrativeLayers() {
+        if(this._administrativeDataJson?.countries) {
+            this._removeLayers('countries');
+        }
+        let index = 1;
+        for(const roads of this._administrativeDataJson?.roads ?? []) {
+            this._removeLayers('roads' + (index ++));
+        }
+    }
+
+    /**
      * Tiles string in format https://tile.openstreetmap.org/{z}/{x}/{y}.png
      * @type {Object}
      */
@@ -359,6 +523,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     layers.push(`${name}-${layer.id}`);
                 }
                 this._currentLayer = layers;
+                this.Dispatch('LayerSwitched', { name: name, layer: this._layers[name] });
 
             } else {
                 this._map.addLayer({
@@ -373,6 +538,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                         this._map.moveLayer(name, linesSourceName);
                     }
                 } catch (e) { }
+                this.Dispatch('LayerSwitched', { name: name, layer: this._layers[name] });
             }
 
 
