@@ -52,13 +52,38 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this.RegisterEvent('LayerSwitched', false, 'When mbtiles protocol is requested');
     }
 
+    _loadScriptsAndStyles() {
+        return new Promise((resolve, reject) => {
+            if(this._resourcesLoaded) {
+                resolve();
+                return;
+            }
 
+            this._resourcesLoaded = false;
+            Promise.all([
+                Colibri.Common.LoadScript('/res/maplibre/maplibre-gl.js'),
+                Colibri.Common.LoadStyles('/res/maplibre/maplibre-gl.css')
+            ]).then(() => {
+                this._resourcesLoaded = true;
+                resolve();
+            }).catch(() => {
+                Promise.all([
+                    Colibri.Common.LoadScript('https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js'),
+                    Colibri.Common.LoadStyles('https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css'),
+                ]).then(() => {
+                    this._resourcesLoaded = true;
+                    resolve();
+                }).catch(() => {
+                    reject();
+                });
+            });
+        })
+    }
 
     _loadMap() {
-        Promise.all([
-            Colibri.Common.LoadScript('https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js'),
-            Colibri.Common.LoadStyles('https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css'),
-        ]).then(() => {
+
+        this._loadScriptsAndStyles().then(() => {
+ 
             this._loaded = true;
             this._map = new maplibregl.Map({
                 container: this._mapContainer.container,
@@ -72,7 +97,6 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     [178, 85] // северо-восточная граница (maxLng, maxLat)
                 ],
             });
-
 
             this._map.boxZoom.disable();
             this._map.dragRotate.disable();
