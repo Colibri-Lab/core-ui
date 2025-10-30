@@ -270,7 +270,7 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
     Query(query, params) {
         return new Promise((resolve, reject) => {
             if (!App.Device.isWeb) {
-                App.Device.SqLite.Query(query, params).then(rows => {
+                App.Device.SqLite.Query(this._db, query, params).then(rows => {
                     resolve(rows);
                 });
             } else {
