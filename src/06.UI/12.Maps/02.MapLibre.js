@@ -1128,6 +1128,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._infoDiv.style.color = '#fff';
         this._infoDiv.style.fontFamily = 'monospace';
         this._infoDiv.style.borderRadius = '4px';
+        this._infoDiv.style.pointerEvents = 'none';
         this._infoDiv.textContent = '';
         this._map.getContainer().appendChild(this._infoDiv);
 

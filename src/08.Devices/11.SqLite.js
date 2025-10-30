@@ -14,7 +14,6 @@ Colibri.Devices.SqLite = class extends Destructable {
      */
     _device = null;
 
-
     /**
      * Instance variable representing the plugin.
      * @type {null}
@@ -42,6 +41,26 @@ Colibri.Devices.SqLite = class extends Destructable {
         return this._plugin.openDatabase({
             name,
             location
+        });
+    }
+
+    Query(db, query, params = []) {
+        return new Promise((resolve, reject) => {
+            db.transaction(function(tx) {
+                tx.executeSql(query, params, function(tx, results) {
+                    const data = [];
+                    for(let i = 0; i < results.rows.length; i++) {
+                        data.push(results.rows.item(i));
+                    }
+                    resolve(data);
+                }, function(error) {
+                    reject(error);
+                });
+            }, function(error) {
+                reject(error);
+            }, function() {
+                resolve([]);
+            });
         });
     }
 
@@ -130,6 +149,21 @@ Colibri.Devices.SqLite = class extends Destructable {
         });
     }
 
+    UpdateByCondition(db, table, data, condition) {
+        return new Promise((resolve, reject) => {
+            db.transaction(function(tx) {
+                const fields = Object.keys(data);
+                const d = fields.map(f => f + '=?');
+                const sqlUpdate = 'UPDATE "' + table + '" SET ' + d.join(', ') + ' WHERE ' + condition;
+                tx.executeSql(sqlUpdate, fields.map(field => data[field]));
+            }, function(error) {
+                reject(error);
+            }, function() {
+                resolve();
+            });
+        });
+    }
+
     Select(db, name, fields = '*', where = '', orderby = '', limit = '') {  
         return new Promise((resolve, reject) => {
             db.transaction(function(tx) {
@@ -146,6 +180,7 @@ Colibri.Devices.SqLite = class extends Destructable {
             });
         });
     }
+
     Delete(db, name, where) {
         return new Promise((resolve, reject) => {
             db.transaction(function(tx) {
@@ -158,6 +193,7 @@ Colibri.Devices.SqLite = class extends Destructable {
             });
         });
     }
+
     Close(db) {
         return new Promise((resolve, reject) => {
             db.close(function() {
