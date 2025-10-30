@@ -59,13 +59,13 @@ Colibri.Common = class {
      * @param {boolean} [resolveWhenTimedOut=false] - Whether to resolve the promise when the timeout occurs.
      * @returns {Promise} - A promise that resolves when the condition is true or the timeout occurs.
      */
-    static Wait(action, maxTimeout = 0, interval = 100, resolveWhenTimedOut = false) {
+    static Wait(action, maxTimeout = 0, interval = 100, resolveWhenTimedOut = false, params = null) {
         return new Promise((resolve, reject) => {
             
             let waiting = 0;
             const _checkAction = (a, h) => {
                 try {
-                    if(a() || (maxTimeout && waiting >= maxTimeout)) {
+                    if(a(params) || (maxTimeout && waiting >= maxTimeout)) {
                         h((maxTimeout && waiting >= maxTimeout));
                     }
                     else {
@@ -83,7 +83,7 @@ Colibri.Common = class {
                 if(timedout) {
                     resolveWhenTimedOut ? resolve() : reject();
                 } else {
-                    resolve();
+                    resolve(params);
                 }
             });
 
