@@ -280,32 +280,30 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
     _showAdministrativeDataJson() {
         Colibri.Common.Wait(() => this._loaded).then(() => {
-
-            if (this._administrativeDataJson?.countries) {
-                this._map.addSource('countries', {
-                    type: 'geojson',
-                    data: this._administrativeDataJson.countries
-                });
-            }
             Object.forEach(this._administrativeDataJson, (name, arr) => {
-                if (name !== 'countries') {
-                    let index = 1;
-                    for (const geodata of arr) {
-                        this._map.addSource(name + (index++), {
-                            type: 'geojson',
-                            data: geodata
-                        });
-                    }
+                let index = 1;
+                for (const geodata of arr) {
+                    this._map.addSource(name + index, {
+                        type: 'geojson',
+                        data: Array.isArray(geodata) ? geodata[0] : geodata
+                    });
+                    index++;
                 }
             });
-            let index = 1;
-            for (const roads of this._administrativeDataJson?.roads ?? []) {
-                this._map.addSource('roads' + (index++), {
-                    type: 'geojson',
-                    data: roads
-                });
-            }
         });
+    }
+
+    _moveBack(name) {
+        try {
+            if(!this._map.getLayer(name)) {
+                return;
+            }
+
+            const linesSourceName = this._layersZIndex[0];
+            if (linesSourceName && this._map.getLayer(linesSourceName)) {
+                this._map.moveLayer(name, linesSourceName);
+            }
+        } catch (e) { }
     }
 
     _createLayers(sourceName, styles) {
@@ -315,10 +313,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 id: sourceName + '-polygons',
                 type: 'fill',
                 source: sourceName,
-                paint: styles?.polygons?.paint ?? {
-                    'fill-color': '#ff0000',
-                    'fill-opacity': 0.05
-                },
+                paint: styles?.polygons?.paint ,
                 minzoom: styles?.polygons?.minzoom ?? 0,
                 maxzoom: styles?.polygons?.maxzoom ?? 24
             });
@@ -329,10 +324,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 id: sourceName + '-lines',
                 type: 'line',
                 source: sourceName,
-                paint: styles?.lines?.paint ?? {
-                    'line-color': '#c0c0c0',
-                    'line-width': 1
-                },
+                paint: styles?.lines?.paint,
                 minzoom: styles?.lines?.minzoom ?? 0,
                 maxzoom: styles?.lines?.maxzoom ?? 24
             });
@@ -343,13 +335,11 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 id: sourceName + '-points',
                 type: 'circle',
                 source: sourceName,
-                paint: styles?.points?.paint ?? {
-                    'circle-color': '#c0c0c0',
-                    'circle-width': 1
-                },
+                paint: styles?.points?.paint,
                 minzoom: styles?.points?.minzoom ?? 0,
                 maxzoom: styles?.points?.maxzoom ?? 24
             });
+            
         }
 
         if (styles?.texts) {
@@ -357,141 +347,92 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 id: sourceName + '-symbols',
                 type: 'symbol',
                 source: sourceName,
-                layout: styles?.texts.layout ?? {
-                    'text-field': ['get', 'name'], // поле name из GeoJSON
-                    'text-font': ['Open Sans Regular'],
-                    'text-size': 12
-                },
-                paint: styles?.texts.paint ?? {
-                    'text-color': '#000000',
-                    'text-halo-color': '#ffffff',
-                    'text-halo-width': 1
-                },
+                layout: styles?.texts.layout,
+                paint: styles?.texts.paint,
+                filter: ['!', ['==', ['get', 'name'], '']],
                 minzoom: styles?.texts?.minzoom ?? 0,
                 maxzoom: styles?.texts?.maxzoom ?? 24
             });
         }
+
+        this._moveBack(sourceName + '-points');
+        this._moveBack(sourceName + '-lines');
+        this._moveBack(sourceName + '-polygons');
+        this._moveBack(sourceName + '-symbols');
+
     }
     _removeLayers(sourceName) {
 
         if (this._map.getLayer(sourceName + '-polygons')) {
             this._map.removeLayer(sourceName + '-polygons');
         }
-        if (this._map.removeLayer(sourceName + '-lines')) {
+        if (this._map.getLayer(sourceName + '-lines')) {
             this._map.removeLayer(sourceName + '-lines');
         }
-        if (this._map.removeLayer(sourceName + '-points')) {
+        if (this._map.getLayer(sourceName + '-points')) {
             this._map.removeLayer(sourceName + '-points');
         }
-        if (this._map.removeLayer(sourceName + '-symbols')) {
+        if (this._map.getLayer(sourceName + '-symbols')) {
             this._map.removeLayer(sourceName + '-symbols');
         }
     }
 
-    ShowAdministrativeLayers() {
+    /**
+     * Glyphs url
+     * @type {String}
+     */
+    get glyphs() {
+        return this._glyphs;
+    }
+    /**
+     * Glyphs url
+     * @type {String}
+     */
+    set glyphs(value) {
+        this._glyphs = value;
+        this._showGlyphs();
+    }
+    _showGlyphs() {
+        Colibri.Common.Wait(() => this._loaded && !!this._map.getStyle()).then(() => {
+            const oldstyle = this._map.getStyle();
+            this._map.setStyle({ ...oldstyle, glyphs: this._glyphs });
+        });
+    }
 
-        const oldstyle = this._map.getStyle();
-        this._map.setStyle({ ...oldstyle, glyphs: 'https://tiles.tir.atg.loc/fonts/{fontstack}/{range}.pbf' });
-        if (this._administrativeDataJson?.countries) {
-            Colibri.Common.Wait(() => !!this._map.getSource('countries')).then(() => {
-                this._createLayers('countries', {
-                    polygons: {
-                        paint: {
-                            'fill-color': '#ffffff',
-                            'fill-opacity': 0.2
-                        },
-                        minzoom: 0,
-                        maxzoom: 24
-                    },
-                    lines: {
-                        paint: {
-                            'line-color': '#ffffff',
-                            'line-width': 2,
-                            'line-dasharray': [1, 2]
-                        },
-                        minzoom: 0,
-                        maxzoom: 24
-                    },
-                    texts: {
-                        layout: {
-                            'text-field': ['get', 'name'], // поле name из GeoJSON
-                            'text-font': ['Open Sans Regular'],
-                            'text-size': 12
-                        },
-                        paint: {
-                            'text-color': '#858585',
-                            'text-halo-color': '#000000',
-                            'text-halo-width': 1
-                        },
-                        minzoom: 0,
-                        maxzoom: 24
-                    }
-                });
-            });
-        }
-        let index = 1;
+    ShowAdministrativeLayers() {
+        this.HideAdministrativeLayers();
         Object.forEach(this._administrativeDataJson, (name, arr) => {
-            if (name !== 'countries') {
-                for (const geodata of arr) {
-                    Colibri.Common.Wait((params) => {
-                        return !!this._map.getSource(name + params.index);
-                    }, null, 100, false, { index }).then((params) => {
-                        this._createLayers(name + params.index, {
-                            lines: {
-                                paint: {
-                                    'line-color': '#f0dd89',
-                                    'line-width': 4,
-                                    'line-opacity': 0.5
-                                },
-                                minzoom: 10,
-                                maxzoom: 24
-                            },
-                            points: {
-                                paint: {
-                                    'circle-radius': 4,
-                                    'circle-color': '#ffc983',
-                                    'circle-stroke-width': 1,
-                                    'circle-stroke-color': '#ffffff',
-                                    'circle-opacity': 0.5
-                                },
-                                minzoom: 7,
-                                maxzoom: 24
-                            },
-                            texts: {
-                                layout: {
-                                    'text-field': ['get', 'name'], // поле name из GeoJSON
-                                    'text-font': ['Open Sans Regular'],
-                                    'text-size': 8
-                                },
-                                paint: {
-                                    'text-color': '#000000',
-                                    'text-halo-color': '#727272ff',
-                                    'text-halo-width': 1
-                                },
-                                minzoom: 7,
-                                maxzoom: 24
-                            }
-                        });
-                    });
-                    index++;
+            let index = 1;
+            for (let geodata of arr) {
+                let layers  = {polygons: null, lines: null, points: null, texts: null};
+                if(Array.isArray(geodata)) {
+                    layers = geodata[1];
+                    geodata = geodata[0];
                 }
+                Colibri.Common.Wait((params) => {
+                    console.log(name + params.index, !!this._map.getSource(name + params.index));
+                    return !!this._map.getSource(name + params.index);
+                }, null, 100, false, { index }).then((params) => {
+                    this._createLayers(name + params.index, layers);
+                });
+                index++;
             }
         });
+
+        this._administrativeDataShown = true;
 
     }
 
     HideAdministrativeLayers() {
-        if (this._administrativeDataJson?.countries) {
-            this._removeLayers('countries');
-        }
         Object.forEach(this._administrativeDataJson, (name, arr) => {
-            if (name !== 'countries') {
-                let index = 1;
-                for (const geodata of this._administrativeDataJson?.roads ?? []) {
-                    this._removeLayers(name + (index++));
-                }
+            let index = 1;
+            for (const geodata of arr ?? []) {
+                this._removeLayers(name + index);
+                index++;
             }
         });
+
+        this._administrativeDataShown = false;
     }
 
     /**
@@ -568,13 +509,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 const style = this._layers[name]?.style;
                 for (const layer of style.layers) {
                     this._map.addLayer({ ...layer, id: `${name}-${layer.id}` });
-                    try {
-                        const linesSourceName = this._layersZIndex[0];
-                        if (linesSourceName && this._map.getLayer(linesSourceName)) {
-                            this._map.moveLayer(`${name}-${layer.id}`, linesSourceName);
-                        }
-                    } catch (e) { }
-
+                    this._moveBack(`${name}-${layer.id}`);
                     layers.push(`${name}-${layer.id}`);
                 }
                 this._currentLayer = layers;
@@ -587,13 +522,12 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     source: name
                 });
                 this._currentLayer = name;
-                try {
-                    const linesSourceName = this._layersZIndex[0];
-                    if (linesSourceName && this._map.getLayer(linesSourceName)) {
-                        this._map.moveLayer(name, linesSourceName);
-                    }
-                } catch (e) { }
+                this._moveBack(name);
                 this.Dispatch('LayerSwitched', { name: name, layer: this._layers[name] });
+            }
+
+            if(this._administrativeDataShown) {
+                this.ShowAdministrativeLayers();
             }
 
 
