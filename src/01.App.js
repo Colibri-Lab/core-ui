@@ -182,7 +182,11 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                 if(this._csrfToken) {
                     headers['X-CSRF-TOKEN'] = this._csrfToken;
                 }
-                Colibri.IO.Request.Post(this._remoteDomain + '/settings', {}, headers).then((response) => {
+                let settingsPromise = Promise.resolve({status: 200, result: this._applicationSettings});
+                if(!this._applicationSettings) {
+                    settingsPromise = Colibri.IO.Request.Post(this._remoteDomain + '/settings', {}, headers);
+                }
+                settingsPromise.then((response) => {
                     if(response.status != 200) {                        
                         reject();
                     }
@@ -602,6 +606,10 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                 focused.blur();
             }
         });
+    }
+
+    SetSettings(settings) {
+        this._applicationSettings = settings;
     }
 
 

@@ -7,10 +7,6 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
 
     static Load() {
         return new Promise((resolve, reject) => {
-            if (!App.Device.isWeb) {
-                resolve();
-                return;
-            }
             if (Colibri.Storages.SqlWasm.loaded) {
                 initSqlJs({
                     locateFile: Colibri.Storages.SqlWasm.loaded
@@ -18,14 +14,14 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
                     resolve(SQL);
                 });
             } else {
-                Colibri.Common.LoadScript('/res/sqlwasm/sql-wasm.js').then(() => {
-                    Colibri.Storages.SqlWasm.loaded = file => `/res/sqlwasm/${file}`;
+                Colibri.Common.LoadScript((!App.Device.isElectron ? '/' : '') + 'res/sqlwasm/sql-wasm.js').then(() => {
+                    Colibri.Storages.SqlWasm.loaded = file => `${(!App.Device.isElectron ? '/' : '')}res/sqlwasm/${file}`;
                     initSqlJs({
                         locateFile: Colibri.Storages.SqlWasm.loaded
                     }).then((SQL) => {
                         resolve(SQL);
                     });
-                }).catch(() => {
+                }).catch(() => {                
                     Colibri.Common.LoadScript('https://unpkg.com/sql.js@1.8.0/dist/sql-wasm.js').then(() => {
                         Colibri.Storages.SqlWasm.loaded = file => `https://unpkg.com/sql.js@1.8.0/dist/${file}`;
                         initSqlJs({
@@ -44,40 +40,24 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         super();
         this.RegisterEvent('Loaded', false, 'When SQL is loaded');
 
-        structure = this._convertStructure(structure);
-
         Colibri.Storages.SqlWasm.Load().then(SQL => {
-
-            if (App.Device.isWeb) {
-                this._sql = SQL;
-                try {
-                    this._db = new this._sql.Database([]);
-                } catch (e) {
-                    console.log(e);
-                }
-
-                for (const table of structure) {
-                    try {
-                        this._db.run(table);
-                    } catch (e) {
-                        // console.log(e);
-                    }
-                }
-
-                this.Dispatch('Loaded');
-            } else {
-
-                this._db = App.Device.SqLite.Open('local.db');
-                for (const table of structure) {
-                    try {
-                        App.Device.SqLite.Query(this._db, table);
-                    } catch (e) {
-                        console.log(e);
-                    }
-                }
-
+            this._sql = SQL;
+            try {
+                this._db = new this._sql.Database([]);
+            } catch (e) {
+                console.log(e);
             }
 
+            structure = this._convertStructure(structure);
+            for (const table of structure) {
+                try {
+                    this._db.run(table);
+                } catch (e) {
+                    // console.log(e);
+                }
+            }
+
+            this.Dispatch('Loaded');
         });
 
     }
@@ -130,134 +110,65 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         return result;
     }
 
-    async saveDataOnDevice(data, name = 'local.db') {
-        const blob = data instanceof Blob ? this._base64ToUint8Array(data) : new Blob([data]);
-        const path = cordova.file.dataDirectory + name;
-
-        // Записываем файл
-        await new Promise((resolve, reject) => {
-            window.resolveLocalFileSystemURL(cordova.file.dataDirectory, dir => {
-                dir.getFile(name, { create: true }, file => {
-                    file.createWriter(writer => {
-                        writer.onwriteend = () => resolve(file);
-                        writer.onerror = reject;
-                        writer.write(blob);
-                    });
-                }, reject);
-            }, reject);
-        });
-
-    }
 
     Open(base64) {
         return new Promise((resolve, reject) => {
             this.Close();
-            if (!App.Device.isWeb) {
-                this.saveDataOnDevice(base64, 'local.db').then(() => {
-                    this._db = App.Device.SqLite.Open('local.db');
+            if (base64 instanceof Blob) {
+                base64.arrayBuffer().then(binaryArray => {
+                    const uint8 = new Uint8Array(binaryArray);
+                    this._db = new this._sql.Database(uint8);
+                    resolve();
                 });
             } else {
-                if (base64 instanceof Blob) {
-                    base64.arrayBuffer().then(binaryArray => {
-                        const uint8 = new Uint8Array(binaryArray);
-                        this._db = new this._sql.Database(uint8);
-                        resolve();
-                    });
-                } else {
-                    const binaryArray = this._base64ToUint8Array(base64);
-                    this._db = new this._sql.Database(binaryArray);
-                    resolve();
-                }
+                const binaryArray = this._base64ToUint8Array(base64);
+                this._db = new this._sql.Database(binaryArray);
+                resolve();
             }
         })
     }
 
     Close() {
-        if (!App.Device.isWeb) {
-            App.Device.SqLite.Close(this._db);
-        } else {
-            this._db.close();
-        }
+        this._db.close();
     }
 
     Insert(table, data) {
-        return new Promise((resolve, reject) => {
+        if (data.length == 0) {
+            return;
+        }
 
-            if (data.length == 0) {
-                resolve();
-                return;
+        const fields = Object.keys(data[0]);
+        const placeholders = fields.map(() => '?').join(', ');
+        const sql = `INSERT INTO "${table}" ("${fields.join('", "')}") VALUES (${placeholders})`;
+        const stmt = this._db.prepare(sql);
+
+        for (const row of data) {
+            const values = fields.map(f => {
+                let v = row[f];
+                if (v === undefined) v = null;
+                if (v === true || v === false) v = v ? 1 : 0;
+                if (Object.isObject(v) || Array.isArray(v)) v = JSON.stringify(v);
+                return v;
+            });
+
+            try {
+                stmt.run(values);
+            } catch (e) {
+                console.error('Ошибка вставки:', e, values);
             }
+        }
 
-            if (App.Device.isWeb) {
-                const fields = Object.keys(data[0]);
-                const placeholders = fields.map(() => '?').join(', ');
-                const sql = `INSERT INTO "${table}" ("${fields.join('", "')}") VALUES (${placeholders})`;
-                const stmt = this._db.prepare(sql);
-
-                for (const row of data) {
-                    const values = fields.map(f => {
-                        let v = row[f];
-                        if (v === undefined) v = null;
-                        if (v === true || v === false) v = v ? 1 : 0;
-                        if (Object.isObject(v) || Array.isArray(v)) v = JSON.stringify(v);
-                        return v;
-                    });
-
-                    try {
-                        stmt.run(values);
-                    } catch (e) {
-                        console.error('Ошибка вставки:', e, values);
-                    }
-                }
-
-                stmt.free();
-                resolve();
-            } else {
-                App.Device.SqLite.Insert(this._db, table, rows).then(() => {
-                    resolve();
-                }).catch((error) => {
-                    reject(error);
-                });
-            }
-
-        });
-
+        stmt.free();
     }
 
     Update(table, data, condition) {
-        return new Promise((resolve, reject) => {
-            if (App.Device.isWeb) {
-                const fields = Object.keys(data);
-                const d = fields.map(f => f + '=?');
-                try {
-                    this._db.run('UPDATE "' + table + '" SET ' + d.join(', ') + ' WHERE ' + condition, fields.map(field => data[field]));
-                    resolve();
-                } catch (e) {
-                    reject(e);
-                }
-            } else {
-                App.Device.SqLite.UpdateByCondition(this._db, table, data, condition)
-                    .then(() => resolve())
-                    .catch(error => reject(error));
-            }
-        });
+        const fields = Object.keys(data);
+        const d = fields.map(f => f + '=?');
+        this._db.run('UPDATE "' + table + '" SET ' + d.join(', ') + ' WHERE ' + condition, fields.map(field => data[field]));
     }
 
     Delete(table, condition = '') {
-        return new Promise((resolve, reject) => {
-            if (App.Device.isWeb) {
-                try {
-                    this._db.run('DELETE FROM "' + table + '"' + (condition ? ' WHERE ' + condition : ''), []);
-                    resolve();
-                } catch (e) {
-                    reject(e)
-                }
-            } else {
-                App.Device.SqLite.Delete(this._db, table, condition)
-                    .then(() => resolve())
-                    .catch(e => reject(e));
-            }
-        });
+        this._db.run('DELETE FROM "' + table + '"' + (condition ? ' WHERE ' + condition : ''), []);
     }
 
     /**
@@ -268,27 +179,20 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
      * @returns {Array} 
      */
     Query(query, params) {
-        return new Promise((resolve, reject) => {
-            if (!App.Device.isWeb) {
-                App.Device.SqLite.Query(this._db, query, params).then(rows => {
-                    resolve(rows);
-                });
-            } else {
-                const d = this._prepareQuery(query, params);
-                if (d.values.length > 0) {
-                    const stmt = this._db.prepare(d.query);
-                    stmt.bind(d.values);
-                    const rows = [];
-                    while (stmt.step()) {
-                        rows.push(stmt.getAsObject());
-                    }
-                    stmt.free();
-                    resolve(rows);
-                } else {
-                    resolve(this._convertToObjects(this._db.exec(d.query)));
-                }
+        // console.log(query, params);
+        const d = this._prepareQuery(query, params);
+        if (d.values.length > 0) {
+            const stmt = this._db.prepare(d.query);
+            stmt.bind(d.values);
+            const rows = [];
+            while (stmt.step()) {
+                rows.push(stmt.getAsObject());
             }
-        });
+            stmt.free();
+            return rows;
+        } else {
+            return this._convertToObjects(this._db.exec(d.query));
+        }
     }
 
     LoadAll(table) {
@@ -302,7 +206,7 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         return this.Query(query, d.params);
     }
 
-    async HistogramByField(table, filters, field, step, max, min) {
+    HistogramByField(table, filters, field, step, max, min) {
         filters = Object.cloneRecursive(filters);
         delete filters[field];
 
@@ -332,7 +236,7 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
                 min: field === 'datecreated' ? new Date(binStart * 1000).toLocalDateTimeString() : binStart,
                 max: field === 'datecreated' ? new Date(binEnd * 1000).toLocalDateTimeString() : binEnd
             });
-            const res = await this.Query(query, params);
+            const res = this.Query(query, params);
             ret.push({
                 start: field === 'datecreated' ? new Date(binStart * 1000).toDbDate() : binStart,
                 end: field === 'datecreated' ? new Date(binEnd * 1000).toDbDate() : binEnd,
@@ -343,25 +247,8 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
     }
 
     Export() {
-        return new Promise((resolve, reject) => {
-            if (App.Device.isWeb) {
-                const binaryArray = this._db.export();
-                resolve(new Blob([binaryArray], { type: 'application/octet-stream' }));
-            } else {
-                window.resolveLocalFileSystemURL(cordova.file.dataDirectory, dir => {
-                    dir.getFile('local.db', { create: false }, fileEntry => {
-                        fileEntry.file(file => {
-                            const reader = new FileReader();
-                            reader.onloadend = () => {
-                                const arrayBuffer = reader.result;
-                                resolve(new Blob([arrayBuffer], { type: 'application/octet-stream' }));
-                            };
-                            reader.readAsArrayBuffer(file);
-                        });
-                    });
-                });
-            }
-        });
+        const binaryArray = this._db.export();
+        return new Blob([binaryArray], { type: 'application/octet-stream' });
     }
 
     _convertToObjects(result) {

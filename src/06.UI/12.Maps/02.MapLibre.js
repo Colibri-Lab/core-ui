@@ -1025,16 +1025,34 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._sourceRemovePoint(name);
     }
 
+    DeleteLinesLike(sourceName, like) {
+        let source = this._createLineSource(sourceName);
+        let data = source._data;
+        data.features = data.features.filter(feature => feature.id.indexOf(like) === -1);
+        source.setData(data);
+    }
     DeleteLinesAllExcept(sourceName, except) {
         let source = this._createLineSource(sourceName);
         let data = source._data;
         data.features = data.features.filter(feature => except.indexOf(feature.id) !== -1);
         source.setData(data);
     }
+    DeletePointsLike(sourceName, like) {
+        let source = this._createPointSource(sourceName);
+        let data = source._data;
+        data.features = data.features.filter(feature => feature.id.indexOf(like) === -1);
+        source.setData(data);
+    }
     DeletePointsAllExcept(sourceName, except) {
         let source = this._createPointSource(sourceName);
         let data = source._data;
         data.features = data.features.filter(feature => except.indexOf(feature.id) !== -1);
+        source.setData(data);
+    }
+    DeleteObjectsLike(sourceName, like) {
+        let source = this._createObjectSource(sourceName);
+        let data = source._data;
+        data.features = data.features.filter(feature => feature.id.indexOf(like) === -1);
         source.setData(data);
     }
     DeleteObjectsAllExcept(sourceName, except) {
@@ -1392,7 +1410,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             if (e.originalEvent.shiftKey) {
                 name = 'marker-' + Date.Mc();
             } else {
-                this.DeleteByNameLike('marker-');
+                this.DeleteObjectsLike('marker-');
             }
             this.AddMarker(name, e.lngLat, icon)
         });
@@ -1401,7 +1419,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     DisableClickToMark() {
         try {
-            this.DeleteByNameLike('marker');
+            this.DeleteObjectsLike('marker');
             this._map.off('click', this._mapClickToMarkClicked);
         } catch (e) {
 
