@@ -58,8 +58,6 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         Promise.all([
             Colibri.Common.LoadScript('https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js'),
             Colibri.Common.LoadStyles('https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css'),
-            // Colibri.Common.LoadScript('https://cdn.jsdelivr.net/npm/density-clustering@1.3.0/lib/DBSCAN.min.js'),
-            // Colibri.Common.LoadScript('https://cdn.jsdelivr.net/npm/@turf/turf@7.2.0/turf.min.js')
         ]).then(() => {
             this._loaded = true;
             this._map = new maplibregl.Map({
@@ -485,7 +483,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             this._map.addSource(tile.name, {
                 type: tile?.type ?? 'raster',
                 tiles: [tile.url],
-                tileSize: tile?.size ?? 256,
+                tileSize: tile?.size ?? 256, 
                 minzoom: tile?.minzoom ?? 0,
                 maxzoom: tile?.maxzoom ?? 22
             });
