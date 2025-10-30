@@ -61,8 +61,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
             this._resourcesLoaded = false;
             Promise.all([
-                Colibri.Common.LoadScript('/res/maplibre/maplibre-gl.js'),
-                Colibri.Common.LoadStyles('/res/maplibre/maplibre-gl.css')
+                Colibri.Common.LoadScript((!App.Device.isWindows ? '/' : '') + 'res/maplibre/maplibre-gl.js'),
+                Colibri.Common.LoadStyles((!App.Device.isWindows ? '/' : '') + 'res/maplibre/maplibre-gl.css')
             ]).then(() => {
                 this._resourcesLoaded = true;
                 resolve();
