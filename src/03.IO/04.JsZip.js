@@ -7,7 +7,7 @@ Colibri.IO.JsZip = class {
             if(Colibri.IO.JsZip.loaded) {
                 resolve(new JSZip());
             } else {
-                Colibri.Common.LoadScript((!App.Device.isWindows ? '/' : '') + 'res/jszip/jszip.min.js').then(() => {
+                Colibri.Common.LoadScript((!App.Device.isElectron ? '/' : '') + 'res/jszip/jszip.min.js').then(() => {
                     Colibri.IO.JsZip.loaded = true;
                     resolve(new JSZip());
                 }).catch(() => {

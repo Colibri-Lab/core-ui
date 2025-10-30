@@ -14,8 +14,8 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
                     resolve(SQL);
                 });
             } else {
-                Colibri.Common.LoadScript((!App.Device.isWindows ? '/' : '') + 'res/sqlwasm/sql-wasm.js').then(() => {
-                    Colibri.Storages.SqlWasm.loaded = file => `${(!App.Device.isWindows ? '/' : '')}res/sqlwasm/${file}`;
+                Colibri.Common.LoadScript((!App.Device.isElectron ? '/' : '') + 'res/sqlwasm/sql-wasm.js').then(() => {
+                    Colibri.Storages.SqlWasm.loaded = file => `${(!App.Device.isElectron ? '/' : '')}res/sqlwasm/${file}`;
                     initSqlJs({
                         locateFile: file => Colibri.Storages.SqlWasm.loaded
                     }).then((SQL) => {
