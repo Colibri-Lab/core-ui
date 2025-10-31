@@ -939,6 +939,19 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         }
     }
 
+    
+    UpdateCirclesColor(source, color, condition = null) {
+        const sourceObj = this._createPointSource(source);
+        const data = sourceObj._data;
+        data.features = data.features.map(feature => {
+            if(!condition || condition(feature)) {
+                feature.properties.color = color;
+            }
+            return feature;
+        });
+        sourceObj.setData(data);
+    }
+
     AddCircles(source, latLngsLike, radius, color = 'red', updateIfExists = true) {
 
         this._sourceAddOrUpdatePoints(source, latLngsLike.map(latLngLike => {
@@ -960,6 +973,18 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 }
             };
         }), updateIfExists);
+    }
+
+    UpdateLinesColor(source, color, condition = null) {
+        const sourceObj = this._createLineSource(source);
+        const data = sourceObj._data;
+        data.features = data.features.map(feature => {
+            if(!condition || condition(feature)) {
+                feature.properties.color = color;
+            }
+            return feature;
+        });
+        sourceObj.setData(data);
     }
 
     AddLinesFromGeo(source, geolineObjects, color = 'red', weight = 1, updateIfExists = true) {

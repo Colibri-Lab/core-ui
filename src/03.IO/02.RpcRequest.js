@@ -130,6 +130,7 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
         const request = new Colibri.IO.Request();
         this._workingRequests[requestKeyword] = request;
 
+        const requestDomain = params?._requestDomain || this._remoteDomain || location.hostname;
         const requestMethod = params && params._requestMethod && params._requestMethod === 'get' ? 'Get' : 'Post';
         const requestType = params && params._requestType ? params._requestType : this._requestType;
         const requestCache = params && params._requestCache ? params._requestCache : false;
@@ -138,7 +139,7 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
         params && delete params._requestCache;
         headers.requester = location.hostname;
 
-        if (App.CsrfToken && (this._urlResolver || location.hostname === new URL(this._remoteDomain).hostname)) {
+        if (App.CsrfToken && (this._urlResolver || location.hostname === new URL(requestDomain).hostname)) {
             headers['X-CSRF-TOKEN'] = App.CsrfToken;
         }
         return new Promise((resolve, reject) => {
@@ -152,8 +153,8 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
                 url = this._urlResolver(this._moduleEntry, controller, method, requestType, params, headers, withCredentials);
             }
 
-            if (this._remoteDomain) {
-                url = this._remoteDomain + url;
+            if (requestDomain) {
+                url = requestDomain + url;
             }
 
             const requestUnique = String.MD5(JSON.stringify(Object.sortPropertiesRecursive({ url: url, params: params, headers: headers })));
