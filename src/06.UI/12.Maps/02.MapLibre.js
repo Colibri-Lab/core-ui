@@ -850,7 +850,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             geometry: { type: 'Point', coordinates: [latLngLike.lng, latLngLike.lat] },
             properties: { id: name, angle: azimuth, type: icon }
         };
-        if (this.Exists(source, name)) {
+        if (this._objectExists(source, name)) {
             this._sourceUpdateObject(source, name, geoData);
         } else {
             this._sourceAddObject(source, geoData);
@@ -908,7 +908,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             }
         };
 
-        if (this.Exists(source, name)) {
+        if (this._lineExists(source, name)) {
             this._sourceUpdateLine(source, name, geoData);
         } else {
             this._sourceAddLine(source, geoData);
@@ -932,7 +932,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             }
         };
 
-        if (this.Exists(source, name)) {
+        if (this._pointExists(source, name)) {
             this._sourceUpdatePoint(source, name, geoData);
         } else {
             this._sourceAddPoint(source, geoData);
@@ -993,7 +993,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             }
         };
 
-        if (this.Exists(source, name)) {
+        if (this._lineExists(source, name)) {
             this._sourceUpdateLine(source, name, geoData);
         } else {
             this._sourceAddLine(source, geoData);
@@ -1079,14 +1079,6 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         const data = source._data;
         const idx = data.features.findIndex(f => f.id === name);
         return idx !== -1;
-    }
-
-    Exists(sourceName, name) {
-        return this._objectExists(sourceName, name) || this._lineExists(sourceName, name) || this._pointExists(sourceName, name);
-    }
-
-    UpdateFeatures(sourceName, features) {
-
     }
 
     Feature(sourceName, name) {
@@ -1410,16 +1402,16 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             if (e.originalEvent.shiftKey) {
                 name = 'marker-' + Date.Mc();
             } else {
-                this.DeleteObjectsLike('marker-');
+                this.DeleteObjectsLike('markers', 'marker-');
             }
-            this.AddMarker(name, e.lngLat, icon)
+            this.AddMarker('markers', name, e.lngLat, icon)
         });
         this._map.on('click', this._mapClickToMarkClicked);
     }
 
     DisableClickToMark() {
         try {
-            this.DeleteObjectsLike('marker');
+            this.DeleteObjectsLike('markers', 'marker-');
             this._map.off('click', this._mapClickToMarkClicked);
         } catch (e) {
 
