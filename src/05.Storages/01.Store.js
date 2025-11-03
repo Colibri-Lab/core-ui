@@ -67,7 +67,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * Saves the store data in the permanent storage.
      */
     KeepInPermanentStore() {
-        const __domain = location.hostname;
+        const __domain = location.hostname || 'localhost';
         let savingData = this.ExportData();
         savingData = Object.assign(savingData, {__domain: __domain});
         App?.Db?.GetDataById(this._name, __domain).then(() => {
@@ -84,11 +84,16 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      */
     RetreiveFromPermanentStore() {
         if(App.Db.StoreExists(this._name)) {
-            App?.Db?.GetDataById(this._name, location.hostname).then(data => {
+            App?.Db?.GetDataById(this._name, location.hostname || 'localhost').then(data => {
+                alert('Retreived' + JSON.stringify(data));
                 this._data = data;
                 // Colibri.Common.StartTimer(this._name + '-store-dump', 15000, () => {
                 //     this.KeepInPermanentStore();
                 // });
+                this.Dispatch('StoreRetreived', {});
+                this.Dispatch('StoreUpdated', {});
+            }).catch(() => {
+                this._data = {};
                 this.Dispatch('StoreRetreived', {});
                 this.Dispatch('StoreUpdated', {});
             });
