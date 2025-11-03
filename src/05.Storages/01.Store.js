@@ -67,16 +67,19 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * Saves the store data in the permanent storage.
      */
     KeepInPermanentStore() {
-        const __domain = location.hostname || 'localhost';
-        let savingData = this.ExportData();
-        savingData = Object.assign(savingData, {__domain: __domain});
-        App?.Db?.GetDataById(this._name, __domain).then(() => {
-            App.Db.UpdateData(this._name, savingData);
-        }).catch(() => {
-            App.Db.AddData(this._name, savingData);
-        }).finally(() => {
-            this.Dispatch('StoreKeeped', {});
-        });
+        return new Promise((resolve, reject) => {
+            const __domain = location.hostname || 'localhost';
+            let savingData = this.ExportData();
+            savingData = Object.assign(savingData, {__domain: __domain});
+            App?.Db?.GetDataById(this._name, __domain).then(() => {
+                App.Db.UpdateData(this._name, savingData);
+            }).catch(() => {
+                App.Db.AddData(this._name, savingData);
+            }).finally(() => {
+                this.Dispatch('StoreKeeped', {});
+                resolve();
+            });
+        })
     }
 
     /**
@@ -85,17 +88,16 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
     RetreiveFromPermanentStore() {
         if(App.Db.StoreExists(this._name)) {
             App?.Db?.GetDataById(this._name, location.hostname || 'localhost').then(data => {
-                alert('Retreived' + JSON.stringify(data));
-                this._data = data;
+                Object.forEach(data, (name, value) => {
+                    this.Set(this._name + '.' + name, value);
+                });
                 // Colibri.Common.StartTimer(this._name + '-store-dump', 15000, () => {
                 //     this.KeepInPermanentStore();
                 // });
-                this.Dispatch('StoreRetreived', {});
-                this.Dispatch('StoreUpdated', {});
             }).catch(() => {
-                this._data = {};
+                this.Clear();
+            }).finally(() => {
                 this.Dispatch('StoreRetreived', {});
-                this.Dispatch('StoreUpdated', {});
             });
         }
     }
@@ -566,7 +568,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @param {boolean} [nodispatch=false] - Whether to dispatch events after setting the data.
      * @returns {object} The updated storage object.
      */
-    Set(path, d, nodispatch = false) {
+    async Set(path, d, nodispatch = false) {
 
         let p = path.split('.');
         let first = p.shift();
@@ -607,7 +609,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
             this.Dispatch('StoreUpdated', {path: path, data: d});
         }
         if(this.permanent) {
-            this.KeepInPermanentStore();
+            await this.KeepInPermanentStore();
         }
         return this;
 
