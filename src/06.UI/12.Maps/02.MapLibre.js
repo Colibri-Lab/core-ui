@@ -198,7 +198,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             { lng: northEast.lng, lat: northEast.lat }
         ];
         this._zoom = this._map.getZoom();
-        this._center = this._map.getCenter();
+        this._center = {lat: this._map.getCenter().lat, lng: this._map.getCenter().lng};
         this._rotation = this._map.getBearing();
     }
 
@@ -231,7 +231,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     Fly(center, zoom) {
         Colibri.Common.Wait(() => this._loaded).then(() => {
-            this._map.flyTo({ center: center, zoom: zoom });
+            this._map.jumpTo({ center: center, zoom: zoom });
         });
     }
 

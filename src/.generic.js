@@ -629,6 +629,19 @@ Object.isObject = function (o) {
     return o instanceof Object && !Array.isArray(o);
 }
 
+Object.isPlainObject = function (obj) {
+    if (obj === null || typeof obj !== 'object') return false;
+    return Object.getPrototypeOf(obj) === Object.prototype || Object.getPrototypeOf(obj) === null;
+};
+
+Object.isFile = function (o) {
+    return o instanceof File && !Array.isArray(o);
+}
+
+Object.isDate = function (o) {
+    return o instanceof Date && !Array.isArray(o);
+}
+
 Object.isEmpty = function (o) {
     return Object.values(o).filter(v => v !== '' && v !== null).length === 0;
 };
@@ -900,39 +913,45 @@ Object.cloneRecursive = function (object, callback = null, excludeKeys = []) {
         object = JSON.parse(object);
     }
 
+    let ret;
     if (Array.isArray(object)) {
-        let ret = [];
+        ret = [];
         for (const o of object) {
-            if (o instanceof Object && !(o instanceof Date) && !(o instanceof File)) {
+            if (Object.isPlainObject(o)) {
                 ret.push(Object.cloneRecursive(o, callback, excludeKeys));
             } else {
                 ret.push(o);
             }
         }
-        return ret;
+    } else if(Object.isPlainObject(object)) {
+        ret = {};
+        const keys = Object.keys(object); 
+        for(const prop of keys) {
+            const value = object[prop];
+    
+            if (excludeKeys.indexOf(prop) !== -1) {
+                return true;
+            }
+    
+            if (value instanceof Function) {
+                ret[prop] = value;
+            }
+            else if (Array.isArray(value)) {
+                ret[prop] = value.map((v) => {
+                    return Object.isPlainObject(v) ? Object.cloneRecursive(v) : v;
+                });
+            }
+            else if (Object.isPlainObject(value)) {
+                ret[prop] = Object.cloneRecursive(value, callback, excludeKeys);
+            }
+            else {
+                ret[prop] = value;
+            }
+        }
+    } else {
+        ret = object;
     }
 
-    let ret = {};
-    Object.forEach(object, (prop, value) => {
-        if (excludeKeys.indexOf(prop) !== -1) {
-            return true;
-        }
-
-        if (value instanceof Function) {
-            ret[prop] = value;
-        }
-        else if (Array.isArray(value)) {
-            ret[prop] = value.map((v) => {
-                return v instanceof Object && !(v instanceof Date) && !(v instanceof File) ? Object.cloneRecursive(v) : v;
-            });
-        }
-        else if (value instanceof Object && !(value instanceof Date) && !(value instanceof File)) {
-            ret[prop] = Object.cloneRecursive(value, callback, excludeKeys);
-        }
-        else {
-            ret[prop] = value;
-        }
-    });
     if (callback) {
         ret = callback(ret);
     }
@@ -945,48 +964,54 @@ Object.cloneRecursive = function (object, callback = null, excludeKeys = []) {
  * @param {Object} object2 - The second object to compare.
  * @returns {boolean} Returns true if the objects are shallowly equal, false otherwise.
  */
-Object.shallowEqual = function (object1, object2) {
-    if (!object1 || !object2) {
-        return object1 == object2;
+Object.shallowEqual = function (a, b) {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (!Object.isObject(a) || !Object.isObject(b)) return false;
+
+    if (Array.isArray(a) && Array.isArray(b)) {
+        return Array.shallowEqual(a, b);
     }
-    if (typeof object1 !== 'object' || typeof object2 !== 'object') {
-        return object1 == object2;
-    }
-    const keys1 = Object.keys(object1);
-    const keys2 = Object.keys(object2);
-    if (keys1.length !== keys2.length) {
-        return false;
-    }
-    for (let key of keys1) {
-        if (typeof object1[key] != typeof object2[key]) {
-            return false;
-        }
-        if (Array.isArray(object1[key])) {
-            if (!object1[key].equals(object2[key])) {
-                return false;
-            }
-        }
-        else if (object1[key] instanceof Object) {
-            if (!Object.shallowEqual(object1[key], object2[key])) {
-                return false;
-            }
-        }
-        else if (object1[key] !== object2[key]) {
+
+    if (Array.isArray(a) !== Array.isArray(b)) return false;
+
+    const keysA = Object.keys(a);
+    const keysB = Object.keys(b);
+    if (keysA.length !== keysB.length) return false;
+
+    for (const key of keysA) {
+        if (!keysB.includes(key)) return false;
+
+        const va = a[key], vb = b[key];
+        if (Array.isArray(va) && Array.isArray(vb)) {
+            if (!Array.shallowEqual(va, vb)) return false;
+        } else if (Object.isObject(va) && Object.isObject(vb)) {
+            if (!Object.shallowEqual(va, vb)) return false;
+        } else if (va !== vb) {
             return false;
         }
     }
+
     return true;
 };
 
-Array.shallowEqual = function (array1, array2) {
-    if (array1.length != array2.length) {
-        return false;
-    }
-    for (let i = 0; i < array1.length; i++) {
-        if (array1[i] != array2[i]) {
+Array.shallowEqual = function (a, b) {
+    if (a === b) return true;
+    if (!Array.isArray(a) || !Array.isArray(b)) return false;
+    if (a.length !== b.length) return false;
+
+    for (let i = 0; i < a.length; i++) {
+        const va = a[i], vb = b[i];
+
+        if (Array.isArray(va) && Array.isArray(vb)) {
+            if (!Array.shallowEqual(va, vb)) return false;
+        } else if (Object.isObject(va) && Object.isObject(vb)) {
+            if (!Object.shallowEqual(va, vb)) return false;
+        } else if (va !== vb) {
             return false;
         }
     }
+
     return true;
 }
 

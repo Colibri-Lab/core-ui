@@ -67,39 +67,24 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * Saves the store data in the permanent storage.
      */
     KeepInPermanentStore() {
-        return new Promise((resolve, reject) => {
-            const __domain = location.hostname || 'localhost';
-            let savingData = this.ExportData();
-            savingData = Object.assign(savingData, {__domain: __domain});
-            App?.Db?.GetDataById(this._name, __domain).then(() => {
-                App.Db.UpdateData(this._name, savingData);
-            }).catch(() => {
-                App.Db.AddData(this._name, savingData);
-            }).finally(() => {
-                this.Dispatch('StoreKeeped', {});
-                resolve();
-            });
-        })
+
+        App.Browser.Set((location.hostname || 'localhost') + '.' + this._name, JSON.stringify(this.ExportData()));
+        this.Dispatch('StoreKeeped', {});
+
     }
 
     /**
      * Retrieves store data from the permanent storage.
      */
     RetreiveFromPermanentStore() {
-        if(App.Db.StoreExists(this._name)) {
-            App?.Db?.GetDataById(this._name, location.hostname || 'localhost').then(data => {
-                Object.forEach(data, (name, value) => {
-                    this.Set(this._name + '.' + name, value);
-                });
-                // Colibri.Common.StartTimer(this._name + '-store-dump', 15000, () => {
-                //     this.KeepInPermanentStore();
-                // });
-            }).catch(() => {
-                this.Clear();
-            }).finally(() => {
-                this.Dispatch('StoreRetreived', {});
-            });
+        const data = App.Browser.Get((location.hostname || 'localhost') + '.' + this._name);
+        if(data) {
+            this._data = JSON.parse(data);
+        } else {
+            this._data = {};
         }
+        this.Dispatch('StoreRetreived', {});
+        this.DispatchAll();
     }
     
     /**
@@ -389,6 +374,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         return this;
     }
 
+    DispatchAll() {
+        const keys = Object.keys(this._data);
+        for(const key of keys) {
+            this.DispatchPath(this._name + '.' + key);
+        }
+    }
+
     /**
      * Dispatches events along the specified path.
      * @param {string} path - The path along which events should be dispatched.
@@ -557,8 +549,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
             }
         }
 
-        return data;
+        return Object.isObject(data) || Array.isArray(data) ? Object.cloneRecursive(data) : data;
 
+    }
+
+    _raiseUpdatedEvent(path, d) {
+        this.DispatchPath(path);
+        this.Dispatch('StoreUpdated', {path: path, data: d});
     }
 
     /**
@@ -570,6 +567,10 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      */
     async Set(path, d, nodispatch = false) {
 
+        if(Object.isPlainObject(d) || Array.isArray(d)) {
+            d = Object.cloneRecursive(d);
+        }
+
         let p = path.split('.');
         let first = p.shift();
         if (first !== this._name) {
@@ -577,7 +578,11 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         }
 
         if (p.length === 0) {
-            this._data = d;
+            // if changed
+            if(!Object.shallowEqual(this._data, d)) {
+                this._data = d;
+                this._raiseUpdatedEvent(path, d);
+            }
             return this;
         }
 
@@ -594,23 +599,29 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
             }
         }
 
-        if(d !== null) {
-            if(this._data === null || this._data === undefined) {
-                this._data = {};
-            }
-            eval(realpath + ' = d;');
-        }
-        else {
-            eval('delete ' + realpath + ';');
+        if(this._data === null || this._data === undefined) {
+            this._data = {};
         }
 
-        if(!nodispatch) {
-            this.DispatchPath(path);
-            this.Dispatch('StoreUpdated', {path: path, data: d});
+        let isChanged = false;
+        eval('isChanged = !Object.shallowEqual(' + realpath + ', d);');
+        if(isChanged) {
+            if(d !== null) {
+                eval(realpath + ' = d;');
+            }
+            else {
+                eval('delete ' + realpath + ';');
+            }
         }
+
+        if(!nodispatch && isChanged) {
+            this._raiseUpdatedEvent(path, d);
+        }
+
         if(this.permanent) {
             await this.KeepInPermanentStore();
         }
+        
         return this;
 
     }
