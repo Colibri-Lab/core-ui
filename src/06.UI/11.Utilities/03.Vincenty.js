@@ -425,17 +425,25 @@ Colibri.UI.Utilities.Vincenty = class {
                 // проверяем толерансы
                 let withinTolerance = true;
                 for (const t of tolerances) {
-                    const value1 = p1[t.parameter];
-                    const value2 = p2[t.parameter];
+                    let value1 = p1[t.parameter];
+                    let value2 = p2[t.parameter];
 
                     if (value1 == null || value2 == null) {
                         withinTolerance = false;
                         break;
                     }
 
+                    if(t.parameter === 'datecreated') {
+                        value1 = new Date(value1).getTime();
+                        value2 = new Date(value2).getTime();
+                    } else {
+                        value1 = parseFloat(value1);
+                        value2 = parseFloat(value2);
+                    }
+
                     // переводим в «реальные единицы»
                     const diff = Math.abs(value1 - value2) * t.unit;
-                    if (diff > t.tolerance) {
+                    if (diff > parseFloat(t.tolerance)) {
                         withinTolerance = false;
                         break;
                     }
