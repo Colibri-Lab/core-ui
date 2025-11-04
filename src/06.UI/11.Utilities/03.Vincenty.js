@@ -405,11 +405,12 @@ Colibri.UI.Utilities.Vincenty = class {
 
     /**
      * Найти пересечения всех пар точек с азимутами
-     * @param {Array<{lat:number,lng:number,azimuth:number}>} points
+     * @param {Array<{lat:number,lng:number,azimuth:number, ...params}>} points
      * @param {Array<{lat:number,lng:number}>} [bbox]
+     * @param {Array<{parameter:string,tolerance:number,unit:number}>} tolerances
      * @returns {Array<{lat:number,lng:number}>}
      */
-    static Intersections(points, bbox = null, maxDistance = 20000000) {
+    static Intersections(points, bbox = null, maxDistance = 20000000, tolerances = []) {
         const results = [];
         const len = points.length;
 
@@ -420,6 +421,27 @@ Colibri.UI.Utilities.Vincenty = class {
 
                 // исключаем совпадающие точки
                 if (Math.abs(p1.lat - p2.lat) < 1e-9 && Math.abs(p1.lng - p2.lng) < 1e-9) continue;
+
+                // проверяем толерансы
+                let withinTolerance = true;
+                for (const t of tolerances) {
+                    const value1 = p1[t.parameter];
+                    const value2 = p2[t.parameter];
+
+                    if (value1 == null || value2 == null) {
+                        withinTolerance = false;
+                        break;
+                    }
+
+                    // переводим в «реальные единицы»
+                    const diff = Math.abs(value1 - value2) * t.unit;
+                    if (diff > t.tolerance) {
+                        withinTolerance = false;
+                        break;
+                    }
+                }
+
+                if (!withinTolerance) continue;
 
                 const inter = this.intersection(p1, p2, bbox, maxDistance);
                 if (inter) {
