@@ -432,7 +432,6 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     geodata = geodata[0];
                 }
                 Colibri.Common.Wait((params) => {
-                    console.log(name + params.index, !!this._map.getSource(name + params.index));
                     return !!this._map.getSource(name + params.index);
                 }, null, 100, false, { index }).then((params) => {
                     this._createLayers(name + params.index, layers);
