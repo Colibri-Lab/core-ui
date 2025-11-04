@@ -605,6 +605,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
         let isChanged = false;
         eval('isChanged = !Object.shallowEqual(' + realpath + ', d);');
+        console.log(path, isChanged);
         if(isChanged) {
             if(d !== null) {
                 eval(realpath + ' = d;');

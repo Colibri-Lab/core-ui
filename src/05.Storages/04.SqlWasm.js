@@ -36,7 +36,7 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
     }
 
 
-    constructor(structure) {
+    constructor() {
         super();
         this.RegisterEvent('Loaded', false, 'When SQL is loaded');
 
@@ -48,18 +48,23 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
                 console.log(e);
             }
 
-            structure = this._convertStructure(structure);
-            for (const table of structure) {
-                try {
-                    this._db.run(table);
-                } catch (e) {
-                    // console.log(e);
-                }
-            }
-
             this.Dispatch('Loaded');
         });
 
+    }
+
+    CreateEmptyDatabase(structure) {
+
+        structure = this._convertStructure(structure);
+        for (const table of structure) {
+            try {
+                this._db.run(table);
+            } catch (e) {
+                // console.log(e);
+            }
+        }
+
+        return Promise.resolve();
     }
 
     get dbCreated() {

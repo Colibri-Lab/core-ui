@@ -9,24 +9,48 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
         return Promise.resolve();
     }
 
-    constructor(structure = [], name = 'local.db') {
+    constructor(name = 'local.db') {
         super();
         this.RegisterEvent('Loaded', false, 'When SQL is loaded');
         this._name = name;
 
         document.addEventListener('deviceready', () => {
             this._db = window.sqlitePlugin.openDatabase({ name, location: 'default' }, () => {
-                structure = this._convertStructure(structure);
-                for (const table of structure) {
-                    try {
-                        this._db.executeSql(table, [], () => { }, () => { });
-                    } catch (e) { }
-                }
                 this.Dispatch('Loaded');
             }, (err) => {
                 console.error('Open database error:', err);
             });
         });
+    }
+
+    
+    CreateEmptyDatabase(structure) {
+        structure = this._convertStructure(structure);
+        return new Promise((resolve, reject) => {
+
+            let counts = structure.length * 2;
+
+            for (const table of structure) {
+                try {
+                    const dropandcreate = table.split(';');
+                    this._db.executeSql(dropandcreate[0], [], () => {
+                        counts --;
+                    }, () => { });
+                    this._db.executeSql(dropandcreate[1], [], () => {
+                        counts --;
+                    }, () => { });
+                } catch (e) { 
+                    console.log('Create table error:', e);
+                }
+            }
+
+            Colibri.Common.Wait(() => counts === 0).then(() => {
+                resolve();
+            })
+
+        });
+
+
     }
 
     get dbCreated() {

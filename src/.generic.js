@@ -972,6 +972,15 @@ Object.shallowEqual = function (a, b) {
     if (Array.isArray(a) && Array.isArray(b)) {
         return Array.shallowEqual(a, b);
     }
+    
+    if (a instanceof Date && b instanceof Date) return a.getTime() === b.getTime();
+
+    if (a instanceof File && b instanceof File) {
+        return a.name === b.name &&
+               a.size === b.size &&
+               a.type === b.type &&
+               a.lastModified === b.lastModified;
+    }
 
     if (Array.isArray(a) !== Array.isArray(b)) return false;
 
@@ -1007,6 +1016,10 @@ Array.shallowEqual = function (a, b) {
             if (!Array.shallowEqual(va, vb)) return false;
         } else if (Object.isObject(va) && Object.isObject(vb)) {
             if (!Object.shallowEqual(va, vb)) return false;
+        } else if (va instanceof Date && vb instanceof Date) {
+            if (va.getTime() !== vb.getTime()) return false;
+        } else if (va instanceof File && vb instanceof File) {
+            if (va.name !== vb.name || va.size !== vb.size || va.type !== vb.type || va.lastModified !== vb.lastModified) return false;
         } else if (va !== vb) {
             return false;
         }

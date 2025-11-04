@@ -568,6 +568,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     _createLineSource(name) {
+        if(!this.loaded) {
+            return;
+        }
         if (!this._linesSources[name]) {
             this._map.addSource(name + '-source', {
                 type: 'geojson',
@@ -599,6 +602,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     _createPointSource(name) {
+        if(!this.loaded) {
+            return;
+        }
         if (!this._pointsSources[name]) {
             this._map.addSource(name + '-source', {
                 type: 'geojson',
@@ -628,6 +634,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     _createObjectSource(name) {
+        if(!this.loaded) {
+            return;
+        }
         if (!this._objectsSources[name]) {
             this._map.addSource(name + '-source', {
                 type: 'geojson',
@@ -941,6 +950,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     
     UpdateCirclesColor(source, color, condition = null) {
         const sourceObj = this._createPointSource(source);
+        if(!sourceObj) {
+            return;
+        }
         const data = sourceObj._data;
         data.features = data.features.map(feature => {
             if(!condition || condition(feature)) {
@@ -976,6 +988,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     UpdateLinesColor(source, color, condition = null) {
         const sourceObj = this._createLineSource(source);
+        if(!sourceObj) {
+            return;
+        }
         const data = sourceObj._data;
         data.features = data.features.map(feature => {
             if(!condition || condition(feature)) {
