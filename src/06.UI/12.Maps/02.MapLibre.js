@@ -934,8 +934,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             },
             properties: {
                 id: name,
-                'radius': radius,
-                'color': color,
+                'radius': latLngLike.radius ?? radius,
+                'color': latLngLike.color ?? circle,
                 'opacity': 1
             }
         };
@@ -946,7 +946,6 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             this._sourceAddPoint(source, geoData);
         }
     }
-
     
     UpdateCirclesColor(source, color, condition = null) {
         const sourceObj = this._createPointSource(source);
@@ -978,8 +977,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 },
                 properties: {
                     id: latLngLike.id,
-                    'radius': radius,
-                    'color': color,
+                    'radius': latLngLike.radius ?? radius,
+                    'color': latLngLike.color ?? color,
                     'opacity': 1
                 }
             };

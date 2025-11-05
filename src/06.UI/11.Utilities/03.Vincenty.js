@@ -395,6 +395,29 @@ Colibri.UI.Utilities.Vincenty = class {
         const dist = Colibri.UI.Utilities.Vincenty.haversine(lat1, lon1, intersection.lat, intersection.lng);
         if (dist > maxDistance) return null;
 
+        const geoline = Colibri.UI.Utilities.Vincenty.Line(p1.lat, p1.lng, p1.azimuth, maxDistance, 100).coordinates;
+        if (geoline && geoline.length > 1) {
+            let cumDist = 0;
+            let found = false;
+            for (let i = 0; i < geoline.length - 1; i++) {
+                const pt1 = geoline[i];
+                const pt2 = geoline[i + 1];
+                const dSeg = Colibri.UI.Utilities.Vincenty.haversine(pt1[0], pt1[1], pt2[0], pt2[1]);
+                cumDist += dSeg;
+
+                const dToIntersection = Colibri.UI.Utilities.Vincenty.haversine(pt1[0], pt1[1], intersection.lat, intersection.lng);
+                if (dToIntersection <= dSeg) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found || cumDist > maxDistance) return null;
+        } else {
+            // fallback — проверка по прямой
+            const dist = Colibri.UI.Utilities.Vincenty.haversine(lat1, lon1, intersection.lat, intersection.lng);
+            if (dist > maxDistance) return null;
+        }
+
         // проверка bbox
         if (bbox && !Colibri.UI.Utilities.Vincenty.InsideBBox(intersection.lat, intersection.lng, bbox)) return null;
 
@@ -431,7 +454,7 @@ Colibri.UI.Utilities.Vincenty = class {
                         break;
                     }
 
-                    if(t.parameter === 'datecreated') {
+                    if (t.parameter === 'datecreated') {
                         value1 = new Date(value1).getTime();
                         value2 = new Date(value2).getTime();
                     } else {
@@ -441,16 +464,16 @@ Colibri.UI.Utilities.Vincenty = class {
 
                     // переводим в «реальные единицы»
                     let unit = t.unit;
-                    if(unit === -1) {
+                    if (unit === -1) {
                         unit = (value1 / 100) * parseFloat(t.tolerance);
                     }
-                    
+
                     const diff = Math.abs(value1 - value2) * unit;
                     if (diff > parseFloat(t.tolerance)) {
                         withinTolerance = false;
                         break;
                     }
-                    
+
                 }
 
                 if (!withinTolerance) continue;
