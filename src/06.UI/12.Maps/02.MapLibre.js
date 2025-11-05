@@ -1189,8 +1189,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             let info = `Lat: ${lat}, Lng: ${lng}`;
             if (features.length) {
                 // Если есть, выводим ID первого объекта
-                const id = features[0]?.properties?.id ?? 'no-id';
-                info += `, ID: ${id}`;
+                const id = features[0]?.properties?.id ?? null;
+                info = info + (id ? `, ID: ${id}` : '');
             }
             if (callback) {
                 info = callback(features, info);

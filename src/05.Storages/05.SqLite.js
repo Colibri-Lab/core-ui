@@ -23,7 +23,7 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
         });
     }
 
-    
+
     CreateEmptyDatabase(structure) {
         structure = this._convertStructure(structure);
         return new Promise((resolve, reject) => {
@@ -34,12 +34,12 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
                 try {
                     const dropandcreate = table.split(';');
                     this._db.executeSql(dropandcreate[0], [], () => {
-                        counts --;
+                        counts--;
                     }, () => { });
                     this._db.executeSql(dropandcreate[1], [], () => {
-                        counts --;
+                        counts--;
                     }, () => { });
-                } catch (e) { 
+                } catch (e) {
                     console.log('Create table error:', e);
                 }
             }
@@ -247,41 +247,20 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
 
     Export() {
         return new Promise((resolve, reject) => {
-            this._db.transaction(tx => {
-                tx.executeSql("SELECT name FROM sqlite_master WHERE type='table'", [], (tx, res) => {
-                    const tables = [];
-                    for (let i = 0; i < res.rows.length; i++) tables.push(res.rows.item(i).name);
-
-                    const exportData = {};
-                    let pending = tables.length;
-                    if (pending === 0) {
-                        const blob = new Blob([JSON.stringify(exportData)], { type: 'application/octet-stream' });
-                        return resolve(blob);
-                    }
-
-                    tables.forEach(table => {
-                        tx.executeSql(`SELECT * FROM "${table}"`, [], (tx, r) => {
-                            const rows = [];
-                            for (let j = 0; j < r.rows.length; j++) rows.push(r.rows.item(j));
-                            exportData[table] = rows;
-
-                            pending--;
-                            if (pending === 0) {
-                                const blob = new Blob([JSON.stringify(exportData)], { type: 'application/octet-stream' });
-                                resolve(blob);
-                            }
-                        }, (tx, err) => {
-                            console.error('Export error on table', table, err);
-                            pending--;
-                            if (pending === 0) {
-                                const blob = new Blob([JSON.stringify(exportData)], { type: 'application/octet-stream' });
-                                resolve(blob);
-                            }
-                        });
+            window.resolveLocalFileSystemURL(cordova.file.dataDirectory, dir => {
+                dir.getFile(this._name, { create: false }, fileEntry => {
+                    fileEntry.file(file => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                            const arrayBuffer = reader.result;
+                            resolve(new Blob([arrayBuffer], { type: 'application/octet-stream' }));
+                        };
+                        reader.readAsArrayBuffer(file);
                     });
-                }, reject);
+                });
             });
         });
+        
     }
 
     _blobToBase64(blob) {
