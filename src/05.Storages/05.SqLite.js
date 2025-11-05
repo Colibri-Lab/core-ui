@@ -14,14 +14,26 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('Loaded', false, 'When SQL is loaded');
         this._name = name;
 
-        document.addEventListener('deviceready', () => {
+        const initDb = () => {
+            if (!window.sqlitePlugin) {
+                console.error('sqlitePlugin not found');
+                return;
+            }
             this._db = window.sqlitePlugin.openDatabase({ name, location: 'default' }, () => {
                 this.Dispatch('Loaded');
             }, (err) => {
                 console.error('Open database error:', err);
             });
-        });
+        };
+
+        if (window.cordova) {
+            document.addEventListener('deviceready', initDb);
+        } else {
+            // Electron fallback
+            initDb();
+        }
     }
+
 
 
     CreateEmptyDatabase(structure) {
@@ -65,7 +77,7 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
             const loadData = (json) => {
                 try {
                     const data = JSON.parse(json);
-                    this._db = window.sqlitePlugin.openDatabase({ name: this._name, location: 'default' }, () => {
+                    this._db = window.sqlitePlugin.openDatabase({ name: this._name, location: '' }, () => {
                         const promises = Object.keys(data).map(table => {
                             const rows = data[table];
                             if (!rows.length) return Promise.resolve();
@@ -81,10 +93,8 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
             if (base64OrBlob instanceof Blob) {
                 base64OrBlob.text().then(loadData).catch(reject);
             } else {
-                // Base64 строка
                 try {
-                    const json = atob(base64OrBlob);
-                    loadData(json);
+                    loadData(atob(base64OrBlob));
                 } catch (e) {
                     reject(e);
                 }
@@ -94,9 +104,7 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
 
     Close() {
         if (this._db) {
-            try {
-                this._db.close();
-            } catch (e) { }
+            try { this._db.close(); } catch (e) { }
             this._db = null;
         }
     }
@@ -247,20 +255,15 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
 
     Export() {
         return new Promise((resolve, reject) => {
-            window.resolveLocalFileSystemURL(cordova.file.dataDirectory, dir => {
-                dir.getFile(this._name, { create: false }, fileEntry => {
-                    fileEntry.file(file => {
-                        const reader = new FileReader();
-                        reader.onloadend = () => {
-                            const arrayBuffer = reader.result;
-                            resolve(new Blob([arrayBuffer], { type: 'application/octet-stream' }));
-                        };
-                        reader.readAsArrayBuffer(file);
-                    });
-                });
-            });
+            if (!this._db || !this._db.export) {
+                return reject(new Error('Database not initialized or export() not supported'));
+            }
+
+            this._db.export(arrayBuffer => {
+                const blob = new Blob([arrayBuffer], { type: 'application/octet-stream' });
+                resolve(blob);
+            }, reject);
         });
-        
     }
 
     _blobToBase64(blob) {
@@ -270,6 +273,16 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
             reader.onerror = reject;
             reader.readAsBinaryString(blob);
         });
+    }
+
+    _base64ToBlob(base64, mime = '') {
+        const byteString = atob(base64.split(',')[1] || base64);
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([ab], { type: mime });
     }
 
     _convertToObjects(result) {
