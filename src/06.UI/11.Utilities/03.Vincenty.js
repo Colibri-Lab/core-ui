@@ -253,9 +253,7 @@ Colibri.UI.Utilities.Vincenty = class {
 
     /**
      * Построение линии с разрывами при переходе ±180 долготы
-     * @param {number} lat - стартовая широта
-     * @param {number} lon - стартовая долгота
-     * @param {number} azimuth - азимут в градусах (0–360)
+     * @param {<lat, lng, azimuth>} point - стартовая широта
      * @param {number} totalDistance - длина линии в метрах
      * @param {number} steps - количество точек вдоль линии
      * @returns {Array<Array<[number, number]>>} массив сегментов, каждый сегмент массив [lat, lon]
