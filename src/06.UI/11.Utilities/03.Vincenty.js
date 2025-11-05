@@ -442,11 +442,17 @@ Colibri.UI.Utilities.Vincenty = class {
                     }
 
                     // переводим в «реальные единицы»
-                    const diff = Math.abs(value1 - value2) * t.unit;
+                    let unit = t.unit;
+                    if(unit === -1) {
+                        unit = (value1 / 100) * parseFloat(t.tolerance);
+                    }
+                    
+                    const diff = Math.abs(value1 - value2) * unit;
                     if (diff > parseFloat(t.tolerance)) {
                         withinTolerance = false;
                         break;
                     }
+                    
                 }
 
                 if (!withinTolerance) continue;
