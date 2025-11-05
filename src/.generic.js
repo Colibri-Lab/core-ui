@@ -930,7 +930,7 @@ Object.cloneRecursive = function (object, callback = null, excludeKeys = []) {
             const value = object[prop];
     
             if (excludeKeys.indexOf(prop) !== -1) {
-                return true;
+                continue;
             }
     
             if (value instanceof Function) {

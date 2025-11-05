@@ -39,6 +39,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
      * @type {Object|Function}
      */
     set structure(value) {
+
         let struct = {};
         if(Object.isObject(value)) {
             struct = value;
@@ -51,12 +52,9 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
         if(struct instanceof Promise) {
             struct.then(structure => {
                 this._structure = this.toPlain(structure, '');
-                console.log(this._structure)
-                // this._initStructure();        
             });
         } else {
             this._structure = this.toPlain(struct, '/');
-            // this._initStructure();    
         }
 
     }
@@ -196,6 +194,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
                     // }
     
                     if(isPattern) {
+
                         const [component, changed] = this._initStructure(pattern, route);
                         if(changed) {
                             if(this.children > 1) {
