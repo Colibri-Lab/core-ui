@@ -18,7 +18,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
 
         this.GenerateChildren(element, this);
         this._canvas = Element.create('canvas').appendTo(this._element);
-        this._ctx = this._canvas.getContext('2d');
+        this._ctx = this._canvas.getContext('2d', { willReadFrequently: true });
 
         this.handleResize = true;
         this.AddHandler('Resize', this.ResizeCanvas, false, this);
@@ -77,11 +77,20 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this._min = value;
     }
 
+    _getColor(palette, index) {
+        if(index >= palette.length) {
+            return palette[palette.length - 1];
+        } else if(index < 0) {
+            return palette[0];
+        }
+        return palette[index];
+    }
+
 
     Draw(floatArray) {
         try {
-            
-            const ctx = this._ctx = this._canvas.getContext('2d');
+
+            const ctx = this._ctx;
             const bounds = this._canvas.bounds();
             const w = bounds.outerWidth;
             const h = bounds.outerHeight;
@@ -96,7 +105,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
             if (len === 0) return;
 
             let min = Infinity, max = -Infinity;
-            if(this._max && this._min) {
+            if (this._max !== undefined && this._min !== undefined) {
                 max = this._max;
                 min = this._min;
             } else {
@@ -120,7 +129,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
                 const norm = (value - min) / (max - min); // 0..1
                 const colorIndex = Math.floor(norm * (palette.length - 1));
 
-                grad.addColorStop(i / (len - 1), palette[colorIndex]);
+                grad.addColorStop(i / (len - 1), this._getColor(palette, colorIndex));
             }
 
             // рисуем 1px прямоугольник сверху

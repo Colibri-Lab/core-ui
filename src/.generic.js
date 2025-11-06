@@ -1144,6 +1144,14 @@ Object.assignRecursive = function (source, target) {
     return target;
 }
 
+Array.pluck = function(arrayOfObjects, key) {
+    let ret = [];
+    for (const obj of arrayOfObjects) {
+        ret.push(obj[key]);
+    }
+    return ret;
+}
+
 /**
  * 
  * @param {object} textAsObject object to render
