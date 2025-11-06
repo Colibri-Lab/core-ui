@@ -1191,7 +1191,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             const rect = this._map.getContainer().getBoundingClientRect();
             const point = [e.clientX - rect.left, e.clientY - rect.top];
             const latLng = this._map.unproject(point);
-            const features = this._map.queryRenderedFeatures(this._contextMenuLngLat);
+            const features = this._map.queryRenderedFeatures(point);
 
             this.AddCircle('contextmenupoints', 'contextmenu-point', latLng, 4, '#c0c0c0');
 
