@@ -1167,7 +1167,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._sourceUpdatePoint(sourceName, name, geoData);
     }
 
-    EnableContextMenu(contextmenuFn) {
+    EnableContextMenu(contextmenuFn, tolerance = 10) {
         this._contextMenuHandler = this._contextMenuHandler || ((e) => {
 
             this._map.addSource('contextmenupoints', {
@@ -1190,8 +1190,12 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
             const rect = this._map.getContainer().getBoundingClientRect();
             const point = [e.clientX - rect.left, e.clientY - rect.top];
+            const rectTol = [
+                [point[0] - tolerance, point[0] - tolerance],
+                [point[1] + tolerance, point[1] + tolerance]
+            ];
             const latLng = this._map.unproject(point);
-            const features = this._map.queryRenderedFeatures(point);
+            const features = this._map.queryRenderedFeatures(rectTol);
 
             this.AddCircle('contextmenupoints', 'contextmenu-point', latLng, 4, '#c0c0c0');
 
@@ -1215,7 +1219,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._map.removeSource('contextmenupoints');
     }
 
-    EnableHover(callback) {
+    EnableHover(callback, tolerance = 10) {
         this._infoDiv = document.createElement('div');
         this._infoDiv.style.position = 'absolute';
         this._infoDiv.style.bottom = '10px';
@@ -1232,9 +1236,12 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._mousemoveHoverHandler = e => {
             const lat = e.lngLat.lat.toFixed(6);
             const lng = e.lngLat.lng.toFixed(6);
-
+            const rect = [
+                [e.point.x - tolerance, e.point.y - tolerance],
+                [e.point.x + tolerance, e.point.y + tolerance]
+            ];
             // Получаем все объекты под курсором
-            const features = this._map.queryRenderedFeatures(e.point);
+            const features = this._map.queryRenderedFeatures(rect);
             let info = `Lat: ${lat}, Lng: ${lng}`;
             if (features.length) {
                 // Если есть, выводим ID первого объекта
