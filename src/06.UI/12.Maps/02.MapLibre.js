@@ -50,6 +50,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this.RegisterEvent('SelectionChanged', false, 'When selection is changed');
         this.RegisterEvent('MbTilesProtocol', false, 'When mbtiles protocol is requested');
         this.RegisterEvent('LayerSwitched', false, 'When mbtiles protocol is requested');
+        this.RegisterEvent('MapContextMenuItemClicked', false, 'When contextmenu item is clicked on map');
     }
 
     _loadScriptsAndStyles() {
@@ -935,7 +936,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             properties: {
                 id: name,
                 'radius': latLngLike.radius ?? radius,
-                'color': latLngLike.color ?? circle,
+                'color': latLngLike.color ?? color,
                 'opacity': 1
             }
         };
@@ -1164,6 +1165,54 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
     UpdatePoint(sourceName, name, geoData) {
         this._sourceUpdatePoint(sourceName, name, geoData);
+    }
+
+    EnableContextMenu(contextmenuFn) {
+        this._contextMenuHandler = this._contextMenuHandler || ((e) => {
+
+            this._map.addSource('contextmenupoints', {
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features: []
+                }
+            });
+            this._map.addLayer({
+                id: 'contextmenu-layer',
+                type: 'circle',
+                source: 'contextmenupoints',
+                paint: {
+                    'circle-radius': ['get', 'radius'],
+                    'circle-color': ['get', 'color'],
+                    'circle-opacity': ['get', 'opacity']
+                }
+            });
+
+            const rect = this._map.getContainer().getBoundingClientRect();
+            const point = [e.clientX - rect.left, e.clientY - rect.top];
+            const latLng = this._map.unproject(point);
+            const features = this._map.queryRenderedFeatures(this._contextMenuLngLat);
+
+            this.AddCircle('contextmenupoints', 'contextmenu-point', latLng, 4, '#c0c0c0');
+
+            this.contextmenu = contextmenuFn(features, latLng) || [];
+            this.ShowContextMenu([Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT], '', { left: e.clientX, top: e.clientY }, true);
+        });
+        this.AddHandler('ContextMenuItemClicked', (event, args) => {
+            this._sourceRemovePoint('contextmenupoints', 'contextmenu-point');
+            this._map.removeLayer('contextmenu-layer');
+            this._map.removeSource('contextmenupoints');
+            this.Dispatch('MapContextMenuItemClicked', {name: args?.menuData?.name, point: args?.menuData?.point, data: args?.menuData?.data});
+
+        }); 
+        this._map.getContainer().addEventListener('contextmenu', this._contextMenuHandler);
+    }
+
+    DisableContextMenu() {
+        this._map.getContainer().removeEventListener('contextmenu', this._contextMenuHandler);
+
+        this._map.removeLayer('contextmenu-layer');
+        this._map.removeSource('contextmenupoints');
     }
 
     EnableHover(callback) {

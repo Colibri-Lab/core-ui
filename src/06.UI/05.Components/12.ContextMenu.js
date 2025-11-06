@@ -116,7 +116,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
         const itemObject = event.sender;
         if (itemObject.tag.children) {
             if (this._childContextMenu) {
-                this._childContextMenu.Dispose();
+                this._childContextMenu?.Dispose();
                 this._childContextMenu = null;
             }
 
@@ -139,7 +139,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
 
     __childContextMenuClicked(event, args) {
         this.Dispatch('Clicked', args);
-        this._childContextMenu.Dispose();
+        this._childContextMenu?.Dispose();
         this._childContextMenu = null;
         args.domEvent && args.domEvent.preventDefault();
         args.domEvent && args.domEvent.stopPropagation();
@@ -329,7 +329,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
             shadow.remove();
         }
         if (this._childContextMenu) {
-            this._childContextMenu.Dispose();
+            this._childContextMenu?.Dispose();
             this._childContextMenu = null;
         }
         super.Dispose();
