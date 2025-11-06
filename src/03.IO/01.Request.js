@@ -80,35 +80,29 @@ Colibri.IO.Request = class extends Destructable {
             fd._files = {};
         }
 
-        if(Array.isArray(params)) {
-            params.forEach((param, index) => {
-                if(param instanceof File || param instanceof Blob) {
-                    // если это файл тогда нужно пихнуть обязательнов в первый уровень
-                    const fileKey = 'file' + String.MD5(param.name);
-                    if(fd._files[fileKey] === undefined) {
-                        fd._files[fileKey] = param;
-                    }
-                    fd.append(keyBefore + '[' + index + ']', 'file(' + fileKey + ')');
+        if(!Array.isArray(params) && !Object.isObject(params)) {
+            fd.append(keyBefore, params);
+        } else if(!Array.isArray(params) && !Object.isPlainObject(params)) {
+            if(Object.isFile(params) || Object.isBlob(params)) {
+                const fileKey = 'file' + String.MD5(params?.name ?? Date.Mc());
+                if(fd._files[fileKey] === undefined) {
+                    fd._files[fileKey] = params;
                 }
+                fd.append(keyBefore, 'file(' + fileKey + ')');
+            } else if(params?.prototype?.toString) {
+                fd.append(keyBefore, params.toString());
+            }
+        } else if(Array.isArray(params)) {
+            params.forEach((param, index) => {
                 this._createFormData(param, keyBefore + '[' + index + ']', fd);
             });
         }
-        else {
-
-            if(typeof params == 'string' && params.isDate()) {
-                fd.append(keyBefore, params);
-            } else {
-                Object.forEach(params, (key, value) => {
-                    if(Array.isArray(value) || (value instanceof Object && !(value instanceof File || value instanceof Blob))) {
-                        this._createFormData(value, keyBefore ? keyBefore + '[' + key + ']' : key, fd);
-                    }
-                    else if(params[key] !== null) {
-                        fd.append(keyBefore ? keyBefore + '[' + key + ']' : key, params[key]);
-                    }
-                });
-            }
-            
+        else if(Object.isPlainObject(params)) {
+            Object.forEach(params, (key, value) => {
+                this._createFormData(value, keyBefore ? keyBefore + '[' + key + ']' : key, fd);
+            });            
         }
+
 
         if(mainThread) {
             Object.forEach(fd._files, (name, file) => {

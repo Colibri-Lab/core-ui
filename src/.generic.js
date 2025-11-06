@@ -638,6 +638,10 @@ Object.isFile = function (o) {
     return o instanceof File && !Array.isArray(o);
 }
 
+Object.isBlob = function (o) {
+    return o instanceof Blob && !Array.isArray(o);
+}
+
 Object.isDate = function (o) {
     return o instanceof Date && !Array.isArray(o);
 }
