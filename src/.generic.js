@@ -273,6 +273,14 @@ Array.prototype.avg = function () {
     return this.reduce((a, b) => a + b, 0) / this.length;
 }
 
+Array.prototype.shuffle = function() {
+    for (let i = this.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [this[i], this[j]] = [this[j], this[i]];
+    }
+    return this; // возвращаем массив для цепочек
+};
+
 /**
  * Returns a new array containing the first 'l' elements of the original array.
  * @param {number} l - The number of elements to include in the new array.
