@@ -60,7 +60,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         value = this._convertProperty('Number', value);
         this._max = value;
     }
-    
+
     /**
      * Minimum ot values
      * @type {Number}
@@ -77,18 +77,32 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this._min = value;
     }
 
-    _getColor(palette, index) {
-        if(index >= palette.length) {
-            return palette[palette.length - 1];
-        } else if(index < 0) {
-            return palette[0];
+    _getColor(palette, index, alpha = 1) {
+        let color = null;
+        if (index >= palette.length) {
+            color = palette[palette.length - 1];
+        } else if (index < 0) {
+            color = palette[0];
+        } else {
+            color = palette[index];
         }
-        return palette[index];
+        if (color && alpha < 1) {
+            return color.replace('hsl', 'hsla').replace(')', `,${alpha})`);
+        }
+        return !!color ? color : '#ffffff';
     }
 
 
+    _crop(floatArray) {
+        const start = this._start || 0;
+        const end = this._end != null ? this._end : floatArray.length;
+        return floatArray.subarray(start, end); // возвращает Float32Array без копирования данных
+    }
+
     Draw(floatArray) {
         try {
+
+            floatArray = this._crop(floatArray);
 
             const ctx = this._ctx;
             const bounds = this._canvas.bounds();
@@ -139,6 +153,12 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         } catch (e) {
             console.error(e);
         }
+    }
+
+    Clear() {
+        const bounds = this._canvas.bounds();
+        this._ctx = this._canvas.getContext('2d', { willReadFrequently: true });
+        this._ctx.clearRect(0, 0, bounds.outerWidth, bounds.outerHeight);
     }
 
 

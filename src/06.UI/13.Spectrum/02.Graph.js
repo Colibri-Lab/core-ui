@@ -237,6 +237,38 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
     }
 
     /**
+     * Index of start
+     * @type {Number}
+     */
+    get start() {
+        return this._start;
+    }
+    /**
+     * Index of start
+     * @type {Number}
+     */
+    set start(value) {
+        value = this._convertProperty('Number', value);
+        this._start = value;
+    }
+
+    /**
+     * Index of end (in array, must be less or equial than dataarray length)
+     * @type {Number}
+     */
+    get end() {
+        return this._end;
+    }
+    /**
+     * Index of end (in array, must be less or equial than dataarray length)
+     * @type {Number}
+     */
+    set end(value) {
+        value = this._convertProperty('Number', value);
+        this._end = value;
+    }
+
+    /**
      * Show maximums
      * @type {Boolean}
      */
@@ -261,10 +293,10 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         } else {
             color = palette[index];
         }
-        if(color && alpha < 1) {
+        if (color && alpha < 1) {
             return color.replace('hsl', 'hsla').replace(')', `,${alpha})`);
         }
-        return color;
+        return !!color ? color : '#ffffff';
     }
 
     /**
@@ -313,7 +345,7 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         value = this._convertProperty('Number', value);
         this._xLabels = value;
     }
-    
+
     /**
      * Count of labels on Y axis
      * @type {Number}
@@ -330,9 +362,18 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         this._yLabels = value;
     }
 
+    _crop(floatArray) {
+        const start = this._start || 0;
+        const end = this._end != null ? this._end : floatArray.length;
+        console.log(this._start, this._end);
+        return floatArray.subarray(start, end); // возвращает Float32Array без копирования данных
+    }
+
 
     Draw(floatArray) {
         try {
+
+            floatArray = this._crop(floatArray);
 
             const palette = this._createPalette();
             const bounds = this._canvas.bounds();
@@ -358,7 +399,23 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
                         if (v > max) max = v;
                     }
                 }
+
+                if (this._showMaximums) {
+                    if (!this._maxValues || this._maxValues.length != floatArray.length) {
+                        this._maxValues = new Float32Array(len);
+                        for (let i = 0; i < len; i++) this._maxValues[i] = floatArray[i];
+                    }
+                    for (let i = 0; i < len; i++) {
+                        const v = this._maxValues[i];
+                        if (!isNaN(v)) {
+                            if (v < min) min = v;
+                            if (v > max) max = v;
+                        }
+                    }
+                }
+
                 if (min === max) max = min + 1; // защита от деления на ноль
+                max = max + max * 10 / 100;
             }
 
             // создаём горизонтальный градиент
@@ -448,7 +505,7 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
                 }
             }
 
-            if(this._maxLineColor === 'grad') {
+            if (this._maxLineColor === 'grad') {
 
                 const grad = ctx.createLinearGradient(0, 0, bounds.outerWidth, 0);
                 const palette = this._createPalette();
@@ -482,11 +539,11 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
 
         const xLabels = this._xLabels || 10;
         for (let i = 0; i <= xLabels; i++) {
-            const x = (bounds.outerWidth / xLabels) * i;
-            let freq = (i / xLabels);
+            const x = (this._start || 0) + (bounds.outerWidth / xLabels) * i;
+            let freq = x; //(i / xLabels);
             if (this._labelFormatter) {
                 const f = this._labelFormatter;
-                freq = f(this, freq, 'x');
+                freq = f(this, freq, 'x', this._start, this._end);
             }
             ctx.fillText(freq, x + (this._labelPadding || 2), bounds.outerHeight - (this._labelPadding || 2));
 
@@ -502,7 +559,7 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
             const value = min + ((max - min) / yLabels) * j; // равномерные шаги между min и max
             const y = bounds.outerHeight - ((value - min) / (max - min)) * bounds.outerHeight;
             let label = value.toFixed(0);
-            if (this._labelFormatter) label = this._labelFormatter(this, value, 'y');
+            if (this._labelFormatter) label = this._labelFormatter(this, value, 'y', min, max);
             ctx.fillText(label, this._labelPadding || 2, y + 12 + (this._labelPadding || 2));
 
             ctx.beginPath();
@@ -510,6 +567,17 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
             ctx.lineTo(5, y);
             ctx.stroke();
         }
+    }
+
+    Clear() {
+        const bounds = this._canvas.bounds();
+        this._ctx = this._canvas.getContext('2d', { willReadFrequently: true });
+        this._ctx.clearRect(0, 0, bounds.outerWidth, bounds.outerHeight);
+        this.ResetMaximums();
+    }
+
+    ResetMaximums() {
+        this._maxValues = null;
     }
 
 
