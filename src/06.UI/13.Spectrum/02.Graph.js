@@ -365,7 +365,6 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
     _crop(floatArray) {
         const start = this._start || 0;
         const end = this._end != null ? this._end : floatArray.length;
-        console.log(this._start, this._end);
         return floatArray.subarray(start, end); // возвращает Float32Array без копирования данных
     }
 
@@ -415,7 +414,6 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
                 }
 
                 if (min === max) max = min + 1; // защита от деления на ноль
-                max = max + max * 10 / 100;
             }
 
             // создаём горизонтальный градиент
@@ -540,12 +538,12 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         const xLabels = this._xLabels || 10;
         for (let i = 0; i <= xLabels; i++) {
             const x = (this._start || 0) + (bounds.outerWidth / xLabels) * i;
-            let freq = x; //(i / xLabels);
-            if (this._labelFormatter) {
-                const f = this._labelFormatter;
-                freq = f(this, freq, 'x', this._start, this._end);
-            }
-            ctx.fillText(freq, x + (this._labelPadding || 2), bounds.outerHeight - (this._labelPadding || 2));
+            // let freq = x; //(i / xLabels);
+            // if (this._labelFormatter) {
+            //     const f = this._labelFormatter;
+            //     freq = f(this, freq, 'x', this._start, this._end);
+            // }
+            // ctx.fillText(freq, x + (this._labelPadding || 2), bounds.outerHeight - (this._labelPadding || 2));
 
             ctx.beginPath();
             ctx.moveTo(x, bounds.outerHeight);
@@ -558,9 +556,9 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         for (let j = 0; j <= yLabels; j++) {
             const value = min + ((max - min) / yLabels) * j; // равномерные шаги между min и max
             const y = bounds.outerHeight - ((value - min) / (max - min)) * bounds.outerHeight;
-            let label = value.toFixed(0);
-            if (this._labelFormatter) label = this._labelFormatter(this, value, 'y', min, max);
-            ctx.fillText(label, this._labelPadding || 2, y + 12 + (this._labelPadding || 2));
+            // let label = value.toFixed(0);
+            // if (this._labelFormatter) label = this._labelFormatter(this, value, 'y', min, max);
+            // ctx.fillText(label, this._labelPadding || 2, y + 12 + (this._labelPadding || 2));
 
             ctx.beginPath();
             ctx.moveTo(0, y);

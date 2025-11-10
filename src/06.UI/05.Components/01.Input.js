@@ -495,8 +495,8 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
     
     ExceededValueWidth() {
         const style = getComputedStyle(this._element);
-        return this._input.getRealWidth() + (parseInt(style.paddingLeft ?? 0)) + (parseInt(style.paddingRight ?? 0)) + 
-            (parseInt(style.borderLeftWidth ?? 0)) + (parseInt(style.borderRightWidth ?? 0));
+        return this._input.getRealWidth() + (parseInt(style.paddingLeft || 0)) + (parseInt(style.paddingRight || 0)) + 
+            (parseInt(style.borderLeftWidth || 0)) + (parseInt(style.borderRightWidth || 0));
     }
 
     /**

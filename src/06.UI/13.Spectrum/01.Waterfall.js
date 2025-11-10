@@ -77,6 +77,39 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this._min = value;
     }
 
+    
+    /**
+     * Index of start
+     * @type {Number}
+     */
+    get start() {
+        return this._start;
+    }
+    /**
+     * Index of start
+     * @type {Number}
+     */
+    set start(value) {
+        value = this._convertProperty('Number', value);
+        this._start = value;
+    }
+
+    /**
+     * Index of end (in array, must be less or equial than dataarray length)
+     * @type {Number}
+     */
+    get end() {
+        return this._end;
+    }
+    /**
+     * Index of end (in array, must be less or equial than dataarray length)
+     * @type {Number}
+     */
+    set end(value) {
+        value = this._convertProperty('Number', value);
+        this._end = value;
+    }
+
     _getColor(palette, index, alpha = 1) {
         let color = null;
         if (index >= palette.length) {

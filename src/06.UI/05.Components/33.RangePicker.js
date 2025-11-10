@@ -76,6 +76,7 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         this._input1.hasIcon = this._input1.hasClearIcon = this._max.hasIcon = this._max.hasClearIcon = false;
         this._input2.hasIcon = this._input2.hasClearIcon = this._min.hasIcon = this._min.hasClearIcon = false;
 
+        this._input1.width = this._input2.width = '50px';
         this._input1.expandByValue = this._input2.expandByValue = this._max.expandByValue = this._min.expandByValue = true;
         this._input1.expandedMinWidth = this._input2.expandedMinWidth = this._max.expandedMinWidth = this._min.expandedMinWidth = 50;
         
@@ -246,7 +247,6 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         if(newValue <= min) {
             newValue = min;
         }
-        console.log(newValue);
         this.value = [newValue, this._value[1]];
 
     }
