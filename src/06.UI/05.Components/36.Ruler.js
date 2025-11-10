@@ -261,7 +261,9 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
     }
 
     _progressMoved(newLeft, newTop) {
-        console.log(newLeft);   
+        console.log(newLeft, newLeft + (this._value[1] - this._value[0]));
+        this._value = [newLeft, newLeft + (this._value[1] - this._value[0])];
+        this._showValue();
     }
 
     _span1Moved(newLeft, newTop) {
@@ -278,12 +280,12 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this.Dispatch('Changed', {value: this.value});
     }
 
-    _calculateValue(left1, left2) {
-        if(left1 !== null) {
-            this._setLeftPoint(left1);
+    _calculateValue(left, right) {
+        if(left !== null) {
+            this._setLeftPoint(left, right);
         }
-        else if(left2 !== null) {
-            this._setRightPoint(left2);
+        else if(right !== null) {
+            this._setRightPoint(right);
         }
     }
 

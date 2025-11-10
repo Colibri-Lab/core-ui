@@ -54,7 +54,8 @@ Colibri.UI.Drag = class {
      */
     __start(e) {
         const bounds = this._container.bounds();
-        this._element.tag = { state: true, point: [e.clientX - bounds.left, e.clientY - bounds.top] };
+        const elementBounds = this._element.bounds();
+        this._element.tag = { state: true, delta: [e.clientX - elementBounds.left, e.clientY - elementBounds.top] };
         document.addEventListener('mouseup', this.__EndHandle, true);
         document.addEventListener('mousemove', this.__MoveHandle, true);
         e.preventDefault();
@@ -80,14 +81,17 @@ Colibri.UI.Drag = class {
             // двигаем
             const containerBounds = this._container.bounds();
             const elementBounds = this._element.bounds();
-            let newLeft = (e.clientX - containerBounds.left - elementBounds.outerWidth / 2);
-            let newTop = (e.clientY - containerBounds.top - elementBounds.outerHeight / 2);
+            const delta = this._element.tag.delta;
 
-            if (newLeft < -1 * elementBounds.outerWidth / 2) { newLeft = -1 * elementBounds.outerWidth / 2; }
-            if (newLeft > containerBounds.outerWidth - elementBounds.outerWidth / 2) { newLeft = containerBounds.outerWidth - elementBounds.outerWidth / 2; }
+            let newLeft = (e.clientX - delta[0] - containerBounds.left);
+            console.log(e.clientX, delta[0], containerBounds.left)
+            let newTop = (e.clientY - delta[1] - containerBounds.top);
 
-            if (newTop < -1 * elementBounds.outerHeight / 2) { newTop = -1 * elementBounds.outerHeight / 2; }
-            if (newTop > containerBounds.outerHeight - elementBounds.outerHeight / 2) { newTop = containerBounds.outerHeight - elementBounds.outerHeight / 2; }
+            // if (newLeft < -1 * elementBounds.outerWidth / 2) { newLeft = -1 * elementBounds.outerWidth / 2; }
+            // if (newLeft > containerBounds.outerWidth - elementBounds.outerWidth / 2) { newLeft = containerBounds.outerWidth - elementBounds.outerWidth / 2; }
+
+            // if (newTop < -1 * elementBounds.outerHeight / 2) { newTop = -1 * elementBounds.outerHeight / 2; }
+            // if (newTop > containerBounds.outerHeight - elementBounds.outerHeight / 2) { newTop = containerBounds.outerHeight - elementBounds.outerHeight / 2; }
 
             this._moveHandler(newLeft, newTop);
         }
