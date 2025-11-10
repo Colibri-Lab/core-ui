@@ -25,6 +25,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
 
         this._palette = this._createPalette();
         this._row = 0;
+        this._history = new Colibri.Common.History(this.height);
 
     }
 
@@ -34,6 +35,9 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this._canvas.width = rect.width * dpr;
         this._canvas.height = rect.height * dpr;
         this._ctx.scale(dpr, dpr);
+        if(this._history) {
+            this._history.clear();
+        }
     }
 
     _createPalette() {
@@ -136,6 +140,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         try {
 
             floatArray = this._crop(floatArray);
+
 
             const ctx = this._ctx;
             const bounds = this._canvas.bounds();

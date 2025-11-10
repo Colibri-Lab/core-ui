@@ -248,6 +248,10 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
      * @type {Boolean}
      */
     set hasSelector(value) {
+        if(this._orientation === 'vertical') {
+            throw new Error('Ruler selector is only available for horizontal rulers');
+        }
+        
         value = this._convertProperty('Boolean', value);
         this._hasSelector = value;
         this._showHasSelector();
