@@ -11,29 +11,38 @@
 
 
     .colibri-ui-rangepicker-rangepicker-progress-pane {
-        background: rgba(0,0,0,.1);
+        background: rgba(0,0,0,.05);
         z-index: 1;
+        width: 100%;
         height: 100%;
         position: absolute;
 
         >.app-component-pane {
             position: relative;
             padding: 0px;
-            background: rgba(0,0,0,.5);
+            background: rgba(0,0,0,.1);
             width: 100%;
             height: 100%;
+            cursor: grab;
 
             >.app-component-pane {
-                
+
                 width: 5px;
                 height: 100%;
-                background: #000;
+                background: rgba(0,0,0,0.5);
                 position: absolute;
                 z-index: 1;
-                cursor: pointer;
+                cursor: col-resize;
 
                 &.app-component-shown {
                     display: block;
+                }
+
+                &:first-child {
+                    left: 0px;
+                }
+                &:last-child {
+                    right: 0px;
                 }
 
             }

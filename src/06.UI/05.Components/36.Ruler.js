@@ -254,9 +254,14 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
 
         this._pane.shown = this._progress.shown = this._span1.shown = this._span2.shown = true;
 
+        this._drag0 = new Colibri.UI.Drag(this._progress.container, this._pane.container, (newLeft, newTop) => this._progressMoved(newLeft, newTop));
         this._drag1 = new Colibri.UI.Drag(this._span1.container, this._pane.container, (newLeft, newTop) => this._span1Moved(newLeft, newTop));
         this._drag2 = new Colibri.UI.Drag(this._span2.container, this._pane.container, (newLeft, newTop) => this._span2Moved(newLeft, newTop));
 
+    }
+
+    _progressMoved(newLeft, newTop) {
+        console.log(newLeft);   
     }
 
     _span1Moved(newLeft, newTop) {
@@ -333,6 +338,7 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
      * @type {Array}
      */
     set value(value) {
+
         if(!this._hasSelector) {
             return;
         }
