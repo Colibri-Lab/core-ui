@@ -32,6 +32,15 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this.ResizeCanvas();
     }
 
+    /**
+     * Register events
+     * @protected
+     */
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('Changed', false, 'When selection is changed');
+    }
+
     ResizeCanvas() {
         const dpr = window.devicePixelRatio || 1;
         const rect = this._canvas.getBoundingClientRect();
@@ -261,40 +270,37 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
     }
 
     _progressMoved(newLeft, newTop) {
-        console.log(newLeft, newLeft + (this._value[1] - this._value[0]));
-        this._value = [newLeft, newLeft + (this._value[1] - this._value[0])];
+        this._calculateValue(newLeft, null, true);
         this._showValue();
+        this.Dispatch('Changed', {value: this.value});
     }
 
     _span1Moved(newLeft, newTop) {
-        // this._progress.container.css('left', newLeft + 'px');
         this._calculateValue(newLeft, null);
         this._showValue();
         this.Dispatch('Changed', {value: this.value});
     }
 
     _span2Moved(newLeft, newTop) {
-        // this._progress.container.css('width', newLeft + 'px');
         this._calculateValue(null, newLeft);
         this._showValue();
         this.Dispatch('Changed', {value: this.value});
     }
 
-    _calculateValue(left, right) {
+    _calculateValue(left, right, saveWidth = false) {
         if(left !== null) {
-            this._setLeftPoint(left, right);
+            this._setLeftPoint(left, saveWidth);
         }
         else if(right !== null) {
-            this._setRightPoint(right);
+            this._setRightPoint(right, saveWidth);
         }
     }
 
-    _setLeftPoint(left) {
+    _setLeftPoint(left, saveWidth = false) {
         const width = this._pane.width;
         const perc = (left) * 100 / width;
         const max = this._max;
         const min = this._min;
-        const step = this._step;
 
         let newValue = min + ((max - min) * perc / 100);
         // newValue = Math.ceil(newValue / step) * step - step;
@@ -304,11 +310,14 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         if(newValue <= min) {
             newValue = min;
         }
+        if(saveWidth) {
+            this._value[1] = newValue + (this._value?.[1] - this._value?.[0]);
+        }
         this.value = [newValue, this._value?.[1]];
 
     }
 
-    _setRightPoint(left) {
+    _setRightPoint(left, saveWidth = false) {
         const width = this._pane.width;
         const perc = (left + 8) * 100 / width;
         const max = this._max;
@@ -322,6 +331,10 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         }
         if(newValue <= min) {
             newValue = min;
+        }
+
+        if(saveWidth) {
+            this._value[0] = newValue - (this._value?.[1] - this._value?.[0]);
         }
 
         this.value = [this._value?.[0], newValue];
@@ -358,7 +371,6 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
             left1 = this._min;
         }
 
-        // left2 = Math.ceil(left2 / step) * step;
         if(left2 >= this._max) {
             left2 = this._max;
         }

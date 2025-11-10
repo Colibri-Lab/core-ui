@@ -84,14 +84,13 @@ Colibri.UI.Drag = class {
             const delta = this._element.tag.delta;
 
             let newLeft = (e.clientX - delta[0] - containerBounds.left);
-            console.log(e.clientX, delta[0], containerBounds.left)
             let newTop = (e.clientY - delta[1] - containerBounds.top);
 
-            // if (newLeft < -1 * elementBounds.outerWidth / 2) { newLeft = -1 * elementBounds.outerWidth / 2; }
-            // if (newLeft > containerBounds.outerWidth - elementBounds.outerWidth / 2) { newLeft = containerBounds.outerWidth - elementBounds.outerWidth / 2; }
+            if (newLeft < -1 * elementBounds.outerWidth / 2) { newLeft = -1 * elementBounds.outerWidth / 2; }
+            if (newLeft > containerBounds.outerWidth - elementBounds.outerWidth / 2) { newLeft = containerBounds.outerWidth - elementBounds.outerWidth / 2; }
 
-            // if (newTop < -1 * elementBounds.outerHeight / 2) { newTop = -1 * elementBounds.outerHeight / 2; }
-            // if (newTop > containerBounds.outerHeight - elementBounds.outerHeight / 2) { newTop = containerBounds.outerHeight - elementBounds.outerHeight / 2; }
+            if (newTop < -1 * elementBounds.outerHeight / 2) { newTop = -1 * elementBounds.outerHeight / 2; }
+            if (newTop > containerBounds.outerHeight - elementBounds.outerHeight / 2) { newTop = containerBounds.outerHeight - elementBounds.outerHeight / 2; }
 
             this._moveHandler(newLeft, newTop);
         }
