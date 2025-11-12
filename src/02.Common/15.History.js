@@ -1,14 +1,11 @@
 Colibri.Common.History = class {
  
     constructor(limit = 1000) {
-        this._limit = limit;
-        this._items = new Array(limit);
-        this._start = 0;
-        this._count = 0;
+        this.limit = parseInt(limit);
     }
 
     set limit(value) {
-        this._limit = value;
+        this._limit = parseInt(value);
     }
 
     get limit() {
@@ -16,27 +13,17 @@ Colibri.Common.History = class {
     }
 
     add(line) {
-        const idx = (this._start + this._count) % this._limit;
-        this._items[idx] = line;
-        if (this._count < this._limit) {
-            this._count++;
-        } else {
-            this._start = (this._start + 1) % this._limit;
-        }
+        if (this._items.length >= this._limit)
+            this._items.shift();
+        this._items.push(line.slice());
     }
 
     getAll() {
-        const result = [];
-        for (let i = 0; i < this._count; i++) {
-            result.push(this._items[(this._start + i) % this._limit]);
-        }
-        return result;
+        return this._items;
     }
 
     clear() {
         this._items = new Array(this._limit);
-        this._start = 0;
-        this._count = 0;
     }
 
 }

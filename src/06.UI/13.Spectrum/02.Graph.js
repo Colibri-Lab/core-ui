@@ -189,6 +189,21 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
     }
 
     /**
+     * Zero line value
+     * @type {Number}
+     */
+    get zeroLineValue() {
+        return this._zeroLineValue;
+    }
+    /**
+     * Zero line value
+     * @type {Number}
+     */
+    set zeroLineValue(value) {
+        this._zeroLineValue = value;
+    }
+
+    /**
      * Zero line stroke width
      * @type {Number}
      */
@@ -266,6 +281,11 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
     set end(value) {
         value = this._convertProperty('Number', value);
         this._end = value;
+    }
+
+    Resize(start, end) {
+        this._start = start;
+        this._end = end;
     }
 
     /**
@@ -368,6 +388,132 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         return floatArray.subarray(start, end); // возвращает Float32Array без копирования данных
     }
 
+    /**
+     * Color of grid lines (color will set opacity .5)
+     * @type {String}
+     */
+    get hgridLinesColor() {
+        return this._hgridLinesColor;
+    }
+    /**
+     * Color of grid lines (color will set opacity .5)
+     * @type {String}
+     */
+    set hgridLinesColor(value) {
+        this._hgridLinesColor = value;
+    }
+
+    /**
+     * Stroke of grid lines
+     * @type {Number}
+     */
+    get hgridLinesStroke() {
+        return this._hgridLinesStroke;
+    }
+    /**
+     * Stroke of grid lines
+     * @type {Number}
+     */
+    set hgridLinesStroke(value) {
+        value = this._convertProperty('Number', value);
+        this._hgridLinesStroke = value;
+    }
+
+    /**
+     * Grid lines step
+     * @type {Number}
+     */
+    get hgridLinesStep() {
+        return this._hgridLinesStep;
+    }
+    /**
+     * Grid lines step
+     * @type {Number}
+     */
+    set hgridLinesStep(value) {
+        value = this._convertProperty('Number', value);
+        this._hgridLinesStep = value;
+    }
+
+    /**
+     * Grid line large steps
+     * @type {Number}
+     */
+    get hgridLinesLargeStep() {
+        return this._hgridLinesLargeStep;
+    }
+    /**
+     * Grid line large steps
+     * @type {Number}
+     */
+    set hgridLinesLargeStep(value) {
+        value = this._convertProperty('Number', value);
+        this._gridLinesLargeStep = value;
+    }
+
+
+    /**
+     * Color of grid lines (color will set opacity .5)
+     * @type {String}
+     */
+    get vgridLinesColor() {
+        return this._vgridLinesColor;
+    }
+    /**
+     * Color of grid lines (color will set opacity .5)
+     * @type {String}
+     */
+    set vgridLinesColor(value) {
+        this._vgridLinesColor = value;
+    }
+
+    /**
+     * Stroke of grid lines
+     * @type {Number}
+     */
+    get vgridLinesStroke() {
+        return this._vgridLinesStroke;
+    }
+    /**
+     * Stroke of grid lines
+     * @type {Number}
+     */
+    set vgridLinesStroke(value) {
+        value = this._convertProperty('Number', value);
+        this._vgridLinesStroke = value;
+    }
+
+    /**
+     * Grid lines step
+     * @type {Number}
+     */
+    get vgridLinesStep() {
+        return this._vgridLinesStep;
+    }
+    /**
+     * Grid lines step
+     * @type {Number}
+     */
+    set vgridLinesStep(value) {
+        value = this._convertProperty('Number', value);
+        this._vgridLinesStep = value;
+    }
+
+    /**
+     * Grid line large steps
+     * @type {Number}
+     */
+    get vgridLinesLargeStep() {
+        return this._vgridLinesLargeStep;
+    }
+    /**
+     * Grid line large steps
+     * @type {Number}
+     */
+    set vgridLinesLargeStep(value) {
+        value = this._convertProperty('Number', value);
+        this._vgridLinesLargeStep = value;
+    }
 
     Draw(floatArray) {
         try {
@@ -378,6 +524,7 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
             const bounds = this._canvas.bounds();
             const ctx = this._ctx;
             ctx.clearRect(0, 0, bounds.outerWidth, bounds.outerHeight);
+
 
             const len = floatArray.length;
             if (len === 0) return;
@@ -416,6 +563,11 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
                 if (min === max) max = min + 1; // защита от деления на ноль
             }
 
+
+            this._drawGridLines(ctx, bounds, min, max, floatArray);
+
+            this._drawZeroLine(ctx, bounds, min, max);
+
             // создаём горизонтальный градиент
             const grad = ctx.createLinearGradient(0, 0, bounds.outerWidth, 0);
             for (let i = 0; i < len; i++) {
@@ -446,16 +598,6 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
             ctx.fillStyle = grad;
             ctx.fill();
 
-            if (min < 0 && max > 0) {
-                const zeroY = bounds.outerHeight - ((0 - min) / (max - min)) * bounds.outerHeight;
-                ctx.beginPath();
-                ctx.moveTo(0, zeroY);
-                ctx.lineTo(bounds.outerWidth, zeroY);
-                ctx.strokeStyle = this._zeroLineColor || '#888'; // полупрозрачная белая линия
-                ctx.lineWidth = this._zeroLineStroke || 1;
-                ctx.stroke();
-            }
-
             // --- Оси и подписи ---
             // ось X
             ctx.strokeStyle = this._axisColor || '#888';
@@ -472,19 +614,83 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
 
             this._drawAxises(ctx, bounds, min, max);
 
-            // линия нуля, если она в диапазоне
-            if (min < 0 && max > 0) {
-                const zeroY = bounds.outerHeight - ((0 - min) / (max - min)) * bounds.outerHeight;
-                ctx.beginPath();
-                ctx.moveTo(0, zeroY);
-                ctx.lineTo(bounds.outerWidth, zeroY);
-                ctx.strokeStyle = this._zeroLineColor || '#888';
-                ctx.lineWidth = this._zeroLineStroke || 1;
-                ctx.stroke();
-            }
+
 
         } catch (e) {
             console.error(e);
+        }
+    }
+
+    _drawGridLines(ctx, bounds, min, max, floatArray) {
+
+        if (this._hgridLinesColor && this._hgridLinesStep) {
+
+            ctx.strokeStyle = this._hgridLinesColor;
+            ctx.lineWidth = this._hgridLinesStroke || 1;
+
+            const stepValue = this._hgridLinesStep;
+            const largeStepValue = this._hgridLinesLargeStep || (stepValue * 5);
+
+            for (let value = min; value <= max; value += stepValue) {
+                const norm = (value - min) / (max - min);
+                const y = bounds.outerHeight - norm * bounds.outerHeight;
+
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(bounds.outerWidth, y);
+
+                if (largeStepValue && (Math.abs(value % largeStepValue) < 0.0001 || Math.abs(value - min) < 0.0001 || Math.abs(value - max) < 0.0001)) {
+                    ctx.lineWidth = (this._hgridLinesStroke || 1) * 2;
+                } else {
+                    ctx.lineWidth = this._hgridLinesStroke || 1;
+                }
+
+                ctx.stroke();
+            }
+
+        }
+
+
+        if (this._vgridLinesColor && this._vgridLinesStep) {
+
+            ctx.strokeStyle = this._vgridLinesColor;
+            ctx.lineWidth = this._vgridLinesStroke || 1;
+
+            const stepValue = this._vgridLinesStep;
+            const largeStepValue = this._vgridLinesLargeStep || (stepValue * 5);
+
+            for (let value = 0; value <= floatArray.length; value += stepValue) {
+                const norm = value / floatArray.length;
+                const x = bounds.outerWidth - norm * bounds.outerWidth;
+
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, bounds.outerWidth);
+
+                if (largeStepValue && (Math.abs(value % largeStepValue) < 0.0001 || Math.abs(value) < 0.0001 || Math.abs(value - floatArray.length) < 0.0001)) {
+                    ctx.lineWidth = (this._vgridLinesStroke || 1) * 2;
+                } else {
+                    ctx.lineWidth = this._vgridLinesStroke || 1;
+                }
+
+                ctx.stroke();
+            }
+
+        }
+
+
+
+    }
+
+    _drawZeroLine(ctx, bounds, min, max) {
+        if (min < (this._zeroLineValue ?? 0) && max > (this._zeroLineValue ?? 0)) {
+            const zeroY = bounds.outerHeight - (((this._zeroLineValue ?? 0) - min) / (max - min)) * bounds.outerHeight;
+            ctx.beginPath();
+            ctx.moveTo(0, zeroY);
+            ctx.lineTo(bounds.outerWidth, zeroY);
+            ctx.strokeStyle = this._zeroLineColor || '#888';
+            ctx.lineWidth = this._zeroLineStroke || 1;
+            ctx.stroke();
         }
     }
 
@@ -531,39 +737,33 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
     }
 
     _drawAxises(ctx, bounds, min, max) {
-        ctx.fillStyle = this._labelColor || '#888';
-        ctx.font = this._labelFontAndSize || '10px monospace';
-        ctx.textAlign = this._labelAlign || 'center';
+        if (this._xLabels) {
+            ctx.fillStyle = this._labelColor || '#888';
+            ctx.font = this._labelFontAndSize || '10px monospace';
+            ctx.textAlign = this._labelAlign || 'center';
 
-        const xLabels = this._xLabels || 10;
-        for (let i = 0; i <= xLabels; i++) {
-            const x = (this._start || 0) + (bounds.outerWidth / xLabels) * i;
-            // let freq = x; //(i / xLabels);
-            // if (this._labelFormatter) {
-            //     const f = this._labelFormatter;
-            //     freq = f(this, freq, 'x', this._start, this._end);
-            // }
-            // ctx.fillText(freq, x + (this._labelPadding || 2), bounds.outerHeight - (this._labelPadding || 2));
-
-            ctx.beginPath();
-            ctx.moveTo(x, bounds.outerHeight);
-            ctx.lineTo(x, bounds.outerHeight - 5);
-            ctx.stroke();
+            const xLabels = this._xLabels || 10;
+            for (let i = 0; i <= xLabels; i++) {
+                const x = (this._start || 0) + (bounds.outerWidth / xLabels) * i;
+                ctx.beginPath();
+                ctx.moveTo(x, bounds.outerHeight);
+                ctx.lineTo(x, bounds.outerHeight - 5);
+                ctx.stroke();
+            }
         }
 
-        const yLabels = this._yLabels || 5;
-        ctx.textAlign = 'left';
-        for (let j = 0; j <= yLabels; j++) {
-            const value = min + ((max - min) / yLabels) * j; // равномерные шаги между min и max
-            const y = bounds.outerHeight - ((value - min) / (max - min)) * bounds.outerHeight;
-            // let label = value.toFixed(0);
-            // if (this._labelFormatter) label = this._labelFormatter(this, value, 'y', min, max);
-            // ctx.fillText(label, this._labelPadding || 2, y + 12 + (this._labelPadding || 2));
-
-            ctx.beginPath();
-            ctx.moveTo(0, y);
-            ctx.lineTo(5, y);
-            ctx.stroke();
+        if(this._yLabels) {
+            const yLabels = this._yLabels || 5;
+            ctx.textAlign = 'left';
+            for (let j = 0; j <= yLabels; j++) {
+                const value = min + ((max - min) / yLabels) * j;
+                const y = bounds.outerHeight - ((value - min) / (max - min)) * bounds.outerHeight;
+    
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(5, y);
+                ctx.stroke();
+            }
         }
     }
 

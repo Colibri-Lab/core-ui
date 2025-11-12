@@ -39,6 +39,8 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'When selection is changed');
+        this.RegisterEvent('BeforeChanged', false, 'Before selection is changed');
+        this.RegisterEvent('AfterChanged', false, 'After selection is changed');
     }
 
     ResizeCanvas() {
@@ -48,7 +50,7 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this._canvas.height = rect.height * dpr;
         this._ctx.scale(dpr, dpr);
         this._render();
-        if(this._hasSelector) {
+        if (this._hasSelector) {
             this._pane.bottom = this._align === 'end' ? 0 : null;
             this._pane.top = this._align === 'start' ? 0 : null;
         }
@@ -135,6 +137,8 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
      */
     set orientation(value) {
         this._orientation = value;
+        this.RemoveClass(['-vertical', '-horizontal']);
+        this.AddClass('-' + value);
         this.ResizeCanvas();
     }
 
@@ -248,10 +252,6 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
      * @type {Boolean}
      */
     set hasSelector(value) {
-        if(this._orientation === 'vertical') {
-            throw new Error('Ruler selector is only available for horizontal rulers');
-        }
-        
         value = this._convertProperty('Boolean', value);
         this._hasSelector = value;
         this._showHasSelector();
@@ -267,36 +267,54 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
 
         this._pane.shown = this._progress.shown = this._span1.shown = this._span2.shown = true;
 
-        this._drag0 = new Colibri.UI.Drag(this._progress.container, this._pane.container, (newLeft, newTop) => this._progressMoved(newLeft, newTop));
-        this._drag1 = new Colibri.UI.Drag(this._span1.container, this._pane.container, (newLeft, newTop) => this._span1Moved(newLeft, newTop));
-        this._drag2 = new Colibri.UI.Drag(this._span2.container, this._pane.container, (newLeft, newTop) => this._span2Moved(newLeft, newTop));
+        this._drag0 = new Colibri.UI.Drag(this._progress.container, this._pane.container, (newLeft, newTop) => this._progressMoved(newLeft, newTop), () => this.Dispatch('BeforeChanged'), () => this.Dispatch('AfterChanged'));
+        this._drag1 = new Colibri.UI.Drag(this._span1.container, this._pane.container, (newLeft, newTop) => this._span1Moved(newLeft, newTop), () => this.Dispatch('BeforeChanged'), () => this.Dispatch('AfterChanged'));
+        this._drag2 = new Colibri.UI.Drag(this._span2.container, this._pane.container, (newLeft, newTop) => this._span2Moved(newLeft, newTop), () => this.Dispatch('BeforeChanged'), () => this.Dispatch('AfterChanged'));
 
     }
 
     _progressMoved(newLeft, newTop) {
-        this._calculateValue(newLeft, null, true);
-        this._showValue();
-        this.Dispatch('Changed', {value: this.value});
+        if (this._orientation === 'horizontal') {
+            this._calculateValue(newLeft, null, true);
+        } else {
+            this._calculateValue(newTop, null, true);
+        }
+        this.Dispatch('Changed', { value: this.value });
     }
 
     _span1Moved(newLeft, newTop) {
-        this._calculateValue(newLeft, null);
-        this._showValue();
-        this.Dispatch('Changed', {value: this.value});
+        if (this._orientation === 'horizontal') {
+            this._calculateValue(newLeft, null);
+        } else {
+            this._calculateValue(newTop, null);
+        }
+        this.Dispatch('Changed', { value: this.value });
     }
 
     _span2Moved(newLeft, newTop) {
-        this._calculateValue(null, newLeft);
-        this._showValue();
-        this.Dispatch('Changed', {value: this.value});
+        if (this._orientation === 'horizontal') {
+            this._calculateValue(null, newLeft);
+        } else {
+            this._calculateValue(null, newTop);
+        }
+        this.Dispatch('Changed', { value: this.value });
     }
 
     _calculateValue(left, right, saveWidth = false) {
-        if(left !== null) {
-            this._setLeftPoint(left, saveWidth);
-        }
-        else if(right !== null) {
-            this._setRightPoint(right, saveWidth);
+        if (this._orientation === 'vertical') {
+            if (left !== null) {
+                this._setTopPoint(left, saveWidth);
+            }
+            else if (right !== null) {
+                this._setBottomPoint(right, saveWidth);
+            }
+        } else {
+            if (left !== null) {
+                this._setLeftPoint(left, saveWidth);
+            }
+            else if (right !== null) {
+                this._setRightPoint(right, saveWidth);
+            }
         }
     }
 
@@ -308,42 +326,89 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
 
         let newValue = min + ((max - min) * perc / 100);
         // newValue = Math.ceil(newValue / step) * step - step;
-        if(newValue >= max) {
+        if (newValue >= max) {
             newValue = max;
         }
-        if(newValue <= min) {
+        if (newValue <= min) {
             newValue = min;
         }
-        if(saveWidth) {
+        if (saveWidth) {
             this._value[1] = newValue + (this._value?.[1] - this._value?.[0]);
         }
-        this.value = [newValue, this._value?.[1]];
-
+        this._value = [newValue, this._value?.[1]];
+        this._renderSelector(newValue, this._value?.[1]);
     }
 
-    _setRightPoint(left, saveWidth = false) {
-        const width = this._pane.width;
-        const perc = (left + 8) * 100 / width;
+    _setTopPoint(top, saveHeight = false) {
+        const height = this._pane.height;
+        const perc = 100 - (top + this._span1.height / 2) * 100 / height;
+        const max = this._max;
+        const min = this._min;
+
+        let newValue = min + ((max - min) * perc / 100);
+        // newValue = Math.ceil(newValue / step) * step - step;
+        if (newValue >= max) {
+            newValue = max;
+        }
+        if (newValue <= min) {
+            newValue = min;
+        }
+        if (saveHeight) {
+            this._value[0] = (this._value?.[0] - this._value?.[1]) + newValue;
+        }
+        this._value = [this._value?.[0], newValue];
+        this._renderSelector(this._value?.[0], newValue);
+    }
+
+    _setBottomPoint(bottom, saveHeight = false) {
+
+        const height = this._pane.height;
+        const perc = 100 - (bottom + this._span1.height / 2) * 100 / height;
         const max = this._max;
         const min = this._min;
         const step = this._step;
 
         let newValue = min + ((max - min) * perc / 100);
         // newValue = Math.ceil(newValue / step) * step + step;
-        if(newValue >= max) {
+        if (newValue >= max) {
             newValue = max;
         }
-        if(newValue <= min) {
+        if (newValue <= min) {
             newValue = min;
         }
 
-        if(saveWidth) {
+        if (saveHeight) {
+            this._value[1] = newValue - (this._value?.[1] - this._value?.[0]);
+        }
+
+        this._value = [newValue, this._value?.[1]];
+        this._renderSelector(newValue, this._value?.[1]);
+    }
+
+    _setRightPoint(left, saveWidth = false) {
+        const width = this._pane.width;
+        const perc = (left) * 100 / width;
+        const max = this._max;
+        const min = this._min;
+        const step = this._step;
+
+        let newValue = min + ((max - min) * perc / 100);
+        // newValue = Math.ceil(newValue / step) * step + step;
+        if (newValue >= max) {
+            newValue = max;
+        }
+        if (newValue <= min) {
+            newValue = min;
+        }
+
+        if (saveWidth) {
             this._value[0] = newValue - (this._value?.[1] - this._value?.[0]);
         }
 
-        this.value = [this._value?.[0], newValue];
-
+        this._value = [this._value?.[0], newValue];
+        this._renderSelector(this._value?.[0], newValue);
     }
+
 
     /**
      * Value of ruler selector
@@ -358,71 +423,102 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
      */
     set value(value) {
 
-        if(!this._hasSelector) {
+        if (!this._hasSelector) {
             return;
         }
 
         value = this._convertProperty('Array', value);
-        
+
         let left1 = parseFloat(value[0]);
         let left2 = parseFloat(value[1]);
 
-        // left1 = Math.ceil(left1 / step) * step;
-        if(left1 >= this._max) {
-            left1 = this._max;
-        }
-        if(left1 <= this._min) {
-            left1 = this._min;
+        // сортировка — чтобы нижний всегда был меньше верхнего
+        if (left1 > left2) {
+            [left1, left2] = [left2, left1];
         }
 
-        if(left2 >= this._max) {
-            left2 = this._max;
-        }
-        if(left2 <= this._min) {
-            left2 = this._min;
-        }
+        if (left1 >= this._max) left1 = this._max;
+        if (left1 <= this._min) left1 = this._min;
+
+        if (left2 >= this._max) left2 = this._max;
+        if (left2 <= this._min) left2 = this._min;
 
         this._value = [left1, left2];
-        this._showValue();
+        this._renderSelector(left1, left2);
+
     }
-    _showValue() {
-        
-        let value = this._value;
 
-        const width = parseFloat(this._pane.width) ?? 0;
-        if(isNaN(width)) {
-            return;
+    _renderSelector(leftOrTop, rightOrBottom) {
+
+        if (this._orientation === 'vertical') {
+
+            const height = parseFloat(this._pane.height) ?? 0;
+            if (isNaN(height)) return;
+
+            const max = parseFloat(this._max);
+            const min = parseFloat(this._min);
+
+            let val1 = parseFloat(leftOrTop);
+            let val2 = parseFloat(rightOrBottom);
+
+            // нормализуем в проценты
+            let perc1 = (val1 - min) * 100 / (max - min);
+            let perc2 = (val2 - min) * 100 / (max - min);
+
+            // ограничиваем диапазон
+            perc1 = Math.max(0, Math.min(100, perc1));
+            perc2 = Math.max(0, Math.min(100, perc2));
+
+            // считаем "снизу вверх"
+            const bottom = Math.min(perc1, perc2);
+            const top = Math.max(perc1, perc2);
+
+            const topPx = height * (100 - top) / 100;
+            const realHeight = height * (top - bottom) / 100;
+
+            this._progress.container.css({
+                top: topPx.toFixed(2) + 'px',
+                height: realHeight.toFixed(2) + 'px'
+            });
+
+        } else {
+
+            const width = parseFloat(this._pane.width) ?? 0;
+            if (isNaN(width)) {
+                return;
+            }
+
+            const max = parseFloat(this._max);
+            const min = parseFloat(this._min);
+
+            // max - min = 100
+            // value - min = x
+            // x = (min + value) * 100 / (max - min)
+            let perc1 = (parseFloat(leftOrTop) - min) * 100 / (max - min);
+            let perc2 = (parseFloat(rightOrBottom) - min) * 100 / (max - min);
+
+            if (perc1 < 0) {
+                perc1 = 0;
+            }
+
+            if (perc2 < 0) {
+                perc2 = 0;
+            }
+
+
+            // width = 100
+            // left = perc
+            const perc = width * perc1 / 100;
+            const percWidth = width * perc2 / 100;
+            let realWidth = (percWidth - perc);
+            if (realWidth > width) {
+                realWidth = width;
+            }
+
+            this._progress.container.css('width', realWidth.toFixed(4) + 'px');
+            this._progress.container.css('left', perc.toFixed(4) + 'px');
         }
 
-        const max = parseFloat(this._max);
-        const min = parseFloat(this._min);
-
-        // max - min = 100
-        // value - min = x
-        // x = (min + value) * 100 / (max - min)
-        let perc1 = (parseFloat(value[0]) - min) * 100 / (max - min);
-        let perc2 = (parseFloat(value[1]) - min) * 100 / (max - min);
-
-        if(perc1 < 0) {
-            perc1 = 0;
-        }
-
-        if(perc2 < 0) {
-            perc2 = 0;
-        }
-
-
-        // width = 100
-        // left = perc
-        const perc = width * perc1 / 100;
-        const percWidth = width * perc2 / 100;
-        let realWidth = (percWidth - perc);
-        if(realWidth > width) {
-            realWidth = width;
-        }
-        
-        this._progress.container.css('width', realWidth.toFixed(4) + 'px');
-        this._progress.container.css('left', perc.toFixed(4) + 'px');
 
     }
 
@@ -528,6 +624,13 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
             }
         }
 
+    }
+
+    Resized() {
+        if (!this.value) {
+            return;
+        }
+        this.value = this.value;
     }
 
 }

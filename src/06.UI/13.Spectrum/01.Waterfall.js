@@ -35,8 +35,9 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this._canvas.width = rect.width * dpr;
         this._canvas.height = rect.height * dpr;
         this._ctx.scale(dpr, dpr);
-        if(this._history) {
+        if (this._history) {
             this._history.clear();
+            this._history.limit = rect.height;
         }
     }
 
@@ -81,7 +82,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this._min = value;
     }
 
-    
+
     /**
      * Index of start
      * @type {Number}
@@ -114,6 +115,20 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this._end = value;
     }
 
+    Resize(start, end) {
+        this._start = start;
+        this._end = end;
+
+        const items = this._history.getAll();
+        this.Clear();
+        let i = 0;
+        for (const index in items) {
+            if (index.isNumeric()) {
+                this.Draw(items[index], i++, false);
+            }
+        }
+    }
+
     _getColor(palette, index, alpha = 1) {
         let color = null;
         if (index >= palette.length) {
@@ -133,14 +148,27 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
     _crop(floatArray) {
         const start = this._start || 0;
         const end = this._end != null ? this._end : floatArray.length;
-        return floatArray.subarray(start, end); // возвращает Float32Array без копирования данных
+        return floatArray.subarray(start, end);
     }
 
-    Draw(floatArray) {
+    set history(value) {
+        this._history.clear();
+        for (const item of value) {
+            this.Draw(item);
+        }
+    }
+    get history() {
+        return this._history.getAll();
+    }
+
+    Draw(floatArray, rowIndex = 0, shift = true) {
         try {
+            if (!floatArray) {
+                return;
+            }
 
+            this._history.add(floatArray);
             floatArray = this._crop(floatArray);
-
 
             const ctx = this._ctx;
             const bounds = this._canvas.bounds();
@@ -148,8 +176,10 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
             const h = bounds.outerHeight;
 
             // scroll вниз на 1px
-            const imageData = ctx.getImageData(0, 0, w, h);
-            ctx.putImageData(imageData, 0, 1);
+            if (shift) {
+                const imageData = ctx.getImageData(0, 0, w, h);
+                ctx.putImageData(imageData, 0, 1);
+            }
 
             const len = floatArray.length;
             const palette = this._palette;
@@ -186,7 +216,10 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
 
             // рисуем 1px прямоугольник сверху
             ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, w, 1);
+            // if(rowIndex != 0) {
+            //     debugger;
+            // }
+            ctx.fillRect(0, rowIndex, w, 1);
 
         } catch (e) {
             console.error(e);
@@ -197,6 +230,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         const bounds = this._canvas.bounds();
         this._ctx = this._canvas.getContext('2d', { willReadFrequently: true });
         this._ctx.clearRect(0, 0, bounds.outerWidth, bounds.outerHeight);
+        this._history.clear();
     }
 
 

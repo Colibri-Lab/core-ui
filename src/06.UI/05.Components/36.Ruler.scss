@@ -11,7 +11,7 @@
 
 
     .colibri-ui-rangepicker-rangepicker-progress-pane {
-        background: rgba(0,0,0,.05);
+        background: rgba(0, 0, 0, .05);
         z-index: 1;
         width: 100%;
         height: 100%;
@@ -20,7 +20,7 @@
         >.app-component-pane {
             position: relative;
             padding: 0px;
-            background: rgba(0,0,0,.1);
+            background: rgba(0, 0, 0, .1);
             width: 100%;
             height: 100%;
             cursor: grab;
@@ -29,7 +29,7 @@
 
                 width: 5px;
                 height: 100%;
-                background: rgba(0,0,0,0.5);
+                background: rgba(0, 0, 0, 0.5);
                 position: absolute;
                 z-index: 1;
                 cursor: col-resize;
@@ -41,6 +41,7 @@
                 &:first-child {
                     left: 0px;
                 }
+
                 &:last-child {
                     right: 0px;
                 }
@@ -48,4 +49,48 @@
             }
         }
     }
+
+    &.-vertical {
+
+        .colibri-ui-rangepicker-rangepicker-progress-pane {
+            background: rgba(0, 0, 0, .05);
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+
+            >.app-component-pane {
+                position: relative;
+                padding: 0px;
+                background: rgba(0, 0, 0, .1);
+                width: 100%;
+                height: 100%;
+                cursor: grab;
+
+                >.app-component-pane {
+
+                    height: 5px;
+                    width: 100%;
+                    background: rgba(0, 0, 0, 0.5);
+                    position: absolute;
+                    z-index: 1;
+                    cursor: row-resize;
+
+                    &.app-component-shown {
+                        display: block;
+                    }
+
+                    &:first-child {
+                        top: 0px;
+                    }
+
+                    &:last-child {
+                        bottom: 0px;
+                    }
+
+                }
+            }
+        }
+    }
+
 }

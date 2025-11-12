@@ -29,11 +29,13 @@ Colibri.UI.Drag = class {
      * @param {Element} container Container for drag in
      * @param {Element} moveHandler Element for drag handle
      */
-    constructor(element, container, moveHandler) {
+    constructor(element, container, moveHandler, startHandler, endHandler) {
 
         this._element = element;
         this._container = container;
-        this._moveHandler = moveHandler;
+        this._moveHandler = moveHandler || (() => {});
+        this._startHandler = startHandler || (() => {});
+        this._endHandler = endHandler || (() => {});
 
         this.__EndHandle = (e) => this.__end(e);
         this.__MoveHandle = (e) => this.__move(e);
@@ -58,6 +60,7 @@ Colibri.UI.Drag = class {
         this._element.tag = { state: true, delta: [e.clientX - elementBounds.left, e.clientY - elementBounds.top] };
         document.addEventListener('mouseup', this.__EndHandle, true);
         document.addEventListener('mousemove', this.__MoveHandle, true);
+        this._startHandler();
         e.preventDefault();
         e.stopPropagation();
     }
@@ -69,6 +72,7 @@ Colibri.UI.Drag = class {
         this._element.tag = { state: false };
         document.removeEventListener('mouseup', this.__EndHandle, true);
         document.removeEventListener('mousemove', this.__MoveHandle, true);
+        this._endHandler();
         e.preventDefault();
         e.stopPropagation();
     }
