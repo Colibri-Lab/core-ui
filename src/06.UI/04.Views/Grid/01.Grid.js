@@ -91,6 +91,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this.RegisterEvent('RowAdded', false, 'When row is added');
         this.RegisterEvent('RowUpdated', false, 'When row is updated');
 
+        this.RegisterEvent('CellClicked', false, 'When clicked on cell value container');
         this.RegisterEvent('CellViewerClicked', false, 'When clicked on cell viewer component');
         this.RegisterEvent('CellEditorChanged', false, 'When cell editor is changed');
         this.RegisterEvent('MassActionsMenuActionClicked', false, 'When clicked on button inside mass actions menu');

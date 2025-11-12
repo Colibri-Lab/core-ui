@@ -398,11 +398,16 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         }
     }
 
+    __cellValueContainerClicked(event, args) {
+        this.grid?.Dispatch('CellClicked', Object.assign(args, { cell: this, row: this.parentRow, field: this.columnName, data: this.parentRow.value, value: this.value }));
+    }
+
     _createValueContainer() {
         if (!this._valueContainer) {
             this._valueContainer = new Colibri.UI.TextSpan('span', this);
             this._valueContainer.AddClass('app-ui-row-cell-value-container');
             this._valueContainer.copy = this.parentColumn.canCopy;
+            this._valueContainer.AddHandler('Clicked', this.__cellValueContainerClicked, false, this);
         }
     }
 
