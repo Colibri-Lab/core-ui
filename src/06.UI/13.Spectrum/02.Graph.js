@@ -320,21 +320,6 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
     }
 
     /**
-     * Maximum lines color
-     * @type {String}
-     */
-    get maxLineColor() {
-        return this._maxLineColor;
-    }
-    /**
-     * Maximum lines color
-     * @type {String}
-     */
-    set maxLineColor(value) {
-        this._maxLineColor = value;
-    }
-
-    /**
      * Maximum line stroke
      * @type {Number}
      */
@@ -514,13 +499,73 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         value = this._convertProperty('Number', value);
         this._vgridLinesLargeStep = value;
     }
+    
+    /**
+     * Maximum line color method
+     * @type {Function}
+     */
+    get maxLineColor() {
+        return this._maxLineColor;
+    }
+    /**
+     * Maximum line color method
+     * @type {Function}
+     */
+    set maxLineColor(value) {
+        value = this._convertProperty('Function', value);
+        this._maxLineColor = value;
+    }
+
+    /**
+     * Graph color method
+     * @type {Function}
+     */
+    get graphColor() {
+        return this._graphColor;
+    }
+    /**
+     * Graph color method
+     * @type {Function}
+     */
+    set graphColor(value) {
+        value = this._convertProperty('Function', value);
+        this._graphColor = value;
+    }
+
+    /**
+     * Type of graph
+     * @type {line,graph}
+     */
+    get graphType() {
+        return this._graphType;
+    }
+    /**
+     * Type of graph
+     * @type {line,graph}
+     */
+    set graphType(value) {
+        this._graphType = value;
+    }
 
     Draw(floatArray) {
         try {
 
-            floatArray = this._crop(floatArray);
+            // save data for future use
+            this._floatArray = floatArray;
+            
+            if(!this._maxValues) {
+                this._maxValues = new Float32Array(this._floatArray.length);
+                for (let i = 0; i < this._floatArray.length; i++) this._maxValues[i] = this._floatArray[i];
+            }
+            for (let i = 0; i < this._floatArray.length; i++) {
+                if (this._floatArray[i] > this._maxValues[i]) {
+                    this._maxValues[i] = this._floatArray[i];
+                }
+            }
 
-            const palette = this._createPalette();
+            floatArray = this._crop(floatArray);
+            const maxValues = this._crop(this._maxValues);
+
             const bounds = this._canvas.bounds();
             const ctx = this._ctx;
             ctx.clearRect(0, 0, bounds.outerWidth, bounds.outerHeight);
@@ -547,12 +592,8 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
                 }
 
                 if (this._showMaximums) {
-                    if (!this._maxValues || this._maxValues.length != floatArray.length) {
-                        this._maxValues = new Float32Array(len);
-                        for (let i = 0; i < len; i++) this._maxValues[i] = floatArray[i];
-                    }
                     for (let i = 0; i < len; i++) {
-                        const v = this._maxValues[i];
+                        const v = maxValues[i];
                         if (!isNaN(v)) {
                             if (v < min) min = v;
                             if (v > max) max = v;
@@ -563,54 +604,17 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
                 if (min === max) max = min + 1; // защита от деления на ноль
             }
 
-
             this._drawGridLines(ctx, bounds, min, max, floatArray);
 
             this._drawZeroLine(ctx, bounds, min, max);
 
-            // создаём горизонтальный градиент
-            const grad = ctx.createLinearGradient(0, 0, bounds.outerWidth, 0);
-            for (let i = 0; i < len; i++) {
-                let value = floatArray[i];
-                if (isNaN(value)) value = min;
-                const normValue = (value - min) / (max - min);
-                const colorIndex = Math.floor(normValue * (palette.length - 1));
-                grad.addColorStop(i / (len - 1), this._getColor(palette, colorIndex));
+            if(this._graphType === 'graph') {
+                this._drawGraph(ctx, floatArray, min, max);
+            } else if(this._graphType === 'line') {
+                this._drawLine(ctx, floatArray, min, max);
             }
 
-            // строим path линии
-            ctx.beginPath();
-            for (let i = 0; i < len; i++) {
-                let value = floatArray[i];
-                if (isNaN(value)) value = min;
-                const norm = (value - min) / (max - min); // 0..1
-                const y = bounds.outerHeight - norm * bounds.outerHeight; // масштабируем по высоте
-                const x = i * step;
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            }
-
-            // замыкаем path вниз
-            ctx.lineTo(bounds.outerWidth, bounds.outerHeight);
-            ctx.lineTo(0, bounds.outerHeight);
-            ctx.closePath();
-
-            ctx.fillStyle = grad;
-            ctx.fill();
-
-            // --- Оси и подписи ---
-            // ось X
-            ctx.strokeStyle = this._axisColor || '#888';
-            ctx.lineWidth = this._axisStroke || 1;
-            ctx.beginPath();
-            ctx.moveTo(0, bounds.outerHeight);
-            ctx.lineTo(bounds.outerWidth, bounds.outerHeight);
-            // ось Y
-            ctx.moveTo(0, 0);
-            ctx.lineTo(0, bounds.outerHeight);
-            ctx.stroke();
-
-            this._drawMaxLine(ctx, bounds, floatArray, len, step, min, max);
+            this._drawMaxLine(ctx, bounds, maxValues, len, step, min, max);
 
             this._drawAxises(ctx, bounds, min, max);
 
@@ -619,6 +623,80 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         } catch (e) {
             console.error(e);
         }
+    }
+
+    _drawLine(ctx, floatArray, min, max) {
+        const bounds = this._canvas.bounds();
+        const palette = this._createPalette();
+        const len = floatArray.length;
+        const step = bounds.outerWidth / len;
+
+        if (len === 0) return;
+
+        ctx.beginPath();
+        for (let i = 0; i < len; i++) {
+            let value = floatArray[i];
+            if (isNaN(value)) value = min;
+            const norm = (value - min) / (max - min);
+            const y = bounds.outerHeight - norm * bounds.outerHeight;
+            const x = i * step;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+
+        ctx.strokeStyle = (this._graphColor ?? (() => 'rgba(0,0,0,0.4)'))(this, ctx, palette, bounds.outerWidth, len, floatArray, min, max);
+        ctx.lineWidth = this._lineWidth || 1;
+        ctx.stroke();
+
+        // --- оси ---
+        ctx.strokeStyle = this._axisColor || '#888';
+        ctx.lineWidth = this._axisStroke || 1;
+        ctx.beginPath();
+        ctx.moveTo(0, bounds.outerHeight);
+        ctx.lineTo(bounds.outerWidth, bounds.outerHeight);
+        ctx.moveTo(0, 0);
+        ctx.lineTo(0, bounds.outerHeight);
+        ctx.stroke();
+    }
+
+
+
+    _drawGraph(ctx, floatArray, min, max) {
+        const bounds = this._canvas.bounds();
+        const palette = this._createPalette();
+        const len = floatArray.length;
+        const step = bounds.outerWidth / len;
+
+        ctx.beginPath();
+        for (let i = 0; i < len; i++) {
+            let value = floatArray[i];
+            if (isNaN(value)) value = min;
+            const norm = (value - min) / (max - min); // 0..1
+            const y = bounds.outerHeight - norm * bounds.outerHeight; // масштабируем по высоте
+            const x = i * step;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+
+        // замыкаем path вниз
+        ctx.lineTo(bounds.outerWidth, bounds.outerHeight);
+        ctx.lineTo(0, bounds.outerHeight);
+        ctx.closePath();
+
+        ctx.fillStyle = (this._graphColor ?? (() => 'rgba(0,0,0,0.4)'))(this, ctx, palette, bounds.outerWidth, len, floatArray, min, max);
+        ctx.fill();
+
+        // --- Оси и подписи ---
+        // ось X
+        ctx.strokeStyle = this._axisColor || '#888';
+        ctx.lineWidth = this._axisStroke || 1;
+        ctx.beginPath();
+        ctx.moveTo(0, bounds.outerHeight);
+        ctx.lineTo(bounds.outerWidth, bounds.outerHeight);
+        // ось Y
+        ctx.moveTo(0, 0);
+        ctx.lineTo(0, bounds.outerHeight);
+        ctx.stroke();
     }
 
     _drawGridLines(ctx, bounds, min, max, floatArray) {
@@ -696,36 +774,13 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
 
     _drawMaxLine(ctx, bounds, floatArray, len, step, min, max) {
         if (this._showMaximums) {
+            const palette = this._createPalette();
 
-            if (!this._maxValues || this._maxValues.length !== len) {
-                this._maxValues = new Float32Array(len);
-                for (let i = 0; i < len; i++) this._maxValues[i] = floatArray[i];
-            }
-
-            // --- обновляем максимальные значения ---
-            for (let i = 0; i < len; i++) {
-                if (floatArray[i] > this._maxValues[i]) {
-                    this._maxValues[i] = floatArray[i];
-                }
-            }
-
-            if (this._maxLineColor === 'grad') {
-
-                const grad = ctx.createLinearGradient(0, 0, bounds.outerWidth, 0);
-                const palette = this._createPalette();
-                for (let i = 0; i < len; i++) {
-                    const normValue = (this._maxValues[i] - min) / (max - min);
-                    const colorIndex = Math.floor(normValue * (palette.length - 1));
-                    grad.addColorStop(i / (len - 1), this._getColor(palette, colorIndex, 0.4));
-                }
-                ctx.strokeStyle = grad;
-            } else {
-                ctx.strokeStyle = this._maxLineColor || 'rgba(255,0,0,0.6)';
-            }
+            ctx.strokeStyle = (this._maxLineColor ?? (() => 'rgba(255,0,0,0.8)'))(this, ctx, palette, bounds.outerWidth, len, floatArray, min, max);
 
             ctx.beginPath();
             for (let i = 0; i < len; i++) {
-                const norm = (this._maxValues[i] - min) / (max - min);
+                const norm = (floatArray[i] - min) / (max - min);
                 const y = bounds.outerHeight - norm * bounds.outerHeight;
                 const x = i * step;
                 if (i === 0) ctx.moveTo(x, y);
@@ -752,13 +807,13 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
             }
         }
 
-        if(this._yLabels) {
+        if (this._yLabels) {
             const yLabels = this._yLabels || 5;
             ctx.textAlign = 'left';
             for (let j = 0; j <= yLabels; j++) {
                 const value = min + ((max - min) / yLabels) * j;
                 const y = bounds.outerHeight - ((value - min) / (max - min)) * bounds.outerHeight;
-    
+
                 ctx.beginPath();
                 ctx.moveTo(0, y);
                 ctx.lineTo(5, y);
@@ -777,6 +832,14 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
     ResetMaximums() {
         this._maxValues = null;
     }
+
+    Resize(start, end) {
+        this._start = start;
+        this._end = end;
+
+        this.Draw(this._floatArray);
+    }
+
 
 
 }
