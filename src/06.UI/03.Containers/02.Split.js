@@ -155,7 +155,7 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
      */
     set startPosition(value) {
         this._startPosition = value;
-        this.container.styles = {flex: '0 0 ' + value}
+        this.container.styles = {flex: '0 0 ' + value};
     }
 
     /**
