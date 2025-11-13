@@ -5,23 +5,6 @@
  */
 Colibri.UI.Pane = class extends Colibri.UI.Component {
 
-    static ResizeNone = 'none';
-    static ResizeAll = 'all';
-    static ResizeHorizontalOnly = 'horizontal';
-    static ResizeVerticalOnly = 'vertical';
-
-    /** @type {string} */
-    _resizable = Colibri.UI.Pane.ResizeNone;
-    /** @type {Function|null} */
-    _resizeHandler = null;
-    /** @type {boolean} */
-    _resizing = false;
-    /** @type {{horizontalSize,verticalSize}} */
-    _resizeData = {
-        horizontalSize: 0,
-        verticalSize: 0,
-    };
-
     /**
      * @constructor
      * @param {string} name name of component
@@ -29,117 +12,211 @@ Colibri.UI.Pane = class extends Colibri.UI.Component {
      * @param {string|HTMLElement} element element to generate in
      * @param {number} resizable is component resizable 
      */
-    constructor(name, container, element, resizable= 'none') {
+    constructor(name, container, element, resizable = 'none') {
         super(name, container, element || Element.create('div'));
 
         this.AddClass('app-component-pane');
 
-        this._resizable = resizable || 'none';
 
-        this.__startResize = (e) => {
-            this._resizing = true;
-            Colibri.UI.Resizing = true;
-            this._resizeData = this._element.bounds();
+        this.__startMove = (e) => {
+            const bounds = this._element.getBoundingClientRect();
+            const cornerSize = 20;
+            const x = e.clientX - bounds.left;
+            const y = e.clientY - bounds.top;
 
-            // ставим на документ, чтобы точно перехватить        
-            document.addEventListener("touchend", this.__stopResize, false);
-            document.addEventListener("mouseup", this.__stopResize, false);
+            let corner = null;
+            if (x <= cornerSize && y <= cornerSize) {
+                corner = 'nw-resize';
+            } else if (x >= bounds.width - cornerSize && y <= cornerSize) {
+                corner = 'ne-resize';
+            } else if (x <= cornerSize && y >= bounds.height - cornerSize) {
+                corner = 'sw-resize';
+            } else if (x >= bounds.width - cornerSize && y >= bounds.height - cornerSize) {
+                corner = 'se-resize';
+            } else if (x <= cornerSize) {
+                corner = 'w-resize';
+            } else if (x >= bounds.width - cornerSize) {
+                corner = 'e-resize';
+            } else if (y <= cornerSize) {
+                corner = 'n-resize';
+            } else if (y >= bounds.height - cornerSize) {
+                corner = 's-resize';
+            }
 
-            document.addEventListener("touchmove", this.__doResize, false);
-            document.addEventListener("mousemove", this.__doResize, false);
+            if (this._resizable && corner) {
+                this.styles = { cursor: corner };
+            } else {
+                this.styles = { cursor: 'grab' };
+            }
 
-            return false;
 
         };
 
-        this.__stopResize = (e) => {
-            e?.preventDefault();
-            e?.stopPropagation();
-        
-            this._resizing = false;
-            Colibri.UI.Resizing = false;
+        this.__mouseDown = (e) => {
+            const bounds = this._element.getBoundingClientRect();
+            const cornerSize = 20;
+            const x = e.clientX - bounds.left;
+            const y = e.clientY - bounds.top;
 
-            document.removeEventListener("touchend", this.__stopResize, false);
-            document.removeEventListener("mouseup", this.__stopResize, false);
-    
-            document.removeEventListener("touchmove", this.__doResize, false);
-            document.removeEventListener("mousemove", this.__doResize, false);
+            let dir = null;
+            if (x <= cornerSize && y <= cornerSize) {
+                dir = 'nw';
+            } else if (x >= bounds.width - cornerSize && y <= cornerSize) {
+                dir = 'ne';
+            } else if (x <= cornerSize && y >= bounds.height - cornerSize) {
+                dir = 'sw';
+            } else if (x >= bounds.width - cornerSize && y >= bounds.height - cornerSize) {
+                dir = 'se';
+            } else if (x <= cornerSize) {
+                dir = 'w';
+            } else if (x >= bounds.width - cornerSize) {
+                dir = 'e';
+            } else if (y <= cornerSize) {
+                dir = 'n';
+            } else if (y >= bounds.height - cornerSize) {
+                dir = 's';
+            }
 
-            return false;
-
-        };
-
-        this.__doResize = (e) => {
-            if (this._resizing) {
+            if (this._resizable && dir) {
                 e.preventDefault();
-    
-                const wdelta = (e.pageX - (this._resizeData.left + this._resizeData.outerWidth));
-                const hdelta = (e.pageY - (this._resizeData.top + this._resizeData.outerHeight));
+                this._resizeDir = dir;
+                this._resizeStart = {
+                    x: e.clientX,
+                    y: e.clientY,
+                    width: this._element.offsetWidth,
+                    height: this._element.offsetHeight,
+                    left: this._element.offsetLeft,
+                    top: this._element.offsetTop
+                };
+                
+                document.addEventListener('mousemove', this.__resizeMove);
+                document.addEventListener('mouseup', this.__resizeStop);
 
-                if(this._resizable == Colibri.UI.Pane.ResizeHorizontalOnly || this._resizable == Colibri.UI.Pane.ResizeAll) {
-                    this.width += wdelta + 10;
-                }
-    
-                if(this._resizable == Colibri.UI.Pane.ResizeVerticalOnly || this._resizable == Colibri.UI.Pane.ResizeAll) {
-                    this.height += hdelta + 10;
-                }
-    
-                this._resizeData = this._element.bounds();
+            } else if (this._movable) {
+                let previousClientX = e.clientX,
+                    previousClientY = e.clientY;
 
-                return false;
+                let previousLeft = this.styles.left ? parseInt(this.styles.left) : 0,
+                    previousTop = this.styles.top ? parseInt(this.styles.top) : 0;
+
+                this.tag._diffX = previousClientX - previousLeft;
+                this.tag._diffY = previousClientY - previousTop;
+                this._isDragged = true;
+
+                document.addEventListener('mousemove', this.__dragMoveHandler);
+                document.addEventListener('mouseup', this.__dragStopHandler);
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+
+        };
+
+        this.__resizeMove = (e) => {
+            if (!this._resizeDir || !this._resizeStart) return;
+            let dx = e.clientX - this._resizeStart.x;
+            let dy = e.clientY - this._resizeStart.y;
+            let newWidth = this._resizeStart.width;
+            let newHeight = this._resizeStart.height;
+            let newLeft = this._resizeStart.left;
+            let newTop = this._resizeStart.top;
+
+            if (this._resizeDir.indexOf('e') !== -1) {
+                newWidth = this._resizeStart.width + dx;
+            }
+            if (this._resizeDir.indexOf('s') !== -1) {
+                newHeight = this._resizeStart.height + dy;
+            }
+            if (this._resizeDir.indexOf('w') !== -1) {
+                newWidth = this._resizeStart.width - dx;
+                newLeft = this._resizeStart.left + dx;
+            }
+            if (this._resizeDir.indexOf('n') !== -1) {
+                newHeight = this._resizeStart.height - dy;
+                newTop = this._resizeStart.top + dy;
+            }
+
+            this._element.style.width = newWidth + 'px';
+            this._element.style.height = newHeight + 'px';
+            this._element.style.left = newLeft + 'px';
+            this._element.style.top = newTop + 'px';
+
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+
+        };
+
+        this.__resizeStop = () => {
+            document.removeEventListener('mousemove', this.__resizeMove);
+            document.removeEventListener('mouseup', this.__resizeStop);
+            this._element.css('cursor', null);
+            this._resizeDir = null;
+            this._resizeStart = null;
+        };
+
+        this.__dragMoveHandler = (e) => {
+            if (this._movable && this._isDragged) {
+                let newClientX = e.clientX,
+                    newClientY = e.clientY,
+                    newLeft = newClientX - this.tag._diffX,
+                    newTop = newClientY - this.tag._diffY;
+
+                this._element.style.top = newTop + 'px';
+                this._element.style.left = newLeft + 'px';
             }
         };
-
-        this.AddClass('app-component-resize-' + this._resizable);
-    }
-
-    /** @private */
-    _createResizeHandler() {
-        this._resizeHandler = Element.create('div', {class: 'app-component-pane-resize'});
-        this._element.prepend(this._resizeHandler);
-
-        this._resizeHandler.addEventListener("touchstart", this.__startResize, false);
-        this._resizeHandler.addEventListener("mousedown", this.__startResize, false);
-
-    }
-
-    /** @private */
-    _removeResizeHandler() {
-        if(this._resizeHandler) {
-            this.__stopResize(null);
-            this._resizeHandler.removeEventListener("touchstart", this.__startResize, false);
-            this._resizeHandler.removeEventListener("mousedown", this.__startResize, false);
-            this._resizeHandler && this._resizeHandler.remove();
+        this.__dragStopHandler = (e) => {
+            if (this._movable && this._isDragged) {
+                document.removeEventListener('mousemove', this.__dragMoveHandler);
+                document.removeEventListener('mouseup', this.__dragStopHandler);
+                this._isDragged = false;
+            }
         }
     }
 
-    Dispose() {
-        this._removeResizeHandler();
-        super.Dispose();
+    /**
+     * Is pane movable
+     * @type {Boolean}
+     */
+    get movable() {
+        return this._movable;
+    }
+    /**
+     * Is pane movable
+     * @type {Boolean}
+     */
+    set movable(value) {
+        this._movable = value;
+        this._showMovable();
+    }
+    _showMovable() {
+        if (this._movable) {
+            this._element.addEventListener('mousedown', this.__dragStartHandler);
+        } else {
+            this._element.removeEventListener('mousedown', this.__dragStartHandler);
+        }
     }
 
     /**
-     * Is block resizable
-     * @type {boolean}
+     * Resizable
+     * @type {Boolean}
      */
     get resizable() {
         return this._resizable;
     }
     /**
-     * Is block resizable
-     * @type {boolean}
+     * Resizable
+     * @type {Boolean}
      */
     set resizable(value) {
-        this.RemoveClass('app-component-resize-' + this._resizable);
         this._resizable = value;
-        this.AddClass('app-component-resize-' + this._resizable);
-
-        if(this._resizable === true) {
-            this._createResizeHandler();
-        }
-        else {
-            this._removeResizeHandler();
-        }
+        this._showResizable();
     }
+    _showResizable() {
+        this._element.addEventListener('mousemove', this.__startMove, true);
+        this._element.addEventListener('mousedown', this.__mouseDown, true);
+    }
+
 
 }

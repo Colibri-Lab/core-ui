@@ -19,10 +19,12 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         this.GenerateChildren(element, this);
         this._canvas = Element.create('canvas').appendTo(this._element);
         this._ctx = this._canvas.getContext('2d', { willReadFrequently: true });
+        this._selections = new Colibri.UI.Spectrum.Selections('selections', this);
+        this._selections.shown = true;
 
         this.handleResize = true;
         this.AddHandler('Resize', this.ResizeCanvas, false, this);
-
+        
     }
 
     ResizeCanvas() {
@@ -281,6 +283,31 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
     set end(value) {
         value = this._convertProperty('Number', value);
         this._end = value;
+    }
+
+    /**
+     * ToolTip function
+     * @type {Function}
+     */
+    get toolTipFunction() {
+        return this._toolTipFunction;
+    }
+    /**
+     * ToolTip function
+     * @type {Function}
+     */
+    set toolTipFunction(value) {
+        this._toolTipFunction = value;
+        this.toolTipPoint = 'mouse';
+        this.AddHandler('MouseMove', this.__thisMouseMove);
+    }
+
+    __thisMouseMove(event, args) {
+        const bounds = this._element.bounds();
+        const point = {left: args.domEvent.screenX - bounds.left, top: args.domEvent.screenY - bounds.top};
+        if(this._toolTipFunction) {
+            this.toolTip = this._toolTipFunction(this, point);
+        }
     }
 
     Resize(start, end) {
@@ -840,6 +867,14 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         this.Draw(this._floatArray);
     }
 
+    /**
+     * Selections object
+     * @type {Colibri.UI.Spectrum.Selections}
+     * @readonly
+     */
+    get Selections() {
+        return this._selections;
+    }
 
 
 }

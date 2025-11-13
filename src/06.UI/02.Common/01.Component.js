@@ -195,6 +195,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._binding = '';
 
         this._renderedIndex = 0;
+        this._toolTipPoint = 'parent';
         
         this._clickToCopyHandler = (e) => (this._copyStyle === 'text' ? this.container.text() : this.value + '').copyToClipboard() && App.Notices.Add(new Colibri.UI.Notice('#{ui-copy-info}', Colibri.UI.Notice.Success));
 
@@ -258,7 +259,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     __defaultMouseEnterHandler(event, args) {
         if(this._toolTip) {
             this._createTipObject();
-            this._setToolTipPositionAndGap();
+            this._setToolTipPositionAndGap(this._element, args.domEvent);
             this._tipObject.html(this._toolTip);
             this._tipObject.showElement();
         }
@@ -1511,6 +1512,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             if(!this._tipObject) {
                 this._createTipObject();
             }
+            this._tipObject.html(this._toolTip);
             this.AddHandler('MouseMove', this.__mouseMoveForToolTip);
         } else {
             if(this._tipObject) {
@@ -1523,7 +1525,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
     __mouseMoveForToolTip(event, args) {
         if(this._toolTip) {
-            this._setToolTipPositionAndGap();
+            this._setToolTipPositionAndGap(this._element, args.domEvent);
         }
     }
 
@@ -1531,13 +1533,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @private
      * @param {Element} elementObject element object to position tooltip
      */
-    _setToolTipPositionAndGap(elementObject = null) {
+    _setToolTipPositionAndGap(elementObject = null, e = null) {
 
         elementObject = elementObject || this._element;
         const bounds = elementObject.bounds();
         const tipBounds = this._tipObject.bounds();
         const windowBounds = document.body.bounds();
         windowBounds.height = window.clientHeight;
+        const toolTipPoint = this._toolTipPoint;
 
         this._tipObject.attr('class', 'tip');
         this._tipObject.data('for', this.path);
@@ -1550,36 +1553,45 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         let likeX = this._toolTipPosition.split(' ')[0];
         let likeY = this._toolTipPosition.split(' ')[1];
 
-        if(likeX === 'left') {
-            // левый край
-            left = bounds.left;
-            if(left + tipBounds.width > windowBounds.width) {
-                likeX = 'right';
-                left = bounds.left + bounds.width - tipBounds.width;
-            }
-        } else  {
-            // правый край
-            left = bounds.left + bounds.width - tipBounds.width;
-            if(left - tipBounds.width < 0) {
-                likeX = 'left';
-                left = bounds.left;
-            }
-        }
+        if(toolTipPoint === 'parent') {
 
-        if(likeY === 'bottom') {
-            // нижний край
-            top = (bounds.top + bounds.height);
-            if(top + tipBounds.height > windowBounds.height) {
-                likeY = 'top';
-                top = (bounds.top - tipBounds.height);
+            let boundsLeft = bounds.left;
+            let boundsTop = bounds.top;
+    
+            if(likeX === 'left') {
+                // левый край
+                left = boundsLeft;
+                if(toolTipPoint === 'parent' && left + tipBounds.width > windowBounds.width) {
+                    likeX = 'right';
+                    left = boundsLeft + bounds.width - tipBounds.width;
+                }
+            } else  {
+                // правый край
+                left = boundsLeft + bounds.width - tipBounds.width;
+                if(toolTipPoint === 'parent' && left - tipBounds.width < 0) {
+                    likeX = 'left';
+                    left = boundsLeft;
+                }
             }
-        } else  {
-            // правый край
-            top = (bounds.top - tipBounds.height);
-            if(top - tipBounds.height < 0) {
-                likeY = 'bottom';
-                top = (bounds.top + bounds.height);
+    
+            if(likeY === 'bottom') {
+                // нижний край
+                top = (boundsTop + bounds.height);
+                if(toolTipPoint === 'parent' && top + tipBounds.height > windowBounds.height) {
+                    likeY = 'top';
+                    top = (boundsTop - tipBounds.height);
+                }
+            } else  {
+                // правый край
+                top = (boundsTop - tipBounds.height);
+                if(toolTipPoint === 'parent' && top - tipBounds.height < 0) {
+                    likeY = 'bottom';
+                    top = (boundsTop + bounds.height);
+                }
             }
+        } else {
+            left = e.clientX + 20;
+            top = e.clientY + 20;
         }
 
         let css = {zIndex: Colibri.UI.maxZIndex + 1};
@@ -1608,7 +1620,21 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     set toolTipPosition(value) {
         this._toolTipPosition = value;
-        
+    }
+
+    /**
+     * Point of tooltip position
+     * @type {parent,mouse}
+     */
+    get toolTipPoint() {
+        return this._toolTipPoint;
+    }
+    /**
+     * Point of tooltip position
+     * @type {parent,mouse}
+     */
+    set toolTipPoint(value) {
+        this._toolTipPoint = value;
     }
 
     /**
