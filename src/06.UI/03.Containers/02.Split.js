@@ -143,6 +143,22 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
     }
 
     /**
+     * Start position of splitter top block
+     * @type {String}
+     */
+    get startPosition() {
+        return this._startPosition;
+    }
+    /**
+     * Start position of splitter top block
+     * @type {String}
+     */
+    set startPosition(value) {
+        this._startPosition = value;
+        this.container.styles = {flex: '0 0 ' + value}
+    }
+
+    /**
      * Container element
      * @type {Element}
      */
