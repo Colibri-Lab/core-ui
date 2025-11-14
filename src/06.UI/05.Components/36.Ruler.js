@@ -26,6 +26,8 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this._orientation = 'horizontal';
         this._align = 'end';
 
+        this._value = [0, 100];
+
         this.handleResize = true;
         this.AddHandler('Resize', this.ResizeCanvas, false, this);
 
@@ -271,6 +273,34 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this._drag1 = new Colibri.UI.Drag(this._span1.container, this._pane.container, (newLeft, newTop) => this._span1Moved(newLeft, newTop), () => this.Dispatch('BeforeChanged'), () => this.Dispatch('AfterChanged'));
         this._drag2 = new Colibri.UI.Drag(this._span2.container, this._pane.container, (newLeft, newTop) => this._span2Moved(newLeft, newTop), () => this.Dispatch('BeforeChanged'), () => this.Dispatch('AfterChanged'));
 
+        this.handleWheel = true;
+        this.AddHandler('MouseWheel', this.__thisMouseWheel);
+
+    }
+
+    /**
+     * Selector fixed width or height
+     * @type {Number}
+     */
+    get fixedSelector() {
+        return this._fixedSelector;
+    }
+    /**
+     * Selector fixed width or height
+     * @type {Number}
+     */
+    set fixedSelector(value) {
+        value = this._convertProperty('Number', value);
+        this._fixedSelector = value;
+    }
+
+    __thisMouseWheel(event, args) {
+        if (this._orientation === 'horizontal') {
+            this._calculateValue(this._progress.left - this.left + (args.domEvent.deltaY / 10), null, true);
+        } else {
+            this._calculateValue(this._progress.top - this.top + (args.domEvent.deltaY / 10), null, true);
+        }
+        this.Dispatch('Changed', { value: this.value });
     }
 
     _progressMoved(newLeft, newTop) {
@@ -335,8 +365,8 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         if (saveWidth) {
             this._value[1] = newValue + (this._value?.[1] - this._value?.[0]);
         }
-        this._value = [newValue, this._value?.[1]];
-        this._renderSelector(newValue, this._value?.[1]);
+        this._value = [newValue, this._fixedSelector ? newValue + this._fixedSelector : this._value?.[1]];
+        this._renderSelector(newValue, this._value?.[1] ?? 100);
     }
 
     _setTopPoint(top, saveHeight = false) {
@@ -356,8 +386,8 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         if (saveHeight) {
             this._value[0] = (this._value?.[0] - this._value?.[1]) + newValue;
         }
-        this._value = [this._value?.[0], newValue];
-        this._renderSelector(this._value?.[0], newValue);
+        this._value = [this._fixedSelector ? newValue - this._fixedSelector : this._value?.[0], newValue];
+        this._renderSelector(this._value?.[0] ?? 0, newValue);
     }
 
     _setBottomPoint(bottom, saveHeight = false) {
@@ -382,7 +412,7 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         }
 
         this._value = [newValue, this._value?.[1]];
-        this._renderSelector(newValue, this._value?.[1]);
+        this._renderSelector(newValue, this._fixedSelector ? newValue + this._fixedSelector : this._value?.[1] ?? 100);
     }
 
     _setRightPoint(left, saveWidth = false) {
@@ -405,7 +435,7 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
             this._value[0] = newValue - (this._value?.[1] - this._value?.[0]);
         }
 
-        this._value = [this._value?.[0], newValue];
+        this._value = [this._fixedSelector ? newValue - this._fixedSelector : this._value?.[0] ?? 0, newValue];
         this._renderSelector(this._value?.[0], newValue);
     }
 
@@ -546,7 +576,10 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         if (!(range > 0)) return;
 
         const pxPerUnit = (this._orientation === 'vertical') ? height / range : width / range;
-        const stepsCount = Math.floor(range / this.step);
+        let stepsCount = Math.floor(range / this.step);
+        if(stepsCount > 1000) {
+            stepsCount = 1000;
+        }
 
         const labels = [];
         for (let i = 0; i <= stepsCount; i++) {

@@ -33,8 +33,11 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * @param {boolean} bubbles - Indicates whether the event bubbles up the component tree.
      * @param {string} description - Description of the event.
      */
-    RegisterEvent(eventName, bubbles, description) {
-        this.__events[eventName] = { name: eventName, bubbles: bubbles, description: description };
+    RegisterEvent(eventName, bubbles, description, source = null) {
+        if(source) {
+            source.register(this, eventName);
+        }
+        this.__events[eventName] = { name: eventName, bubbles: bubbles, description: description, source: source };
     }
 
     /**

@@ -2874,7 +2874,15 @@ Date.prototype.Age = function (removeNazad = false, returnFull = false, tokens =
  * @param {string} formatString - The format string.
  * @returns {string} The formatted date string.
  */
-Date.prototype.format = function (formatString) { return this.toString(formatString); };
+Date.prototype.format = function (formatObject, dateFormat = 'ru-RU') { 
+    let dateformat = dateFormat || App.DateFormat || 'ru-RU';
+    const params = formatObject;
+    const format = new Intl.DateTimeFormat(dateformat, params);
+    if ((this + '') === 'Invalid Date') {
+        return '';
+    }
+    return format.format(this);
+};
 /**
  * Formats the date according to the locale, optionally including time and excluding day.
  * @param {boolean} [withTime=false] - Whether to include time.
@@ -4169,6 +4177,16 @@ String.prototype.spkiPem2spkiDer = function () {
     return binaryDerString.toArrayBuffer();
 }
 
+String.prototype.convertToFunction = function() {
+    let test = null;
+    try {
+        eval('test = ' + (this + '') + ';');
+    } catch(e) {
+        test = null;
+    }
+    return typeof test === 'function' ? test : null;
+}
+
 Function.prototype.isAsync = function () {
     return this.constructor.name === 'AsyncFunction';
 };
@@ -4335,7 +4353,7 @@ window.getEventListenersFor = function (el) {
     return __listenersMap.get(el) || [];
 };
 
-Window.prototype.mapToUIComponent = Element.prototype.mapToUIComponent = function (instance) {
+document.mapToUIComponent = Window.prototype.mapToUIComponent = Element.prototype.mapToUIComponent = function (instance) {
     if (__elToInstance.has(this)) {
         let exists = __elToInstance.get(this);
         if (!Array.isArray(exists)) {
@@ -4350,7 +4368,7 @@ Window.prototype.mapToUIComponent = Element.prototype.mapToUIComponent = functio
     }
 };
 
-Window.prototype.getUIComponent = Element.prototype.getUIComponent = function () {
+document.getUIComponent = Window.prototype.getUIComponent = Element.prototype.getUIComponent = function () {
     const exists = __elToInstance.get(this);
     if (!Array.isArray(exists)) {
         return exists;

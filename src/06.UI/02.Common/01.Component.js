@@ -36,10 +36,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         MouseLeave: {
             domEvent: 'mouseleave',
         },
-        MouseWheel: {
-            domEvent: 'wheel',
-            passive: false
-        },
         KeyDown: {
             domEvent: 'keydown',
         },
@@ -112,7 +108,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         __Resize: {
             domEvent: 'resize',
             respondent: window,
-        }
+        },
+        __MouseWheel: {
+            domEvent: 'wheel',
+            respondent: document,
+        },
     };
 
     /**
@@ -280,6 +280,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @returns 
      */
     _convertProperty(type, value) {
+        if(typeof value === 'string') {
+            const f = value.convertToFunction();
+            if(!!f) {
+                value = f(value, this);
+            }
+        }
         if(typeof value === 'function' && !Object.isClass(value) && type != 'Function') {
             return value(value, this);
         } else if((value === 'true' || value === 'false') && type === 'Boolean') {
@@ -591,6 +597,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.RegisterEvent('MouseDown', false, 'When mouse button is down');
         this.RegisterEvent('MouseUp', false, 'When mouse button is up');
         this.RegisterEvent('MouseMove', false, 'When mouse button is moving');
+        this.RegisterEvent('MouseWheel', false, 'When mouse wheel is used');
         this.RegisterEvent('KeyDown', false, 'When keyboard key is down');
         this.RegisterEvent('KeyUp', false, 'When keyboard key is up');
         this.RegisterEvent('KeyPressed', false, 'Whe keyboard key is pressed');
@@ -635,6 +642,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
 
         this.RegisterEvent('__Resize', false, 'When the window resizing (fake event internal use only)');
         this.RegisterEvent('__Resized', false, 'When the window resized (fake event internal use only)');
+        this.RegisterEvent('__MouseWheel', false, 'When the window resized (fake event internal use only)');
         this.RegisterEvent('__ClickedOut', false, 'When clicked out (fake event internal use only)');
     }
 
@@ -783,7 +791,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             return;
         }
 
-        
         const component = e?.currentTarget?.getUIComponent ? e?.currentTarget?.getUIComponent() : null;
         if(!component) {
             return;
@@ -857,9 +864,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
         if(passive !== undefined) {
             options.passive = passive;
-        }
-        if(domEvent === 'wheel') {
-            console.log(domEvent, options, respondent);
         }
         respondent.addEventListener(domEvent, handler, options, delay);
     }
@@ -2179,6 +2183,37 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * Is component must handle resize event
      * @type {boolean}
      */
+    get handleWheel() {
+        return this._handleWheel;
+    }
+    /**
+     * Is component must handle resize event
+     * @type {boolean}
+     */
+    set handleWheel(value) {
+        this._handleWheel = value;
+        if(value) {
+            this.AddHandler('__MouseWheel', this.__mouseWheel);
+        } else {
+            this.RemoveHandler('__MouseWheel', this.__mouseWheel);
+        }
+    }
+
+    __mouseWheel(event, args) {
+        if(!this.isConnected) {
+            return;
+        }
+
+        if(this.isEventRaisedOnMe(args.domEvent)) {
+            this.Dispatch('MouseWheel', args);
+        }
+        
+    }
+
+    /**
+     * Is component must handle resize event
+     * @type {boolean}
+     */
     get handleResize() {
         return this._handleResize;
     }
@@ -3208,6 +3243,13 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             this.styles = {'transform': 'rotate(' + this._rotation + 'deg)'};
         }
         
+    }
+
+    isEventRaisedOnMe(event) {
+        const bounds = this._element.bounds();
+        const x = event.clientX;
+        const y = event.clientY;
+        return x >= bounds.left && x <= bounds.left + bounds.outerWidth && y >= bounds.top && y <= bounds.top + bounds.outerHeight;
     }
 
 }
