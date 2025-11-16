@@ -39,9 +39,9 @@ Colibri.Events.Source = class extends Destructable {
         return this._socket.readyState === 1;
     }
 
-
-    Config(configData) {
-        this._socket.send(JSON.stringify({event: 'ChangeConfig', data: configData}));
+    Event(name, args) {
+        this._socket.send(JSON.stringify({event: name, args: args}));
     }
+
 
 }

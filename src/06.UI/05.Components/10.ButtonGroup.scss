@@ -4,4 +4,7 @@
     }
     align-items: center;
     justify-content: flex-start;
+    &.-vertical {
+        flex-direction: column;
+    }
 }

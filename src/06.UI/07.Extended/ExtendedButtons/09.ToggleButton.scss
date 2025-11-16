@@ -1,8 +1,25 @@
 .app-toggle-button-component {
+
+    [data-object-name="span"] {
+        &.app-component-shown {
+            display: none;
+        }
+    }
+
+    &.-has-value {
+        [data-object-name="span"] {
+            &.app-component-shown {
+                display: inline;
+            }
+        }
+    }
+
     &.-expanded {
 
     }
-
+    [data-object-name="icon"] {
+        transition: transform .2s;
+    }
     &.-collapsed {
         [data-object-name="icon"] {
             transform: rotate(180deg);

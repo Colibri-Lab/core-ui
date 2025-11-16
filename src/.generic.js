@@ -4424,9 +4424,11 @@ document.addEventListener('keydown', (e) => {
     document.keysPressed.ctrl = e.ctrlKey;
     document.keysPressed.alt = e.altKey;
     document.keysPressed.shift = e.shiftKey;
+    App.Dispatch('KeyDown', {domEvent: e});
 });
 document.addEventListener('keyup', (e) => {
     document.keysPressed.ctrl = e.ctrlKey;
     document.keysPressed.alt = e.altKey;
     document.keysPressed.shift = e.shiftKey;
+    App.Dispatch('KeyUp', {domEvent: e});
 });

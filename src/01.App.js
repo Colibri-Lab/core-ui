@@ -70,6 +70,8 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('DocumentShown', false, 'Document shown');
         this.RegisterEvent('DocumentHidden', false, 'Document hidden');
         this.RegisterEvent('DocumentUnloaded', false, 'Document well be unloaded');
+        this.RegisterEvent('KeyDown', false, 'When key is down on document');
+        this.RegisterEvent('KeyUp', false, 'When key is up on document');
     }
 
     /**

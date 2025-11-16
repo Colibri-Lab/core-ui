@@ -141,4 +141,21 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Orientation of toolbar
+     * @type {vertical,horizontal}
+     */
+    get orientation() {
+        return this._orientation;
+    }
+    /**
+     * Orientation of toolbar
+     * @type {vertical,horizontal}
+     */
+    set orientation(value) {
+        this._orientation = value;
+        this.RemoveClass(['-vertical', '-horizontal']);
+        this.AddClass('-' + this._orientation);   
+    }
+
 }
