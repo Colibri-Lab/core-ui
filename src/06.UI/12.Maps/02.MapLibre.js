@@ -954,7 +954,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         if (!sourceObj) {
             return;
         }
-        const data = sourceObj._data;
+        const data = sourceObj._data.geojson;
         data.features = data.features.map(feature => {
             if (!condition || condition(feature)) {
                 feature.properties.color = color;
@@ -992,7 +992,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         if (!sourceObj) {
             return;
         }
-        const data = sourceObj._data;
+        const data = sourceObj._data.geojson;
         data.features = data.features.map(feature => {
             if (!condition || condition(feature)) {
                 feature.properties.color = color;
