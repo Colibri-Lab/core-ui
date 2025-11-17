@@ -55,7 +55,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _loadScriptsAndStyles() {
         return new Promise((resolve, reject) => {
-            if(this._resourcesLoaded) {
+            if (this._resourcesLoaded) {
                 resolve();
                 return;
             }
@@ -84,7 +84,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     _loadMap() {
 
         this._loadScriptsAndStyles().then(() => {
- 
+
             this._loaded = true;
             this._map = new maplibregl.Map({
                 container: this._mapContainer.container,
@@ -199,7 +199,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             { lng: northEast.lng, lat: northEast.lat }
         ];
         this._zoom = this._map.getZoom();
-        this._center = {lat: this._map.getCenter().lat, lng: this._map.getCenter().lng};
+        this._center = { lat: this._map.getCenter().lat, lng: this._map.getCenter().lng };
         this._rotation = this._map.getBearing();
     }
 
@@ -318,7 +318,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _moveBack(name) {
         try {
-            if(!this._map.getLayer(name)) {
+            if (!this._map.getLayer(name)) {
                 return;
             }
 
@@ -336,7 +336,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 id: sourceName + '-polygons',
                 type: 'fill',
                 source: sourceName,
-                paint: styles?.polygons?.paint ,
+                paint: styles?.polygons?.paint,
                 minzoom: styles?.polygons?.minzoom ?? 0,
                 maxzoom: styles?.polygons?.maxzoom ?? 24
             });
@@ -362,7 +362,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 minzoom: styles?.points?.minzoom ?? 0,
                 maxzoom: styles?.points?.maxzoom ?? 24
             });
-            
+
         }
 
         if (styles?.texts) {
@@ -427,8 +427,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         Object.forEach(this._administrativeDataJson, (name, arr) => {
             let index = 1;
             for (let geodata of arr) {
-                let layers  = {polygons: null, lines: null, points: null, texts: null};
-                if(Array.isArray(geodata)) {
+                let layers = { polygons: null, lines: null, points: null, texts: null };
+                if (Array.isArray(geodata)) {
                     layers = geodata[1];
                     geodata = geodata[0];
                 }
@@ -507,7 +507,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             this._map.addSource(tile.name, {
                 type: tile?.type ?? 'raster',
                 tiles: [tile.url],
-                tileSize: tile?.size ?? 256, 
+                tileSize: tile?.size ?? 256,
                 minzoom: tile?.minzoom ?? 0,
                 maxzoom: tile?.maxzoom ?? 22
             });
@@ -548,7 +548,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 this.Dispatch('LayerSwitched', { name: name, layer: this._layers[name] });
             }
 
-            if(this._administrativeDataShown) {
+            if (this._administrativeDataShown) {
                 this.ShowAdministrativeLayers();
             }
 
@@ -569,7 +569,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     _createLineSource(name) {
-        if(!this.loaded) {
+        if (!this.loaded) {
             return;
         }
         if (!this._linesSources[name]) {
@@ -603,7 +603,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     _createPointSource(name) {
-        if(!this.loaded) {
+        if (!this.loaded) {
             return;
         }
         if (!this._pointsSources[name]) {
@@ -635,7 +635,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     _createObjectSource(name) {
-        if(!this.loaded) {
+        if (!this.loaded) {
             return;
         }
         if (!this._objectsSources[name]) {
@@ -668,14 +668,14 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceAddObject(name, objectJson) {
         const source = this._createObjectSource(name);
-        const data = source._data;
+        const data = source._data.geojson;
         data.features.push(objectJson);
         source.setData(data);
     }
 
     _sourceAddOrUpdateObjects(name, objectsJson, updateIfExists = true) {
         const source = this._createObjectSource(name);
-        const data = source._data;
+        const data = source._data.geojson;
         for (const objectJson of objectsJson) {
             if (updateIfExists) {
                 const idx = data.features.findIndex(f => f.id === objectJson.id);
@@ -693,21 +693,21 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceRemoveObject(name, objectId) {
         const source = this._createObjectSource(name);
-        const data = source._data;
+        const data = source._data.geojson;
         data.features = data.features.filter(f => f.id !== objectId);
         source.setData(data);
     }
 
     _sourceRemoveObjects(name, objectIds) {
         const source = this._createObjectSource(name);
-        const data = source._data;
+        const data = source._data.geojson;
         data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
         source.setData(data);
     }
 
     _sourceUpdateObject(name, objectId, objectJson) {
         const source = this._createObjectSource(name);
-        const data = source._data;
+        const data = source._data.geojson;
         const idx = data.features.findIndex(f => f.id === objectId);
         if (idx === -1) return;
         data.features.splice(idx, 1, objectJson);
@@ -716,14 +716,14 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceAddLine(name, objectJson) {
         const source = this._createLineSource(name);
-        const data = source._data;
+        const data = source._data.geojson;
         data.features.push(objectJson);
         source.setData(data);
     }
 
     _sourceAddOrUpdateLines(name, objectsJson, updateIfExists = true) {
         const source = this._createLineSource(name);
-        const data = source._data;
+        const data = source._data.geojson;
         for (const objectJson of objectsJson) {
             if (updateIfExists) {
                 const idx = data.features.findIndex(f => f.id === objectJson.id);
@@ -741,21 +741,21 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceRemoveLine(name, objectId) {
         const source = this._createLineSource(name);
-        const data = source._data;
+        const data = source._data.geojson;
         data.features = data.features.filter(f => f.id !== objectId);
         source.setData(data);
     }
 
     _sourceRemoveLines(name, objectIds) {
         const source = this._createLineSource(name);
-        const data = source._data;
+        const data = source._data.geojson;
         data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
         source.setData(data);
     }
 
     _sourceUpdateLine(name, objectId, objectJson) {
         const source = this._createLineSource(name);
-        const data = source._data;
+        const data = source._data.geojson;
         const idx = data.features.findIndex(f => f.id === objectId);
         if (idx === -1) return;
         data.features.splice(idx, 1, objectJson);
@@ -764,14 +764,14 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceAddPoint(name, objectJson) {
         const source = this._createPointSource(name);
-        const data = source._data;
+        const data = source._data.geojson;
         data.features.push(objectJson);
         source.setData(data);
     }
 
     _sourceAddOrUpdatePoints(name, objectsJson, updateIfExists = true) {
         const source = this._createPointSource(name);
-        const data = source._data;
+        const data = source._data.geojson;
         for (const objectJson of objectsJson) {
             if (updateIfExists) {
                 let idx = data.features.findIndex(f => f.id === objectJson.id);
@@ -789,21 +789,21 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceRemovePoint(name, objectId) {
         const source = this._createPointSource(name);
-        const data = source._data;
+        const data = source._data.geojson;
         data.features = data.features.filter(f => f.id !== objectId);
         source.setData(data);
     }
 
     _sourceRemovePoints(name, objectIds) {
         const source = this._createPointSource(name);
-        const data = source._data;
+        const data = source._data.geojson;
         data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
         source.setData(data);
     }
 
     _sourceUpdatePoint(name, objectId, objectJson) {
         const source = this._createPointSource(name);
-        const data = source._data;
+        const data = source._data.geojson;
         const idx = data.features.findIndex(f => f.id === objectId);
         if (idx === -1) return;
         data.features.splice(idx, 1, objectJson);
@@ -813,7 +813,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     ClearLineSource(sourceName) {
         if (this._linesSources[sourceName]) {
             const source = this._linesSources[sourceName];
-            const data = source._data;
+            const data = source._data.geojson;
             data.features = [];
             source.setData(data);
         }
@@ -822,16 +822,17 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     ClearPointsSource(sourceName) {
         if (this._pointsSources[sourceName]) {
             const source = this._pointsSources[sourceName];
-            const data = source._data;
+            const data = source._data.geojson;
             data.features = [];
             source.setData(data);
+
         }
     }
 
     ClearObjectsSource(sourceName) {
         if (this._objectsSources[sourceName]) {
             const source = this._objectsSources[sourceName];
-            const data = source._data;
+            const data = source._data.geojson;
             data.features = [];
             source.setData(data);
         }
@@ -842,7 +843,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         const source = this._createObjectSource(name);
         if (!source) return null;
 
-        const data = source._data; // GeoJSON FeatureCollection
+        const data = source._data.geojson; // GeoJSON FeatureCollection
         if (!data || !data.features) return null;
 
         const feature = data.features.find(f => f.id === id);
@@ -947,15 +948,15 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             this._sourceAddPoint(source, geoData);
         }
     }
-    
+
     UpdateCirclesColor(source, color, condition = null) {
         const sourceObj = this._createPointSource(source);
-        if(!sourceObj) {
+        if (!sourceObj) {
             return;
         }
         const data = sourceObj._data;
         data.features = data.features.map(feature => {
-            if(!condition || condition(feature)) {
+            if (!condition || condition(feature)) {
                 feature.properties.color = color;
             }
             return feature;
@@ -988,12 +989,12 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     UpdateLinesColor(source, color, condition = null) {
         const sourceObj = this._createLineSource(source);
-        if(!sourceObj) {
+        if (!sourceObj) {
             return;
         }
         const data = sourceObj._data;
         data.features = data.features.map(feature => {
-            if(!condition || condition(feature)) {
+            if (!condition || condition(feature)) {
                 feature.properties.color = color;
             }
             return feature;
@@ -1066,56 +1067,56 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     DeleteLinesLike(sourceName, like) {
         let source = this._createLineSource(sourceName);
-        let data = source._data;
+        let data = source._data.geojson;
         data.features = data.features.filter(feature => feature.id.indexOf(like) === -1);
         source.setData(data);
     }
     DeleteLinesAllExcept(sourceName, except) {
         let source = this._createLineSource(sourceName);
-        let data = source._data;
+        let data = source._data.geojson;
         data.features = data.features.filter(feature => except.indexOf(feature.id) !== -1);
         source.setData(data);
     }
     DeletePointsLike(sourceName, like) {
         let source = this._createPointSource(sourceName);
-        let data = source._data;
+        let data = source._data.geojson;
         data.features = data.features.filter(feature => feature.id.indexOf(like) === -1);
         source.setData(data);
     }
     DeletePointsAllExcept(sourceName, except) {
         let source = this._createPointSource(sourceName);
-        let data = source._data;
+        let data = source._data.geojson;
         data.features = data.features.filter(feature => except.indexOf(feature.id) !== -1);
         source.setData(data);
     }
     DeleteObjectsLike(sourceName, like) {
         let source = this._createObjectSource(sourceName);
-        let data = source._data;
+        let data = source._data.geojson;
         data.features = data.features.filter(feature => feature.id.indexOf(like) === -1);
         source.setData(data);
     }
     DeleteObjectsAllExcept(sourceName, except) {
         let source = this._createObjectSource(sourceName);
-        let data = source._data;
+        let data = source._data.geojson;
         data.features = data.features.filter(feature => except.indexOf(feature.id) !== -1);
         source.setData(data);
     }
 
     _objectExists(sourceName, name) {
         const source = this._createObjectSource(sourceName);
-        const data = source._data;
+        const data = source._data.geojson;
         const idx = data.features.findIndex(f => f.id === name);
         return idx !== -1;
     }
     _lineExists(sourceName, name) {
         const source = this._createLineSource(sourceName);
-        const data = source._data;
+        const data = source._data.geojson;
         const idx = data.features.findIndex(f => f.id === name);
         return idx !== -1;
     }
     _pointExists(sourceName, name) {
         const source = this._createPointSource(sourceName);
-        const data = source._data;
+        const data = source._data.geojson;
         const idx = data.features.findIndex(f => f.id === name);
         return idx !== -1;
     }
@@ -1132,7 +1133,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     Object(sourceName, name) {
         const source = this._createObjectSource(sourceName);
-        const data = source._data;
+        const data = source._data.geojson;
         const found = data.features.filter(v => v.id === name);
         if (found.length === 0) {
             return null;
@@ -1144,7 +1145,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
     Line(sourceName, name) {
         const source = this._createLineSource(sourceName);
-        const data = source._data;
+        const data = source._data.geojson;
         const found = data.features.filter(v => v.id === name);
         if (found.length === 0) {
             return null;
@@ -1156,7 +1157,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
     Point(sourceName, name) {
         const source = this._createPointSource(sourceName);
-        const data = source._data;
+        const data = source._data.geojson;
         const found = data.features.filter(v => v.id === name);
         if (found.length === 0) {
             return null;
@@ -1206,9 +1207,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             this._sourceRemovePoint('contextmenupoints', 'contextmenu-point');
             this._map.removeLayer('contextmenu-layer');
             this._map.removeSource('contextmenupoints');
-            this.Dispatch('MapContextMenuItemClicked', {name: args?.menuData?.name, point: args?.menuData?.point, data: args?.menuData?.data});
+            this.Dispatch('MapContextMenuItemClicked', { name: args?.menuData?.name, point: args?.menuData?.point, data: args?.menuData?.data });
 
-        }); 
+        });
         this._map.getContainer().addEventListener('contextmenu', this._contextMenuHandler);
     }
 

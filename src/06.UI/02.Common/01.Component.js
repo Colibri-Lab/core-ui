@@ -1973,14 +1973,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     _handler(data, path) {
-        try {
+        // try {
             if(this.isConnected) {
                 this.__renderBoundedValues(data, path);
             }
-        } catch(e) {
-            console.error(e);
-            App.Notices.Add(new Colibri.UI.Notice(e, Colibri.UI.Notice.Error));
-        }
+        // } catch(e) {
+        //     console.error(e);
+        //     App.Notices.Add(new Colibri.UI.Notice(e, Colibri.UI.Notice.Error));
+        // }
     }
 
     /**
