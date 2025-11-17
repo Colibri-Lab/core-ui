@@ -162,6 +162,20 @@ Colibri.UI.Pane = class extends Colibri.UI.Component {
                     newLeft = newClientX - this.tag._diffX,
                     newTop = newClientY - this.tag._diffY;
 
+                if(newTop < 0) {
+                    newTop = 0;
+                }
+                if(newLeft < 0) {
+                    newLeft = 0;
+                }
+
+                if(newTop + this.height > this.parent.height) {
+                    newTop = this.parent.height - this.height;
+                }
+                if(newLeft + this.width > this.parent.width) {
+                    newLeft = this.parent.width - this.width;
+                }
+
                 this._element.style.top = newTop + 'px';
                 this._element.style.left = newLeft + 'px';
             }

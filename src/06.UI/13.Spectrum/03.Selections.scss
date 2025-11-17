@@ -11,6 +11,27 @@
         background: rgba(255, 196, 0, 0.158);
         border: 1px solid rgb(255, 196, 0);
         position: absolute;
-        pointer-events: all;     
+        pointer-events: all;
+
+        [data-object-name="close-icon"] {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            right: 5px;
+            top: 5px;
+            cursor: pointer;
+        }
+
+        &.-select-column {
+            border-top: 0px;
+            border-bottom: 0px;
+        }
+
+        &.-select-row {
+            border-left: 0px;
+            border-right: 0px;
+        }
     }
+
+
 }

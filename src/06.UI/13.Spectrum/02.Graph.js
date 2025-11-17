@@ -24,6 +24,12 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
 
         this.handleResize = true;
         this.AddHandler('Resize', this.ResizeCanvas, false, this);
+        this.AddHandler('ContextMenu', this.__thisContextMenu); 
+
+    }
+
+    __thisContextMenu(event, args) {
+        this._selections.SelectionOnPoint(args.domEvent.clientX, args.domEvent.clientY);
         
     }
 
@@ -629,6 +635,7 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
                 }
 
                 if (min === max) max = min + 1; // защита от деления на ноль
+                
             }
 
             this._drawGridLines(ctx, bounds, min, max, floatArray);

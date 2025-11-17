@@ -10,6 +10,7 @@ Colibri.IO.WebSocketStream = class extends Destructable {
 
     _connect() {
         this._socket = new WebSocket(this._uri);
+        this._socket.binaryType = "arraybuffer";
         this._socket.onopen = (event) => console.log('WebSocket connection opened:', event);
         this._socket.onmessage = (event) => {
             this._chunkCallback(event.data);

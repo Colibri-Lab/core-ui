@@ -395,7 +395,7 @@ Colibri.UI.Utilities.Vincenty = class {
         const dist = Colibri.UI.Utilities.Vincenty.haversine(lat1, lon1, intersection.lat, intersection.lng);
         if (dist > maxDistance) return null;
 
-        const geoline = p1?.geoline?.[0] ?? Colibri.UI.Utilities.Vincenty.Line(p1.lat, p1.lng, p1.azimuth, maxDistance, 100).coordinates;
+        const geoline = p1?.geoline?.coordinates?.[0] ?? Colibri.UI.Utilities.Vincenty.Line(p1.lat, p1.lng, p1.azimuth, maxDistance, 100).coordinates;
         if (geoline && geoline.length > 1) {
             let cumDist = 0;
             let found = false;
