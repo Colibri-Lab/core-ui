@@ -392,28 +392,17 @@ Colibri.UI.Utilities.Vincenty = class {
         }
 
         // проверка максимальной дистанции
-        const dist = Colibri.UI.Utilities.Vincenty.haversine(lat1, lon1, intersection.lat, intersection.lng);
-        if (dist > maxDistance) return null;
+        // const dist = Colibri.UI.Utilities.Vincenty.haversine(lat1, lon1, intersection.lat, intersection.lng);
+        // if (dist > maxDistance) return null;
 
         const geoline = p1?.geoline?.coordinates?.[0] ?? Colibri.UI.Utilities.Vincenty.Line(p1.lat, p1.lng, p1.azimuth, maxDistance, 100).coordinates;
         if (geoline && geoline.length > 1) {
-            let cumDist = 0;
-            let found = false;
-            for (let i = 0; i < geoline.length - 1; i++) {
-                const pt1 = geoline[i];
-                const pt2 = geoline[i + 1];
-                const dSeg = Colibri.UI.Utilities.Vincenty.haversine(pt1[0], pt1[1], pt2[0], pt2[1]);
-                cumDist += dSeg;
-
-                const dToIntersection = Colibri.UI.Utilities.Vincenty.haversine(pt1[0], pt1[1], intersection.lat, intersection.lng);
-                if (dToIntersection <= dSeg) {
-                    found = true;
-                    break;
-                }
+            // debugger;
+            const distance = Colibri.UI.Utilities.Vincenty.polylineLengthToPoint(geoline, intersection);
+            if (distance > maxDistance - 500000) {
+                return null;
             }
-            if (!found || cumDist > maxDistance) return null;
         } else {
-            // fallback — проверка по прямой
             const dist = Colibri.UI.Utilities.Vincenty.haversine(lat1, lon1, intersection.lat, intersection.lng);
             if (dist > maxDistance) return null;
         }
@@ -499,6 +488,50 @@ Colibri.UI.Utilities.Vincenty = class {
         }
 
         return unique;
+    }
+
+    static closestPointOnSegment(lat1, lon1, lat2, lon2, latP, lonP) {
+        // проекция на сегмент в плоских координатах (приближение)
+        const x1 = lon1, y1 = lat1;
+        const x2 = lon2, y2 = lat2;
+        const xP = lonP, yP = latP;
+
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        if (dx === 0 && dy === 0) return { lat: lat1, lon: lon1 };
+
+        let t = ((xP - x1) * dx + (yP - y1) * dy) / (dx * dx + dy * dy);
+        t = Math.max(0, Math.min(1, t)); // ограничиваем сегментом
+        return {
+            lon: x1 + t * dx,
+            lat: y1 + t * dy
+        };
+    }
+
+    static polylineLengthToPoint(coords, point) {
+        if (!coords || coords.length < 4) return 0;
+
+        let length = 0;
+
+        for (let i = 2; i < coords.length; i += 2) {
+            const [lon1, lat1] = coords[i - 1];
+            const [lon2, lat2] = coords[i];
+
+            const distToPoint = Colibri.UI.Utilities.Vincenty.haversine(lat1, lon1, point.lat, point.lng);
+            const distToNext = Colibri.UI.Utilities.Vincenty.haversine(lat1, lon1, lat2, lon2);
+            if (distToPoint <= distToNext) {
+                length += distToPoint;
+                return length;
+            } else {
+                length += distToNext;
+            }
+
+        }
+
+        // если точка не найдена на линии, возвращаем длину всей линии
+        const [lon1, lat1] = coords[coords.length - 1];
+        const distToPoint = Colibri.UI.Utilities.Vincenty.haversine(lat1, lon1, point.lat, point.lng);
+        return length + distToPoint;
     }
 
 
