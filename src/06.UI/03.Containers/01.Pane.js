@@ -136,10 +136,13 @@ Colibri.UI.Pane = class extends Colibri.UI.Component {
                 newTop = this._resizeStart.top + dy;
             }
 
-            this._element.style.width = newWidth + 'px';
-            this._element.style.height = newHeight + 'px';
-            this._element.style.left = newLeft + 'px';
-            this._element.style.top = newTop + 'px';
+            const args = {width: newWidth, height: newHeight, top: newTop, left: newLeft, delta: {left: dx, top: dy}, direction: this._resizeDir};
+            this.Dispatch('SizeChanging', args);
+
+            this._element.style.width = args.width + 'px';
+            this._element.style.height = args.height + 'px';
+            this._element.style.left = args.left + 'px';
+            this._element.style.top = args.top + 'px';
 
             e.preventDefault();
             e.stopPropagation();
@@ -153,6 +156,7 @@ Colibri.UI.Pane = class extends Colibri.UI.Component {
             this._element.css('cursor', null);
             this._resizeDir = null;
             this._resizeStart = null;
+            this.Dispatch('SizeChanged', {});
         };
 
         this.__dragMoveHandler = (e) => {
@@ -176,8 +180,11 @@ Colibri.UI.Pane = class extends Colibri.UI.Component {
                     newLeft = this.parent.width - this.width;
                 }
 
-                this._element.style.top = newTop + 'px';
-                this._element.style.left = newLeft + 'px';
+                const args = {top: newTop, left: newLeft};
+                this.Dispatch('PositionChanging', args);
+
+                this._element.style.top = args.top + 'px';
+                this._element.style.left = args.left + 'px';
             }
         };
         this.__dragStopHandler = (e) => {
@@ -185,8 +192,21 @@ Colibri.UI.Pane = class extends Colibri.UI.Component {
                 document.removeEventListener('mousemove', this.__dragMoveHandler);
                 document.removeEventListener('mouseup', this.__dragStopHandler);
                 this._isDragged = false;
+                this.Dispatch('PositionChanged', {}); 
             }
         }
+    }
+
+    /**
+     * Register events
+     * @protected
+     */
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('SizeChanging', false, 'When resize in progress');
+        this.RegisterEvent('SizeChanged', false, 'When resize completed');
+        this.RegisterEvent('PositionChanging', false, 'When move in progress');
+        this.RegisterEvent('PositionChanged', false, 'When move completed');
     }
 
     /**
