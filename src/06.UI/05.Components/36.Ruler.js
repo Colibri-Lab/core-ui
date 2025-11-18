@@ -276,6 +276,22 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
 
     }
 
+    get progressStartPerc() {
+        if (this._orientation === 'vertical') {
+            return (this._progress.top - this.top) * 100 / this.height;
+        } else {
+            return (this._progress.left - this.left) * 100 / this.width;
+        }
+    }
+
+    get progressEndPerc() {
+        if (this._orientation === 'vertical') {
+            return (this._progress.top - this.top + this._progress.height) * 100 / this.height;
+        } else {
+            return (this._progress.left - this.left + this._progress.width) * 100 / this.width;
+        }
+    }
+
     /**
      * Selector fixed width or height
      * @type {Number}
@@ -310,31 +326,43 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this.Dispatch('Changed', { value: this.value });
     }
 
+    StartMove() {
+        this._startMovePoint = { left: this._progress.left - this.left, top: this._progress.top - this.top };
+        console.log(this._startMovePoint);
+    }
+
+    EndMove() {
+        this._startMovePoint = null;
+    }
+
     Move(delta) {
+        if (!this._startMovePoint) {
+            return;
+        }
         if (this._orientation === 'horizontal') {
-            this._calculateValue(this._progress.left - delta, null, true);
+            this._calculateValue(this._startMovePoint.left - delta, null, true);
         } else {
-            this._calculateValue(this._progress.top - delta, null, true);
+            this._calculateValue(this._startMovePoint.top - delta, null, true);
         }
         this.Dispatch('Changed', { value: this.value });
     }
 
-    _span1Moved(newLeft, newTop) {
+    _span1Moved(newLeft, newTop, dispatch = true) {
         if (this._orientation === 'horizontal') {
             this._calculateValue(newLeft, null);
         } else {
             this._calculateValue(newTop, null);
         }
-        this.Dispatch('Changed', { value: this.value });
+        dispatch && this.Dispatch('Changed', { value: this.value });
     }
 
-    _span2Moved(newLeft, newTop) {
+    _span2Moved(newLeft, newTop, dispatch = true) {
         if (this._orientation === 'horizontal') {
             this._calculateValue(null, newLeft);
         } else {
             this._calculateValue(null, newTop);
         }
-        this.Dispatch('Changed', { value: this.value });
+        dispatch && this.Dispatch('Changed', { value: this.value });
     }
 
     _calculateValue(left, right, saveWidth = false) {
@@ -370,7 +398,7 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
             newValue = min;
         }
         if (saveWidth) {
-            if(newValue + (this._value?.[1] - this._value?.[0]) > max) {
+            if (newValue + (this._value?.[1] - this._value?.[0]) > max) {
                 newValue = max - (this._value?.[1] - this._value?.[0]);
             }
             this._value[1] = newValue + (this._value?.[1] - this._value?.[0]);
@@ -392,9 +420,9 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         }
         if (newValue <= min) {
             newValue = min;
-        }    
+        }
         if (saveHeight) {
-            if((this._value?.[0] - this._value?.[1]) + newValue <= min) {
+            if ((this._value?.[0] - this._value?.[1]) + newValue <= min) {
                 newValue = min - (this._value?.[0] - this._value?.[1]);
             }
             this._value[0] = (this._value?.[0] - this._value?.[1]) + newValue;
@@ -590,7 +618,7 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
 
         const pxPerUnit = (this._orientation === 'vertical') ? height / range : width / range;
         let stepsCount = Math.floor(range / this.step);
-        if(stepsCount > 1000) {
+        if (stepsCount > 1000) {
             stepsCount = 1000;
         }
 
@@ -674,6 +702,33 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
 
     Resized() {
         this.value = this.value || [this.min, this.max];
+    }
+
+
+    Recalculate(left, right) {
+
+        const length = (this._orientation === 'horizontal' ? this.width : this.height);
+
+        const percLeft = left * 100 / length;
+        const percRight = right * 100 / length;
+
+        const xStart = this.progressStartPerc + (percLeft / 100) * (this.progressEndPerc - this.progressStartPerc);
+        const xEnd = this.progressStartPerc + (percRight / 100) * (this.progressEndPerc - this.progressStartPerc);
+
+        let newLeft = xStart * length / 100;
+        let newRight = xEnd * length / 100;
+
+        this._span1Moved(newLeft, newLeft, false);
+        this._span2Moved(newRight, newRight, false);
+        
+
+        this.Dispatch('Changed');
+
+    }
+
+    Expand() {
+        this.value = [this.min, this.max];
+        this.Dispatch('Changed');
     }
 
 }

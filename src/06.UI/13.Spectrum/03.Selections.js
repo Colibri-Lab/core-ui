@@ -66,6 +66,13 @@ Colibri.UI.Spectrum.Selections = class extends Colibri.UI.Pane {
 
         });
 
+        selectionElement.AddHandler('ContextMenu', (event, args) => {
+            this.Dispatch('ContextMenu', {domEvent: args.domEvent, component: selectionElement});
+            args.domEvent.stopPropagation();
+            args.domEvent.preventDefault();
+            return false;
+        });
+
         return selectionName;
     }
 

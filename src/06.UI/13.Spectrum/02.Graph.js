@@ -28,11 +28,13 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
 
         this.handleResize = true;
         this.AddHandler('Resize', this.ResizeCanvas, false, this);
-        this.AddHandler('ContextMenu', this.__thisContextMenu);
 
         this.AddHandler('PointerControlStart', this.__thisPointerControlStart);
         this.AddHandler('PointerControlEnd', this.__thisPointerControlEnd);
         this.AddHandler('PointerControlMove', this.__thisPointerControlMove);
+
+        this._selections.AddHandler('ContextMenu', this.__thisBubble, false, this);
+        this._selections.AddHandler('ContextMenuItemClicked', this.__thisBubble, false, this);
 
     }
 
@@ -70,13 +72,13 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
             case 'select-rect':
                 this.cursor = 'crosshair';
                 break;
-            default: 
+            default:
                 this.cursor = 'default';
         }
     }
 
     __thisPointerControlStart(event, args) {
-        if(this.selectionMode != 'none') {
+        if (this.selectionMode != 'none') {
             this._selection = this.Selections.Add(args.point, this._selectionMode, document.keysPressed.ctrl);
         } else {
             this.cursor = 'grab';
@@ -85,7 +87,7 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
     }
 
     __thisPointerControlEnd(event, args) {
-        if(this.selectionMode != 'none') {
+        if (this.selectionMode != 'none') {
             if (args.rect.width === 0 || args.rect.height === 0) {
                 this.Selections.Remove(this._selection);
             } else {
@@ -99,7 +101,7 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
     }
 
     __thisPointerControlMove(event, args) {
-        if(this._selectionMode !== 'none') {
+        if (this._selectionMode !== 'none') {
             this.Selections.Update(this._selection, args.rect);
         } else {
             this.cursor = 'grabbing';
@@ -107,10 +109,6 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         }
     }
 
-    __thisContextMenu(event, args) {
-        this._selections.SelectionOnPoint(args.domEvent.clientX, args.domEvent.clientY);
-
-    }
 
     ResizeCanvas() {
         const dpr = window.devicePixelRatio || 1;
@@ -354,6 +352,10 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         this._start = value;
     }
 
+    get startPerc() {
+        return this._start * 100 / this._floatArray.length;
+    }
+
     /**
      * Index of end (in array, must be less or equial than dataarray length)
      * @type {Number}
@@ -368,6 +370,14 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
     set end(value) {
         value = this._convertProperty('Number', value);
         this._end = value;
+    }
+
+    get endPerc() {
+        return this._end * 100 / this._floatArray.length;
+    }
+
+    get length() {
+        return this._floatArray.length;
     }
 
     /**
@@ -946,11 +956,21 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         this._maxValues = null;
     }
 
+    Rearange(min, max) {
+        this.min = min;
+        this.max = max;
+        if (this._floatArray) {
+            this.Draw(this._floatArray);
+        }
+    }
+
     Resize(start, end) {
         this._start = start;
         this._end = end;
 
-        this.Draw(this._floatArray);
+        if (this._floatArray) {
+            this.Draw(this._floatArray);
+        }
     }
 
     /**
@@ -961,6 +981,7 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
     get Selections() {
         return this._selections;
     }
+
 
 
 }

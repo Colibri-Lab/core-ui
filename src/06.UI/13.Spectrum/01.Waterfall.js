@@ -206,6 +206,22 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this._end = value;
     }
 
+    
+    Rearange(min, max) {
+        this.min = min;
+        this.max = max;
+        
+        const items = this._history.getAll();
+        this.Clear();
+        let i = 0;
+        for (const index in items) {
+            if (index.isNumeric()) {
+                this.Draw(items[index], i++, false);
+            }
+        }
+        
+    }
+
     Resize(start, end) {
         this._start = start;
         this._end = end;
