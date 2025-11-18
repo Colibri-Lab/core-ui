@@ -639,6 +639,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.RegisterEvent('RefreshCheck', false, 'Pull to refresh check event');
         this.RegisterEvent('RefreshPosition', false, 'Pull to refresh touch position');
         this.RegisterEvent('RefreshRequested', false, 'Pull to refresh check event');
+        
+        this.RegisterEvent('PointerControlStart', false, 'Pointer control events');
+        this.RegisterEvent('PointerControlEnd', false, 'Pointer control events');
+        this.RegisterEvent('PointerControlMove', false, 'Pointer control events');
 
         this.RegisterEvent('__Resize', false, 'When the window resizing (fake event internal use only)');
         this.RegisterEvent('__Resized', false, 'When the window resized (fake event internal use only)');
@@ -2822,6 +2826,21 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     /**
+     * Cursor for component
+     * @type {String}
+     */
+    get cursor() {
+        return this._element.css('cursor');
+    }
+    /**
+     * Cursor for component
+     * @type {String}
+     */
+    set cursor(value) {
+        this.styles = {cursor: value};
+    }
+
+    /**
      * Can copy content
      * @type {Boolean}
      */
@@ -3250,6 +3269,30 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         const x = event.clientX;
         const y = event.clientY;
         return x >= bounds.left && x <= bounds.left + bounds.outerWidth && y >= bounds.top && y <= bounds.top + bounds.outerHeight;
+    }
+
+    /**
+     * Enable pointer control
+     * @type {Boolean}
+     */
+    get enablePointerControl() {
+        return !!this._enablePointerControl;
+    }
+    /**
+     * Enable pointer control
+     * @type {Boolean}
+     */
+    set enablePointerControl(value) {
+        this._enablePointerControl?.Dispose();
+        if(value) {
+            this._enablePointerControl = new Colibri.UI.PointerControl(
+                this, 
+                (point) => this.Dispatch('PointerControlStart', {point: point}),
+                (rect) => this.Dispatch('PointerControlEnd', {rect: rect}),
+                (rect) => this.Dispatch('PointerControlMove', {rect: rect})
+            );
+        }
+
     }
 
 }

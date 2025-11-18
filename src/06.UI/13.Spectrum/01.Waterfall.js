@@ -19,6 +19,10 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this.GenerateChildren(element, this);
         this._canvas = Element.create('canvas').appendTo(this._element);
         this._ctx = this._canvas.getContext('2d', { willReadFrequently: true });
+        this._selections = new Colibri.UI.Spectrum.Selections('selections', this);
+        this._selections.shown = true;
+
+        this._selectionMode = 'none';
 
         this.handleResize = true;
         this.AddHandler('Resize', this.ResizeCanvas, false, this);
@@ -27,6 +31,93 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this._row = 0;
         this._history = new Colibri.Common.History(this.height);
 
+        this.enablePointerControl = true;
+
+        this.AddHandler('PointerControlStart', this.__thisPointerControlStart);
+        this.AddHandler('PointerControlEnd', this.__thisPointerControlEnd);
+        this.AddHandler('PointerControlMove', this.__thisPointerControlMove);
+    }
+
+    /**
+     * Register events
+     * @protected
+     */
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('GrabStart', false, 'When waterfall is grabbed');
+        this.RegisterEvent('Grabbing', false, 'When waterfall is grabbed');
+        this.RegisterEvent('GrabEnd', false, 'When waterfall is grabbed');
+    }
+
+    
+    /**
+     * Selection mode
+     * @type {none,select-column,select-row,select-rect}
+     */
+    get selectionMode() {
+        return this._selectionMode;
+    }
+    /**
+     * Selection mode
+     * @type {none,select-column,select-row,select-rect}
+     */
+    set selectionMode(value) {
+        this._selectionMode = value;
+        switch (value) {
+            case 'select-column':
+                this.cursor = 'col-resize';
+                break;
+            case 'select-row':
+                this.cursor = 'row-resize';
+                break;
+            case 'select-rect':
+                this.cursor = 'crosshair';
+                break;
+            default: 
+                this.cursor = 'default';
+        }
+    }
+
+    __thisPointerControlStart(event, args) {
+        if(this.selectionMode != 'none') {
+            this._selection = this.Selections.Add(args.point, this._selectionMode, document.keysPressed.ctrl);
+        } else {
+            this.cursor = 'grab';
+            this.Dispatch('GrabStart', args);
+        }
+    }
+
+    __thisPointerControlEnd(event, args) {
+        if(this.selectionMode != 'none') {
+            if (args.rect.width === 0 || args.rect.height === 0) {
+                this.Selections.Remove(this._selection);
+            } else {
+                this.Selections.Update(this._selection, args.rect);
+
+            }
+        } else {
+            this.cursor = 'default';
+            this.Dispatch('GrabEnd', args);
+        }
+    }
+
+    __thisPointerControlMove(event, args) {
+        if(this._selectionMode !== 'none') {
+            this.Selections.Update(this._selection, args.rect);
+        } else {
+            this.cursor = 'grabbing';
+            this.Dispatch('Grabbing', args);
+        }
+    }
+
+
+    /**
+     * Selections object
+     * @type {Colibri.UI.Spectrum.Selections}
+     * @readonly
+     */
+    get Selections() {
+        return this._selections;
     }
 
     ResizeCanvas() {

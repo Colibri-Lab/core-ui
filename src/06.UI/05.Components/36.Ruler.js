@@ -26,8 +26,6 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this._orientation = 'horizontal';
         this._align = 'end';
 
-        this._value = [0, 100];
-
         this.handleResize = true;
         this.AddHandler('Resize', this.ResizeCanvas, false, this);
 
@@ -312,6 +310,15 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this.Dispatch('Changed', { value: this.value });
     }
 
+    Move(delta) {
+        if (this._orientation === 'horizontal') {
+            this._calculateValue(this._progress.left - delta, null, true);
+        } else {
+            this._calculateValue(this._progress.top - delta, null, true);
+        }
+        this.Dispatch('Changed', { value: this.value });
+    }
+
     _span1Moved(newLeft, newTop) {
         if (this._orientation === 'horizontal') {
             this._calculateValue(newLeft, null);
@@ -363,6 +370,9 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
             newValue = min;
         }
         if (saveWidth) {
+            if(newValue + (this._value?.[1] - this._value?.[0]) > max) {
+                newValue = max - (this._value?.[1] - this._value?.[0]);
+            }
             this._value[1] = newValue + (this._value?.[1] - this._value?.[0]);
         }
         this._value = [newValue, this._fixedSelector ? newValue + this._fixedSelector : this._value?.[1]];
@@ -382,11 +392,15 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         }
         if (newValue <= min) {
             newValue = min;
-        }
+        }    
         if (saveHeight) {
+            if((this._value?.[0] - this._value?.[1]) + newValue <= min) {
+                newValue = min - (this._value?.[0] - this._value?.[1]);
+            }
             this._value[0] = (this._value?.[0] - this._value?.[1]) + newValue;
         }
         this._value = [this._fixedSelector ? newValue - this._fixedSelector : this._value?.[0], newValue];
+
         this._renderSelector(this._value?.[0] ?? 0, newValue);
     }
 
@@ -456,7 +470,6 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         if (!this._hasSelector) {
             return;
         }
-
         value = this._convertProperty('Array', value);
 
         let left1 = parseFloat(value[0]);
@@ -660,10 +673,7 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
     }
 
     Resized() {
-        if (!this.value) {
-            return;
-        }
-        this.value = this.value;
+        this.value = this.value || [this.min, this.max];
     }
 
 }
