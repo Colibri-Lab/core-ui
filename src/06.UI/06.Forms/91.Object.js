@@ -321,10 +321,10 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     
     _runGenerateOfFieldData() {
-
-        Object.forEach(this._fields, (name, fieldData) => {
+        
+        Object.forEach(this._fieldData.fields, (name, fieldData) => {
             
-            let fieldComponent = this.Children(name);
+            let fieldComponent = this.contentContainer.Children(name);
             if (!fieldComponent || !fieldComponent.needHideAndShow) {
                 return true;
             }
@@ -354,7 +354,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
         const data = this.value;
         const formData = this.root.value;
-
+        
         Object.forEach(this._fieldData.fields, (name, fieldData) => {
             if (!fieldData || !this.contentContainer) {
                 return true;

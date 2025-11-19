@@ -100,6 +100,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     }
 
     _runGenerateOfFieldData() {
+
         Object.forEach(this._fields, (name, fieldData) => {
             
             let fieldComponent = this.Children(name);
@@ -125,11 +126,10 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     /** @protected */
     _hideAndShow() {
-
         if (!this.needHideAndShow) {
             return;
         }
-
+        
         const data = this.value;
 
         Object.forEach(this._fields, (name, fieldData) => {
@@ -475,7 +475,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     get needHideAndShow() {
         let nr = false;
         this.ForEach((n, c) => {
-            nr = nr || c.needHideAndShow;
+            nr = nr || !!(c.needHideAndShow);
         });
         return nr;
     }
