@@ -26,5 +26,9 @@ Colibri.IO.WebSocketStream = class extends Destructable {
         return this._socket.readyState === 1;
     }
 
+    disconnect() {
+        this._socket.close();
+    }
+
 
 }

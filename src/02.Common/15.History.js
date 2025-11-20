@@ -36,4 +36,9 @@ Colibri.Common.History = class {
         this._items = new Array(this._limit);
     }
 
+    resize(newLimit) {
+        this.limit = newLimit;
+        this._items = this._items.slice(-this._limit);
+    }
+
 }

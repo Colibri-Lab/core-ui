@@ -519,6 +519,16 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
 
     }
 
+    Delta(delta) {
+        this.min = this.min + delta;
+        this.max = this.max + delta;
+        if (!this._hasSelector) {
+            return;
+        }
+        
+        this.value = [this._value[0] + delta, this._value[1] + delta];
+    }
+
     _renderSelector(leftOrTop, rightOrBottom) {
 
         if (this._orientation === 'vertical') {
