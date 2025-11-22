@@ -222,34 +222,52 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this._end = value;
     }
 
+    /**
+     * Start index of waterfall
+     * @type {Number}
+     */
+    get startIndex() {
+        return this._startIndex;
+    }
+    /**
+     * Start index of waterfall
+     * @type {Number}
+     */
+    set startIndex(value) {
+        this._startIndex = value;
+    }
+
+    /**
+     * End index of waterfall
+     * @type {Number}
+     */
+    get endIndex() {
+        return this._endIndex;
+    }
+    /**
+     * End index of waterfall
+     * @type {Number}
+     */
+    set endIndex(value) {
+        this._endIndex = value;
+    }
+
+    ResizeVertical(start, end) {
+        this.startIndex = start;
+        this.endIndex = end;
+        this.Redraw();
+    }
 
     Rearange(min, max) {
         this.min = min;
         this.max = max;
-
-        const items = this._history.getAll();
-        this.Clear();
-        let i = 0;
-        for (const index in items) {
-            if (index.isNumeric()) {
-                this.Draw(items[index], i++, false);
-            }
-        }
-
+        this.Redraw();
     }
 
     Resize(start, end) {
         this._start = start;
         this._end = end;
-
-        const items = this._history.getAll();
-        this.Clear();
-        let i = 0;
-        for (const index in items) {
-            if (index.isNumeric()) {
-                this.Draw(items[index], i++, false);
-            }
-        }
+        this.Redraw();
     }
 
     _getColor(palette, index, alpha = 1) {
@@ -282,8 +300,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
             this.Draw(item, false);
         }
 
-        const bounds = this._canvas.bounds();
-        this._waterfallBuffer.draw(this._ctx, bounds.outerWidth, bounds.outerHeight);
+        this.ShowBuffer();
 
     }
     get history() {
@@ -308,6 +325,19 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
 
         this._waterfallBuffer = new Colibri.UI.WaterfallBuffer(this._canvas.bounds().outerWidth || 1, this._length);
 
+    }
+
+    Redraw() {
+        const items = this._history.getAll();
+        this.Clear();
+        let i = 0;
+        for (const index in items) {
+            if (index.isNumeric()) {
+                this.Draw(items[index], i++, false);
+            }
+        }
+        
+        this.ShowBuffer();
     }
 
 
@@ -348,21 +378,18 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
             });
 
             if (show) {
-                this._waterfallBuffer.draw(this._ctx, bounds.outerWidth, bounds.outerHeight);
+                this.ShowBuffer();
             }
-
-
-
-
-            // const grad = this._createGradient(offCtx, w, min, max, floatArray.length, floatArray);
-            // offCtx.fillStyle = grad;
-            // offCtx.fillRect(0, rowIndex, w, 1);
-
-
 
         } catch (e) {
             console.error(e);
         }
+    }
+
+    ShowBuffer() {
+        const bounds = this._canvas.bounds();
+        // console.log(this._startIndex || 0, this._endIndex || this._length || 0);
+        this._waterfallBuffer.draw(this._ctx, bounds.outerWidth, bounds.outerHeight, this._startIndex || 0, this._endIndex || this._length || 0);
     }
 
     _createGradient(ctx, w, min, max, floatArray) {

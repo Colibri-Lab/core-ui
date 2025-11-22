@@ -93,54 +93,48 @@ Colibri.UI.WaterfallBuffer = class extends Destructable {
     }
 
 
-    draw(ctx, width, height) {
-        // ctx.save();
+    /**
+ * Рисует диапазон строк [startIndex .. endIndex] включительно
+ * startIndex и endIndex — индексы логические (0 — самая старая строка)
+ * endIndex >= startIndex
+ */
+    draw(ctx, width, height, startIndex = 0, endIndex = this.maxRows - 1) {
 
-        // // переворачиваем по вертикали
-        // ctx.translate(0, height);
-        // ctx.scale(1, -1);
-
-        // const w = this.width;
-        // const h = this.maxRows;
-        // const topRows = h - this._currentIndex;
-
-        // // рисуем нижнюю часть (от currentIndex до конца)
-        // ctx.drawImage(
-        //     this._off,
-        //     0, this._currentIndex, w, topRows,
-        //     0, 0, width, (topRows / h) * height
-        // );
-
-        // // рисуем верхнюю часть (от 0 до currentIndex)
-        // if (this._currentIndex > 0) {
-        //     ctx.drawImage(
-        //         this._off,
-        //         0, 0, w, this._currentIndex,
-        //         0, (topRows / h) * height, width, (this._currentIndex / h) * height
-        //     );
-        // }
-
-        // ctx.restore();
+        if (startIndex < 0) startIndex = 0;
+        if (endIndex >= this.maxRows) endIndex = this.maxRows - 1;
+        if (endIndex < startIndex) return;
 
         const w = this.width;
         const h = this.maxRows;
-        const topRows = h - this._currentIndex;
+        const range = endIndex - startIndex + 1;
 
-        // рисуем сначала нижнюю часть (от currentIndex до конца)
-        ctx.drawImage(
-            this._off,
-            0, this._currentIndex, w, topRows,
-            0, 0, width, (topRows / h) * height
-        );
+        // размер целевого отображения
+        const targetHeight = height;
+        const scale = targetHeight / range;
 
-        // рисуем верхнюю часть (от 0 до currentIndex)
-        if (this._currentIndex > 0) {
+        // startIndex/endIndex — логические индексы
+        // translate в физические строки off-canvas
+        let logicalToPhysical = (logicalIdx) => {
+            return (this._currentIndex + logicalIdx) % h;
+        };
+
+        ctx.save();
+
+        let drawY = 0;
+        for (let logicalRow = startIndex; logicalRow <= endIndex; logicalRow++) {
+
+            const physicalRow = logicalToPhysical(logicalRow);
+
             ctx.drawImage(
                 this._off,
-                0, 0, w, this._currentIndex,
-                0, (topRows / h) * height, width, (this._currentIndex / h) * height
+                0, physicalRow, w, 1,         // SRC: одна строка
+                0, drawY, width, scale        // DST: увеличиваем на scale
             );
+
+            drawY += scale;
         }
+
+        ctx.restore();
     }
 
 }
