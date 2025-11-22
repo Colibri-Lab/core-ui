@@ -283,7 +283,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         if(typeof value === 'string') {
             const f = value.convertToFunction();
             if(!!f) {
-                value = f(value, this);
+                try {
+                    value = f(value, this);
+                } catch(e) {
+                    
+                }
             }
         }
         if(typeof value === 'function' && !Object.isClass(value) && type != 'Function') {
