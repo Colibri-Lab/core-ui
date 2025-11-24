@@ -255,7 +255,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
     ResizeVertical(start, end) {
         this.startIndex = start;
         this.endIndex = end;
-        this.Redraw();
+        this.ShowBuffer();
     }
 
     Rearange(min, max) {
@@ -328,12 +328,14 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
     }
 
     Redraw() {
+        console.log(this._history);
+        debugger;
         const items = this._history.getAll();
         this.Clear();
         let i = 0;
         for (const index in items) {
             if (index.isNumeric()) {
-                this.Draw(items[index], i++, false);
+                this.Draw(items[index], false);
             }
         }
         
@@ -348,33 +350,32 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
             }
 
             this._history.add(floatArray);
-            floatArray = this._crop(floatArray);
-
+            // floatArray = this._crop(floatArray);
             if (floatArray.length == 0) {
                 return;
             }
 
 
-            let min = Infinity, max = -Infinity;
-            if (this._max !== undefined && this._min !== undefined) {
-                max = this._max;
-                min = this._min;
-            } else {
-                // находим минимальное и максимальное значение
-                for (let i = 0; i < floatArray.length; i++) {
-                    const v = floatArray[i];
-                    if (!isNaN(v)) {
-                        if (v < min) min = v;
-                        if (v > max) max = v;
-                    }
-                }
-                if (min === max) max = min + 1; // защита от деления на ноль
-            }
+            // let min = Infinity, max = -Infinity;
+            // if (this._max !== undefined && this._min !== undefined) {
+            //     max = this._max;
+            //     min = this._min;
+            // } else {
+            //     // находим минимальное и максимальное значение
+            //     for (let i = 0; i < floatArray.length; i++) {
+            //         const v = floatArray[i];
+            //         if (!isNaN(v)) {
+            //             if (v < min) min = v;
+            //             if (v > max) max = v;
+            //         }
+            //     }
+            //     if (min === max) max = min + 1; // защита от деления на ноль
+            // }
 
             const bounds = this._canvas.bounds();
             const w = bounds.outerWidth;
             this._waterfallBuffer.push(floatArray, (ctx, freqArray) => {
-                return this._createGradient(ctx, w, min, max, freqArray)
+                return this._createGradient(ctx, w, this._min, this._max, freqArray)
             });
 
             if (show) {
@@ -389,7 +390,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
     ShowBuffer() {
         const bounds = this._canvas.bounds();
         // console.log(this._startIndex || 0, this._endIndex || this._length || 0);
-        this._waterfallBuffer.draw(this._ctx, bounds.outerWidth, bounds.outerHeight, this._startIndex || 0, this._endIndex || this._length || 0);
+        this._waterfallBuffer.draw(this._ctx, bounds.outerWidth, bounds.outerHeight, this._start || 0, this._end || 2048, this._startIndex || 0, this._endIndex || this._length || 0);
     }
 
     _createGradient(ctx, w, min, max, floatArray) {

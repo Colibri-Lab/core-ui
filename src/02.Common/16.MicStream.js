@@ -16,6 +16,7 @@ Colibri.Common.MicStream = class extends Colibri.Events.Dispatcher {
         this._source = null;
         this._stream = null;
 
+        this._registerEvents();
         
     }
 
@@ -24,7 +25,6 @@ Colibri.Common.MicStream = class extends Colibri.Events.Dispatcher {
      * @protected
      */
     _registerEvents() {
-        super._registerEvents();
         this.RegisterEvent('DataReceived', false, 'Mic data received');
         this.RegisterEvent('Started', false, 'Mic data received');
         this.RegisterEvent('Ended', false, 'Mic data received');
@@ -44,14 +44,18 @@ Colibri.Common.MicStream = class extends Colibri.Events.Dispatcher {
         this._source = this._audioContext.createMediaStreamSource(stream);
         this._source.connect(this._analyser);
 
-        const bufferLength = this._analyser.frequencyBinCount;
-        this._dataArray = new Uint8Array(bufferLength);
+        this._bufferLength = this._analyser.frequencyBinCount;
+        this._dataArray = new Uint8Array(this._options.fftSize);
 
         Colibri.Common.StartTimer('mictimer', 100, () => {
             this.Dispatch('DataReceived', {data: this.getFrequencyData(), options: this._options});
         });
 
         this.Dispatch('Started', this._options);
+    }
+
+    get params() {
+        return {length: 1000, row: this._options.fftSize, timeout: 100};
     }
 
     stop() {

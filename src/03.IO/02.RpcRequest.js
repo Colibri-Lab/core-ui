@@ -130,7 +130,7 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
         const request = new Colibri.IO.Request();
         this._workingRequests[requestKeyword] = request;
 
-        const requestDomain = params?._requestDomain || this._remoteDomain || location.hostname;
+        const requestDomain = params?._requestDomain || this._remoteDomain || '//' + location.hostname;
         const requestMethod = params && params._requestMethod && params._requestMethod === 'get' ? 'Get' : 'Post';
         const requestType = params && params._requestType ? params._requestType : this._requestType;
         const requestCache = params && params._requestCache ? params._requestCache : false;
