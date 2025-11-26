@@ -18,6 +18,7 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
 
         this._canvas = Element.create('canvas').appendTo(this._element);
         this._ctx = this._canvas.getContext('2d', { willReadFrequently: true });
+        
         this._selections = new Colibri.UI.Spectrum.Selections('selections', this);
         this._selections.shown = true;
         this._selectionMode = 'none';
@@ -956,7 +957,7 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         this._maxValues = null;
     }
 
-    Rearange(min, max) {
+    Rearrange(min, max) {
         this.min = min;
         this.max = max;
         if (this._floatArray) {

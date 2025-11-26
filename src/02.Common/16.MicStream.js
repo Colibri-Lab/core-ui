@@ -8,6 +8,7 @@ Colibri.Common.MicStream = class extends Colibri.Events.Dispatcher {
             smoothingTimeConstant: 0.8,
             minDecibels: -90,
             maxDecibels: -10,
+            deviceId: null,         // ← выбор устройства
         }, options);
 
         this._audioContext = null;
@@ -17,20 +18,27 @@ Colibri.Common.MicStream = class extends Colibri.Events.Dispatcher {
         this._stream = null;
 
         this._registerEvents();
-        
     }
 
-    /**
-     * Register events
-     * @protected
-     */
     _registerEvents() {
         this.RegisterEvent('DataReceived', false, 'Mic data received');
-        this.RegisterEvent('Started', false, 'Mic data received');
-        this.RegisterEvent('Ended', false, 'Mic data received');
+        this.RegisterEvent('Started', false, 'Mic started');
+        this.RegisterEvent('Ended', false, 'Mic stopped');
+        this.RegisterEvent('DevicesLoaded', false, 'Mic devices loaded');
     }
 
-    async start() {
+    async loadDevices() {
+        const list = await navigator.mediaDevices.enumerateDevices();
+        const devices = list.filter(d => d.kind === 'audioinput');
+        this.Dispatch('DevicesLoaded', {devices: devices});
+        return devices;
+    }
+
+    async start(deviceId = null) {
+        this.stop();
+
+        this._options.deviceId = deviceId || this._options.deviceId;
+
         this._audioContext = new (window.AudioContext || window.webkitAudioContext)();
         this._analyser = this._audioContext.createAnalyser();
         this._analyser.fftSize = this._options.fftSize;
@@ -38,7 +46,12 @@ Colibri.Common.MicStream = class extends Colibri.Events.Dispatcher {
         this._analyser.minDecibels = this._options.minDecibels;
         this._analyser.maxDecibels = this._options.maxDecibels;
 
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+        const constraints = {
+            audio: this._options.deviceId ? { deviceId: this._options.deviceId } : true,
+            video: false
+        };
+
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
         this._stream = stream;
 
         this._source = this._audioContext.createMediaStreamSource(stream);
@@ -47,7 +60,7 @@ Colibri.Common.MicStream = class extends Colibri.Events.Dispatcher {
         this._bufferLength = this._analyser.frequencyBinCount;
         this._dataArray = new Uint8Array(this._options.fftSize);
 
-        Colibri.Common.StartTimer('mictimer', 100, () => {
+        Colibri.Common.StartTimer('mictimer', this._options.timeout || 100, () => {
             this.Dispatch('DataReceived', {data: this.getFrequencyData(), options: this._options});
         });
 
@@ -59,9 +72,10 @@ Colibri.Common.MicStream = class extends Colibri.Events.Dispatcher {
     }
 
     stop() {
+        Colibri.Common.StopTimer('mictimer');
+
         if (this._stream) {
-            const tracks = this._stream.getTracks();
-            tracks.forEach(track => track.stop());
+            this._stream.getTracks().forEach(t => t.stop());
             this._stream = null;
         }
         if (this._audioContext) {
@@ -69,7 +83,6 @@ Colibri.Common.MicStream = class extends Colibri.Events.Dispatcher {
             this._audioContext = null;
         }
         this.Dispatch('Ended', this._options);
-        Colibri.Common.StopTimer('mictimer');
     }
 
     getFrequencyData() {
@@ -79,4 +92,12 @@ Colibri.Common.MicStream = class extends Colibri.Events.Dispatcher {
         }
         return null;
     }
+
+    setDevice(deviceId) {
+        this._options.deviceId = deviceId;
+        if (this._audioContext) {
+            this.start();
+        }
+    }
+
 };
