@@ -279,5 +279,20 @@ Colibri.UI.TableCell = class extends Colibri.UI.Component {
         this._element.css('vertical-align', value);
     }
 
+    /**
+     * Tooltip string
+     * @type {String}
+     */
+    get title() {
+        return this.toolTip;
+    }
+    /**
+     * Tooltip string
+     * @type {String}
+     */
+    set title(value) {
+        this.toolTip = value;
+    }
+
 }
 

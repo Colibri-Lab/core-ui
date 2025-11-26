@@ -1619,6 +1619,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         
     }
 
+    ShowToolTip(e = null) {
+        this.__defaultMouseEnterHandler(null, {domEvent: e});
+    }
+
     /**
      * Position of tooltip
      * @type {left bottom,right bottom,left top,right top}
