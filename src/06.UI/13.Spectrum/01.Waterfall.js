@@ -33,7 +33,9 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this._createPalette();
         this._uploadPalette();
         this._row = 0;
-        this._history = new Colibri.Common.History(this._length, true);
+        this._historyClass = 'Colibri.Common.History';
+        const cls = eval(this._historyClass);
+        this._history = new cls(this._length, true);
 
         this.AddHandler('PointerControlStart', this.__thisPointerControlStart);
         this.AddHandler('PointerControlEnd', this.__thisPointerControlEnd);
@@ -56,6 +58,26 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this.RegisterEvent('GrabStart', false, 'When graph is grabbed');
         this.RegisterEvent('Grabbing', false, 'When graph is grabbed');
         this.RegisterEvent('GrabEnd', false, 'When graph is grabbed');
+    }
+
+    /**
+     * Class of history
+     * @type {String}
+     */
+    get historyClass() {
+        return this._historyClass;
+    }
+
+    /**
+     * Class of history
+     * @type {String}
+     */
+    set historyClass(value) {
+        this._historyClass = value;
+        const cls = eval(this._historyClass);
+        if(!(this._history instanceof cls)) {
+            this._history = new cls(this._length, true); 
+        }
     }
 
     /**
@@ -308,6 +330,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
     set min(value) {
         value = this._convertProperty('Number', value);
         this._min = value;
+        this._history.emptyValue = this._min;
         this.Redraw();
     }
 
@@ -499,8 +522,8 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
     }
 
     _crop(floatArray) {
-        let start = this._start || 0;
-        let end = this._end || floatArray.length;
+        let start = this._start || 0 +  + this._history.rowValueStartPosition;
+        let end = this._end || floatArray.length + this._history.rowValueStartPosition - 1;
         if (start < 0) start = 0;
 
         const length = end - start;
@@ -557,6 +580,11 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
             gl.UNSIGNED_BYTE,
             data
         );
+    }
+
+    set dateShiftMs(value) {
+        value = this._convertProperty('Number', value);
+        this._history.dateShiftMs = value;
     }
 
     Redraw() {

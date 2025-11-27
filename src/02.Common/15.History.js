@@ -17,6 +17,10 @@ Colibri.Common.History = class {
         }
     }
 
+    get rowValueStartPosition() {
+        return 0;
+    }
+
     get limit() {
         return this._limit;
     }
