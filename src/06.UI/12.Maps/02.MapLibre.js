@@ -1500,12 +1500,14 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             //     this.AddMarker('markers', 'marker-' + Date.Mc(), e.lngLat, icon);
             // }  
         });
+        this._map.getCanvas().style.cursor = 'crosshair';
         this._map.on('click', this._mapClickToMarkClicked);
     }
 
     DisableClickToMark() {
         try {
             // this.DeleteObjectsLike('markers', 'marker-');
+            this._map.getCanvas().style.cursor = null;
             this._map.off('click', this._mapClickToMarkClicked);
         } catch (e) {
 
