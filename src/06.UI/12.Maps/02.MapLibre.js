@@ -51,6 +51,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this.RegisterEvent('MbTilesProtocol', false, 'When mbtiles protocol is requested');
         this.RegisterEvent('LayerSwitched', false, 'When mbtiles protocol is requested');
         this.RegisterEvent('MapContextMenuItemClicked', false, 'When contextmenu item is clicked on map');
+        this.RegisterEvent('MarkAdded', false, 'When user adds a mark to the map');
     }
 
     _loadScriptsAndStyles() {
@@ -1492,21 +1493,19 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     EnableClickToMark(icon) {
-        this._mapClickToMarkClicked = this._mapClickToMarkClicked || ((e) => {
-            let name = 'marker';
-            if (e.originalEvent.shiftKey) {
-                name = 'marker-' + Date.Mc();
-            } else {
-                this.DeleteObjectsLike('markers', 'marker-');
-            }
-            this.AddMarker('markers', name, e.lngLat, icon)
+        this._mapClickToMarkClicked = this._mapClickToMarkClicked || (async (e) => {
+            const args = { point: {lat: e.lngLat.lat, lng: e.lngLat.lng} };
+            await this.Dispatch('MarkAdded', args);
+            // if(await this.Dispatch('MarkAdded', args)) {
+            //     this.AddMarker('markers', 'marker-' + Date.Mc(), e.lngLat, icon);
+            // }  
         });
         this._map.on('click', this._mapClickToMarkClicked);
     }
 
     DisableClickToMark() {
         try {
-            this.DeleteObjectsLike('markers', 'marker-');
+            // this.DeleteObjectsLike('markers', 'marker-');
             this._map.off('click', this._mapClickToMarkClicked);
         } catch (e) {
 

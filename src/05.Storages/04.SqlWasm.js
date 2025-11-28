@@ -39,6 +39,7 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
     constructor() {
         super();
         this.RegisterEvent('Loaded', false, 'When SQL is loaded');
+        this.RegisterEvent('Changed', false, 'When SQL is changed');
 
         Colibri.Storages.SqlWasm.Load().then(SQL => {
             this._sql = SQL;
@@ -99,6 +100,7 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
             });
             create.push(flds.join(',\n'));
             create.push(');');
+            console.log(create.join('\n'));
             return create.join('\n');
         } else {
             return storage;
@@ -113,6 +115,14 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
             result.push(table);
         }
         return result;
+    }
+
+    OpenBytes(bytes) {
+        return new Promise((resolve, reject) => {
+            this.Close();
+            this._db = new this._sql.Database(bytes);
+            resolve();
+        });
     }
 
 
@@ -130,7 +140,7 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
                 this._db = new this._sql.Database(binaryArray);
                 resolve();
             }
-        })
+        });
     }
 
     Close() {
@@ -164,16 +174,20 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         }
 
         stmt.free();
+
+        this.Dispatch('Changed');
     }
 
     Update(table, data, condition) {
         const fields = Object.keys(data);
         const d = fields.map(f => f + '=?');
         this._db.run('UPDATE "' + table + '" SET ' + d.join(', ') + ' WHERE ' + condition, fields.map(field => data[field]));
+        this.Dispatch('Changed');
     }
 
     Delete(table, condition = '') {
         this._db.run('DELETE FROM "' + table + '"' + (condition ? ' WHERE ' + condition : ''), []);
+        this.Dispatch('Changed');
     }
 
     /**
@@ -251,8 +265,12 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         return ret;
     }
 
+    ExportBytes() {
+        return this._db.export();
+    }
+
     Export() {
-        const binaryArray = this._db.export();
+        const binaryArray = this.ExportBytes();
         return new Blob([binaryArray], { type: 'application/octet-stream' });
     }
 
