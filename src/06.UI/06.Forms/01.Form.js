@@ -146,9 +146,9 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                     const empty = condition?.empty || false;
                     const inverse = condition?.inverse || false;
                     let fieldValue = eval('data?.' + condition.field.split('.').join('?.'));
-                    fieldValue = fieldValue?.value ?? fieldValue;
                     let conditionResult = true;
                     if ((condition?.value ?? null) !== null) {
+                        fieldValue = fieldValue?.value ?? fieldValue;
                         if (Array.isArray(condition.value)) {
                             conditionResult = fieldValue === undefined || (fieldValue !== undefined && condition.value.indexOf(fieldValue) !== -1);
                         }

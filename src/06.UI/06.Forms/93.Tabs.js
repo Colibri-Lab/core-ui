@@ -250,9 +250,9 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
                     if(!fieldValue) {
                         fieldValue = eval('formData?.' + condition.field.split('.').join('?.'));
                     }
-                    fieldValue = fieldValue?.value ?? fieldValue;
                     let conditionResult = true;
                     if((condition?.value ?? null) !== null) {
+                        fieldValue = fieldValue?.value ?? fieldValue;
                         if(Array.isArray(condition.value)) {
                             conditionResult = fieldValue === undefined || (fieldValue !== undefined && condition.value.indexOf(fieldValue) !== -1);
                         }
