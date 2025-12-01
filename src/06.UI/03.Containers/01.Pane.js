@@ -12,7 +12,7 @@ Colibri.UI.Pane = class extends Colibri.UI.Component {
      * @param {string|HTMLElement} element element to generate in
      * @param {number} resizable is component resizable 
      */
-    constructor(name, container, element, resizable = 'none') {
+    constructor(name, container, element) {
         super(name, container, element || Element.create('div'));
 
         this.AddClass('app-component-pane');
