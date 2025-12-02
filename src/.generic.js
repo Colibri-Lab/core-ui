@@ -1216,6 +1216,68 @@ Object.PerformFormatConversion = function (textAsObject, showLineBrakes = false,
     return '<div>' + ret.join('') + '</div>';
 }
 
+Object.hasAllOfKeys = function (clsString, keys) {
+    let allExists = true;
+    const clsObject = eval(clsString);
+    for(const key of keys) {
+        if(!clsObject.prototype.hasOwnProperty(key)) {
+            allExists = false;
+        }
+    }
+
+    return allExists;
+}
+
+Object.hasStaticMethod = function (cls, methodName) {
+    return cls && typeof cls[methodName] === 'function';
+}
+
+Object.hasStaticMethodRecursive = function (cls, methodName) {
+    if (!cls) {
+        return false;
+    }
+
+    if(Object.hasStaticMethod(cls, methodName)) {
+        return true;
+    }
+
+    for(const key in cls) {
+        const value = cls[key];
+        if(Object.hasStaticMethodRecursive(value, methodName)) {
+            return true;
+        }
+
+    }
+
+    return false;
+}
+
+Object.listChildsWith = function (clsString, checkFunction) {
+    let cls = null;
+    try {
+        cls = eval(clsString);
+    } catch(e) {
+
+    }
+    if (!cls || !(Object.isClass(cls) || Object.isPlainObject(cls))) {
+        return false;
+    }
+
+    let list = [];
+    if(checkFunction(cls)) {
+        list.push(clsString);
+    }
+
+    for(const key in cls) {
+        const l = Object.listChildsWith(clsString + '.' + key, checkFunction);
+        if(l.length) {
+            list = list.concat(l);
+        }
+    }
+
+    return list;
+}
+
 /**
  * Returns an array of all captured groups in a string that match the regular expression.
  * @param {string} str - The string to search for matches.
