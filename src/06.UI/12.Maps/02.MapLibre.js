@@ -669,6 +669,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceAddObject(name, objectJson) {
         const source = this._createObjectSource(name);
+        if(!source) {
+            return;
+        }
         const data = source._data.geojson;
         data.features.push(objectJson);
         source.setData(data);
@@ -676,6 +679,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceAddOrUpdateObjects(name, objectsJson, updateIfExists = true) {
         const source = this._createObjectSource(name);
+        if(!source) {
+            return;
+        }
+        
         const data = source._data.geojson;
         for (const objectJson of objectsJson) {
             if (updateIfExists) {
@@ -694,6 +701,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceRemoveObject(name, objectId) {
         const source = this._createObjectSource(name);
+        if(!source) {
+            return;
+        }
         const data = source._data.geojson;
         data.features = data.features.filter(f => f.id !== objectId);
         source.setData(data);
@@ -701,6 +711,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceRemoveObjects(name, objectIds) {
         const source = this._createObjectSource(name);
+        if(!source) {
+            return;
+        }
         const data = source._data.geojson;
         data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
         source.setData(data);
@@ -708,6 +721,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceUpdateObject(name, objectId, objectJson) {
         const source = this._createObjectSource(name);
+        if(!source) {
+            return;
+        }
         const data = source._data.geojson;
         const idx = data.features.findIndex(f => f.id === objectId);
         if (idx === -1) return;
@@ -717,6 +733,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceAddLine(name, objectJson) {
         const source = this._createLineSource(name);
+        if(!source) {
+            return;
+        }
         const data = source._data.geojson;
         data.features.push(objectJson);
         source.setData(data);
@@ -724,6 +743,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceAddOrUpdateLines(name, objectsJson, updateIfExists = true) {
         const source = this._createLineSource(name);
+        if(!source) {
+            return;
+        }
         const data = source._data.geojson;
         for (const objectJson of objectsJson) {
             if (updateIfExists) {
@@ -742,6 +764,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceRemoveLine(name, objectId) {
         const source = this._createLineSource(name);
+        if(!source) {
+            return;
+        }
         const data = source._data.geojson;
         data.features = data.features.filter(f => f.id !== objectId);
         source.setData(data);
@@ -749,6 +774,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceRemoveLines(name, objectIds) {
         const source = this._createLineSource(name);
+        if(!source) {
+            return;
+        }
         const data = source._data.geojson;
         data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
         source.setData(data);
@@ -756,6 +784,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceUpdateLine(name, objectId, objectJson) {
         const source = this._createLineSource(name);
+        if(!source) {
+            return;
+        }
         const data = source._data.geojson;
         const idx = data.features.findIndex(f => f.id === objectId);
         if (idx === -1) return;
@@ -765,6 +796,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceAddPoint(name, objectJson) {
         const source = this._createPointSource(name);
+        if(!source) {
+            return;
+        }
         const data = source._data.geojson;
         data.features.push(objectJson);
         source.setData(data);
@@ -772,6 +806,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceAddOrUpdatePoints(name, objectsJson, updateIfExists = true) {
         const source = this._createPointSource(name);
+        if(!source) {
+            return;
+        }
         const data = source._data.geojson;
         for (const objectJson of objectsJson) {
             if (updateIfExists) {
@@ -790,6 +827,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceRemovePoint(name, objectId) {
         const source = this._createPointSource(name);
+        if(!source) {
+            return;
+        }
         const data = source._data.geojson;
         data.features = data.features.filter(f => f.id !== objectId);
         source.setData(data);
@@ -797,6 +837,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceRemovePoints(name, objectIds) {
         const source = this._createPointSource(name);
+        if(!source) {
+            return;
+        }
         const data = source._data.geojson;
         data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
         source.setData(data);
@@ -804,6 +847,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceUpdatePoint(name, objectId, objectJson) {
         const source = this._createPointSource(name);
+        if(!source) {
+            return;
+        }
         const data = source._data.geojson;
         const idx = data.features.findIndex(f => f.id === objectId);
         if (idx === -1) return;
