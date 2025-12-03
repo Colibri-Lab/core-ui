@@ -568,7 +568,6 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         });
     }
 
-
     Dispose() {
 
         if(this._valueContainer) {
@@ -605,6 +604,13 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         this._width = value;
     }
 
+    ClickOnViewer() {
+        if(this._viewerObject) {
+            this._viewerObject.Dispatch('Clicked', {});
+        } else if(this._valueContainer) {
+            this._valueContainer.Dispatch('Clicked', {});
+        }       
+    }
 
 
 }
