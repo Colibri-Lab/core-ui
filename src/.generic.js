@@ -1555,6 +1555,10 @@ String.prototype.toDate = function () {
         return parseInt(this).toDateFromUnixTime();
     }
 
+    if (new Date(this + 'T00:00:00' + Date.getTimezoneString()) != 'Invalid Date') {
+        return new Date(this + 'T00:00:00' + Date.getTimezoneString());
+    }
+
     if (new Date(this) != 'Invalid Date') {
         return new Date(this);
     }
