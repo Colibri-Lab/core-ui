@@ -32,7 +32,12 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         this._min = new Date(-8640000000000000);
         this._max = new Date(8640000000000000);
 
-        this._hiddenElement.addEventListener('click', (e) => { this.Dispatch('Clicked', { domEvent: e }); e.preventDefault(); e.stopPropagation(); return false; });
+        this._hiddenElement.addEventListener('click', (e) => { 
+            this.Dispatch('Clicked', { domEvent: e }); 
+            e.preventDefault(); 
+            e.stopPropagation(); 
+            return false; 
+        });
         this._hiddenElement.addEventListener('change', (e) => {
             this._showValue();
             if (this._changeTimeout) {
@@ -316,7 +321,7 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
      */
     get value() {
         if (typeof this._hiddenElement.value == 'string') {
-            return new Date(this._hiddenElement.value);
+            return new Date(this._hiddenElement.value + 'T00:00:00' + Date.getTimezoneString());
         }
         else if (this._hiddenElement.value instanceof Date) {
             return this._hiddenElement.value;
@@ -572,7 +577,6 @@ Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
                 }
                 if(b.left + b.outerWidth > window.innerWidth) {
                     this.left = bounds.left - b.outerWidth + bounds.outerWidth;
-                    console.log(bounds, b, bounds.left - b.outerWidth + bounds.outerWidth);
                 }
             });
         }

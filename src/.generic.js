@@ -2642,6 +2642,16 @@ Date.prototype.toTimeString = function (hasSeconds = true) { if (this == 'Invali
  * @returns {boolean} True if the year is a leap year, false otherwise.
  */
 Date.isLeapYear = function (year) { return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)); };
+
+Date.getTimezoneString = function() {
+    const m = new Date().getTimezoneOffset(); // minutes, positive for GMT-
+    const sign = m > 0 ? "-" : "+";
+    const abs = Math.abs(m);
+    const hh = String(Math.floor(abs / 60)).padStart(2, "0");
+    const mm = String(abs % 60).padStart(2, "0");
+    return `${sign}${hh}${mm}`;
+}
+
 /**
  * Returns the number of days in the given month and year.
  * @param {number} year - The year.
