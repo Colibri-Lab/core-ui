@@ -44,9 +44,9 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
         }
 
         this._input.clearIcon = this._fieldData?.params?.dateselectorclear ?? false;
-        this._min = this._fieldData?.params?.min ? new Date(this._fieldData?.params?.min + ' 00:00:00') : new Date(-8640000000000000);
-        this._max = this._fieldData?.params?.max ? new Date(this._fieldData?.params?.max + ' 23:59:59') : new Date(8640000000000000);
-        this._todayDate = this._fieldData?.params?.today ? new Date(this._fieldData?.params?.today) : null;
+        this._min = this._fieldData?.params?.min ? new Date(this._fieldData?.params?.min + 'T00:00:00' + Date.getTimezoneString()) : new Date(-8640000000000000);
+        this._max = this._fieldData?.params?.max ? new Date(this._fieldData?.params?.max + 'T23:59:59' + Date.getTimezoneString()) : new Date(8640000000000000);
+        this._todayDate = this._fieldData?.params?.today ? new Date(this._fieldData?.params?.today + 'T00:00:00' + Date.getTimezoneString()) : null;
         this._todayString = this._fieldData?.params?.today_title ?? null;
         this._input.min = this._min;
         this._input.max = this._max;
@@ -129,7 +129,7 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
      */
     set value(value) {
         if (typeof value == 'string') {
-            value = new Date(value);
+            value = new Date(value + 'T00:00:00' + Date.getTimezoneString());
         }
         if (value < this._min) {
             return;
