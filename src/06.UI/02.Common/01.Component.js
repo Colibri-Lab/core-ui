@@ -342,6 +342,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      */
     _unregisterObserver() {
         if(this._observer) {
+            this._observer.Dispatch('VisibilityChanged', {state: false});
             this._observer.unobserve(this._element);
             this._observer = null;
         }
