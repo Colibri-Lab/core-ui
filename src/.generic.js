@@ -1291,6 +1291,9 @@ RegExp.prototype.all = function (str) {
             ret.push(matches[index]);
         }
     }
+    if(ret.length === 0 && Array.isArray(matches) && matches.length > 0 && str === matches[0]) {
+        ret.push(str);
+    }
     return ret;
 }
 
