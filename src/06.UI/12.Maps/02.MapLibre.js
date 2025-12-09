@@ -1284,20 +1284,21 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._mousemoveHoverHandler = e => {
             const lat = e.lngLat.lat.toFixed(6);
             const lng = e.lngLat.lng.toFixed(6);
+            const zoom = this._map.getZoom().toFixed(2);
             const rect = [
                 [e.point.x - tolerance, e.point.y - tolerance],
                 [e.point.x + tolerance, e.point.y + tolerance]
             ];
             // Получаем все объекты под курсором
             const features = this._map.queryRenderedFeatures(rect);
-            let info = `Lat: ${lat}, Lng: ${lng}`;
+            let info = `Lat: ${lat}, Lng: ${lng}, Zoom: ${zoom}`;
             if (features.length) {
                 // Если есть, выводим ID первого объекта
                 const id = features[0]?.properties?.id ?? null;
                 info = info + (id ? `, ID: ${id}` : '');
             }
             if (callback) {
-                info = callback(features, info);
+                info = callback(features, info, e);
             }
 
             this._infoDiv.html(info);
