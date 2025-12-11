@@ -472,7 +472,6 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     _renderValue(renderValue = true) {
         if (!this.multiple) {
             if (renderValue) {
-
                 const f = this._getRenderMethod();
                 if(f) {
                     const ff = f(Array.isArray(this._value) ? (this._value[0] === null ? '' : this._value[0]) : this._value, this) + '';
