@@ -94,7 +94,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
                     left: clientX - this._element.bounds().left,
                     top: clientY - this._element.bounds().top
                 };
-                document.body?.addEventListener(isTouch ? 'touchmove' : 'mousemove', this._movingHandler, {passive: false});
+                document.body?.addEventListener(isTouch ? 'touchmove' : 'mousemove', this._movingHandler, { passive: false });
                 document.body?.addEventListener(isTouch ? 'touchend' : 'mouseup', this._movingStopHandler);
                 this._element?.addEventListener(isTouch ? 'touchend' : 'mouseup', this._movingStopHandler);
             } else {
@@ -102,14 +102,14 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
                     left: clientX - this._windowContainer.bounds().left,
                     top: clientY - this._windowContainer.bounds().top
                 };
-                this._element?.addEventListener(isTouch ? 'touchmove' : 'mousemove', this._movingHandler, {passive: false});
+                this._element?.addEventListener(isTouch ? 'touchmove' : 'mousemove', this._movingHandler, { passive: false });
                 this._element?.addEventListener(isTouch ? 'touchend' : 'mouseup', this._movingStopHandler);
             }
         }
 
         /** @private */
         this._movingStopHandler = (e) => {
-            if(!this.isConnected) {
+            if (!this.isConnected) {
                 return;
             }
             this.moving = false;
@@ -124,7 +124,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             this._element?.removeEventListener('touchend', this._movingStopHandler);
         }
 
-         /** @private */
+        /** @private */
         this._movingHandler = (e) => {
             if (!this.isConnected || !this.moving) {
                 return;
@@ -132,10 +132,10 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             const isTouch = e.type.startsWith('touch');
             const clientX = isTouch ? e.touches[0].clientX : e.pageX;
             const clientY = isTouch ? e.touches[0].clientY : e.pageY;
-            
+
             const delta = this._movingDelta;
 
-            if(this._state === 'minimized') {
+            if (this._state === 'minimized') {
                 this._element?.css('left', (clientX - delta.left) + 'px');
                 this._element?.css('top', (clientY - delta.top) + 'px');
             } else {
@@ -148,13 +148,13 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         }
 
         this.__movingMouseOutHandler = (e) => {
-            if(!this.isConnected) {
+            if (!this.isConnected) {
                 return;
             }
             if (!e.relatedTarget || e.relatedTarget.nodeName === "HTML") {
                 this.moving = false;
                 document.body?.removeEventListener('mousemove', this._movingHandler);
-                document.body?.removeEventListener('mouseup', this._movingStopHandler);            
+                document.body?.removeEventListener('mouseup', this._movingStopHandler);
                 this._element?.removeEventListener('mousemove', this._movingHandler);
                 this._element?.removeEventListener('mouseup', this._movingStopHandler);
 
@@ -181,13 +181,13 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         this._windowContainer.removeEventListener('mousedown', this._movingStartHandler);
         this._titleContainer.removeEventListener('touchstart', this._movingStartHandler);
         this._windowContainer.removeEventListener('touchstart', this._movingStartHandler);
-        if(value) {
+        if (value) {
             (this._movablePoint === 'title' ? this._titleContainer : this._windowContainer)
                 .addEventListener('mousedown', this._movingStartHandler);
             (this._movablePoint === 'title' ? this._titleContainer : this._windowContainer)
                 .addEventListener('touchstart', this._movingStartHandler);
         }
-        
+
     }
 
     /** @protected */
@@ -204,23 +204,23 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */ 
+     */
     __CloseClicked(event, args) {
 
-        const aargs = {cancel: false};
+        const aargs = { cancel: false };
         this.Dispatch('WindowBeforeClosed', aargs);
-        if(aargs.cancel) {
+        if (aargs.cancel) {
             return;
         }
-        
+
         this.Close();
-        
+
     }
 
     Close() {
         if (this._closable === true) {
-            if(this._minimizable === true && this._state === 'minimized') {
-                this.RemoveClass('-minimized');   
+            if (this._minimizable === true && this._state === 'minimized') {
+                this.RemoveClass('-minimized');
                 super.width = null;
                 super.height = null;
                 super.right = null;
@@ -231,12 +231,12 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             this.Dispatch('WindowClosed', {});
         }
     }
-    
+
     /**
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */ 
+     */
     __MinimizeClicked(event, args) {
         this.MinimizeToggle();
     }
@@ -245,14 +245,14 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      * Toggle minimize state
      */
     MinimizeToggle() {
-        
-        if(this._minimizable && this._state === 'normal') {
+
+        if (this._minimizable && this._state === 'normal') {
             this._lastNormalPosition = this._windowContainer.bounds();
 
             this.AddClass('-minimized');
             super.width = this._minimizedSize[0];
             super.height = this._minimizedSize[1];
-            if(this._lastMinimizedPosition) {
+            if (this._lastMinimizedPosition) {
                 this._element.css('left', this._lastMinimizedPosition.left + 'px');
                 this._element.css('top', this._lastMinimizedPosition.top + 'px');
                 this._windowContainer.css('right', null);
@@ -260,7 +260,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
                 this._windowContainer.css('left', null);
                 this._windowContainer.css('top', null);
             } else {
-                if(this._minimizedBind === 'rightbottom') {
+                if (this._minimizedBind === 'rightbottom') {
                     super.right = this._minimizedPosition[0];
                     super.bottom = this._minimizedPosition[1];
                     this._windowContainer.css('right', null);
@@ -275,17 +275,17 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             this._state = 'minimized';
 
 
-        } else if(this._minimizable && this._state === 'minimized') {
+        } else if (this._minimizable && this._state === 'minimized') {
             this._lastMinimizedPosition = this._element.bounds();
-            this.RemoveClass('-minimized');   
+            this.RemoveClass('-minimized');
             super.width = null;
             super.height = null;
             super.right = null;
             super.left = null;
             super.top = null;
             super.bottom = null;
-            
-            if(this._lastNormalPosition) {
+
+            if (this._lastNormalPosition) {
                 this._windowContainer.css('left', this._lastNormalPosition.left + 'px');
                 this._windowContainer.css('top', this._lastNormalPosition.top + 'px');
             }
@@ -298,7 +298,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */ 
+     */
     __MouseUp(event, args) {
         args.domEvent.stopPropagation();
         args.domEvent.preventDefault();
@@ -309,7 +309,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */ 
+     */
     __MouseDown(event, args) {
         if (args.domEvent.target == this._element && !Colibri.UI.Resizing && this._closableOnShadow) {
             this.__CloseClicked();
@@ -320,10 +320,10 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */ 
+     */
     __KeyDown(event, args) {
-        if(args.domEvent.code === 'Escape') {
-            this.Children('closebutton').Dispatch('Clicked', {domEvent: args.domEvent});
+        if (args.domEvent.code === 'Escape') {
+            this.Children('closebutton').Dispatch('Clicked', { domEvent: args.domEvent });
             return false;
         }
         return true;
@@ -335,7 +335,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      */
     StartTabIndexRoutine() {
         const firstInput = this._element.querySelector('input,textarea,select');
-        if(firstInput) {
+        if (firstInput) {
             firstInput.focus();
         }
     }
@@ -459,21 +459,11 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      * @type {number}
      */
     set width(value) {
-        if(value === null) {
-            this._element.querySelector('.app-component-window-content').css('width', null);    
+        if (value === null) {
+            this._element.querySelector('.app-component-window-content').css('width', null);
         }
         else {
             this._element.querySelector('.app-component-window-content').css('width', (value + '').isNumeric() ? value + 'px' : value);
-            // const style = this._element.querySelector('.app-component-window-content').css();
-            // if((value + '').isNumeric()) {
-            //     this._element.querySelector('.app-component-window-title').css('width', (value - (parseInt(style.paddingLeft) || 0) - (parseInt(style.paddingRight) || 0)) + 'px');
-            //     this._element.querySelector('.app-component-window-footer').css('width', (value - (parseInt(style.paddingLeft) || 0) - (parseInt(style.paddingRight) || 0)) + 'px');
-            //     this._element.querySelector('.app-component-window-content').css('width', (value - (parseInt(style.paddingLeft) || 0) - (parseInt(style.paddingRight) || 0)) + 'px');
-            // } else {
-            //     this._element.querySelector('.app-component-window-title').css('width', value);
-            //     this._element.querySelector('.app-component-window-footer').css('width', value);
-            //     this._element.querySelector('.app-component-window-content').css('width', value);
-            // }
         }
     }
 
@@ -491,12 +481,39 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      * @type {number}
      */
     set containerWidth(value) {
-        if(value === null) {
-            this._element.querySelector('.app-component-window-container').css('width', null);    
+        if (value === null) {
+            this._element.querySelector('.app-component-window-container').css('width', null);
         }
         else {
             const style = this._element.querySelector('.app-component-window-container').css();
             this._element.querySelector('.app-component-window-container').css('width', (value - (parseInt(style.paddingLeft) || 0) - (parseInt(style.paddingRight) || 0)) + 'px');
+        }
+    }
+
+    
+    /**
+     * Window container height
+     * @type {number}
+     */
+    get containerHieght() {
+        const bounds = this._element.querySelector('.app-component-window-container').bounds();
+        return bounds.outerHeight;
+    }
+
+    /**
+     * Window container height
+     * @type {number}
+     */
+    set containerHeight(value) {
+        if (value === null) {
+            this._element.querySelector('.app-component-window-container').css('height', null);
+        }
+        else {
+            const style = this._element.querySelector('.app-component-window-container').css();
+            this._element.querySelector('.app-component-window-container').css('height', value.isNumeric() ? (value - (parseInt(style.paddingLeft) || 0) - (parseInt(style.paddingRight) || 0)) + 'px' : value);
+            const titleHeight = this._element.querySelector('.app-component-window-title').bounds().outerHeight;
+            const footerHeight = this._element.querySelector('.app-component-window-footer').bounds().outerHeight;
+            this._element.querySelector('.app-component-window-content').css('height', 'calc(100% - ' + (titleHeight + footerHeight) + 'px)');
         }
     }
 
@@ -514,12 +531,16 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      * @type {number}
      */
     set height(value) {
-        if(value === null) {
-            this._element.querySelector('.app-component-window-content').css('height', null);    
+        if (value === null) {
+            this._element.querySelector('.app-component-window-content').css('height', null);
         }
         else {
             const style = this._element.querySelector('.app-component-window-content').css();
-            this._element.querySelector('.app-component-window-content').css('height', (value - (parseInt(style.paddingTop) || 0) - (parseInt(style.paddingBottom) || 0)) + 'px');
+            if (value.indexOf('%') !== -1) {
+                this._element.querySelector('.app-component-window-content').css('height', value);
+            } else {
+                this._element.querySelector('.app-component-window-content').css('height', ((value + '').replaceAll('px', '') - (parseInt(style.paddingTop) || 0) - (parseInt(style.paddingBottom) || 0)) + 'px');
+            }
         }
     }
 
@@ -537,7 +558,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      */
     set title(value) {
         this._element.querySelector('.app-component-window-title > span').innerHTML = value;
-        if(!value && !this.minimizable && !this.closable) {
+        if (!value && !this.minimizable && !this.closable) {
             this._element.querySelector('.app-component-window-title').hideElement();
         }
         else {
@@ -591,7 +612,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      */
     set shown(value) {
         super.shown = value;
-        if(value) {
+        if (value) {
             this.BringToFront();
             this.StartTabIndexRoutine();
             this.Dispatch('WindowOpened');
@@ -633,7 +654,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     AddButton(title, name) {
         this._footer.hideElement();
         this._footer.showElement();
-        let newButton =new Colibri.UI.Button(name, this._footer, title);
+        let newButton = new Colibri.UI.Button(name, this._footer, title);
         newButton.AddClass('app-component-window-button');
         newButton.parent = this;
         newButton.shown = true;
@@ -663,8 +684,8 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     /** @private */
     _showMinimizable() {
         this.Children('minimizebutton').shown = this._minimizable;
-        if(!this._minimizable) {
-            this.RemoveClass('-minimized');   
+        if (!this._minimizable) {
+            this.RemoveClass('-minimized');
             super.width = null;
             super.height = null;
             super.right = null;

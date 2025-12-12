@@ -22,12 +22,12 @@
         animation-timing-function: ease-in;
 
     }
-    
+
     .app-component-window-container {
         margin-top: 60px;
         margin-bottom: 60px;
         background-color: #FFFFFF;
-        box-shadow: 0px 0px 20px rgba(0,0,0,.3);
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, .3);
         border-radius: 10px;
         position: absolute;
 
@@ -37,17 +37,18 @@
                 min-height: 100%;
                 margin: 0px;
                 border-radius: 0px;
-    
+
                 display: flex;
                 flex-direction: column;
                 height: 100%;
             }
-            @include platform(android,ios) {
+
+            @include platform(android, ios) {
                 width: 100%;
                 min-height: 100%;
                 margin: 0px;
                 border-radius: 0px;
-    
+
                 display: flex;
                 flex-direction: column;
                 height: 100%;
@@ -59,8 +60,8 @@
             top: 60px;
             z-index: 9;
         }
-    
-    
+
+
 
     }
 
@@ -82,6 +83,7 @@
         overflow: hidden;
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
+
         &:empty {
             display: none;
         }
@@ -89,7 +91,8 @@
         @include respond-to(500px) {
             width: 100% !important;
         }
-        @include platform(androiandroid,iosd) {
+
+        @include platform(androiandroid, iosd) {
             width: 100% !important;
         }
     }
@@ -97,8 +100,12 @@
     .app-component-window-minimized-content {
         display: none;
     }
+
     .app-component-window-content {
         padding: 20px 30px;
+        overflow: auto;
+        @include custom-scroll($scrollbar-size, $scrollbar-track-color, $scrollbar-thumb-color, $scrollbar-thumb-hover-color, 10px);
+
         & {
             @include respond-to(500px) {
                 width: 100% !important;
@@ -106,7 +113,8 @@
                 flex: 1 1 100%;
                 overflow: auto;
             }
-            @include platform(android,ios) {
+
+            @include platform(android, ios) {
                 width: 100% !important;
                 height: 100%;
                 flex: 1 1 100%;
@@ -125,6 +133,7 @@
         overflow: hidden;
         border-bottom-left-radius: 10px;
         border-bottom-right-radius: 10px;
+
         &:empty {
             display: none;
         }
@@ -146,12 +155,15 @@
         background-color: transparent;
         border: 0;
         cursor: pointer;
+
         .app-component-icon {
             &.app-component-shown {
                 display: block !important;
             }
+
             width: 12px;
             height: 12px;
+
             path {
                 stroke: #14151A;
                 fill: #14151A;
@@ -176,7 +188,7 @@
         left: unset;
         top: unset;
         background: transparent;
-        box-shadow: 0px 0px 20px rgba(0,0,0,.3);
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, .3);
         border-radius: 10px;
 
         transition: all .2s;
@@ -184,7 +196,7 @@
         button.s-minimize {
             background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='4' y='9' width='16' height='9' stroke='%230B1F35' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
         }
-        
+
         .app-component-window-container {
             width: 100%;
             height: 100%;
@@ -195,12 +207,15 @@
             background: transparent;
             box-shadow: none;
         }
+
         .app-component-window-footer {
             display: none !important;
         }
+
         .app-component-window-content {
             display: none !important;
         }
+
         .app-component-window-minimized-content:not(:empty) {
             display: block;
         }
