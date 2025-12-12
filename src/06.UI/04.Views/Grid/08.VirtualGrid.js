@@ -32,7 +32,9 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
     }
 
     __thisRecalcCounts(event, args) {
+
         this._showValue();
+
     }
 
     /**
@@ -89,6 +91,7 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
         const gridHeight = (this._value?.length ?? 0) * this._rowHeight;
         const visibleHeight = this._element.bounds().outerHeight;
         const scrolledTop = this.scrollTop;
+        const scrolledLeft = this.scrollLeft;
         this._gridScrollContainer.height = gridHeight;
 
         if(visibleHeight > gridHeight) {
@@ -122,6 +125,7 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
             }
 
 
+            this._gridScrollContainer.scrollLeft = this.scrollLeft;
 
         }
 
