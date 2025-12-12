@@ -20,7 +20,7 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
         this._gridScrollContainer = new Colibri.UI.Component('app-ui-grid-scroll', this, Element.create('div'));
         this._gridScrollContainer.shown = true;
 
-        // this.animateScroll = true;
+        this.animateScroll = false;
         this.handleResize = true;
         this.AddHandler('Scrolled', this.__thisRecalcCounts);
         this.AddHandler('Resized', this.__thisRecalcCounts);
@@ -32,9 +32,7 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
     }
 
     __thisRecalcCounts(event, args) {
-
         this._showValue();
-
     }
 
     /**
@@ -84,21 +82,38 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
         this._showValue();
     }
     _showValue() {
-        if(!this.isConnected || !this._value?.length) {
+        if (!this.isConnected || !this._value?.length) {
             return;
         }
 
         const gridHeight = (this._value?.length ?? 0) * this._rowHeight;
         const visibleHeight = this._element.bounds().outerHeight;
         const scrolledTop = this.scrollTop;
-        const scrolledLeft = this.scrollLeft;
         this._gridScrollContainer.height = gridHeight;
 
-        if(visibleHeight > gridHeight) {
-            super.value = this._value;
+        if (visibleHeight > gridHeight) {
+            
+            let i = 0;
+            for (const row of this._value) {
+                if (row) {
+                    if (this.rows.Children('data' + i)) {
+                        this.rows.Children('data' + i).value = row;
+                        this.rows.Children('data' + i).styles = { visibility: 'visible' };
+                    } else {
+                        this.rows.Add('data' + i, row);
+                    }
+                    this.rows.Children('data' + i).height = this._rowHeight;
+                } else {
+                    if (this.rows.Children('data' + i)) {
+                        this.rows.Children('data' + i).styles = { visibility: 'hidden' };
+                    }
+                }
+                i++;
+            }
+
         } else {
 
-            
+
             const startIndex = Math.max(0, Math.floor(scrolledTop / this._rowHeight));
             const visibleCount = Math.ceil(visibleHeight / this._rowHeight) - 1 /* header */;
             const lastPageSize = this._value.length % visibleCount;
@@ -107,35 +122,30 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
             const endIndex = Math.min(this._value.length, startIndex + visibleCount);
             const visibleRows = this._value.slice(startIndex, endIndex);
             this._gridScrollContainer.width = this._gridContent.width;
-            
-            for(let i=0; i<visibleCount;i++) {
-                if(visibleRows[i]) {
-                    if(this.rows.Children('data' + i)) {
+
+            for (let i = 0; i < visibleCount; i++) {
+                if (visibleRows[i]) {
+                    if (this.rows.Children('data' + i)) {
                         this.rows.Children('data' + i).value = visibleRows[i];
-                        this.rows.Children('data' + i).styles = {visibility: 'visible'};
+                        this.rows.Children('data' + i).styles = { visibility: 'visible' };
                     } else {
                         this.rows.Add('data' + i, visibleRows[i]);
                     }
                     this.rows.Children('data' + i).height = this._rowHeight;
                 } else {
-                    if(this.rows.Children('data' + i)) {
-                        this.rows.Children('data' + i).styles = {visibility: 'hidden'};
+                    if (this.rows.Children('data' + i)) {
+                        this.rows.Children('data' + i).styles = { visibility: 'hidden' };
                     }
                 }
             }
-
-
-            this._gridScrollContainer.scrollLeft = this.scrollLeft;
-
         }
-
 
 
 
     }
 
     _generateRows(visibleCount) {
-        for(let i=0; i<visibleCount;i++) {
+        for (let i = 0; i < visibleCount; i++) {
             this.rows.Add('data' + i, this._emptyRow ?? {});
         }
     }
