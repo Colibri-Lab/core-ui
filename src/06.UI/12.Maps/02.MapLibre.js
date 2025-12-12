@@ -1698,6 +1698,21 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * Can rotate (Show rotate button)
+     * @type {Boolean}
+     */
+    get rotatable() {
+        return this._zoomRotate.shown;
+    }
+    /**
+     * Can rotate (Show rotate button)
+     * @type {Boolean}
+     */
+    set rotatable(value) {
+        value = this._convertProperty('Boolean', value);
+        this._zoomRotate.shown = value;
+    }
 
 }
 
