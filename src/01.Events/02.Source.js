@@ -3,11 +3,13 @@ Colibri.Events.Source = class extends Destructable {
     constructor(ipOrHost, port) {
         super();
 
-        this._ipOrHost = ipOrHost;
-        this._port = port;
         this._handlers = {};
 
-        this._connect();
+        this.Connect(ipOrHost, port);
+    }
+
+    get ipAndPort() {
+        return `${this._ipOrHost}:${this._port}`;
     }
 
     register(repsondent, eventName) {
@@ -17,7 +19,16 @@ Colibri.Events.Source = class extends Destructable {
         this._handlers[eventName].push(repsondent);
     }
 
-    _connect() {
+    Disconnect() {
+        this._socket.close();
+        this._socket = null;
+    }
+
+    Connect(ipOrHost, port) {
+
+        this._ipOrHost = ipOrHost;
+        this._port = port;
+
         this._socket = new WebSocket(`wss://${this._ipOrHost}:${this._port}/dispatcher/${App.Device.id}`);
         this._socket.onopen = (event) => console.log('WebSocket connection opened:', event);
         this._socket.onmessage = (event) => {
@@ -30,7 +41,7 @@ Colibri.Events.Source = class extends Destructable {
         };
         this._socket.onclose = (event) => {
             console.log('WebSocket connection closed:', event, 'reconnecting ');
-            setTimeout(() => this._connect(), 3000);
+            setTimeout(() => this.Connect(this._ipOrHost, this._port), 3000);
         };
         this._socket.onerror = (error) => console.error('WebSocket error:', error);
     }
