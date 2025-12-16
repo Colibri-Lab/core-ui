@@ -20,11 +20,19 @@ Colibri.Events.Source = class extends Destructable {
     }
 
     Disconnect() {
-        this._socket.close();
-        this._socket = null;
+        if(this._socket) {
+            this._socket.close();
+            this._socket = null;
+        }
+        this._ipOrHost = null;
+        this._port = null;
     }
 
     Connect(ipOrHost, port) {
+
+        if(!ipOrHost || !port) {
+            return;
+        }
 
         this._ipOrHost = ipOrHost;
         this._port = port;
