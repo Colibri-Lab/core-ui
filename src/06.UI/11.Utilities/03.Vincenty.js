@@ -534,5 +534,21 @@ Colibri.UI.Utilities.Vincenty = class {
         return length + distToPoint;
     }
 
+    static bearing(lat1, lon1, lat2, lon2) {
+        const toRad = d => d * Math.PI / 180;
+        const toDeg = r => r * 180 / Math.PI;
+
+        const f1 = toRad(lat1);
+        const f2 = toRad(lat2);
+        const d = toRad(lon2 - lon1);
+
+        const y = Math.sin(d) * Math.cos(f2);
+        const x =
+            Math.cos(f1) * Math.sin(f2) -
+            Math.sin(f1) * Math.cos(f2) * Math.cos(d);
+
+        return (toDeg(Math.atan2(y, x)) + 360) % 360;
+    }
+
 
 }
