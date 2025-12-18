@@ -720,7 +720,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @param {string} className class name for context menu
      * @param {{top, left}} point point to show contextmenu on
      */
-    ShowContextMenu(orientation = [Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT], className = '', point = null, closeOnClick = true) {
+    ShowContextMenu(orientation = [Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT], className = '', point = null, closeOnClick = true, rendererComponent = null, rendererAttrs = {}) {
 
 
         this.Children(this._name + '-contextmenu-icon-parent') && this.Children(this._name + '-contextmenu-icon-parent').AddClass('-selected');
@@ -730,6 +730,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
         
         const contextMenuObject = new Colibri.UI.ContextMenu(this._name + '-contextmenu', document.body, orientation, point);
+        contextMenuObject.rendererComponent = rendererComponent;
+        contextMenuObject.rendererAttrs = rendererAttrs;
         contextMenuObject.parent = this;
         contextMenuObject.namespace = this.namespace;
         contextMenuObject.Show(this.contextmenu, this);

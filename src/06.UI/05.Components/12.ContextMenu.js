@@ -54,6 +54,36 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
     }
 
     /**
+     * Renderer component
+     * @type {String|Colibri.UI.Component}
+     */
+    get rendererComponent() {
+        return this._rendererComponent;
+    }
+    /**
+     * Renderer component
+     * @type {String|Colibri.UI.Component}
+     */
+    set rendererComponent(value) {
+        this._rendererComponent = value;
+    }
+
+    /**
+     * Attributes for renderer component
+     * @type {Object}
+     */
+    get rendererAttrs() {
+        return this._rendererAttrs;
+    }
+    /**
+     * Attributes for renderer component
+     * @type {Object}
+     */
+    set rendererAttrs(value) {
+        this._rendererAttrs = value;
+    }
+
+    /**
      * Orientation 
      * @type {string}
      */
@@ -87,11 +117,25 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
             }
 
             const icon = new Colibri.UI.Icon(item.name + '-icon', itemObject);
-            const text = new Colibri.UI.TextSpan(item.name + '-text', itemObject);
+
+            let text = null;
+            if(this.rendererComponent) {
+                let f = this.rendererComponent;
+                if(typeof f === 'string') {
+                    f = eval(f);
+                }
+
+                text = new f(item.name + '-text', itemObject);
+                text.value = item;
+            } else {
+                text = new Colibri.UI.TextSpan(item.name + '-text', itemObject);
+                text.value = item.title;
+            }
+
             const arrow = new Colibri.UI.Icon(item.name + '-arrow', itemObject);
             arrow.value = Colibri.UI.ContextMenuRightArrowIcon;
 
-            if (item.children) {
+            if (item.children && Array.isArray(item.children) && item.children.length > 0) {
                 arrow.shown = true;
             }
 
@@ -103,7 +147,6 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
                 icon.shown = false;
             }
 
-            text.value = item.title;
             text.shown = true;
 
             itemObject.AddHandler('Clicked', this.__itemObjectClicked, false, this);
@@ -114,7 +157,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
 
     __itemObjectClicked(event, args) {
         const itemObject = event.sender;
-        if (itemObject.tag.children) {
+        if (itemObject.tag.children && Array.isArray(itemObject.tag.children) && itemObject.tag.children.length > 0) {
             if (this._childContextMenu) {
                 this._childContextMenu?.Dispose();
                 this._childContextMenu = null;
