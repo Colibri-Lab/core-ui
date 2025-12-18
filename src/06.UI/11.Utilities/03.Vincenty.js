@@ -252,6 +252,36 @@ Colibri.UI.Utilities.Vincenty = class {
     }
 
     /**
+     * Линия по Винсенти между двумя точками
+     * с учётом твоего inverse(), который возвращает [distance, azimuth]
+     *
+     * coord = [lat, lon]
+     */
+    static LineBetween(coord1, coord2, steps = 1000) {
+        // inverse: [distance(m), azimuth(deg)]
+        const [distance, azimuth] =
+            Colibri.UI.Utilities.Vincenty.inverse(coord1, coord2);
+
+        const [lat1, lon1] = coord1;
+        const step = distance / steps;
+
+        const points = [];
+
+        for (let i = 0; i <= steps; i++) {
+            const d = step * i;
+            const [lat, lon] =
+                Colibri.UI.Utilities.Vincenty.direct(lat1, lon1, azimuth, d);
+            points.push([lon, lat]); // GeoJSON
+        }
+
+        return {
+            type: "LineString",
+            coordinates: points
+        };
+    }
+
+
+    /**
      * Построение линии с разрывами при переходе ±180 долготы
      * @param {<lat, lng, azimuth>} point - стартовая широта
      * @param {number} totalDistance - длина линии в метрах

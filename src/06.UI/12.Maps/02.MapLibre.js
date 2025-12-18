@@ -669,7 +669,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceAddObject(name, objectJson) {
         const source = this._createObjectSource(name);
-        if(!source) {
+        if (!source) {
             return;
         }
         const data = source._data.geojson;
@@ -679,10 +679,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceAddOrUpdateObjects(name, objectsJson, updateIfExists = true) {
         const source = this._createObjectSource(name);
-        if(!source) {
+        if (!source) {
             return;
         }
-        
+
         const data = source._data.geojson;
         for (const objectJson of objectsJson) {
             if (updateIfExists) {
@@ -701,7 +701,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceRemoveObject(name, objectId) {
         const source = this._createObjectSource(name);
-        if(!source) {
+        if (!source) {
             return;
         }
         const data = source._data.geojson;
@@ -711,7 +711,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceRemoveObjects(name, objectIds) {
         const source = this._createObjectSource(name);
-        if(!source) {
+        if (!source) {
             return;
         }
         const data = source._data.geojson;
@@ -721,7 +721,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceUpdateObject(name, objectId, objectJson) {
         const source = this._createObjectSource(name);
-        if(!source) {
+        if (!source) {
             return;
         }
         const data = source._data.geojson;
@@ -733,7 +733,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceAddLine(name, objectJson) {
         const source = this._createLineSource(name);
-        if(!source) {
+        if (!source) {
             return;
         }
         const data = source._data.geojson;
@@ -743,7 +743,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceAddOrUpdateLines(name, objectsJson, updateIfExists = true) {
         const source = this._createLineSource(name);
-        if(!source) {
+        if (!source) {
             return;
         }
         const data = source._data.geojson;
@@ -764,7 +764,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceRemoveLine(name, objectId) {
         const source = this._createLineSource(name);
-        if(!source) {
+        if (!source) {
             return;
         }
         const data = source._data.geojson;
@@ -774,7 +774,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceRemoveLines(name, objectIds) {
         const source = this._createLineSource(name);
-        if(!source) {
+        if (!source) {
             return;
         }
         const data = source._data.geojson;
@@ -784,7 +784,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceUpdateLine(name, objectId, objectJson) {
         const source = this._createLineSource(name);
-        if(!source) {
+        if (!source) {
             return;
         }
         const data = source._data.geojson;
@@ -796,7 +796,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceAddPoint(name, objectJson) {
         const source = this._createPointSource(name);
-        if(!source) {
+        if (!source) {
             return;
         }
         const data = source._data.geojson;
@@ -806,7 +806,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceAddOrUpdatePoints(name, objectsJson, updateIfExists = true) {
         const source = this._createPointSource(name);
-        if(!source) {
+        if (!source) {
             return;
         }
         const data = source._data.geojson;
@@ -827,7 +827,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceRemovePoint(name, objectId) {
         const source = this._createPointSource(name);
-        if(!source) {
+        if (!source) {
             return;
         }
         const data = source._data.geojson;
@@ -837,7 +837,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceRemovePoints(name, objectIds) {
         const source = this._createPointSource(name);
-        if(!source) {
+        if (!source) {
             return;
         }
         const data = source._data.geojson;
@@ -847,7 +847,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     _sourceUpdatePoint(name, objectId, objectJson) {
         const source = this._createPointSource(name);
-        if(!source) {
+        if (!source) {
             return;
         }
         const data = source._data.geojson;
@@ -1543,7 +1543,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     EnableClickToMark(icon) {
         this._mapClickToMarkClicked = this._mapClickToMarkClicked || (async (e) => {
-            const args = { point: {lat: e.lngLat.lat, lng: e.lngLat.lng} };
+            const args = { point: { lat: e.lngLat.lat, lng: e.lngLat.lng } };
             await this.Dispatch('MarkAdded', args);
             // if(await this.Dispatch('MarkAdded', args)) {
             //     this.AddMarker('markers', 'marker-' + Date.Mc(), e.lngLat, icon);
@@ -1697,6 +1697,197 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
         }
     }
+
+    EnableAngleMeasure() {
+        let drawing = false;
+        let points = []; // max 3
+        const srcId = 'angle-measure';
+        this._anglePopup = null;
+        const turf = new Colibri.UI.Maps.Turf();
+
+        this._map.getCanvas().style.cursor = 'crosshair';
+
+        const ensureLayer = (data) => {
+            if (!this._map.getSource(srcId)) {
+                this._map.addSource(srcId, { type: 'geojson', data });
+                this._map.addLayer({
+                    id: srcId + '-line',
+                    type: 'line',
+                    source: srcId,
+                    paint: { 'line-color': '#1976d2', 'line-width': 2 }
+                });
+                this._map.addLayer({
+                    id: srcId + '-points',
+                    type: 'circle',
+                    source: srcId,
+                    paint: { 'circle-radius': 2, 'circle-color': '#1976d2' }
+                });
+            } else {
+                this._map.getSource(srcId).setData(data);
+            }
+        };
+
+        const redraw = (cursorLngLat = null) => {
+            const features = [];
+
+            // points
+            points.forEach(p => {
+                features.push({
+                    type: 'Feature',
+                    geometry: { type: 'Point', coordinates: p }
+                });
+            });
+
+            // first segment
+            if (points.length >= 2) {
+                features.push({
+                    type: 'Feature',
+                    geometry: turf.greatCircle(points[0], points[1], { npoints: 100 }).geometry
+                });
+            }
+
+            // second segment (dynamic)
+            if (points.length === 2 && cursorLngLat) {
+                features.push({
+                    type: 'Feature',
+                    geometry: turf.greatCircle(points[1], cursorLngLat, { npoints: 100 }).geometry
+                });
+            }
+
+            if (points.length === 3) {
+                features.push({
+                    type: 'Feature',
+                    geometry: turf.greatCircle(points[1], points[2], { npoints: 100 }).geometry
+                });
+            }
+
+            ensureLayer({
+                type: 'FeatureCollection',
+                features
+            });
+        };
+
+        const calcAngle = (p1, p2, p3) => {
+            const toRad = d => d * Math.PI / 180;
+
+            const a = [
+                toRad(p1[0] - p2[0]),
+                toRad(p1[1] - p2[1])
+            ];
+            const b = [
+                toRad(p3[0] - p2[0]),
+                toRad(p3[1] - p2[1])
+            ];
+
+            const dot = a[0] * b[0] + a[1] * b[1];
+            const ma = Math.hypot(a[0], a[1]);
+            const mb = Math.hypot(b[0], b[1]);
+
+            const angle = Math.acos(dot / (ma * mb)) * 180 / Math.PI;
+
+            return isNaN(angle) ? 0 : angle;
+        };
+
+        const begin = (x, y) => {
+            const ll = this._map.unproject([x, y]).toArray();
+
+            if (!drawing) {
+                drawing = true;
+                points = [];
+            }
+
+            points.push(ll);
+
+            if (!this._anglePopup) {
+                this._anglePopup = new maplibregl.Popup({ closeButton: false, closeOnClick: false })
+                    .setLngLat(ll)
+                    .setHTML('0°')
+                    .addTo(this._map);
+            }
+
+            redraw();
+            this._map.dragPan.disable();
+
+            if (points.length === 3) {
+                const angle = calcAngle(points[0], points[1], points[2]);
+                this._anglePopup
+                    .setLngLat(points[1])
+                    .setHTML(angle.toFixed(2) + '°');
+
+                drawing = false;
+                this._map.dragPan.enable();
+            }
+        };
+
+        const move = (x, y) => {
+            if (!drawing || points.length !== 2) return;
+            const ll = this._map.unproject([x, y]).toArray();
+            redraw(ll);
+
+            const angle = calcAngle(points[0], points[1], ll);
+            this._anglePopup
+                .setLngLat(points[1])
+                .setHTML('<span style="vertical-align: middle;">' + Colibri.UI.AzimuthIcon + '</span> ' + angle.toFixed(2) + '°');
+        };
+
+        this._mousedownHandlerAngle = (e) => {
+            e.preventDefault();
+            begin(e.clientX, e.clientY);
+
+            const mm = ev => move(ev.clientX, ev.clientY);
+            const up = () => {
+                document.removeEventListener('mousemove', mm);
+                document.removeEventListener('mouseup', up);
+            };
+
+            document.addEventListener('mousemove', mm);
+            document.addEventListener('mouseup', up);
+            return false;
+        };
+
+        this._touchHandlerAngle = (e) => {
+            if (e.touches.length !== 1) return true;
+            const t = e.touches[0];
+            begin(t.clientX, t.clientY);
+
+            const mm = ev => {
+                if (ev.touches.length !== 1) return;
+                const t2 = ev.touches[0];
+                move(t2.clientX, t2.clientY);
+            };
+            const end = () => {
+                document.removeEventListener('touchmove', mm);
+                document.removeEventListener('touchend', end);
+            };
+
+            document.addEventListener('touchmove', mm);
+            document.addEventListener('touchend', end);
+            return false;
+        };
+
+        this._map.getCanvas().addEventListener('mousedown', this._mousedownHandlerAngle);
+        this._map.getCanvas().addEventListener('touchstart', this._touchHandlerAngle);
+    }
+
+    DisableAngleMeasure() {
+        try {
+            this._map.getCanvas().removeEventListener('mousedown', this._mousedownHandlerAngle);
+            this._map.getCanvas().removeEventListener('touchstart', this._touchHandlerAngle);
+
+            if (this._anglePopup) {
+                this._anglePopup.remove();
+                this._anglePopup = null;
+            }
+
+            const srcId = 'angle-measure';
+            if (this._map.getLayer(srcId + '-line')) this._map.removeLayer(srcId + '-line');
+            if (this._map.getLayer(srcId + '-points')) this._map.removeLayer(srcId + '-points');
+            if (this._map.getSource(srcId)) this._map.removeSource(srcId);
+
+            this._map.getCanvas().style.cursor = null;
+        } catch (e) { }
+    }
+
 
     /**
      * Can rotate (Show rotate button)
