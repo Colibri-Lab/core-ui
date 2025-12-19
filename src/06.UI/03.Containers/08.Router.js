@@ -124,7 +124,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
         object = Object.cloneRecursive(object, null, ['parent']);
         for(const name of Object.keys(object)) {
             const value = object[name];
-            ret[prefix + name] = value;
+            ret[(prefix + name).replaceAll('//', '/')] = value;
             if(value?.childs ?? null) {
                 ret = Object.assign(ret, this.toPlain(value.childs, prefix + name + '/'));
                 delete value.childs;
@@ -180,6 +180,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
                 this._ifNotFoundComponent.KeepInMind();
             }
             if(this._structure) {
+                console.log(this._structure);
                 for(const pattern of Object.keys(this._structure).sort().reverse()) {
                     const route = this._structure[pattern];
                     

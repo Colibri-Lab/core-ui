@@ -89,4 +89,38 @@ Colibri.UI.SearchInput = class extends Colibri.UI.FlexBox {
         this._search.iconSVG = value;
     }
 
+    
+    /** 
+     * Input has icon
+     * @type {boolean} 
+     */
+    set hasIcon(value) {
+        value = this._convertProperty('Boolean', value);
+        this._input.hasIcon = value;
+    }
+    /** 
+     * Input has icon
+     * @type {boolean} 
+     */
+    get hasIcon() {
+        return this._input.hasIcon;
+    }
+
+    /** 
+     * Input has clear icon
+     * @type {boolean} 
+     */
+    set hasClearIcon(value) {
+        value = this._convertProperty('Boolean', value);
+        this._input.hasClearIcon = value;
+    }
+
+    /** 
+     * Input has clear icon
+     * @type {boolean} 
+     */
+    get hasClearIcon() {
+        return this._input.hasClearIcon;
+    }
+
 }
