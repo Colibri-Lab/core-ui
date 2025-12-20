@@ -34,6 +34,8 @@ Colibri.Events.Source = class extends Destructable {
             return;
         }
 
+        this.Disconnect();
+
         this._ipOrHost = ipOrHost;
         this._port = port;
 
