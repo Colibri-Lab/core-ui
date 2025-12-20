@@ -1269,6 +1269,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._element.css(value);
     }
 
+    RemoveStyle(style) {
+        this._element.css(style, null);
+    }
+
     /**
      * Name of object
      * @type {string}
@@ -2276,7 +2280,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this._handleSwipe = value;
         if(value) {
             this.__touchStartedPos = null;
-            
             this.AddHandler('TouchStarted', this.__defaultTouchStartHandler);
         }
     }
@@ -2287,7 +2290,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
 
         const c = document.body.__swipingComponent;
-        c.styles = null;
+        c.RemoveStyle('marginLeft');
+        c.RemoveStyle('marginTop');
         document.body.removeEventListener('touchend', c._swipeTouchEnd, true);
         document.body.removeEventListener('touchmove', c._swipeTouchMove, true);
         document.body.__swipingComponent = null;
@@ -2324,6 +2328,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         document.body.__swipingComponent = this;
         document.body.addEventListener('touchend', this._swipeTouchEnd);
         document.body.addEventListener('touchmove', this._swipeTouchMove);
+    }
+
+    StopSwiping() {
+        if(document.body.__swipingComponent) {
+            document.body.__swipingComponent._swipeTouchEnd(null);
+        }
     }
 
     /**
