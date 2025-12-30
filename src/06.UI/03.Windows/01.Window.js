@@ -536,7 +536,7 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         }
         else {
             const style = this._element.querySelector('.app-component-window-content').css();
-            if (value.indexOf('%') !== -1) {
+            if ((value + '').indexOf('%') !== -1) {
                 this._element.querySelector('.app-component-window-content').css('height', value);
             } else {
                 this._element.querySelector('.app-component-window-content').css('height', ((value + '').replaceAll('px', '') - (parseInt(style.paddingTop) || 0) - (parseInt(style.paddingBottom) || 0)) + 'px');
