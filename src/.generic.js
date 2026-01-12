@@ -2357,8 +2357,9 @@ Number.prototype.formatSequence = function (labels, viewnumber) {
     if (!viewnumber) { s = ""; }
 
     let ssecuence = this + '';
-    let sIntervalLastChar = ssecuence.substr(ssecuence.length - 1, 1);
-    if (parseInt(ssecuence) > 10 && parseInt(ssecuence) < 20) {
+    let sIntervalLastChar = ssecuence.slice(-1);
+    let sIntervalLast2Chars = ssecuence.slice(-2);
+    if (parseInt(sIntervalLast2Chars) > 10 && parseInt(sIntervalLast2Chars) < 20) {
         return s + labels[2];
     } else {
         switch (parseInt(sIntervalLastChar)) {
@@ -2390,6 +2391,17 @@ Number.prototype.decPlaces = function () {
     }
     return n[1].length;
 };
+
+Number.prototype.decimals = function(places = 2) {
+    // Handle negative numbers by working with absolute value
+    const absNum = Math.abs(this + 0);
+
+    // Get decimal part
+    const decimalPart = absNum - Math.floor(absNum);
+
+    // Convert to integer (remove leading "0.")
+    return parseInt((Math.round(decimalPart * Math.pow(10, decimalPart.toString().split(".")[1]?.length || 0)) + '').substring(0, places));
+}
 /**
  * Formats the number as a money string.
  * @param {number} [digits=2] - The number of digits after the decimal point.
