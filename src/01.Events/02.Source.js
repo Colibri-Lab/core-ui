@@ -60,8 +60,25 @@ Colibri.Events.Source = class extends Destructable {
         return this._socket.readyState === 1;
     }
 
-    Event(name, args) {
+    /**
+     * Dispatch an event
+     * @param {String} name Event name
+     * @param {*} args Event arguments
+     */
+    Dispatch(name, args) {
+        if(!this.isReady) {
+            console.log('Dispatcher socket is not connected yet');
+            console.log(name, args);
+            return;
+        }
         this._socket.send(JSON.stringify({event: name, args: args}));
+    }
+
+    /**
+     * @deprecated
+     */
+    Event(name, args) {
+        this.Dispatch(name, args);
     }
 
 
