@@ -1,7 +1,7 @@
 Colibri.IO.WebSocketStream = class extends Destructable {
 
     static TYPE_READERS = {
-        Date: (dv, o, le) => new Date(dv.getFloat64(o, le)),
+        Date: (dv, o, le) => new Date(dv.getFloat64(o, le) * 1000),
         Float64: (dv, o, le) => dv.getFloat64(o, le),
         Float32: (dv, o, le) => dv.getFloat32(o, le),
         Uint32: (dv, o, le) => dv.getUint32(o, le),
@@ -54,7 +54,7 @@ Colibri.IO.WebSocketStream = class extends Destructable {
             }
 
             // scalar
-            out[name] = Colibri.IO.WebSocketStream.TYPE_READERS[type](dv, offset, littleEndian);
+            out[name] = Colibri.IO.WebSocketStream.TYPE_READERS[type](dv, offset, true);
             offset += size;
         }
 
@@ -86,7 +86,7 @@ Colibri.IO.WebSocketStream = class extends Destructable {
                     chunks[i] = this._format(chunks[i], this._chunkFormatter);
                 }
             }
-            this._chunkReceived(chunk);
+            this._chunkReceived(chunks);
         };
         this._socket.onclose = (event) => {
             console.log('WebSocket connection closed:', event, 'reconnecting ');
