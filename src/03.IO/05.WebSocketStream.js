@@ -1,6 +1,10 @@
 Colibri.IO.WebSocketStream = class extends Destructable {
 
     static TYPE_READERS = {
+        FDate: (dv, o, le) => {
+            const dv2 = new DataView(dv.getFloat64(o, le));
+            return new FDate(dv2.getFloat64(0, le), dv.getFloat64(8, le))
+        },
         Date: (dv, o, le) => new Date(dv.getFloat64(o, le) * 1000),
         Float64: (dv, o, le) => dv.getFloat64(o, le),
         Float32: (dv, o, le) => dv.getFloat32(o, le),
