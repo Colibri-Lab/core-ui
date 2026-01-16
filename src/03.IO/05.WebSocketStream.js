@@ -1,10 +1,7 @@
 Colibri.IO.WebSocketStream = class extends Destructable {
 
     static TYPE_READERS = {
-        FDate: (dv, o, le) => {
-            const dv2 = new DataView(dv.getFloat64(o, le));
-            return new FDate(dv2.getFloat64(0, le), dv.getFloat64(8, le))
-        },
+        FDate: (dv, o, le) => new Colibri.Common.FDate(dv.getFloat64(o / 2, le), dv.getFloat64(o / 2 + 8, le)),
         Date: (dv, o, le) => new Date(dv.getFloat64(o, le) * 1000),
         Float64: (dv, o, le) => dv.getFloat64(o, le),
         Float32: (dv, o, le) => dv.getFloat32(o, le),
@@ -75,6 +72,7 @@ Colibri.IO.WebSocketStream = class extends Destructable {
     }
 
     _connect() {
+        this._manualDisconnect = false;
         this._socket = new WebSocket(this._uri);
         this._socket.binaryType = "arraybuffer";
         this._socket.onopen = (event) => console.log('WebSocket connection opened:', event);
@@ -94,7 +92,9 @@ Colibri.IO.WebSocketStream = class extends Destructable {
         };
         this._socket.onclose = (event) => {
             console.log('WebSocket connection closed:', event, 'reconnecting ');
-            setTimeout(() => this._connect(), 3000);
+            if(!this._manualDisconnect) {
+                setTimeout(() => this._connect(), 3000);
+            }
         };
         this._socket.onerror = (error) => console.error('WebSocket error:', error);
     }
@@ -104,6 +104,7 @@ Colibri.IO.WebSocketStream = class extends Destructable {
     }
 
     disconnect() {
+        this._manualDisconnect = true;
         this._socket.close();
     }
 

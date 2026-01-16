@@ -1,17 +1,17 @@
-class FDate {
-    
+Colibri.Common.FDate = class {
+
     constructor(sec = null, fs = null) {
-        
+
         if (!sec && !fs) {
             this._setNow();
         }
 
-        if(sec instanceof FDate) {
+        if (sec instanceof Colibri.Common.FDate) {
             this._sec = sec.seconds;
             this._fs = sec.fs;
         } else {
             this._sec = sec;
-            this._fs  = fs ?? 0;
+            this._fs = fs ?? 0;
         }
     }
 
@@ -24,16 +24,29 @@ class FDate {
         const sec = Math.floor(ms / 1000);
         const frac = (ms / 1000) - sec;
 
-        this.sec = sec; 
-        this.fs  = frac * 1e15;
+        this.seconds = sec;
+        this.fs = frac * 1e15;
     }
 
     _toMilliseconds() {
-        return (this.sec + this.fs / 1e15) * 1000;
+        return (this.seconds + this.fs / 1e15) * 1000;
     }
 
     static now() {
-        return new FDate();
+        return new Colibri.Common.FDate();
+    }
+
+    static parse(s) {
+        const [datePart, fsStr] = s.split("/");
+
+        // Парсим читаемую дату (секунда целиком)
+        const dateMs = Date.parse(datePart.slice(0, 19) + "Z"); // ms
+        if (isNaN(dateMs)) throw new Error("Invalid date string");
+
+        const sec = dateMs / 1000; // Float64 seconds
+        const fs = Number(fsStr); // Float64 femtoseconds
+
+        return new Colibri.Common.FDate(sec, fs);
     }
 
     valueOf() {
@@ -58,15 +71,28 @@ class FDate {
     }
 
     toString() {
-        return new Date(this.getTime()).toString();
+        return this.__toString();
+    }
+
+    __toString() {
+        // Читаемая дата из целой части секунд
+        const secInt = Math.floor(this._sec);
+        const date = new Date(secInt * 1000).toISOString().slice(0, 19);
+
+        // Дробная часть для визуализации (секунды + часть fs), не для восстановления
+        const fracSec = this._sec - secInt;
+        const displayFrac = (fracSec + this._fs / 1e15).toFixed(15).slice(2);
+
+        // Итоговая строка: YYYY-MM-DDTHH:MM:SS.<displayFrac>/fs
+        return `${date}.${displayFrac}/${this._fs.toPrecision(17)}`;
     }
 
     getFullYear() { return new Date(this.getTime()).getUTCFullYear(); }
-    getMonth()    { return new Date(this.getTime()).getUTCMonth(); }
-    getDate()     { return new Date(this.getTime()).getUTCDate(); }
-    getHours()    { return new Date(this.getTime()).getUTCHours(); }
-    getMinutes()  { return new Date(this.getTime()).getUTCMinutes(); }
-    getSeconds()  { return new Date(this.getTime()).getUTCSeconds(); }
+    getMonth() { return new Date(this.getTime()).getUTCMonth(); }
+    getDate() { return new Date(this.getTime()).getUTCDate(); }
+    getHours() { return new Date(this.getTime()).getUTCHours(); }
+    getMinutes() { return new Date(this.getTime()).getUTCMinutes(); }
+    getSeconds() { return new Date(this.getTime()).getUTCSeconds(); }
     getMilliseconds() { return Math.floor(this.fs / 1e12); }
 
     get fs() {
@@ -88,7 +114,7 @@ class FDate {
     }
 
     compare(other) {
-        if (this.sec !== other.sec) return this.seconds - other.seconds;
+        if (this.seconds !== other.seconds) return this.seconds - other.seconds;
         return this.fs - other.fs;
     }
 
