@@ -789,15 +789,6 @@ Colibri.UI.Forms.HiddenField = class extends Colibri.UI.Component {
     }
 
     /**
-     * Return field object
-     * @type {object}
-     * @readonly
-     */
-    get field() {
-        return {};
-    }
-
-    /**
      * Reset validation results of field
      */
     ResetValidation() {

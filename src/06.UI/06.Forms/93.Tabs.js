@@ -26,17 +26,17 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
         this.AddHandler('Changed', this.__thisChanged);
 
-        if(this._fieldData.className) {
+        if (this._fieldData.className) {
             this.AddClass(this._fieldData.className);
         }
 
-        if(this._fieldData?.params?.readonly === undefined) {
-            this.readonly = false;    
+        if (this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;
         }
         else {
             this.readonly = this._fieldData?.params?.readonly;
         }
-        if(this._fieldData?.params?.enabled === undefined) {
+        if (this._fieldData?.params?.enabled === undefined) {
             this.enabled = true;
         }
         else {
@@ -56,13 +56,13 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
     }
 
     __thisChanged(event, args) {
-        if(!this.root) {
+        if (!this.root) {
             this._hideAndShow();
         }
     }
 
     _renderField(name, fieldData, value, shown = true) {
-        
+
         const field = Object.cloneRecursive(fieldData);
         const tabTitle = field.desc ? (field.desc[Lang.Current] ?? field.desc ?? '') : (field.placeholder ? (field.placeholder[Lang.Current] ?? field.placeholder ?? '') : '');
 
@@ -70,13 +70,13 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
         const component = Colibri.UI.Forms.Field.Create(name, this._tabs.container, fieldData, this, this.root);
         component.message = false;
-        component.shown = shown;4
-        
+        component.shown = shown; 4
+
         const tabButton = new Colibri.UI.Button(component.name + '-button', this._tabs.header);
         tabButton.value = tabTitle;
         tabButton.shown = shown;
 
-        if(value) {
+        if (value) {
             component.value = value;
         }
 
@@ -128,7 +128,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         value = this._convertProperty('Boolean', value);
         super.readonly = value;
         Object.forEach(this._tabs.components, (name, component) => {
-            component.readonly = value; 
+            component.readonly = value;
         });
     }
 
@@ -140,7 +140,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
         let data = {};
         Object.forEach(this._tabs.components, (name, component) => {
-            if(name == '_adds') {
+            if (name == '_adds') {
                 data = Object.assign(data, component.value);
             }
             else {
@@ -159,11 +159,11 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
     set value(value) {
         value = eval_default_values(value);
         Object.forEach(this._tabs.components, (name, component) => {
-            if(name == '_adds') {
+            if (name == '_adds') {
                 // если наткнулись на _adds
                 component.ForEveryField((name, field) => {
-                    if(!this._value) {
-                        field.value = component.field.default ?? null;    
+                    if (!this._value) {
+                        field.value = component.field.default ?? null;
                     }
                     else {
                         field.value = this._value[name] ?? field?.field?.default ?? null;
@@ -171,8 +171,8 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
                 });
             }
             else {
-                if(!value) {
-                    component.value = component.field.default ?? null;    
+                if (!value) {
+                    component.value = component.field.default ?? null;
                 }
                 else {
                     component.value = value[name] ?? component.field.default ?? null;
@@ -180,10 +180,10 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
             }
         });
 
-        
-        if(value) {
+
+        if (value) {
             const oneof = this._tabs.components['_oneof'];
-            if(oneof) {
+            if (oneof) {
                 const keys = Object.keys(value);
                 oneof.value = keys[0];
             }
@@ -192,7 +192,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         Colibri.Common.Wait(() => {
             let loading = false;
             this.ForEveryField((name, component) => {
-                if(component.loading) {
+                if (component.loading) {
                     loading = true;
                     return false;
                 }
@@ -203,31 +203,31 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
             this._hideAndShow();
         });
 
-        
+
     }
 
     _runGenerateOfFieldData() {
         Object.forEach(this._fieldData.fields, (name, fieldData) => {
-            if(!fieldData || !this.contentContainer) {
+            if (!fieldData || !this.contentContainer) {
                 return true;
             }
-            
+
             let fieldComponent = this.contentContainer.Children(name);
-            if(fieldData?.params?.fieldgenerator) {
+            if (fieldData?.params?.fieldgenerator) {
                 const gen = eval(fieldData.params.fieldgenerator);
                 gen(fieldData, fieldComponent, this);
-                if(fieldData?.replace ?? false) {
+                if (fieldData?.replace ?? false) {
                     fieldComponent.Dispose();
                     fieldComponent = this._renderField(name, fieldData, data[name] ?? null, true);
                 }
 
-            } 
+            }
         });
     }
 
     /** @protected */
     _hideAndShow() {
-        if(!this.needHideAndShow) {
+        if (!this.needHideAndShow) {
             return;
         }
 
@@ -235,43 +235,43 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         const formData = this.root.value;
 
         Object.forEach(this._fieldData.fields, (name, fieldData) => {
-            if(!fieldData || !this.contentContainer) {
+            if (!fieldData || !this.contentContainer) {
                 return true;
             }
-            
+
             let fieldComponent = this.contentContainer.Children(name);
-            if(fieldComponent && fieldData.params && fieldData.params.condition) {
+            if (fieldComponent && fieldData.params && fieldData.params.condition) {
                 const condition = fieldData.params.condition;
-                if(condition.field) {        
-                    const type = condition?.type == 'disable' ? 'enabled' : 'shown';            
+                if (condition.field) {
+                    const type = condition?.type == 'disable' ? 'enabled' : 'shown';
                     const empty = condition?.empty || false;
                     const inverse = condition?.inverse || false;
                     let fieldValue = eval('data?.' + condition.field.split('.').join('?.'));
-                    if(!fieldValue) {
+                    if (!fieldValue) {
                         fieldValue = eval('formData?.' + condition.field.split('.').join('?.'));
                     }
                     let conditionResult = true;
-                    if((condition?.value ?? null) !== null) {
+                    if ((condition?.value ?? null) !== null) {
                         fieldValue = fieldValue?.value ?? fieldValue;
-                        if(Array.isArray(condition.value)) {
+                        if (Array.isArray(condition.value)) {
                             conditionResult = fieldValue === undefined || (fieldValue !== undefined && condition.value.indexOf(fieldValue) !== -1);
                         }
                         else {
                             conditionResult = fieldValue === undefined || (fieldValue !== undefined && fieldValue === condition.value);
                         }
-                    } else if(condition?.method) {
-                        if(typeof condition.method === 'string') {
+                    } else if (condition?.method) {
+                        if (typeof condition.method === 'string') {
                             conditionResult = eval(condition.method);
                         } else {
                             conditionResult = condition.method(fieldValue, data, type, empty, inverse, fieldData);
                         }
                     }
-                    if(inverse) {
+                    if (inverse) {
                         conditionResult = !conditionResult;
                     }
                     fieldComponent[type] = conditionResult;
-                    if(!conditionResult && empty) {
-                        fieldComponent.value = null;  
+                    if (!conditionResult && empty) {
+                        fieldComponent.value = null;
                     }
                 }
                 else {
@@ -279,7 +279,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
                     fieldComponent.enable = true;
                 }
             }
-            else if(fieldData.params && fieldData.params.hidden) {
+            else if (fieldData.params && fieldData.params.hidden) {
                 fieldComponent.shown = false;
             }
         });
@@ -292,7 +292,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
      * @returns {Array<Colibri.UI.Forms.Object>}
      */
     Fields(name = null) {
-        if(!this._tabs) {
+        if (!this._tabs) {
             return [];
         }
         return name ? this._tabs.components[name] : this._tabs.components;
@@ -340,35 +340,35 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
     /** @protected */
     _calcRuntimeValues(changedComponent = null) {
-        if(!this.needRecalc) {
+        if (!this.needRecalc) {
             return;
         }
 
         Object.forEach(this._fieldData.fields, (name, fieldData) => {
 
-            const fieldComponent = this.Fields(name);         
-            if(!fieldComponent || !fieldComponent.needRecalc) {
+            const fieldComponent = this.Fields(name);
+            if (!fieldComponent || !fieldComponent.needRecalc) {
                 return true;
             }
-            
-            if(fieldComponent instanceof Colibri.UI.Forms.Object || fieldComponent instanceof Colibri.UI.Forms.Array || fieldComponent instanceof Colibri.UI.Forms.Tabs) {
+
+            if (fieldComponent instanceof Colibri.UI.Forms.Object || fieldComponent instanceof Colibri.UI.Forms.Array || fieldComponent instanceof Colibri.UI.Forms.Tabs) {
                 fieldComponent._calcRuntimeValues(changedComponent);
             } else {
-                if(fieldData?.params?.valuegenerator) {
+                if (fieldData?.params?.valuegenerator) {
                     try {
                         const f = typeof fieldData?.params?.valuegenerator === 'string' ? eval(fieldData?.params?.valuegenerator) : fieldData?.params?.valuegenerator;
                         const isOldVersion = typeof fieldData?.params?.valuegenerator === 'string' && fieldData?.params?.valuegenerator.indexOf('(parentValue, formValue') !== -1;
                         const v = isOldVersion ? f(this.value, this.root?.value, fieldComponent, this) : f(this.value, this.root?.value, fieldComponent, this.root, changedComponent);
-                        if(v !== undefined) {
+                        if (v !== undefined) {
                             fieldComponent.value = v;
                         }
-                    } catch(e) {
+                    } catch (e) {
                         console.log('Error in ValueGenerator', name, fieldData, fieldData?.params?.valuegenerator, e);
                     }
                 }
             }
         });
     }
-    
+
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Tabs', 'Colibri.UI.Forms.Tabs', '#{ui-fields-tabs}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler','vertical','removedesc'])
+Colibri.UI.Forms.Field.RegisterFieldComponent('Tabs', 'Colibri.UI.Forms.Tabs', '#{ui-fields-tabs}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'vertical', 'removedesc'])
