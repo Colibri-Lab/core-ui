@@ -303,7 +303,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 return value['ru'] ?? value;
             }
         } else if(typeof value === 'string' && ['Object', 'Function', 'Array'].indexOf(type) !== -1) {
-            eval('value = ' + value + ';');
+            try {
+                eval('value = ' + value + ';');
+            } catch(e) {
+                value = null;
+            }
         } else if(typeof value === 'string' && type === 'Date') {
             return value.toDate();
         }
