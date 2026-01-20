@@ -352,8 +352,6 @@ Colibri.UI.Utilities.Vincenty = class {
         // исключаем совпадающие точки
         if (Math.abs(lat1 - lat2) < 1e-9 && Math.abs(lon1 - lon2) < 1e-9) return null;
 
-        const toRad = deg => deg * Math.PI / 180;
-        const toDeg = rad => rad * 180 / Math.PI;
 
         const cross3 = (a, b) => [
             a[1] * b[2] - a[2] * b[1],
@@ -378,12 +376,12 @@ Colibri.UI.Utilities.Vincenty = class {
         const toLatLon = v => {
             const lat = Math.asin(v[2]);
             let lon = Math.atan2(v[1], v[0]);
-            return { lat: toDeg(lat), lng: (toDeg(lon) + 540) % 360 - 180 };
+            return { lat: Colibri.UI.Utilities.Vincenty.degrees(lat), lng: (Colibri.UI.Utilities.Vincenty.degrees(lon) + 540) % 360 - 180 };
         };
 
         // нормали больших кругов
-        const n1 = greatCircleNormal(toRad(lat1), toRad(lon1), toRad(az1));
-        const n2 = greatCircleNormal(toRad(lat2), toRad(lon2), toRad(az2));
+        const n1 = greatCircleNormal(Colibri.UI.Utilities.Vincenty.radians(lat1), Colibri.UI.Utilities.Vincenty.radians(lon1), Colibri.UI.Utilities.Vincenty.radians(az1));
+        const n2 = greatCircleNormal(Colibri.UI.Utilities.Vincenty.radians(lat2), Colibri.UI.Utilities.Vincenty.radians(lon2), Colibri.UI.Utilities.Vincenty.radians(az2));
 
         const cross = cross3(n1, n2);
         const norm = Math.hypot(...cross);
@@ -409,13 +407,17 @@ Colibri.UI.Utilities.Vincenty = class {
         const valid2 = isForward(az1, heading2);
 
         let intersection = null;
+        let azimuth = null;
         if (valid1 && valid2) {
             const d1 = Colibri.UI.Utilities.Vincenty.haversine(lat1, lon1, latLng1.lat, latLng1.lng);
             const d2 = Colibri.UI.Utilities.Vincenty.haversine(lat1, lon1, latLng2.lat, latLng2.lng);
             intersection = d1 < d2 ? latLng1 : latLng2;
+            azimuth = d1 < d2 ? az1 : az2;
         } else if (valid1) {
+            azimuth = az1;
             intersection = latLng1;
         } else if (valid2) {
+            azimuth = az2;
             intersection = latLng2;
         } else {
             return null; // обе точки “назад”
@@ -425,16 +427,17 @@ Colibri.UI.Utilities.Vincenty = class {
         // const dist = Colibri.UI.Utilities.Vincenty.haversine(lat1, lon1, intersection.lat, intersection.lng);
         // if (dist > maxDistance) return null;
 
-        const geoline = p1?.geoline?.coordinates?.[0] ?? Colibri.UI.Utilities.Vincenty.Line(p1.lat, p1.lng, p1.azimuth, maxDistance, 100).coordinates;
-        if (geoline && geoline.length > 1) {
-            // debugger;
-            const distance = Colibri.UI.Utilities.Vincenty.polylineLengthToPoint(geoline, intersection);
-            if (distance > maxDistance - 500000) {
-                return null;
-            }
-        } else {
-            const dist = Colibri.UI.Utilities.Vincenty.haversine(lat1, lon1, intersection.lat, intersection.lng);
-            if (dist > maxDistance) return null;
+        const realLinePoints1 = p1?.geoline?.coordinates?.[0] ?? Colibri.UI.Utilities.Vincenty.Line(p1.lat, p1.lng, p1.azimuth, maxDistance, 100).coordinates;
+        const realLinePoints2 = p2?.geoline?.coordinates?.[0] ?? Colibri.UI.Utilities.Vincenty.Line(p2.lat, p2.lng, p2.azimuth, maxDistance, 100).coordinates;
+
+        const fictionLinePoints1 = Colibri.UI.Utilities.Vincenty.LineBetween([realLinePoints1[0][1], realLinePoints1[0][0]], [intersection.lat, intersection.lng], 1000).coordinates;
+        const fictionLinePoints2 = Colibri.UI.Utilities.Vincenty.LineBetween([realLinePoints2[0][1], realLinePoints2[0][0]], [intersection.lat, intersection.lng], 1000).coordinates;
+
+        if (
+            !Colibri.UI.Utilities.Vincenty.checkDirectionOfIntersectionPoint(realLinePoints1, p1.azimuth, fictionLinePoints1, maxDistance) ||
+            !Colibri.UI.Utilities.Vincenty.checkDirectionOfIntersectionPoint(realLinePoints2, p2.azimuth, fictionLinePoints2, maxDistance)
+        ) {
+            return null;
         }
 
         // проверка bbox
@@ -537,6 +540,38 @@ Colibri.UI.Utilities.Vincenty = class {
             lat: y1 + t * dy
         };
     }
+    
+
+    static lineLength(coords) {
+        let length = 0;
+        for (let i = 0; i < coords.length - 2; i += 2) {
+            const [lon1, lat1] = coords[i];
+            const [lon2, lat2] = coords[i + 1];
+            length += Colibri.UI.Utilities.Vincenty.haversine(lat1, lon1, lat2, lon2);
+        }
+        return length;
+    }
+
+    static checkDirectionOfIntersectionPoint(realLinePoints, azimuth, fictionLinePoints, maxDistance) {
+
+        // 2 создаем линию из точек от coords[0] до point
+        // сравниваем длину линии 2 если она больше maxDistance тогда false
+        // если меньше тогда проверяем чтобы азимут линии от точки coords[0] до point был сравним с азимутом линии coords 
+        const realPoint = realLinePoints[0];
+        const interesctionPoint = fictionLinePoints[fictionLinePoints.length - 1];
+        const lineLength = Colibri.UI.Utilities.Vincenty.lineLength(fictionLinePoints);
+        if(lineLength > maxDistance) {
+            return false;
+        }
+
+        let intersectionAzimuth = Colibri.UI.Utilities.Vincenty.bearing(realPoint[1], realPoint[0], interesctionPoint[1], interesctionPoint[0]);
+        console.log('realLat', realPoint[1], 'realLon', realPoint[0], 'interLat', interesctionPoint[1], 'interLon', interesctionPoint[0], 'interAz', intersectionAzimuth, 'realAz', azimuth, 'lineLength', lineLength);
+        if(!intersectionAzimuth.approximateCheck(5, azimuth)) {
+            return false;
+        }
+
+        return true;
+    }
 
     static polylineLengthToPoint(coords, point) {
         if (!coords || coords.length < 4) return 0;
@@ -565,19 +600,17 @@ Colibri.UI.Utilities.Vincenty = class {
     }
 
     static bearing(lat1, lon1, lat2, lon2) {
-        const toRad = d => d * Math.PI / 180;
-        const toDeg = r => r * 180 / Math.PI;
 
-        const f1 = toRad(lat1);
-        const f2 = toRad(lat2);
-        const d = toRad(lon2 - lon1);
+        const f1 = Colibri.UI.Utilities.Vincenty.radians(lat1);
+        const f2 = Colibri.UI.Utilities.Vincenty.radians(lat2);
+        const d = Colibri.UI.Utilities.Vincenty.radians(lon2 - lon1);
 
         const y = Math.sin(d) * Math.cos(f2);
         const x =
             Math.cos(f1) * Math.sin(f2) -
             Math.sin(f1) * Math.cos(f2) * Math.cos(d);
 
-        return (toDeg(Math.atan2(y, x)) + 360) % 360;
+        return (Colibri.UI.Utilities.Vincenty.degrees(Math.atan2(y, x)) + 360) % 360;
     }
 
 

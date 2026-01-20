@@ -2336,6 +2336,11 @@ String.prototype.bin2hex = function () {
     return hex;
 };
 
+Number.prototype.approximateCheck = function (tolerance, check) {
+    return Math.abs(this - check) <= tolerance;
+}
+    
+
 /**
  * Formats the number according to the current locale.
  * @returns {string} The formatted number string.
@@ -2670,6 +2675,7 @@ Date.getTimezoneString = function() {
     const mm = String(abs % 60).padStart(2, "0");
     return `${sign}${hh}${mm}`;
 }
+
 
 /**
  * Returns the number of days in the given month and year.
