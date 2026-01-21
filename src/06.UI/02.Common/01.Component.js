@@ -280,16 +280,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * @returns 
      */
     _convertProperty(type, value) {
-        if(typeof value === 'string') {
-            const f = value.convertToFunction();
-            if(!!f) {
-                try {
-                    value = f(value, this);
-                } catch(e) {
-                    
-                }
-            }
-        }
         if(typeof value === 'function' && !Object.isClass(value) && type != 'Function') {
             return value(value, this);
         } else if((value === 'true' || value === 'false') && type === 'Boolean') {
@@ -304,7 +294,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             }
         } else if(typeof value === 'string' && ['Object', 'Function', 'Array'].indexOf(type) !== -1) {
             try {
-                eval('value = ' + value + ';');
+                value = value.convertToFunction();
             } catch(e) {
                 value = null;
             }
