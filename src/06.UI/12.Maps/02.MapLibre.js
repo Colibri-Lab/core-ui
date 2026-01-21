@@ -1636,13 +1636,13 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
         this._mousedownHandler2 = this._mousedownHandler2 || ((e) => {
             e.preventDefault();
-            beginDrawing(e.clientX, e.clientY);
+            beginDrawing(e.clientX - this._element.bounds().left, e.clientY - this._element.bounds().top);
 
-            const move = (ev) => updateDrawing(ev.clientX, ev.clientY);
+            const move = (ev) => updateDrawing(ev.clientX - this._element.bounds().left, ev.clientY - this._element.bounds().top);
             const up = (ev) => {
                 document.removeEventListener('mousemove', move);
                 document.removeEventListener('mouseup', up);
-                finishDrawing(ev.clientX, ev.clientY);
+                finishDrawing(ev.clientX - this._element.bounds().left, ev.clientY - this._element.bounds().top);
             };
 
             document.addEventListener('mousemove', move);
