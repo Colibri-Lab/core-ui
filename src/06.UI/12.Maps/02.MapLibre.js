@@ -1832,9 +1832,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
         this._mousedownHandlerAngle = (e) => {
             e.preventDefault();
-            begin(e.clientX, e.clientY);
+            begin(e.clientX - this._element.bounds().left, e.clientY - this._element.bounds().top);
 
-            const mm = ev => move(ev.clientX, ev.clientY);
+            const mm = ev => move(e.clientX - this._element.bounds().left, e.clientY - this._element.bounds().top);
             const up = () => {
                 document.removeEventListener('mousemove', mm);
                 document.removeEventListener('mouseup', up);
@@ -1848,12 +1848,12 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._touchHandlerAngle = (e) => {
             if (e.touches.length !== 1) return true;
             const t = e.touches[0];
-            begin(t.clientX, t.clientY);
+            begin(t.clientX - this._element.bounds().left, t.clientY - this._element.bounds().top);
 
             const mm = ev => {
                 if (ev.touches.length !== 1) return;
                 const t2 = ev.touches[0];
-                move(t2.clientX, t2.clientY);
+                move(t2.clientX - this._element.bounds().left, t2.clientY - this._element.bounds().top);
             };
             const end = () => {
                 document.removeEventListener('touchmove', mm);
