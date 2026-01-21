@@ -565,7 +565,6 @@ Colibri.UI.Utilities.Vincenty = class {
         }
 
         let intersectionAzimuth = Colibri.UI.Utilities.Vincenty.bearing(realPoint[1], realPoint[0], interesctionPoint[1], interesctionPoint[0]);
-        console.log('realLat', realPoint[1], 'realLon', realPoint[0], 'interLat', interesctionPoint[1], 'interLon', interesctionPoint[0], 'interAz', intersectionAzimuth, 'realAz', azimuth, 'lineLength', lineLength);
         if(!intersectionAzimuth.approximateCheck(5, azimuth)) {
             return false;
         }
