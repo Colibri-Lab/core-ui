@@ -152,6 +152,7 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
             return;
         }
 
+        const errors = [];
         const fields = Object.keys(data[0]);
         const placeholders = fields.map(() => '?').join(', ');
         const sql = `INSERT INTO "${table}" ("${fields.join('", "')}") VALUES (${placeholders})`;
@@ -169,11 +170,16 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
             try {
                 stmt.run(values);
             } catch (e) {
-                console.error('Ошибка вставки:', e, values);
+                console.error('Ошибка вставки: ' + e, values);
+                errors.push({message: 'Ошибка вставки: ' + e, values});
             }
         }
 
         stmt.free();
+
+        if(errors.length > 0) {
+            throw 'Ошибка вставки: ' + errors.map(e => e.message).join('<br />');
+        }
 
         this.Dispatch('Changed');
     }
