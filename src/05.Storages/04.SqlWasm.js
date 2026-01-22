@@ -21,7 +21,7 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
                     }).then((SQL) => {
                         resolve(SQL);
                     });
-                }).catch(() => {                
+                }).catch(() => {
                     Colibri.Common.LoadScript('https://unpkg.com/sql.js@1.8.0/dist/sql-wasm.js').then(() => {
                         Colibri.Storages.SqlWasm.loaded = file => `https://unpkg.com/sql.js@1.8.0/dist/${file}`;
                         initSqlJs({
@@ -171,13 +171,13 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
                 stmt.run(values);
             } catch (e) {
                 console.error('Ошибка вставки: ' + e, values);
-                errors.push({message: 'Ошибка вставки: ' + e, values});
+                errors.push({ message: 'Ошибка вставки: ' + e, values });
             }
         }
 
         stmt.free();
 
-        if(errors.length > 0) {
+        if (errors.length > 0) {
             throw 'Ошибка вставки: ' + errors.map(e => e.message).join('<br />');
         }
 
@@ -187,12 +187,22 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
     Update(table, data, condition) {
         const fields = Object.keys(data);
         const d = fields.map(f => f + '=?');
-        this._db.run('UPDATE "' + table + '" SET ' + d.join(', ') + ' WHERE ' + condition, fields.map(field => data[field]));
+        try {
+            this._db.run('UPDATE "' + table + '" SET ' + d.join(', ') + ' WHERE ' + condition, fields.map(field => data[field]));
+        } catch (e) {
+            console.error('Ошибка вставки: ' + e, values);
+            throw e;
+        }
         this.Dispatch('Changed');
     }
 
     Delete(table, condition = '') {
-        this._db.run('DELETE FROM "' + table + '"' + (condition ? ' WHERE ' + condition : ''), []);
+        try {
+            this._db.run('DELETE FROM "' + table + '"' + (condition ? ' WHERE ' + condition : ''), []);
+        } catch (e) {
+            console.error('Ошибка вставки: ' + e, values);
+            throw e;
+        }
         this.Dispatch('Changed');
     }
 
