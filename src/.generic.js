@@ -2561,7 +2561,7 @@ Number.prototype.toTimeString = function (daySplitter, trim00 = true, hasSeconds
  * @param {string[]} postfixes - Array of postfixes for different size units.
  * @param {number} range - The range used to determine the size unit.
  * @param {boolean} [remove0s=false] - Whether to remove '.00' from the result.
- * @param {boolean} [approximate=false] - Whether to round the number to the nearest integer.
+ * @param {boolean|Number} [approximate=false] - Whether to round the number to the nearest integer.
  * @param {boolean} [shownumber=true] - Whether to include the number in the output.
  * @returns {string} The formatted size string.
  */
@@ -2583,7 +2583,7 @@ Number.prototype.toSizeString = function (postfixes = ['bytes', 'Kb', 'Mb', 'Gb'
         number = number.replaceAll('.00', '');
     }
     if (approximate) {
-        number = Math.round(number);
+        number = parseFloat(number).toFixed(approximate);
     }
     return (shownumber ? (isMinus ? '-' : '') + number + ' ' : '') + postfixes[j];
 };
