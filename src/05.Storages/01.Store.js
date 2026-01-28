@@ -565,7 +565,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @param {boolean} [nodispatch=false] - Whether to dispatch events after setting the data.
      * @returns {object} The updated storage object.
      */
-    async Set(path, d, nodispatch = false) {
+    async Set(path, d, nodispatch = false, force = false) {
 
         if(Object.isPlainObject(d) || Array.isArray(d)) {
             d = Object.cloneRecursive(d);
@@ -604,7 +604,11 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         }
 
         let isChanged = false;
-        eval('isChanged = !Object.shallowEqual(' + realpath + ', d);');
+        if(!force) {
+            eval('isChanged = !Object.shallowEqual(' + realpath + ', d);');
+        } else {
+            isChanged = true;
+        }
         if(isChanged) {
             if(d !== null) {
                 eval(realpath + ' = d;');
