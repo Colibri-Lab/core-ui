@@ -87,7 +87,6 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
         //this._current = args.domEvent.target.closest('[data-object-name][draggable="true"]').getUIComponent();
         this._current = args.domEvent.target.closest('[data-object-name][draggable="true"]').getUIComponent();
         this._current.styles = {overflow: 'hidden'};
-        console.log('__dragStartFromSources', this._current);
     }
 
     /**
