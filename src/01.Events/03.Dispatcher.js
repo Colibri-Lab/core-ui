@@ -41,6 +41,19 @@ Colibri.Events.Dispatcher = class extends Destructable {
     }
 
     /**
+     * Registers an event.
+     * @param {string} eventName - The name of the event.
+     * @param {boolean} bubbles - Indicates whether the event bubbles up the component tree.
+     * @param {string} description - Description of the event.
+     */
+    UnregisterEvent(eventName) {
+        if(source) {
+            source.unregister(this, eventName);
+        }
+        delete this.__events[eventName];
+    }
+
+    /**
      * Adds an event handler.
      * @param {string|array} eventName - The event or array of events to add the handler to.
      * @param {Function} handler - The handler method.

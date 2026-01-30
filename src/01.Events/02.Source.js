@@ -19,6 +19,16 @@ Colibri.Events.Source = class extends Destructable {
         this._handlers[eventName].push(repsondent);
     }
 
+    unregister(repsondent, eventName) {
+        if(!this._handlers[eventName]) {
+            this._handlers[eventName] = [];
+        }
+        if(this._handlers[eventName]) {
+            const index = this._handlers[eventName].indexOf(repsondent);
+            this._handlers[eventName].splice(index, 1);
+        }
+    }
+
     Disconnect() {
         if(this._socket) {
             this._socket.close();

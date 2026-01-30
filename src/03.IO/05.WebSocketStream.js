@@ -25,9 +25,10 @@ Colibri.IO.WebSocketStream = class extends Destructable {
      * @param {Number|null} chunkSize part size in bytes or null (means that must be one row in chunk)
      * @param {Array<Array>} format of chunk [[8,'time','Date'],[4,'duration','Uint8'],[['n',4], 'chunk','Float32Array']]
      */
-    constructor(uri, chunkSize, chunkFormatter, chunkReceived) {
+    constructor(name, uri, chunkSize, chunkFormatter, chunkReceived) {
         super();
 
+        this._name = name;
         this._uri = uri;
         this._chunkReceived = chunkReceived;
         this._chunkSize = chunkSize;
@@ -88,7 +89,7 @@ Colibri.IO.WebSocketStream = class extends Destructable {
                     chunks[i] = this._format(chunks[i], this._chunkFormatter);
                 }
             }
-            this._chunkReceived(chunks);
+            this._chunkReceived(chunks, this);
         };
         this._socket.onclose = (event) => {
             console.log('WebSocket connection closed:', event, 'reconnecting ');
@@ -101,6 +102,10 @@ Colibri.IO.WebSocketStream = class extends Destructable {
 
     get isReady() {
         return this._socket.readyState === 1;
+    }
+
+    get name() {
+        return this._name;
     }
 
     disconnect() {
