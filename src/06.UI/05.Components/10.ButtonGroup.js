@@ -38,7 +38,8 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
     /** @protected */
     _registerEvents() {
         super._registerEvents();
-        this.RegisterEvent('Changed', false, 'Поднимается, когда изменилась выбранная кнопка');
+        this.RegisterEvent('Changed', false, 'When button selection is changed');
+        this.RegisterEvent('ButtonClicked', false, 'When button is clicked');
     }
 
     /**
@@ -61,6 +62,7 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
         this._selectedButton = button;
         this._selectedButton.AddClass('-selected');
 
+        this.Dispatch('ButtonClicked', {button: this._selectedButton, index: this.selectedIndex});
         if(!isSelected && !dontSendEvent) {
             Colibri.Common.Delay(10).then(() => {
                 this.Dispatch('Changed', {button: this._selectedButton, index: this.selectedIndex});
