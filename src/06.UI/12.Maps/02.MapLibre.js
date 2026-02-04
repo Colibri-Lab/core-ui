@@ -1511,29 +1511,11 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             });
             this.Dispatch('SelectionChanged', { ids: this._selectedIds });
         });
-        this._mapMouseEnter = this._mapMouseEnter || ((e) => {
-            if (e.features.length) {
-            }
-        });
-        this._mapMouseLeave = this._mapMouseLeave || ((e) => {
-        });
-        this._map.on("mouseenter", "lines", this._mapMouseEnter);
-        this._map.on("mouseleave", "lines", this._mapMouseLeave);
-        this._map.on("mouseenter", "points", this._mapMouseEnter);
-        this._map.on("mouseleave", "points", this._mapMouseLeave);
-        this._map.on("mouseenter", "objects", this._mapMouseEnter);
-        this._map.on("mouseleave", "objects", this._mapMouseLeave);
         this._map.on('click', this._mapClicked);
     }
 
     DisableSingleSelection() {
         try {
-            this._map.off("mouseenter", "lines", this._mapMouseEnter);
-            this._map.off("mouseleave", "lines", this._mapMouseLeave);
-            this._map.off("mouseenter", "points", this._mapMouseEnter);
-            this._map.off("mouseleave", "points", this._mapMouseLeave);
-            this._map.off("mouseenter", "objects", this._mapMouseEnter);
-            this._map.off("mouseleave", "objects", this._mapMouseLeave);
             this._map.off('click', this._mapClicked);
             this._map.getCanvas().style.cursor = "";
         } catch (e) {
