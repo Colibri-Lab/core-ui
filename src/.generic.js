@@ -273,7 +273,7 @@ Array.prototype.avg = function () {
     return this.reduce((a, b) => a + b, 0) / this.length;
 }
 
-Array.prototype.shuffle = function() {
+Array.prototype.shuffle = function () {
     for (let i = this.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [this[i], this[j]] = [this[j], this[i]];
@@ -935,16 +935,16 @@ Object.cloneRecursive = function (object, callback = null, excludeKeys = []) {
                 ret.push(o);
             }
         }
-    } else if(Object.isPlainObject(object)) {
+    } else if (Object.isPlainObject(object)) {
         ret = {};
-        const keys = Object.keys(object); 
-        for(const prop of keys) {
+        const keys = Object.keys(object);
+        for (const prop of keys) {
             const value = object[prop];
-    
+
             if (excludeKeys.indexOf(prop) !== -1) {
                 continue;
             }
-    
+
             if (value instanceof Function) {
                 ret[prop] = value;
             }
@@ -984,14 +984,14 @@ Object.shallowEqual = function (a, b) {
     if (Array.isArray(a) && Array.isArray(b)) {
         return Array.shallowEqual(a, b);
     }
-    
+
     if (a instanceof Date && b instanceof Date) return a.getTime() === b.getTime();
 
     if (a instanceof File && b instanceof File) {
         return a.name === b.name &&
-               a.size === b.size &&
-               a.type === b.type &&
-               a.lastModified === b.lastModified;
+            a.size === b.size &&
+            a.type === b.type &&
+            a.lastModified === b.lastModified;
     }
 
     if (Array.isArray(a) !== Array.isArray(b)) return false;
@@ -1144,7 +1144,7 @@ Object.assignRecursive = function (source, target) {
     return target;
 }
 
-Array.pluck = function(arrayOfObjects, key) {
+Array.pluck = function (arrayOfObjects, key) {
     let ret = [];
     for (const obj of arrayOfObjects) {
         ret.push(obj[key]);
@@ -1219,8 +1219,8 @@ Object.PerformFormatConversion = function (textAsObject, showLineBrakes = false,
 Object.hasAllOfKeys = function (clsString, keys) {
     let allExists = true;
     const clsObject = eval(clsString);
-    for(const key of keys) {
-        if(!clsObject.prototype.hasOwnProperty(key)) {
+    for (const key of keys) {
+        if (!clsObject.prototype.hasOwnProperty(key)) {
             allExists = false;
         }
     }
@@ -1237,13 +1237,13 @@ Object.hasStaticMethodRecursive = function (cls, methodName) {
         return false;
     }
 
-    if(Object.hasStaticMethod(cls, methodName)) {
+    if (Object.hasStaticMethod(cls, methodName)) {
         return true;
     }
 
-    for(const key in cls) {
+    for (const key in cls) {
         const value = cls[key];
-        if(Object.hasStaticMethodRecursive(value, methodName)) {
+        if (Object.hasStaticMethodRecursive(value, methodName)) {
             return true;
         }
 
@@ -1256,7 +1256,7 @@ Object.listChildsWith = function (clsString, checkFunction) {
     let cls = null;
     try {
         cls = eval(clsString);
-    } catch(e) {
+    } catch (e) {
 
     }
     if (!cls || !(Object.isClass(cls) || Object.isPlainObject(cls))) {
@@ -1264,13 +1264,13 @@ Object.listChildsWith = function (clsString, checkFunction) {
     }
 
     let list = [];
-    if(checkFunction(cls)) {
+    if (checkFunction(cls)) {
         list.push(clsString);
     }
 
-    for(const key in cls) {
+    for (const key in cls) {
         const l = Object.listChildsWith(clsString + '.' + key, checkFunction);
-        if(l.length) {
+        if (l.length) {
             list = list.concat(l);
         }
     }
@@ -1291,7 +1291,7 @@ RegExp.prototype.all = function (str) {
             ret.push(matches[index]);
         }
     }
-    if(ret.length === 0 && Array.isArray(matches) && matches.length > 0 && str === matches[0]) {
+    if (ret.length === 0 && Array.isArray(matches) && matches.length > 0 && str === matches[0]) {
         ret.push(str);
     }
     return ret;
@@ -1519,6 +1519,31 @@ String.prototype.isEmail = function () {
     } else if (arrayString[1].charAt(arrayString[1].length - 1) == ".") {
         return false;
     }
+    return true;
+};
+
+String.prototype.isEmail2 = function () {
+    const email = (this + '');
+    if (typeof email !== 'string') return false;
+
+    const m = email.trim().toLowerCase().match(
+        /^[a-z0-9._%+-]+@([a-z-]+)\.([a-z.]{2,})$/
+    );
+    if (!m) return false;
+
+    const mainDomain = m[1];          // основной домен (без TLD)
+    const tld = m[2];
+
+    if (/\d/.test(mainDomain)) return false;
+
+    const knownTlds = new Set([
+        'com', 'net', 'org', 'edu', 'gov', 'mil',
+        'io', 'ai', 'app', 'dev', 'info', 'biz',
+        'ru', 'am', 'us', 'uk', 'de', 'fr', 'it', 'es'
+    ]);
+
+    if (!knownTlds.has(tld.split('.').pop())) return false;
+
     return true;
 };
 
@@ -2339,7 +2364,7 @@ String.prototype.bin2hex = function () {
 Number.prototype.approximateCheck = function (tolerance, check) {
     return Math.abs(this - check) <= tolerance;
 }
-    
+
 
 /**
  * Formats the number according to the current locale.
@@ -2397,7 +2422,7 @@ Number.prototype.decPlaces = function () {
     return n[1].length;
 };
 
-Number.prototype.decimals = function(places = 2) {
+Number.prototype.decimals = function (places = 2) {
     // Handle negative numbers by working with absolute value
     const absNum = Math.abs(this + 0);
 
@@ -2667,7 +2692,7 @@ Date.prototype.toTimeString = function (hasSeconds = true) { if (this == 'Invali
  */
 Date.isLeapYear = function (year) { return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)); };
 
-Date.getTimezoneString = function() {
+Date.getTimezoneString = function () {
     const m = new Date().getTimezoneOffset(); // minutes, positive for GMT-
     const sign = m > 0 ? "-" : "+";
     const abs = Math.abs(m);
@@ -2971,7 +2996,7 @@ Date.prototype.Age = function (removeNazad = false, returnFull = false, tokens =
  * @param {string} formatString - The format string.
  * @returns {string} The formatted date string.
  */
-Date.prototype.format = function (formatObject, dateFormat = 'ru-RU') { 
+Date.prototype.format = function (formatObject, dateFormat = 'ru-RU') {
     let dateformat = dateFormat || App.DateFormat || 'ru-RU';
     const params = formatObject;
     const format = new Intl.DateTimeFormat(dateformat, params);
@@ -4274,11 +4299,11 @@ String.prototype.spkiPem2spkiDer = function () {
     return binaryDerString.toArrayBuffer();
 }
 
-String.prototype.convertToFunction = function() {
+String.prototype.convertToFunction = function () {
     let test = null;
     try {
         eval('test = ' + (this + '') + ';');
-    } catch(e) {
+    } catch (e) {
         test = null;
     }
     return typeof test === 'function' ? test : null;
@@ -4521,11 +4546,11 @@ document.addEventListener('keydown', (e) => {
     document.keysPressed.ctrl = e.ctrlKey;
     document.keysPressed.alt = e.altKey;
     document.keysPressed.shift = e.shiftKey;
-    App.Dispatch('KeyDown', {domEvent: e});
+    App.Dispatch('KeyDown', { domEvent: e });
 });
 document.addEventListener('keyup', (e) => {
     document.keysPressed.ctrl = e.ctrlKey;
     document.keysPressed.alt = e.altKey;
     document.keysPressed.shift = e.shiftKey;
-    App.Dispatch('KeyUp', {domEvent: e});
+    App.Dispatch('KeyUp', { domEvent: e });
 });
