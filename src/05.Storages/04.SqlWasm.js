@@ -322,7 +322,7 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
                 params['datecreated2'] = (f[1] instanceof Date ? f[1] : f[1].toDate()).toLocalDateTimeString();
             } else if (Array.isArray(f)) {
                 if (f.length === 2) {
-                    filter.push('("' + name + '" BETWEEN [[' + name + '1:string]] AND [[' + name + '2:string]]) OR ("' + name + '" IN (' + f.map(v => v.isNumeric() ? v : '\'' + v + '\'') + '))');
+                    filter.push('(("' + name + '" BETWEEN [[' + name + '1:string]] AND [[' + name + '2:string]]) OR ("' + name + '" IN (' + f.map(v => v.isNumeric() ? v : '\'' + v + '\'') + ')))');
                     params[name + '1'] = f[0];
                     params[name + '2'] = f[1];
                 } else {
