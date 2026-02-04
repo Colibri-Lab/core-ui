@@ -298,7 +298,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             } catch(e) {
                 value = null;
             }
-            if(typeof value === 'function' && ['Object', 'Array'].indexOf(type)) {
+            if(typeof value === 'function' && ['Object', 'Array'].indexOf(type) !== -1) {
                 value = value(this);
             }
         } else if(typeof value === 'string' && type === 'Date') {
