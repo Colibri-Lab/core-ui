@@ -293,13 +293,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
                 return value['ru'] ?? value;
             }
         } else if(typeof value === 'string' && ['Object', 'Function', 'Array'].indexOf(type) !== -1) {
-            try {
-                value = value.convertToFunction();
-            } catch(e) {
-                value = null;
-            }
-            if(typeof value === 'function' && ['Object', 'Array'].indexOf(type) !== -1) {
-                value = value(this);
+            if(!value.isFunction()) {
+                eval('value = ' + value + ';');
+            } else {
+                try {
+                    value = value.convertToFunction();
+                } catch(e) {
+                    value = null;
+                }
             }
         } else if(typeof value === 'string' && type === 'Date') {
             return value.toDate();

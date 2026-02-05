@@ -4299,6 +4299,16 @@ String.prototype.spkiPem2spkiDer = function () {
     return binaryDerString.toArrayBuffer();
 }
 
+String.prototype.isFunction = function() {
+    let test = null;
+    try {
+        eval('test = ' + (this + '') + ';');
+    } catch (e) {
+        test = null;
+    }
+    return typeof test === 'function';
+}
+
 String.prototype.convertToFunction = function () {
     let test = null;
     try {
