@@ -46,7 +46,7 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * @param {boolean} bubbles - Indicates whether the event bubbles up the component tree.
      * @param {string} description - Description of the event.
      */
-    UnregisterEvent(eventName) {
+    UnregisterEvent(eventName, source = null) {
         if(source) {
             source.unregister(this, eventName);
         }

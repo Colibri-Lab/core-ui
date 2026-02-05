@@ -882,8 +882,8 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
             this.parent.SelectItem(control);
         }
 
-        if(!!this.list.maxItems) {
-            while(this._div.children > this.list.maxItems) {
+        if(!!this.parent.maxItems) {
+            while(this._div.children > this.parent.maxItems) {
                 this._div.Children('firstChild').Dispose();
             }
         }
