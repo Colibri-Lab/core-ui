@@ -1537,7 +1537,7 @@ String.prototype.isEmail2 = function () {
     if (/\d/.test(mainDomain)) return false;
 
     const knownTlds = new Set([
-        'com', 'net', 'org', 'edu', 'gov', 'mil',
+        'com', 'net', 'org', 'edu', 'gov', 'mil', 
         'io', 'ai', 'app', 'dev', 'info', 'biz',
         'ru', 'am', 'us', 'uk', 'de', 'fr', 'it', 'es',
         'group','tech','online'
