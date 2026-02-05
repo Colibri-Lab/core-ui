@@ -1539,7 +1539,8 @@ String.prototype.isEmail2 = function () {
     const knownTlds = new Set([
         'com', 'net', 'org', 'edu', 'gov', 'mil',
         'io', 'ai', 'app', 'dev', 'info', 'biz',
-        'ru', 'am', 'us', 'uk', 'de', 'fr', 'it', 'es'
+        'ru', 'am', 'us', 'uk', 'de', 'fr', 'it', 'es',
+        'group','tech','online'
     ]);
 
     if (!knownTlds.has(tld.split('.').pop())) return false;
