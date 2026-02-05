@@ -124,7 +124,7 @@ Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
      * Focus on component
      */
     Focus() {
-        this._list.focus();
+        this._list.Focus();
     }
 
     /**
@@ -133,7 +133,11 @@ Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
      */
     get value() {
         try {
-            return this._list.selectedValue.map(v => v[this._fieldData?.selector?.value ?? 'value']);
+            if(this.multiple) {
+                return this._list.selectedValue.map(v => v[this._fieldData?.selector?.value ?? 'value']);
+            } else {
+                return this._list.selectedValue[this._fieldData?.selector?.value ?? 'value'];
+            }
         } catch(e) {
             return this.multiple ? [] : null;
         }
