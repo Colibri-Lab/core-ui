@@ -670,6 +670,21 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         this._idField = value;
     }
     
+    /**
+     * Maximum item count (at the end)
+     * @type {Number|null}
+     */
+    get maxItems() {
+        return this._maxItems;
+    }
+    /**
+     * Maximum item count (at the end)
+     * @type {Number|null}
+     */
+    set maxItems(value) {
+        this._maxItems = value;
+    }
+
 
 }
 
@@ -865,6 +880,12 @@ Colibri.UI.List.Group = class extends Colibri.UI.Component {
 
         if(selected) {
             this.parent.SelectItem(control);
+        }
+
+        if(!!this.list.maxItems) {
+            while(this._div.children > this.list.maxItems) {
+                this._div.Children('firstChild').Dispose();
+            }
         }
 
         return control;

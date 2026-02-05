@@ -108,6 +108,22 @@ Colibri.IO.WebSocketStream = class extends Destructable {
         return this._name;
     }
 
+    get chunkSize() {
+        return this._chunkSize;
+    }
+
+    set chunkSize(value) {
+        this._chunkSize = value;
+    }
+
+    get chunkFormatter() {
+        return this._chunkFormatter;
+    }
+
+    set chunkFormatter(value) {
+        this._chunkFormatter = value;
+    }
+
     disconnect() {
         this._manualDisconnect = true;
         this._socket.close();
