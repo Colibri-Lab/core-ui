@@ -317,9 +317,11 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
             const f = filters[name];
             if (name === 'datecreated') {
                 // hack
-                filter.push('"datecreated" BETWEEN [[datecreated1:string]] AND [[datecreated2:string]]');
-                params['datecreated1'] = (f[0] instanceof Date ? f[0] : f[0].toDate()).toLocalDateTimeString();
-                params['datecreated2'] = (f[1] instanceof Date ? f[1] : f[1].toDate()).toLocalDateTimeString();
+                if(f[0] && f[1]) {
+                    filter.push('"datecreated" BETWEEN [[datecreated1:string]] AND [[datecreated2:string]]');
+                    params['datecreated1'] = (f[0] instanceof Date ? f[0] : f[0]?.toDate())?.toLocalDateTimeString() ?? null;
+                    params['datecreated2'] = (f[1] instanceof Date ? f[1] : f[1]?.toDate())?.toLocalDateTimeString() ?? null;
+                }
             } else if (Array.isArray(f)) {
                 if (f.length === 2 && (f[0] + '').isDate() && (f[1] + '').isDate()) {
                     filter.push('(("' + name + '" BETWEEN [[' + name + '1:string]] AND [[' + name + '2:string]]) OR ("' + name + '" IN (' + f.map(v => v.isNumeric() ? v : '\'' + v + '\'') + ')))');
