@@ -317,7 +317,7 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
             const f = filters[name];
             if (name === 'datecreated') {
                 // hack
-                if(f[0] && f[1]) {
+                if(f && f[0] && f[1]) {
                     filter.push('"datecreated" BETWEEN [[datecreated1:string]] AND [[datecreated2:string]]');
                     params['datecreated1'] = (f[0] instanceof Date ? f[0] : f[0]?.toDate())?.toLocalDateTimeString() ?? null;
                     params['datecreated2'] = (f[1] instanceof Date ? f[1] : f[1]?.toDate())?.toLocalDateTimeString() ?? null;
