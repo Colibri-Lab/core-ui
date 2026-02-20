@@ -298,6 +298,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             } else {
                 try {
                     value = value.convertToFunction();
+                    if(['Object', 'Array'].indexOf(type) !== -1) {
+                        value = value(this);
+                    }
                 } catch(e) {
                     value = null;
                 }
