@@ -388,6 +388,10 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
         return this._titleContainer.querySelector('span');
     }
 
+    get headerContainer() {
+        return this._titleContainer;
+    }
+
     /**
      * Window content string
      * @type {string}
