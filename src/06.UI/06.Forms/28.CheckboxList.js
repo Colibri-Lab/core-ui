@@ -25,6 +25,9 @@ Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
         else {
             this.enabled = this._fieldData.params.enabled;
         }
+        if(this._fieldData?.params?.showunlisted) {
+            this._showUnlisted = !!this._fieldData?.params?.showunlisted;
+        }
         this.value = this._fieldData?.default ?? false;
 
         this.values = this._fieldData?.values ?? [];
@@ -97,7 +100,7 @@ Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
                     v = Array.findObject(this.values, 'value', v);
                 }
                 let input = contentContainer.Children(this._name + '-input-' + String.MD5(v.value + v.title));
-                if(!input) {
+                if(!input && this._showUnlisted) {
                     input = new Colibri.UI.Checkbox(this._name + '-input-' + String.MD5(v.value + v.title), contentContainer);
                     input.shown = true;
                     input.placeholder = v.title;
@@ -105,7 +108,7 @@ Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
                     input.tabIndex = true;
                     this._handleEvents(input);
                 }
-                input.checked = v.__checked ?? true;
+                input && (input.checked = v.__checked ?? true);
             } catch(e) {}
         }
 
