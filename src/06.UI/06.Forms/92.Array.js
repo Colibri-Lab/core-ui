@@ -43,6 +43,12 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
             this.RemoveClass('app-field-noscroll');
         }
 
+        if(this._fieldData?.params?.showcopyjson === undefined) {
+            this.showcopyjson = false;
+        } else {
+            this.showcopyjson = this._fieldData.params.showcopyjson;
+        }
+
         this.RegisterEvent('ObjectRemoved', false, 'Object in array removed');
 
     }
@@ -426,6 +432,30 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     ShowAddLink() {
         this._linkCanBeShown = true;
         this._link.shown = true;
+    }
+
+    /**
+     * Show copy json button
+     * @type {Boolean}
+     */
+    get showcopyjson() {
+        return this._showcopyjson;
+    }
+    /**
+     * Show copy json button
+     * @type {Boolean}
+     */
+    set showcopyjson(value) {
+        this._showcopyjson = value;
+        this._showShowcopyjson();
+    }
+    _showShowcopyjson() {
+        if (this._showcopyjson) {
+            this.AddHandler('ContextMenu', this.__thisContextMenu);
+            this.AddHandler('ContextMenuItemClicked', this.__thisContextMenuItemClicked);
+        } else {
+
+        }        
     }
 
 
