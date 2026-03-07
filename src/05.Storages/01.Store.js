@@ -514,6 +514,12 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      */
     Query(path, queryList = null) {
 
+        let pathData = this._parsePathIfHasParam(path);
+        if(pathData[1]) {
+            path = pathData[0];
+            queryList = queryList ? queryList + ',' + pathData[1] : pathData[1];
+        }
+
         let p = path.split('.');
         let first = p.shift();
         if (first !== this._name) {
@@ -542,10 +548,14 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
         if(queryList) {
             // queryList = field=value
-            const queryParts = queryList.split('=');
-            data = Array.isArray(data) ? data.filter(v => v[queryParts[0]] == queryParts[1]) : []; 
-            if(data.length === 1) {
-                data = data[0];
+            queryList = queryList.split(',');
+            for(const ql of queryList) {
+                const queryParts = ql.split('=');
+                data = Array.isArray(data) ? data.filter(v => v[queryParts[0]] == queryParts[1]) : []; 
+                if(data.length === 1) {
+                    data = data[0];
+                    break;
+                }
             }
         }
 
