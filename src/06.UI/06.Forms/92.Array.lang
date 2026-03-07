@@ -24,3 +24,81 @@ ui-fields-array:
   tr: Nesne dizisi
   zh: 对象数组
   fa: آرایه‌ای از اشیاء
+ui-fields-array-copyjson:
+  ru: Копировать в видео JSON
+  en: Copy as JSON
+  hy: Կրկնօրինակել JSON-ի տեսքով
+  it: Copia come JSON
+  es: Copiar como JSON
+  kk: JSON ретінде көшіру
+  uz: JSON sifatida nusxalash
+  cz: Copy as JSON
+  de: Als JSON kopieren
+  tr: JSON olarak kopyala
+  zh: 复制为JSON
+  fa: کپی به صورت JSON
+ui-fields-array-inportjson:
+  ru: Импорт из JSON
+  en: Import from JSON
+  hy: Ներմուծել JSON-ից
+  it: Importa da JSON
+  es: Importar desde JSON
+  kk: JSON-нан импорттау
+  uz: JSON'dan içe aktar
+  cz: Import from JSON
+  de: Aus JSON importieren
+  tr: JSON'dan içe aktar
+  zh: 从JSON导入
+  fa: وارد کردن از JSON
+ui-fields-array-importtitle:
+  ru: Вставьте JSON текст с данными
+  en: Paste JSON text with data
+  hy: Ներբեռնեք JSON տեքստը տվյալներով
+  it: Incolla il testo JSON con i dati
+  es: Pegue el texto JSON con los datos
+  kk: Деректермен JSON мәтінін қойыңыз
+  uz: Ma'lumotlar bilan JSON matnini yapıştırın
+  cz: Paste JSON text with data
+  de: JSON-Text mit Daten einfügen
+  tr: Verilerle JSON metnini yapıştırın
+  zh: 粘贴包含数据的JSON文本
+  fa: چسباندن متن JSON با داده‌ها
+ui-fields-array-importplaceholder:
+  ru: Текст JSON
+  en: JSON text
+  hy: JSON տեքստ
+  it: Testo JSON
+  es: Texto JSON
+  kk: JSON мәтіні
+  uz: JSON metni
+  cz: JSON text
+  de: JSON-Text
+  tr: JSON metni
+  zh: JSON文本
+  fa: متن JSON
+ui-fields-array-importbutton:
+  ru: Импортировать
+  en: Import
+  hy: Ներմուծել
+  it: Importa
+  es: Importar
+  kk: Импортировать
+  uz: İçe aktar
+  cz: Import
+  de: Importieren
+  tr: İçe aktar
+  zh: 导入
+  fa: وارد کردن
+ui-fields-array-copied:
+  ru: Данные скопированы
+  en: Data copied to clipboard
+  hy: Տվյալները պատճենվել են
+  it: Dati copiati negli appunti
+  es: Datos copiados al portapapeles
+  kk: Деректер буфер обменаға скопированы
+  uz: Veriler panoya kopyalandı
+  cz: Data copied to clipboard
+  de: Daten in die Zwischenablage kopiert
+  tr: Veriler panoya kopyalandı
+  zh: 数据已复制到剪贴板
+  fa: داده‌ها در کلیپ‌بورد کپی شدند

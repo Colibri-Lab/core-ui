@@ -43,10 +43,10 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
             this.RemoveClass('app-field-noscroll');
         }
 
-        if(this._fieldData?.params?.showcopyjson === undefined) {
-            this.showcopyjson = false;
+        if(this._fieldData?.params?.copyjson === undefined) {
+            this.copyjson = false;
         } else {
-            this.showcopyjson = this._fieldData.params.showcopyjson;
+            this.copyjson = this._fieldData.params.copyjson;
         }
 
         this.RegisterEvent('ObjectRemoved', false, 'Object in array removed');
@@ -438,26 +438,53 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
      * Show copy json button
      * @type {Boolean}
      */
-    get showcopyjson() {
-        return this._showcopyjson;
+    get copyjson() {
+        return this._copyjson;
     }
     /**
      * Show copy json button
      * @type {Boolean}
      */
-    set showcopyjson(value) {
-        this._showcopyjson = value;
-        this._showShowcopyjson();
+    set copyjson(value) {
+        this._copyjson = value;
+        this._showCopyjson();
     }
-    _showShowcopyjson() {
-        if (this._showcopyjson) {
+    _showCopyjson() {
+        if (this._copyjson) {
             this.AddHandler('ContextMenu', this.__thisContextMenu);
             this.AddHandler('ContextMenuItemClicked', this.__thisContextMenuItemClicked);
         } else {
-
+            this.RemoveHandler('ContextMenu', this.__thisContextMenu);
+            this.RemoveHandler('ContextMenuItemClicked', this.__thisContextMenuItemClicked);
         }        
     }
-
+    __thisContextMenu(event, args) {
+        this.contextmenu = [
+            {title: '#{ui-fields-array-copyjson}', name: 'copyjson'},
+            {title: '#{ui-fields-array-inportjson}', name: 'importjson'},
+        ];
+        this.ShowContextMenu([Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT], '', {left: args.domEvent.clientX, top: args.domEvent.clientY});
+        args.domEvent.stopPropagation();
+        args.domEvent.preventDefault();
+        return false;
+    }
+    __thisContextMenuItemClicked(event, args) {
+        if (args.menuData.name === 'copyjson') {
+            const data = JSON.stringify(this.value, null, 4);
+            data.copyToClipboard().then(() => {
+                App.Notices.Add(new Colibri.UI.Notice('#{ui-fields-array-copied}', Colibri.UI.Notice.Success));
+            });
+        } else if(args.menuData.name === 'importjson') {
+            App.Prompt.Show('#{ui-fields-array-importtitle}', {
+                d: {
+                    component: 'TextArea',
+                    placeholder: '#{ui-fields-array-importplaceholder}'
+                }
+            }, '#{ui-fields-array-importbutton}').then((data) => {
+                this.value = JSON.parse(data.d);
+            });
+        }
+    }
 
 }
 Colibri.UI.Forms.Field.RegisterFieldComponent('Array', 'Colibri.UI.Forms.Array', '#{ui-fields-array}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'vertical', 'addlink', 'removelink', 'updownlink', 'hasscroll', 'initempty', 'maxadd', 'title', 'removedesc'])
