@@ -176,7 +176,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
             this._ws.readyState = 1; 
         } else {
             this._ws && this._ws.close();
-            this._ws = new WebSocket('wss://' + this._settings.host + ':' + this._settings.port + '/client/' + this._clientId);
+            this._ws = new WebSocket('wss://' + (this._websocketURI ?? this._settings.host + ':' + this._settings.port) + '/client/' + this._clientId);
             this._ws.onopen = () => this.__onCometOpened();
             this._ws.onmessage = (message) => this.__onCometMessage(message);
             this._ws.onerror = error => this.__onCometError(error);
@@ -202,8 +202,9 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {function|null} pushFunction - Function to handle push notifications.
      * @returns {void}
      */
-    Init(userData, store, storeMessages, handlers = {}, texts = {}, firebaseServiceJson = null, pushToken = null, pushFunction = null) {
+    Init(userData, store, storeMessages, handlers = {}, texts = {}, firebaseServiceJson = null, pushToken = null, pushFunction = null, websocketURI = null) {
 
+        this._websocketURI = websocketURI;
         this._user = userData.guid;
         this._userName = userData.name;
         this._store = store;

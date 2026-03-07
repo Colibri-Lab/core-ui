@@ -195,6 +195,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                     else {
                         Colibri.Common.StopTimer('app-settings-error');
                         const settings = (typeof response.result === 'string' ? JSON.parse(response.result) : response.result);
+                        this._appSettings = settings;
                         this._store.Set('app.settings', settings);
     
                         if(initComet && settings.comet && settings.comet.host) {
@@ -348,6 +349,14 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
      */
     get appVersion() {
         return this._appVersion;
+    }
+
+    /**
+     * Gets the settings of the application.
+     * @type {object} The settings of the application.
+     */
+    get appSettings() {
+        return this._appSettings;
     }
 
     /**
@@ -613,6 +622,7 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
     SetSettings(settings) {
         this._applicationSettings = settings;
     }
+
 
 
 }
