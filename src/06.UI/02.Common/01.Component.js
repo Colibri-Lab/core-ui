@@ -3062,17 +3062,33 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
     }
 
     _registerPositionObserver() {
-        this._positionObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
+        this._lastPosition = null;
+        Colibri.Common.StartTimer('scrolling-observer', 10, () => {
+            if(JSON.stringify(this._lastPosition) != JSON.stringify(this._element.bounds())) {
                 this.Dispatch('ScrolledIn', {});
-            });
+                this._lastPosition = this._element.bounds();
+            }
         });
-        this._positionObserver.observe(this._element);
+        // this._positionObserver = new IntersectionObserver((entries) => {
+        //     entries.forEach(entry => {
+        //         console.log(entry);
+        //         this.Dispatch('ScrolledIn', {});
+        //     });
+        // });
+        // this._positionObserver.observe(this._element);
     }
 
     _unregisterPositionObserver() {
-        this._positionObserver?.unobserve();
-        this._positionObserver = null;
+        Colibri.Common.StopTimer('scrolling-observer');
+        // if(this._positionObserver) {
+        //     try {
+        //         this._positionObserver?.unobserve();
+        //     } catch(e) {
+
+        //     }
+        // }
+        // this._positionObserver = null;
+        this._lastPosition = null;
     }
 
     StartBlink(name, styles, timeout) {
