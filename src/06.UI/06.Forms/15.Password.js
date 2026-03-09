@@ -112,7 +112,6 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
 
     /** @private */
     _showPasswordTip(strength) {
-
         if (this._fieldData?.params?.tip) {
             const tipData = this._fieldData?.params?.tip;
             if (!this._passwordTip) {
@@ -129,13 +128,13 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
             const requirements = this._fieldData?.params?.requirements || { digits: 8, strength: 40 };
 
             let cls = 'bad';
-            if (strength > requirements?.minForStrong ?? 80) {
+            if (strength > (requirements?.minForStrong ?? 80)) {
                 cls = "strong";
             }
-            else if (strength > requirements?.minForGood ?? 60) {
+            else if (strength > (requirements?.minForGood ?? 60)) {
                 cls = "good";
             }
-            else if (strength >= requirements?.minForWeak ?? 30) {
+            else if (strength >= (requirements?.minForWeak ?? 30)) {
                 cls = "weak";
             }
             let tipText = '';
@@ -229,6 +228,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         }
 
         score = parseInt(score);
+
 
         return score;
 
