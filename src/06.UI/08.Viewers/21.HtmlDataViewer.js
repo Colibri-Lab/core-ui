@@ -30,7 +30,7 @@ Colibri.UI.HtmlDataViewer = class extends Colibri.UI.Viewer {
      * @type {string}
      */
     set value(value) {
-        let v = !value ? '&mdash;' : (Lang ? Lang.Translate(value) : value).replaceAll(/\n/, '<br />');
+        let v = !value ? '&mdash;' : (Lang ? Lang.Translate(value) : value).replaceAll(/\n/g, '<br />');
         if((this._strip ?? true)) {
             v = v.stripHtml().words(20);
         }

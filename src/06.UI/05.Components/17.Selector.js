@@ -720,7 +720,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
             return this._values ?? {};
         }
 
-        let searchPattern = new RegExp('.*?' + String.EscapeRegExp(searchString.stripHtml()).replaceAll(/\s+/, '.+') + '.*?', 'i');
+        let searchPattern = new RegExp('.*?' + String.EscapeRegExp(searchString.stripHtml()).replaceAll(/\s+/g, '.+') + '.*?', 'i');
         let values = this._values;
         let matches = [];
         let startMatches = [];

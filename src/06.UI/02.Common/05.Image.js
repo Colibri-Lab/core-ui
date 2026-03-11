@@ -30,7 +30,7 @@ Colibri.UI.Image = class extends Colibri.UI.Component {
     set source(value) {
         
         this._element.css('background-image', value);
-        value = value.replaceAll(/\w+\(/, '').replaceAll(')', '');
+        value = value.replaceAll(/\w+\(/g, '').replaceAll(')', '');
         if(value.indexOf('data:') === -1) {
             const img = new Image();
             // /**

@@ -1670,21 +1670,21 @@ String.prototype.breakAll = function (chunkSize = 100) {
         '$1\u200B'   // невидимый "zero-width space", браузеры его переносят
     );
 };
-/**
- * Replaces all occurrences of a substring with another substring in the string.
- * @param {string} from - The substring to replace.
- * @param {string} to - The substring to replace with.
- * @returns {string} Returns the string with all occurrences of 'from' replaced by 'to'.
- */
-String.prototype.replaceAll = function (from, to) {
-    let s = this;
-    let s1 = s.replace(from, to);
-    while (s != s1) {
-        s = s1;
-        s1 = s.replace(from, to);
-    }
-    return s1;
-};
+// /**
+//  * Replaces all occurrences of a substring with another substring in the string.
+//  * @param {string} from - The substring to replace.
+//  * @param {string} to - The substring to replace with.
+//  * @returns {string} Returns the string with all occurrences of 'from' replaced by 'to'.
+//  */
+// String.prototype.replaceAll = function (from, to) {
+//     let s = this;
+//     let s1 = s.replace(from, to);
+//     while (s != s1) {
+//         s = s1;
+//         s1 = s.replace(from, to);
+//     }
+//     return s1;
+// };
 /**
  * Replaces placeholders in the string with values from an object using template syntax.
  * @param {Object} values - The object containing values to substitute into the template.
@@ -1985,7 +1985,7 @@ String.prototype.fromCamelCase = function (splitter) {
     splitter = splitter || '-';
     if (this.trimString().indexOf('--') === 0) { return this; }
 
-    return this.replaceAll(new RegExp('([A-Z])'), (v) => { return splitter + v.toLowerCase(); }).rtrim('-').ltrim('-');
+    return this.replaceAll(new RegExp('([A-Z])', 'g'), (v) => { return splitter + v.toLowerCase(); }).rtrim('-').ltrim('-');
 
 };
 String.prototype.countCharIn = function (c) {
