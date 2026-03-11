@@ -1221,8 +1221,9 @@ Colibri.UI.List.Item = class extends Colibri.UI.Component {
      */ 
     __ItemSelected(event, args) {
         if(this.list) {
+            const lastSelection = this.list.selected;
             this.list.selected = this;
-            this.list.Dispatch('ItemClicked', Object.assign(args, {item: this, domEvent: args.domEvent}));
+            this.list.Dispatch('ItemClicked', Object.assign(args, {item: this, before: lastSelection, domEvent: args.domEvent}));
         }
     }
 
