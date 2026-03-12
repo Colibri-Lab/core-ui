@@ -1838,7 +1838,7 @@ String.prototype.CyrToUrl = function (words) {
     let val = this.Transliterate()
         .trimString()
         .replaceArray([" ", "|", ".", ",", "(", ")", "[", "]", "!", "@", ":", ";", "*", "#", "$", "%", "^"], "-")
-        .replaceArray(["'", "?", '"', '…', '&quot;', "\\", "/", '«', '»', /[0-9]/i], "")
+        .replaceArray(["'", "?", '"', '…', '&quot;', "\\", "/", '«', '»', /[0-9]/gi], "")
         .replaceAll('--', '-')
         .toLowerCase();
 
