@@ -3752,6 +3752,9 @@ Element.prototype.bounds = function (includeBorders = false, includeMargin = fal
     position.outerHeight += (includeBorders ? ((parseInt(style.borderTopWidth ?? 0)) + (parseInt(style.borderBottomWidth ?? 0))) : 0)
     position.outerHeight += (includeMargin ? ((parseInt(style.marginTop ?? 0)) + (parseInt(style.marginBottom ?? 0))) : 0);
 
+    position.center = {left: position.left + position.outerWidth / 2, top: position.top + position.outerHeight / 2};
+    position.relativeCenter = {left: position.center.left - position.left, top: position.center.top - position.top};
+
     return position;
 
 };

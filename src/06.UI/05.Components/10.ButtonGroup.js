@@ -62,10 +62,10 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
         this._selectedButton = button;
         this._selectedButton.AddClass('-selected');
 
-        this.Dispatch('ButtonClicked', {button: this._selectedButton, index: this.selectedIndex});
+        this.Dispatch('ButtonClicked', {button: this._selectedButton, index: this.selectedIndex, value: this._selectedButton.name});
         if(!isSelected && !dontSendEvent) {
             Colibri.Common.Delay(10).then(() => {
-                this.Dispatch('Changed', {button: this._selectedButton, index: this.selectedIndex});
+                this.Dispatch('Changed', {button: this._selectedButton, index: this.selectedIndex, value: this._selectedButton.name});
             });
         }
 
