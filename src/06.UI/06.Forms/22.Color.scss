@@ -8,12 +8,13 @@
         min-width: 300px;
 
         background: white;
-        
+
     }
 
     .app-component-flexbox {
         position: relative;
         flex-wrap: nowrap;
+
         .app-component-pane {
             width: 20px;
             height: calc(100% - 4px);
@@ -21,11 +22,13 @@
             left: 2px;
             top: 2px;
         }
+
         .app-input-component {
             input {
                 padding-left: 20px;
             }
         }
+
         .app-component-button {
             position: absolute;
             right: 2px;
@@ -36,4 +39,9 @@
             padding: 0px 10px;
         }
     }
+
+    &.-focused input {
+        box-shadow: inset 0px 0px 3px #0095ff;
+    }
+
 }

@@ -1,23 +1,24 @@
-
 .app-form-component {
     [data-object-name="form-message"] {
         width: 100%;
         font-style: normal;
         font-weight: normal;
         font-size: 14px;
-        line-height: 20px;      
-        color: #ED3545;  
+        line-height: 20px;
+        color: #ED3545;
         margin-bottom: 10px;
+
         &.app-component-shown {
             display: block;
         }
+
         &:empty {
             display: none;
         }
     }
 
     .app-buttongroup-component {
-        
+
         &.app-component-shown {
             display: inline-flex;
         }
@@ -34,13 +35,19 @@
             background: transparent;
             border: 0px;
             border-right: 1px solid #D9DCE3;
+
             &:last-child {
                 border-right: 0px;
-            } 
+            }
+
             &.-selected {
                 background: #0095FF;
                 color: #ffffff;
             }
+        }
+
+        &.-focused {
+            box-shadow: 0px 0px 3px #0095ff;
         }
     }
 

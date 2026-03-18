@@ -11,3 +11,16 @@ ui-fields-token:
   tr: Jeton (üreteçli)
   zh: 令牌（带生成器）
   fa: توکن (با تولیدکننده)
+ui-fields-token-generate:
+  ru: Сгенерировать
+  en: Generate
+  hy: Գեներացնել
+  it: Generare
+  es: Generar
+  kk: Генерировать
+  uz: Yaratish
+  cz: Generovat
+  de: Generieren
+  tr: Üret
+  zh: 生成
+  fa: تولید کردن

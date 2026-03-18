@@ -9,4 +9,9 @@
         align-items: center;
         justify-content: flex-start;
     }
+    
+    &.-focused [data-object-name$="-icon"] {
+        box-shadow: inset 0px 0px 3px #0095ff;
+    }
+
 }

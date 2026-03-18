@@ -27,7 +27,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         this._multipleSelectionKey = '';
         this._multiple = multiple;
 
-        this.tabIndex = -1;
+        // this.tabIndex = -1;
         // this._scrolling = -1;
         // this._scrollY = -1;
 

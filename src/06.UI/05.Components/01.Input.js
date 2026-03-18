@@ -333,7 +333,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
         if (value === true || value === 'true') {
-            this._input.attr('readonly', 'readonly').attr('tabindex', '-1');
+            this._input.attr('readonly', 'readonly'); //.attr('tabindex', '-1');
         }
         else {
             this._input.attr('readonly', null).attr('tabindex', null);

@@ -112,7 +112,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._input.AddHandler('Cleared', this.__inputCleared, false, this);
         this._input.AddHandler('Clicked', this.__inputClicked, false, this);
         this._input.AddHandler('KeyUp', this.__thisBubble, false, this);
-        this._input.AddHandler('ReceiveFocus', this.__thisBubble, false, this);
+        this._input.AddHandler('ReceiveFocus', this.__inputReceiveFocus, false, this);
         this._input.AddHandler('LoosedFocus', this.__inputLoosesFocus, false, this);
         this._input.AddHandler('KeyDown', this.__inputKeyDown, false, this);
         this._input.AddHandler('Filled', this.__inputFilled, false, this);
@@ -139,6 +139,10 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         }
     }
 
+    __inputReceiveFocus(event, args) {
+
+    }
+
     __inputLoosesFocus(event, args) {
         if (!this._skipLooseFocus) {
             this._hidePopup();
@@ -148,9 +152,11 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     __inputKeyDown(event, args) {
 
         // , 'Space'
-        if (['Escape', 'ArrowUp', 'ArrowDown', 'Enter', 'NumpadEnter'].indexOf(args.domEvent.code) !== -1) {
+        if (['Escape', 'ArrowUp', 'ArrowDown', 'Enter', 'NumpadEnter', 'Space'].indexOf(args.domEvent.code) !== -1) {
 
-            if (args.domEvent.code === 'Escape') {
+            if(args.domEvent.code === 'Space') {
+                this.__thisFilled(event, Object.assign(args, { search: true }));
+            } else if (args.domEvent.code === 'Escape') {
                 this._hidePopup();
             }
             else if (args.domEvent.code === 'Space') {
@@ -554,12 +560,12 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * Set focus on selector
      */
     Focus() {
-        if (this._input?.readonly) {
-            this._element.focus();
-            this.Dispatch('ReceiveFocus', {});
-        } else {
+        // if (this._input?.readonly) {
+        //     this._element.focus();
+        //     this.Dispatch('ReceiveFocus', {});
+        // } else {
             this._input.Focus();
-        }
+        // }
     }
 
     /**
@@ -618,7 +624,6 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         }
         else {
             this.RemoveClass('app-component-searchable');
-            this.tabIndex = -1;
             this._input.readonly = true;
         }
     }

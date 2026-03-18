@@ -28,7 +28,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         this.RegisterEventHandlers();
 
         this._permanent = permanent ?? false;
-        if(this._permanent) {
+        if (this._permanent) {
             window.onbeforeunload = () => {
                 this.KeepInPermanentStore();
             };
@@ -60,7 +60,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
         this._pathHandlers = null;
         this._pathLoaders = null;
-        
+
     }
 
     /**
@@ -78,7 +78,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      */
     RetreiveFromPermanentStore() {
         const data = App.Browser.Get((location.hostname || 'localhost') + '.' + this._name);
-        if(data) {
+        if (data) {
             this._data = JSON.parse(data);
         } else {
             this._data = {};
@@ -86,7 +86,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         this.Dispatch('StoreRetreived', {});
         this.DispatchAll();
     }
-    
+
     /**
      * Exports store data.
      * @param {boolean} [fullData=false] - Indicates whether to export full data recursively.
@@ -97,8 +97,8 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         const newData = {};
 
         Object.forEach(this._data, (name, value) => {
-            if(value instanceof Colibri.Storages.Store) {
-                if(fullData) {
+            if (value instanceof Colibri.Storages.Store) {
+                if (fullData) {
                     newData[name] = value.ExportData();
                 }
             } else {
@@ -123,7 +123,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      */
     set permanent(value) {
         this._permanent = value;
-        if(!this._permanent) {
+        if (!this._permanent) {
             Colibri.Common.StopTimer(this._name + '-store-dump');
         }
     }
@@ -142,18 +142,18 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
     set owner(value) {
         this._owner = value;
     }
-    
+
     /**
      * Clears data at the specified path or the entire store if no path is provided.
      * @param {string} [path] - The path to clear.
      */
     Clear(path) {
-        if(!path) {
+        if (!path) {
             this._data = {};
         }
         this.Set(path, null);
     }
-    
+
     /**
      * Gets the name of the store.
      * @returns {string} The name of the store.
@@ -177,13 +177,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * Registers event handlers for the store.
      */
     RegisterEventHandlers() {
-        if(this._parent) {
-            this.AddHandler('StoreUpdated', this.__thisStoreUpdated); 
+        if (this._parent) {
+            this.AddHandler('StoreUpdated', this.__thisStoreUpdated);
         }
     }
 
     __thisStoreUpdated(event, args) {
-        this._parent.Dispatch('StoreUpdated', {child: this});
+        this._parent.Dispatch('StoreUpdated', { child: this });
     }
 
     /**
@@ -219,16 +219,16 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         }
 
         let data = this._data;
-        if(!data) {
+        if (!data) {
             return null;
         }
 
-        while(p.length > 0) {
+        while (p.length > 0) {
             first = p.shift();
-            if((data[first] ?? undefined) !== undefined) {
+            if ((data[first] ?? undefined) !== undefined) {
                 data = data[first];
-                if(data instanceof Colibri.Storages.Store) {
-                    return {child: data, path: (first + (p.length > 0 ? '.' + p.join('.') : ''))};
+                if (data instanceof Colibri.Storages.Store) {
+                    return { child: data, path: (first + (p.length > 0 ? '.' + p.join('.') : '')) };
                 }
             }
             else {
@@ -247,19 +247,19 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @returns {Colibri.Storages.Store} The store object.
      */
     AddPathLoader(path, loader, params = {}) {
-        if(this._pathLoaders[path]) {
+        if (this._pathLoaders[path]) {
             console.log('Path loader is Registered');
             return this;
         }
 
-        if(typeof loader == 'string') {
+        if (typeof loader == 'string') {
             // значит это Module:Controller.Method
             const parts = loader.split(':');
             const module = eval(parts[0]);
-            loader = () => module.Call(parts[1].split('.')[0], parts[1].split('.')[1], Object.assign(params, {__defered: true}));
+            loader = () => module.Call(parts[1].split('.')[0], parts[1].split('.')[1], Object.assign(params, { __defered: true }));
         }
 
-        this._pathLoaders[path] = {loader: loader, loading: false, loaded: false};
+        this._pathLoaders[path] = { loader: loader, loading: false, loaded: false };
         return this;
     }
 
@@ -276,28 +276,28 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      */
     AddPathHandler(path, handler, prepend, respondent = null) {
 
-        if(!respondent) {
+        if (!respondent) {
             respondent = this;
         }
 
-        if(Array.isArray(path)) {
-            for(const p of path) {
+        if (Array.isArray(path)) {
+            for (const p of path) {
                 this.AddPathHandler(p, handler, prepend);
             }
             return this;
         }
 
         const childStoreData = this.GetChild(path);
-        if(childStoreData) {
+        if (childStoreData) {
             return childStoreData.child.AddPathHandler(childStoreData.path, handler, prepend);
         }
 
-        if(Array.isArray(handler)) {
+        if (Array.isArray(handler)) {
             respondent = handler[0];
             handler = handler[1];
         }
 
-        if(respondent instanceof Colibri.UI.Component) {
+        if (respondent instanceof Colibri.UI.Component) {
             respondent.AddHandler('ComponentDisposed', this.__componentDisposed, false, this);
         }
 
@@ -330,11 +330,11 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
     }
 
     EraseComponentFormHandlers(component) {
-        for(const key of Object.keys(this._pathHandlers)) {
+        for (const key of Object.keys(this._pathHandlers)) {
             const handlers = this._pathHandlers[key];
-            for(let i = handlers.length - 1; i >= 0; i--) {
+            for (let i = handlers.length - 1; i >= 0; i--) {
                 const handlerObject = handlers[i];
-                if(handlerObject.respondent === component) {
+                if (handlerObject.respondent === component) {
                     handlers.splice(i, 1);
                 }
             }
@@ -351,16 +351,16 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
     RemovePathHandler(path, respondent, handler) {
 
         const childStoreData = this.GetChild(path);
-        if(childStoreData) {
+        if (childStoreData) {
             return childStoreData.child.RemovePathHandler(childStoreData.path, respondent, handler);
         }
 
-        if(!this._pathHandlers) {
+        if (!this._pathHandlers) {
             return this;
         }
 
         const handlers = this._pathHandlers[path];
-        if(!handlers) {
+        if (!handlers) {
             return this;
         }
         for (let i = 0; i < handlers.length; i++) {
@@ -376,7 +376,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
     DispatchAll() {
         const keys = Object.keys(this._data);
-        for(const key of keys) {
+        for (const key of keys) {
             this.DispatchPath(this._name + '.' + key);
         }
     }
@@ -386,37 +386,48 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @param {string} path - The path along which events should be dispatched.
      * @returns {boolean} True if all event handlers were executed successfully, otherwise false.
      */
-    DispatchPath(path) {
+    async DispatchPath(path) {
 
         const childStoreData = this.GetChild(path);
-        if(childStoreData) {
+        if (childStoreData) {
             return childStoreData.child.DispatchPath(childStoreData.path);
         }
 
         const keys = Object.keys(this._pathHandlers);
-        for(let j=0; j<keys.length; j++) {
-            if(path.indexOf(keys[j]) === 0 || keys[j].indexOf(path) === 0) {
+        for (let j = 0; j < keys.length; j++) {
+            if (path.indexOf(keys[j]) === 0 || keys[j].indexOf(path) === 0) {
                 const pathHandlers = this._pathHandlers[keys[j]];
 
                 let queryPath = keys[j];
                 let queryParam = null;
 
                 let queryData = this._parsePathIfHasParam(queryPath);
-                if(queryData[1]) {
+                if (queryData[1]) {
                     queryPath = queryData[0];
                     queryParam = queryData[1];
                 }
 
                 const data = this.Query(queryPath, queryParam);
 
-                for(let i=0; i<pathHandlers.length; i++) {
+                // ! попробуем сделать так, чтобы все работало паралельно
+                const handlers = pathHandlers
+                    .filter(h => h && typeof h.handler === 'function');
 
-                    const handlerObject = pathHandlers[i];
-                    if (handlerObject && handlerObject.handler.apply(handlerObject.respondent, [data, queryPath]) === false) {
-                        return false;
-                    }
-        
-                }        
+                const promises = handlers.map(h =>Promise.resolve(h.handler.apply(h.respondent, [data, queryPath])));
+                const results = await Promise.all(promises);
+                if (results.some(r => r === false)) {
+                    return false;
+                }
+
+                // ! старое
+                // for (let i = 0; i < pathHandlers.length; i++) {
+
+                //     const handlerObject = pathHandlers[i];
+                //     if (handlerObject && handlerObject.handler.apply(handlerObject.respondent, [data, queryPath]) === false) {
+                //         return false;
+                //     }
+
+                // }
 
             }
         }
@@ -431,9 +442,9 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @returns {boolean} True if the loader has been executed or if the path doesn't have a loader, otherwise false.
      */
     IsLoaderExecuted(path) {
-        
+
         const childStore = this.GetChild(path);
-        if(childStore) {
+        if (childStore) {
             return childStore.child.IsLoaderExecuted(childStore.path, nodispatch, param);
         }
         const loader = this._pathLoaders[path];
@@ -450,17 +461,16 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      */
     async Reload(path, nodispatch = true, param = null) {
         const childStore = this.GetChild(path);
-        if(childStore) {
+        if (childStore) {
             return childStore.child.Reload(childStore.path, nodispatch, param);
         }
 
         const loader = this._pathLoaders[path];
-        if(!loader) {
+        if (!loader) {
             return this.Query(path + (param && param.indexOf('=') === -1 ? '.' + param : ''), param && param.indexOf('=') !== -1 ? param : null);
         }
 
-        if(loader.loading) {
-            //Уже загружается, ждем пока завершится
+        if (loader.loading) {
             await Colibri.Common.Wait(() => !loader.loading);
             return this.Query(path + (param && param.indexOf('=') === -1 ? '.' + param : ''), param && param.indexOf('=') !== -1 ? param : null);
         }
@@ -468,7 +478,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         loader.loading = true;
         try {
             let response = await loader.loader(param);
-            if(response && response.result) {
+            if (response && response.result) {
                 this.Set(path, response.result, nodispatch);
                 return this.Query(path + (param && param.indexOf('=') === -1 ? '.' + param : ''), param && param.indexOf('=') !== -1 ? param : null);
             } else {
@@ -479,8 +489,8 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
             loader.loading = false;
             loader.loaded = true;
         }
-        
-        
+
+
     }
 
     /**
@@ -493,13 +503,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
     async AsyncQuery(path, param = null, reload = false) {
 
         let data = this._parsePathIfHasParam(path);
-        if(data[1]) {
+        if (data[1]) {
             path = data[0];
             param = data[1];
         }
 
         const res = this.Query(path + (param && param.indexOf('=') === -1 ? '.' + param : ''), param && param.indexOf('=') !== -1 ? param : null);
-        if(!reload && ((Object.isObject(res) && Object.countKeys(res) > 0) || (Array.isArray(res) && res.length > 0))) {
+        if (!reload && ((Object.isObject(res) && Object.countKeys(res) > 0) || (Array.isArray(res) && res.length > 0))) {
             return res;
         }
 
@@ -515,7 +525,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
     Query(path, queryList = null) {
 
         let pathData = this._parsePathIfHasParam(path);
-        if(pathData[1]) {
+        if (pathData[1]) {
             path = pathData[0];
             queryList = queryList ? queryList + ',' + pathData[1] : pathData[1];
         }
@@ -531,11 +541,11 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
             return data;
         }
 
-        while(p.length > 0) {
+        while (p.length > 0) {
             first = p.shift();
-            if((data[first] ?? undefined) !== undefined) {
+            if ((data[first] ?? undefined) !== undefined) {
                 data = data[first];
-                if(data instanceof Colibri.Storages.Store) {
+                if (data instanceof Colibri.Storages.Store) {
                     return data.Query(first + '.' + p.join('.'), queryList);
                 }
             }
@@ -546,13 +556,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
         }
 
-        if(queryList) {
+        if (queryList) {
             // queryList = field=value
             queryList = queryList.split(',');
-            for(const ql of queryList) {
+            for (const ql of queryList) {
                 const queryParts = ql.split('=');
-                data = Array.isArray(data) ? data.filter(v => v[queryParts[0]] == queryParts[1] || v[queryParts[0]].toLowerCase() == queryParts[1].toLowerCase()) : []; 
-                if(data.length === 1) {
+                data = Array.isArray(data) ? data.filter(v => v[queryParts[0]] == queryParts[1] || v[queryParts[0]].toLowerCase() == queryParts[1].toLowerCase()) : [];
+                if (data.length === 1) {
                     data = data[0];
                     break;
                 }
@@ -565,7 +575,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
     _raiseUpdatedEvent(path, d) {
         this.DispatchPath(path);
-        this.Dispatch('StoreUpdated', {path: path, data: d});
+        this.Dispatch('StoreUpdated', { path: path, data: d });
     }
 
     /**
@@ -577,7 +587,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      */
     async Set(path, d, nodispatch = false, force = false) {
 
-        if(Object.isPlainObject(d) || Array.isArray(d)) {
+        if (Object.isPlainObject(d) || Array.isArray(d)) {
             d = Object.cloneRecursive(d);
         }
 
@@ -589,7 +599,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
         if (p.length === 0) {
             // if changed
-            if(!Object.shallowEqual(this._data, d)) {
+            if (!Object.shallowEqual(this._data, d)) {
                 this._data = d;
                 this._raiseUpdatedEvent(path, d);
             }
@@ -598,29 +608,29 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
         let realpath = 'this._data';
         let data = this._data || {};
-        for(let i=0; i<p.length; i++) {
-            if((data[p[i]] ?? undefined) === undefined) {
+        for (let i = 0; i < p.length; i++) {
+            if ((data[p[i]] ?? undefined) === undefined) {
                 data[p[i]] = {};
             }
             realpath += '["' + p[i] + '"]';
             data = data[p[i]];
-            if(data instanceof Colibri.Storages.Store) {
+            if (data instanceof Colibri.Storages.Store) {
                 return data.Set(first + '.' + p.join('.'));
             }
         }
 
-        if(this._data === null || this._data === undefined) {
+        if (this._data === null || this._data === undefined) {
             this._data = {};
         }
 
         let isChanged = false;
-        if(!force) {
+        if (!force) {
             eval('isChanged = !Object.shallowEqual(' + realpath + ', d);');
         } else {
             isChanged = true;
         }
-        if(isChanged) {
-            if(d !== null) {
+        if (isChanged) {
+            if (d !== null) {
                 eval(realpath + ' = d;');
             }
             else {
@@ -628,14 +638,14 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
             }
         }
 
-        if(!nodispatch && isChanged) {
+        if (!nodispatch && isChanged) {
             this._raiseUpdatedEvent(path, d);
         }
 
-        if(this.permanent) {
+        if (this.permanent) {
             await this.KeepInPermanentStore();
         }
-        
+
         return this;
 
     }
@@ -654,23 +664,23 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      */
     UpdateList(path, searchField, searchValue = null, newData = null, sortField = null, sortOrder = 'asc', insertIfNotExists = true, incrementIfInserted = '') {
         let list = this.Query(path);
-        if(!Array.isArray(list)) {
+        if (!Array.isArray(list)) {
             list = [];
         }
         const oldLength = list.length;
         list = Array.replaceObject(list, searchField, searchValue, newData, insertIfNotExists);
-        if(sortField) {
+        if (sortField) {
             list.sort((a, b) => {
-                if(a[sortField] > b[sortField]) {
+                if (a[sortField] > b[sortField]) {
                     return sortOrder === 'asc' ? 1 : -1;
                 }
-                else if(a[sortField] < b[sortField]) {
+                else if (a[sortField] < b[sortField]) {
                     return sortOrder === 'asc' ? -1 : 1;
                 }
                 return 0;
             });
         }
-        if(oldLength != list.length && incrementIfInserted) {
+        if (oldLength != list.length && incrementIfInserted) {
             this.Set(incrementIfInserted, list.length, true);
         }
         this.Set(path, list);
@@ -685,11 +695,11 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      */
     IntersectList(path, searchField, values) {
         let list = this.Query(path);
-        if(!Array.isArray(list)) {
+        if (!Array.isArray(list)) {
             list = [];
         }
 
-        for(const item of values) {
+        for (const item of values) {
             list = Array.replaceObject(list, searchField, item[searchField], item, true);
         }
 
@@ -706,7 +716,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      */
     ListAddPage(path, page, pageItems) {
         let list = this.Query(path);
-        if(!Array.isArray(list) || page === 1) {
+        if (!Array.isArray(list) || page === 1) {
             list = [];
         }
         list = list.concat(pageItems);
@@ -723,14 +733,14 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      */
     SortList(path, sortField, sortOrder = 'asc') {
         let list = this.Query(path);
-        if(!Array.isArray(list)) {
+        if (!Array.isArray(list)) {
             list = [];
         }
         list.sort((a, b) => {
-            if(a[sortField] > b[sortField]) {
+            if (a[sortField] > b[sortField]) {
                 return sortOrder === 'asc' ? 1 : -1;
             }
-            else if(a[sortField] < b[sortField]) {
+            else if (a[sortField] < b[sortField]) {
                 return sortOrder === 'asc' ? -1 : 1;
             }
             return 0;
@@ -748,7 +758,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      */
     QueryList(path, field, value) {
         let list = this.Query(path);
-        if(!Array.isArray(list)) {
+        if (!Array.isArray(list)) {
             list = [];
         }
 
@@ -762,7 +772,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @private
      */
     _parsePathIfHasParam(path) {
-        if(path.indexOf('(') === -1) {
+        if (path.indexOf('(') === -1) {
             return [path, null];
         }
         path = path.replaceAll(')', '');

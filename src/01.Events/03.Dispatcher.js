@@ -34,7 +34,7 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * @param {string} description - Description of the event.
      */
     RegisterEvent(eventName, bubbles, description, source = null) {
-        if(source) {
+        if (source) {
             source.register(this, eventName);
         }
         this.__events[eventName] = { name: eventName, bubbles: bubbles, description: description, source: source };
@@ -47,7 +47,7 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * @param {string} description - Description of the event.
      */
     UnregisterEvent(eventName, source = null) {
-        if(source) {
+        if (source) {
             source.unregister(this, eventName);
         }
         delete this.__events[eventName];
@@ -63,7 +63,7 @@ Colibri.Events.Dispatcher = class extends Destructable {
      */
     AddHandler(eventName, handler, prepend = false, respondent = null) {
 
-        if(!respondent) {
+        if (!respondent) {
             respondent = this;
         }
 
@@ -72,7 +72,7 @@ Colibri.Events.Dispatcher = class extends Destructable {
                 this.AddHandler(en, handler, prepend, respondent);
             });
         } else {
-            
+
             this.RemoveHandler(eventName, handler, respondent);
 
             if (!this.__handlers[eventName]) {
@@ -99,7 +99,7 @@ Colibri.Events.Dispatcher = class extends Destructable {
      */
     RemoveHandler(eventName, handler, respondent = null) {
 
-        if(!respondent) {
+        if (!respondent) {
             respondent = this;
         }
 
@@ -108,7 +108,7 @@ Colibri.Events.Dispatcher = class extends Destructable {
                 this.RemoveHandler(en, handler);
             });
         } else {
-            
+
             if (!this.__handlers[eventName]) {
                 this.__handlers[eventName] = [];
             }
@@ -133,7 +133,7 @@ Colibri.Events.Dispatcher = class extends Destructable {
      */
     HandlerExists(eventName, handler) {
         const handlerObject = { handler: handler, respondent: this },
-              handlerStr = handlerObject.handler.toString();
+            handlerStr = handlerObject.handler.toString();
         for (let i = 0; i < this.__handlers[eventName].length; i++) {
             const h = this.__handlers[eventName][i];
             if (h.handler.toString() === handlerStr && h.respondent === handlerObject.respondent) {
@@ -151,47 +151,66 @@ Colibri.Events.Dispatcher = class extends Destructable {
      */
     async Dispatch(event, args = null) {
 
-        if(Array.isArray(event)) {
-            for(const e of event) {
+        if (Array.isArray(event)) {
+            for (const e of event) {
                 this.Dispatch(e, args);
             }
-        } 
+        }
 
         if (!(event instanceof Colibri.Events.Event)) {
             // ищем сoбытие в стандартных
-            if(this.__events[event]) {
+            if (this.__events[event]) {
                 event = this.__events[event];
-            } else if(!event.bubbles) {
+            } else if (!event.bubbles) {
                 return true;
             }
         }
 
-        if(!event.sender) {
+        if (!event.sender) {
             event.sender = this;
         }
 
-        if(App && event.name !== 'Event') {
-            App.Dispatch('Event', {event: event, args: args});
+        if (App && event.name !== 'Event') {
+            App.Dispatch('Event', { event: event, args: args });
         }
 
         const eventHandlers = this.__handlers[event.name];
         if (eventHandlers) {
 
-            for (var j = 0; j < eventHandlers.length; j++) {
+            const promises = [];
+
+            for (let j = 0; j < eventHandlers.length; j++) {
                 const handlerObject = eventHandlers[j];
-                if (handlerObject && handlerObject.handler.isAsync()) {
-                    if (await (handlerObject.handler).apply(handlerObject.respondent, [event, args]) === false) {
-                        return false;
-                    }
-                } else if(handlerObject && !handlerObject.handler.isAsync()) {
-                    if (handlerObject.handler.apply(handlerObject.respondent, [event, args]) === false) {
-                        return false;
-                    }
-                }
+                if (!handlerObject) continue;
+
+                promises.push(
+                    Promise.resolve(
+                        handlerObject.handler.apply(handlerObject.respondent, [event, args])
+                    )
+                );
             }
+
+            const results = await Promise.all(promises);
+            if (results.some(r => r === false)) {
+                return false;
+            }
+
+            // ! старое    
+            // for (var j = 0; j < eventHandlers.length; j++) {
+            //     const handlerObject = eventHandlers[j];
+            //     if (handlerObject && handlerObject.handler.isAsync()) {
+            //         if (await (handlerObject.handler).apply(handlerObject.respondent, [event, args]) === false) {
+            //             return false;
+            //         }
+            //     } else if(handlerObject && !handlerObject.handler.isAsync()) {
+            //         if (handlerObject.handler.apply(handlerObject.respondent, [event, args]) === false) {
+            //             return false;
+            //         }
+            //     }
+            // }
         }
 
-        if(event.bubbles && this.parent && this.parent.Dispatch(event, args) === false) {
+        if (event.bubbles && this.parent && this.parent.Dispatch(event, args) === false) {
             return false;
         }
 

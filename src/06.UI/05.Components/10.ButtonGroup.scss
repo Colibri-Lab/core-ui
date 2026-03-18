@@ -2,9 +2,11 @@
     &.app-component-shown {
         display: flex;
     }
+    outline: none;
     align-items: center;
     justify-content: flex-start;
     &.-vertical {
         flex-direction: column;
     }
+    
 }

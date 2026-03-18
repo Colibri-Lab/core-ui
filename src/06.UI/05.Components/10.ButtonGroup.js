@@ -19,6 +19,26 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
         this._selectedButton = null;
 
         this.AddHandler('Clicked', this.__thisClicked);
+        this.AddHandler('KeyDown', this.__thisKeyDown);
+    }
+
+    __thisKeyDown(event, args) {
+        if(args.domEvent.key == 'Enter' || args.domEvent.key == ' ') {
+        } else if(args.domEvent.key == 'ArrowRight' || args.domEvent.key == 'ArrowDown') {
+            if(this._selectedButton) {
+                const nextButton = this.Children(this._selectedButton.childIndex + 1);
+                if(nextButton) {
+                    this.SelectButton(nextButton);
+                }
+            }
+        } else if(args.domEvent.key == 'ArrowLeft' || args.domEvent.key == 'ArrowUp') {
+            if(this._selectedButton) {
+                const prevButton = this.Children(this._selectedButton.childIndex - 1);
+                if(prevButton) {
+                    this.SelectButton(prevButton);
+                }
+            }
+        }   
     }
 
     /**

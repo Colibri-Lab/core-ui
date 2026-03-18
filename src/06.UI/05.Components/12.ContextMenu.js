@@ -367,7 +367,7 @@ Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
      * Dispose the component
      */
     Dispose() {
-        const shadow = this._element.next();
+        const shadow = this._element?.next() ?? null;
         if (shadow && shadow.classList.contains('app-component-shadow-div')) {
             shadow.remove();
         }

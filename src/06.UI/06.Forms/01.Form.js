@@ -503,6 +503,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         if (hasGroups) {
             this._groups = new Colibri.UI.ButtonGroup('groups', this);
             this._groups.shown = true;
+            this._groups.tabIndex = true;
             Object.forEach(this._fields, (name, fieldData) => {
                 fieldData = Object.cloneRecursive(fieldData);
                 fieldData.group && (fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group);
@@ -511,6 +512,8 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                 }
             });
             this._groups.AddHandler('Changed', this.__groupsChanged, false, this);
+            this._groups.AddHandler('ReceiveFocus', (event, args) => this._groups.AddClass('-focused'), false, this);
+            this._groups.AddHandler('LoosedFocus', (event, args) => this._groups.RemoveClass('-focused'), false, this);
         }
 
         Object.forEach(this._fields, (name, fieldData) => {
@@ -533,11 +536,15 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     __groupsChanged(event, args) {
         const groupName = args.button.name;
+        // let firstComponent = null;
         Object.forReverseEach(this._fields, (name, fieldData) => {
             fieldData = Object.cloneRecursive(fieldData);
             fieldData.group && (fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group);
             if (fieldData.group !== 'window') {
                 if (fieldData.group === groupName) {
+                    // if(!firstComponent) {
+                    //     firstComponent = this.Children(name);
+                    // }
                     this.Children(name).Retreive();
                 }
                 else {
@@ -545,6 +552,10 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                 }
             }
         });
+
+        // if(firstComponent) {
+        //     firstComponent.Focus();
+        // }
 
         if (args?.noevent) {
             return;
