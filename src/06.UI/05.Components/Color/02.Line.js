@@ -83,6 +83,8 @@ Colibri.UI.Color.Line = class extends Colibri.UI.Component {
         const g = pixel[1];
         const b = pixel[2];
 
+        console.log(r, g, b, this._canvas.container.width, this._canvas.container.height)
+
         // Переводим RGB в Hue 0..1
         const rr = r / 255, gg = g / 255, bb = b / 255;
         const max = Math.max(rr, gg, bb);
@@ -118,9 +120,13 @@ Colibri.UI.Color.Line = class extends Colibri.UI.Component {
     _renderGradient() {
         const bounds = this._element.bounds();
         const ctx = this._canvas.container.getContext("2d");
+        const dpr = window.devicePixelRatio || 1;
+        this._canvas.container.width = bounds.outerWidth * dpr;
+        this._canvas.container.height = bounds.outerHeight * dpr;
+        ctx.scale(dpr, dpr);
 
-        const w = bounds.outerWidth;
-        const h = bounds.outerHeight + 100;
+        const w = bounds.outerWidth * dpr;
+        const h = bounds.outerHeight * dpr;
 
         // горизонтальный градиент: слева → справа
         const gradient = ctx.createLinearGradient(0, h / 2, w, h / 2);

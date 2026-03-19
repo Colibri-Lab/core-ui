@@ -1742,9 +1742,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         }
 
         this._children.splice(fromIndex, 1);
-        if(fromIndex < toIndex) {
-            toIndex--;
-        } 
+        // if(fromIndex < toIndex) {
+        //     toIndex--;
+        // } 
 
         this._children.splice(toIndex, 0, child);
         this._moveInDom(child.container, this.container, toIndex);        

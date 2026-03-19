@@ -102,3 +102,16 @@ ui-fields-array-copied:
   tr: Veriler panoya kopyalandı
   zh: 数据已复制到剪贴板
   fa: داده‌ها در کلیپ‌بورد کپی شدند
+ui-array-addtooltip:
+  ru: Нажмите {Insert} на клавиатуре
+  en: Press {Insert} on keyboard
+  hy: Սեղմեք {Insert} ստեղնաշարի վրա
+  it: Premi {Insert} sulla tastiera
+  es: Presiona {Insert} en el teclado
+  kk: Пернетақтада {Insert} басыңыз
+  uz: Klavyede {Insert} tuşuna basın
+  cz: Press {Insert} on keyboard
+  de: Drücken Sie {Insert} auf der Tastatur
+  tr: Klavyede {Insert} tuşuna basın
+  zh: 在键盘上按{Insert}
+  fa: در صفحه کلید {Insert} را فشار دهید

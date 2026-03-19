@@ -80,10 +80,12 @@ Colibri.UI.Color.Alpha = class extends Colibri.UI.Component {
 
     /** @private */
     _setTrackPosition() {
-        const bounds = this._element.bounds()
-        const topPercent = this._value * 100 / 255;
-        const top = topPercent * bounds.outerHeight / 100;
-        this._pointer.styles = {top: top + 'px'};
+        Colibri.Common.Delay(100).then(() => {
+            const bounds = this._element.bounds()
+            const topPercent = this._value * 100 / 255;
+            const top = topPercent * bounds.outerHeight / 100;
+            this._pointer.styles = {top: top + 'px'};
+        });
     }
     
     /**

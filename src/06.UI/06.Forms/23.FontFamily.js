@@ -10,7 +10,7 @@ Colibri.UI.Forms.FontFamily = class extends Colibri.UI.Forms.Field {
      */
     RenderFieldContainer() {
 
-        this.AddClass('app-component-color-field');
+        this.AddClass('app-component-fontfamily-field');
 
         const contentContainer = this.contentContainer;
         

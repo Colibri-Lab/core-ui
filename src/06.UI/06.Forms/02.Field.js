@@ -122,7 +122,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             }
 
             componentObject.shown = true;
-            componentObject.tabIndex = true;
+            // componentObject.tabIndex = true;
             if (field.attrs) {
                 Object.forEach(field.attrs, (attrName, attrValue) => {
                     componentObject[attrName] = attrValue;
@@ -294,8 +294,46 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
                 handler(event, args);
             }
         }
+        
+        if(args && args.domEvent) {
+            args.domEvent.stopImmediatePropagation();
+            args.domEvent.stopPropagation();
+            if (event.name === 'KeyDown' && args.domEvent.key === 'Tab') {
+                if (args.domEvent.shiftKey) {
+                    (this.prev || this.parentField?.prev)?.Focus('lastChild');
+                } else {
+                    (this.next || this.parentField?.next)?.Focus('firstChild');
+                }
+                args.domEvent.preventDefault();
+                return false;
+            }
 
-        args && args.domEvent && args.domEvent.stopPropagation();
+            if(event.name === 'KeyDown' && args.domEvent.key === 'Insert') {
+                if(this.AddNew) {
+                    const object = this.AddNew();
+                    object.Focus();
+                }
+            }
+
+            if(event.name === 'KeyDown' && args.domEvent.key === 'Delete' && args.domEvent.ctrlKey) {
+                if(this.ClickOnRemoveLink) {
+                    this.ClickOnRemoveLink();
+                }
+            }
+
+            if(event.name === 'KeyDown' && args.domEvent.key === 'ArrowUp' && args.domEvent.ctrlKey) {
+                if(this.ClickOnUpLink) {
+                    this.ClickOnUpLink();
+                }
+            }
+
+            if(event.name === 'KeyDown' && args.domEvent.key === 'ArrowDown' && args.domEvent.ctrlKey) {
+                if(this.ClickOnDownLink) {
+                    this.ClickOnDownLink();
+                }
+            }
+
+        }    
         return true;
     }
 
@@ -325,8 +363,13 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         if (!this.enabled) {
             return;
         }
+        const index = this.childIndex;
         this.Dispose();
-        event.sender.callback && event.sender.callback();
+        event.sender.callback && event.sender.callback(index);
+    }
+
+    ClickOnRemoveLink() {
+        this._removeLink && this._removeLink.Dispatch('Clicked', {});
     }
 
     /**
@@ -362,6 +405,14 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             return;
         }
         this._upLink.callback && this._upLink.callback();
+    }
+
+    ClickOnUpLink() {
+        this._upLink && this._upLink.Dispatch('Clicked', {});
+    }
+
+    ClickOnDownLink() {
+        this._downLink && this._downLink.Dispatch('Clicked', {});
     }
 
     /** @protected */

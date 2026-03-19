@@ -220,6 +220,10 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
      */
     set tabIndex(value) {
         // do nothing
+        this.ForEveryField((name, component) => {
+            component.tabIndex = value;
+        });
+
     }
 
     /**

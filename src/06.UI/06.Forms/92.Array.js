@@ -70,20 +70,18 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
             Object.forEach(linkData.attrs, (name, value) => {
                 this._link[name] = value;
             });
-
         } else {
             this._fieldData.desc = this._fieldData.desc ? this._fieldData.desc[Lang.Current] ?? this._fieldData.desc : '';
             this._fieldData.params.addlink = this._fieldData?.params?.addlink ? this._fieldData.params?.addlink[Lang.Current] ?? this._fieldData.params?.addlink : '';
             this._link = new Colibri.UI.Link('add-new', this.contentContainer);
             this._link.value = this._fieldData.params && this._fieldData.params?.addlink || '#{ui-array-add} «' + (this._fieldData.desc) + '»';
+            this._link.toolTip = '#{ui-array-addtooltip}';
         }
 
 
         this._link.shown = true;
         this._link.AddHandler('Clicked', this.__linkClicked, false, this);
-        if (this.readonly || !this.enabled) {
-            this._link.Hide();
-        }
+        
         return this._link;
     }
 
@@ -91,7 +89,8 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         if (this.readonly || !this.enabled) {
             return;
         }
-        this.AddNew();
+        const newObject = this.AddNew();
+        newObject.Focus();
     }
 
     /** @private */
@@ -105,6 +104,9 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
      * @returns {Colibri.UI.Forms.Object}
      */
     AddNew(value) {
+        if (this.readonly || !this.enabled) {
+            return;
+        }
         if (this._link.ContainsClass('ui-disabled')) {
             return;
         }
@@ -136,7 +138,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         object.enabled = this.enabled;
 
         if (this._fieldData.params && this._fieldData.params.removelink !== false && !this.readonly && this.enabled && (!this._fieldData.params?.mincount || this._fieldData.params?.mincount < Object.countKeys(this.Fields()))) {
-            object.AddRemoveLink(() => {
+            object.AddRemoveLink((index) => {
 
                 if (this.readonly || !this.enabled) {
                     return;
@@ -172,6 +174,12 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
                     this._runGenerateOfFieldData();
                 }
 
+                if(!this.itemsContainer.children) {
+                    this.next?.Focus();
+                } else {
+                    this.Focus(index > this.itemsContainer.children - 1 ? 'lastChild' : index);
+                }
+
             });
         }
         if (this._fieldData.params && this._fieldData.params.updownlink !== false && !this.readonly && this.enabled) {
@@ -205,6 +213,8 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
             object.value = value;
         }
 
+        object.tabIndex = this._tabIndex;
+
         if (this._fieldData.params && this._fieldData.params?.showObjectCount) {
             if (typeof this._fieldData.params?.showObjectCount === 'function') {
                 const f = this._fieldData.params?.showObjectCount;
@@ -236,9 +246,12 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     /**
      * Focus on component to the first object of array
      */
-    Focus() {
-        if (this._itemsContainer.Children('firstChild')) {
-            this._itemsContainer.Children('firstChild').Focus();
+    Focus(element = 'firstChild') {
+        if(!this._itemsContainer.children) {
+            this.AddNew();
+        } 
+        if (this._itemsContainer.Children(element)) {
+            this._itemsContainer.Children(element).Focus();
         }
     }
 
@@ -365,6 +378,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
      */
     set tabIndex(value) {
         // do nothing
+        this._tabIndex = value;
     }
 
     /**
@@ -372,8 +386,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
      * @type {number}
      */
     get tabIndex() {
-        const first = this._itemsContainer.Children('firstChild');
-        return first?.tabIndex ?? 0;
+        return this._tabIndex;
     }
 
     /**

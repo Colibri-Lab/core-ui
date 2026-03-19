@@ -58,7 +58,7 @@ Colibri.UI = class {
                 for(const mut of mutationList) {
                     elements.push(mut.target);
                 }
-                Colibri.UI.maxZIndex = Math.max(Colibri.UI.maxZIndex, Colibri.UI._getZIndex(elements));
+                Colibri.UI.maxZIndex = Colibri.UI._getZIndex(elements);
             }).observe(document.body, {
                 attributes: true, 
                 attributeFilter: ['style', 'class'], 

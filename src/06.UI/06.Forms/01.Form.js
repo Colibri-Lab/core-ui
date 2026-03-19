@@ -25,6 +25,8 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             return false;
         });
 
+
+
     }
 
     /** @protected */
@@ -43,6 +45,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     /** @protected */
     _registerEventHandlers() {
         this.AddHandler('Changed', this.__thisChanged);
+        this.AddHandler('KeyDown', this.__thisKeyDown);
     }
 
     __thisChanged(event, args) {
@@ -102,7 +105,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
     _runGenerateOfFieldData() {
 
         Object.forEach(this._fields, (name, fieldData) => {
-            
+
             let fieldComponent = this.Children(name);
             if (!fieldComponent || !fieldComponent.needHideAndShow) {
                 return true;
@@ -129,7 +132,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         if (!this.needHideAndShow) {
             return;
         }
-        
+
         const data = this.value;
 
         Object.forEach(this._fields, (name, fieldData) => {
@@ -276,8 +279,8 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                             else {
                                 field.value = this._value[name] ?? def ?? null;
                             }
-                            
-                            if(field.value === null) {
+
+                            if (field.value === null) {
                                 field.checkableChecked = false;
                             }
                         });
@@ -295,7 +298,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                             component.value = this._value[name] ?? def ?? null;
                         }
 
-                        if(component.value === null || Array.shallowEqual(component.value, [null, null]) || Array.shallowEqual(component.value, ['', ''])) {
+                        if (component.value === null || Array.shallowEqual(component.value, [null, null]) || Array.shallowEqual(component.value, ['', ''])) {
                             component.checkableChecked = false;
                         }
                     }
@@ -325,7 +328,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         this.ForEach((name, component) => {
             if (component instanceof Colibri.UI.Forms.Field) {
 
-                if(component.hasCheckable && !component.checkableChecked) {
+                if (component.hasCheckable && !component.checkableChecked) {
                     return true;
                 }
 
@@ -431,6 +434,19 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         return field;
     }
 
+    _rearrangeFieldTabIndexes() {
+
+        const elements = this._element.querySelectorAll('[tabindex]');
+        for (let i = 0; i < elements.length; i++) {
+            elements[i].removeAttribute('tabIndex');
+        }
+
+        for (const component of Object.values(this.Fields())) {
+            component.tabIndex = -1;
+        }
+
+    }
+
     /** @private */
     _renderField(name, fieldData, value, shown = true) {
 
@@ -448,6 +464,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         if (value && value[name] !== undefined) {
             component.value = value[name];
         }
+        component.tabIndex = -1;
 
     }
 
@@ -482,7 +499,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     /** @private */
     _renderFields(value) {
-        
+
         let hasGroups = false;
         Object.forEach(this._fields, (name, fieldData) => {
             fieldData = Object.cloneRecursive(fieldData);
@@ -503,7 +520,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         if (hasGroups) {
             this._groups = new Colibri.UI.ButtonGroup('groups', this);
             this._groups.shown = true;
-            this._groups.tabIndex = true;
+            // this._groups.tabIndex = true;
             Object.forEach(this._fields, (name, fieldData) => {
                 fieldData = Object.cloneRecursive(fieldData);
                 fieldData.group && (fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group);
@@ -536,15 +553,11 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     __groupsChanged(event, args) {
         const groupName = args.button.name;
-        // let firstComponent = null;
         Object.forReverseEach(this._fields, (name, fieldData) => {
             fieldData = Object.cloneRecursive(fieldData);
             fieldData.group && (fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group);
             if (fieldData.group !== 'window') {
                 if (fieldData.group === groupName) {
-                    // if(!firstComponent) {
-                    //     firstComponent = this.Children(name);
-                    // }
                     this.Children(name).Retreive();
                 }
                 else {
@@ -552,10 +565,6 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
                 }
             }
         });
-
-        // if(firstComponent) {
-        //     firstComponent.Focus();
-        // }
 
         if (args?.noevent) {
             return;

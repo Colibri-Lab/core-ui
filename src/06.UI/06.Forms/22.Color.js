@@ -43,6 +43,7 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
         this.value = this._fieldData?.default ?? '';
 
         this._button.AddHandler('Clicked', this.__buttonClicked, false, this);
+        this._color.AddHandler('Clicked', this.__buttonClicked, false, this);
 
         this._input.AddHandler('Changed', this.__inputChanged, false, this);
         this._input.AddHandler('KeyUp', this.__thisBubble, false, this);

@@ -1,47 +1,52 @@
 .app-component-color-field {
 
-
-
-    .app-color-component {
-        position: absolute;
-        width: 100%;
-        min-width: 300px;
-
-        background: white;
-
-    }
-
     .app-component-flexbox {
-        position: relative;
         flex-wrap: nowrap;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 5px;
 
-        .app-component-pane {
-            width: 20px;
-            height: calc(100% - 4px);
-            position: absolute;
-            left: 2px;
-            top: 2px;
+        padding: 5px 0px 5px 5px;
+        background: #FFFFFF;
+        border: 1px solid #D9DCE3;
+        border-radius: 3px;
+
+        [data-object-name$="_color"] {
+            flex: 0 0 20px;
+            height: 20px;
+            border-radius: 50%;
+            padding: 0px;
+            margin: 0px;
+            cursor: pointer;
         }
 
-        .app-input-component {
-            input {
-                padding-left: 20px;
+        [data-object-name$="_button"] {
+            margin-left: auto;
+            justify-self: stretch;
+            font-size: 0px;
+            span {
+                font-size: 0px;
             }
         }
 
         .app-component-button {
-            position: absolute;
-            right: 2px;
-            top: 2px;
-            height: calc(100% - 4px);
             background: transparent;
             border: 0px;
             padding: 0px 10px;
         }
+
+        .app-input-component {
+            border: 0px;
+            background: transparent;
+            padding: 0px;
+        }
+
     }
 
-    &.-focused input {
+    &.-focused .app-component-flexbox {
         box-shadow: inset 0px 0px 3px #0095ff;
     }
+
+
 
 }
