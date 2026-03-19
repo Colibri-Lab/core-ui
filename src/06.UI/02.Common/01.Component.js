@@ -2607,6 +2607,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         return this;
     }
 
+    get isFocused() {
+        return this.ContainsClass('-focused');
+    }
+
     /**
      * Blurs a focus from component
      * @returns {Colibri.UI.Component}

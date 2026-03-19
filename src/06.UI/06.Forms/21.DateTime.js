@@ -15,18 +15,21 @@ Colibri.UI.Forms.DateTime = class extends Colibri.UI.Forms.Field {
 
         const contentContainer = this.contentContainer;
 
-        this._input = new Colibri.UI.DateSelector(this._name + '-input', contentContainer);
+        this._input = new Colibri.UI.DateTimeSelector(this._name + '-input', contentContainer);
         this._input.shown = true;
+        this._input.format = new Intl.DateTimeFormat(App.DateFormat || 'ru-RU', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
         this._input.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
         this._input.AddHandler('KeyUp', this.__thisBubble, false, this);
         this._input.AddHandler('Clicked', this.__thisBubbleWithFocus, false, this);
+        // this._input.AddHandler('KeyDown', this.__inputKeyDown, false, this);
 
-        this._time = new Colibri.UI.Input(this._name + '-time', contentContainer);
-        this._time.shown = true;
-        this._time.hasIcon = false;
-        this._time.hasClearIcon = false;
-        this._time.mask = '99:99:99';
-        this._time.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
+        // this._time = new Colibri.UI.Input(this._name + '-time', contentContainer);
+        // this._time.shown = true;
+        // this._time.hasIcon = false;
+        // this._time.hasClearIcon = false;
+        // this._time.mask = '99:99:99';
+        // this._time.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
+        // this._time.AddHandler('KeyDown', this.__timeKeyDown, false, this);
         // this._time.AddHandler('KeyUp', this.__thisBubble, false, this);
         // this._time.AddHandler('Clicked', this.__thisBubbleWithFocus, false, this);
 
@@ -48,11 +51,32 @@ Colibri.UI.Forms.DateTime = class extends Colibri.UI.Forms.Field {
             this.enabled = this._fieldData.params.enabled;
         }
 
-        if(this._fieldData?.params?.time_format) {
-            this._time.mask = this._fieldData?.params?.time_format;
-        }
+        // if(this._fieldData?.params?.time_format) {
+        //     this._time.mask = this._fieldData?.params?.time_format;
+        // }
 
     }
+
+    // __inputKeyDown(event, args) {
+    //     if(args.domEvent.key === 'Tab') {
+    //         if(!args.domEvent.shiftKey) {
+    //             this._time.Focus();
+    //             args.domEvent.preventDefault();
+    //             args.domEvent.stopPropagation();
+    //             return false;
+    //         }
+    //     }
+    // }
+    // __timeKeyDown(event, args) {
+    //     if(args.domEvent.key === 'Tab') {
+    //         if(args.domEvent.shiftKey) {
+    //             this._input.Focus();
+    //             args.domEvent.preventDefault();
+    //             args.domEvent.stopPropagation();
+    //             return false;
+    //         }
+    //     }
+    // }
 
     __clearClicked(event, args) {
         this.value = null;
@@ -104,11 +128,7 @@ Colibri.UI.Forms.DateTime = class extends Colibri.UI.Forms.Field {
      * @type {Date|string}
      */
     get value() {
-        let value = this._input.value;
-        let timeValue = this._time.value;
-
-        value = (value?.toString() === 'Invalid Date' ? null : value.toShortDateString());
-        return value ? value + ' ' + timeValue : null;
+        return (this._input.value?.toString() === 'Invalid Date' ? null : this._input.value.toLocalDateTimeString());
     }
 
     /**
@@ -123,7 +143,6 @@ Colibri.UI.Forms.DateTime = class extends Colibri.UI.Forms.Field {
             value = new Date(value);
         }
         this._input.value = value;
-        this._time.value = value instanceof Date ? value.toTimeString(this._time.mask.split(':').length > 2) : '';
     }
 
     /**

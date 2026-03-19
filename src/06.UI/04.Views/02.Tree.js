@@ -106,12 +106,15 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
      * Select node
      */
     Select(node) {
+        const isChanged = node !== this._selected;
         this.ClearSelection();
         this._selected = node;
         if(node !== null) {
             node.selected = true;
         }
-        this.Dispatch('SelectionChanged', {node: node});
+        if(isChanged) {
+            this.Dispatch('SelectionChanged', {node: node});
+        }
     }
 
     /**

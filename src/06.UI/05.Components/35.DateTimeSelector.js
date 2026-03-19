@@ -52,17 +52,7 @@ Colibri.UI.DateTimeSelector = class extends Colibri.UI.Component {
             e.preventDefault();
         });
         this._hiddenElement.addEventListener('blur', (e) => {
-            // debugger;
-            // if (!this._skipLooseFocus) {
-            //     if (this.value < this._min) {
-            //         this.value = this._min;
-            //     } else if (this.value > this._max) {
-            //         this.value = this._max;
-            //     }
-            //     this._showValue();
-            //     this.Dispatch('Changed');
-            //     this.Close();
-            // }
+            this.Close();
         });
         // this._hiddenElement.addEventListener('keydown', (e) => {
         //     e.stopPropagation(); 
@@ -475,15 +465,27 @@ Colibri.UI.DateTimeSelectorPopup = class extends Colibri.UI.Pane {
         this._timePicker.hasIcon = false;
         this._timePicker.hasClearIcon = false;
         this._timePicker.mask = '99:99:99';
-        this._timePicker.changeOnKeyUp = true;
+        this._timePicker.changeOnKeyUp = false;
         this._timePicker.changeOnKeyUpTimeout = 0;
         this._timePicker.AddHandler('Changed', (event, args) => {
             let dt = this.value.copy();
             let parts = this._timePicker.value.split(':');
-            dt.setHours(parts[0]);
-            dt.setMinutes(parts[1]);
-            dt.setSeconds(parts[2]);
-            this.value = dt.copy();
+            if(parts.length === 3) {
+                dt.setHours(parts[0]);
+                dt.setMinutes(parts[1]);
+                dt.setSeconds(parts[2]);
+                this.value = dt.copy();
+            } else if(parts.length === 2) {
+                dt.setHours(parts[0]);
+                dt.setMinutes(parts[1]);
+                dt.setSeconds(0);
+                this.value = dt.copy();
+            } else if(parts.length === 1) {
+                dt.setHours(parts[0]);
+                dt.setMinutes(0);
+                dt.setSeconds(0);
+                this.value = dt.copy();
+            }
 
             args.domEvent.stopPropagation();
             args.domEvent.preventDefault();
