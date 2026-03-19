@@ -615,6 +615,9 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
      * @type {boolean}
      */
     set shown(value) {
+        this._windowContainer.css('top', null);
+        this._windowContainer.css('left', null);
+        
         super.shown = value;
         if (value) {
             this.BringToFront();
