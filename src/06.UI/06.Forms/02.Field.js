@@ -300,9 +300,9 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             args.domEvent.stopPropagation();
             if (event.name === 'KeyDown' && args.domEvent.key === 'Tab') {
                 if (args.domEvent.shiftKey) {
-                    (this.prev || this.parentField?.prev)?.Focus('lastChild');
+                    this.form?.FindPreviousFocusableField(this)?.Focus('lastVisibleChild');
                 } else {
-                    (this.next || this.parentField?.next)?.Focus('firstChild');
+                    this.form?.FindNextFocusableField(this)?.Focus('firstVisibleChild');
                 }
                 args.domEvent.preventDefault();
                 return false;

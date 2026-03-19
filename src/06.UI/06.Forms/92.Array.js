@@ -246,12 +246,12 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     /**
      * Focus on component to the first object of array
      */
-    Focus(element = 'firstChild') {
+    Focus(element = 'firstVisibleChild') {
         if(!this._itemsContainer.children) {
             this.AddNew();
         } 
         if (this._itemsContainer.Children(element)) {
-            this._itemsContainer.Children(element).Focus();
+            this._itemsContainer.Children(element).Focus(element);
         }
     }
 

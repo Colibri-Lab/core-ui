@@ -497,6 +497,36 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         return nr;
     }
 
+
+    FindNextFocusableField(field) {
+        let next = field.next;
+        while (next) {
+            if ((next instanceof Colibri.UI.Forms.Field || next.name === 'groups') && next.shown && next.enabled && next.isConnected) {
+                return next;
+            }
+            next = next.next;
+        }
+        if (!next && field.parentField) {
+            return this.FindNextFocusableField(field.parentField);
+        }
+        return null;
+    }
+
+    FindPreviousFocusableField(field) {
+        let prev = field.prev;
+        while (prev) {
+            if ((prev instanceof Colibri.UI.Forms.Field || prev.name === 'groups') && prev.shown && prev.enabled && prev.isConnected) {
+                return prev;
+            }
+            prev = prev.prev;
+        }
+        if (!prev && field.parentField) {
+            return this.FindPreviousFocusableField(field.parentField);
+        }
+        return null;
+    }
+
+
     /** @private */
     _renderFields(value) {
 
@@ -520,7 +550,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         if (hasGroups) {
             this._groups = new Colibri.UI.ButtonGroup('groups', this);
             this._groups.shown = true;
-            // this._groups.tabIndex = true;
+            this._groups.tabIndex = -1;
             Object.forEach(this._fields, (name, fieldData) => {
                 fieldData = Object.cloneRecursive(fieldData);
                 fieldData.group && (fieldData.group = fieldData.group[Lang.Current] ?? fieldData.group);
@@ -531,6 +561,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             this._groups.AddHandler('Changed', this.__groupsChanged, false, this);
             this._groups.AddHandler('ReceiveFocus', (event, args) => this._groups.AddClass('-focused'), false, this);
             this._groups.AddHandler('LoosedFocus', (event, args) => this._groups.RemoveClass('-focused'), false, this);
+            this._groups.AddHandler('KeyDown', this.__groupsKeyDown, false, this);
         }
 
         Object.forEach(this._fields, (name, fieldData) => {
@@ -549,6 +580,18 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         this._error.shown = true;
 
         this.Dispatch('FieldsRendered');
+    }
+
+    __groupsKeyDown(event, args) {
+        if (args.domEvent.key == 'Tab') {
+            if (args.domEvent.shiftKey) {
+                this.FindPreviousFocusableField(this._groups)?.Focus('lastVisibleChild');
+            } else {
+                this.FindNextFocusableField(this._groups)?.Focus('firstVisibleChild');
+            }
+            args.domEvent.preventDefault();
+            return false;
+        }
     }
 
     __groupsChanged(event, args) {

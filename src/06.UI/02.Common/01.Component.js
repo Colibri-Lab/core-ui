@@ -1679,9 +1679,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         if (this._element.is(":disabled")) {
             return false;
         }
-        var tabIndex = this._element.attr("tabindex");
-        tabIndex = isNaN(tabIndex) ? -1 : tabIndex;
-        return this._element.is("input[type], a[href], area[href], iframe") || tabIndex > -1;
+        return this._element.is("input[type], a[href], area[href], iframe") || this._element.attr("tabindex");
     }
 
     /**
@@ -1849,10 +1847,15 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         
         if (name === undefined || name === null)
             return this._children;
+
         if (name === 'firstChild') {
             return this._children[0] ?? null;
+        } else if (name === 'firstVisibleChild') {
+            return this._children.find(c => c.shown && c.isConnected) ?? null;
         } else if (name === 'lastChild') {
             return this._children[this._children.length - 1];
+        } else if (name === 'lastVisibleChild') {
+            return [...this._children].reverse().find(c => c.shown && c.isConnected) ?? null;
         }
         else if(typeof name === 'string' && name.indexOf('/') !== -1) {
             return this.Find(name);

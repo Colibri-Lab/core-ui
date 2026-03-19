@@ -108,9 +108,9 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
     /**
      * Focus on component
      */
-    Focus() {
-        if (this.contentContainer.Children('firstChild')) {
-            this.contentContainer.Children('firstChild').Focus();
+    Focus(element = 'firstVisibleChild') {
+        if (this.contentContainer.Children(element)) {
+            this.contentContainer.Children(element).Focus(element);
         }
     }
 

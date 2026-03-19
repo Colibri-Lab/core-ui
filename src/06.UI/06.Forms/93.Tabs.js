@@ -107,8 +107,8 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
     /**
      * Focus on component to the first object of array
      */
-    Focus() {
-        this.contentContainer.Children('firstChild').Focus();
+    Focus(element = 'firstChild') {
+        this.contentContainer.Children(element).Focus(element);
     }
 
     /**

@@ -23,8 +23,7 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
     }
 
     __thisKeyDown(event, args) {
-        if(args.domEvent.key == 'Enter' || args.domEvent.key == ' ') {
-        } else if(args.domEvent.key == 'ArrowRight' || args.domEvent.key == 'ArrowDown') {
+        if(args.domEvent.key == 'ArrowRight' || args.domEvent.key == 'ArrowDown') {
             if(this._selectedButton) {
                 const nextButton = this.Children(this._selectedButton.childIndex + 1);
                 if(nextButton) {
