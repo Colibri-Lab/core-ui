@@ -31,6 +31,12 @@
     }
     
     &.-focused input {
+        box-shadow: none;
+    }
+    &.-focused [data-object-name$="-input"] {
+        box-shadow: inset 0px 0px 3px #0095ff;
+    }
+    &.-focused [data-object-name$="-time"] {
         box-shadow: inset 0px 0px 3px #0095ff;
     }
 

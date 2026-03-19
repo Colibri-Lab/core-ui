@@ -75,7 +75,7 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         this._viewElement.addEventListener('mousemove', (e) => this.Dispatch('MouseMove', { domEvent: e }));
         this._viewElement.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', { domEvent: e }));
         this._viewElement.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', { domEvent: e }));
-        this._viewElement.addEventListener('keydown', nullhandler);
+        this._viewElement.addEventListener('keydown', this.__viewerKeyDown, false, this);
         this._viewElement.addEventListener('keyup', nullhandler);
         this._viewElement.addEventListener('keypress', nullhandler);
 
@@ -88,6 +88,17 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
 
         this.AddHandler('Clicked', this.__thisClicked);
         this.AddHandler('KeyDown', this.__thisKeyDown);
+
+
+    }
+
+    __viewerKeyDown(event, args) {
+        if(args.domEvent.key === 'Tab') {
+            return true;
+        }
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
 
 
     }
