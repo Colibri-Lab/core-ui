@@ -14,7 +14,8 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         this._tabs = new Colibri.UI.Tabs('tabs', this.contentContainer);
         this._tabs.shown = true;
         this._tabs.allTabsInDoc = true;
-
+        this._tabs.tabIndex = -1;
+        
         this._tabs.AddHandler('SelectionChanged', this.__thisSelectionChanged, false, this);
         this._tabs.AddHandler('TabClicked', this.__thisTabClicked, false, this);
 
@@ -108,7 +109,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
      * Focus on component to the first object of array
      */
     Focus(element = 'firstChild') {
-        this.contentContainer.Children(element).Focus(element);
+        this._tabs.Focus(element);
     }
 
     /**

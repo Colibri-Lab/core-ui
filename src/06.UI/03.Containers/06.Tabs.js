@@ -47,6 +47,36 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         this.AddHandler('TabClicked', this.__thisTabClicked);
         this.AddHandler('ChildsProcessed', this.__thisChildsProcessed);
         this.AddHandler('Clicked', this.__thisClicked);
+        this.AddHandler('KeyDown', this.__thisKeyDown);
+    }
+    
+    __thisKeyDown(event, args) {
+        if( args.domEvent.key === 'ArrowRight' || args.domEvent.key === 'ArrowLeft' ) {
+            const buttons = this.buttonsByIndex;
+            const currentIndex = this.selectedIndex;
+            let newIndex = null;
+            if(args.domEvent.key === 'ArrowRight') {
+                newIndex = currentIndex + 1;
+                if(newIndex >= buttons.length) {
+                    newIndex = 0;
+                }
+            }
+            else {
+                newIndex = currentIndex - 1;
+                if(newIndex < 0) {
+                    newIndex = buttons.length - 1;
+                }
+            }
+
+            if(buttons[newIndex]) {
+                this._selectTab(newIndex);
+                args.domEvent.preventDefault();
+                args.domEvent.stopPropagation();
+                return false;
+            }
+        } else if( args.domEvent.key === 'Tab' ) { 
+            this.selectedContainer?.Focus(args.domEvent.shiftKey ? 'lastVisibleChild' : 'firstVisibleChild');
+        }
     }
 
     __thisClicked(event, args) {
@@ -385,6 +415,18 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
      */
     set allTabsInDoc(value) {
         this._allTabsInDoc = value;
+    }
+
+    get tabIndex() {
+        return this.header.attr('tabindex');
+    }
+
+    set tabIndex(value) {
+        this.header.attr('tabindex', value === 'true' || value === true ? Colibri.UI.tabIndex++ : value);
+    }
+
+    Focus() {
+        this.header.focus();
     }
 
 }

@@ -279,9 +279,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             this._applyRuntimes();
             this._setFilledMark();
         }
-        if (this._parentField) {
-            this._parentField.Dispatch(event.name, Object.assign({ component: event.sender }, args));
-        }
+        
 
         if (this._fieldData?.params?.onchangehandler) {
             let handler = null;
@@ -334,6 +332,11 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             }
 
         }    
+
+        if (this._parentField) {
+            this._parentField.Dispatch(event.name, Object.assign({ component: event.sender }, args));
+        }
+
         return true;
     }
 

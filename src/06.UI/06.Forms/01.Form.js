@@ -521,6 +521,9 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
             prev = prev.prev;
         }
         if (!prev && field.parentField) {
+            if(field.parentField instanceof Colibri.UI.Forms.Tabs) {
+                return field.parentField;
+            }
             return this.FindPreviousFocusableField(field.parentField);
         }
         return null;
