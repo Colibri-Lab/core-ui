@@ -434,19 +434,6 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         return field;
     }
 
-    _rearrangeFieldTabIndexes() {
-
-        const elements = this._element.querySelectorAll('[tabindex]');
-        for (let i = 0; i < elements.length; i++) {
-            elements[i].removeAttribute('tabIndex');
-        }
-
-        for (const component of Object.values(this.Fields())) {
-            component.tabIndex = -1;
-        }
-
-    }
-
     /** @private */
     _renderField(name, fieldData, value, shown = true) {
 

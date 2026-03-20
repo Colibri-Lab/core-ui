@@ -24,8 +24,13 @@
 
     
     &.-focused textarea {
+        box-shadow: none;
+    }
+
+    &.-focused .-focused [data-object-name$="-container"] {
         box-shadow: inset 0px 0px 3px #0095ff;
     }
+
     
 
 }
