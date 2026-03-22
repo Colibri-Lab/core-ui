@@ -205,6 +205,7 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         this._showValue();
         this.ToggleView(true);
         this._hiddenElement.focus();
+        this._popup.BridgToFront(); 
         this.Dispatch('PopupOpened', {});
 
     }

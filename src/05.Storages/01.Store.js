@@ -561,7 +561,17 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
             queryList = queryList.split(',');
             for (const ql of queryList) {
                 const queryParts = ql.split('=');
-                data = Array.isArray(data) ? data.filter(v => v[queryParts[0]] == queryParts[1] || v[queryParts[0]].toLowerCase() == queryParts[1].toLowerCase()) : [];
+                data = Array.isArray(data) ? data.filter(v => {
+                    if(Array.isArray(v[queryParts[0]])) {
+                        return v[queryParts[0]].filter(v => v == queryParts[1] || v.toLowerCase() == queryParts[1].toLowerCase()).length > 0;
+                    } else if(Object.isObject(v[queryParts[0]])) {
+                        return Object.values(v[queryParts[0]]).filter(v => v == queryParts[1] || v.toLowerCase() == queryParts[1].toLowerCase()).length > 0;
+                    } else if(typeof v[queryParts[0]] === 'string') {
+                        return v[queryParts[0]] == queryParts[1] || v[queryParts[0]]?.toLowerCase() == queryParts[1]?.toLowerCase();
+                    } else {
+                        return v[queryParts[0]] == queryParts[1];
+                    }
+                }) : [];
                 if (data.length === 1) {
                     data = data[0];
                     break;

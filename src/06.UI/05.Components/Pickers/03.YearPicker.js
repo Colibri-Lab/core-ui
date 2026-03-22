@@ -14,7 +14,7 @@ Colibri.UI.YearPicker = class extends Colibri.UI.Pane {
     constructor(name, container) {
         super(name, container);
         this.AddClass('app-month-picker-component');
-        this.Render();
+
     }
 
     /**
@@ -64,7 +64,7 @@ Colibri.UI.YearPicker = class extends Colibri.UI.Pane {
             }
         }
 
-        tfoot.append(Element.fromHtml('<td colspan="7" data-today="today" data-value="' + (today.getTime()) + '">Сегодня</td>'));
+        tfoot.append(Element.fromHtml('<td colspan="7" data-today="today" data-value="' + (today.getTime()) + '">' + (this.parent.parent.todayString || '#{ui-yearpicker-today}') + '</td>'));
 
     }
 
