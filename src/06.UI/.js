@@ -54,11 +54,11 @@ Colibri.UI = class {
         });
         if(document.body) {
             new MutationObserver((mutationList, observer) => {
-                let elements = [];
-                for(const mut of mutationList) {
-                    elements.push(mut.target);
-                }
-                Colibri.UI.maxZIndex = Colibri.UI._getZIndex(elements);
+                // let elements = [];
+                // for(const mut of mutationList) {
+                //     elements.push(mut.target);
+                // }
+                Colibri.UI.maxZIndex = Colibri.UI._getZIndex(); // elements
             }).observe(document.body, {
                 attributes: true, 
                 attributeFilter: ['style', 'class'], 
