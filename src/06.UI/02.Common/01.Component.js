@@ -480,7 +480,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             parent = this._element;
         }
         if(!root) {
-            root = this;
+            root = this; 
         }
 
         for (let i = 0; i < children.length; i++) {

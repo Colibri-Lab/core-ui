@@ -9,7 +9,7 @@ RegExp.SpecialChars = /(?![a-zA-Z0-9!"#\$%&'\(\)\*\+,-\.\/:;<=>\?@\[\\^\]_`{\|}~
 const nullhandler = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    return false;
+    return false; 
 };
 
 /**
@@ -716,11 +716,11 @@ Object.sortPropertiesRecursive = function (object) {
     return ret;
 }
 
-/**
+/** 
  * Creates an object from an array of objects, using one field as the key and another as the value (optional).
  * @param {Array} array - The array of objects.
  * @param {string} keyField - The field to use as the key.
- * @param {string|null} valueField - The field to use as the value (optional).
+ * @param {string|null} valueField - The field to use as the value (optional).  
  * @returns {Object} Returns the resulting object.
  */
 Object.createFromArray = function (array, keyField, valueField = null) {
