@@ -22,7 +22,7 @@
     align-items: stretch;
     justify-content: stretch;
 
-    background: #444855;
+    background: #1f1f1f;
     box-shadow: 0 1px 4px rgba(68, 72, 85, 0.06), 0 4px 8px rgba(0, 0, 0, 0.06);
     border-radius: 5px;
 
@@ -71,7 +71,7 @@
             margin-right: 10px;
             svg:not(.colored) {
                 path, rect, circle {
-                    fill: #ffffff;
+                    filter:invert(1)
                 }
             }
         }
@@ -80,6 +80,11 @@
             width: 10px;
             height: 10px;
             margin-left: auto;
+            svg {
+                path, rect, circle {
+                    fill: white;
+                }
+            }
         }
 
         .app-component-textspan {
