@@ -11,3 +11,29 @@ ui-viewers-array:
   tr: Dizi
   zh: 数组
   fa: آرایه
+ui-viewers-array-count:
+  ru: Строк в массиве - %s
+  en: Items in array - %s
+  hy: Զանգվածի տարրեր - %s
+  it: Elementi nell'array - %s
+  es: Elementos en el array - %s
+  kk: Массивтегі элементтер - %s
+  uz: Arraydagi elementlar - %s
+  cz: Položek v poli - %s
+  de: Elemente im Array - %s
+  tr: Dizideki öğeler - %s
+  zh: 数组中的项目 - %s
+  fa: آیتم ها در آرایه - %s
+ui-viewers-array-empty:
+  ru: Массив пуст
+  en: Array is empty
+  hy: Զանգվածը դատարկ է
+  it: L'array è vuoto
+  es: El array está vacío
+  kk: Массив пустой
+  uz: Array bo'sh
+  cz: Pole je prázdné
+  de: Array ist leer
+  tr: Dizi boş
+  zh: 数组为空
+  fa: آرایه خالی است

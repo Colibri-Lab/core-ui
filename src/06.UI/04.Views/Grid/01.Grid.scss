@@ -117,8 +117,10 @@
                         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00e5e5e5', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 */
                         padding: 0px 3px 0px 15px;
                         svg {
+                            width: 10px;
+                            height: 10px;
                             path {
-                                stroke: #9DA5BE
+                                fill: #505050
                             }
                         }
                     }

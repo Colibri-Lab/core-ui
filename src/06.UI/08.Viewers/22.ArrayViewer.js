@@ -22,13 +22,20 @@ Colibri.UI.ArrayViewer = class extends Colibri.UI.Viewer {
      * @private
      */
     _showValue() {
-        let ret = [];
-        if(isIterable(this._value)) {
-            this._value.forEach(value => {
-                ret.push(Object.toQueryString(value, [',<br />', ': ']));
-            });
+        if(this._value.length > 0) {
+            this._element.html('#{ui-viewers-array-count}'.replaceAll('%s', this._value.length));
+    
+            let ret = [];
+            if(isIterable(this._value)) {
+                this._value.forEach(value => {
+                    console.log(value);
+                    ret.push(Object.toQueryString(value, [',<br />', ': '], false, true));
+                });
+            }
+            this.toolTip = ret.join(', ');
+        } else {
+            this._element.html('#{ui-viewers-array-empty}');
         }
-        this._element.html(ret.join(', '));
     }
 
     /**

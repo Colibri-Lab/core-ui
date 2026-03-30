@@ -803,10 +803,17 @@ Object.countKeys = function (o) { return o && o instanceof Object && !Array.isAr
  * @param {Array} splittersArray - An array containing the separator strings.
  * @returns {string} Returns the query string.
  */
-Object.toQueryString = function (o, splittersArray) {
+Object.toQueryString = function (o, splittersArray, encode = true, removeEmpty = false) {
     let ret = [];
     Object.keys(o).forEach((key) => {
-        ret.push(key + splittersArray[1] + encodeURI(o[key]));
+        let val = o[key];
+        if(Object.isObject(val)) {
+            val = Object.toQueryString(val, splittersArray, encode, removeEmpty);
+        } 
+        if(removeEmpty && !val) {
+            return true;
+        }
+        ret.push(key + splittersArray[1] + (encode ? encodeURI(val) : val));
     });
     return ret.join(splittersArray[0]);
 };
