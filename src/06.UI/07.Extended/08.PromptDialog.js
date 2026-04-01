@@ -44,9 +44,13 @@ Colibri.UI.PromptDialog = class extends Colibri.UI.Window {
      * @param {string} button button title
      * @returns {Promise}
      */
-    Show(title, fields, button) {
+    Show(title, fields, button, data = {}, width = null) {
         return new Promise((resolve, reject) => {
             this.title = title;
+
+            if(width) {
+                this.width = width;
+            }
 
             this._form = this.Children('form');
             this._save = this.Children('btn-save');
@@ -57,7 +61,7 @@ Colibri.UI.PromptDialog = class extends Colibri.UI.Window {
                 this._validator = new Colibri.UI.FormValidator(this._form);
             }
             this._form.fields = fields;
-            this._form.value = {};
+            this._form.value = data;
 
             this._save.value = button || '#{ui-prompt-ok}';
             super.Show();

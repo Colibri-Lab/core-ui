@@ -16,17 +16,17 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         this._allowedExtensions = null;
         this._maxFileSize = null;
 
-        if (!Array.isArray(this._fieldData.params.allow)) {
+        if (this._fieldData.params?.allow && !Array.isArray(this._fieldData.params.allow)) {
             this._fieldData.params.allow = this._fieldData.params.allow.split(',');
         }
 
-        if (typeof this._fieldData.params.size === 'string') {
+        if (typeof this._fieldData.params?.size === 'string') {
             this._fieldData.params.size = parseInt(this._fieldData.params.size);
         }
 
-        this._allowedExtensions = this._fieldData.params.allow ?? null;
-        this._maxFileSize = this._fieldData.params.size ?? null;
-        this._maxCount = this._fieldData.params.maxadd ?? null;
+        this._allowedExtensions = this._fieldData.params?.allow ?? null;
+        this._maxFileSize = this._fieldData.params?.size ?? null;
+        this._maxCount = this._fieldData.params?.maxadd ?? null;
 
         this._validated = false;
         this._errorMessages = [];
@@ -179,21 +179,21 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
     }
 
     __deleteIconClicked(event, args) {
-        const value = this.value,
-            delParams = this._delDialog,
-            delAction = () => {
-                this.lastValue = value;
-                args.removed = itemData.file || null;
-                event.sender.parent.Dispose();
-                if (this._filesGroup.children == 0) {
-                    this._files.shown = false;
-                    if (this._fieldData.params && this._fieldData.params.button) {
-                        this._input.title = this._fieldData.params.button;
-                        this._input.RemoveClass('-full');
-                    }
+        const value = event.sender.parent.value;
+        const delParams = this._delDialog;
+        const delAction = (itemData) => {
+            this.lastValue = value;
+            args.removed = itemData.file || null;
+            event.sender.parent.Dispose();
+            if (this._filesGroup.children == 0) {
+                this._files.shown = false;
+                if (this._fieldData.params && this._fieldData.params.button) {
+                    this._input.title = this._fieldData.params.button;
+                    this._input.RemoveClass('-full');
                 }
-                this.Dispatch('Changed', Object.assign(args, { component: this }));
-            };
+            }
+            this.Dispatch('Changed', Object.assign(args, { component: this }));
+        };
 
         if (delParams) {
             const dialog = new Colibri.UI.ConfirmDialog(this.name + '-confirm-delete-dialog', document.body);
@@ -201,11 +201,11 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
                 return itemData.file[key] || "";
             }), delParams.button ?? 'Удалить', (result) => {
                 if (result === true) {
-                    delAction.call(this);
+                    delAction.call(this, value);
                 }
             });
         } else {
-            delAction.call(this);
+            delAction.call(this, value);
         }
 
         args.domEvent?.stopPropagation();
