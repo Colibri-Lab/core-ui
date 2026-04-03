@@ -231,7 +231,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     __objectChanged(event, args) {
         if (this._fieldData.params && this._fieldData.params.title !== null) {
             const f = eval(this._fieldData.params.title);
-            f && f(object, this);
+            f && f(event.sender, this);
         }
         
         // return this.Dispatch('Changed', Object.assign(args ?? {}, {component: this}));
