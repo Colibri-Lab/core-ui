@@ -199,13 +199,14 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
             const el = this.container.closest('[namespace]');
             el && this._popup.container.attr('namespace', el.attr('namespace'));
         }
+        this._skipLooseFocus = true;
         this._popup.mode = 'datepicker';
         this._popup.shown = true;
         this._popup.value = this.value;
         this._showValue();
         this.ToggleView(true);
         this._hiddenElement.focus();
-        this._popup?.BridgToFront(); 
+        this._popup?.BringToFront(); 
         this.Dispatch('PopupOpened', {});
 
     }
@@ -214,7 +215,7 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
      * Close selector
      */
     Close() {
-
+        debugger;
         this.ToggleView(false);
         if (this._popup) {
             this._popup.Dispose();
