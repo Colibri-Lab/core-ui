@@ -322,10 +322,12 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         if (value === true || value === 'true') {
             this.AddClass('app-component-readonly');
             this._readonly = true;
+            this._input.hasClearIcon = false;
         }
         else {
             this.RemoveClass('app-component-readonly');
             this._readonly = false;
+            this._input.hasClearIcon = true;
         }
     }
 
