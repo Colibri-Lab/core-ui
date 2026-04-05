@@ -84,7 +84,12 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
 
         this.AddHandler(['KeyUp', 'Pasted', 'ReceiveFocus'], this.__thisKeyUpOrPastedOrReceivedFocus, false, this);
         this.AddHandler(['ScrolledIn', 'Resize'], this.__thisScrolledInOrResize, false, this);
+        this.AddHandler(['Hidden', 'LoosedFocus'], this.__thisHidden);
 
+    }
+
+    __thisHidden(event, args) {
+        this._hidePasswordTip();
     }
 
     __thisScrolledInOrResize(event, args) {
