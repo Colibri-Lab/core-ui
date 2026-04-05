@@ -17,8 +17,8 @@ Colibri.UI.CheckboxEditor = class extends Colibri.UI.Editor {
         this._input.shown = true;
 
         this._input.AddHandler('Changed', this.__thisBubble, false, this);
-        this._input.AddHandler('LoosedFocus', this.__thisBubble, false, this);
-        this._input.AddHandler('ReceiveFocus', this.__thisBubble, false, this);
+        // this._input.AddHandler('LoosedFocus', this.__thisBubble, false, this);
+        // this._input.AddHandler('ReceiveFocus', this.__thisBubble, false, this);
 
     }
 
