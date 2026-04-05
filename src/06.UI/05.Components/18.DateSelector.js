@@ -215,7 +215,6 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
      * Close selector
      */
     Close() {
-        debugger;
         this.ToggleView(false);
         if (this._popup) {
             this._popup.Dispose();
