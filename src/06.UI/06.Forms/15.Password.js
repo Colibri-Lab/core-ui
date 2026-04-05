@@ -89,7 +89,7 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
     }
 
     __thisHidden(event, args) {
-        this._hidePasswordTip();
+        this._hidePasswordTip(true);
     }
 
     __thisScrolledInOrResize(event, args) {
@@ -105,13 +105,19 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
     }
 
     /** @private */
-    _hidePasswordTip() {
+    _hidePasswordTip(nowait = false) {
         if (this._passwordTip) {
-            Colibri.Common.Delay(2000).then(() => {
+            if(nowait) {
                 this._passwordTip.Hide();
                 this.handleContainerScroll = false;
                 this.handleResize = false;
-            })
+            } else {
+                Colibri.Common.Delay(2000).then(() => {
+                    this._passwordTip.Hide();
+                    this.handleContainerScroll = false;
+                    this.handleResize = false;
+                });
+            }
         }
     }
 
