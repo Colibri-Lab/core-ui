@@ -10,7 +10,7 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
      */
     RenderFieldContainer() {
 
-        this.AddClass('app-component-simplearray-field');
+        this.AddClass('app-component-keyvalueobject-field');
         this._enabled = true;
 
         const contentContainer = this.contentContainer;
@@ -18,7 +18,7 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
         this._grid = new Colibri.UI.Grid('grid', contentContainer);
         this._grid.shown = true;
         this._grid.rows.title = '';
-        this._grid.height = 200;
+        this._grid.height = this.contentContainer.height - 30;
 
         this._link = new Colibri.UI.Link('link', contentContainer);
         this._link.shown = true;
@@ -243,7 +243,7 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
      * @type {Boolean}
      */
     set canEditKey(value) {
-        this._grid.header.columns.Children('key').editor = !value ? null : Colibri.UI.TextEditor;
+        this._grid.header.columns.Children('key').editor = !value ? null : (this._fieldData?.params?.keyEditor || Colibri.UI.TextEditor);
     }
 
     /**
