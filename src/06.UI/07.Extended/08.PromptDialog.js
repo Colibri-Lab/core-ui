@@ -44,9 +44,11 @@ Colibri.UI.PromptDialog = class extends Colibri.UI.Window {
      * @param {string} button button title
      * @returns {Promise}
      */
-    Show(title, fields, button, data = {}, width = null) {
+    Show(title, fields, button, data = {}, width = null, closable = true) {
         return new Promise((resolve, reject) => {
             this.title = title;
+            this.closable = closable;
+            this.closableOnShadow = closable;
 
             if(width) {
                 this.width = width;
@@ -56,6 +58,7 @@ Colibri.UI.PromptDialog = class extends Colibri.UI.Window {
             this._save = this.Children('btn-save');
             this._cancel = this.Children('btn-cancel');
             this._save.enabled = false;
+            this._cancel.shown = closable;
 
             if (!this._validator) {
                 this._validator = new Colibri.UI.FormValidator(this._form);
@@ -84,6 +87,9 @@ Colibri.UI.PromptDialog = class extends Colibri.UI.Window {
                 reject();
                 this.Hide();
             });
+
+            this._validator.Dispatch('Validated');
+
 
         });
 

@@ -165,8 +165,8 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
                 this.enabled = this.field.params.enabled;
             }
 
-            if (this.field?.params?.values !== undefined) {
-                this.values = this.field?.params?.values;
+            if (this.field?.values !== undefined) {
+                this.values = this.field?.values;
             }
 
             if (this.field?.params?.value !== undefined) {

@@ -38,6 +38,7 @@ Colibri.UI.AlertDialog = class extends Colibri.UI.Window {
             this.Children('btn-cancel').ClearHandlers();
             this.Children('btn-cancel').AddHandler('Clicked', (event, args) => {
                 this.Hide();
+                resolve();
             });
         });
     }
