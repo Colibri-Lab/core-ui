@@ -304,7 +304,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     __onCometOpened(registered = false) {
         this._connected = true;
         if(!registered) {
-            this.Command(this._user, 'register', {name: this._userName, storeHandler: this._handlers['storeHandler'] ?? null, closeHandler: this._handlers['closeHandler'] ?? null});
+            this.Command(this._user, 'register', {name: this._userName, storeHandler: this._handlers?.['storeHandler'] ?? null, closeHandler: this._handlers?.['closeHandler'] ?? null});
         }
         if(this._pushToken) {
             this.Command(this._user, 'firebase', {name: this._userName, json: JSON.stringify(this._firebaseServiceJson), token: this._pushToken, f: this._pushFunction});

@@ -168,6 +168,9 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
             if (this.field?.values !== undefined) {
                 this.values = this.field?.values;
             }
+            if (this.field?.params?.values !== undefined) {
+                this.values = this.field?.params?.values;
+            }
 
             if (this.field?.params?.value !== undefined) {
                 this.value = this.field?.params?.value;
@@ -219,7 +222,7 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
      * Reload values
      */
     ReloadValues() {
-        this.values = this.field.values;
+        this.values = this.field?.values || this.field?.params?.values;
         if (this.field.lookup) {
             this.loading = true;
             this.AddClass('app-select-loading');
