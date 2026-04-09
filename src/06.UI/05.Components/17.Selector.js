@@ -486,7 +486,9 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
  
                     let v = '';
                     if (Array.isArray(this._value)) {
-                        v = (this._value[0] !== '' && this._value[0] !== null && this._value[0] !== undefined ? (this._value[0][this._titleField] ?? this._value[0] ?? '') : '');
+                        v = (this._value[0] !== '' && this._value[0] !== null && this._value[0] !== undefined ? (this._value[0][this._valueField] ?? this._value[0] ?? '') : '');
+                        v = this._findValue(v);
+                        v = v ? v[this._titleField] ?? v : '';
                         if (Object.isObject(v)) {
                             try { v = v[Lang.Current] } catch (e) { v = ''; };
                         }
