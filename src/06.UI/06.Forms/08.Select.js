@@ -405,4 +405,4 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
     }
     
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Select', 'Colibri.UI.Forms.Select', '#{ui-fields-select}', null, ['required','enabled','canbeempty','readonly','searchable','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler'])
+Colibri.UI.Forms.Field.RegisterFieldComponent('Select', 'Colibri.UI.Forms.Select', '#{ui-fields-select}', null, ['required','enabled','multiple','canbeempty','readonly','searchable','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler'])
