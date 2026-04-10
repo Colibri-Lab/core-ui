@@ -826,6 +826,14 @@ Colibri.UI.Forms.HiddenField = class extends Colibri.UI.Component {
         this._element.value = value;
     }
 
+    get field() {
+        return this._fieldData;
+    }
+
+    set field(value) {
+        this._fieldData = value;
+    }
+
     /**
      * Validate field
      */
