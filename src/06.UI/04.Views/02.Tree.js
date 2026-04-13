@@ -28,7 +28,9 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
     /** @protected */
     _registerEvents() {
         super._registerEvents();
+        this.RegisterEvent('NodeExpanding', false, 'When node is expanding');
         this.RegisterEvent('NodeExpanded', false, 'When node is expanded');
+        this.RegisterEvent('NodeCollapsing', false, 'When node is collapsing');
         this.RegisterEvent('NodeCollapsed', false, 'When node is collapsed');
         this.RegisterEvent('SelectionChanged', false, 'When selection is changed');
         this.RegisterEvent('NodeEditCompleted', false, 'When node editing is complete');
@@ -494,7 +496,9 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
     /** @protected */
     _registerEvents() {
         super._registerEvents();
+        this.RegisterEvent('Expanding', false, 'When node is expanding');
         this.RegisterEvent('Expanded', false, 'When node is expanded');
+        this.RegisterEvent('Collapsing', false, 'When node is collapsing');
         this.RegisterEvent('Collapsed', false, 'When node is collapsed');
         this.RegisterEvent('CheckChanged', false, 'When multiple check changed');
     }
@@ -625,6 +629,7 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
      */
     set expanded(value) {
         if(value) {
+            this.Dispatch('Expanding', {node: this._element});
             this._element.classList.add('expanded');
             if(this.tree.removeHiddenNodes) {
                 this.nodes.Retreive();
@@ -632,6 +637,7 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
             this.Dispatch('Expanded', {node: this._element});
         }
         else {
+            this.Dispatch('Collapsing', {node: this._element});
             this._element.classList.remove('expanded');
             if(this.tree.removeHiddenNodes) {
                 this.nodes.KeepInMind();
@@ -778,6 +784,11 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
             p = p.parentNode;
         }
         return null;
+    }
+
+    isParentOf(node) {
+        const found = node.FindParent((p) => p === this);
+        return found !== null;
     }
 
     /**
@@ -1061,6 +1072,13 @@ Colibri.UI.TreeNodes = class extends Colibri.UI.Component {
     __nodeCollapsed(event, args) { 
         return this._tree.Dispatch('NodeCollapsed', {node: event.sender}); 
     }
+    __nodeExpanding(event, args) { 
+        return this._tree.Dispatch('NodeExpanding', {node: event.sender}); 
+    }
+
+    __nodeCollapsing(event, args) { 
+        return this._tree.Dispatch('NodeCollapsing', {node: event.sender}); 
+    }
 
     /**
      * Adds a new node to nodes collection 
@@ -1075,7 +1093,9 @@ Colibri.UI.TreeNodes = class extends Colibri.UI.Component {
         }
         else {
             node = new Colibri.UI.TreeNode(name || 'node', this);
+            node.AddHandler('Expanding', this.__nodeExpanding, false, this);
             node.AddHandler('Expanded', this.__nodeExpanded, false, this);
+            node.AddHandler('Collapsing', this.__nodeCollapsing, false, this);    
             node.AddHandler('Collapsed', this.__nodeCollapsed, false, this);    
         }
 
