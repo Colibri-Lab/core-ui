@@ -159,3 +159,4 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
     }
 
 }
+

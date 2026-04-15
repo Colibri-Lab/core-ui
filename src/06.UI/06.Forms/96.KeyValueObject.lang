@@ -63,3 +63,237 @@ ui-fields-keyvalueobject-remove:
   tr: Sil
   zh: 删除
   fa: حذف
+ui-fields-fieldparams-addlink:
+  ru: Текст ссылки для добавления строки в массив
+  en: Link text to add string to array
+  hy: Կցեք տեքստը զանգվածին տող ավելացնելու համար
+  it: Testo del link per aggiungere una stringa all'array
+  es: Texto del enlace para agregar cadena al array
+  kk: Массивке жол қосу үшін сілтеме мәтіні
+  uz: Massivga satr qo'shish uchun havola matni
+  cz: Text odkazu pro přidání řádku do pole
+  de: Linktext zum Hinzufügen einer Zeile zum Array
+  tr: Diziye satır eklemek için bağlantı metni
+  zh: 向数组添加字符串的链接文本
+  fa: متن لینک برای افزودن رشته به آرایه
+ui-fields-fieldparams-addlink-note:
+  ru: Работает только с обьектами типа Array
+  en: Works only with objects of type Array
+  hy: Աշխատում է միայն Array տիպի օբյեկտների հետ
+  it: Funziona solo con oggetti di tipo Array
+  es: Funciona solo con objetos de tipo Array
+  kk: Тек Array типіндегі нысандармен жұмыс істейді
+  uz: Faqat Array turidagi ob'ektlar bilan ishlaydi
+  cz: Funguje pouze s objekty typu Array
+  de: Funktioniert nur mit Objekten vom Typ Array
+  tr: Sadece Array türündeki nesnelerle çalışır
+  zh: 仅适用于 Array 类型的对象
+  fa: فقط با اشیاء از نوع Array کار می‌کند
+ui-fields-keyvalueobject-fieldparams-caneditkey:
+  ru: Можно редактировать ключ в обьекте
+  en: Can edit key in object
+  hy: Կարող եք խմբագրել ստորակետը օբյեկտում
+  it: Può modificare la chiave nell'oggetto
+  es: Puede editar la clave en el objeto
+  kk: Объекттегі кілтті өңдей алады
+  uz: Ob'ektda kalitni tahrirlay oladimi
+  cz: Lze upravit klíč v objektu
+  de: Kann den Schlüssel im Objekt bearbeiten
+  tr: Nesnedeki anahtarı düzenleyebilir mi
+  zh: 可以编辑对象中的键吗
+  fa: آیا می‌توان کلید را در شیء ویرایش کرد
+ui-fields-keyvalueobject-fieldparams-caneditkey-note:
+  ru: Работает только с обьектами типа KeyValueObject
+  en: Works only with objects of type KeyValueObject
+  hy: Աշխատում է միայն KeyValueObject տիպի օբյեկտների հետ
+  it: Funziona solo con oggetti di tipo KeyValueObject
+  es: Funciona solo con objetos de tipo KeyValueObject
+  kk: Тек KeyValueObject типіндегі объектілермен жұмыс істейді
+  uz: Faqat KeyValueObject turidagi ob'ektlar bilan ishlaydi
+  cz: Funguje pouze s objekty typu KeyValueObject
+  de: Funktioniert nur mit Objekten des Typs KeyValueObject
+  tr: Sadece KeyValueObject türündeki nesnelerle çalışır
+  zh: 仅适用于 KeyValueObject 类型的对象
+  fa: فقط با اشیاء از نوع KeyValueObject کار می‌کند
+ui-fields-keyvalueobject-fieldparams-canaddnew:
+  ru: Можно добавлять новые элементы
+  en: Can add new elements
+  hy: Կարող եք ավելացնել նոր տարրեր
+  it: Può aggiungere nuovi elementi
+  es: Puede agregar nuevos elementos
+  kk: Жаңа элементтерді қосуға болады
+  uz: Yangi elementlar qo'shish mumkin
+  cz: Lze přidat nové prvky
+  de: Neue Elemente können hinzugefügt werden
+  tr: Yeni öğeler ekleyebilir mi
+  zh: 可以添加新元素吗
+  fa: می‌توان عناصر جدید اضافه کرد
+ui-fields-keyvalueobject-fieldparams-canaddnew-note:
+  ru: Работает только с обьектами типа KeyValueObject
+  en: Works only with objects of type KeyValueObject
+  hy: Աշխատում է միայն KeyValueObject տիպի օբյեկտների հետ
+  it: Funziona solo con oggetti di tipo KeyValueObject
+  es: Funciona solo con objetos de tipo KeyValueObject
+  kk: Тек KeyValueObject типіндегі объектілермен жұмыс істейді
+  uz: Faqat KeyValueObject turidagi ob'ektlar bilan ishlaydi
+  cz: Funguje pouze s objekty typu KeyValueObject
+  de: Funktioniert nur mit Objekten des Typs KeyValueObject
+  tr: Sadece KeyValueObject türündeki nesnelerle çalışır
+  zh: 仅适用于 KeyValueObject 类型的对象
+  fa: فقط با اشیاء از نوع KeyValueObject کار می‌کند
+ui-fields-keyvalueobject-fieldparams-canremoverows:
+  ru: Можно удалять элементы
+  en: Can remove elements
+  hy: Կարող եք հեռացնել տարրերը
+  it: Può rimuovere gli elementi
+  es: Puede eliminar elementos
+  kk: Элементтерді жоюға болады
+  uz: Elementlarni o'chirish mumkin
+  cz: Lze odstranit prvky
+  de: Elemente können entfernt werden
+  tr: Öğeleri kaldırabilir
+  zh: 可以删除元素
+  fa: می‌توان عناصر را حذف کرد
+ui-fields-keyvalueobject-fieldparams-canremoverows-note:
+  ru: Работает только с обьектами типа KeyValueObject
+  en: Works only with objects of type KeyValueObject
+  hy: Աշխատում է միայն KeyValueObject տիպի օբյեկտների հետ
+  it: Funziona solo con oggetti di tipo KeyValueObject
+  es: Funciona solo con objetos de tipo KeyValueObject
+  kk: Тек KeyValueObject типіндегі объектілермен жұмыс істейді
+  uz: Faqat KeyValueObject turidagi ob'ektlar bilan ishlaydi
+  cz: Funguje pouze s objekty typu KeyValueObject
+  de: Funktioniert nur mit Objekten des Typs KeyValueObject
+  tr: Sadece KeyValueObject türündeki nesnelerle çalışır
+  zh: 仅适用于 KeyValueObject 类型的对象
+  fa: فقط با اشیاء از نوع KeyValueObject کار می‌کند
+ui-fields-keyvalueobject-fieldparams-keyeditor:
+  ru: Редактор для использования у ключа
+  en: Editor to use for key
+  hy: Խմբագիր օգտագործելու համար ստորակետի համար
+  it: Editor da utilizzare per la chiave
+  es: Editor para usar en la clave
+  kk: Кілт үшін қолданылатын редактор
+  uz: Kalit uchun foydalaniladigan editor
+  cz: Editor pro použití u klíče
+  de: Editor für die Verwendung bei Schlüsseln
+  tr: Anahtar için kullanılacak editör
+  zh: 用于键的编辑器
+  fa: ویرایشگر برای استفاده در کلید
+ui-fields-keyvalueobject-fieldparams-keyeditor-note:
+  ru: Работает только с обьектами типа KeyValueObject
+  en: Works only with objects of type KeyValueObject
+  hy: Աշխատում է միայն KeyValueObject տիպի օբյեկտների հետ
+  it: Funziona solo con oggetti di tipo KeyValueObject
+  es: Funciona solo con objetos de tipo KeyValueObject
+  kk: Тек KeyValueObject типіндегі объектілермен жұмыс істейді
+  uz: Faqat KeyValueObject turidagi ob'ektlar bilan ishlaydi
+  cz: Funguje pouze s objekty typu KeyValueObject
+  de: Funktioniert nur mit Objekten des Typs KeyValueObject
+  tr: Sadece KeyValueObject türündeki nesnelerle çalışır
+  zh: 仅适用于 KeyValueObject 类型的对象
+  fa: فقط با اشیاء از نوع KeyValueObject کار می‌کند
+ui-fields-keyvalueobject-fieldparams-valueeditor:
+  ru: Редактор для поля значение
+  en: Editor for value field
+  hy: Խմբագիր արժեքի դաշտի համար
+  it: Editor per il campo valore
+  es: Editor para el campo de valor
+  kk: Мәндік өріс үшін редактор
+  uz: Qiymat maydoni uchun editor
+  cz: Editor pro pole hodnoty
+  de: Editor für Wertfeld
+  tr: Değer alanı için editör
+  zh: 值字段的编辑器
+  fa: ویرایشگر برای فیلد مقدار
+ui-fields-keyvalueobject-fieldparams-valueeditor-note:
+  ru: Работает только с обьектами типа KeyValueObject
+  en: Works only with objects of type KeyValueObject
+  hy: Աշխատում է միայն KeyValueObject տիպի օբյեկտների հետ
+  it: Funziona solo con oggetti di tipo KeyValueObject
+  es: Funciona solo con objetos de tipo KeyValueObject
+  kk: Тек KeyValueObject типіндегі объектілермен жұмыс істейді
+  uz: Faqat KeyValueObject turidagi ob'ektlar bilan ishlaydi
+  cz: Funguje pouze s objekty typu KeyValueObject
+  de: Funktioniert nur mit Objekten des Typs KeyValueObject
+  tr: Sadece KeyValueObject türündeki nesnelerle çalışır
+  zh: 仅适用于 KeyValueObject 类型的对象
+  fa: فقط با اشیاء از نوع KeyValueObject کار می‌کند
+ui-fields-keyvalueobject-fieldparams-addlink:
+  ru: Текст ссылки для добавления строки в массив
+  en: Link text to add string to array
+  hy: Կցեք տեքստը զանգվածին տող ավելացնելու համար
+  it: Testo del link per aggiungere una stringa all'array
+  es: Texto del enlace para agregar cadena al array
+  kk: Массивке жол қосу үшін сілтеме мәтіні
+  uz: Massivga satr qo'shish uchun havola matni
+  cz: Text odkazu pro přidání řádku do pole
+  de: Linktext zum Hinzufügen einer Zeile zum Array
+  tr: Diziye satır eklemek için bağlantı metni
+  zh: 向数组添加字符串的链接文本
+  fa: متن لینک برای افزودن رشته به آرایه
+ui-fields-keyvalueobject-fieldparams-addlink-note:
+  ru: Работает только с обьектами типа Array
+  en: Works only with objects of type Array
+  hy: Աշխատում է միայն Array տիպի օբյեկտների հետ
+  it: Funziona solo con oggetti di tipo Array
+  es: Funciona solo con objetos de tipo Array
+  kk: Тек Array типіндегі нысандармен жұмыс істейді
+  uz: Faqat Array turidagi ob'ektlar bilan ishlaydi
+  cz: Funguje pouze s objekty typu Array
+  de: Funktioniert nur mit Objekten vom Typ Array
+  tr: Sadece Array türündeki nesnelerle çalışır
+  zh: 仅适用于 Array 类型的对象
+  fa: فقط با اشیاء از نوع Array کار می‌کند
+ui-fields-keyvalueobject-fieldparams-keytitle:
+  ru: Заголовок ключа
+  en: Key title
+  hy: Ստորակետի վերնագիր
+  it: Titolo chiave
+  es: Título clave
+  kk: Кілт тақырыбы
+  uz: Kalit sarlavhasi
+  cz: Název klíče
+  de: Schlüssel-Titel
+  tr: Anahtar başlığı
+  zh: 键标题
+  fa: عنوان کلید
+ui-fields-keyvalueobject-fieldparams-keytitle-note:
+  ru: Заголовок для поля ключ в компоненте KeyValueObject
+  en: Title for key field in KeyValueObject component
+  hy: Ստորակետի դաշտի վերնագիրը KeyValueObject կոմպոնենտում
+  it: Titolo per il campo chiave nel componente KeyValueObject
+  es: Título para el campo clave en el componente KeyValueObject
+  kk: KeyValueObject компонентінде кілт тақырыбы
+  uz: KeyValueObject komponentidagi kalit maydoni
+  cz: Název pro pole klíče v komponentě KeyValueObject
+  de: Titel für Schlüsselfeld in KeyValueObject-Komponente
+  tr: KeyValueObject bileşeninde anahtar alanı başlığı
+  zh: KeyValueObject 组件中键字段的标题
+  fa: عنوان برای فیلد کلید در کامپوننت KeyValueObject
+ui-fields-keyvalueobject-fieldparams-valuetitle:
+  ru: Заголовок значения
+  en: Value title
+  hy: Արժեքի վերնագիր
+  it: Titolo del valore
+  es: Título del valor
+  kk: Мән тақырыбы
+  uz: Qiymat sarlavhasi
+  cz: Název hodnoty
+  de: Werttitel
+  tr: Değer başlığı
+  zh: 值标题
+  fa: عنوان مقدار
+ui-fields-keyvalueobject-fieldparams-valuetitle-note:
+  ru: Заголовок для поля значение в компоненте KeyValueObject
+  en: Title for value field in KeyValueObject component
+  hy: Արժեքի դաշտի վերնագիրը KeyValueObject կոմպոնենտում
+  it: Titolo per il campo valore nel componente KeyValueObject
+  es: Título para el campo valor en el componente KeyValueObject
+  kk: KeyValueObject компонентінде мән тақырыбы
+  uz: KeyValueObject komponentidagi qiymat maydoni
+  cz: Název pro pole hodnoty v komponentě KeyValueObject
+  de: Titel für Wertfeld in KeyValueObject-Komponente
+  tr: KeyValueObject bileşeninde değer alanı başlığı
+  zh: KeyValueObject 组件中值字段的标题
+  fa: عنوان برای فیلد مقدار در کامپوننت KeyValueObject

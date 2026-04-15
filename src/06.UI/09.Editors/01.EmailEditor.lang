@@ -11,7 +11,6 @@ ui-editors-email-message:
   tr: Lütfen geçerli bir e-posta girin
   zh: 请输入有效的邮箱
   fa: لطفاً یک ایمیل معتبر وارد کنید
-
 ui-editors-email:
   ru: Эл. почта
   en: Email

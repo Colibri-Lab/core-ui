@@ -32,6 +32,10 @@ Colibri.UI.Forms.Label = class extends Colibri.UI.Forms.Field {
             this.AddClass(this._fieldData.params?.className);
         }
 
+        if(this._fieldData.default) {
+            this.value = this._fieldData.default;
+        }
+
     }
 
     /**

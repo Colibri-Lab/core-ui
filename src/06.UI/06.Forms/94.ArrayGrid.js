@@ -472,4 +472,129 @@ Colibri.UI.Forms.ArrayGrid.ObjectWindow = class extends Colibri.UI.Window {
 
 }
 
-Colibri.UI.Forms.Field.RegisterFieldComponent('ArrayGrid', 'Colibri.UI.Forms.ArrayGrid', '#{ui-fields-arraygrid}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'vertical', 'addlink', 'removelink', 'updownlink', 'hasscroll', 'initempty', 'maxadd', 'title', 'removedesc', 'displayed_columns'])
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.ArrayGrid', 'vertical', {
+    type: 'bool',
+    placeholder: '#{ui-fields-arraygrid-fieldparams-vertical}',
+    note: '#{ui-fields-arraygrid-fieldparams-vertical-note}',
+    component: 'Checkbox',
+    default: false,
+    params: {
+        condition: {
+            field: 'component',
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'vertical')
+        }
+    }
+});
+
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.ArrayGrid', 'removedesc', {
+    type: 'bool',
+    component: 'Checkbox',
+    placeholder: '#{ui-fields-arraygrid-fieldparams-removedesc}',
+    note: '#{ui-fields-arraygrid-fieldparams-removedesc-note}',
+    default: true,
+    params: {
+        condition: {
+            field: 'component',
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'removedesc')
+        }
+    }
+});
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.ArrayGrid', 'addlink', {
+    type: 'varchar',
+    placeholder: '#{ui-fields-arraygrid-fieldparams-addlink}',
+    note: '#{ui-fields-arraygrid-fieldparams-addlink-note}',
+    component: 'App.Modules.Lang.UI.TextArea',
+    default: '',
+    params: {
+        compact: true,
+        condition: {
+            field: 'component',
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'addlink')
+        }
+    }
+});
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.ArrayGrid', 'removelink', {
+    type: 'bool',
+    placeholder: '#{ui-fields-arraygrid-fieldparams-removelink}',
+    note: '#{ui-fields-arraygrid-fieldparams-removelink-note}',
+    component: 'Checkbox',
+    default: true,
+    params: {
+        condition: {
+            field: 'component',
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'removelink')
+        }
+    }
+});
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.ArrayGrid', 'updownlink', {
+    type: 'bool',
+    placeholder: '#{ui-fields-arraygrid-fieldparams-updownlink}',
+    note: '#{ui-fields-arraygrid-fieldparams-updownlink-note}',
+    component: 'Checkbox',
+    default: true,
+    params: {
+        condition: {
+            field: 'component',
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'updownlink')
+        }
+    }
+});
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.ArrayGrid', 'hasscroll', {
+    type: 'bool',
+    placeholder: '#{ui-fields-arraygrid-fieldparams-hasscroll}',
+    note: '#{ui-fields-arraygrid-fieldparams-hasscroll-note}',
+    component: 'Checkbox',
+    default: true,
+    params: {
+        condition: {
+            field: 'component',
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'hasscroll')
+        }
+    }
+});
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.ArrayGrid', 'initempty', {
+    type: 'bool',
+    placeholder: '#{ui-fields-arraygrid-fieldparams-initempty}',
+    note: '#{ui-fields-arraygrid-fieldparams-initempty-note}',
+    component: 'Checkbox',
+    default: true,
+    params: {
+        condition: {
+            field: 'component',
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'initempty')
+        }
+    }
+});
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.ArrayGrid', 'title', {
+    type: 'varchar',
+    placeholder: '#{ui-fields-arraygrid-fieldparams-title}',
+    note: '#{ui-fields-arraygrid-fieldparams-title-note}',
+    component: 'App.Modules.Manage.UI.TinyMCETextArea',
+    default: '',
+    params: {
+        code: 'js',
+        condition: {
+            field: 'component',
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'title')
+        }
+    },
+    attrs: {
+        height: 200
+    }
+});
+
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.ArrayGrid', 'displayed_columns', {
+    type: 'varchar',
+    placeholder: '#{ui-fields-arraygrid-fieldparams-displayed_columns}',
+    note: '#{ui-fields-arraygrid-fieldparams-displayed_columns-note}',
+    component: 'Text',
+    default: '',
+    params: {
+        condition: {
+            field: 'component',
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'displayed_columns')
+        }
+    }
+});
+
+Colibri.UI.Forms.Field.RegisterFieldComponent('ArrayGrid', 'Colibri.UI.Forms.ArrayGrid', '#{ui-fields-arraygrid}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'vertical', 'addlink', 'removelink', 'updownlink', 'hasscroll', 'initempty', 'maxadd', 'title', 'removedesc', 'displayed_columns'], true);

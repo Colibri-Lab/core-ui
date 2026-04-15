@@ -501,4 +501,31 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         }
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Files', 'Colibri.UI.Forms.Files', '#{ui-fields-files}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'allow', 'size'])
+
+
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.Files', 'allow', {
+    type: 'varchar',
+    component: 'Text',
+    placeholder: '#{ui-files-fieldparams-allow}',
+    note: '#{ui-files-fieldparams-allow-note}',
+    params: {
+        condition: {
+            field: 'component',
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'allow')
+        }
+    }
+});
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.Files', 'size', {
+    type: 'int',
+    component: 'Number',
+    placeholder: '#{ui-files-fieldparams-size}',
+    note: '#{ui-files-fieldparams-size-note}',
+    params: {
+        condition: {
+            field: 'component',
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'size')
+        }
+    }
+});
+
+Colibri.UI.Forms.Field.RegisterFieldComponent('Files', 'Colibri.UI.Forms.Files', '#{ui-files-files}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'allow', 'size'])

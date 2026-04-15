@@ -546,7 +546,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
                 }
                 this.AddClass('-selected');
             } else {
-                this._input.placeholder = '#{ui-selector-choosed}'.replaceAll('%s1', itemCount).replaceAll('%s2', this?.parent?.parent?.title).stripHtml();
+                this._input.placeholder = '#{ui-selector-choosed}'.replaceAll('%s1', itemCount).replaceAll('%s2', this?.parent?.parent?.parent?.title).stripHtml();
                 this.AddClass('-selected');
             }
 

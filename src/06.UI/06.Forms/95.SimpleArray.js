@@ -185,4 +185,32 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
     }
 
 }
+
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.SimpleArray', 'simplearraywidth', {
+    type: 'int',
+        placeholder: '#{ui-fields-fieldparams-simplearraywidth}',
+            note: '#{ui-fields-fieldparams-simplearraywidth-note}',
+                component: 'Number',
+                            default: '',
+        params: {
+        condition: {
+            field: 'component',
+                method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'simplearraywidth')
+        }
+    }
+});
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.SimpleArray', 'simplearrayheight', {
+    type: 'int',
+        placeholder: '#{ui-fields-fieldparams-simplearrayheight}',
+            note: '#{ui-fields-fieldparams-simplearrayheight-note}',
+                component: 'Number',
+                            default: '',
+        params: {
+        condition: {
+            field: 'component',
+                method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'simplearrayheight')
+        }
+    }
+});
+
 Colibri.UI.Forms.Field.RegisterFieldComponent('SimpleArray', 'Colibri.UI.Forms.SimpleArray', '#{ui-fields-simplearray}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'simplearraywidth', 'simplearrayheight'])

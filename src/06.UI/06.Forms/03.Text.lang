@@ -11,3 +11,29 @@ ui-fields-text:
   tr: Metin
   zh: 文本
   fa: متن
+ui-fields-fieldparams-mask:
+  ru: Маска ввода
+  en: Input mask
+  hy: Ներածման դիմակ
+  it: Maschera di input
+  es: Máscara de entrada
+  kk: Енгізу маскасы
+  uz: Kiritish niqobi
+  cz: Vstupní maska
+  de: Eingabemaske
+  tr: Giriş maskesi
+  zh: 输入掩码
+  fa: ماسک ورودی
+ui-fields-fieldparams-mask-note:
+  ru: Работает только с обьектами типа Text
+  en: Works only with objects of type Text
+  hy: Աշխատում է միայն Text տեսակի օբյեկտների հետ
+  it: Funziona solo con oggetti di tipo Text
+  es: Funciona solo con objetos de tipo Text
+  kk: Тек Text типіндегі нысандармен жұмыс істейді
+  uz: Faqat Text turidagi ob'ektlar bilan ishlaydi
+  cz: Funguje pouze s objekty typu Text
+  de: Funktioniert nur mit Objekten vom Typ Text
+  tr: Sadece Text türündeki nesnelerle çalışır
+  zh: 仅适用于 Text 类型的对象
+  fa: فقط با اشیاء از نوع Text کار می‌کند

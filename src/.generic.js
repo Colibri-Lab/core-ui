@@ -263,7 +263,7 @@ Array.replaceObject = function (arr, field, value, replace = null, insertIfNotEx
         arr.push(replace);
     }
     return arr;
-};
+}; 
 
 /**
  * Calculates the average of all elements in the array.
@@ -271,6 +271,10 @@ Array.replaceObject = function (arr, field, value, replace = null, insertIfNotEx
  */
 Array.prototype.avg = function () {
     return this.reduce((a, b) => a + b, 0) / this.length;
+}
+
+Array.prototype.joinMax = function (splitter, maxItems, text = ' and %s more') {
+    return this.slice(0, maxItems).join(splitter) + (this.length > maxItems ? text.replaceAll('%s', this.length - maxItems) : '');
 }
 
 Array.prototype.shuffle = function () {

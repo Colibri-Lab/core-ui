@@ -11,3 +11,55 @@ ui-fields-select:
   tr: Seç
   zh: 选择
   fa: انتخاب
+ui-fields-multiple:
+  ru: Мультивыбор
+  en: Multiple
+  hy: Բազմաթիվ
+  it: Multiplo
+  es: Múltiple
+  kk: Көп таңдаулы
+  uz: Ko'p tanlovli
+  cz: Vícenásobný výběr
+  de: Mehrfachauswahl
+  tr: Çoklu seçim
+  zh: 多选
+  fa: چندگانه
+ui-fields-multiple-note:
+  ru: Мультивыбор, может ли компонента принимать множественные значения
+  en: Multiple, whether the component can accept multiple values
+  hy: Մուլտիվալ, արդյոք կոմպոնենտը կարող է ընդունել մի քանի արժեք
+  it: Multiplo, se il componente può accettare valori multipli
+  es: Múltiple, si el componente puede aceptar múltiples valores
+  kk: Көптеген, компонент көптеген мәндерді қабылдауға болады ма
+  uz: Ko'p, komponent necha marta qiymat qabul qilishi mumkin
+  cz: Vícenásobný výběr, zda komponenta může přijímat více hodnot
+  de: Mehrfach, ob die Komponente mehrere Werte akzeptieren kann
+  tr: Çoklu, bileşen birden fazla değer kabul edebilir mi
+  zh: 多选，组件是否可以接受多个值
+  fa: چندگانه، آیا کامپوننت می‌تواند چند مقدار بپذیرد
+ui-fields-searchable:
+  ru: Поиск в выпадающем списке (только для списков)
+  en: Search in select menu (only for selects)
+  hy: Որոնել ընտրացանկից (միայն ընտրվածների համար)
+  it: Cerca nel menu a tendina (solo per selezioni)
+  es: Buscar en el menú desplegable (solo para selecciones)
+  kk: Ашылмалы тізімде іздеу (тек таңдаулар үшін)
+  uz: Ochiladigan ro'yxatda qidirish (faqat tanlovlar uchun)
+  cz: Hledat v rozbalovacím seznamu (pouze pro výběry)
+  de: Suche im Auswahlmenü (nur für Auswahlen)
+  tr: Açılır menüde ara (sadece seçimler için)
+  zh: 下拉菜单搜索（仅限选择）
+  fa: جستجو در منوی انتخاب (فقط برای انتخاب‌ها)
+ui-fields-searchable-note:
+  ru: Указывает возможен ли в выпадающем списке поиск по тексту
+  hy: Ցույց է տալիս, թե արդյոք հնարավոր է տեքստի որոնում բացվող ցանկում
+  en: Indicates whether text search is possible in the drop-down list
+  it: Indica se è possibile la ricerca di testo nell'elenco a discesa
+  es: Indica si es posible la búsqueda de texto en la lista desplegable
+  kk: Ашылмалы тізімде мәтіндік іздеу мүмкіндігін көрсетеді
+  uz: Ochiladigan ro'yxatda matn qidiruvi mumkinligini ko'rsatadi
+  cz: Udává, zda je v rozbalovacím seznamu možný textový vyhledávání
+  de: Gibt an, ob eine Textsuche in der Dropdown-Liste möglich ist
+  tr: Açılır listede metin araması mümkün mü belirtir
+  zh: 指示下拉列表中是否可以文本搜索
+  fa: نشان می‌دهد که آیا جستجوی متن در لیست کشویی ممکن است یا نه

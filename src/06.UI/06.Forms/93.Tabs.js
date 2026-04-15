@@ -372,4 +372,32 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
     }
 
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Tabs', 'Colibri.UI.Forms.Tabs', '#{ui-fields-tabs}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'vertical', 'removedesc'])
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.Tabs', 'vertical', {
+    type: 'bool',
+    placeholder: '#{ui-fields-tabs-fieldparams-vertical}',
+    note: '#{ui-fields-tabs-fieldparams-vertical-note}',
+    component: 'Checkbox',
+    default: false,
+    params: {
+        condition: {
+            field: 'component',
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'vertical')
+        }
+    }
+});
+
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.Tabs', 'removedesc', {
+    type: 'bool',
+    component: 'Checkbox',
+    placeholder: '#{ui-fields-tabs-fieldparams-removedesc}',
+    note: '#{ui-fields-tabs-fieldparams-removedesc-note}',
+    default: true,
+    params: {
+        condition: {
+            field: 'component',
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'removedesc')
+        }
+    }
+});
+
+Colibri.UI.Forms.Field.RegisterFieldComponent('Tabs', 'Colibri.UI.Forms.Tabs', '#{ui-fields-tabs}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'vertical', 'removedesc'], true);

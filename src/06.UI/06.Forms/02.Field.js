@@ -10,6 +10,8 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      * @type {object}
      */
     static Components = {};
+    static Params = {};
+
     /**
      * Registers field to show in backend when choosing component on storage field
      * @param {string} name name of component
@@ -17,12 +19,13 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      * @param {string} description component description
      * @param {string} icon icon of component
      * @param {Array} params params of component
+     * @param {boolean} canhaveFields whether the component can have fields
      */
-    static RegisterFieldComponent(name, className, description, icon, params) {
+    static RegisterFieldComponent(name, className, description, icon, params, canhaveFields = false) {
         if (!icon) {
             icon = Colibri.UI.FieldIcons[className];
         }
-        Colibri.UI.Forms.Field.Components[name] = { className, description, icon, params };
+        Colibri.UI.Forms.Field.Components[name] = { className, description, icon, params, canhaveFields };
     }
     /**
      * Unregisters a field from backend list
@@ -30,6 +33,20 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      */
     static UnregisterFieldComponent(name) {
         delete Colibri.UI.Forms.Field.Components[name];
+    }
+
+    static RegisterFieldParam(component, paramName, fieldData) {
+        if(!Colibri.UI.Forms.Field.Params[component]) {
+            Colibri.UI.Forms.Field.Params[component] = {};
+        }
+        Colibri.UI.Forms.Field.Params[component][paramName] = fieldData;
+    }
+
+    static UnregisterFieldParam(component, paramName) {
+        if(!Colibri.UI.Forms.Field.Params[component]) {
+            return;
+        }
+        delete Colibri.UI.Forms.Field.Params[component][paramName];
     }
 
     static FindFieldComponent(nameOrClassName) {
@@ -52,7 +69,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         if (!paramData) {
             return true;
         }
-        return paramData.params.indexOf(paramName) !== -1;
+        return (paramData.params ?? []).indexOf(paramName) !== -1;
     }
 
     /**
@@ -154,7 +171,6 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
         this.AddClass('app-component-field');
 
-        
         if (this._fieldData?.params?.checkable && this._fieldData?.params?.checkable === true) {
             
             this._checkableTitleContainer = new Colibri.UI.FlexBox('checkable-title-container', this);
@@ -280,12 +296,11 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             this._setFilledMark();
         }
         
-
         if (this._fieldData?.params?.onchangehandler) {
             let handler = null;
             if (typeof this._fieldData?.params?.onchangehandler === 'string') {
                 handler = eval(this._fieldData?.params?.onchangehandler);
-            } else if (typeof this._fieldData?.params?.onchangehandler === 'Function') {
+            } else if (typeof this._fieldData?.params?.onchangehandler === 'function') {
                 handler = this._fieldData?.params?.onchangehandler;
             }
             if (handler) {
@@ -481,6 +496,10 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     /** @protected */
     RenderFieldContainer() {
         throw new Error('#{ui-field-needtooverload-error}');
+    }
+
+    ClearFieldContainer() {
+        this.contentContainer.Clear();
     }
 
     /**

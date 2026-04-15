@@ -516,7 +516,6 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         return null;
     }
 
-
     /** @private */
     _renderFields(value) {
 

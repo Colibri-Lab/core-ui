@@ -22,17 +22,17 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
 
         this._link = new Colibri.UI.Link('link', contentContainer);
         this._link.shown = true;
-        this._link.value = this._fieldData?.params?.addlink && !Object.isEmpty(this._fieldData?.params?.addlink) ? 
-            Lang.Translate(this._fieldData?.params?.addlink) : 
+        this._link.value = this._fieldData?.params?.addlink && !Object.isEmpty(this._fieldData?.params?.addlink) ?
+            Lang.Translate(this._fieldData?.params?.addlink) :
             '#{ui-fields-keyvalueobject-add}'
 
-        if(this._fieldData?.params?.readonly === undefined) {
-            this.readonly = false;    
+        if (this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;
         }
         else {
             this.readonly = this._fieldData?.params?.readonly;
         }
-        if(this._fieldData?.params?.enabled === undefined) {
+        if (this._fieldData?.params?.enabled === undefined) {
             this.enabled = true;
         }
         else {
@@ -47,14 +47,14 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
         column1.editor = this._fieldData?.params?.keyEditor || Colibri.UI.TextEditor;
         column1.editorAllways = true;
         column1.resizable = true;
-        column1.value = this._fieldData?.params?.keyTitle || '#{ui-fields-keyvalueobject-key}';
+        column1.value = Lang.Translate(this._fieldData?.params?.keyTitle) || '#{ui-fields-keyvalueobject-key}';
 
         const column2 = this._grid.header.columns.Add('value', '');
         column2.width = '50%';
         column2.align = 'left';
         column2.editorAllways = true;
         column2.editor = this._fieldData?.params?.valueEditor || Colibri.UI.TextEditor;
-        column2.value = this._fieldData?.params?.valueTitle || '#{ui-fields-keyvalueobject-value}';
+        column2.value = Lang.Translate(this._fieldData?.params?.valueTitle) || '#{ui-fields-keyvalueobject-value}';
 
         this._grid.AddHandler('ContextMenuIconClicked', this.__gridContextMenuIconClicked, false, this);
         this._grid.AddHandler('ContextMenuItemClicked', this.__gridContextMenuItemClicked, false, this);
@@ -74,15 +74,15 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
     __gridCellEditorChanged(event, args) {
         return this.Dispatch('Changed', { component: this });
     }
-    
+
     __gridContextMenuIconClicked(event, args) {
         args.item.contextmenu = [{ name: 'remove', title: '#{ui-fields-keyvalueobject-remove}' }];
         args.item.ShowContextMenu(args.isContextMenuEvent ? [Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT] : [Colibri.UI.ContextMenu.RB, Colibri.UI.ContextMenu.RT], '', args.isContextMenuEvent ? { left: args.domEvent.clientX, top: args.domEvent.clientY } : null);
     }
 
     __gridContextMenuItemClicked(event, args) {
-        if(args.menuData?.name) {
-            if(args.menuData?.name === 'remove') {
+        if (args.menuData?.name) {
+            if (args.menuData?.name === 'remove') {
                 args.item.Dispose();
             }
         }
@@ -132,10 +132,10 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
      */
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
-        if(this._enabled != value) {
+        if (this._enabled != value) {
             this._enabled = value;
             this.contentContainer.ForEach((name, component) => {
-                component.enabled = this._enabled; 
+                component.enabled = this._enabled;
             });
             this._link && (this._link.enabled = this._enabled);
         }
@@ -159,12 +159,12 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
      */
     set value(value) {
         this._grid.ClearAllRows();
-        
+
         Object.forEach(value, (key, value) => {
-            this._grid.rows.Add('row' + Date.Mc(), {key: key, value: value});
+            this._grid.rows.Add('row' + Date.Mc(), { key: key, value: value });
         });
 
-        if(this._grid.rows.children === 1 && this._fieldData?.params?.initempty === true) {
+        if (this._grid.rows.children === 1 && this._fieldData?.params?.initempty === true) {
             this._link.Dispatch('Clicked');
         }
 
@@ -260,7 +260,137 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
     set valueEditor(value) {
         this._grid.header.columns.Children('value').editor = value;
     }
-    
+
 
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('KeyValueObject', 'Colibri.UI.Forms.KeyValueObject', '#{ui-fields-keyvalueobject}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler','addlink','keyTitle','valueTitle','canEditKey','canAddNew','canRemoveRows'])
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'addlink', {
+    type: 'varchar',
+    placeholder: '#{ui-fields-keyvalueobject-fieldparams-addlink}',
+    note: '#{ui-fields-keyvalueobject-fieldparams-addlink-note}',
+    component: 'App.Modules.Lang.UI.TextArea',
+    default: '',
+    params: {
+        compact: true,
+        condition: {
+            field: 'component',
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'addlink')
+        }
+    }
+});
+
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'canEditKey', {
+    type: 'bool',
+        placeholder: '#{ui-fields-keyvalueobject-fieldparams-caneditkey}',
+            note: '#{ui-fields-keyvalueobject-fieldparams-caneditkey-note}',
+                component: 'Checkbox',
+                            default: false,
+        params: {
+        condition: {
+            field: 'component',
+                method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'canEditKey')
+        }
+    }
+});
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'canAddNew', {
+    type: 'bool',
+        placeholder: '#{ui-fields-keyvalueobject-fieldparams-canaddnew}',
+            note: '#{ui-fields-keyvalueobject-fieldparams-canaddnew-note}',
+                component: 'Checkbox',
+                            default: false,
+        params: {
+        condition: {
+            field: 'component',
+                method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'canAddNew')
+        }
+    }
+});
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'canRemoveRows', {
+    type: 'bool',
+        placeholder: '#{ui-fields-keyvalueobject-fieldparams-canremoverows}',
+            note: '#{ui-fields-keyvalueobject-fieldparams-canremoverows-note}',
+                component: 'Checkbox',
+                            default: false,
+        params: {
+        condition: {
+            field: 'component',
+                method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'canRemoveRows')
+        }
+    }
+});
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'keyTitle', {
+    type: 'varchar',
+        placeholder: '#{ui-fields-keyvalueobject-fieldparams-keytitle}',
+            note: '#{ui-fields-keyvalueobject-fieldparams-keytitle-note}',
+                component: 'App.Modules.Lang.UI.Text',
+                            default: '',
+        params: {
+        compact: true,
+            condition: {
+            field: 'component',
+                method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'keyTitle')
+        }
+    }
+});
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'keyEditor', {
+    type: 'varchar',
+        placeholder: '#{ui-fields-keyvalueobject-fieldparams-keyeditor}',
+            note: '#{ui-fields-keyvalueobject-fieldparams-keyeditor-note}',
+                component: 'Select',
+                            default: '',
+        params: {
+        compact: true,
+            readonly: false,
+                searchable: false,
+                    condition: {
+            field: 'component',
+                method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'keyEditor') && data.canEditKey
+        }
+    },
+    selector: {
+        value: 'value',
+            title: 'title'
+    },
+    lookup: () => new Promise((resolve, reject) => {
+        resolve(Colibri.UI.Editor.Enum().map(v => { return { value: v.value, title: v.value + ' ' + v.title }; }));
+    })
+});
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'valueTitle', {
+    type: 'varchar',
+        placeholder: '#{ui-fields-keyvalueobject-fieldparams-valuetitle}',
+            note: '#{ui-fields-keyvalueobject-fieldparams-valuetitle-note}',
+                component: 'App.Modules.Lang.UI.Text',
+                            default: '',
+        params: {
+        compact: true,
+            condition: {
+            field: 'component',
+                method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'valueTitle')
+        }
+    }
+});
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'valueEditor', {
+    type: 'varchar',
+        placeholder: '#{ui-fields-keyvalueobject-fieldparams-valueeditor}',
+            note: '#{ui-fields-keyvalueobject-fieldparams-valueeditor-note}',
+                component: 'Select',
+                            default: '',
+        params: {
+        compact: true,
+            readonly: false,
+                searchable: false,
+                    condition: {
+            field: 'component',
+                method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'valueEditor')
+        }
+    },
+    selector: {
+        value: 'value',
+            title: 'title'
+    },
+    lookup: () => new Promise((resolve, reject) => {
+        resolve(Colibri.UI.Editor.Enum().map(v => { return { value: v.value, title: v.value + ' ' + v.title }; }));
+    })
+});
+
+
+Colibri.UI.Forms.Field.RegisterFieldComponent('KeyValueObject', 'Colibri.UI.Forms.KeyValueObject', '#{ui-fields-keyvalueobject}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'addlink', 'keyTitle', 'valueTitle', 'keyEditor', 'valueEditor', 'canEditKey', 'canAddNew', 'canRemoveRows']);

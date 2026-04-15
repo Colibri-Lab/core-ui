@@ -77,7 +77,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
             const component = Colibri.UI.Forms.Field.Create('nofields', this.contentContainer, {
                 component: 'TextArea'
             }, this, this.root);
-            
+
             component.placeholder = 'Введите JSON обьекта';
             component.message = false;
             component.shown = true;
@@ -320,14 +320,14 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
                 }
             }
         });
-    
+
     }
 
-    
+
     _runGenerateOfFieldData() {
-        
+
         Object.forEach(this._fieldData.fields, (name, fieldData) => {
-            
+
             let fieldComponent = this.contentContainer.Children(name);
             if (!fieldComponent || !fieldComponent.needHideAndShow) {
                 return true;
@@ -358,7 +358,7 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
         const data = this.value;
         const formData = this.root.value;
-        
+
         Object.forEach(this._fieldData.fields, (name, fieldData) => {
             if (!fieldData || !this.contentContainer) {
                 return true;
@@ -433,4 +433,33 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
     }
 
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Object', 'Colibri.UI.Forms.Object', '#{ui-fields-object}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'vertical', 'removedesc']);
+
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.Object', 'vertical', {
+    type: 'bool',
+    placeholder: '#{ui-fields-object-fieldparams-vertical}',
+    note: '#{ui-fields-object-fieldparams-vertical-note}',
+    component: 'Checkbox',
+    default: false,
+    params: {
+        condition: {
+            field: 'component',
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'vertical')
+        }
+    }
+});
+
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.Object', 'removedesc', {
+    type: 'bool',
+    component: 'Checkbox',
+    placeholder: '#{ui-fields-object-fieldparams-removedesc}',
+    note: '#{ui-fields-object-fieldparams-removedesc-note}',
+    default: true,
+    params: {
+        condition: {
+            field: 'component',
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'removedesc')
+        }
+    }
+});
+
+Colibri.UI.Forms.Field.RegisterFieldComponent('Object', 'Colibri.UI.Forms.Object', '#{ui-fields-object}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'vertical', 'removedesc'], true);

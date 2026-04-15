@@ -180,3 +180,55 @@ ui-files-filehuge:
   tr: "%s dosyası çok büyük"
   zh: 文件%s太大
   fa: فایل%s خیلی بزرگ است
+ui-files-fieldparams-allow:
+  ru: Разрешенные типы файлов
+  en: Allowed File Types
+  hy: Թույլատրված ֆայլերի տեսակները
+  it: Tipi di file consentiti
+  es: Tipos de archivos permitidos
+  kk: Рұқсат етілген файл түрлері
+  uz: Ruxsat etilgan fayl turlari
+  cz: Povolené typy souborů
+  de: Zulässige Dateitypen
+  tr: İzin verilen dosya türleri
+  zh: 允许的文件类型
+  fa: انواع فایل‌های مجاز
+ui-files-fieldparams-allow-note:
+  ru: Работает только с обьектами типа File/Files
+  en: Works only with objects of type File/Files
+  hy: Աշխատում է միայն File/Files տիպի օբյեկտների հետ
+  it: Funziona solo con oggetti di tipo File/Files
+  es: Funciona solo con objetos de tipo File/Files
+  kk: Тек File/Files типіндегі нысандармен жұмыс істейді
+  uz: Faqat File/Files turidagi ob'ektlar bilan ishlaydi
+  cz: Funguje pouze s objekty typu File/Files
+  de: Funktioniert nur mit Objekten vom Typ File/Files
+  tr: Sadece File/Files türündeki nesnelerle çalışır
+  zh: 仅适用于 File/Files 类型的对象
+  fa: فقط با اشیاء از نوع File/Files کار می‌کند
+ui-files-fieldparams-size:
+  ru: Разрешенные размер файлов в байтах
+  en: Allowed file size in bytes
+  hy: Թույլատրված ֆայլի չափը բայթերով
+  it: Dimensione del file consentita in byte
+  es: Tamaño de archivo permitido en bytes
+  kk: Рұқсат етілген файл өлшемі байтпен
+  uz: Ruxsat etilgan fayl hajmi baytlarda
+  cz: Povolená velikost souboru v bajtech
+  de: Zulässige Dateigröße in Bytes
+  tr: İzin verilen dosya boyutu (bayt)
+  zh: 允许的文件大小（字节）
+  fa: اندازه مجاز فایل به بایت
+ui-files-fieldparams-size-note:
+  ru: Работает только с обьектами типа File/Files
+  en: Works only with objects of type File/Files
+  hy: Աշխատում է միայն File/Files տիպի օբյեկտների հետ
+  it: Funziona solo con oggetti di tipo File/Files
+  es: Funciona solo con objetos de tipo File/Files
+  kk: Тек File/Files типіндегі нысандармен жұмыс істейді
+  uz: Faqat File/Files turidagi ob'ektlar bilan ishlaydi
+  cz: Funguje pouze s objekty typu File/Files
+  de: Funktioniert nur mit Objekten vom Typ File/Files
+  tr: Sadece File/Files türündeki nesnelerle çalışır
+  zh: 仅适用于 File/Files 类型的对象
+  fa: فقط با اشیاء از نوع File/Files کار می‌کند

@@ -237,6 +237,8 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
                 this._setEnabled();
                 this.Dispatch('Changed');
             });
+        } else {
+            this.value = this.value ? this._input._findValue(this.value) : (this.field.default ?? null);
         }
     }
 
