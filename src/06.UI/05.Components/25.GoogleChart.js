@@ -4,12 +4,12 @@
  * @memberof Colibri.UI
  */
 Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
-    
+
     /**
      * @constructor
      * @param {string} name name of component
      * @param {Element|Colibri.UI.Component} container container of component
-     */    
+     */
     constructor(name, container) {
         /* создаем компонент и передаем шаблон */
         super(name, container);
@@ -22,21 +22,21 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
             Colibri.Common.Wait(() => {
                 try {
                     return !!google;
-                } catch(e) {
+                } catch (e) {
                     return false;
                 }
             }).then(() => {
-                google.charts.load('current', {'packages': ['corechart']});
+                google.charts.load('current', { 'packages': ['corechart'] });
                 google.charts.setOnLoadCallback(() => {
                     this._chartsIsLoaded = true;
                     this.Dispatch('GoogleChartsLoaded');
-                });    
+                });
             });
         });
 
         this.handleVisibilityChange = true;
         this.AddHandler('VisibilityChanged', this.__thisVisibilityChanged);
-        
+
         this.AddHandler('Shown', this.__thisShown);
         this.AddHandler('GoogleChartsLoaded', this.__thisGoogleChartsLoaded);
 
@@ -54,14 +54,14 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */ 
+     */
     __thisGoogleChartsLoaded(event, args) {
 
-        if(!this._type) {
+        if (!this._type) {
             this._type = 'PieChart';
         }
 
-        if(!this._value) {
+        if (!this._value) {
             return;
         }
 
@@ -76,19 +76,17 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
 
     /** @private */
     _generateChart() {
-        if(!this._chartsIsLoaded) {
+        if (!this._chartsIsLoaded) {
             return;
         }
 
-        if(!this._value) {
+        if (!this._value) {
             this._value = [];
         }
 
-        // this._element.html('');
-        if(!this._chart) {
-            this._chart = new google.visualization[this._type](this._element);
-        }
-        
+        this.Clear();
+        this._chart = new google.visualization[this._type](this._element);
+
         const options = Object.assign({
             title: this._title,
             legend: 'none'
@@ -97,7 +95,7 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
         try {
 
             let data;
-            if(this._drawDataHandle) {
+            if (this._drawDataHandle) {
                 data = this._drawDataHandle(this._value, this);
             } else {
                 data = google.visualization.arrayToDataTable(this._value);
@@ -107,12 +105,12 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
             this._chart.draw(data, options);
             google.visualization.events.addListener(this._chart, 'ready', () => {
                 setTimeout(() => {
-                    if(this._chartReadyHandler) {
+                    if (this._chartReadyHandler) {
                         this._chartReadyHandler(this._chart);
                     }
                 }, 500);
             });
-        } catch(e) {
+        } catch (e) {
             console.log(e);
         }
 
@@ -169,7 +167,7 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
         this._value = value;
         this._generateChart();
     }
-    
+
     /**
      * OPtions object
      * @type {Object}
