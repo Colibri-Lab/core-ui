@@ -234,7 +234,7 @@ Colibri.Common.MimeType = class {
      * @returns {string|false} The file extension, or false if not found.
      */
     static type2ext(type) {
-        if (Colibri.Common.MimeType.externalTypes) {
+        if (Colibri.Common.MimeType.externalTypes && Object.countKeys(Colibri.Common.MimeType.externalTypes) > 0) {
             if (Colibri.Common.MimeType.externalTypes[type]) {
                 return Colibri.Common.MimeType.externalTypes[type].extensions[0];
             } else {
