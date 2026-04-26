@@ -22,7 +22,6 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         this._nodes = new Colibri.UI.TreeNodes('nodes', this, this);
         this.AddClass('app-ui-tree-component');
 
-        this.handleScrollProperties = true;
         this.AddHandler('ScrollStarted', this.__thisScrollStarted);
         this.AddHandler('ScrollEnded', this.__thisScrollEnded);
 
@@ -462,12 +461,14 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
      */
     set hasSearchBox(value) {
         if(value) {
+            this.handleScrollProperties = true;
             this.AddClass('-has-search');
             this._searchBox = new Colibri.UI.Tree.SearchBox(this.name + '-searchbox', this);
             this._searchBox.shown = true;
             this._searchBox.AddHandler('Changed', this.__searchBoxChanged, false, this);
             this._searchBox.MoveTop();
         } else if(this._searchBox) {
+            this.handleScrollProperties = false;
             this.RemoveClass('-has-search');
             this._searchBox.Dispose();
             this._searchBox = null;
