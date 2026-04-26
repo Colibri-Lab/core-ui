@@ -16,6 +16,19 @@
 		right: 0px;
 	}
 
+	
+    .app-component-tree-searchbox {
+		margin: 0px 5px 5px;
+		position: absolute;
+		width: calc(100% - 10px);
+		z-index: 1;
+		
+	}
+
+	.app-component-tree-searchbox + .nodes {
+		padding-top: 35px;
+	}
+
 
 	.nodes {
 		flex: 1 1 100%;
@@ -29,6 +42,7 @@
 		}
 
 		.node {
+
 			position: relative;
 
 			> div:not([data-object-name]) {

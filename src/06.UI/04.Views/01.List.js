@@ -223,7 +223,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         return this._selected[0]?.parent?.parent?.childIndex ?? 0;
 
     }
-    
+
     /**
      * Selected index
      * @type {number}

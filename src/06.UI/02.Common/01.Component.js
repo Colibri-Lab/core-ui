@@ -628,6 +628,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         this.RegisterEvent('Drag', false, 'When the drag and drop process occurs');
         this.RegisterEvent('ContextMenu', false, 'Context menu');
         this.RegisterEvent('Scrolled', false, 'When scrolled');
+        this.RegisterEvent('ScrollStarted', false, 'When scroll process is started');
         this.RegisterEvent('ScrollEnded', false, 'When scroll process is ended');
         this.RegisterEvent('ScrolledToBottom', false, 'When scrolled to end of element');
         this.RegisterEvent('ScrolledToTop', false, 'When scrolled to top of element');
@@ -3184,6 +3185,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
         
         if (this._scrollEndTimeout != -1) {
             clearTimeout(this._scrollEndTimeout);
+        } else {
+            this.Dispatch('ScrollStarted', { domEvent: args?.domEvent ?? null });
         }
 
         if(!this._lastScrollPosition) {
@@ -3215,6 +3218,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             if(!this.isConnected) {
                 return;
             }
+            this._scrollEndTimeout = -1;
             this.Dispatch('ScrollEnded', { direction: this.scrollDirection, domEvent: args?.domEvent ?? null });
             
             if (this._element.scrollTop + this._element.clientHeight >= this._element.scrollHeight) {

@@ -22,7 +22,24 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         this._nodes = new Colibri.UI.TreeNodes('nodes', this, this);
         this.AddClass('app-ui-tree-component');
 
+        this.handleScrollProperties = true;
+        this.AddHandler('ScrollStarted', this.__thisScrollStarted);
+        this.AddHandler('ScrollEnded', this.__thisScrollEnded);
+
         this._handleEvents();
+    }
+
+    __thisScrollStarted(event, args) {
+        if(this.hasSearchBox) {
+            this._searchBox.shown = false;
+        }
+    }
+
+    __thisScrollEnded(event, args) {
+        if(this.hasSearchBox) {
+            this._searchBox.top = this.scrollTop;
+            this._searchBox.shown = true;
+        }
     }
 
     /** @protected */
@@ -60,28 +77,40 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
      * @param {string} term term to search in nodes
      * @param {boolean} asAjar return nodes ajar
      */
-    Search(term, asAjar = false) {
+    Search(term, asAjar = false, filterCallback = null) {
         if(!term) {
-            this.allNodes.forEach((node) => node.Show());    
+            this.allNodes.forEach((node) => {
+                node.found = null;
+                node.Show();
+            });    
         }
         else {
             this.allNodes.forEach((node) => {
-                if(node.text.toLowerCase().indexOf(term.toLowerCase()) === -1) {
+                node.found = null;
+            });    
+            if(!filterCallback) {
+                filterCallback = (node, term) => node.text.toLowerCase().indexOf(term.toLowerCase()) !== -1;
+            }
+            this.allNodes.forEach((node) => {
+                if(!filterCallback(node, term)) {
                     node.Hide();
-                }
-                else {
+                } else {
                     let p = node.parentNode;
                     while(p) {
                         p.Show();
                         p = p.parentNode;
                     }
-                    if(asAjar) {
-                        node.ShowAll();
-                    } else {
-                        node.Show();
-                    }
+                    node.found = term;
+                    node.Show();
                 }
             }); 
+        }
+        if(asAjar) {
+            this.allNodes.forEach((node) => {
+                if(node.found) {
+                    node.ShowAll();
+                }
+            });    
         }
         
     }
@@ -252,7 +281,7 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
     }
 
     __thisScrolled(event, args) {
-        this.Children(this._name + '-contextmenu-icon-parent').container.css('bottom', (-1 * this.scrollTop + 10) + 'px');
+        this.Children(this._name + '-contextmenu-icon-parent')?.container?.css('bottom', (-1 * this.scrollTop + 10) + 'px');
     }
 
     /** @private */
@@ -418,6 +447,198 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
             } 
         });
 
+    }
+
+    /**
+     * Has searchbox in top of list
+     * @type {Boolean}
+     */
+    get hasSearchBox() {
+        return this._searchBox !== null;
+    }
+    /**
+     * Has searchbox in top of list
+     * @type {Boolean}
+     */
+    set hasSearchBox(value) {
+        if(value) {
+            this.AddClass('-has-search');
+            this._searchBox = new Colibri.UI.Tree.SearchBox(this.name + '-searchbox', this);
+            this._searchBox.shown = true;
+            this._searchBox.AddHandler('Changed', this.__searchBoxChanged, false, this);
+            this._searchBox.MoveTop();
+        } else if(this._searchBox) {
+            this.RemoveClass('-has-search');
+            this._searchBox.Dispose();
+            this._searchBox = null;
+        }
+    }
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
+    __searchBoxChanged(event, args) {
+        const f = this._searchFilterCallback;
+        this.Search(this._searchBox.value, true, this._searchFilterCallback);
+    }
+
+    /**
+     * Has search icon in search box
+     * @type {Boolean}
+     */
+    get searchBoxSearchIcon() {
+        if(!this._searchBox) {
+            return false;
+        }
+        return this._searchBox.hasIcon;
+    }
+    /**
+     * Has search icon in search box
+     * @type {Boolean}
+     */
+    set searchBoxSearchIcon(value) {
+        if(!this._searchBox) {
+            return;
+        }
+        this._searchBox.hasIcon = value;
+    }
+    
+    /**
+     * Searchbox placeholder
+     * @type {String}
+     */
+    get searchBoxPlaceholder() {
+        if(!this._searchBox) {
+            return; 
+        }
+        return this._searchBox.placeholder;
+    }
+    /**
+     * Searchbox placeholder
+     * @type {String}
+     */
+    set searchBoxPlaceholder(value) {
+        if(!this._searchBox) {
+            return;
+        }
+        this._searchBox.placeholder = value;
+    }
+
+    /**
+     * Filter callback
+     * @type {Function}
+     */
+    get searchFilterCallback() {
+        return this._searchFilterCallback;
+    }
+    /**
+     * Filter callback
+     * @type {Function}
+     */
+    set searchFilterCallback(value) {
+        this._searchFilterCallback = value;
+    }
+
+    /**
+     * Sets the focus on searchbox
+     */
+    FocusOnSearchBox() {
+        if(!this._searchBox) {
+            return;
+        }
+        this._searchBox.Focus();
+    }
+
+}
+
+
+/**
+ * @class
+ * @extends Colibri.UI.Pane
+ * @memberof Colibri.UI.Tree
+ */
+Colibri.UI.Tree.SearchBox = class extends Colibri.UI.Pane {
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     */
+    constructor(name, container) {
+        super(name, container);
+        this.AddClass('app-component-tree-searchbox');
+
+        this._input = new Colibri.UI.Input(this.name + '-input', this);
+        this._input.shown = true;
+        this._input.AddHandler(['Filled', 'Cleared'], this.__inputChangedOrFilled, false, this);
+        this._input.AddHandler('KeyDown', this.__inputKeyDown, false, this);
+
+    }
+
+    __inputKeyDown(event, args) {
+        args.domEvent.stopPropagation();
+    }
+
+    __inputChangedOrFilled(event, args) {
+        this.Dispatch('Changed', args);
+    }
+
+    /** @protected */
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('Changed', false, 'When search term is changed');
+    }
+
+    /**
+     * Searchbox has icon
+     * @type {boolean}
+     */
+    get hasIcon() {
+        return this._input.hasIcon;
+    }
+    /**
+     * Searchbox has icon
+     * @type {boolean}
+     */
+    set hasIcon(value) {
+        this._input.hasIcon = value;
+    }
+
+    /**
+     * Searchbox placeholder
+     * @type {string}
+     */
+    get placeholder() {
+        return this._input.placeholder;
+    }
+    /**
+     * Searchbox placeholder
+     * @type {string}
+     */
+    set placeholder(value) {
+        this._input.placeholder = value;
+    }
+
+    /**
+     * Set the focus on searchbox
+     */
+    Focus() {
+        this._input.Focus();
+    }
+
+    /**
+     * Value of searchbox
+     * @type {String}
+     */
+    get value() {
+        return this._input.value;
+    }
+    /**
+     * Value of searchbox
+     * @type {String}
+     */
+    set value(value) {
+        this._input.value = value;
     }
 
 }
@@ -842,9 +1063,11 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
      */
     ShowAll() {
         this.Show();
-        const childs = this.Children();
+        const childs = this.nodes.Children();
         for(const child of childs) {
-            child.ShowAll();
+            if(child instanceof Colibri.UI.TreeNode) {
+                child.ShowAll();
+            }
         }        
     }
 
@@ -853,9 +1076,11 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
      */
     HideAll() {
         this.Hide();
-        const childs = this.Children();
+        const childs = this.nodes.Children();
         for(const child of childs) {
-            child.HideAll();
+            if(child instanceof Colibri.UI.TreeNode) {
+                child.HideAll();
+            }
         }        
     }
 
@@ -1034,6 +1259,32 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         }
         this.tree.PerformCheckState(this);
         this.tree.Dispatch('CheckChanged', args);
+    }
+
+    
+    /**
+     * Founded string in search operation
+     * @type {String}
+     */
+    get found() {
+        return this._found;
+    }
+    /**
+     * Founded string in search operation
+     * @type {String}
+     */
+    set found(value) {
+        this._found = value;
+        this._showFound();
+    }
+    _showFound() {
+        if(!this._found) {
+            this.text = this.text.replaceAll('<b>', '').replaceAll('</b>', '');
+        } else {
+            const start = this.text.indexOf(this._found);
+            const end = start + this._found.length;
+            this.text = this.text.substring(0, start) + '<b>' + this.text.substring(start, end) + '</b>' + this.text.substring(end);
+        }
     }
 
 
@@ -1257,6 +1508,7 @@ Colibri.UI.TreeNodes = class extends Colibri.UI.Component {
         return checked === 0;
 
     }
+
 
 }
 
