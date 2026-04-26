@@ -159,7 +159,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
             this._templateElement = Element.create('tr', { class: 'app-ui-row-template' });
             this._element.after(this._templateElement);
             
-            this._templateElement.append(Element.create('td', { colspan: this.allCells, style: 'grid-column: span ' + this.allCells }))
+            this._templateElement.append(Element.create('td', { colspan: this.visibleCells, style: 'grid-column: span ' + this.visibleCells }))
 
             const comp = eval(this.grid?.rowTemplateComponent);
             const templateObject = new comp(this.name + '-template', this._templateElement.querySelector('td'));
@@ -456,6 +456,25 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
             cellsCount--;
         }
         return cellsCount;
+    }
+
+    get visibleCells() {
+        let cellsCount = this.Children().filter(v => v.shown).length;
+        if(!this.hasContextMenu) {
+            cellsCount--;
+        }
+        if(!this.checkbox) {
+            cellsCount--;
+        }
+        return cellsCount;
+
+    }
+
+    SetRowTemplateSpan() {
+        if(this._templateElement) {
+            this._templateElement.querySelector('td').setAttribute('colspan', this.visibleCells);
+            this._templateElement.querySelector('td').setAttribute('style', 'grid-column: span ' + this.visibleCells);
+        }
     }
 
 

@@ -1467,6 +1467,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
      * Brings coponent to top of z-index
      */
     BringToFront() {
+        if(!this._element) {
+            return;
+        }
         const position = this._element.css('position');
         if(['relative', 'fixed', 'absolute'].indexOf(position) > -1) {
             const maxZIndex = Colibri.UI.maxZIndex;
@@ -3212,7 +3215,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher
             if(!this.isConnected) {
                 return;
             }
-            this.Dispatch('ScrollEnded', { direction: this.scrollDirection, domEvent: args.domEvent });
+            this.Dispatch('ScrollEnded', { direction: this.scrollDirection, domEvent: args?.domEvent ?? null });
             
             if (this._element.scrollTop + this._element.clientHeight >= this._element.scrollHeight) {
                 this.Dispatch('ScrolledToBottom', {});

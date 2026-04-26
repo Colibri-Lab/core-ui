@@ -134,7 +134,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     }
 
-    AddCustomContextMenuButton(icon) {
+    AddCustomContextMenuButton(icon, top = null, right = 0) {
         if(this._customContextMenuIcon) {
             return;
         }        
@@ -143,16 +143,16 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             this._customContextMenuIcon = icon;
             this._customContextMenuIcon.parent = this;
             this._customContextMenuIcon.AddClass('-custom-contextmenu-icon');
-            this._customContextMenuIcon.right = 0;
-            this._customContextMenuIcon.top = this.top - this.parent.top;
+            this._customContextMenuIcon.right = right;
+            this._customContextMenuIcon.top = !top ? this.top - this.parent.top : top;
         } else {
             this._customContextMenuIcon = new Colibri.UI.Icon('contextmenu-icon', this.parent);
             this._customContextMenuIcon.AddClass('-custom-contextmenu-icon');
             this._customContextMenuIcon.iconSVG = icon;
             this._customContextMenuIcon.shown = true;
             this.parent.styles = {position: 'relative'};
-            this._customContextMenuIcon.right = 0;
-            this._customContextMenuIcon.top = this.top - this.parent.top;
+            this._customContextMenuIcon.right = right;
+            this._customContextMenuIcon.top = !top ? this.top - this.parent.top : top;
 
         }
 
@@ -1307,6 +1307,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
                     cell.shown = cell.parentColumn.shown;
                 }
             });
+            row.SetRowTemplateSpan();
         });
     }
 
