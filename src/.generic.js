@@ -1426,6 +1426,50 @@ String.prototype.formatCurrent = function () {
  * @returns {string} Returns the string with HTML tags removed.
  */
 String.prototype.stripHtml = function () { return this.replace(/<[^>]+>/gim, "").replace(/<\/[^>]+>/gim, "").replace(/&nbsp;/gim, ""); }
+String.prototype.highliteTextInHtml = function (search) {
+    const html = this + '';
+    
+    if (!search) return html;
+
+    const container = document.createElement('div');
+    container.innerHTML = html;
+
+    const walker = document.createTreeWalker(
+        container,
+        NodeFilter.SHOW_TEXT,
+        null,
+        false
+    );
+
+    const nodes = [];
+    while (walker.nextNode()) {
+        nodes.push(walker.currentNode);
+    }
+
+    const searchLower = search.toLowerCase();
+
+    nodes.forEach(node => {
+        const text = node.nodeValue;
+        const textLower = text.toLowerCase();
+        const index = textLower.indexOf(searchLower);
+
+        if (index !== -1) {
+            const before = text.substring(0, index);
+            const match = text.substring(index, index + search.length);
+            const after = text.substring(index + search.length);
+
+            const span = document.createElement('span');
+            span.innerHTML =
+                before +
+                '<mark>' + match + '</mark>' +
+                after;
+
+            node.parentNode.replaceChild(span, node);
+        }
+    });
+
+    return container.innerHTML;
+}
 /**
  * Removes leading whitespace or specified characters from the string.
  * @param {string} [c] - Optional characters to trim from the beginning of the string.

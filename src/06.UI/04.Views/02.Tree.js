@@ -110,6 +110,7 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
                     node.ShowAll();
                 }
             });    
+            this.ExpandAll();
         }
         
     }
@@ -1280,11 +1281,9 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
     }
     _showFound() {
         if(!this._found) {
-            this.text = this.text.replaceAll('<b>', '').replaceAll('</b>', '');
+            this.text = this.text.replaceAll('<mark>', '').replaceAll('</mark>', '');
         } else {
-            const start = this.text.indexOf(this._found);
-            const end = start + this._found.length;
-            this.text = this.text.substring(0, start) + '<b>' + this.text.substring(start, end) + '</b>' + this.text.substring(end);
+            this.text = this.text.highliteTextInHtml(this._found);
         }
     }
 

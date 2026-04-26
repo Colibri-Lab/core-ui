@@ -21,7 +21,7 @@
 		margin: 0px 5px 5px;
 		position: absolute;
 		width: calc(100% - 10px);
-		z-index: 1;
+		z-index: 2;
 		
 	}
 
@@ -125,6 +125,12 @@
 					overflow: hidden;
 					white-space: nowrap;
 					text-overflow: ellipsis;
+				}
+				> span b {
+					background: #ffeb3b;
+					border: 1px solid #f2f2f2;
+					border-radius: 2px;
+					padding: 0 2px;
 				}
 				> input {
 					display: none;
