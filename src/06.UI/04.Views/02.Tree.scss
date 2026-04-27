@@ -21,8 +21,9 @@
 		margin: 0px;
 		position: sticky;
 		top: 0;
-		width: calc(100% - 10px);
+		width: 100%;
 		z-index: 2;
+		flex: 0 0 auto;
 		
 	}
 

@@ -14,9 +14,15 @@
     &.app-component-shown {
         display: block;
 
-        &.app-component-hascontextmenu {
+        &.app-component-hascontextmenu:not(.app-component-has-search) {
             display: flex;
             > *:first-child {
+                flex: 1 1 100%;
+            }
+        }
+        &.app-component-has-search {
+            display: flex;
+            > *:nth-child(2) {
                 flex: 1 1 100%;
             }
         }

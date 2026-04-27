@@ -559,12 +559,12 @@ Colibri.UI.List = class extends Colibri.UI.Component {
      */
     set hasSearchBox(value) {
         if(value) {
-            this.AddClass('-has-search');
+            this.AddClass('app-component-has-search');
             this._searchBox = new Colibri.UI.List.SearchBox(this.name + '-searchbox', this);
             this._searchBox.shown = true;
             this._searchBox.AddHandler('Changed', this.__searchBoxChanged, false, this);
         } else if(this._searchBox) {
-            this.RemoveClass('-has-search');
+            this.RemoveClass('app-component-has-search');
             this._searchBox.Dispose();
             this._searchBox = null;
         }
