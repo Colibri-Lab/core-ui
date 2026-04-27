@@ -18,15 +18,12 @@
 
 	
     .app-component-tree-searchbox {
-		margin: 0px 5px 5px;
-		position: absolute;
+		margin: 0px;
+		position: sticky;
+		top: 0;
 		width: calc(100% - 10px);
 		z-index: 2;
 		
-	}
-
-	.app-component-tree-searchbox + .nodes {
-		padding-top: 35px;
 	}
 
 

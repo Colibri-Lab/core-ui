@@ -22,8 +22,8 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         this._nodes = new Colibri.UI.TreeNodes('nodes', this, this);
         this.AddClass('app-ui-tree-component');
 
-        this.AddHandler('ScrollStarted', this.__thisScrollStarted);
-        this.AddHandler('ScrollEnded', this.__thisScrollEnded);
+        // this.AddHandler('ScrollStarted', this.__thisScrollStarted);
+        // this.AddHandler('ScrollEnded', this.__thisScrollEnded);
 
         this._handleEvents();
     }

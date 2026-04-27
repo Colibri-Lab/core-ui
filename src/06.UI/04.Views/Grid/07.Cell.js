@@ -414,7 +414,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
     _createViewer() {
         
         if (this._viewer && !this._viewerObject) {
-    
+            const cell = this;
             const viewer = eval(this._viewer);
             if (!viewer) {
                 throw 'Can not find viewer component: ' + this._viewer;
@@ -455,6 +455,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
 
         if (this._editor && !this._editorObject) {
             
+            const cell = this;
             let editor = this._editor;
             let tag = this.parentColumn.tag;
             let download = this.parentColumn.download;
