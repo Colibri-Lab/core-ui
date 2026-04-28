@@ -470,6 +470,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
             this._editorObject = new editor(this.name + '_editor', this);
             this._editorObject.field = tag;
             this._editorObject.download = download;
+            this._editorObject.tabIndex = -1;
             this._editorObject.tag = { column: this.parentColumn, row: this.parentRow, cell: this };
             this._editorObject.AddHandler('KeyDown', this.__editorObjectKeyDown, false, this);
             this._editorObject.AddHandler('Changed', this.__editorObjectChanged, false, this);
@@ -492,7 +493,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         else if (args.domEvent.keyCode == 27) {
             this.EndEdit(true, false);
         }
-        args.domEvent.stopPropagation();
+        // args.domEvent.stopPropagation();
     }
     __editorObjectChanged(event, args) {
         if (!this._editorObject.invalid) {

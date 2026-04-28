@@ -309,40 +309,60 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         }
         
         if(args && args.domEvent) {
-            args.domEvent.stopImmediatePropagation();
-            args.domEvent.stopPropagation();
             if (event.name === 'KeyDown' && args.domEvent.key === 'Tab') {
+                let newField = null;
                 if (args.domEvent.shiftKey) {
-                    this.form?.FindPreviousFocusableField(this)?.Focus('lastVisibleChild');
+                    newField = this.form?.FindPreviousFocusableField(this);
                 } else {
-                    this.form?.FindNextFocusableField(this)?.Focus('firstVisibleChild');
+                    newField = this.form?.FindNextFocusableField(this);
                 }
-                args.domEvent.preventDefault();
-                return false;
+                if(newField) {
+                    newField?.Focus(args.domEvent.shiftKey ? 'lastVisibleChild' : 'firstVisibleChild')
+                }
+                if(newField) {
+                    args.domEvent.stopImmediatePropagation();
+                    args.domEvent.stopPropagation();
+                    args.domEvent.preventDefault();
+                    return false;
+                } else {
+                    return true;
+                }
             }
 
             if(event.name === 'KeyDown' && args.domEvent.key === 'Insert') {
                 if(this.AddNew) {
+                    args.domEvent.stopImmediatePropagation();
+                    args.domEvent.stopPropagation();
                     const object = this.AddNew();
                     object.Focus();
+                    return true;
                 }
             }
 
             if(event.name === 'KeyDown' && args.domEvent.key === 'Delete' && args.domEvent.ctrlKey) {
                 if(this.ClickOnRemoveLink) {
+                    args.domEvent.stopImmediatePropagation();
+                    args.domEvent.stopPropagation();
                     this.ClickOnRemoveLink();
+                    return true;
                 }
             }
 
             if(event.name === 'KeyDown' && args.domEvent.key === 'ArrowUp' && args.domEvent.ctrlKey) {
                 if(this.ClickOnUpLink) {
+                    args.domEvent.stopImmediatePropagation();
+                    args.domEvent.stopPropagation();
                     this.ClickOnUpLink();
+                    return true;
                 }
             }
 
             if(event.name === 'KeyDown' && args.domEvent.key === 'ArrowDown' && args.domEvent.ctrlKey) {
                 if(this.ClickOnDownLink) {
+                    args.domEvent.stopImmediatePropagation();
+                    args.domEvent.stopPropagation();
                     this.ClickOnDownLink();
+                    return true;
                 }
             }
 

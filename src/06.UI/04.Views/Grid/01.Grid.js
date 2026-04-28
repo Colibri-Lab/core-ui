@@ -658,7 +658,6 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      * @param {*} args event arguments
      */
     __thisKeyDown(event, args) {
-
         const e = args.domEvent;
 
         if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Enter', 'NumpadEnter'].indexOf(e.code) !== -1) {
@@ -822,9 +821,35 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             e.stopPropagation();
             e.preventDefault();
             return false;
+        } else if (e.code === 'Tab') {
+            const editors = this.CollectEditors();
+            const editor = args.domEvent.target?.closestComponent().Closest(v => v instanceof Colibri.UI.Editor);
+            const editorIndex = editors.indexOf(editor);
+            if (e.shiftKey) {
+                if (editorIndex > 0) {
+                    editors[editorIndex - 1].Focus();
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                } else {
+                    this.parent.Dispatch('KeyDown', {component: this});
+                }
+            } else {
+                if(editorIndex < editors.length - 1) {
+                    editors[editorIndex + 1].Focus();
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                } else {
+                    this.parent.Dispatch('KeyDown', {component: this});
+                }
+            }
+            return false;
         }
 
+        return true;
     }
+
 
     /**
      * @private
@@ -1435,6 +1460,39 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
      */
     set resizeMode(value) {
         this._resizeMode = value;
+    }
+
+    Focus(element = 'firstVisibleChild') {
+        const editors = this.CollectEditors();
+        if(element === 'firstVisibleChild') {
+            const first = editors.find(e => e.shown);
+            if(first) {
+                first.Focus();
+            }
+        } else if(editor === 'lastVisibleChild') {
+            const last = editors.reverse().find(e => e.shown);
+            if(last) {
+                last.Focus();
+            }
+        } else if(element == 'firstChild') {
+            if(editors.length) {
+                editors[0].Focus();
+            }
+        } else if(element == 'lastChild') {
+            if(editors.length) {
+                editors[editors.length - 1].Focus();
+            }
+        } else {
+            editors[element]?.Focus();
+        }
+    }
+
+    CollectEditors() {
+        let editors = [];
+        this.ForEveryRow((name, row) => {
+            editors = editors.concat(row.CollectEditors());
+        });
+        return editors;
     }
 
 }

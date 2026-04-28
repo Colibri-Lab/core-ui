@@ -375,3 +375,29 @@ ui-fields-keyvalueobject-importbutton:
   tr: İçe aktar
   zh: 导入
   fa: وارد کردن
+ui-fields-keyvalueobject-copied:
+  ru: Данные скопированы
+  en: Data copied to clipboard
+  hy: Տվյալները պատճենվել են
+  it: Dati copiati negli appunti
+  es: Datos copiados al portapapeles
+  kk: Деректер буферге көшірілді
+  uz: Ma'lumotlar panoya kopyalandı
+  cz: Data zkopírována do schránky
+  de: Daten in die Zwischenablage kopiert
+  tr: Veriler panoya kopyalandı
+  zh: 数据已复制到剪贴板
+  fa: داده‌ها در کلیپ‌بورد کپی شدند
+ui-fields-keyvalueobject-export:
+  ru: Скопировать данные в JSON
+  en: Copy data as JSON
+  hy: Տվյալները պատճենել JSON-ի տեսքով
+  it: Copia dati come JSON
+  es: Copiar datos como JSON
+  kk: Деректерді JSON ретінде көшіру
+  uz: Verileri JSON olarak kopyala
+  cz: Kopírovat data jako JSON
+  de: Daten als JSON kopieren
+  tr: Verileri JSON olarak kopyala
+  zh: 将数据复制为 JSON
+  fa: داده‌ها را به صورت JSON کپی کنید

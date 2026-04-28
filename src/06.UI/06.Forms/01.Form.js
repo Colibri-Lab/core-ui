@@ -18,6 +18,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         this._shuffleFieldNames = false;
         this._value = {};
         this._storage = App.Store;
+        this._changed = false;
 
         this._element.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -317,6 +318,8 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         this._hideAndShow();
         this.Dispatch('Validated');
         this._setFilledMark();
+
+        this.changed = false;
     }
 
     /**
@@ -465,6 +468,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         if (!args.component) {
             args.component = component;
         }
+        this.changed = true;
         component._timeout = setTimeout(() => this.Dispatch('Changed', args), 50);
     }
 
@@ -697,6 +701,14 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     _checkIfChanged(value) {
         return JSON.stringify(this.value) !== JSON.stringify(value);
+    }
+
+    get changed() {
+        return this._changed ?? false;
+    }
+
+    set changed(value) {
+        this._changed = value;
     }
 
 } 

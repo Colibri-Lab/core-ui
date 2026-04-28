@@ -208,12 +208,13 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
     __CloseClicked(event, args) {
 
         const aargs = { cancel: false };
-        this.Dispatch('WindowBeforeClosed', aargs);
-        if (aargs.cancel) {
-            return;
-        }
-
-        this.Close();
+        this.Dispatch('WindowBeforeClosed', aargs).then((result) => {
+            if (aargs.cancel) {
+                return;
+            }
+    
+            this.Close();
+        });
 
     }
 

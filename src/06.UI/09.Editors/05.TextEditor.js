@@ -28,7 +28,7 @@ Colibri.UI.TextEditor = class extends Colibri.UI.Editor {
         } else {
             this._unsetFilled();
         }
-
+        this.Dispatch('KeyDown', {domEvent: e});
     }
 
     /** @private */

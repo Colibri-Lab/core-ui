@@ -67,6 +67,7 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
         this.canAddNew = this._fieldData?.params?.canAddNew ?? true;
         this.canRemoveRows = this._fieldData?.params?.canRemoveRows ?? true;
 
+
     }
 
     __linkClicked(event, args) {
@@ -99,8 +100,8 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
     /**
      * Focus on component
      */
-    Focus() {
-        this.contentContainer.Children('firstChild').Focus();
+    Focus(element = 'firstVisibleChild') {
+        this._grid.Focus(element);
     }
 
     /**
@@ -284,12 +285,28 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
             this._import.shown = true;
             this._import.value = '#{ui-fields-keyvalueobject-import}';
             this._import.AddHandler('Clicked', this.__importClicked, false, this);
+
+            this._export = new Colibri.UI.Link('export', this.contentContainer);
+            this._export.shown = true;
+            this._export.value = '#{ui-fields-keyvalueobject-export}';
+            this._export.AddHandler('Clicked', this.__exportClicked, false, this);
         } else {
             if (this._import) {
                 this._import.Dispose();
                 this._import = null;
             }
+            if (this._export) {
+                this._export.Dispose();
+                this._export = null;
+            }
         }
+    }
+
+    __exportClicked(event, args) {
+        const data = JSON.stringify(this.value, null, 4);
+        data.copyToClipboard().then(() => {
+            App.Notices.Add(new Colibri.UI.Notice('#{ui-fields-keyvalueobject-copied}', Colibri.UI.Notice.Success));
+        });
     }
 
     __importClicked(event, args) {
@@ -303,6 +320,8 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
             return this.Dispatch('Changed', { component: this });
         });
     }
+
+
 
 }
 Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'addlink', {

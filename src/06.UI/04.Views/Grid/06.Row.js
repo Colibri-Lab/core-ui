@@ -477,5 +477,15 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         }
     }
 
+    CollectEditors() {
+        let editors = [];
+        this.ForEach((name, cell) => {
+            if(cell.editor) {
+                editors.push(cell.editorObject);
+            }
+        });
+        return editors;
+    }
+
 
 }
