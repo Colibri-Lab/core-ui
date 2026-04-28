@@ -11,7 +11,7 @@
         font-size: 18px;
     }
 
-    [data-object-name="add-new"] {
+    [data-object-name="link"], [data-object-name="import"] {
         font-style: normal;
         font-weight: normal;
         font-size: 14px;
@@ -20,6 +20,7 @@
         cursor: pointer;
         margin-top: 8px;
         display: inline-block;
+        margin-right: 20px;
     }
 
     > [data-object-name$="-title"] {

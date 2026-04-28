@@ -481,7 +481,6 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
      * @param {*} args event arguments
      */ 
     __searchBoxChanged(event, args) {
-        const f = this._searchFilterCallback;
         this.Search(this._searchBox.value, true, this._searchFilterCallback);
     }
 

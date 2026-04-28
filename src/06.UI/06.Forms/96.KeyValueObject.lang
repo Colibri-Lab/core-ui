@@ -297,3 +297,81 @@ ui-fields-keyvalueobject-fieldparams-valuetitle-note:
   tr: KeyValueObject bileşeninde değer alanı başlığı
   zh: KeyValueObject 组件中值字段的标题
   fa: عنوان برای فیلد مقدار در کامپوننت KeyValueObject
+ui-fields-keyvalueobject-fieldparams-has_import:
+  ru: Включить импорт данных
+  en: Enable data import
+  hy: Նվազեցնել տվյալների ներմուծումը
+  it: Abilita importazione dati
+  es: Habilitar importación de datos
+  kk: Деректер импортыны қосу
+  uz: Ma'lumot importini yoqish
+  cz: Povolit import data
+  de: Datenimport aktivieren
+  tr: Veri içe aktarmayı etkinleştirme
+  zh: 启用数据导入
+  fa: فعال کردن واردات داده
+ui-fields-keyvalueobject-fieldparams-has_import-note:
+  ru: Влючить фунцию импорта в компоненте
+  en: Enable import function in component
+  hy: Նվազեցնել ներմուծման ֆունկցիան կոմպոնենտում
+  it: Abilita funzione di importazione nel componente
+  es: Habilitar función de importación en el componente
+  kk: Компонентте импорт функциясын қосу
+  uz: Komponentda import fonksiyonunu etkinleştirme
+  cz: Povolit funkci importu v komponentě
+  de: Importfunktion in der Komponente aktivieren
+  tr: Bileşende içe aktarma işlevini etkinleştirme
+  zh: 在组件中启用导入功能
+  fa: فعال کردن تابع واردات در کامپوننت
+ui-fields-keyvalueobject-import:
+  ru: Импортировать из JSON
+  en: Import from JSON
+  hy: Ներմուծել JSON-ից
+  it: Importa da JSON
+  es: Importar desde JSON
+  kk: JSON-дан импорттау
+  uz: JSON'dan içe aktar
+  cz: Importovat z JSON
+  de: Aus JSON importieren
+  tr: JSON'dan içe aktar
+  zh: 从 JSON 导入
+  fa: وارد کردن از JSON
+ui-fields-keyvalueobject-importtitle:
+  ru: Импорт данных
+  en: Data import
+  hy: Տվյալների ներմուծում
+  it: Importazione dati
+  es: Importación de datos
+  kk: Деректер импорты
+  uz: Ma'lumot importi
+  cz: Import data
+  de: Datenimport
+  tr: Veri içe aktarma
+  zh: 数据导入
+  fa: واردات داده
+ui-fields-keyvalueobject-importplaceholder:
+  ru: Текст JSON
+  en: JSON text
+  hy: JSON տեքստ
+  it: Testo JSON
+  es: Texto JSON
+  kk: JSON мәтіні
+  uz: JSON matni
+  cz: JSON text
+  de: JSON-Text
+  tr: JSON metni
+  zh: JSON 文本
+  fa: متن JSON
+ui-fields-keyvalueobject-importbutton:
+  ru: Импортировать
+  en: Import
+  hy: Ներմուծել
+  it: Importa
+  es: Importar
+  kk: Импорттау
+  uz: İçe aktar
+  cz: Importovat
+  de: Importieren
+  tr: İçe aktar
+  zh: 导入
+  fa: وارد کردن

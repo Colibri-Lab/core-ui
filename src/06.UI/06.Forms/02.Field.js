@@ -724,10 +724,17 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     /**
      * Field field
      * @type {Colibri.UI.Forms.Field}
-     * @readonly
      */
     get parentField() {
         return this._parentField;
+    }
+    
+    /**
+     * Field field
+     * @type {Colibri.UI.Forms.Field}
+     */
+    set parentField(value) {
+        this._parentField = value;
     }
 
     /**

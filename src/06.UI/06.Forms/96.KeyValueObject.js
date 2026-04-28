@@ -39,6 +39,8 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
             this.enabled = this._fieldData.params.enabled;
         }
 
+        this.hasImport = this._fieldData?.params?.has_import ?? false;
+
         this._grid.hasContextMenu = true;
 
         const column1 = this._grid.header.columns.Add('key', '');
@@ -261,6 +263,46 @@ Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
         this._grid.header.columns.Children('value').editor = value;
     }
 
+    /**
+     * Has the import funcionality
+     * @type {Boolean}
+     */
+    get hasImport() {
+        return this._hasImport;
+    }
+    /**
+     * Has the import funcionality
+     * @type {Boolean}
+     */
+    set hasImport(value) {
+        this._hasImport = value;
+        this._showHasImport();
+    }
+    _showHasImport() {
+        if (this._hasImport) {
+            this._import = new Colibri.UI.Link('import', this.contentContainer);
+            this._import.shown = true;
+            this._import.value = '#{ui-fields-keyvalueobject-import}';
+            this._import.AddHandler('Clicked', this.__importClicked, false, this);
+        } else {
+            if (this._import) {
+                this._import.Dispose();
+                this._import = null;
+            }
+        }
+    }
+
+    __importClicked(event, args) {
+        App.Prompt.Show('#{ui-fields-keyvalueobject-importtitle}', {
+            d: {
+                component: 'TextArea',
+                placeholder: '#{ui-fields-keyvalueobject-importplaceholder}'
+            }
+        }, '#{ui-fields-keyvalueobject-importbutton}').then((data) => {
+            this.value = JSON.parse(data.d);
+            return this.Dispatch('Changed', { component: this });
+        });
+    }
 
 }
 Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'addlink', {
@@ -280,75 +322,75 @@ Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'ad
 
 Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'canEditKey', {
     type: 'bool',
-        placeholder: '#{ui-fields-keyvalueobject-fieldparams-caneditkey}',
-            note: '#{ui-fields-keyvalueobject-fieldparams-caneditkey-note}',
-                component: 'Checkbox',
-                            default: false,
-        params: {
+    placeholder: '#{ui-fields-keyvalueobject-fieldparams-caneditkey}',
+    note: '#{ui-fields-keyvalueobject-fieldparams-caneditkey-note}',
+    component: 'Checkbox',
+    default: false,
+    params: {
         condition: {
             field: 'component',
-                method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'canEditKey')
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'canEditKey')
         }
     }
 });
 Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'canAddNew', {
     type: 'bool',
-        placeholder: '#{ui-fields-keyvalueobject-fieldparams-canaddnew}',
-            note: '#{ui-fields-keyvalueobject-fieldparams-canaddnew-note}',
-                component: 'Checkbox',
-                            default: false,
-        params: {
+    placeholder: '#{ui-fields-keyvalueobject-fieldparams-canaddnew}',
+    note: '#{ui-fields-keyvalueobject-fieldparams-canaddnew-note}',
+    component: 'Checkbox',
+    default: false,
+    params: {
         condition: {
             field: 'component',
-                method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'canAddNew')
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'canAddNew')
         }
     }
 });
 Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'canRemoveRows', {
     type: 'bool',
-        placeholder: '#{ui-fields-keyvalueobject-fieldparams-canremoverows}',
-            note: '#{ui-fields-keyvalueobject-fieldparams-canremoverows-note}',
-                component: 'Checkbox',
-                            default: false,
-        params: {
+    placeholder: '#{ui-fields-keyvalueobject-fieldparams-canremoverows}',
+    note: '#{ui-fields-keyvalueobject-fieldparams-canremoverows-note}',
+    component: 'Checkbox',
+    default: false,
+    params: {
         condition: {
             field: 'component',
-                method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'canRemoveRows')
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'canRemoveRows')
         }
     }
 });
 Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'keyTitle', {
     type: 'varchar',
-        placeholder: '#{ui-fields-keyvalueobject-fieldparams-keytitle}',
-            note: '#{ui-fields-keyvalueobject-fieldparams-keytitle-note}',
-                component: 'App.Modules.Lang.UI.Text',
-                            default: '',
-        params: {
+    placeholder: '#{ui-fields-keyvalueobject-fieldparams-keytitle}',
+    note: '#{ui-fields-keyvalueobject-fieldparams-keytitle-note}',
+    component: 'App.Modules.Lang.UI.Text',
+    default: '',
+    params: {
         compact: true,
-            condition: {
+        condition: {
             field: 'component',
-                method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'keyTitle')
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'keyTitle')
         }
     }
 });
 Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'keyEditor', {
     type: 'varchar',
-        placeholder: '#{ui-fields-keyvalueobject-fieldparams-keyeditor}',
-            note: '#{ui-fields-keyvalueobject-fieldparams-keyeditor-note}',
-                component: 'Select',
-                            default: '',
-        params: {
+    placeholder: '#{ui-fields-keyvalueobject-fieldparams-keyeditor}',
+    note: '#{ui-fields-keyvalueobject-fieldparams-keyeditor-note}',
+    component: 'Select',
+    default: '',
+    params: {
         compact: true,
-            readonly: false,
-                searchable: false,
-                    condition: {
+        readonly: false,
+        searchable: false,
+        condition: {
             field: 'component',
-                method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'keyEditor') && data.canEditKey
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'keyEditor') && data.canEditKey
         }
     },
     selector: {
         value: 'value',
-            title: 'title'
+        title: 'title'
     },
     lookup: () => new Promise((resolve, reject) => {
         resolve(Colibri.UI.Editor.Enum().map(v => { return { value: v.value, title: v.value + ' ' + v.title }; }));
@@ -356,41 +398,49 @@ Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'ke
 });
 Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'valueTitle', {
     type: 'varchar',
-        placeholder: '#{ui-fields-keyvalueobject-fieldparams-valuetitle}',
-            note: '#{ui-fields-keyvalueobject-fieldparams-valuetitle-note}',
-                component: 'App.Modules.Lang.UI.Text',
-                            default: '',
-        params: {
+    placeholder: '#{ui-fields-keyvalueobject-fieldparams-valuetitle}',
+    note: '#{ui-fields-keyvalueobject-fieldparams-valuetitle-note}',
+    component: 'App.Modules.Lang.UI.Text',
+    default: '',
+    params: {
         compact: true,
-            condition: {
+        condition: {
             field: 'component',
-                method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'valueTitle')
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'valueTitle')
         }
     }
 });
 Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'valueEditor', {
     type: 'varchar',
-        placeholder: '#{ui-fields-keyvalueobject-fieldparams-valueeditor}',
-            note: '#{ui-fields-keyvalueobject-fieldparams-valueeditor-note}',
-                component: 'Select',
-                            default: '',
-        params: {
+    placeholder: '#{ui-fields-keyvalueobject-fieldparams-valueeditor}',
+    note: '#{ui-fields-keyvalueobject-fieldparams-valueeditor-note}',
+    component: 'Select',
+    default: '',
+    params: {
         compact: true,
-            readonly: false,
-                searchable: false,
-                    condition: {
+        readonly: false,
+        searchable: false,
+        condition: {
             field: 'component',
-                method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'valueEditor')
+            method: (fieldValue, data, type, empty, inverse, fieldData) => Colibri.UI.Forms.Field.HasParam(fieldValue, 'valueEditor')
         }
     },
     selector: {
         value: 'value',
-            title: 'title'
+        title: 'title'
     },
     lookup: () => new Promise((resolve, reject) => {
         resolve(Colibri.UI.Editor.Enum().map(v => { return { value: v.value, title: v.value + ' ' + v.title }; }));
     })
 });
 
+Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'has_import', {
+    type: 'bool',
+    placeholder: '#{ui-fields-keyvalueobject-fieldparams-has_import}',
+    note: '#{ui-fields-keyvalueobject-fieldparams-has_import-note}',
+    component: 'Checkbox',
+    default: false
+});
 
-Colibri.UI.Forms.Field.RegisterFieldComponent('KeyValueObject', 'Colibri.UI.Forms.KeyValueObject', '#{ui-fields-keyvalueobject}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'addlink', 'keyTitle', 'valueTitle', 'keyEditor', 'valueEditor', 'canEditKey', 'canAddNew', 'canRemoveRows']);
+
+Colibri.UI.Forms.Field.RegisterFieldComponent('KeyValueObject', 'Colibri.UI.Forms.KeyValueObject', '#{ui-fields-keyvalueobject}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'addlink', 'keyTitle', 'valueTitle', 'keyEditor', 'valueEditor', 'canEditKey', 'canAddNew', 'canRemoveRows', 'has_import']);
