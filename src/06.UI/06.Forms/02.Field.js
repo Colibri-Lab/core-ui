@@ -340,7 +340,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             }
 
             if(event.name === 'KeyDown' && args.domEvent.key === 'Delete' && args.domEvent.ctrlKey) {
-                if(this.ClickOnRemoveLink) {
+                if(this?._removeLink) {
                     args.domEvent.stopImmediatePropagation();
                     args.domEvent.stopPropagation();
                     this.ClickOnRemoveLink();
@@ -349,7 +349,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             }
 
             if(event.name === 'KeyDown' && args.domEvent.key === 'ArrowUp' && args.domEvent.ctrlKey) {
-                if(this.ClickOnUpLink) {
+                if(this?._upLink) {
                     args.domEvent.stopImmediatePropagation();
                     args.domEvent.stopPropagation();
                     this.ClickOnUpLink();
@@ -358,7 +358,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             }
 
             if(event.name === 'KeyDown' && args.domEvent.key === 'ArrowDown' && args.domEvent.ctrlKey) {
-                if(this.ClickOnDownLink) {
+                if(this?._downLink) {
                     args.domEvent.stopImmediatePropagation();
                     args.domEvent.stopPropagation();
                     this.ClickOnDownLink();
