@@ -115,25 +115,25 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     };
 
     static __elementsToComponentMap = {
-        'div': { component: 'Colibri.UI.Pane', element: 'div', attrs: {className: '{class}', styles: '{style}', elementID: '{id}'} },
-        'span': { component: 'Colibri.UI.TextSpan', element: null, attrs: {className: '{class}', styles: '{style}', elementID: '{id}'} },
-        'b': { component: 'Colibri.UI.Strong', element: 'b', attrs: {className: '{class}', styles: '{style}', elementID: '{id}'} },
-        'strong': { component: 'Colibri.UI.Strong', element: 'strong', attrs: {className: '{class}', styles: '{style}', elementID: '{id}'} },
-        'i': { component: 'Colibri.UI.TextSpan', element: 'i', attrs: {className: '{class}', styles: '{style}', elementID: '{id}'} },
-        'p': { component: 'Colibri.UI.Pane', element: 'p', attrs: {className: '{class}', styles: '{style}', elementID: '{id}'} },
-        'ul': { component: 'Colibri.UI.UnorderedList', element: 'ul', attrs: {className: '{class}', styles: '{style}', elementID: '{id}'} },
-        'ol': { component: 'Colibri.UI.OrderedList', element: 'ol', attrs: {className: '{class}', styles: '{style}', elementID: '{id}'} },
-        'menu': { component: 'Colibri.UI.MenuList', element: 'menu', attrs: {className: '{class}', styles: '{style}', elementID: '{id}'} },
-        'li': { component: 'Colibri.UI.ListItem', element: 'li', attrs: {className: '{class}', styles: '{style}', elementID: '{id}'} },
-        'img': { component: 'Colibri.UI.Img', element: 'img', attrs: { source: '{src}', className: '{class}', styles: '{style}', elementID: '{id}'} },
-        'h1': { component: 'Colibri.UI.H1', element: 'h1', attrs: {className: '{class}', styles: '{style}', elementID: '{id}'} },
-        'h2': { component: 'Colibri.UI.H2', element: 'h2', attrs: {className: '{class}', styles: '{style}', elementID: '{id}'} },
-        'h3': { component: 'Colibri.UI.H3', element: 'h3', attrs: {className: '{class}', styles: '{style}', elementID: '{id}'} },
-        'h4': { component: 'Colibri.UI.H4', element: 'h4', attrs: {className: '{class}', styles: '{style}', elementID: '{id}'} },
-        'h5': { component: 'Colibri.UI.H5', element: 'h5', attrs: {className: '{class}', styles: '{style}', elementID: '{id}'} },
-        'h6': { component: 'Colibri.UI.H6', element: 'h6', attrs: {className: '{class}', styles: '{style}', elementID: '{id}'} },
-        'hr': { component: 'Colibri.UI.HR', element: 'hr', attrs: {className: '{class}', styles: '{style}', elementID: '{id}'} },
-        'a': { component: 'Colibri.UI.Link', element: 'a', attrs: {className: '{class}', styles: '{style}', elementID: '{id}', href: '{href}', target: '{target}'} },
+        'div': { component: 'Colibri.UI.Pane', element: 'div', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
+        'span': { component: 'Colibri.UI.TextSpan', element: null, attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
+        'b': { component: 'Colibri.UI.Strong', element: 'b', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
+        'strong': { component: 'Colibri.UI.Strong', element: 'strong', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
+        'i': { component: 'Colibri.UI.TextSpan', element: 'i', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
+        'p': { component: 'Colibri.UI.Pane', element: 'p', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
+        'ul': { component: 'Colibri.UI.UnorderedList', element: 'ul', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
+        'ol': { component: 'Colibri.UI.OrderedList', element: 'ol', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
+        'menu': { component: 'Colibri.UI.MenuList', element: 'menu', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
+        'li': { component: 'Colibri.UI.ListItem', element: 'li', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
+        'img': { component: 'Colibri.UI.Img', element: 'img', attrs: { source: '{src}', className: '{class}', textStyle: '{style}', elementID: '{id}'} },
+        'h1': { component: 'Colibri.UI.H1', element: 'h1', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
+        'h2': { component: 'Colibri.UI.H2', element: 'h2', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
+        'h3': { component: 'Colibri.UI.H3', element: 'h3', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
+        'h4': { component: 'Colibri.UI.H4', element: 'h4', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
+        'h5': { component: 'Colibri.UI.H5', element: 'h5', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
+        'h6': { component: 'Colibri.UI.H6', element: 'h6', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
+        'hr': { component: 'Colibri.UI.HR', element: 'hr', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
+        'a': { component: 'Colibri.UI.Link', element: 'a', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}', href: '{href}', target: '{target}'} },
     }
 
     /**
@@ -1291,6 +1291,18 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         value = this._convertProperty('Object', value)
         this._element.css(value);
     }
+
+    set textStyle(value) {
+        try {
+            this.styles = value.toObject([';', ':']);
+        } catch(e) {
+            console.log('Error style', value);
+        }
+    }
+
+    get textStyle() {
+        return '';
+    } 
 
     RemoveStyle(style) {
         this._element.css(style, null);
