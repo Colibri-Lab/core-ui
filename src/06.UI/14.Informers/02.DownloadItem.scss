@@ -1,0 +1,61 @@
+.colibri-ui-informers-downloaditem {
+    
+    padding: 10px;
+    border-radius: 6px;
+    background: white;
+    margin-bottom: 10px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,.5);
+    opacity: .8;
+
+    &:hover, &.-complete {
+        opacity: 1;
+    }
+
+    gap: 10px;
+    align-items: center;
+    justify-content: stretch;
+    position: relative;
+
+    [data-object-name="close"] {
+        width: 15px;
+        height: 15px;
+        flex: 0 0 15px;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
+
+    [data-object-name="icon"] {
+        width: 22px;
+        height: 22px;
+        flex: 0 0 22px;
+        svg {
+            path {
+                fill: gray;
+            }
+            @include rotateInfinite;
+        }
+    }
+
+    &.-complete {
+        svg {
+            path {
+                fill: gray;
+            }
+            @include rotateOnes(.5s);
+        }
+    }
+
+    [data-object-name="message"] {
+        flex: 0 0 calc(100% - 50px);
+    }
+
+    [data-object-name="link"] {
+        flex: 1 1 100%;
+    }
+
+    [data-object-name="percent"] {
+        flex: 1 1 100%;
+    }
+
+}
