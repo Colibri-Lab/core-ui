@@ -399,4 +399,4 @@ Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.File', 'size', {
     }
 });
 
-Colibri.UI.Forms.Field.RegisterFieldComponent('File', 'Colibri.UI.Forms.File', '#{ui-file-file}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'allow', 'size'])
+Colibri.UI.Forms.Field.RegisterFieldComponent('File', 'Colibri.UI.Forms.File', '#{ui-file-file}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'transformer', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'allow', 'size'])

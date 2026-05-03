@@ -308,4 +308,4 @@ Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.Text', 'mask', {
     }
 });
 
-Colibri.UI.Forms.Field.RegisterFieldComponent('Text', 'Colibri.UI.Forms.Text', '#{ui-fields-text}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'mask', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler']);
+Colibri.UI.Forms.Field.RegisterFieldComponent('Text', 'Colibri.UI.Forms.Text', '#{ui-fields-text}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'mask', 'fieldgenerator', 'generator', 'transformer', 'transformer', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler']);

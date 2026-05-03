@@ -613,4 +613,4 @@ Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.Array', 'title', {
     }
 });
 
-Colibri.UI.Forms.Field.RegisterFieldComponent('Array', 'Colibri.UI.Forms.Array', '#{ui-fields-array}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'vertical', 'removedesc', 'addlink', 'removelink', 'updownlink', 'hasscroll', 'initempty', 'maxadd', 'title'], true);
+Colibri.UI.Forms.Field.RegisterFieldComponent('Array', 'Colibri.UI.Forms.Array', '#{ui-fields-array}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'transformer', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'vertical', 'removedesc', 'addlink', 'removelink', 'updownlink', 'hasscroll', 'initempty', 'maxadd', 'title'], true);

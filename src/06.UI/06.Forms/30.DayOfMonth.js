@@ -141,4 +141,4 @@ Colibri.UI.Forms.DayOfMonth = class extends Colibri.UI.Forms.Field {
         }
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('DayOfMonth', 'Colibri.UI.Forms.DayOfMonth', '#{ui-fields-dayofmonth}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler'])
+Colibri.UI.Forms.Field.RegisterFieldComponent('DayOfMonth', 'Colibri.UI.Forms.DayOfMonth', '#{ui-fields-dayofmonth}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'transformer', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler'])

@@ -462,4 +462,4 @@ Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.KeyValueObject', 'ha
 });
 
 
-Colibri.UI.Forms.Field.RegisterFieldComponent('KeyValueObject', 'Colibri.UI.Forms.KeyValueObject', '#{ui-fields-keyvalueobject}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'addlink', 'keyTitle', 'valueTitle', 'keyEditor', 'valueEditor', 'canEditKey', 'canAddNew', 'canRemoveRows', 'has_import']);
+Colibri.UI.Forms.Field.RegisterFieldComponent('KeyValueObject', 'Colibri.UI.Forms.KeyValueObject', '#{ui-fields-keyvalueobject}', null, ['required', 'enabled', 'canbeempty', 'readonly', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'transformer', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler', 'addlink', 'keyTitle', 'valueTitle', 'keyEditor', 'valueEditor', 'canEditKey', 'canAddNew', 'canRemoveRows', 'has_import']);

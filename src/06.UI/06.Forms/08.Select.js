@@ -447,4 +447,4 @@ Colibri.UI.Forms.Field.RegisterFieldParam('Colibri.UI.Forms.Select', 'multiple',
     }
 });
 
-Colibri.UI.Forms.Field.RegisterFieldComponent('Select', 'Colibri.UI.Forms.Select', '#{ui-fields-select}', null, ['required', 'enabled', 'multiple', 'canbeempty', 'readonly', 'searchable', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler'])
+Colibri.UI.Forms.Field.RegisterFieldComponent('Select', 'Colibri.UI.Forms.Select', '#{ui-fields-select}', null, ['required', 'enabled', 'multiple', 'canbeempty', 'readonly', 'searchable', 'list', 'template', 'greed', 'viewer', 'fieldgenerator', 'generator', 'transformer', 'noteClass', 'validate', 'valuegenerator', 'onchangehandler'])

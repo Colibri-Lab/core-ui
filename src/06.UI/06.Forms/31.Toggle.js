@@ -122,4 +122,4 @@ Colibri.UI.Forms.Toggle = class extends Colibri.UI.Forms.Field {
         }
     }
 }
-Colibri.UI.Forms.Field.RegisterFieldComponent('Toggle', 'Colibri.UI.Forms.Toggle', '#{ui-fields-toggle}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','noteClass','validate','valuegenerator','onchangehandler'])
+Colibri.UI.Forms.Field.RegisterFieldComponent('Toggle', 'Colibri.UI.Forms.Toggle', '#{ui-fields-toggle}', null, ['required','enabled','canbeempty','readonly','list','template','greed','viewer','fieldgenerator','generator','transformer','noteClass','validate','valuegenerator','onchangehandler'])
