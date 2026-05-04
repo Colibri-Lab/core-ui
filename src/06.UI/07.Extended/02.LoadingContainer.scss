@@ -24,7 +24,8 @@
 
         .app-progress-bar-container-component {
             margin-top: 24px;
-            width: 160px;
+            width: 100%;
+            min-width: 160px;
             background: #D9DCE3;
             border-radius: 5px;
             height: 4px;

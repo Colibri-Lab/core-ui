@@ -79,6 +79,21 @@ Colibri.UI.LoadingContainer = class extends Colibri.UI.Component {
     }
 
     /**
+     * Progress bar width
+     * @type {Number}
+     */
+    get progressWidth() {
+        return this._progress.width;
+    }
+    /**
+     * Progress bar width
+     * @type {Number}
+     */
+    set progressWidth(value) {
+        this._progress.width = value;
+    }
+
+    /**
      * Opacity
      * @type {number}
      */
