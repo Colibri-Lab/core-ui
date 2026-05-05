@@ -557,14 +557,14 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         }
     }
 
-    CreateSources(sources) {
+    CreateSources(sources, properties) {
         Object.map(sources, (name, type) => {
             if (type === 'line') {
                 this._createLineSource(name);
             } else if (type === 'circle') {
                 this._createPointSource(name);
             } else if (type === 'symbol') {
-                this._createObjectSource(name);
+                this._createObjectSource(name, properties?.[name] ?? {});
             }
         });
     }
@@ -635,7 +635,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         return this._pointsSources[name];
     }
 
-    _createObjectSource(name) {
+    _createObjectSource(name, properties) {
         if (!this.loaded) {
             return;
         }
@@ -648,17 +648,31 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 }
             });
 
+            const paint = {};
+            const layout = {
+                'icon-image': ['get', 'type'],
+                'icon-rotate': ['get', 'angle'],
+                'icon-allow-overlap': true,
+                'icon-rotation-alignment': 'map',
+                'icon-anchor': 'center',
+            };
+            if(properties?.['size']) {
+                layout['icon-size'] = properties['size'];
+            }
+            if(properties?.['offset']) {
+                layout['icon-offset'] = properties['offset'];
+            }
+            if(properties?.['opacity']) {
+                paint['icon-opacity'] = properties['opacity'];
+            }
+            console.log(layout);
+
             this._map.addLayer({
                 id: name,
                 type: 'symbol',
                 source: name + '-source',
-                layout: {
-                    'icon-image': ['get', 'type'],
-                    'icon-rotate': ['get', 'angle'],
-                    'icon-allow-overlap': true,
-                    'icon-rotation-alignment': 'map',
-                    'icon-anchor': 'center',
-                }
+                layout: layout,
+                paint: paint
             });
 
             this._layersZIndex.push(name);
@@ -923,7 +937,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     type: 'Feature',
                     id: latLngLike.id,
                     geometry: { type: 'Point', coordinates: [latLngLike.lng, latLngLike.lat] },
-                    properties: { id: latLngLike.id, angle: latLngLike.azimuth, type: latLngLike.type ?? icon }
+                    properties: Object.assign(latLngLike, { id: latLngLike.id, angle: latLngLike.azimuth, type: latLngLike.type ?? icon })
                 };
             }
         }), updateIfExists);
