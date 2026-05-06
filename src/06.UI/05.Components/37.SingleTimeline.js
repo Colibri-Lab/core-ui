@@ -375,6 +375,17 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         this._disableChangeEvent = false;
     }
 
+    Play() {
+        Colibri.Common.StartTimer('ldi-timeline-timer', 1000, () => {
+            this.max = new Date(this.max.getTime() + 1000);
+            this.value = new Date(this.value.getTime() + 1000);
+            this.Dispatch('Changed', { value: this.value });
+        });
+    }
+
+    Pause() {
+        Colibri.Common.StopTimer('ldi-timeline-timer');
+    }
 
 
 }

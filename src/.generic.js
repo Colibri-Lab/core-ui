@@ -1634,6 +1634,13 @@ String.prototype.expand = function (c, l) {
  * @returns {Date} Returns the Date object representing the date and time parsed from the string.
  */
 String.prototype.toDate = function () {
+   
+    if(this.length === 14) { // возможно формат YYYYMMDDHHMMSS
+        return new Date(this.substring(0, 4) + '-' + this.substring(4, 6) + '-' + this.substring(6, 8) + 'T' + this.substring(8, 10) + ':' + this.substring(10, 12) + ':' + this.substring(12, 14) + Date.getTimezoneString());
+    } else if(this.split('-').length === 6) { // возможно формат YYYY-MM-DD-HH-MM-SS
+        const parts = this.split('-');
+        return new Date(parts[0] + '-' + parts[1] + '-' + parts[2] + ' ' + parts[3] + ':' + parts[4] + ':' + (parts[5] || '00'));
+    }
 
     if (this.isNumeric()) {
         return parseInt(this).toDateFromUnixTime();
