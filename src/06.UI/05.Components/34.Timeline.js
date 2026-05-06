@@ -13,7 +13,7 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
      */
     constructor(name, container) {
         /* создаем компонент и передаем шаблон */
-        super(name, container, Colibri.UI.Templates['Colibri.UI.Timeline']);
+        super(name, container, Element.create('div'));
         this.AddClass('colibri-ui-timeline');
 
         this._disableChangeEvent = false;

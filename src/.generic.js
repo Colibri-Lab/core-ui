@@ -3067,12 +3067,15 @@ Date.prototype.format = function (formatObject, dateFormat = 'ru-RU') {
  * @param {boolean} [withoutDay=false] - Whether to exclude day.
  * @returns {string} The formatted date string.
  */
-Date.prototype.intlFormat = function (withTime = false, withoutDay = false, withoutYear = false) {
+Date.prototype.intlFormat = function (withTime = false, withoutDay = false, withoutYear = false, withSeconds = false) {
     let dateformat = App.DateFormat || 'ru-RU';
     const params = { day: '2-digit', month: 'short', year: 'numeric' };
     if (withTime) {
         params.hour = '2-digit';
         params.minute = '2-digit';
+        if (withSeconds) {
+            params.second = '2-digit';
+        }
     }
     if (withoutDay) {
         delete params.day;

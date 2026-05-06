@@ -1,0 +1,92 @@
+.colibri-ui-singletimeline {
+    
+    > .app-component-textspan {
+        font-style: normal !important;
+        font-weight: 400 !important;
+        font-size: 16px !important;
+        line-height: 18px !important;
+        color: #000;
+        min-height: auto;
+    }
+
+    [data-object-name="input"], [data-object-name="min"], [data-object-name="max"] {
+        flex: 0 0 200px;
+        border: 0px;
+        padding: 10px 0px;
+        input {
+            padding: 0px;
+            font-style: normal;
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 18px;
+            color: #0B1F35;
+            background: transparent;
+        }
+        
+        &:last-child {
+            input {
+                text-align: right;
+            }
+        }
+    }
+
+    [data-object-name="input"] {
+        justify-self: center;
+    }
+
+    flex-direction: column;
+
+    [data-object-name="inputflex"] {
+        width: 100%;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 10px;
+        .app-component-textspan {
+            font-style: normal;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 18px;
+            color: #c0c0c0;
+        } 
+        [data-object-name="min-text"] {
+            margin-left: auto;
+        }
+        
+    }
+
+    .colibri-ui-rangepicker-rangepicker-progress-pane {
+        background: #B5B2B2;
+        height: 4px;
+        margin-left: 8px;
+        width: calc(100% - 16px);
+        > .app-component-pane {
+            max-width: 100%;
+            position: relative;
+            padding: 0px 0px 0px 8px;
+            background: #888;
+            height: 4px;
+            width: 0%;
+            > .app-component-pane {
+                width: 16px;
+                height: 16px;
+                top: -6px;
+                background: #888;
+                border-radius: 50%;
+                position: absolute;
+                z-index: 1;
+                cursor: pointer;
+                &.app-component-shown {
+                    display: block;
+                }
+                &:first-child {
+                    left: -8px;
+                }
+                &:last-child {
+                    right: -8px;
+                }
+            }
+        }
+    }
+
+
+}
