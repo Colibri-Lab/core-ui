@@ -154,10 +154,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     image.onload = resolve;
                 });
                 image.src = svg;
-                await promise; // Wait for the image to load
+                await promise;
 
                 if (this._map.hasImage(e.id)) {
-                    return;
+                    this._map.removeImage(e.id);
                 }
                 this._map.addImage(e.id, image);
             });
@@ -1114,6 +1114,13 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     AddIcon(iconName, iconContent, width, height) {
         this._icons[iconName] = { content: iconContent, width, height };
+    }
+
+    RemoveIcon(iconName) {
+        delete this._icons[iconName];
+        if(this._map.hasImage(iconName)) {
+            this._map.removeImage(iconName);
+        }
     }
 
     AddDivIcon(iconName, className, width, height) {
