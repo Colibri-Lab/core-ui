@@ -20,10 +20,16 @@
         > .app-component-split-handler {
             width: 10px;
             flex: 0 0 10px; 
-            justify-self: stretch; 
             height: 100%;
             background: #f5f5f5;
             cursor: col-resize;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            justify-self: stretch; 
+            svg {
+                width: 90%;
+            }
         }    
     }
     &.app-component-split-vertical {
@@ -31,10 +37,16 @@
         > .app-component-split-handler {
             height: 10px;
             flex: 0 0 10px; 
-            justify-self: stretch; 
             width: 100%;
             background: #f5f5f5;
             cursor: row-resize;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            justify-self: stretch; 
+            svg {
+                height: 90%;
+            }
         }    
     }
 
@@ -52,5 +64,6 @@
             height: 100%;
         }
     }
+    
    
 }

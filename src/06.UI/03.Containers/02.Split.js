@@ -318,7 +318,22 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
             this.Dispatch('ViewSideChanged', {side: 'none'});
             // this.left.showElement();
             // this.right.showElement();
+        }
     }
+
+    /**
+     * Handle icon
+     * @type {String}
+     */
+    get handleIcon() {
+        return this.handle.html();
+    }
+    /**
+     * Handle icon
+     * @type {String}
+     */
+    set handleIcon(value) {
+        this.handle.html(eval(value));
     }
 
 }

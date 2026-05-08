@@ -665,7 +665,6 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             if(properties?.['opacity']) {
                 paint['icon-opacity'] = properties['opacity'];
             }
-            console.log(layout);
 
             this._map.addLayer({
                 id: name,
