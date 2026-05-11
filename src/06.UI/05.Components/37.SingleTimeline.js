@@ -87,10 +87,10 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         this._max.AddHandler('Changed', this.__maxChanged, false, this);
         this._progress.AddHandler('Clicked', this.__progressClicked, false, this);
         this.handleWheel = true;
-        this.AddHandler('MouseWheel', this.__mouseWheel);
+        this.AddHandler('MouseWheel', this.__thisMouseWheel);
     }
 
-    __mouseWheel(event, args) {
+    __thisMouseWheel(event, args) {
         const step = ((this._select?.value?.value ?? this._select?.value) * 1000);
         if(args.domEvent.deltaY > 0) {
             this.value = new Date(this.value.getTime() - step);

@@ -145,7 +145,6 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     return;
                 }
 
-
                 const svg = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(iconData.content);
                 const image = new Image();
                 image.width = iconData.width;
@@ -656,13 +655,13 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 'icon-rotation-alignment': 'map',
                 'icon-anchor': 'center',
             };
-            if(properties?.['size']) {
+            if (properties?.['size']) {
                 layout['icon-size'] = properties['size'];
             }
-            if(properties?.['offset']) {
+            if (properties?.['offset']) {
                 layout['icon-offset'] = properties['offset'];
             }
-            if(properties?.['opacity']) {
+            if (properties?.['opacity']) {
                 paint['icon-opacity'] = properties['opacity'];
             }
 
@@ -698,7 +697,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
         const data = source._data.geojson;
         // remove unexistance objects if updateIfExists = true
-        if(updateIfExists) {
+        if (updateIfExists) {
             const objectIds = objectsJson.map(o => o.id);
             data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
         }
@@ -765,7 +764,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             return;
         }
         const data = source._data.geojson;
-        if(updateIfExists) {
+        if (updateIfExists) {
             const objectIds = objectsJson.map(o => o.id);
             data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
         }
@@ -832,7 +831,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             return;
         }
         const data = source._data.geojson;
-        if(updateIfExists) {
+        if (updateIfExists) {
             const objectIds = objectsJson.map(o => o.id);
             data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
         }
@@ -1130,7 +1129,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     RemoveIcon(iconName) {
         delete this._icons[iconName];
-        if(this._map.hasImage(iconName)) {
+        if (this._map.hasImage(iconName)) {
             this._map.removeImage(iconName);
         }
     }
