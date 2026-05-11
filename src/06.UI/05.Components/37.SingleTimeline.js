@@ -33,6 +33,7 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         this.RegisterEvent('MinChanged', false, 'When the min value is changed');
         this.RegisterEvent('MaxChanged', false, 'When the max value is changed');
         this.RegisterEvent('ProgressClicked', false, 'When the progress is clicked');
+        this.RegisterEvent('StepChanged', false, 'When the step value is changed');
     }
 
     _render() {
@@ -40,6 +41,10 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         this._inputFlex = new Colibri.UI.FlexBox('inputflex', this);
 
         this._input = new Colibri.UI.DateTimeSelector('input', this._inputFlex);
+        
+        this._select = new Colibri.UI.Selector('select', this._inputFlex);
+        this._select.readonly = false;
+        this._select.searchable = false;
 
         this._minText = new Colibri.UI.TextSpan('min-text', this._inputFlex);
         this._min = new Colibri.UI.DateTimeSelector('min', this._inputFlex);
@@ -54,7 +59,8 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
 
         this._inputFlex.shown = this._input.shown =
             this._pane.shown = this._progress.shown = this._span.shown =
-            this._max.shown = this._min.shown = this._minText.shown = this._maxText.shown = true;
+            this._max.shown = this._min.shown = this._minText.shown = 
+            this._maxText.shown = this._select.shown = true;
 
         this._input.hasIcon = this._min.hasIcon = this._max.hasIcon = false;
         this._input.hasClearIcon = this._min.hasClearIcon = this._max.hasClearIcon = false;
@@ -62,6 +68,8 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         let dateformat = App.DateFormat || 'ru-RU';
         this._input.format = this._min.format = this._max.format =
             new Intl.DateTimeFormat(dateformat, { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+        this._select.AddHandler('Changed', this.__selectChanged, false, this);
 
         this._drag = new Colibri.UI.Drag(this._span.container, this._pane.container, (newLeft, newTop) => this._spanMoved(newLeft, newTop));
         this._addHandlers();
@@ -376,16 +384,68 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
     }
 
     Play() {
+        this._state = 'play';
         Colibri.Common.StartTimer('ldi-timeline-timer', 1000, () => {
-            this.max = new Date(this.max.getTime() + 1000);
-            this.value = new Date(this.value.getTime() + 1000);
+            const step = ((this._select?.value?.value ?? this._select?.value) * 1000);
+            this.max = new Date(this.max.getTime() + step);
+            if(this.max.getTime() > Date.Now().getTime()) {
+                this.max = new Date();
+            }
+            this.value = new Date(this.value.getTime() + step);
+            if(this.value.getTime() > Date.Now().getTime()) {
+                this.value = new Date();
+            }
             this.Dispatch('Changed', { value: this.value });
         });
     }
 
     Pause() {
+        this._state = 'pause';
         Colibri.Common.StopTimer('ldi-timeline-timer');
     }
 
+    /**
+     * Steps array <{value, title},...>
+     * @type {Array}
+     */
+    get steps() {
+        return this._steps;
+    }
+    /**
+     * Steps array <{value, title},...>
+     * @type {Array}
+     */
+    set steps(value) {
+        value = this._convertProperty('Array', value);
+        this._steps = value;
+        this._showSteps();
+    }
+    _showSteps() {
+        this._select.values = this._steps;
+    }
+
+    /**
+     * Step seconds
+     * @type {Number}
+     */
+    get step() {
+        return (this._select?.value?.value ?? this._select?.value);
+    }
+    /**
+     * Step seconds
+     * @type {Number}
+     */
+    set step(value) {
+        value = this._convertProperty('Number', value);
+        this._select.value = value;
+    }
+
+    __selectChanged(event, args) {
+        if(this._state === 'play') {
+            this.Pause();
+            this.Play();
+        }
+        this.Dispatch('StepChanged', { value: this.step });
+    }
 
 }
