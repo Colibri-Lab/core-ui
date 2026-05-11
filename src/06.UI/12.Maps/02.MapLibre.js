@@ -697,6 +697,11 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         }
 
         const data = source._data.geojson;
+        // remove unexistance objects if updateIfExists = true
+        if(updateIfExists) {
+            const objectIds = objectsJson.map(o => o.id);
+            data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
+        }
         for (const objectJson of objectsJson) {
             if (updateIfExists) {
                 const idx = data.features.findIndex(f => f.id === objectJson.id);
@@ -760,6 +765,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             return;
         }
         const data = source._data.geojson;
+        if(updateIfExists) {
+            const objectIds = objectsJson.map(o => o.id);
+            data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
+        }
         for (const objectJson of objectsJson) {
             if (updateIfExists) {
                 const idx = data.features.findIndex(f => f.id === objectJson.id);
@@ -823,6 +832,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             return;
         }
         const data = source._data.geojson;
+        if(updateIfExists) {
+            const objectIds = objectsJson.map(o => o.id);
+            data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
+        }
         for (const objectJson of objectsJson) {
             if (updateIfExists) {
                 let idx = data.features.findIndex(f => f.id === objectJson.id);
