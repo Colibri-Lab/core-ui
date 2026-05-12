@@ -286,6 +286,59 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         ]);
     }
 
+    _getBBox(points) {
+
+        const OFFSET_KM = 50;
+
+        let minLat = Infinity;
+        let maxLat = -Infinity;
+
+        let minLng = Infinity;
+        let maxLng = -Infinity;
+
+        for (const p of points) {
+
+            if (p.lat < minLat) minLat = p.lat;
+            if (p.lat > maxLat) maxLat = p.lat;
+
+            if (p.lng < minLng) minLng = p.lng;
+            if (p.lng > maxLng) maxLng = p.lng;
+        }
+
+        // km -> degrees latitude
+        const latOffset =
+            OFFSET_KM / 111;
+
+        // km -> degrees longitude
+        const centerLat =
+            (minLat + maxLat) / 2;
+
+        const lngOffset =
+            OFFSET_KM /
+            (
+                111 *
+                Math.cos(
+                    centerLat * Math.PI / 180
+                )
+            );
+
+        minLat -= latOffset;
+        maxLat += latOffset;
+
+        minLng -= lngOffset;
+        maxLng += lngOffset;
+
+        return [
+            [minLat, minLng], // southwest
+            [maxLat, maxLng]  // northeast
+        ];
+    }
+
+    ShowFeatures(featuresPoints) {
+        const bbox = this._getBBox(featuresPoints);
+        this.SetBBox(bbox);
+    }
+
     /**
      * Set or get administrative data geojson url
      * @type {String}
