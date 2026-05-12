@@ -60,7 +60,8 @@
         border: 0px;
     }
 
-    .colibri-ui-rangepicker-rangepicker-progress-pane {
+    [data-object-name="pane"] {
+        cursor: pointer;;
         background: #B5B2B2;
         height: 4px;
         margin-left: 8px;

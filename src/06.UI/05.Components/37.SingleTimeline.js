@@ -52,7 +52,6 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         this._max = new Colibri.UI.DateTimeSelector('max', this._inputFlex);
 
         this._pane = new Colibri.UI.Pane('pane', this);
-        this._pane.AddClass('colibri-ui-rangepicker-rangepicker-progress-pane');
 
         this._progress = new Colibri.UI.Pane('progress', this._pane);
         this._span = new Colibri.UI.Pane('span', this._progress);
@@ -101,7 +100,9 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
     }
 
     __progressClicked(event, args) {
-        debugger;
+        const left = args.domEvent.offsetX;
+        const top = args.domEvent.offsetY;
+        this._spanMoved(left, null);
         this.Dispatch('ProgressClicked', Object.assign(args, { value: this.value }));
     }
 
