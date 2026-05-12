@@ -85,7 +85,7 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         this._min.AddHandler('Changed', this.__minChanged, false, this);
         this._max.RemoveHandler('Changed', this.__maxChanged, this);
         this._max.AddHandler('Changed', this.__maxChanged, false, this);
-        this._progress.AddHandler('Clicked', this.__progressClicked, false, this);
+        this._pane.AddHandler('Clicked', this.__progressClicked, false, this);
         this.handleWheel = true;
         this.AddHandler('MouseWheel', this.__thisMouseWheel);
     }
@@ -101,6 +101,7 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
     }
 
     __progressClicked(event, args) {
+        debugger;
         this.Dispatch('ProgressClicked', Object.assign(args, { value: this.value }));
     }
 

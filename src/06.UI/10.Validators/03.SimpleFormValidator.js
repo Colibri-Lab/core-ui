@@ -34,7 +34,7 @@ Colibri.UI.SimpleFormValidator = class {
             return;
         }
         Object.forEach(fields, (name, field) => {
-            field.field.params && (field.field.params.validated = 'not-validated-yet');
+            field.field.params && field.field.params?.validate && (field.field.params.validated = 'not-validated-yet');
             field.AddHandler('Changed', this.__fieldChanged, false, this);
             field.AddHandler('FieldsRendered', this.__fieldFieldsRendered, false, this);
             this._init(field.Fields ? field.Fields() : []);
