@@ -104,14 +104,14 @@ Colibri.UI.SimpleFormValidator = class {
         }
 
         for (const field of fields) {
-            if(field.field?.params?.validate) {    
-                if (field.field.params && field.field.params.validated !== 'success') {
-                    return false;
-                }
-                if (!this.Status(field.Fields ? field.Fields() : [])) {
-                    return false;
-                }
+            // if(field.field?.params?.validate) {    
+            if (field.field.params && field.field.params.validated !== 'success') {
+                return false;
             }
+            if (!this.Status(field.Fields ? field.Fields() : [])) {
+                return false;
+            }
+            //}
         }
 
         return true;
