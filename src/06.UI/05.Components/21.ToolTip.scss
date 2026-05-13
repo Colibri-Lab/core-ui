@@ -5,7 +5,10 @@
     margin: 1px;
     cursor: default;
 
-   
+    &.-permanent {
+        pointer-events: none;
+    }
+
 
     &.app-component-shown {
 
@@ -118,5 +121,13 @@
     }
 
     
+    &.-permanent {
+        [data-object-name="arrow"] {
+            &.app-component-shown {
+                display: none;
+            }
+        }
+    }
+
 
 }

@@ -1347,28 +1347,25 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     DisableContextMenu() {
         this._map.getContainer().removeEventListener('contextmenu', this._contextMenuHandler);
-
+        
         this._map.removeLayer('contextmenu-layer');
         this._map.removeSource('contextmenupoints');
     }
-
+    
     EnableHover(callback, tolerance = 10) {
-        this._infoDiv = document.createElement('div');
-        this._infoDiv.style.position = 'absolute';
-        this._infoDiv.style.bottom = '10px';
-        this._infoDiv.style.right = '10px';
-        this._infoDiv.style.padding = '6px 10px';
-        this._infoDiv.style.background = 'rgba(0,0,0,0.6)';
-        this._infoDiv.style.color = '#fff';
-        this._infoDiv.style.fontFamily = 'monospace';
-        this._infoDiv.style.borderRadius = '4px';
-        this._infoDiv.style.pointerEvents = 'none';
-        this._infoDiv.style.maxHeight = '80%';
-        this._infoDiv.style.overflowY = 'hidden';
-        this._infoDiv.textContent = '';
-        this._map.getContainer().appendChild(this._infoDiv);
+        this._infoDiv = new Colibri.UI.ToolTip('maplibre-tooltip', document.body, [Colibri.UI.ToolTip.RB, Colibri.UI.ToolTip.LT]);
+        this._infoDiv.Hide();
+        // this._map.getContainer().appendChild(this._infoDiv);
 
-        this._mousemoveHoverHandler = e => {
+        let loading = null; 
+        this._mousemoveHoverHandler = async e => {
+            if(loading) {
+                return false;
+            }
+
+            
+            loading = true;
+
             const lat = e.lngLat.lat.toFixed(6);
             const lng = e.lngLat.lng.toFixed(6);
             const zoom = this._map.getZoom().toFixed(2);
@@ -1384,11 +1381,18 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 const id = features[0]?.properties?.id ?? null;
                 info = info + (id ? `, ID: ${id}` : '');
             }
+            let res = {infoOnMousePoint: false};
             if (callback) {
-                info = callback(features, info, e);
+                info = await callback(features, info, e, res);
+                loading = false;
             }
 
-            this._infoDiv.html(info);
+            this._infoDiv.value = info;
+            if(res.infoOnMousePoint) {
+                this._infoDiv.Show(null, true, { left: e.point.x + this.left, top: e.point.y + this.top});
+            } else {
+                this._infoDiv.Show(null, true, { left: this.left + this.width - this._infoDiv.width - 25, top: this.top + this.height - this._infoDiv.height});
+            }
         };
 
         this._map.on('mousemove', this._mousemoveHoverHandler);

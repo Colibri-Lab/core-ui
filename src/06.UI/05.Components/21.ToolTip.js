@@ -220,13 +220,16 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
      * Show tooltip on component
      * @param {Colibri.UI.Component} parent parent component
      */
-    Show(parent = null, permanent = false) {
+    Show(parent = null, permanent = false, point = null) {
         if(parent) {
             this.parent = parent;
         }
         this.permanent = permanent;
+        this._point = point;
         if(!this.shown) {
             this.shown = true;
+        } else {
+            this._setPosition();
         }
     }
 
@@ -265,7 +268,12 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
         if(this._permanent && !this.shown) {
             this.shown = true;
             this.hasShadow = false;
-        } 
+        }
+        if(this._permanent) {
+            this.AddClass('-permanent');
+        } else {
+            this.RemoveClass('-permanent');
+        }
     }
 
 }
