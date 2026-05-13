@@ -500,6 +500,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         if (!parent) {
             parent = this._element;
         }
+        
         if (!root) {
             root = this;
         }
@@ -556,9 +557,15 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
                     }
                 }
                 else {
-                    const e = element.clone(element.attr('xmlns') ? element.attr('xmlns') : parent.attr('xmlns'));
-                    parent.append(e);
-                    this.ProcessChildren(element.childNodes, e, true, root);
+                    if (parent instanceof Colibri.UI.Component) {                        
+                        const e = element.clone(element.attr('xmlns') ? element.attr('xmlns') : parent.container.attr('xmlns'));
+                        parent.container.append(e);
+                        this.ProcessChildren(element.childNodes, e, true, root);
+                    } else {
+                        const e = element.clone(element.attr('xmlns') ? element.attr('xmlns') : parent.attr('xmlns'));
+                        parent.append(e);                        
+                        this.ProcessChildren(element.childNodes, e, true, root);
+                    }
                 }
             }
             else {

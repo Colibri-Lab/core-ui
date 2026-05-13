@@ -57,6 +57,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
     _registerEvents() {
         super._registerEvents();
 
+        this.RegisterEvent('RowDoubleClicked', true, 'Поднимается, когда выбирают строку');        
         this.RegisterEvent('RowDisposed', true, 'Поднимается, когда выбирают строку');        
         this.RegisterEvent('RowSelected', true, 'Поднимается, когда выбирают строку');        
         this.RegisterEvent('RowCheckChanged', true, 'Поднимается, когда выбирают строку');        
@@ -70,7 +71,12 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         this.AddHandler('ComponentDisposed', this.__thisComponentDisposed);
         this.AddHandler('ChildAdded', this.__thisChildAdded);
         this.AddHandler('ContextMenu', this.__thisContextMenu);
+        this.AddHandler('DoubleClicked', this.__thisDoubleClicked);
 
+    }
+
+    __thisDoubleClicked(event, args) {
+        this.grid.Dispatch('RowDoubleClicked', Object.assign(args, {item: this}));
     }
 
     __thisComponentDisposed(event, args) {

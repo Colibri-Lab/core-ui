@@ -90,6 +90,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this.RegisterEvent('RowDisposed', false, 'When row is disposed');
         this.RegisterEvent('RowAdded', false, 'When row is added');
         this.RegisterEvent('RowUpdated', false, 'When row is updated');
+        this.RegisterEvent('RowDoubleClicked', false, 'When row is double clicked');
 
         this.RegisterEvent('CellClicked', false, 'When clicked on cell value container');
         this.RegisterEvent('CellViewerClicked', false, 'When clicked on cell viewer component');

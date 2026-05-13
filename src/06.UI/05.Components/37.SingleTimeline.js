@@ -100,10 +100,12 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
     }
 
     __progressClicked(event, args) {
-        const left = args.domEvent.offsetX;
-        const top = args.domEvent.offsetY;
-        this._spanMoved(left, null);
-        this.Dispatch('ProgressClicked', Object.assign(args, { value: this.value }));
+        if(args.domEvent.target.matches('[data-object-name="pane"]')) {
+            const left = args.domEvent.offsetX;
+            const top = args.domEvent.offsetY;
+            this._spanMoved(left, null);
+            this.Dispatch('ProgressClicked', Object.assign(args, { value: this.value }));
+        }
     }
 
     __minChanged(event, args) {
