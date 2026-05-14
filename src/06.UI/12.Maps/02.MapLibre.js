@@ -700,22 +700,40 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 }
             });
 
-            const paint = {};
+            const paint = {
+                'text-halo-color': '#000',
+                'text-halo-width': 2
+            };
             const layout = {
                 'icon-image': ['get', 'type'],
                 'icon-rotate': ['get', 'angle'],
                 'icon-allow-overlap': true,
                 'icon-rotation-alignment': 'map',
                 'icon-anchor': 'center',
+                'text-field': ['get', 'label'],
+                'text-font': ['Open Sans Bold'],
+                'text-size': 12,
+                'text-offset': [0, 1.5],
+                'text-anchor': 'top',
+                'text-allow-overlap': true
             };
             if (properties?.['size']) {
                 layout['icon-size'] = properties['size'];
+                layout['text-size'] = properties['size'];
             }
             if (properties?.['offset']) {
                 layout['icon-offset'] = properties['offset'];
+                layout['text-offset'] = properties['offset'];
             }
             if (properties?.['opacity']) {
                 paint['icon-opacity'] = properties['opacity'];
+                paint['text-opacity'] = properties['opacity'];
+            }
+            if (properties?.['color']) {
+                paint['text-color'] = properties['color'];
+            }
+            if (properties?.['font']) {
+                layout['text-font'] = properties['font'];
             }
 
             this._map.addLayer({
@@ -1347,23 +1365,23 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     DisableContextMenu() {
         this._map.getContainer().removeEventListener('contextmenu', this._contextMenuHandler);
-        
+
         this._map.removeLayer('contextmenu-layer');
         this._map.removeSource('contextmenupoints');
     }
-    
+
     EnableHover(callback, tolerance = 10) {
         this._infoDiv = new Colibri.UI.ToolTip('maplibre-tooltip', document.body, [Colibri.UI.ToolTip.RB, Colibri.UI.ToolTip.LT]);
         this._infoDiv.Hide();
         // this._map.getContainer().appendChild(this._infoDiv);
 
-        let loading = null; 
+        let loading = null;
         this._mousemoveHoverHandler = async e => {
-            if(loading) {
+            if (loading) {
                 return false;
             }
 
-            
+
             loading = true;
 
             const lat = e.lngLat.lat.toFixed(6);
@@ -1381,17 +1399,17 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 const id = features[0]?.properties?.id ?? null;
                 info = info + (id ? `, ID: ${id}` : '');
             }
-            let res = {infoOnMousePoint: false};
+            let res = { infoOnMousePoint: false };
             if (callback) {
                 info = await callback(features, info, e, res);
                 loading = false;
             }
 
             this._infoDiv.value = info;
-            if(res.infoOnMousePoint) {
-                this._infoDiv.Show(null, true, { left: e.point.x + this.left, top: e.point.y + this.top});
+            if (res.infoOnMousePoint) {
+                this._infoDiv.Show(null, true, { left: e.point.x + this.left, top: e.point.y + this.top });
             } else {
-                this._infoDiv.Show(null, true, { left: this.left + this.width - this._infoDiv.width - 25, top: this.top + this.height - this._infoDiv.height});
+                this._infoDiv.Show(null, true, { left: this.left + this.width - this._infoDiv.width - 25, top: this.top + this.height - this._infoDiv.height });
             }
         };
 
