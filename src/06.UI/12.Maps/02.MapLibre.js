@@ -1382,26 +1382,35 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             }
 
 
+            let info = '';
             loading = true;
-
-            const lat = e.lngLat.lat.toFixed(6);
-            const lng = e.lngLat.lng.toFixed(6);
-            const zoom = this._map.getZoom().toFixed(2);
-            const rect = [
-                [e.point.x - tolerance, e.point.y - tolerance],
-                [e.point.x + tolerance, e.point.y + tolerance]
-            ];
-            // Получаем все объекты под курсором
-            const features = this._map.queryRenderedFeatures(rect);
-            let info = `Lat: ${lat}, Lng: ${lng}, Zoom: ${zoom}`;
-            if (features.length) {
-                // Если есть, выводим ID первого объекта
-                const id = features[0]?.properties?.id ?? null;
-                info = info + (id ? `, ID: ${id}` : '');
-            }
             let res = { infoOnMousePoint: false };
-            if (callback) {
-                info = await callback(features, info, e, res);
+            try {
+
+                const lat = e.lngLat.lat.toFixed(6);
+                const lng = e.lngLat.lng.toFixed(6);
+                const zoom = this._map.getZoom().toFixed(2);
+                const rect = [
+                    [e.point.x - tolerance, e.point.y - tolerance],
+                    [e.point.x + tolerance, e.point.y + tolerance]
+                ];
+                // Получаем все объекты под курсором
+                info = `Lat: ${lat}, Lng: ${lng}, Zoom: ${zoom}`;
+
+                const features = this._map.queryRenderedFeatures(rect);
+                if (features.length) {
+                    // Если есть, выводим ID первого объекта
+                    const id = features[0]?.properties?.id ?? null;
+                    info = info + (id ? `, ID: ${id}` : '');
+                }
+                
+                if (callback) {
+                    info = await callback(features, info, e, res);
+                    loading = false;
+                }
+    
+            } catch (err) {
+                console.log(err);
                 loading = false;
             }
 
