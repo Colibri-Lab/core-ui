@@ -51,6 +51,10 @@ Colibri.Common = class {
         }
     }
 
+    static TimerExists(name) {
+        return !!Colibri.Common._timers?.[name];
+    }
+
     /**
      * Waits for a condition to be true.
      * @param {Function} action - The function to check the condition.

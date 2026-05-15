@@ -76,7 +76,7 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         this._select.AddHandler('Changed', this.__selectChanged, false, this);
         this._intensivity.AddHandler('Changed', this.__intensivityChanged, false, this);
 
-        this._drag = new Colibri.UI.Drag(this._span.container, this._pane.container, (newLeft, newTop) => this._spanMoved(newLeft, newTop));
+        this._drag = new Colibri.UI.Drag(this._span.container, this._pane.container, (newLeft, newTop) => this._spanMoved(newLeft, newTop), () => {}, () => this._spanEnd());
         this._addHandlers();
 
     }
@@ -110,6 +110,7 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
             const left = args.domEvent.offsetX;
             const top = args.domEvent.offsetY;
             this._spanMoved(left, null);
+            this._spanEnd();
             this.Dispatch('ProgressClicked', Object.assign(args, { value: this.value }));
         }
     }
@@ -167,6 +168,9 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         // this._progress.container.css('left', newLeft + 'px');
         this._calculateValue(newLeft, null);
         this._showProgress();
+    }
+
+    _spanEnd(event, args) {
         this.Dispatch('Changed', { value: this.value });
     }
 
