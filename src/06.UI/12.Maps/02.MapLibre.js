@@ -385,50 +385,57 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     _createLayers(sourceName, styles) {
         // Пример: полигоны
         if (styles?.polygons) {
-            this._map.addLayer({
-                id: sourceName + '-polygons',
-                type: 'fill',
-                source: sourceName,
-                paint: styles?.polygons?.paint,
-                minzoom: styles?.polygons?.minzoom ?? 0,
-                maxzoom: styles?.polygons?.maxzoom ?? 24
-            });
+            if(!this._map.getLayer(sourceName + '-polygons')) {
+                this._map.addLayer({
+                    id: sourceName + '-polygons',
+                    type: 'fill',
+                    source: sourceName,
+                    paint: styles?.polygons?.paint,
+                    minzoom: styles?.polygons?.minzoom ?? 0,
+                    maxzoom: styles?.polygons?.maxzoom ?? 24
+                });
+            }
         }
 
         if (styles?.lines) {
-            this._map.addLayer({
-                id: sourceName + '-lines',
-                type: 'line',
-                source: sourceName,
-                paint: styles?.lines?.paint,
-                minzoom: styles?.lines?.minzoom ?? 0,
-                maxzoom: styles?.lines?.maxzoom ?? 24
-            });
+            if(!this._map.getLayer(sourceName + '-lines')) {    
+                this._map.addLayer({
+                    id: sourceName + '-lines',
+                    type: 'line',
+                    source: sourceName,
+                    paint: styles?.lines?.paint,
+                    minzoom: styles?.lines?.minzoom ?? 0,
+                    maxzoom: styles?.lines?.maxzoom ?? 24
+                });
+            }
         }
 
         if (styles?.points) {
-            this._map.addLayer({
-                id: sourceName + '-points',
-                type: 'circle',
-                source: sourceName,
-                paint: styles?.points?.paint,
-                minzoom: styles?.points?.minzoom ?? 0,
-                maxzoom: styles?.points?.maxzoom ?? 24
-            });
-
+            if(!this._map.getLayer(sourceName + '-points')) {
+                this._map.addLayer({
+                    id: sourceName + '-points',
+                    type: 'circle',
+                    source: sourceName,
+                    paint: styles?.points?.paint,
+                    minzoom: styles?.points?.minzoom ?? 0,
+                    maxzoom: styles?.points?.maxzoom ?? 24
+                });
+            }
         }
 
         if (styles?.texts) {
-            this._map.addLayer({
-                id: sourceName + '-symbols',
-                type: 'symbol',
-                source: sourceName,
-                layout: styles?.texts.layout,
-                paint: styles?.texts.paint,
-                filter: ['!', ['==', ['get', 'name'], '']],
-                minzoom: styles?.texts?.minzoom ?? 0,
-                maxzoom: styles?.texts?.maxzoom ?? 24
-            });
+            if(!this._map.getLayer(sourceName + '-symbols')) {
+                this._map.addLayer({
+                    id: sourceName + '-symbols',
+                    type: 'symbol',
+                    source: sourceName,
+                    layout: styles?.texts.layout,
+                    paint: styles?.texts.paint,
+                    filter: ['!', ['==', ['get', 'name'], '']],
+                    minzoom: styles?.texts?.minzoom ?? 0,
+                    maxzoom: styles?.texts?.maxzoom ?? 24
+                });
+            }
         }
 
         this._moveBack(sourceName + '-points');

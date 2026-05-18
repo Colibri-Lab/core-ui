@@ -116,6 +116,7 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
     }
 
     __minChanged(event, args) {
+        this.min = this._min.value;
         if (!this._disableChangeEvent) {
             this._disableChangeEvent = true;
             this.Dispatch('MinChanged', { min: this._min.value, max: this._max.value });
@@ -124,6 +125,7 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
     }
 
     __maxChanged(event, args) {
+        this.max = this._max.value;
         if (!this._disableChangeEvent) {
             this._disableChangeEvent = true;
             this.Dispatch('MaxChanged', { min: this._min.value, max: this._max.value });
@@ -165,9 +167,10 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
     }
 
     _spanMoved(newLeft, newTop) {
-        // this._progress.container.css('left', newLeft + 'px');
+        this._progress.container.css('left', newLeft + 'px');
         this._calculateValue(newLeft, null);
         this._showProgress();
+        // this.Dispatch('Changed', { value: this.value });
     }
 
     _spanEnd(event, args) {
@@ -205,10 +208,10 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
 
             const width = parseFloat(this._pane.width);
 
-            const max = parseFloat(this._maxValue.toUnixTime());
-            const min = parseFloat(this._minValue.toUnixTime());
+            const max = parseFloat(this._maxValue?.toUnixTime() ?? 0);
+            const min = parseFloat(this._minValue?.toUnixTime() ?? 0);
 
-            let left = width * (parseFloat(value.toUnixTime()) - min) * 100 / (max - min) / 100;
+            let left = width * (parseFloat(value?.toUnixTime() ?? 0) - min) * 100 / (max - min) / 100;
             if (left > width) {
                 left = width;
             }
@@ -216,7 +219,7 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
             this._progress.container.css('left', left.toFixed(4) + 'px');
 
         } catch (e) {
-
+            console.log(e);
         }
 
     }
@@ -360,7 +363,8 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
      */
     set min(value) {
         if(this._maxLength) {
-            throw new Error('Cannot set min value when maxLength is set');
+            console.log('Cannot set min value when maxLength is set');
+            return;
         }
 
         value = this._convertProperty('Date', value);
