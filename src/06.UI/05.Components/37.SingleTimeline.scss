@@ -55,6 +55,7 @@
         
     }
 
+
     [data-object-name="select"] {
         width: 150px;
         border: 0px;
@@ -70,6 +71,17 @@
         height: 4px;
         margin-left: 8px;
         width: calc(100% - 16px);
+
+        [data-object-name="movinghandler"] {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: -8px;
+            z-index: 2;
+            border-radius: 50%;
+            background: #b9b9b9;
+        }
+        
         > .app-component-pane {
             max-width: 100%;
             position: relative;

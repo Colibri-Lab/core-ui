@@ -167,13 +167,20 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
     }
 
     _spanMoved(newLeft, newTop) {
-        this._progress.container.css('left', newLeft + 'px');
+        if(!this._movingHandler) {
+            this._movingHandler = new Colibri.UI.TextSpan('movinghandler', this._pane);
+        }
+        this._movingHandler.shown = true;
+        this._movingHandler.container.css('left', newLeft + 'px');
         this._calculateValue(newLeft, null);
         this._showProgress();
         // this.Dispatch('Changed', { value: this.value });
     }
 
     _spanEnd(event, args) {
+        if(this._movingHandler) {
+            this._movingHandler.shown = false;
+        }
         this.Dispatch('Changed', { value: this.value });
     }
 
