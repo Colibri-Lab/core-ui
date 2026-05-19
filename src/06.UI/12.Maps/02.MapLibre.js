@@ -1401,12 +1401,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     [e.point.x - tolerance, e.point.y - tolerance],
                     [e.point.x + tolerance, e.point.y + tolerance]
                 ];
-                // Получаем все объекты под курсором
                 info = `Lat: ${lat}, Lng: ${lng}, Zoom: ${zoom}`;
 
                 const features = this._map.queryRenderedFeatures(rect);
                 if (features.length) {
-                    // Если есть, выводим ID первого объекта
                     const id = features[0]?.properties?.id ?? null;
                     info = info + (id ? `, ID: ${id}` : '');
                 }
