@@ -69,8 +69,7 @@
         cursor: pointer;;
         background: #B5B2B2;
         height: 4px;
-        margin-left: 8px;
-        width: calc(100% - 16px);
+        width: 100%;
 
         [data-object-name="movinghandler"] {
             position: absolute;
@@ -85,7 +84,7 @@
         > .app-component-pane {
             max-width: 100%;
             position: relative;
-            padding: 0px 0px 0px 8px;
+            padding: 0px 0px 0px 0px;
             background: #888;
             height: 4px;
             width: 0%;
@@ -101,12 +100,12 @@
                 &.app-component-shown {
                     display: block;
                 }
-                &:first-child {
-                    left: -8px;
-                }
-                &:last-child {
-                    right: -8px;
-                }
+                // &:first-child {
+                //     left: -8px;
+                // }
+                // &:last-child {
+                //     right: -8px;
+                // }
             }
         }
     }

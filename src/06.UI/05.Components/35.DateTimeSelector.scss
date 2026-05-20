@@ -209,9 +209,13 @@
             }
         }
     }
-    &-timepicker {
-        table {
-            width: 100%;
-        }
+    [data-object-name="time-picker"] {
+        width: 100%;
+    }
+    [data-object-name="time-viewer"] {
+        width: 100%;
+        text-align: center;
+        font-weight: bold;
+        padding-bottom: 5px;
     }
 }

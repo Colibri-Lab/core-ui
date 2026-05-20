@@ -52,7 +52,16 @@ Colibri.UI.DateTimeSelector = class extends Colibri.UI.Component {
             e.preventDefault();
         });
         this._hiddenElement.addEventListener('blur', (e) => {
-            this.Close();
+            if (!this._skipLooseFocus && this._popup?.focusedElement != 'time-picker') {
+                if (this.value < this._min) {
+                    this.value = this._min;
+                } else if (this.value > this._max) {
+                    this.value = this._max;
+                }
+                this._showValue();
+                this.Dispatch('Changed');
+                this.Close();
+            }
         });
         // this._hiddenElement.addEventListener('keydown', (e) => {
         //     e.stopPropagation(); 
@@ -449,7 +458,6 @@ Colibri.UI.DateTimeSelectorPopup = class extends Colibri.UI.Pane {
 
         this.AddClass('app-date-selector-popup-component');
 
-        this.AddHandler('ShadowClicked', this.__thisShadowClicked);
 
         this._pickerheader = this._element.append(Element.fromHtml('<div class="calendar__dropdown-pickerheader"></div>'));
         this._pickerheader.append(Element.fromHtml('<table><tr><td class="left">' + Colibri.UI.ArrowLeft + '</td><td class="calendar__dropdown-pickerheader_title"></td><td class="right">' + Colibri.UI.ArrowRight + '</td></tr></table>'));
@@ -459,44 +467,37 @@ Colibri.UI.DateTimeSelectorPopup = class extends Colibri.UI.Pane {
         this._monthPicker = new Colibri.UI.MonthPicker('month-picker', this);
         this._yearPicker = new Colibri.UI.YearPicker('year-picker', this);
 
-        this._timePicker = new Colibri.UI.Input('time-picker', this);
-        this._timePicker.placeholder = 'Время';
-        this._timePicker.shown = true;
-        this._timePicker.hasIcon = false;
-        this._timePicker.hasClearIcon = false;
-        this._timePicker.mask = '99:99:99';
-        this._timePicker.changeOnKeyUp = false;
-        this._timePicker.changeOnKeyUpTimeout = 0;
-        this._timePicker.AddHandler('Changed', (event, args) => {
-            let dt = this.value.copy();
-            let parts = this._timePicker.value.split(':');
-            if(parts.length === 3) {
-                dt.setHours(parts[0]);
-                dt.setMinutes(parts[1]);
-                dt.setSeconds(parts[2]);
-                this.value = dt.copy();
-            } else if(parts.length === 2) {
-                dt.setHours(parts[0]);
-                dt.setMinutes(parts[1]);
-                dt.setSeconds(0);
-                this.value = dt.copy();
-            } else if(parts.length === 1) {
-                dt.setHours(parts[0]);
-                dt.setMinutes(0);
-                dt.setSeconds(0);
-                this.value = dt.copy();
-            }
+        this._timeViewer = new Colibri.UI.DateTimeViewer('time-viewer', this);
+        this._timeViewer.format = new Intl.DateTimeFormat(App.DateFormat || 'ru-RU', {hour: '2-digit', minute: '2-digit', second: '2-digit'})
+        this._timeViewer.shown = true;
 
-            args.domEvent.stopPropagation();
-            args.domEvent.preventDefault();
+        this._timePicker = new Colibri.UI.SingleTimeline('time-picker', this);
+        this._timePicker.shown = true;
+        this._timePicker.hasDateComponents = false;
+        this._timePicker.maxLength = 24 * 60 * 60 - 1;
+        this._timePicker.AddHandler('MouseDown', (event, args) => {
+            this.parent._skipLooseFocus = true;
+        });
+        this._timePicker.AddHandler('DateMayChangeTo', (event, args) => {
+            this._timeViewer.value = args.value;
+        });
+        this._timePicker.AddHandler('Changed', (event, args) => {
+            const dt = this.value;
+            dt.setSeconds(this._timePicker.value.getSeconds());
+            dt.setMinutes(this._timePicker.value.getMinutes());
+            dt.setHours(this._timePicker.value.getHours());
+            this.parent.value = dt.copy();
             return false;
         });
 
         this._mode = 'datepicker';
         this._value = new Date();
+        this._timePicker.max = this._value.copy().setAsEndOfDay();
         this._datePicker.value = this._value;
         this._yearPicker.value = this._value;
         this._monthPicker.value = this._value;
+        this._timePicker.value = this._value;
+        this._timeViewer.value = this._value;
 
         this.handleVisibilityChange = true;
         this.AddHandler('VisibilityChanged', this.__thisVisibilityChanged);
@@ -575,6 +576,8 @@ Colibri.UI.DateTimeSelectorPopup = class extends Colibri.UI.Pane {
             return false;
         });
 
+        this.AddHandler('ShadowClicked', this.__thisShadowClicked);
+
         this._show();
 
     }
@@ -586,7 +589,6 @@ Colibri.UI.DateTimeSelectorPopup = class extends Colibri.UI.Pane {
     }
 
     __thisVisibilityChanged(event, args) {
-        
 
         if (!args.state) {
             Colibri.Common.Delay(50).then(() => {
@@ -686,7 +688,9 @@ Colibri.UI.DateTimeSelectorPopup = class extends Colibri.UI.Pane {
         this._datePicker.Render();
         this._yearPicker.Render();
         this._monthPicker.Render();
-        this._timePicker.value = this._value.toTimeString();
+        this._timePicker.max = this._value.copy().setAsEndOfDay();
+        this._timePicker.value = this._value;
+        this._timeViewer.value = this._value;
         if(this.parent.value.toDbDate() != this.value.toDbDate()) {
             this.parent.value = this.value;
         }
@@ -734,6 +738,8 @@ Colibri.UI.DateTimeSelectorPopup = class extends Colibri.UI.Pane {
             this._monthPicker.shown = false;
             this._yearPicker.shown = true;
         }
+        
+        // console.log(this._value, this._timePicker.min, this._timePicker.max)
         this._showPickerTitle();
         if (this.ContainsClass('-up')) {
             this.Dispatch('VisibilityChanged', { state: false });
@@ -755,6 +761,10 @@ Colibri.UI.DateTimeSelectorPopup = class extends Colibri.UI.Pane {
             this._headerText.html(this._yearPicker.startYear + '&nbsp;&ndash;&nbsp;' + (this._yearPicker.startYear + 10));
         }
 
+    }
+
+    get focusedElement() {
+        return this._focusedElement;
     }
 
 }

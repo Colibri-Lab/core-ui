@@ -3074,7 +3074,7 @@ Date.prototype.format = function (formatObject, dateFormat = 'ru-RU') {
  * @param {boolean} [withoutDay=false] - Whether to exclude day.
  * @returns {string} The formatted date string.
  */
-Date.prototype.intlFormat = function (withTime = false, withoutDay = false, withoutYear = false, withSeconds = false) {
+Date.prototype.intlFormat = function (withTime = false, withoutDay = false, withoutYear = false, withSeconds = false, withoutMonth = false) {
     let dateformat = App.DateFormat || 'ru-RU';
     const params = { day: '2-digit', month: 'short', year: 'numeric' };
     if (withTime) {
@@ -3089,6 +3089,9 @@ Date.prototype.intlFormat = function (withTime = false, withoutDay = false, with
     }
     if (withoutYear) {
         delete params.year;
+    }
+    if (withoutMonth) {
+        delete params.month;
     }
     const format = new Intl.DateTimeFormat(dateformat, params);
     if ((this + '') === 'Invalid Date') {
@@ -3141,6 +3144,24 @@ Date.prototype.setAsStartOfYear = function () {
 Date.prototype.setAsEndOfYear = function () {
     this.setMonth(11);
     this.setDate(31);
+    return this;
+};
+/**
+ * Sets the date to the start of the current year.
+ * @returns {Date} The updated date object.
+ */
+Date.prototype.setAsStartOfDay = function () {
+    this.setHours(0);
+    this.setMinutes(0);
+    this.setSeconds(0);
+    this.setMilliseconds(0);
+    return this;
+};
+Date.prototype.setAsEndOfDay = function () {
+    this.setHours(23);
+    this.setMinutes(59);
+    this.setSeconds(59);
+    this.setMilliseconds(0);
     return this;
 };
 /**

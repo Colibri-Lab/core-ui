@@ -587,4 +587,8 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         this._expandedMinWidth = value;
     }
 
+    get input() {
+        return this._input;
+    }
+
 }
