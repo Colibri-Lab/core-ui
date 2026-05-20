@@ -413,7 +413,6 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
      */
     set min(value) {
         if (this._maxLength) {
-            console.log('Cannot set min value when maxLength is set');
             return;
         }
 
