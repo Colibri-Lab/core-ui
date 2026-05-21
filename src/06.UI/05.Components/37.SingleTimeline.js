@@ -388,7 +388,7 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
      */
     set max(value) {
         value = this._convertProperty('Date', value);
-        if (!this._maxValue || this._maxValue.getTime() != value.getTime()) {
+        // if (!this._maxValue || this._maxValue.getTime() != value.getTime()) {
             this._maxValue = value;
 
             if (this._maxLength) {
@@ -397,7 +397,7 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
 
             this._viewPicker();
             this._showProgress();
-        }
+        // }
     }
 
     /**
