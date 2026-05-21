@@ -467,11 +467,11 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         Colibri.Common.StartTimer('ldi-timeline-timer', (this._intensivity?.value?.value ?? this._intensivity?.value ?? 1) * 1000, () => {
             const step = ((this._select?.value?.value ?? this._select?.value) * 1000);
             this.max = new Date(this.max.getTime() + step);
-            if (this.max.getTime() > Date.Now().getTime()) {
+            if (this.max.toDbDate() >= Date.Now().toDbDate()) {
                 this.max = new Date();
             }
             this.value = new Date(this.value.getTime() + step);
-            if (this.value.getTime() > Date.Now().getTime()) {
+            if (this.value.toDbDate() >= Date.Now().toDbDate()) {
                 this.value = new Date();
             }
             this.Dispatch('Changed', { value: this.value });
