@@ -88,13 +88,13 @@
         }
         
         .app-component-icon {
-            &.app-component-shown {
-                display: block;
-            }
             width: 17px;
             height: 32px;
             background: transparent;
             border-radius: 2px;
+            &.app-component-shown {
+                display: block;
+            }
             &:hover {
                 background: #4CB5FF;
                 svg {

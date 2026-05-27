@@ -14,9 +14,6 @@
     padding: 5px 12px;
 
     [data-object-name="icon"] {
-        &.app-component-shown {
-            display: block;
-        }
         outline: none;
         background: transparent;
         border: 0;
@@ -24,6 +21,9 @@
         width: 20px;
         height: 20px;
         padding: 0;
+        &.app-component-shown {
+            display: block;
+        }
         svg {
             display: block;
             width: 20px;
