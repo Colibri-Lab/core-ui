@@ -59,7 +59,7 @@ Colibri.UI.Drag = class {
     __start(e) {
         const bounds = this._container.bounds();
         const elementBounds = this._element.bounds();
-        this._element.tag = { state: true, delta: [e.clientX - elementBounds.left, e.clientY - elementBounds.top] };
+        this._element.tag = { state: true, delta: [(e.clientX || e.touches[0].clientX) - elementBounds.left, (e.clientY || e.touches[0].clientY) - elementBounds.top] };
         document.addEventListener('mouseup', this.__EndHandle, true);
         document.addEventListener('touchend', this.__EndHandle, true);
         document.addEventListener('mousemove', this.__MoveHandle, true);
@@ -77,7 +77,9 @@ Colibri.UI.Drag = class {
         const point = this._calcPoint(e);
         this._element.tag = { state: false };
         document.removeEventListener('mouseup', this.__EndHandle, true);
+        document.removeEventListener('touchend', this.__EndHandle, true);
         document.removeEventListener('mousemove', this.__MoveHandle, true);
+        document.removeEventListener('touchmove', this.__MoveHandle, true);
         this._endHandler(point.left, point.top);
         e.preventDefault();
         e.stopPropagation();
@@ -102,16 +104,21 @@ Colibri.UI.Drag = class {
         const elementBounds = this._element.bounds();
         const delta = this._element.tag.delta;
 
-        let newLeft = (e.clientX - delta[0] - containerBounds.left);
-        let newTop = (e.clientY - delta[1] - containerBounds.top);
+        console.log(e.touches[0], delta);
 
-        if (newLeft < -1 * elementBounds.outerWidth / 2) { newLeft = -1 * elementBounds.outerWidth / 2; }
-        if (newLeft > containerBounds.outerWidth - elementBounds.outerWidth / 2) { newLeft = containerBounds.outerWidth - elementBounds.outerWidth / 2; }
-
-        if (newTop < -1 * elementBounds.outerHeight / 2) { newTop = -1 * elementBounds.outerHeight / 2; }
-        if (newTop > containerBounds.outerHeight - elementBounds.outerHeight / 2) { newTop = containerBounds.outerHeight - elementBounds.outerHeight / 2; }
-
-        return {left: newLeft, top: newTop};
+        if(e.touches && e.touches.length > 0 || e.clientX) {
+            let newLeft = ((e.clientX || e.touches[0].clientX) - delta[0] - containerBounds.left);
+            let newTop = ((e.clientY || e.touches[0].clientY) - delta[1] - containerBounds.top);
+    
+            if (newLeft < -1 * elementBounds.outerWidth / 2) { newLeft = -1 * elementBounds.outerWidth / 2; }
+            if (newLeft > containerBounds.outerWidth - elementBounds.outerWidth / 2) { newLeft = containerBounds.outerWidth - elementBounds.outerWidth / 2; }
+    
+            if (newTop < -1 * elementBounds.outerHeight / 2) { newTop = -1 * elementBounds.outerHeight / 2; }
+            if (newTop > containerBounds.outerHeight - elementBounds.outerHeight / 2) { newTop = containerBounds.outerHeight - elementBounds.outerHeight / 2; }
+    
+            return {left: newLeft, top: newTop};
+        }
+        return {left: elementBounds.left, top: elementBounds.top};
     }
 
 }
