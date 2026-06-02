@@ -42,12 +42,14 @@ Colibri.UI.Drag = class {
         this.__StartHandle = (e) => this.__start(e);
 
         this._element.addEventListener('mousedown', this.__StartHandle);
+        this._element.addEventListener('touchstart', this.__StartHandle);
 
     }
 
     Dispose() {
         this.__end();
         this._element.removeEventListener('mousedown', this.__StartHandle);
+        this._element.removeEventListener('touchstart', this.__StartHandle);
         super.Dispose();
     }
 
@@ -59,7 +61,9 @@ Colibri.UI.Drag = class {
         const elementBounds = this._element.bounds();
         this._element.tag = { state: true, delta: [e.clientX - elementBounds.left, e.clientY - elementBounds.top] };
         document.addEventListener('mouseup', this.__EndHandle, true);
+        document.addEventListener('touchend', this.__EndHandle, true);
         document.addEventListener('mousemove', this.__MoveHandle, true);
+        document.addEventListener('touchmove', this.__MoveHandle, true);
         const point = this._calcPoint(e);
         this._startHandler(point.left, point.top);
         e.preventDefault();
