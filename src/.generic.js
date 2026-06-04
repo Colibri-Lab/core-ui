@@ -32,6 +32,22 @@ const json_array = function (v) {
     return JSON.parse(v || '[]');
 };
 
+function stableStringify(obj) {
+  if (obj === null || typeof obj !== "object") {
+    return JSON.stringify(obj);
+  }
+
+  if (Array.isArray(obj)) {
+    return "[" + obj.map(stableStringify).join(",") + "]";
+  }
+
+  const keys = Object.keys(obj).sort();
+
+  return "{" + keys.map(k => {
+    return JSON.stringify(k) + ":" + stableStringify(obj[k]);
+  }).join(",") + "}";
+}
+
 /**
  * Evaluates a default value string.
  * If the default value is a string and contains 'json_object' or 'json_array',
