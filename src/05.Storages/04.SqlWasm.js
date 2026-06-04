@@ -326,10 +326,24 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
             if(Array.isArray(f)) {
                 if(f[0] === 'in') {
                     filter.push('"' + name + '" IN (' + f.slice(1).map(v => v.isNumeric() ? v : '\'' + v + '\'') + ')');
-                } else if(f[0] === 'between' && f.length === 3) {
-                    filter.push('"' + name + '" BETWEEN [[' + name + '1:string]] AND [[' + name + '2:string]]');
-                    params[name + '1'] = f[1];
-                    params[name + '2'] = f[2];
+                } else if(f[0] === 'between') {
+                    if(f.length !== 3) {
+                        continue;
+                    }
+                    if(f[1] && f[2]) {
+                        filter.push('"' + name + '" BETWEEN [[' + name + '1:string]] AND [[' + name + '2:string]]');
+                        params[name + '1'] = f[1];
+                        params[name + '2'] = f[2];
+                    } else {
+                        if(!f[1]) {
+                            filter.push('"' + name + '" <= [[' + name + '2:string]]');
+                            params[name + '2'] = f[2];
+                        } 
+                        if(!f[2]) {
+                            filter.push('"' + name + '" >= [[' + name + '1:string]]');
+                            params[name + '1'] = f[1];                        
+                        }
+                    }
                 }
             } else {
                 filter.push('"' + name + '" = [[' + name + ':' + (f.isNumeric() ? 'integer' : 'string') + ']]');
