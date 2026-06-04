@@ -266,7 +266,7 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
             const query = `
                 SELECT COUNT(*) as results_count
                 FROM ${table}
-                WHERE ${field} BETWEEN [[min:${type}]] AND [[max:${type}]]` + (d.filter ? 'AND ' + d.filter : '');
+                WHERE ${field} BETWEEN [[min:${type}]] AND [[max:${type}]]` + (d.filter ? ' AND ' + d.filter : '');
             const params = Object.assign(d.params, {
                 min: field === 'datecreated' ? new Date(binStart * 1000).toLocalDateTimeString() : binStart,
                 max: field === 'datecreated' ? new Date(binEnd * 1000).toLocalDateTimeString() : binEnd
@@ -332,16 +332,16 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
                     }
                     if(f[1] && f[2]) {
                         filter.push('"' + name + '" BETWEEN [[' + name + '1:string]] AND [[' + name + '2:string]]');
-                        params[name + '1'] = f[1];
-                        params[name + '2'] = f[2];
+                        params[name + '1'] = f[1] instanceof Date ? f[1].toLocalDateTimeString() : f[1];
+                        params[name + '2'] = f[2] instanceof Date ? f[2].toLocalDateTimeString() : f[2];
                     } else {
                         if(!f[1]) {
                             filter.push('"' + name + '" <= [[' + name + '2:string]]');
-                            params[name + '2'] = f[2];
+                            params[name + '2'] = f[2] instanceof Date ? f[2].toLocalDateTimeString() : f[2];
                         } 
                         if(!f[2]) {
                             filter.push('"' + name + '" >= [[' + name + '1:string]]');
-                            params[name + '1'] = f[1];                        
+                            params[name + '1'] = f[1] instanceof Date ? f[1].toLocalDateTimeString() : f[1];                        
                         }
                     }
                 }

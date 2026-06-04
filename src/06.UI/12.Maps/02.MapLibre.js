@@ -767,7 +767,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         source.setData(data);
     }
 
-    _sourceAddOrUpdateObjects(name, objectsJson, updateIfExists = true) {
+    _sourceAddOrUpdateObjects(name, objectsJson, updateIfExists = true, removeIfNotFoundInObjects = false) {
         const source = this._createObjectSource(name);
         if (!source) {
             return;
@@ -775,7 +775,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
         const data = source._data.geojson;
         // remove unexistance objects if updateIfExists = true
-        if (updateIfExists) {
+        if (updateIfExists && removeIfNotFoundInObjects) {
             const objectIds = objectsJson.map(o => o.id);
             data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
         }
@@ -836,13 +836,13 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         source.setData(data);
     }
 
-    _sourceAddOrUpdateLines(name, objectsJson, updateIfExists = true) {
+    _sourceAddOrUpdateLines(name, objectsJson, updateIfExists = true, removeIfNotFoundInObjects = false) {
         const source = this._createLineSource(name);
         if (!source) {
             return;
         }
         const data = source._data.geojson;
-        if (updateIfExists) {
+        if (updateIfExists && removeIfNotFoundInObjects) {
             const objectIds = objectsJson.map(o => o.id);
             data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
         }
@@ -903,13 +903,13 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         source.setData(data);
     }
 
-    _sourceAddOrUpdatePoints(name, objectsJson, updateIfExists = true) {
+    _sourceAddOrUpdatePoints(name, objectsJson, updateIfExists = true, removeIfNotFoundInObjects = false) {
         const source = this._createPointSource(name);
         if (!source) {
             return;
         }
         const data = source._data.geojson;
-        if (updateIfExists) {
+        if (updateIfExists && removeIfNotFoundInObjects) {
             const objectIds = objectsJson.map(o => o.id);
             data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
         }
@@ -1017,7 +1017,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         }
     }
 
-    AddMarkers(source, latLngsLike, icon = null, updateIfExists = true) {
+    AddMarkers(source, latLngsLike, icon = null, updateIfExists = true, removeIfNotFoundInObjects = false) {
         this._sourceAddOrUpdateObjects(source, latLngsLike.map(latLngLike => {
             if (latLngLike.type === 'Feature') {
                 return latLngLike;
@@ -1029,7 +1029,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     properties: Object.assign(latLngLike, { id: latLngLike.id, angle: latLngLike.azimuth, type: latLngLike.type ?? icon })
                 };
             }
-        }), updateIfExists);
+        }), updateIfExists, removeIfNotFoundInObjects);
     }
 
     AddPopup(name, popupHtml) {
@@ -1114,7 +1114,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         sourceObj.setData(data);
     }
 
-    AddCircles(source, latLngsLike, radius, color = 'red', updateIfExists = true) {
+    AddCircles(source, latLngsLike, radius, color = 'red', updateIfExists = true, removeIfNotFoundInObjects = false) {
 
         this._sourceAddOrUpdatePoints(source, latLngsLike.map(latLngLike => {
             if (latLngLike.type === 'Feature') {
@@ -1134,7 +1134,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     'opacity': 1
                 }
             };
-        }), updateIfExists);
+        }), updateIfExists, removeIfNotFoundInObjects);
     }
 
     UpdateLinesColor(source, color, condition = null) {
@@ -1152,7 +1152,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         sourceObj.setData(data);
     }
 
-    AddLinesFromGeo(source, geolineObjects, color = 'red', weight = 1, updateIfExists = true) {
+    AddLinesFromGeo(source, geolineObjects, color = 'red', weight = 1, updateIfExists = true, removeIfNotFoundInObjects = false) {
         this._sourceAddOrUpdateLines(source, geolineObjects.map(v => {
             if (v.type === 'Feature') {
                 return v;
@@ -1168,7 +1168,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     }
                 };
             }
-        }), updateIfExists);
+        }), updateIfExists, removeIfNotFoundInObjects);
     }
 
     AddLineFromGeo(source, name, geolineObject, color = 'red', weight = 1) {
