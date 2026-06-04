@@ -295,7 +295,6 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             case Colibri.UI.Grid.FullRow:
                 if (row) {
                     this.DeactivateAllRows();
-
                     if (!this.multiple) {
                         this.UnselectAllRows();
                     }
@@ -877,7 +876,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         switch (this.selectionMode) {
             case Colibri.UI.Grid.EveryCell:
                 this.DeactivateAllCells();
-                if (!this.multiple) {
+                if (!this.multiple || !document.keysPressed.ctrl) {
                     this.DeselectAllCells();
                 }
                 cell.activated = !cell.activated;
@@ -886,7 +885,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             case Colibri.UI.Grid.FullRow:
                 this.DeactivateAllRows();
 
-                if (!this.multiple) {
+                if (!this.multiple || !document.keysPressed.ctrl) {
                     this.UnselectAllRows();
                 }
                 row.activated = !row.activated;
