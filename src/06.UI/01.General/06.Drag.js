@@ -104,8 +104,6 @@ Colibri.UI.Drag = class {
         const elementBounds = this._element.bounds();
         const delta = this._element.tag.delta;
 
-        console.log(e.touches[0], delta);
-
         if(e.touches && e.touches.length > 0 || e.clientX) {
             let newLeft = ((e.clientX || e.touches[0].clientX) - delta[0] - containerBounds.left);
             let newTop = ((e.clientY || e.touches[0].clientY) - delta[1] - containerBounds.top);
