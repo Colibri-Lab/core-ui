@@ -141,7 +141,8 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         if(event.name === 'ContextMenu') {
             args.isContextMenuEvent = true;
         }
-        this.grid.Dispatch('ContextMenuIconClicked', Object.assign(args, {item: this}));
+
+        this.grid.Dispatch('ContextMenuIconClicked', Object.assign(args, {item: this, row: this, cell: this.activeCell}));
         if(event.name === 'ContextMenu') {
             args.domEvent.stopPropagation();
             args.domEvent.preventDefault();
@@ -434,7 +435,7 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         
         this._contextmenuContainer.Children('firstChild')?.RemoveClass('-selected');
         this._contextMenuObject.Hide();
-        this.grid.Dispatch('ContextMenuItemClicked', Object.assign(args, {item: this}));
+        this.grid.Dispatch('ContextMenuItemClicked', Object.assign(args, {item: this, row: this, cell: this.activeCell}));
         this._contextMenuObject.Dispose();
         this._contextMenuObject = null;
     }

@@ -42,7 +42,13 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
 
     _registerEventHandlers() {
         super._registerEventHandlers();
+
+        this.AddHandler('MouseDown', this.__thisClicked);
         
+    }
+
+    __thisClicked(event, args) {
+        this.activated = true;
     }
 
 

@@ -1423,16 +1423,23 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             if (res.infoOnMousePoint) {
                 this._infoDiv.Show(null, true, { left: e.point.x + this.left, top: e.point.y + this.top });
             } else {
-                this._infoDiv.Show(null, true, { left: this.left + this.width - this._infoDiv.width - 25, top: this.top + this.height - this._infoDiv.height });
+                this._infoDiv.Show(null, true, { 
+                    left: this.left + this.width - this._infoDiv.width - 25, 
+                    top: this.top + this.height - this._infoDiv.height - this.Children('commands').height - 15
+                });
             }
         };
 
         this._map.on('mousemove', this._mousemoveHoverHandler);
+        this._map.on('mouseout', () => {
+            this._infoDiv.Hide();
+        });
     }
 
     DisableHover() {
         if (this._mousemoveHoverHandler) {
             this._map.off('mousemove', this._mousemoveHoverHandler);
+            this._map.off('mouseout', this._mousemoveHoverHandler);
             this._mousemoveHoverHandler = null;
         }
         if (this._infoDiv) {
