@@ -27,6 +27,15 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
 
     }
 
+    /**
+     * Register events
+     * @protected
+     */
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('VirtualRowsChanged', false, 'When the virtual rows are changed');
+    }
+
     Refresh() {
         this._showValue();
     }
@@ -91,6 +100,8 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
         const scrolledTop = this.scrollTop;
         this._gridScrollContainer.height = gridHeight;
 
+        const oldRows = this.rows.Children().filter(r => r.value);
+
         if (visibleHeight > gridHeight) {
             
             let i = 0;
@@ -139,6 +150,9 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
                 }
             }
         }
+
+        const newRows = this.rows.Children().filter(r => r.value);
+        this.Dispatch('VirtualRowsChanged', {before: oldRows, after: newRows});
 
 
 
