@@ -16,6 +16,8 @@ Colibri.UI.Maps.Controls.ToggleButton = class extends Colibri.UI.Maps.Controls.B
         super(name, container, Colibri.UI.Templates['Colibri.UI.Maps.Controls.ToggleButton']);
         this.AddClass('colibri-ui-maps-controls-togglebutton');
 
+        this._icons = ['Colibri.UI.SelectCheckIcon', 'Colibri.UI.ClearIcon'];
+        this._labels = [];
         this.AddHandler('Clicked', this.__thisClicked);
 
     }
@@ -47,11 +49,51 @@ Colibri.UI.Maps.Controls.ToggleButton = class extends Colibri.UI.Maps.Controls.B
     _showChecked() {
         if(this._checked) {
             this.AddClass('-checked');
-            this.icon = 'Colibri.UI.SelectCheckIcon';
+            this.icon = this._icons[1];
+            if(this._labels.length > 1) {
+                this.label = this._labels[1];
+            }
         } else {
             this.RemoveClass('-checked');
-            this.icon = 'Colibri.UI.ClearIcon';
+            this.icon = this._icons[0];
+            if(this._labels.length > 1) {
+                this.label = this._labels[0];
+            }
         }
+    }
+
+    /**
+     * Icons for selection
+     * @type {Array<string>}
+     */
+    get icons() {
+        return this._icons;
+    }
+    /**
+     * Icons for selection
+     * @type {Array<string>}
+     */
+    set icons(value) {
+        value = this._convertProperty('Array', value);
+        this._icons = value;
+    }
+
+
+    /**
+     * Array of texts
+     * @type {Array<string>}
+     */
+    get labels() {
+        return this._labels;
+    }
+    /**
+     * Array of texts
+     * @type {Array<string>}
+     */
+    set labels(value) {
+        value = this._convertProperty('Array', value);
+        this._labels = value;
+        console.log(this._labels);
     }
 
 }
