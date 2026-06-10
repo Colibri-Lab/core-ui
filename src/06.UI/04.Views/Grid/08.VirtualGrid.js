@@ -25,6 +25,7 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
         this.AddHandler('Scrolled', this.__thisRecalcCounts);
         this.AddHandler('Resized', this.__thisRecalcCounts);
 
+
     }
 
     /**
@@ -163,6 +164,5 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
             this.rows.Add('data' + i, this._emptyRow ?? {});
         }
     }
-
 
 }

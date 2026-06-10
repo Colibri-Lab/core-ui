@@ -93,7 +93,6 @@ Colibri.UI.Maps.Controls.ToggleButton = class extends Colibri.UI.Maps.Controls.B
     set labels(value) {
         value = this._convertProperty('Array', value);
         this._labels = value;
-        console.log(this._labels);
     }
 
 }

@@ -852,7 +852,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
 
     /**
-     * @private
+     * @protected
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
      */
@@ -885,11 +885,21 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             case Colibri.UI.Grid.FullRow:
                 this.DeactivateAllRows();
 
-                if (!this.multiple || !document.keysPressed.ctrl) {
+                if (!this.multiple || (!document.keysPressed.ctrl && !document.keysPressed.shift)) {
                     this.UnselectAllRows();
                 }
-                row.activated = !row.activated;
-                row.selected = !row.selected;
+                if(document.keysPressed.shift && this.selected.length > 0) {
+                    const indexes = this.selected.map(v => v.childIndex);
+                    const minIndex = Math.min(...indexes);
+                    const maxIndex = row.childIndex;
+                    this.selected.forEach(v => (v.selected = false));
+                    for(let i = Math.min(minIndex, maxIndex); i <= Math.max(minIndex, maxIndex); i++) {
+                        (this.activeGroup ?? this.rows).Children(i).selected = true;
+                    }
+                } else {
+                    row.activated = !row.activated;
+                    row.selected = !row.selected;
+                }
                 break;
         }
 

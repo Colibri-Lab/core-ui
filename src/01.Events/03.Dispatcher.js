@@ -225,6 +225,13 @@ Colibri.Events.Dispatcher = class extends Destructable {
     }
 
     /**
+     * Clears all event handlers.
+     */
+    ClearHandler(eventName) {
+        delete this.__handlers[eventName];
+    }
+
+    /**
      * Disposes of the dispatcher.
      */
     Dispose() {
