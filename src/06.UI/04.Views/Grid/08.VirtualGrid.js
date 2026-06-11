@@ -20,10 +20,15 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
         this._gridScrollContainer = new Colibri.UI.Component('app-ui-grid-scroll', this, Element.create('div'));
         this._gridScrollContainer.shown = true;
 
+        this._gridSelection = [];
+
         this.animateScroll = false;
         this.handleResize = true;
         this.AddHandler('Scrolled', this.__thisRecalcCounts);
         this.AddHandler('Resized', this.__thisRecalcCounts);
+
+        this.ClearHandler('Clicked');
+        this.AddHandler('Clicked', this.__clickedProcessing2, false, this);
 
 
     }
@@ -96,12 +101,12 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
             return;
         }
 
+        const leftScrolled = this.scrollLeft;
+
         const gridHeight = (this._value?.length ?? 0) * this._rowHeight;
         const visibleHeight = this._element.bounds().outerHeight;
         const scrolledTop = this.scrollTop;
         this._gridScrollContainer.height = gridHeight;
-
-        const oldRows = this.rows.Children().filter(r => r.value);
 
         if (visibleHeight > gridHeight) {
             
@@ -149,13 +154,11 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
                         this.rows.Children('data' + i).styles = { visibility: 'hidden' };
                     }
                 }
+                this.rows.Children('data' + i).selected = this._gridSelection.indexOf(this.rows.Children('data' + i).value.id) !== -1;
             }
         }
 
-        const newRows = this.rows.Children().filter(r => r.value);
-        this.Dispatch('VirtualRowsChanged', {before: oldRows, after: newRows});
-
-
+        this.scrollLeft = leftScrolled;
 
     }
 
@@ -165,4 +168,80 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
         }
     }
 
+    
+    /**
+     * Selected items
+     * @type {Array}
+     */
+    get selectedItems() {
+        return this._gridSelection;
+    }
+    /**
+     * Selected items
+     * @type {Array}
+     */
+    set selectedItems(value) {
+        if(JSON.stringify(this._gridSelection) != JSON.stringify(value)) {
+            this._gridSelection = value;
+            this._showValue();
+        }
+    }
+
+    
+    /**
+     * @protected
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
+    __clickedProcessing2(event, args) {
+
+        const target = args.domEvent.target;
+        const cell = target.closest('.app-ui-row-cell')?.getUIComponent();
+        if (!cell) {
+            return false;
+        }
+
+        const row = target.closest('.app-ui-row').getUIComponent();
+
+        args.cell = cell;
+        args.row = row;
+
+        this._element.focus();
+
+        switch (this.selectionMode) {
+            case Colibri.UI.Grid.EveryCell:
+                this.__clickedProcessing(event, args);
+                break;
+            case Colibri.UI.Grid.FullRow:
+                this.DeactivateAllRows();
+
+                if (!this.multiple || (!args.domEvent.ctrlKey && !args.domEvent.shiftKey)) {
+                    this._gridSelection = [];
+                }
+                if(args.domEvent.shiftKey && this._gridSelection.length > 0) {
+                    const indexes = this._gridSelection.map(v => this._value.map(vv => vv.id).indexOf(v));
+                    const minIndex = Math.min(...indexes);
+                    const maxIndex = this._value.map(vv => vv.id).indexOf(row.value.id);
+                    this._gridSelection = [];
+                    for(let i = Math.min(minIndex, maxIndex); i <= Math.max(minIndex, maxIndex); i++) {
+                        this._gridSelection.push(this._value[i].id);
+                    }
+                } else {
+                    if(this._gridSelection.indexOf(row.value.id) !== -1) {
+                        this._gridSelection.splice(this._gridSelection.indexOf(row.value.id), 1);
+                    } else {
+                        this._gridSelection.push(row.value.id);
+                    }
+                }
+                this._showValue();
+                break;
+        }
+
+        cell.EditValue && cell.EditValue();
+
+        args.item = this.selected;
+        this.Dispatch('SelectionChanged', args);
+    }
+
+    
 }
