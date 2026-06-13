@@ -64,8 +64,23 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
     }
 
     __inputFileChanged(event, args) {
-        this._value = this._input.Files();
-        this.Dispatch('Changed', Object.assign(args, { component: this }));
+        let files = this._input.Files();
+        if (files) {
+            if (!Array.isArray(files)) {
+                files = [files];
+            }
+            this._validate(files);
+
+            if (this._validated) {
+                this._value = files[0];
+                this._showFile();
+            }
+            else {
+                this._value = null;
+                this._showError();
+            }
+            this.Dispatch('Changed', Object.assign(args, { component: this }));
+        }
     }
 
     __inputInputFileChosen(event, args) {
@@ -88,6 +103,9 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         this._value = null;
         this._clearInput();
         this.Dispatch('Changed', args);
+        args.domEvent.stopPropagation();
+        args.domEvent.preventDefault();
+        return false;
     }
 
     /** @protected */
@@ -99,7 +117,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         if (this._dropAreaEnabled) {
             /* Валидация выбранных файлов, отображение одного файла, вывод ошибок */
             this._input.AddHandler('InputFileChosen', this.__inputInputFileChosen, false, this);
-            this._removeButton.AddHandler('Clicked', this.__removeButtonClicked);
+            this._removeButton.AddHandler('Clicked', this.__removeButtonClicked, false, this);
         }
     }
 
