@@ -142,7 +142,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         this._lookup = value;
         return Colibri.UI.GetLookupPromise(this, this._lookup, this._input._input.value, (type = null) => {
             return this._getDependsValue(type);
-        });
+        }, this._lastValue);
     }
 
     /**

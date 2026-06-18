@@ -166,7 +166,7 @@ Colibri.UI = class {
 
     }
 
-    static GetLookupPromise(component, value, term, getDependsValueMethod) {
+    static GetLookupPromise(component, value, term, getDependsValueMethod, selectedValue = null) {
         let lookupPromise;
         
         if (typeof value == 'function' || typeof value == 'string') {
@@ -235,7 +235,7 @@ Colibri.UI = class {
                 let dependsValue = getDependsValueMethod('controller');
                 let dependsField = value.controller.depends ?? null;
                 let cacheResults = value.controller?.cache ?? false;
-                lookupPromise = module.Call(controller.class, controller.method, {term: term, param: dependsValue, depends: dependsField, lookup: value, _requestCache: cacheResults});
+                lookupPromise = module.Call(controller.class, controller.method, {term: term, param: dependsValue, depends: dependsField, lookup: value, selected: selectedValue, _requestCache: cacheResults});
             }
             else if(value?.storage) {
                 let controller = value?.storage?.controller;
@@ -243,7 +243,7 @@ Colibri.UI = class {
                 let dependsValue = getDependsValueMethod('storage');
                 let dependsField = value?.storage?.depends ?? null;
                 let cacheResults = value?.storage?.cache ?? false;
-                lookupPromise = module.Call(controller.class, controller.method, {term: term, param: dependsValue, depends: dependsField, lookup: value, _requestCache: cacheResults});
+                lookupPromise = module.Call(controller.class, controller.method, {term: term, param: dependsValue, depends: dependsField, lookup: value, selected: selectedValue, _requestCache: cacheResults});
             }
             else if(value?.accesspoint) {
                 let controller = value?.accesspoint?.controller;
@@ -251,7 +251,7 @@ Colibri.UI = class {
                 let dependsValue = getDependsValueMethod('accesspoint');
                 let dependsField = value?.storage?.depends ?? null;
                 let cacheResults = value?.storage?.cache ?? false;
-                lookupPromise = module.Call(controller.class, controller.method, {term: term, param: dependsValue, depends: dependsField, lookup: value, _requestCache: cacheResults});
+                lookupPromise = module.Call(controller.class, controller.method, {term: term, param: dependsValue, depends: dependsField, lookup: value, selected: selectedValue, _requestCache: cacheResults});
             }
             else {
                 lookupPromise = new Promise((resolve, reject) => { resolve({result: ''}); })

@@ -254,7 +254,6 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
      * @type {object}
      */
     set value(value) {
-
         if (!this._checkIfChanged(value)) {
             return;
         }
