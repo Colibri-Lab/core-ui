@@ -689,6 +689,10 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
             floatArray = this._crop(floatArray);
             const maxValues = this._crop(this._maxValues);
 
+            if(this._valueConvertMethod) {
+                floatArray = this._valueConvertMethod(floatArray, this);
+            }
+
             const bounds = this._canvas.bounds();
             const ctx = this._ctx;
             ctx.clearRect(0, 0, bounds.outerWidth, bounds.outerHeight);
@@ -984,5 +988,20 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
     }
 
 
+    /**
+     * Value convert method
+     * @type {Function}
+     */
+    get valueConvertMethod() {
+        return this._valueConvertMethod;
+    }
+    /**
+     * Value convert method
+     * @type {Function}
+     */
+    set valueConvertMethod(value) {
+        value = this._convertProperty('Function', value);
+        this._valueConvertMethod = value;
+    }
 
 }
