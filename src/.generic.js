@@ -87,6 +87,30 @@ Intl.NumberFormat.prototype.unformat = function (stringNumber) {
     );
 }
 
+Float32Array.prototype.extrapolate = function(max) {
+    const output = new Float32Array(max);
+    const ratio = (this.length - 1) / (max - 1);
+
+    for (let i = 0; i < max; i++) {
+        const pos = i * ratio;
+        const left = Math.floor(pos);
+        const right = Math.min(left + 1, this.length - 1);
+        const t = pos - left;
+
+        // линейная интерполяция
+        output[i] = this[left] * (1 - t) + this[right] * t;
+    }
+
+    return output;
+}
+
+Float32Array.prototype.max = function() {
+    return Math.max(...this);
+}
+Float32Array.prototype.min = function() {
+    return Math.min(...this);
+}
+
 Array.coalesce = (v) => Array.isArray(v) ? v : [v];
 
 /**
