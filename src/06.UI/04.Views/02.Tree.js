@@ -53,6 +53,7 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         this.RegisterEvent('NodeClicked', false, 'When node is clicked');
         this.RegisterEvent('NodeDoubleClicked', false, 'When node is double clicked');
         this.RegisterEvent('CheckChanged', false, 'When node checkbox is changed');
+        this.RegisterEvent('Searched', false, 'When is searched');
     }
 
     /** @protected */
@@ -77,41 +78,47 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
      * @param {boolean} asAjar return nodes ajar
      */
     Search(term, asAjar = false, filterCallback = null) {
-        if(!term) {
-            this.allNodes.forEach((node) => {
-                node.found = null;
-                node.Show();
-            });    
-        }
-        else {
-            this.allNodes.forEach((node) => {
-                node.found = null;
-            });    
-            if(!filterCallback) {
-                filterCallback = (node, term) => node.text.toLowerCase().indexOf(term.toLowerCase()) !== -1;
-            }
-            this.allNodes.forEach((node) => {
-                if(!filterCallback(node, term)) {
-                    node.Hide();
-                } else {
-                    let p = node.parentNode;
-                    while(p) {
-                        p.Show();
-                        p = p.parentNode;
-                    }
-                    node.found = term;
+
+        if(this.searchBoxUseEvent) {
+            this.Dispatch('Searched', {term: term, asAjar: asAjar});
+        } else {
+            if(!term) {
+                this.allNodes.forEach((node) => {
+                    node.found = null;
                     node.Show();
+                });    
+            }
+            else {
+                this.allNodes.forEach((node) => {
+                    node.found = null;
+                });    
+                if(!filterCallback) {
+                    filterCallback = (node, term) => node.text.toLowerCase().indexOf(term.toLowerCase()) !== -1;
                 }
-            }); 
+                this.allNodes.forEach((node) => {
+                    if(!filterCallback(node, term)) {
+                        node.Hide();
+                    } else {
+                        let p = node.parentNode;
+                        while(p) {
+                            p.Show();
+                            p = p.parentNode;
+                        }
+                        node.found = term;
+                        node.Show();
+                    }
+                }); 
+            }
+            if(asAjar) {
+                this.allNodes.forEach((node) => {
+                    if(node.found) {
+                        node.ShowAll();
+                    }
+                });    
+                this.ExpandAll();
+            }
         }
-        if(asAjar) {
-            this.allNodes.forEach((node) => {
-                if(node.found) {
-                    node.ShowAll();
-                }
-            });    
-            this.ExpandAll();
-        }
+
         
     }
 
@@ -539,6 +546,21 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
      */
     set searchFilterCallback(value) {
         this._searchFilterCallback = value;
+    }
+
+    /**
+     * Use external event on search
+     * @type {Boolean}
+     */
+    get searchBoxUseEvent() {
+        return this._searchBoxUseEvent;
+    }
+    /**
+     * Use external event on search
+     * @type {Boolean}
+     */
+    set searchBoxUseEvent(value) {
+        this._searchBoxUseEvent = value;
     }
 
     /**

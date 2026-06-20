@@ -738,7 +738,9 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
 
     Expand() {
         this.value = [this.min, this.max];
+        this.Dispatch('BeforeChanged');
         this.Dispatch('Changed');
+        this.Dispatch('AfterChanged');
     }
 
 }
