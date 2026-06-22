@@ -689,10 +689,6 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
             floatArray = this._crop(floatArray);
             const maxValues = this._crop(this._maxValues);
 
-            if(this._valueConvertMethod) {
-                floatArray = this._valueConvertMethod(floatArray, this);
-            }
-
             const bounds = this._canvas.bounds();
             const ctx = this._ctx;
             ctx.clearRect(0, 0, bounds.outerWidth, bounds.outerHeight);
@@ -709,27 +705,9 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
                 max = this._max;
                 min = this._min;
             } else {
-                // находим минимальное и максимальное значение
-                for (let i = 0; i < len; i++) {
-                    const v = floatArray[i];
-                    if (!isNaN(v)) {
-                        if (v < min) min = v;
-                        if (v > max) max = v;
-                    }
-                }
-
-                if (this._showMaximums) {
-                    for (let i = 0; i < len; i++) {
-                        const v = maxValues[i];
-                        if (!isNaN(v)) {
-                            if (v < min) min = v;
-                            if (v > max) max = v;
-                        }
-                    }
-                }
-
+                min = floatArray.min();
+                max = floatArray.max();
                 if (min === max) max = min + 1; // защита от деления на ноль
-
             }
 
             this._drawGridLines(ctx, bounds, min, max, floatArray);
@@ -742,7 +720,9 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
                 this._drawLine(ctx, floatArray, min, max);
             }
 
-            this._drawMaxLine(ctx, bounds, maxValues, len, step, min, max);
+            if(this._showMaximums) {
+                this._drawMaxLine(ctx, bounds, maxValues, len, step, min, max);
+            }
 
             this._drawAxises(ctx, bounds, min, max);
 
