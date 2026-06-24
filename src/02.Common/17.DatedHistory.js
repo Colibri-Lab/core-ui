@@ -68,7 +68,7 @@ Colibri.Common.DatedHistory = class {
                 const oldDate = this._items[0][datePosition];
                 let unshiftCount = this.measure(date, oldDate);
                 while (unshiftCount-- > 1) {
-                    const emptyItem = new Float32Array(line.length);
+                    const emptyItem = new Float64Array(line.length);
                     emptyItem[datePosition] = oldDate + this._dateShift * (unshiftCount + 1);
                     emptyItem.fill(this._emptyValue);
                     this._items.unshift(emptyItem);
@@ -82,7 +82,7 @@ Colibri.Common.DatedHistory = class {
                 const oldDate = this._items[this._items.length - 1][datePosition];
                 let pushCount = this.measure(date, oldDate);
                 while (pushCount-- > 1) {
-                    const emptyItem = new Float32Array(line.length);
+                    const emptyItem = new Float64Array(line.length);
                     emptyItem[datePosition] = oldDate + this._dateShift * (this._limit - pushCount);
                     emptyItem.fill(this._emptyValue);
                     this._items.push(emptyItem);

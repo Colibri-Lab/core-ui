@@ -148,6 +148,50 @@ Float32Array.prototype.min = function() {
     return Math.min(...this);
 }
 
+Float64Array.prototype.appendTo = Float64Array.prototype.expandTo = function(max, valueCallback = null) {
+    const output = new Float64Array(max);
+    const len = this.length;
+    output.set(this, 0);
+    for(let i = len; i < max; i++) {
+        output[i] = valueCallback ? valueCallback(i) : 0;
+    }
+    return output;
+}
+
+Float64Array.prototype.prependTo = function(max, valueCallback = null) {
+    const output = new Float64Array(max);
+    let prependCount = max - this.length; 
+    output.set(this, prependCount);
+    while(prependCount >= 0) {
+        prependCount--;
+        output[prependCount] = valueCallback ? valueCallback(prependCount) : 0;
+    }
+    return output;
+}
+
+Float64Array.prototype.findByValue = function(value) {
+    if(value < this[0] || value > this[this.length - 1]) {
+        return -1;
+    }
+    let closestIndex = 0;
+    let minDiff = Math.abs(this[0] - value);
+    for(let i = 1; i < this.length; i++) {
+        const diff = Math.abs(this[i] - value);
+        if(diff < minDiff) {
+            minDiff = diff;
+            closestIndex = i;
+        }
+    }
+    return closestIndex;
+}
+
+Float64Array.prototype.max = function() {
+    return Math.max(...this);
+}
+Float64Array.prototype.min = function() {
+    return Math.min(...this);
+}
+
 Array.coalesce = (v) => Array.isArray(v) ? v : [v];
 
 /**

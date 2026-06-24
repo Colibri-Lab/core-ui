@@ -527,7 +527,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         if (start < 0) start = 0;
 
         const length = end - start;
-        const result = new Float32Array(length); // автоматически заполнен нулями
+        const result = new Float64Array(length); // автоматически заполнен нулями
 
         const available = Math.min(floatArray.length - start, length);
         if (available > 0) {
@@ -540,7 +540,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
     _createPaletteTexture() {
         const gl = this._ctx;
 
-        // создаём Float32Array с RGB
+        // создаём Float64Array с RGB
         const size = 256;
         const data = new Uint8Array(size * 3);
 
@@ -642,8 +642,8 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
                 for (let k = 0; k < 6; k++) values.push(v);
             }
 
-            const posArray = new Float32Array(positions);
-            const valArray = new Float32Array(values);
+            const posArray = new Float64Array(positions);
+            const valArray = new Float64Array(values);
 
 
             gl.bindBuffer(gl.ARRAY_BUFFER, this._positionBuffer);

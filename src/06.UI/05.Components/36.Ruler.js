@@ -327,11 +327,13 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
     }
 
     StartMove() {
+        this.Dispatch('BeforeChanged');
         this._startMovePoint = { left: this._progress.left - this.left, top: this._progress.top - this.top };
     }
 
     EndMove() {
         this._startMovePoint = null;
+        this.Dispatch('AfterChanged');
     }
 
     Move(delta) {
@@ -387,6 +389,9 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         const perc = (left) * 100 / width;
         const max = this._max;
         const min = this._min;
+        if(!this._value) {
+            this._value = [min, max];
+        }
 
         let newValue = min + ((max - min) * perc / 100);
         // newValue = Math.ceil(newValue / step) * step - step;
@@ -411,6 +416,9 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         const perc = 100 - (top + this._span1.height / 2) * 100 / height;
         const max = this._max;
         const min = this._min;
+        if(!this._value) {
+            this._value = [min, max];
+        }
 
         let newValue = min + ((max - min) * perc / 100);
         // newValue = Math.ceil(newValue / step) * step - step;
@@ -492,7 +500,6 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
      * @type {Array}
      */
     set value(value) {
-
         if (!this._hasSelector) {
             return;
         }

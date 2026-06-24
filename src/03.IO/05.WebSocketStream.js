@@ -50,7 +50,7 @@ Colibri.IO.WebSocketStream = class extends Destructable {
                 const count = bytesLeft / stride;
                 const Ctor = Colibri.IO.WebSocketStream.ARRAY_VIEWS[type];
 
-                out[name] = new Ctor(buffer, offset, count);
+                out[name] = new Ctor(dv.buffer, 0, count);
                 offset += bytesLeft;
                 break;
             }
@@ -79,7 +79,7 @@ Colibri.IO.WebSocketStream = class extends Destructable {
         this._socket.onopen = (event) => console.log('WebSocket connection opened:', event);
         this._socket.onmessage = (event) => {
             let chunks = event.data;
-            if (this._chunkSize && chunks.length > this._chunkSize) {
+            if (this._chunkSize && chunks.byteLength > this._chunkSize) {
                 chunks = this._unpackRows(chunks, this._chunkSize);
             } else {
                 chunks = [chunks];
