@@ -91,14 +91,14 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Step of ruller
+     * Points count for one ruler step
      * @type {Number}
      */
     get step() {
         return this._step;
     }
     /**
-     * Step of ruller
+     * Points count for one ruler step
      * @type {Number}
      */
     set step(value) {
@@ -314,7 +314,7 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         } else {
             this._calculateValue(this._progress.top - this.top + (args.domEvent.deltaY / 10), null, true);
         }
-        this.Dispatch('Changed', { value: this.value });
+        this.Dispatch('Changed', { value: this.value, right: true, left: true });
     }
 
     _progressMoved(newLeft, newTop) {
@@ -323,12 +323,11 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         } else {
             this._calculateValue(newTop, null, true);
         }
-        this.Dispatch('Changed', { value: this.value });
+        this.Dispatch('Changed', { value: this.value, right: true, left: true });
     }
 
     StartMove() {
         this._startMovePoint = { left: this._progress.left - this.left, top: this._progress.top - this.top };
-        console.log(this._startMovePoint);
     }
 
     EndMove() {
@@ -344,7 +343,7 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         } else {
             this._calculateValue(this._startMovePoint.top - delta, null, true);
         }
-        this.Dispatch('Changed', { value: this.value });
+        this.Dispatch('Changed', { value: this.value, right: true, left: true });
     }
 
     _span1Moved(newLeft, newTop, dispatch = true) {
@@ -353,7 +352,7 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         } else {
             this._calculateValue(newTop, null);
         }
-        dispatch && this.Dispatch('Changed', { value: this.value });
+        dispatch && this.Dispatch('Changed', { value: this.value, right: false, left: true });
     }
 
     _span2Moved(newLeft, newTop, dispatch = true) {
@@ -362,7 +361,7 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         } else {
             this._calculateValue(null, newTop);
         }
-        dispatch && this.Dispatch('Changed', { value: this.value });
+        dispatch && this.Dispatch('Changed', { value: this.value, right: true, left: false });
     }
 
     _calculateValue(left, right, saveWidth = false) {
@@ -438,7 +437,6 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         const perc = 100 - (bottom + this._span1.height / 2) * 100 / height;
         const max = this._max;
         const min = this._min;
-        const step = this._step;
 
         let newValue = min + ((max - min) * perc / 100);
         // newValue = Math.ceil(newValue / step) * step + step;
@@ -517,6 +515,12 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this._value = [left1, left2];
         this._renderSelector(left1, left2);
 
+    }
+
+    Set(min, max) {
+        this._min = min;
+        this._max = max;
+        this._render();
     }
 
     Delta(delta) {
@@ -612,8 +616,13 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         if (canvas.offsetWidth === 0 || canvas.offsetHeight === 0) {
             return;
         }
+
+        if(this.maxPoints === Infinity || this.maxPoints === -Infinity) {
+            return;
+        }
+
         const maxHeight = (height - 10) * 2 / 3;
-        const maxWidth = width; // (width - 10) * 2 / 3;
+        const maxWidth = width;
 
         ctx.clearRect(0, 0, width, height);
         ctx.strokeStyle = this._rulerColor || '#000';
@@ -624,17 +633,19 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         ctx.textBaseline = this._align === 'start' ? 'top' : 'bottom';
 
         const range = this.max - this.min;
-        if (!(range > 0)) return;
-
-        const pxPerUnit = (this._orientation === 'vertical') ? height / range : width / range;
-        let stepsCount = Math.floor(range / this.step);
-        if (stepsCount > 1000) {
-            stepsCount = 1000;
+        if (range <= 0) {
+            return;
         }
 
+        const pxPerPoint = (this._orientation === 'vertical' ? height : width) / this.maxPoints;
+        let pointsInStep = range / this.maxPoints;
+        if(pointsInStep == 0) {
+            pointsInStep = 1;
+        }
+        
         const labels = [];
-        for (let i = 0; i <= stepsCount; i++) {
-            const value = this.min + i * this.step;
+        for (let i = 0; i <= this.maxPoints; i++) {
+            const value = this.min + i * pointsInStep;
             const isLarge = (i % this.largeStep) === 0;
             if (isLarge) {
                 labels.push(ctx.measureText((this._labelFormatter || ((c, v) => v))(this, value)));
@@ -643,29 +654,31 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
 
         const maxLabelWidth = Math.max(...labels.map(l => l.width)) + 2;
 
-        for (let i = 0; i <= stepsCount; i++) {
-            const value = this.min + i * this.step;
+        for (let i = 0; i <= this.maxPoints; i++) {
+            const value = this.min + i * pointsInStep;
+
+            const isStep = (i % this.step) === 0;
             const isLarge = (i % this.largeStep) === 0;
 
             if (this._orientation === 'vertical') {
-                const y = Math.round(height - (value - this.min) * pxPerUnit);
+                const y = Math.round(height - i * pxPerPoint);
                 const lineLength = isLarge ? maxWidth - maxLabelWidth : (maxWidth - maxLabelWidth) / 3;
 
-                ctx.beginPath();
-                if (this._align === 'start') {
-                    ctx.moveTo(0.5, y - 0.5);
-                    ctx.lineTo(lineLength + 0.5, y - 0.5);
-                } else {
-                    ctx.moveTo(width - lineLength - 0.5, y - 0.5);
-                    ctx.lineTo(width - 0.5, y - 0.5);
-                }
-                ctx.stroke();
-
-                if (isLarge) {
+                if(isStep && !isLarge) {
+                    ctx.beginPath();
+                    if (this._align === 'start') {
+                        ctx.moveTo(0.5, y - 0.5);
+                        ctx.lineTo(lineLength + 0.5, y - 0.5);
+                    } else {
+                        ctx.moveTo(width - lineLength - 0.5, y - 0.5);
+                        ctx.lineTo(width - 0.5, y - 0.5);
+                    }
+                    ctx.stroke();
+                } else if (isLarge) {
 
                     const label = (this._labelFormatter || ((c, v) => v))(this, value);
                     if (i === 0) ctx.textBaseline = 'bottom';
-                    else if (i === stepsCount) ctx.textBaseline = 'top';
+                    else if (i === this.maxPoints) ctx.textBaseline = 'top';
                     else ctx.textBaseline = 'middle';
 
                     if (this._align === 'start') {
@@ -678,23 +691,23 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
                 }
 
             } else {
-                const x = Math.round((value - this.min) * pxPerUnit);
+                const x = Math.round(i * pxPerPoint);
                 const lineLength = isLarge ? maxHeight : maxHeight / 3;
 
-                ctx.beginPath();
-                if (this._align === 'start') {
-                    ctx.moveTo(x + 0.5, 0.5);
-                    ctx.lineTo(x + 0.5, lineLength + 0.5);
-                } else {
-                    ctx.moveTo(x + 0.5, height - lineLength - 0.5);
-                    ctx.lineTo(x + 0.5, height - 0.5);
-                }
-                ctx.stroke();
-
-                if (isLarge) {
+                if(isStep && !isLarge) {
+                    ctx.beginPath();
+                    if (this._align === 'start') {
+                        ctx.moveTo(x + 0.5, 0.5);
+                        ctx.lineTo(x + 0.5, lineLength + 0.5);
+                    } else {
+                        ctx.moveTo(x + 0.5, height - lineLength - 0.5);
+                        ctx.lineTo(x + 0.5, height - 0.5);
+                    }
+                    ctx.stroke();
+                } else if (isLarge) {
                     const label = (this._labelFormatter || ((c, v) => v))(this, value);
                     if (i === 0) ctx.textAlign = 'left';
-                    else if (i === stepsCount) ctx.textAlign = 'right';
+                    else if (i === this.maxPoints) ctx.textAlign = 'right';
                     else ctx.textAlign = this._labelAlign || 'center';
 
                     if (this._align === 'start') {
@@ -732,15 +745,32 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this._span2Moved(newRight, newRight, false);
         
 
-        this.Dispatch('Changed');
+        this.Dispatch('Changed', {right: true, left: true});
 
     }
 
     Expand() {
         this.value = [this.min, this.max];
         this.Dispatch('BeforeChanged');
-        this.Dispatch('Changed');
+        this.Dispatch('Changed', {right: true, left: true});
         this.Dispatch('AfterChanged');
+    }
+
+    /**
+     * Maximum points in ruler
+     * @type {Number}
+     */
+    get maxPoints() {
+        return this._maxPoints;
+    }
+    /**
+     * Maximum points in ruler
+     * @type {Number}
+     */
+    set maxPoints(value) {
+        value = this._convertProperty('Number', value);
+        this._maxPoints = value;
+        this.ResizeCanvas();
     }
 
 }

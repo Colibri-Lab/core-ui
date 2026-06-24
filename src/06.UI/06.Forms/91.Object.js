@@ -253,7 +253,9 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         super.readonly = value;
         this.contentContainer && this.contentContainer.ForEach((name, component) => {
             // const allreadyReadonly = component.readonly;
-            component.readonly = value;
+            if(component.field?.params?.readonly !== true) {
+                component.readonly = value;
+            }
         });
         if (this._removeLink) {
             this._removeLink.shown = !value;

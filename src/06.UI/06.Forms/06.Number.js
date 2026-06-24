@@ -22,6 +22,14 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
         }
         this._input = contentContainer.container.append(Element.create('input', params));
 
+        if (this._fieldData?.params?.readonly === undefined) {
+            this.readonly = false;
+        }
+        else {
+            this.readonly = this._fieldData?.params?.readonly;
+        }
+
+
         this._input.addEventListener('mousewheel', nullhandler);
         this._input.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', { domEvent: e }));
         this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', { domEvent: e }));
@@ -126,30 +134,6 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Field is readonly
-     * @type {boolean}
-     */
-    get readonly() {
-        return this._input.attr('readonly') === 'readonly';
-    }
-
-    /**
-     * Field is readonly
-     * @type {boolean}
-     */
-    set readonly(value) {
-        value = this._convertProperty('Boolean', value);
-        if (value) {
-            this._input.attr('readonly', 'readonly');
-            this.AddClass('app-component-readonly');
-        }
-        else {
-            this._input.attr('readonly', null);
-            this.RemoveClass('app-component-readonly');
-        }
-    }
-
-    /**
      * Field placeholder
      * @type {string}
      */
@@ -192,6 +176,27 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /**
+     * Is field readonly
+     * @type {boolean}
+     */
+    get readonly() {
+        return this._input.attr('readonly') === 'readonly';
+    }
+    /**
+     * Is field readonly
+     * @type {boolean}
+     */
+    set readonly(value) {
+        value = this._convertProperty('Boolean', value);
+        if (value) {
+            this._input.attr('readonly', 'readonly');
+        }
+        else {
+            this._input.attr('readonly', null);
+        }
+    }
+
     /** @private */
     _convertValue(value, direction = true) {
         this._isShare = this._fieldData?.params?.isShare ?? false;
@@ -213,7 +218,7 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
                 // console.log(e, value)
             }
         }
-        return value;
+        return parseFloat(value);
     }
 
     /**

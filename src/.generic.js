@@ -104,6 +104,41 @@ Float32Array.prototype.extrapolate = function(max) {
     return output;
 }
 
+Float32Array.prototype.expandTo = function(max, valueCallback = null) {
+    const output = new Float32Array(max);
+    for(let i = this.length; i < max; i++) {
+        output[i] = valueCallback ? valueCallback(i) : 0;
+    }
+    output.set(this, 0);
+    return output;
+}
+
+Float32Array.prototype.prependTo = function(max, valueCallback = null) {
+    const output = new Float32Array(max);
+    const prependCount = max - this.length; 
+    for(let i = 0; i < prependCount; i++) {
+        output[i] = valueCallback ? valueCallback(i) : 0;
+    }
+    output.set(this, prependCount);
+    return output;
+}
+
+Float32Array.prototype.findByValue = function(value) {
+    if(value < this[0] || value > this[this.length - 1]) {
+        return -1;
+    }
+    let closestIndex = 0;
+    let minDiff = Math.abs(this[0] - value);
+    for(let i = 1; i < this.length; i++) {
+        const diff = Math.abs(this[i] - value);
+        if(diff < minDiff) {
+            minDiff = diff;
+            closestIndex = i;
+        }
+    }
+    return closestIndex;
+}
+
 Float32Array.prototype.max = function() {
     return Math.max(...this);
 }

@@ -18,7 +18,7 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
 
         this._canvas = Element.create('canvas').appendTo(this._element);
         this._ctx = this._canvas.getContext('2d', { willReadFrequently: true });
-        
+
         this._selections = new Colibri.UI.Spectrum.Selections('selections', this);
         this._selections.shown = true;
         this._selectionMode = 'none';
@@ -406,11 +406,6 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         }
     }
 
-    Resize(start, end) {
-        this._start = start;
-        this._end = end;
-    }
-
     /**
      * Show maximums
      * @type {Boolean}
@@ -493,7 +488,12 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
     _crop(floatArray) {
         const start = this._start || 0;
         const end = this._end != null ? this._end : floatArray.length;
-        return floatArray.subarray(start, end); // возвращает Float32Array без копирования данных
+        // console.log('resize', floatArray, start, end);
+        let ret = floatArray ? floatArray.subarray(start, end) : new Float32Array(end - start);
+        if(end - start > 0) {
+            ret = ret.expandTo(end - start);
+        }
+        return ret;
     }
 
     /**
@@ -670,29 +670,20 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         this._graphType = value;
     }
 
-    Draw(floatArray) {
+    _drawGraphic(ctx, floatArray, min, max) {
+        if (this._graphType === 'graph') {
+            this._drawGraph(ctx, floatArray, min, max);
+        } else if (this._graphType === 'line') {
+            this._drawLine(ctx, floatArray, min, max);
+        }
+    }
+
+    Draw(floatArray, name = null) {
         try {
-
-            // save data for future use
-            this._floatArray = floatArray;
-
-            if (!this._maxValues) {
-                this._maxValues = new Float32Array(this._floatArray.length);
-                for (let i = 0; i < this._floatArray.length; i++) this._maxValues[i] = this._floatArray[i];
-            }
-            for (let i = 0; i < this._floatArray.length; i++) {
-                if (this._floatArray[i] > this._maxValues[i]) {
-                    this._maxValues[i] = this._floatArray[i];
-                }
-            }
-
-            floatArray = this._crop(floatArray);
-            const maxValues = this._crop(this._maxValues);
 
             const bounds = this._canvas.bounds();
             const ctx = this._ctx;
             ctx.clearRect(0, 0, bounds.outerWidth, bounds.outerHeight);
-
 
             const len = floatArray.length;
             if (len === 0) return;
@@ -707,25 +698,67 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
             } else {
                 min = floatArray.min();
                 max = floatArray.max();
-                if (min === max) max = min + 1; // защита от деления на ноль
+                if (min === max) max = min + 1;
+            }
+
+
+            if (name) {
+                if (!this._floatArray || this._floatArray instanceof Float32Array) {
+                    this._floatArray = {};
+                }
+                this._floatArray[name] = floatArray;
+
+                if (!this._maxValues) {
+                    this._maxValues = {};
+                }
+                if(!this._maxValues[name]) {
+                    this._maxValues[name] = new Float32Array(floatArray.length);
+                    for (let i = 0; i < floatArray.length; i++) {
+                        this._maxValues[name][i] = floatArray[i];
+                    }
+                }
+                for (let i = 0; i < this._floatArray[name].length; i++) {
+                    if (this._floatArray[name][i] > this._maxValues[name][i]) {
+                        this._maxValues[name][i] = this._floatArray[name][i];
+                    }
+                }
+            } else {
+                this._floatArray = floatArray;
+                if (!this._maxValues) {
+                    this._maxValues = new Float32Array(floatArray.length);
+                    for (let i = 0; i < floatArray.length; i++) {
+                        this._maxValues[i] = floatArray[i];
+                    }
+                }
+                for (let i = 0; i < floatArray.length; i++) {
+                    if (floatArray[i] > this._maxValues[i]) {
+                        this._maxValues[i] = floatArray[i];
+                    }
+                }
             }
 
             this._drawGridLines(ctx, bounds, min, max, floatArray);
-
             this._drawZeroLine(ctx, bounds, min, max);
-
-            if (this._graphType === 'graph') {
-                this._drawGraph(ctx, floatArray, min, max);
-            } else if (this._graphType === 'line') {
-                this._drawLine(ctx, floatArray, min, max);
-            }
-
-            if(this._showMaximums) {
-                this._drawMaxLine(ctx, bounds, maxValues, len, step, min, max);
-            }
-
             this._drawAxises(ctx, bounds, min, max);
 
+            if (Object.isPlainObject(this._floatArray)) {
+                for (const name in this._floatArray) {
+                    floatArray = this._crop(this._floatArray[name]);
+                    this._drawGraphic(ctx, floatArray, min, max);
+                }
+            } else {
+                floatArray = this._crop(this._floatArray);
+                this._drawGraphic(ctx, floatArray, min, max);
+            }
+            if (this._showMaximums) {
+                if(Object.isPlainObject(this._maxValues)) {
+                    for (const name in this._maxValues) {
+                        this._drawMaxLine(ctx, bounds, this._maxValues[name], len, step, min, max);
+                    }
+                } else {
+                    this._drawMaxLine(ctx, bounds, this._maxValues, len, step, min, max);
+                }
+            }
 
 
         } catch (e) {
@@ -807,7 +840,7 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         ctx.stroke();
     }
 
-    _drawGridLines(ctx, bounds, min, max, floatArray) {
+    _drawGridLines(ctx, bounds, min, max, length) {
 
         if (this._hgridLinesColor && this._hgridLinesStep) {
 
@@ -845,15 +878,15 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
             const stepValue = this._vgridLinesStep;
             const largeStepValue = this._vgridLinesLargeStep || (stepValue * 5);
 
-            for (let value = 0; value <= floatArray.length; value += stepValue) {
-                const norm = value / floatArray.length;
+            for (let value = 0; value <= length; value += stepValue) {
+                const norm = value / length;
                 const x = bounds.outerWidth - norm * bounds.outerWidth;
 
                 ctx.beginPath();
                 ctx.moveTo(x, 0);
                 ctx.lineTo(x, bounds.outerWidth);
 
-                if (largeStepValue && (Math.abs(value % largeStepValue) < 0.0001 || Math.abs(value) < 0.0001 || Math.abs(value - floatArray.length) < 0.0001)) {
+                if (largeStepValue && (Math.abs(value % largeStepValue) < 0.0001 || Math.abs(value) < 0.0001 || Math.abs(value - length) < 0.0001)) {
                     ctx.lineWidth = (this._vgridLinesStroke || 1) * 2;
                 } else {
                     ctx.lineWidth = this._vgridLinesStroke || 1;
@@ -982,6 +1015,80 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
     set valueConvertMethod(value) {
         value = this._convertProperty('Function', value);
         this._valueConvertMethod = value;
+    }
+
+    /**
+     * Values for X axis
+     * @type {Float32Array}
+     */
+    get xAxisValues() {
+        return this._xAxisValues;
+    }
+    /**
+     * Values for X axis
+     * @type {Float32Array}
+     */
+    set xAxisValues(value) {
+        this._xAxisValues = value;
+    }
+
+    GenerateValues(points, start_x, delta_x) {
+        this._start_x = start_x;
+        this._delta_x = delta_x;
+        const values = new Float32Array(points);
+        for(let i = 0; i < points; i++) {
+            values[i] = start_x + i * delta_x;
+        }
+        this.xAxisValues = values;
+    }
+
+    Reorganize(minValue, maxValue) {
+
+        if(!this._floatArray) {
+            this._floatArray = new Float32Array(this._xAxisValues.length);
+        }
+
+        let startIndex = this._xAxisValues.findByValue(minValue);
+        let endIndex = this._xAxisValues.findByValue(maxValue);
+
+        if(startIndex === -1) {
+            const firstValue = this._xAxisValues[0];
+            if(minValue < firstValue && this._delta_x > 0) {
+                const prependCount = Math.ceil((firstValue - minValue) / this._delta_x);
+                this._xAxisValues = this._xAxisValues.prependTo(this._xAxisValues.length + prependCount, (i) => {
+                    return firstValue - (prependCount - i) * this._delta_x;
+                });
+                if(Object.isPlainObject(this._floatArray)) {
+                    for(const name in this._floatArray) {
+                        this._floatArray[name] = this._floatArray[name].prependTo(this._floatArray[name].length + prependCount);
+                    }
+                } else {
+                    this._floatArray = this._floatArray.prependTo(this._floatArray.length + prependCount);
+                }
+                startIndex = this._xAxisValues.findByValue(minValue);
+            }
+        }
+
+        if(endIndex === -1) {
+            const lastValue = this._xAxisValues[this._xAxisValues.length - 1];
+            if(maxValue > lastValue && this._delta_x > 0) {
+                const appendCount = Math.ceil((maxValue - lastValue) / this._delta_x);
+                this._xAxisValues = this._xAxisValues.expandTo(this._xAxisValues.length + appendCount, (i) => {
+                    return lastValue + (i - appendCount) * this._delta_x;
+                });
+                if(Object.isPlainObject(this._floatArray)) {
+                    for(const name in this._floatArray) {
+                        this._floatArray[name] = this._floatArray[name].expandTo(this._floatArray[name].length + appendCount);
+                    }
+                } else {
+                    this._floatArray = this._floatArray.expandTo(this._floatArray.length + appendCount);
+                }
+                endIndex = this._xAxisValues.findByValue(maxValue);
+            }
+
+        }
+
+        this.Resize(startIndex, endIndex);
     }
 
 }
