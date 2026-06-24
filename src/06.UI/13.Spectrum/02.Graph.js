@@ -488,11 +488,10 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
     _crop(floatArray) {
         const start = this._start || 0;
         const end = this._end != null ? this._end : floatArray.length;
-        // console.log('resize', floatArray, start, end);
         let ret = floatArray ? floatArray.subarray(start, end) : new Float32Array(end - start);
-        if(end - start > 0) {
-            ret = ret.expandTo(end - start);
-        }
+        // if(end - start > 0) {
+        //     ret = ret.expandTo(end - start);
+        // }
         return ret;
     }
 
@@ -1040,6 +1039,7 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
             values[i] = start_x + i * delta_x;
         }
         this.xAxisValues = values;
+
     }
 
     Reorganize(minValue, maxValue) {
@@ -1050,7 +1050,8 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
 
         let startIndex = this._xAxisValues.findByValue(minValue);
         let endIndex = this._xAxisValues.findByValue(maxValue);
-
+        console.log(startIndex, endIndex, this._xAxisValues.length, minValue, maxValue, this._xAxisValues[startIndex], this._xAxisValues[endIndex]);
+debugger;
         if(startIndex === -1) {
             const firstValue = this._xAxisValues[0];
             if(minValue < firstValue && this._delta_x > 0) {
@@ -1071,11 +1072,14 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
 
         if(endIndex === -1) {
             const lastValue = this._xAxisValues[this._xAxisValues.length - 1];
+            console.log('last value', lastValue);
             if(maxValue > lastValue && this._delta_x > 0) {
                 const appendCount = Math.ceil((maxValue - lastValue) / this._delta_x);
+                console.log(appendCount);
                 this._xAxisValues = this._xAxisValues.expandTo(this._xAxisValues.length + appendCount, (i) => {
-                    return lastValue + (i - appendCount) * this._delta_x;
+                    return lastValue + (i - appendCount + 1) * this._delta_x;
                 });
+                console.log('new xAxisValues', this._xAxisValues.length);
                 if(Object.isPlainObject(this._floatArray)) {
                     for(const name in this._floatArray) {
                         this._floatArray[name] = this._floatArray[name].expandTo(this._floatArray[name].length + appendCount);

@@ -104,22 +104,24 @@ Float32Array.prototype.extrapolate = function(max) {
     return output;
 }
 
-Float32Array.prototype.expandTo = function(max, valueCallback = null) {
+Float32Array.prototype.appendTo = Float32Array.prototype.expandTo = function(max, valueCallback = null) {
     const output = new Float32Array(max);
-    for(let i = this.length; i < max; i++) {
+    const len = this.length;
+    output.set(this, 0);
+    for(let i = len; i < max; i++) {
         output[i] = valueCallback ? valueCallback(i) : 0;
     }
-    output.set(this, 0);
     return output;
 }
 
 Float32Array.prototype.prependTo = function(max, valueCallback = null) {
     const output = new Float32Array(max);
-    const prependCount = max - this.length; 
-    for(let i = 0; i < prependCount; i++) {
-        output[i] = valueCallback ? valueCallback(i) : 0;
-    }
+    let prependCount = max - this.length; 
     output.set(this, prependCount);
+    while(prependCount >= 0) {
+        prependCount--;
+        output[prependCount] = valueCallback ? valueCallback(prependCount) : 0;
+    }
     return output;
 }
 
