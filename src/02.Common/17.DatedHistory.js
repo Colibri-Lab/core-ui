@@ -4,12 +4,19 @@ Colibri.Common.DatedHistory = class {
         this._items = [];
         this._limit = parseInt(limit);
         this._newestFirst = newestFirst; // true = новые в начало
+        this._dataType = Float64Array;
     }
 
+    /**
+     * @returns {Number} The date shift in nanoseconds
+     */
     get dateShiftMs() {
         return this._dateShift;
     }
 
+    /**
+     * @returns {Number} The date shift in nanoseconds
+     */
     set dateShiftMs(value) {
         this._dateShift = parseInt(value);
     }
@@ -41,11 +48,27 @@ Colibri.Common.DatedHistory = class {
         return 1;
     }
 
+    /**
+     * Compares in nanoseconds two dates and returns the difference in nanoseconds between them.
+     * If the difference is less than 5 nanoseconds, it returns 0.
+     * @param {BigInt} date1 Date to compare
+     * @param {BigInt} date2 Date compare with
+     * @returns BigInt nanoseconds between two dates
+     */
     measure(date1, date2) {
-        if(Math.abs(date1 - date2) < 5) {
-            return 0;
+        if(date1 instanceof Colibri.Common.FDate) {
+            date1 = date1.toBigIntNanoseconds();
         }
-        return Math.floor(Math.abs(date2 - date1) / this._dateShift);
+        if(date2 instanceof Colibri.Common.FDate) {
+            date2 = date2.toBigIntNanoseconds();
+        }
+        const diff = date1 >= date2 ? date1 - date2 : date2 - date1;
+
+        if (diff < 5n) {
+            return 0n;
+        }
+
+        return diff / this._dateShift;
     }
 
     get emptyValue() {
@@ -56,44 +79,86 @@ Colibri.Common.DatedHistory = class {
         this._emptyValue = value;
     }
 
-    add(line, datePosition = 0) {
-        const copy = Object.cloneRecursive(line); // твой метод клонирования
-        const date = copy[datePosition];
+    set dataType(value) {
+        this._dataType = value;
+    }
+
+    get dataType() {
+        return this._dataType;
+    }
+
+    _add(date, chunk, duration = null) {
+        if (duration) {
+            this._dateShift = BigInt(duration);
+        }
+
+        const cloned = {
+            date: date,
+            duration: this._dateShift,
+            chunk: Object.cloneRecursive(chunk)
+        }
 
         if (this._items.length == 0) {
-            this._items.push(copy);
+            this._items.push(cloned);
         } else {
             if (this._newestFirst) {
 
-                const oldDate = this._items[0][datePosition];
-                let unshiftCount = this.measure(date, oldDate);
-                while (unshiftCount-- > 1) {
-                    const emptyItem = new Float64Array(line.length);
-                    emptyItem[datePosition] = oldDate + this._dateShift * (unshiftCount + 1);
-                    emptyItem.fill(this._emptyValue);
-                    this._items.unshift(emptyItem);
-                }
+                // const oldDate = this._items[0].date;
+                // let unshiftCount = Math.floor(Number(this.measure(date, oldDate) / 1000000n / 1000n)); // milliseconds
+                // while (unshiftCount-- > 1) {
+                //     const emptyItem = {
+                //         date: oldDate.addNanoseconds(this._dateShift * (BigInt(unshiftCount) + 1n)),
+                //         duration: this._dateShift,
+                //         chunk: (new this._dataType(chunk.length)).fill(this._emptyValue)
+                //     };
+                //     this._items.unshift(emptyItem);
+                //     if (this._items.length > this._limit) {
+                //         this._items.pop(); // убираем старую в конце
+                //     }
+                // }
 
-                this._items.unshift(copy); // вставляем в начало
+                this._items.unshift(cloned); // вставляем в начало
                 if (this._items.length > this._limit) {
                     this._items.pop(); // убираем старую в конце
                 }
             } else {
-                const oldDate = this._items[this._items.length - 1][datePosition];
-                let pushCount = this.measure(date, oldDate);
-                while (pushCount-- > 1) {
-                    const emptyItem = new Float64Array(line.length);
-                    emptyItem[datePosition] = oldDate + this._dateShift * (this._limit - pushCount);
-                    emptyItem.fill(this._emptyValue);
-                    this._items.push(emptyItem);
-                }
+                // const oldDate = this._items[this._items.length - 1].date;
+                // let pushCount = Math.floor(Number(this.measure(date, oldDate) / 1000000n)); // milliseconds
+                // while (pushCount-- > 1) {
+                //     const emptyItem = {
+                //         date: oldDate.addNanoseconds(this._dateShift * BigInt(this._limit - pushCount)),
+                //         duration: this._dateShift,
+                //         chunk: (new this._dataType(chunk.length)).fill(this._emptyValue)
+                //     };
+                //     this._items.push(emptyItem);
+                //     if (this._items.length > this._limit) {
+                //         this._items.shift(); // убираем старую в начале
+                //     }
+                // }
 
-                this._items.push(copy); // вставляем в конец
+                this._items.push(cloned); // вставляем в конец
                 if (this._items.length > this._limit) {
                     this._items.shift(); // убираем старую в начале
                 }
             }
         }
+    }
+
+    addObject(chunkObject) {
+        // {
+        //     "time": {
+        //         "_sec": 1.6540993818464124e-189,
+        //         "_fs": -101718058739137.48
+        //     },
+        //     "duration": 9.999999717180685e-10, // miliseconds
+        //     "chunk": { ... }
+        // }
+        this._add(chunkObject.time, chunkObject.chunk, chunkObject.duration);
+
+    }
+
+    add(line, datePosition = 0) {
+        this._add(line[datePosition], line, this._dateShift);
     }
 
     push(line) {

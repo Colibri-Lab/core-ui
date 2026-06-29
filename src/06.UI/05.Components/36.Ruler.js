@@ -695,6 +695,16 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
                         ctx.textAlign = 'right';
                         ctx.fillText(label, width - lineLength - 2, y + 2);
                     }
+
+                    ctx.beginPath();
+                    if (this._align === 'start') {
+                        ctx.moveTo(0.5, y - 0.5);
+                        ctx.lineTo(lineLength + 0.5, y - 0.5);
+                    } else {
+                        ctx.moveTo(width - lineLength - 0.5, y - 0.5);
+                        ctx.lineTo(width - 0.5, y - 0.5);
+                    }
+                    ctx.stroke();
                 }
 
             } else {
@@ -724,6 +734,16 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
                         ctx.textBaseline = 'bottom';
                         ctx.fillText(label, x, height - maxHeight - 4);
                     }
+
+                    ctx.beginPath();
+                    if (this._align === 'start') {
+                        ctx.moveTo(x + 0.5, 0.5);
+                        ctx.lineTo(x + 0.5, lineLength + 0.5);
+                    } else {
+                        ctx.moveTo(x + 0.5, height - lineLength - 0.5);
+                        ctx.lineTo(x + 0.5, height - 0.5);
+                    }
+                    ctx.stroke();
                 }
             }
         }

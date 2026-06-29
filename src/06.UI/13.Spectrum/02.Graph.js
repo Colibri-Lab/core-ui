@@ -50,6 +50,15 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         this.RegisterEvent('GrabEnd', false, 'When graph is grabbed');
     }
 
+    set dataType(value) {
+        value = this._convertProperty('Function', value);
+        this._dataType = value;
+    }
+
+    get dataType() {
+        return this._dataType;
+    }
+
     /**
      * Selection mode
      * @type {none,select-column,select-row,select-rect}
@@ -488,7 +497,7 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
     _crop(floatArray) {
         const start = this._start || 0;
         const end = this._end != null ? this._end : floatArray.length;
-        let ret = floatArray ? floatArray.subarray(start, end) : new Float64Array(end - start);
+        let ret = floatArray ? floatArray.subarray(start, end) : new this._dataType(end - start);
         // if(end - start > 0) {
         //     ret = ret.expandTo(end - start);
         // }
@@ -702,7 +711,7 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
 
 
             if (name) {
-                if (!this._floatArray || this._floatArray instanceof Float64Array) {
+                if (!this._floatArray || this._floatArray instanceof (this._dataType)) {
                     this._floatArray = {};
                 }
                 this._floatArray[name] = floatArray;
@@ -711,7 +720,7 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
                     this._maxValues = {};
                 }
                 if(!this._maxValues[name]) {
-                    this._maxValues[name] = new Float64Array(floatArray.length);
+                    this._maxValues[name] = new this._dataType(floatArray.length);
                     for (let i = 0; i < floatArray.length; i++) {
                         this._maxValues[name][i] = floatArray[i];
                     }
@@ -724,7 +733,7 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
             } else {
                 this._floatArray = floatArray;
                 if (!this._maxValues) {
-                    this._maxValues = new Float64Array(floatArray.length);
+                    this._maxValues = new this._dataType(floatArray.length);
                     for (let i = 0; i < floatArray.length; i++) {
                         this._maxValues[i] = floatArray[i];
                     }
@@ -1018,23 +1027,23 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
 
     /**
      * Values for X axis
-     * @type {Float64Array}
+     * @type {Float64Array|Float32Array|Int32Array|Int16Array|Int8Array|Uint32Array|Uint16Array|Uint8Array}
      */
     get xAxisValues() {
         return this._xAxisValues;
     }
     /**
      * Values for X axis
-     * @type {Float64Array}
+     * @type {Float64Array|Float32Array|Int32Array|Int16Array|Int8Array|Uint32Array|Uint16Array|Uint8Array}
      */
     set xAxisValues(value) {
         this._xAxisValues = value;
     }
 
-    GenerateValues(points, start_x, delta_x) {
+    GenerateValues(points, start_x, delta_x, valueDataType = Float64Array) {
         this._start_x = start_x;
         this._delta_x = delta_x;
-        const values = new Float64Array(points);
+        const values = new valueDataType(points);
         for(let i = 0; i < points; i++) {
             values[i] = start_x + i * delta_x;
         }
@@ -1045,7 +1054,7 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
     Reorganize(minValue, maxValue) {
 
         if(!this._floatArray) {
-            this._floatArray = new Float64Array(this._xAxisValues.length);
+            this._floatArray = new this._dataType(this._xAxisValues.length);
         }
 
         let startIndex = this._xAxisValues.findByValue(minValue);

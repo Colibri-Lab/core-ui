@@ -306,6 +306,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         } else if ((value === 'true' || value === 'false') && type === 'Boolean') {
             return value === 'true';
         } else if (typeof value === 'string' && type === 'Number') {
+            if(value.isFunction()) {
+                value = value.convertToFunction();
+                value = value(value, this);
+            }
             return parseFloat(value);
         } else if (typeof value === 'object' && type !== 'String') {
             if (Lang !== undefined) {

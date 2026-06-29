@@ -1,7 +1,12 @@
 Colibri.IO.WebSocketStream = class extends Destructable {
 
     static TYPE_READERS = {
-        FDate: (dv, o, le) => new Colibri.Common.FDate(dv.getFloat64(o / 2, le), dv.getFloat64(o / 2 + 8, le)),
+        FDate: (dv, o, le) => {
+            const ns = dv.getBigUint64(o, le);
+            const ms = Number(ns / 1000000n);
+            const nano = Number(ns % 1_000_000n);
+            return new Colibri.Common.FDate(ms, nano);
+        },
         Date: (dv, o, le) => new Date(dv.getFloat64(o, le) * 1000),
         Float64: (dv, o, le) => dv.getFloat64(o, le),
         Float32: (dv, o, le) => dv.getFloat32(o, le),
@@ -18,6 +23,8 @@ Colibri.IO.WebSocketStream = class extends Destructable {
         Uint8Array
     };
 
+    _chunkDataType = null;
+
     /**
      * constructor
      * @constructor
@@ -25,7 +32,7 @@ Colibri.IO.WebSocketStream = class extends Destructable {
      * @param {Number|null} chunkSize part size in bytes or null (means that must be one row in chunk)
      * @param {Array<Array>} format of chunk [[8,'time','Date'],[4,'duration','Uint8'],[['n',4], 'chunk','Float32Array']]
      */
-    constructor(name, uri, chunkSize, chunkFormatter, chunkReceived) {
+    constructor(name, uri, chunkSize, chunkFormatter, chunkReceived, dataTypeChanged) {
         super();
 
         this._name = name;
@@ -33,6 +40,7 @@ Colibri.IO.WebSocketStream = class extends Destructable {
         this._chunkReceived = chunkReceived;
         this._chunkSize = chunkSize;
         this._chunkFormatter = chunkFormatter;
+        this._dataTypeChanged = dataTypeChanged;
         this._connect();
     }
 
@@ -49,6 +57,7 @@ Colibri.IO.WebSocketStream = class extends Destructable {
                 const bytesLeft = buffer.byteLength - offset;
                 const count = bytesLeft / stride;
                 const Ctor = Colibri.IO.WebSocketStream.ARRAY_VIEWS[type];
+                this.chunkDataType = Ctor;
 
                 out[name] = new Ctor(dv.buffer, 0, count);
                 offset += bytesLeft;
@@ -127,6 +136,20 @@ Colibri.IO.WebSocketStream = class extends Destructable {
     disconnect() {
         this._manualDisconnect = true;
         this._socket.close();
+    }
+
+    get chunkDataType() {
+        return this._chunkDataType;
+    }
+
+    set chunkDataType(value) {
+        const dtype = this._chunkDataType;
+        if(!dtype || dtype != value) {
+            this._chunkDataType = value;
+            if(this._dataTypeChanged) {
+                this._dataTypeChanged(value, this);
+            }
+        }
     }
 
 

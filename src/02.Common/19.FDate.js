@@ -1,35 +1,22 @@
 Colibri.Common.FDate = class {
 
-    constructor(sec = null, fs = null) {
+    constructor(ms = null, ns = 0) {
 
-        if (!sec && !fs) {
+        if(ms === null) {
             this._setNow();
-        }
-
-        if (sec instanceof Colibri.Common.FDate) {
-            this._sec = sec.seconds;
-            this._fs = sec.fs;
+        } else if(ms instanceof Colibri.Common.FDate) {
+            this._ms = ms._ms;
+            this._ns = ms._ns;
         } else {
-            this._sec = sec;
-            this._fs = fs ?? 0;
+            this._ms = Number(ms);
+            this._ns = Number(ns);
         }
     }
 
     _setNow() {
-        const nowMs = performance.timeOrigin + performance.now();
-        this._fromMilliseconds(nowMs);
-    }
-
-    _fromMilliseconds(ms) {
-        const sec = Math.floor(ms / 1000);
-        const frac = (ms / 1000) - sec;
-
-        this.seconds = sec;
-        this.fs = frac * 1e15;
-    }
-
-    _toMilliseconds() {
-        return (this.seconds + this.fs / 1e15) * 1000;
+        const now = performance.timeOrigin + performance.now();
+        this._ms = Math.floor(now);
+        this._ns = Math.round((now - this._ms) * 1e6);
     }
 
     static now() {
@@ -37,37 +24,33 @@ Colibri.Common.FDate = class {
     }
 
     static parse(s) {
-        const [datePart, fsStr] = s.split("/");
+        const [date, ns] = s.split("/");
 
-        // Парсим читаемую дату (секунда целиком)
-        const dateMs = Date.parse(datePart.slice(0, 19) + "Z"); // ms
-        if (isNaN(dateMs)) throw new Error("Invalid date string");
+        const ms = Date.parse(date.slice(0, 23) + "Z");
 
-        const sec = dateMs / 1000; // Float64 seconds
-        const fs = Number(fsStr); // Float64 femtoseconds
-
-        return new Colibri.Common.FDate(sec, fs);
+        return new Colibri.Common.FDate(ms, Number(ns));
     }
 
     valueOf() {
-        return this._toMilliseconds();
+        return this._ms;
     }
 
     getTime() {
-        return this._toMilliseconds();
+        return this._ms;
     }
 
     setTime(ms) {
-        this._fromMilliseconds(ms);
-        return this.getTime();
+        this._ms = Number(ms);
+        this._ns = 0;
+        return this._ms;
     }
 
     toISOString() {
-        return new Date(this.getTime()).toISOString();
+        return new Date(this._ms).toISOString();
     }
 
     toUTCString() {
-        return new Date(this.getTime()).toUTCString();
+        return new Date(this._ms).toUTCString();
     }
 
     toString() {
@@ -75,47 +58,71 @@ Colibri.Common.FDate = class {
     }
 
     __toString() {
-        // Читаемая дата из целой части секунд
-        const secInt = Math.floor(this._sec);
-        const date = new Date(secInt * 1000).toISOString().slice(0, 19);
 
-        // Дробная часть для визуализации (секунды + часть fs), не для восстановления
-        const fracSec = this._sec - secInt;
-        const displayFrac = (fracSec + this._fs / 1e15).toFixed(15).slice(2);
+        const d = new Date(this._ms);
 
-        // Итоговая строка: YYYY-MM-DDTHH:MM:SS.<displayFrac>/fs
-        return `${date}.${displayFrac}/${this._fs.toPrecision(17)}`;
+        const yyyy = d.getUTCFullYear();
+        const MM = String(d.getUTCMonth() + 1).padStart(2, '0');
+        const dd = String(d.getUTCDate()).padStart(2, '0');
+
+        const hh = String(d.getUTCHours()).padStart(2, '0');
+        const mm = String(d.getUTCMinutes()).padStart(2, '0');
+        const ss = String(d.getUTCSeconds()).padStart(2, '0');
+
+        const ms = String(d.getUTCMilliseconds()).padStart(3, '0');
+        const ns = String(this._ns).padStart(6, '0');
+
+        return `${yyyy}-${MM}-${dd}T${hh}:${mm}:${ss}.${ms}${ns}`;
     }
 
-    getFullYear() { return new Date(this.getTime()).getUTCFullYear(); }
-    getMonth() { return new Date(this.getTime()).getUTCMonth(); }
-    getDate() { return new Date(this.getTime()).getUTCDate(); }
-    getHours() { return new Date(this.getTime()).getUTCHours(); }
-    getMinutes() { return new Date(this.getTime()).getUTCMinutes(); }
-    getSeconds() { return new Date(this.getTime()).getUTCSeconds(); }
-    getMilliseconds() { return Math.floor(this.fs / 1e12); }
+    getFullYear() { return new Date(this._ms).getUTCFullYear(); }
+    getMonth() { return new Date(this._ms).getUTCMonth(); }
+    getDate() { return new Date(this._ms).getUTCDate(); }
+    getHours() { return new Date(this._ms).getUTCHours(); }
+    getMinutes() { return new Date(this._ms).getUTCMinutes(); }
+    getSeconds() { return new Date(this._ms).getUTCSeconds(); }
+    getMilliseconds() { return new Date(this._ms).getUTCMilliseconds(); }
 
-    get fs() {
-        return this._fs;
-    }
-    set fs(value) {
-        this._fs = value;
+    get nanoseconds() {
+        return this._ns;
     }
 
-    get seconds() {
-        return this._sec;
+    set nanoseconds(value) {
+        this._ns = Number(value);
     }
-    set seconds(value) {
-        this._sec = value;
+
+    get milliseconds() {
+        return this._ms;
+    }
+
+    set milliseconds(value) {
+        this._ms = Number(value);
     }
 
     clone() {
-        return new Float64Date(this);
+        return new Colibri.Common.FDate(this);
     }
 
     compare(other) {
-        if (this.seconds !== other.seconds) return this.seconds - other.seconds;
-        return this.fs - other.fs;
+        if(this._ms !== other._ms)
+            return this._ms - other._ms;
+
+        return this._ns - other._ns;
+    }
+
+    toBigIntNanoseconds() {
+        return BigInt(this._ms) * 1000000n + BigInt(this._ns);
+    }
+
+    static fromBigIntNanoseconds(ns) {
+        const ms = Number(ns / 1000000n);
+        const nano = Number(ns % 1_000_000n);
+        return new Colibri.Common.FDate(ms, nano);
+    }
+
+    addNanoseconds(ns) {
+        const totalNs = this.toBigIntNanoseconds() + BigInt(ns);
+        return Colibri.Common.FDate.fromBigIntNanoseconds(totalNs);
     }
 
 }
