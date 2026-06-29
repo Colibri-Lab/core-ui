@@ -107,19 +107,21 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
 
     /* ===================== MIN / MAX ===================== */
 
+    /** Minimum date value */
     get min() { return this._min; }
     set min(value) {
         this._min = value;
         this.Redraw();
     }
 
+    /** Maximum date value */
     get max() { return this._max; }
     set max(value) {
         this._max = value;
         this.Redraw();
     }
 
-
+    /** Rearrange dates from min to max */
     Rearrange(min, max) {
         this.min = min;
         this.max = max;
@@ -140,6 +142,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this.Redraw();
     }
 
+    /** Resize vertical range */
     ResizeVertical(start, end) {
         this._startIndex = parseInt(start);
         this._endIndex = parseInt(end);
@@ -148,14 +151,14 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
 
 
     /**
-     * Index of start
+     * Start index for every history row to crop
      * @type {Number}
      */
     get start() {
         return this._start;
     }
     /**
-     * Index of start
+     * Start index for every history row to crop
      * @type {Number}
      */
     set start(value) {
@@ -164,7 +167,24 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this.Redraw();
     }
 
+    /**
+     * End index for every history row to crop
+     * @type {Number}
+     */
+    get end() {
+        return this._end;
+    }
+    /**
+     * End index for every history row to crop
+     * @type {Number}
+     */
+    set end(value) {
+        value = this._convertProperty('Number', value);
+        this._end = parseInt(value);
+        this.Redraw();
+    }
 
+    /** Resize waterfall width from start index to end */
     Resize(start, end) {
         this._start = parseInt(start);
         this._end = parseInt(end);
@@ -173,10 +193,12 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
 
     /* ===================== SELECTION ===================== */
 
+    /** Selection mode */
     get selectionMode() {
         return this._selectionMode;
     }
 
+    /** Selection mode */
     set selectionMode(value) {
         this._selectionMode = value;
 
@@ -226,6 +248,49 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         }
     }
 
+    Clear() {
+        this._history.clear();
+        this.Redraw();
+    }
+
+    ResizeCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        const r = this._canvas.getBoundingClientRect();
+
+        this._canvas.width = r.width * dpr;
+        this._canvas.height = r.height * dpr;
+
+        this.Redraw();
+    }
+
+    /* ===================== DRAW ===================== */
+
+    Draw(data, show = true) {
+        if (Array.isArray(data)) {
+            this._history.add(data);
+        } else {
+            this._history.addObject(data);
+        }
+
+        if (show) this.Redraw();
+    }
+
+
+    /**
+     * Normalization function
+     * @type {Function}
+     */
+    get normalizationFunction() {
+        return this._normalizationFunction;
+    }
+    /**
+     * Normalization function
+     * @type {Function}
+     */
+    set normalizationFunction(value) {
+        value = this._convertProperty('Function', value);
+        this._normalizationFunction = value;
+    }
     /* ===================== PALETTE ===================== */
 
     get palette() {
@@ -257,15 +322,13 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
 
         gl.bindTexture(gl.TEXTURE_2D, this._paletteTexture);
 
-        const width = this._paletteSize || (this._palette.length / 4);
-
         gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
 
         gl.texImage2D(
             gl.TEXTURE_2D,
             0,
-            gl.RGBA8,
-            width,
+            gl.RGBA,
+            this._paletteSize,
             1,
             0,
             gl.RGBA,
@@ -277,6 +340,10 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+        console.log("WebGL2:", gl instanceof WebGL2RenderingContext);
+        console.log("FLOAT texture support:", gl.getExtension("EXT_color_buffer_float"));
+        console.log("RED:", gl.RED, "R32F:", gl.R32F);
     }
 
     /* ===================== INIT GL ===================== */
@@ -285,36 +352,43 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         const gl = this._ctx;
 
         const vs = `#version 300 es
-        in vec2 a_position;
-        out vec2 v_uv;
-        void main() {
-            v_uv = (a_position + 1.0) * 0.5;
-            gl_Position = vec4(a_position, 0.0, 1.0);
-        }`;
+in vec2 a_position;
+out vec2 v_uv;
+
+void main() {
+    v_uv = (a_position + 1.0) * 0.5;
+    gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
 
         const fs = `#version 300 es
-        precision highp float;
+precision highp float;
+precision highp sampler2D;
 
-        in vec2 v_uv;
+in vec2 v_uv;
 
-        uniform sampler2D u_data;
-        uniform sampler2D u_palette;
+uniform sampler2D u_data;
+uniform sampler2D u_palette;
 
-        uniform float u_min;
-        uniform float u_max;
+out vec4 outColor;
 
-        out vec4 outColor;
+void main() {
+    float v = texture(u_data, v_uv).r;
+    v = clamp(v, 0.0, 1.0);
 
-        void main() {
-            float v = texture(u_data, v_uv).r;
-            float n = clamp((v - u_min) / (u_max - u_min), 0.0, 1.0);
-            outColor = texture(u_palette, vec2(n, 0.5));
-        }`;
+    vec4 color = texture(u_palette, vec2(v, 0.5));
+    outColor = color;
+}`;
 
         const compile = (src, type) => {
             const s = gl.createShader(type);
             gl.shaderSource(s, src);
             gl.compileShader(s);
+
+            if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+                console.error(gl.getShaderInfoLog(s));
+                throw new Error("Shader compile failed");
+            }
+
             return s;
         };
 
@@ -323,13 +397,16 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         gl.attachShader(p, compile(fs, gl.FRAGMENT_SHADER));
         gl.linkProgram(p);
 
+        if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
+            console.error(gl.getProgramInfoLog(p));
+            throw new Error("Program link failed");
+        }
+
         this._program = p;
 
         this._aPosition = gl.getAttribLocation(p, "a_position");
         this._uData = gl.getUniformLocation(p, "u_data");
         this._uPalette = gl.getUniformLocation(p, "u_palette");
-        this._uMin = gl.getUniformLocation(p, "u_min");
-        this._uMax = gl.getUniformLocation(p, "u_max");
 
         this._texture = gl.createTexture();
         this._paletteTexture = gl.createTexture();
@@ -347,27 +424,29 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         ]), gl.STATIC_DRAW);
     }
 
-    /* ===================== DRAW ===================== */
-
-    Draw(data, show = true) {
-        if (Array.isArray(data)) {
-            this._history.add(data);
-        } else {
-            this._history.addObject(data);
-        }
-
-        if (show) this.Redraw();
-    }
-
     /* ===================== CORE RENDER ===================== */
 
     Redraw() {
         const gl = this._ctx;
 
-        const b = this._canvas.bounds();
-        gl.viewport(0, 0, b.outerWidth, b.outerHeight);
+        // --- resize ONLY if needed ---
+        const dpr = window.devicePixelRatio || 1;
+        const rect = this._canvas.getBoundingClientRect();
 
+        const width = Math.round(rect.width * dpr);
+        const height = Math.round(rect.height * dpr);
+
+        if (this._canvas.width !== width || this._canvas.height !== height) {
+            this._canvas.width = width;
+            this._canvas.height = height;
+        }
+
+        // --- viewport MUST match drawing buffer ---
+        gl.viewport(0, 0, this._canvas.width, this._canvas.height);
+
+        gl.clearColor(0, 0, 0, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
+
         gl.useProgram(this._program);
 
         const all = this._history.getAll();
@@ -378,33 +457,29 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         const rows = Math.max(1, end - start);
         const cols = this._length;
 
-        const data = new this._dataType(rows * cols);
+        const data = new Float32Array(rows * cols);
 
         let offset = 0;
 
-        let min = Infinity;
-        let max = -Infinity;
-
         for (let i = start; i < end; i++) {
-            const row = all[i];
-            if (!row || !row.chunk) continue;
+            const chunk = all[i]?.chunk;
 
-            const chunk = row.chunk;
-
-            for (let j = 0; j < chunk.length; j++) {
-                const v = chunk[j];
-                if (!isFinite(v)) continue;
-
-                if (v < min) min = v;
-                if (v > max) max = v;
+            for (let j = 0; j < cols; j++) {
+                const v = chunk?.[j] ?? 0;
+                data[offset + j] = this._normalizationFunction(v);
             }
 
-            data.set(chunk, offset);
             offset += cols;
         }
 
-        // ===== TEXTURE UPLOAD =====
+        // --- texture upload ---
+        gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, this._texture);
+
+        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
         gl.texImage2D(
             gl.TEXTURE_2D,
@@ -418,17 +493,14 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
             data
         );
 
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, this._texture);
         gl.uniform1i(this._uData, 0);
 
+        // --- palette ---
         gl.activeTexture(gl.TEXTURE1);
         gl.bindTexture(gl.TEXTURE_2D, this._paletteTexture);
         gl.uniform1i(this._uPalette, 1);
 
-        gl.uniform1f(this._uMin, this._min);
-        gl.uniform1f(this._uMax, this._max);
-
+        // --- quad ---
         gl.bindBuffer(gl.ARRAY_BUFFER, this._quad);
         gl.enableVertexAttribArray(this._aPosition);
         gl.vertexAttribPointer(this._aPosition, 2, gl.FLOAT, false, 0, 0);
@@ -436,20 +508,4 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
 
-    /* ===================== RESIZE ===================== */
-
-    ResizeCanvas() {
-        const dpr = window.devicePixelRatio || 1;
-        const r = this._canvas.getBoundingClientRect();
-
-        this._canvas.width = r.width * dpr;
-        this._canvas.height = r.height * dpr;
-
-        this.Redraw();
-    }
-
-    Clear() {
-        this._history.clear();
-        this.Redraw();
-    }
 };
