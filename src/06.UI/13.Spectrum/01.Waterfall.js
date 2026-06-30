@@ -46,10 +46,21 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this._selections.AddHandler('ContextMenu', this.__thisBubble, false, this);
         this._selections.AddHandler('ContextMenuItemClicked', this.__thisBubble, false, this);
 
+        this._waterfallSelector = new Colibri.UI.Selector('waterfall-selector', this);
+        this._waterfallSelector.shown = true;
+        this._waterfallSelector.multiple = false;
+        this._waterfallSelector.searchable = false;
+        this._waterfallSelector.readonly = false;
+
+        this._waterfallSelector.AddHandler('Changed', this.__waterfallSelectorChanged, false, this);
+
         this._initGL();
         this._initQuad();
     }
 
+    __waterfallSelectorChanged(event, args) {
+        this.Redraw();
+    }
 
     /**
      * Register events
@@ -66,11 +77,27 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
     /* ===================== HISTORY ===================== */
 
     get history() {
-        return this._history.getAll();
+        if(Object.isPlainObject(this._history)) {
+            if(this._waterfallSelector?.value?.value ?? this._waterfallSelector?.value) {
+                return this._history[this._waterfallSelector?.value?.value ?? this._waterfallSelector?.value].getAll();
+            } else {
+                return this._history[Object.keys(this._history)[0]].getAll();
+            }
+        } else {
+            return this._history.getAll();
+        }
     }
 
     set history(value) {
-        this._history.setAll(value);
+        if(Object.isPlainObject(this._history)) {
+            if(this._waterfallSelector?.value?.value ?? this._waterfallSelector?.value) {
+                this._history[this._waterfallSelector?.value?.value ?? this._waterfallSelector?.value].setAll(value);
+            } else {
+                this._history[Object.keys(this._history)[0]].setAll(value);
+            }
+        } else {
+            this._history.setAll(value);
+        }
         this.Redraw();
     }
 
@@ -89,7 +116,13 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
     set historyClass(value) {
         this._historyClass = value;
         const cls = eval(this._historyClass);
-        if (!(this._history instanceof cls)) {
+        if(Object.isPlainObject(this._history)) {
+            for(const key in this._history) {
+                if (!(this._history[key] instanceof cls)) {
+                    this._history[key] = new cls(this._length, true);
+                }
+            }
+        } else if (!(this._history instanceof cls)) {
             this._history = new cls(this._length, true);
         }
     }
@@ -265,13 +298,45 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
 
     /* ===================== DRAW ===================== */
 
-    Draw(data, show = true) {
-        if (Array.isArray(data)) {
-            this._history.add(data);
-        } else {
-            this._history.addObject(data);
-        }
+    Draw(data, name = null, show = true) {
+        if(name) {
 
+            let values = this._waterfallSelector.values;
+            if(!values) {
+                values = [{value: name, title: name}];
+            } else {
+                if(values.filter(v => v.value === name).length === 0) {
+                    values.push({value: name, title: name});
+                }
+            }
+            this._waterfallSelector.values = values;
+            this._waterfallSelector.value = name;
+
+            if(!Object.isPlainObject(this._history)) {
+                const existingHistory = this._history;
+                this._history = {};
+                this._history[name] = existingHistory;
+            }
+
+            if(!this._history[name]) {
+                const cls = eval(this._historyClass);
+                this._history[name] = new cls(this._length, true);
+            }
+
+            if (Array.isArray(data)) {
+                this._history[name].add(data);
+            } else {
+                this._history[name].addObject(data);
+            }
+
+        } else {
+            if (Array.isArray(data)) {
+                this._history.add(data);
+            } else {
+                this._history.addObject(data);
+            }
+
+        }    
         if (show) this.Redraw();
     }
 
@@ -424,6 +489,16 @@ void main() {
         ]), gl.STATIC_DRAW);
     }
 
+    _crop(floatArray) {
+        const start = this._start || 0;
+        const end = this._end != null ? this._end : floatArray.length;
+        let ret = floatArray ? floatArray.subarray(start, end) : new this._dataType(end - start);
+        // if(end - start > 0) {
+        //     ret = ret.expandTo(end - start);
+        // }
+        return ret;
+    }
+
     /* ===================== CORE RENDER ===================== */
 
     Redraw() {
@@ -449,20 +524,37 @@ void main() {
 
         gl.useProgram(this._program);
 
-        const all = this._history.getAll();
+        let currentHistory = null;
+        if(Object.isPlainObject(this._history)) {
+            currentHistory = this._history[this._waterfallSelector?.value?.value ?? this._waterfallSelector?.value];
+        } else {
+            currentHistory = this._history;
+        }
+
+        const all = currentHistory.crop((v) => {
+            return v.date.toDate().toUnixTime() >= this._min;
+        }, (v) => {
+            return v.date.toDate().toUnixTime() <= this._max;
+        });
+
+        let chunkLength = 0;
+        if(all.length > 0) {
+            chunkLength = all[0].chunk.length;
+        }
+
 
         const start = Math.max(0, this._startIndex || 0);
-        const end = Math.min(all.length, this._endIndex || this._length);
+        const end = Math.min(chunkLength, this._endIndex || chunkLength);
 
-        const rows = Math.max(1, end - start);
-        const cols = this._length;
+        const rows = Math.max(all.length, this._length);
+        const cols = end - start;
 
         const data = new Float32Array(rows * cols);
 
         let offset = 0;
 
-        for (let i = start; i < end; i++) {
-            const chunk = all[i]?.chunk;
+        for (let i = 0; i < all.length; i++) {
+            let chunk = this._crop(all[i]?.chunk);
 
             for (let j = 0; j < cols; j++) {
                 const v = chunk?.[j] ?? 0;

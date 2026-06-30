@@ -35,6 +35,10 @@ Colibri.Common.FDate = class {
         return this._ms;
     }
 
+    toDate() {
+        return new Date(this._ms);
+    }
+
     getTime() {
         return this._ms;
     }

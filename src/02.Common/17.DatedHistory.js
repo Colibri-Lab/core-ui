@@ -103,38 +103,38 @@ Colibri.Common.DatedHistory = class {
         } else {
             if (this._newestFirst) {
 
-                // const oldDate = this._items[0].date;
-                // let unshiftCount = Math.floor(Number(this.measure(date, oldDate) / 1000000n / 1000n)); // milliseconds
-                // while (unshiftCount-- > 1) {
-                //     const emptyItem = {
-                //         date: oldDate.addNanoseconds(this._dateShift * (BigInt(unshiftCount) + 1n)),
-                //         duration: this._dateShift,
-                //         chunk: (new this._dataType(chunk.length)).fill(this._emptyValue)
-                //     };
-                //     this._items.unshift(emptyItem);
-                //     if (this._items.length > this._limit) {
-                //         this._items.pop(); // убираем старую в конце
-                //     }
-                // }
+                const oldDate = this._items[0].date;
+                let unshiftCount = Math.floor(Number(this.measure(date, oldDate) / 1000000n / 1000n)); // milliseconds
+                while (unshiftCount-- > 1) {
+                    const emptyItem = {
+                        date: oldDate.addNanoseconds(this._dateShift * (BigInt(unshiftCount) + 1n)),
+                        duration: this._dateShift,
+                        chunk: (new this._dataType(chunk.length)).fill(this._emptyValue)
+                    };
+                    this._items.unshift(emptyItem);
+                    if (this._items.length > this._limit) {
+                        this._items.pop(); // убираем старую в конце
+                    }
+                }
 
                 this._items.unshift(cloned); // вставляем в начало
                 if (this._items.length > this._limit) {
                     this._items.pop(); // убираем старую в конце
                 }
             } else {
-                // const oldDate = this._items[this._items.length - 1].date;
-                // let pushCount = Math.floor(Number(this.measure(date, oldDate) / 1000000n)); // milliseconds
-                // while (pushCount-- > 1) {
-                //     const emptyItem = {
-                //         date: oldDate.addNanoseconds(this._dateShift * BigInt(this._limit - pushCount)),
-                //         duration: this._dateShift,
-                //         chunk: (new this._dataType(chunk.length)).fill(this._emptyValue)
-                //     };
-                //     this._items.push(emptyItem);
-                //     if (this._items.length > this._limit) {
-                //         this._items.shift(); // убираем старую в начале
-                //     }
-                // }
+                const oldDate = this._items[this._items.length - 1].date;
+                let pushCount = Math.floor(Number(this.measure(date, oldDate) / 1000000n)); // milliseconds
+                while (pushCount-- > 1) {
+                    const emptyItem = {
+                        date: oldDate.addNanoseconds(this._dateShift * BigInt(this._limit - pushCount)),
+                        duration: this._dateShift,
+                        chunk: (new this._dataType(chunk.length)).fill(this._emptyValue)
+                    };
+                    this._items.push(emptyItem);
+                    if (this._items.length > this._limit) {
+                        this._items.shift(); // убираем старую в начале
+                    }
+                }
 
                 this._items.push(cloned); // вставляем в конец
                 if (this._items.length > this._limit) {
@@ -181,7 +181,25 @@ Colibri.Common.DatedHistory = class {
         return this._items.slice();
     }
 
-    crop(startIndex, endIndex) {
+    /**
+     * Crop items by method
+     * @param {Function} startF index search method
+     * @param {Function} endF index search method
+     * @returns Array of items cropped by the index search method
+     */
+    crop(startF, endF) {
+        startF = startF || (() => true);
+        endF = endF || (() => true);
+        const startIndex = this._items.findIndex(startF);
+        if (startIndex === -1) {
+            return [];
+        }
+        let endIndex = this._items.length - 1;
+        for(let i = this._items.length - 1; i > startIndex; i--) {
+            if(endF(this._items[i])) {
+                endIndex = i;
+            }
+        }
         return this._items.slice(startIndex, endIndex);
     }
 
