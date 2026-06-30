@@ -161,28 +161,6 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this.Redraw();
     }
 
-    /* ===================== INDEXING ===================== */
-
-    get startIndex() { return this._startIndex; }
-    set startIndex(v) {
-        this._startIndex = parseInt(v);
-        this.Redraw();
-    }
-
-    get endIndex() { return this._endIndex; }
-    set endIndex(v) {
-        this._endIndex = parseInt(v);
-        this.Redraw();
-    }
-
-    /** Resize vertical range */
-    ResizeVertical(start, end) {
-        this._startIndex = parseInt(start);
-        this._endIndex = parseInt(end);
-        this.Redraw();
-    }
-
-
     /**
      * Start index for every history row to crop
      * @type {Number}
@@ -221,6 +199,12 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
     Resize(start, end) {
         this._start = parseInt(start);
         this._end = parseInt(end);
+        this.Redraw();
+    }
+
+    Expand() {
+        this._start = 0;
+        this._end = null;
         this.Redraw();
     }
 
@@ -543,8 +527,8 @@ void main() {
         }
 
 
-        const start = Math.max(0, this._startIndex || 0);
-        const end = Math.min(chunkLength, this._endIndex || chunkLength);
+        const start = Math.max(0, (this._start = this._start || 0));
+        const end = Math.min(chunkLength, (this._end = this._end || chunkLength));
 
         const rows = Math.max(all.length, this._length);
         const cols = end - start;
