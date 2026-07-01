@@ -27,10 +27,10 @@ Colibri.UI.PlayPauseButton = class extends Colibri.UI.ExtendedButton {
     }
 
     __thisClicked(event, args) {
-        if(this.state === 'play') {
-            this.state = 'pause';
+        if(this.state === PlayPauseButton.Play) {
+            this.state = PlayPauseButton.Pause;
         } else {
-            this.state = 'play';
+            this.state = PlayPauseButton.Play;
         }
         this.Dispatch('Changed', {state: this.state, component: this});
     }
@@ -51,11 +51,16 @@ Colibri.UI.PlayPauseButton = class extends Colibri.UI.ExtendedButton {
         this._showState();
     }
     _showState() {
-        if(this._state === 'play') {
+        if(this._state === PlayPauseButton.Play) {
             this.icon = 'Colibri.UI.PauseIcon';
         } else {
             this.icon = 'Colibri.UI.PlayIcon';
         }
     }
 
+}
+
+PlayPauseButton = {
+    Play: 'play',
+    Pause: 'pause'
 }
