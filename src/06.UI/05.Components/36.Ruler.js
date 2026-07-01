@@ -772,7 +772,9 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this._span2Moved(newRight, newRight, false);
         
 
+        this.Dispatch('BeforeChanged');
         this.Dispatch('Changed', {right: true, left: true});
+        this.Dispatch('AfterChanged');
 
     }
 

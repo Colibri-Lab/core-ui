@@ -405,8 +405,12 @@ in vec2 a_position;
 out vec2 v_uv;
 
 void main() {
-    v_uv = (a_position + 1.0) * 0.5;
     gl_Position = vec4(a_position, 0.0, 1.0);
+
+    v_uv = vec2(
+        (a_position.x + 1.0) * 0.5,
+        1.0 - (a_position.y + 1.0) * 0.5
+    );
 }`;
 
         const fs = `#version 300 es
@@ -522,7 +526,7 @@ void main() {
         });
 
         let chunkLength = 0;
-        if(all.length > 0) {
+        if(all?.length > 0) {
             chunkLength = all[0].chunk.length;
         }
 
@@ -530,14 +534,19 @@ void main() {
         const start = Math.max(0, (this._start = this._start || 0));
         const end = Math.min(chunkLength, (this._end = this._end || chunkLength));
 
-        const rows = Math.max(all.length, this._length);
+        const rows = Math.max(all?.length, this._length);
         const cols = end - start;
+        const length = rows * cols;
 
-        const data = new Float32Array(rows * cols);
+        if(length <= 0) {
+            return;
+        }
+
+        const data = new this._dataType(length);
 
         let offset = 0;
 
-        for (let i = 0; i < all.length; i++) {
+        for (let i = 0; i < all?.length; i++) {
             let chunk = this._crop(all[i]?.chunk);
 
             for (let j = 0; j < cols; j++) {
@@ -584,4 +593,87 @@ void main() {
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
 
-};
+    /**
+     * Values for X axis
+     * @type {Float64Array|Float32Array|Int32Array|Int16Array|Int8Array|Uint32Array|Uint16Array|Uint8Array}
+     */
+    get xAxisValues() {
+        return this._xAxisValues;
+    }
+    /**
+     * Values for X axis
+     * @type {Float64Array|Float32Array|Int32Array|Int16Array|Int8Array|Uint32Array|Uint16Array|Uint8Array}
+     */
+    set xAxisValues(value) {
+        this._xAxisValues = value;
+    }
+
+    GenerateValues(points, start_x, delta_x, valueDataType = Float64Array) {
+        this._start_x = start_x;
+        this._delta_x = delta_x;
+        const values = new valueDataType(points);
+        for(let i = 0; i < points; i++) {
+            values[i] = start_x + i * delta_x;
+        }
+        this.xAxisValues = values;
+
+    }
+
+    Reorganize(minValue, maxValue) {
+
+        let startIndex = this._xAxisValues.findByValue(minValue);
+        let endIndex = this._xAxisValues.findByValue(maxValue);
+
+        if(startIndex === -1) {
+            const firstValue = this._xAxisValues[0];
+            if(minValue < firstValue && this._delta_x > 0) {
+                const prependCount = Math.ceil((firstValue - minValue) / this._delta_x);
+                this._xAxisValues = this._xAxisValues.prependTo(this._xAxisValues.length + prependCount, (i) => {
+                    return firstValue - (prependCount - i) * this._delta_x;
+                });
+
+
+                if(Object.isPlainObject(this._history)) {
+                    for(const name in this._history) {
+                        this._history[name].prependTo(prependCount);
+                    }
+                } else {
+                    this._history.prependTo(prependCount);
+                }
+                startIndex = this._xAxisValues.findByValue(minValue);
+            }
+        }
+
+        if(endIndex === -1) {
+            const lastValue = this._xAxisValues[this._xAxisValues.length - 1];
+            if(maxValue > lastValue && this._delta_x > 0) {
+                const appendCount = Math.ceil((maxValue - lastValue) / this._delta_x);
+                const len = this._xAxisValues.length;
+                this._xAxisValues = this._xAxisValues.appendTo(this._xAxisValues.length + appendCount, (i) => {
+                    return lastValue + (i - (len - 1)) * this._delta_x;
+                });
+                if(Object.isPlainObject(this._history)) {
+                    for(const name in this._history) {
+                        this._history[name].appendTo(appendCount);
+                    }
+                } else {
+                    this._history.appendTo(appendCount);
+                }
+                endIndex = this._xAxisValues.findByValue(maxValue);
+            }
+
+        }
+
+        // if(Object.isPlainObject(this._history)) {
+        //     for(const name in this._history) {
+        //         this._history[name].cropItems(startIndex, endIndex);
+        //     }
+        // } else {
+        //     this._history.cropItems(startIndex, endIndex);
+        // }
+        // this.Redraw();
+        this.Resize(startIndex, endIndex);
+    }
+
+
+}

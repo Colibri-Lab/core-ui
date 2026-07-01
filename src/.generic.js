@@ -125,6 +125,13 @@ Float32Array.prototype.prependTo = function(max, valueCallback = null) {
     return output;
 }
 
+Float32Array.prototype.crop = function(startIndex, endIndex) {
+    // if(startIndex < 0 || endIndex > this.length || startIndex >= endIndex) {
+    //     throw new Error('Invalid startIndex or endIndex for cropping Float32Array.');
+    // }
+    return this.subarray(startIndex, endIndex);
+}
+
 Float32Array.prototype.findByValue = function(value) {
     if(value < this[0] || value > this[this.length - 1]) {
         return -1;

@@ -87,6 +87,14 @@ Colibri.Common.DatedHistory = class {
         return this._dataType;
     }
 
+    get chunkLength() {
+        return this._chunkLength;
+    }
+
+    set chunkLength(value) {
+        this._chunkLength = value;
+    }
+
     _add(date, chunk, duration = null) {
         if (duration) {
             this._dateShift = BigInt(duration);
@@ -97,6 +105,8 @@ Colibri.Common.DatedHistory = class {
             duration: this._dateShift,
             chunk: Object.cloneRecursive(chunk)
         }
+
+        this.chunkLength = cloned.chunk.length;
 
         if (this._items.length == 0) {
             this._items.push(cloned);
@@ -204,10 +214,32 @@ Colibri.Common.DatedHistory = class {
     }
 
     clear() {
+        debugger;
         this._items = [];
     }
 
     resize(newLimit) {
         this.limit = newLimit;
     }
+
+    prependTo(prependCount) {
+        this._items.forEach((item) => {
+            item.chunk = item.chunk.prependTo(item.chunk.length + prependCount);
+        });
+    } 
+
+    appendTo(appendCount) {
+        this._items.forEach((item) => {
+            item.chunk = item.chunk.appendTo(item.chunk.length + appendCount);
+        });
+    }
+
+    cropItems(startIndex, endIndex) {
+        this._items.forEach((item) => {
+            let chunk = item.chunk.crop(startIndex, endIndex);
+            chunk = chunk.extrapolate(this.chunkLength);
+            item.chunk = chunk;
+        });
+    }
+
 };
