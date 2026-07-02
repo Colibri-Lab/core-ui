@@ -59,7 +59,7 @@ Colibri.IO.WebSocketStream = class extends Destructable {
                 const Ctor = Colibri.IO.WebSocketStream.ARRAY_VIEWS[type];
                 this.chunkDataType = Ctor;
 
-                out[name] = new Ctor(dv.buffer, 0, count);
+                out[name] = new Ctor(dv.buffer, offset, count);
                 offset += bytesLeft;
                 break;
             }

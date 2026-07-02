@@ -19,6 +19,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this._selections = new Colibri.UI.Spectrum.Selections('selections', this);
         this._selections.shown = true;
         this._selectionMode = 'none';
+        this._selections.AddClass('-light');
 
         this.enablePointerControl = true;
 
@@ -620,6 +621,9 @@ void main() {
     }
 
     Reorganize(minValue, maxValue) {
+        if(!this._xAxisValues) {
+            return;
+        }
 
         let startIndex = this._xAxisValues.findByValue(minValue);
         let endIndex = this._xAxisValues.findByValue(maxValue);

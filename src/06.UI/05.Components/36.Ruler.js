@@ -314,7 +314,9 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         } else {
             this._calculateValue(this._progress.top - this.top + (args.domEvent.deltaY / 10), null, true);
         }
+        this.Dispatch('BeforeChanged');
         this.Dispatch('Changed', { value: this.value, right: true, left: true });
+        this.Dispatch('AfterChanged');
     }
 
     _progressMoved(newLeft, newTop) {
