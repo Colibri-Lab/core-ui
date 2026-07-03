@@ -246,13 +246,17 @@ Colibri.IO.Request = class extends Destructable {
                 params = {};
             }
             const req = new XMLHttpRequest();
+            if(params._responseType) {
+                req.responseType = params._responseType;
+                delete params._responseType;
+            }
             req.onreadystatechange = () => {
                 if (req.readyState == 4) {
                     if(req.status != 200) {
                         reject({status: req.status, result: req.responseText, headers: this._getResponseHeaders(req)});
                     }
                     else {
-                        resolve({status: req.status, result: req.responseText, headers: this._getResponseHeaders(req)});    
+                        resolve({status: req.status, result: req.response, headers: this._getResponseHeaders(req)});    
                     }
                 }
             };
@@ -303,13 +307,17 @@ Colibri.IO.Request = class extends Destructable {
                 params = {};
             }
             const req = new XMLHttpRequest();
+            if(params._responseType) {
+                req.responseType = params._responseType;
+                delete params._responseType;
+            }
             req.onreadystatechange = () => {
                 if (req.readyState == 4) {
                     if(req.status != 200) {
                         reject({status: req.status, result: req.responseText, headers: this._getResponseHeaders(req)});
                     }
                     else {
-                        resolve({status: req.status, result: req.responseText, headers: this._getResponseHeaders(req)});    
+                        resolve({status: req.status, result: req.response, headers: this._getResponseHeaders(req)});    
                     }
                 }
             };
