@@ -2,7 +2,7 @@ Colibri.Modules.Math = class {
 
     constructor() {
         this._wasmLoaded = false;
-        this._wasm = new Colibri.Common.Wasm('/res/math/math.wasm');
+        this._wasm = new Colibri.Common.Wasm('/res/math.wasm');
         this._wasm.Load().then(() => {
             this._wasmLoaded = true;
         });
@@ -12,7 +12,7 @@ Colibri.Modules.Math = class {
         return this._wasmLoaded;
     }
 
-    voltsToDb(arr, reference = 1.0) {
+    voltsToDb(arr) {
         if (!this._wasmLoaded) {
             throw new Error("WASM module not loaded");
         }
@@ -30,7 +30,7 @@ Colibri.Modules.Math = class {
         throw new Error("Unsupported array type. Only Float32Array and Float64Array are supported.");
     }
 
-    voltsToDbBatch(arr, reference = 1.0) {
+    voltsToDbBatch(arr) {
         if (!this._wasmLoaded) {
             throw new Error("WASM module not loaded");
         }

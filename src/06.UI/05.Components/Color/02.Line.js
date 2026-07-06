@@ -77,7 +77,7 @@ Colibri.UI.Color.Line = class extends Colibri.UI.Component {
     /** @private */
     _setNewValue(left) {
 
-        const ctx = this._canvas.container.getContext("2d");
+        const ctx = this._canvas.container.getContext("2d", { willReadFrequently: true });
         const pixel = ctx.getImageData(left, 0, 1, 1).data;
         const r = pixel[0];
         const g = pixel[1];
@@ -119,7 +119,7 @@ Colibri.UI.Color.Line = class extends Colibri.UI.Component {
     /** @private */
     _renderGradient() {
         const bounds = this._element.bounds();
-        const ctx = this._canvas.container.getContext("2d");
+        const ctx = this._canvas.container.getContext("2d", { willReadFrequently: true });
         const dpr = window.devicePixelRatio || 1;
         this._canvas.container.width = bounds.outerWidth * dpr;
         this._canvas.container.height = bounds.outerHeight * dpr;
