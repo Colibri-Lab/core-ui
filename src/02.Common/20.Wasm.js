@@ -33,34 +33,52 @@ Colibri.Common.Wasm = class extends Colibri.Events.Dispatcher {
         }
 
         this._memory = memoryByteSize ? new WebAssembly.Memory({
-            initial: ((memoryByteSize + 0xffff) & ~0xffff) >>> 16
+            initial: ((memoryByteSize + 0xffff) & ~0xffff) >>> 16,
+            maximum: ((memoryByteSize * 10 + 0xffff) & ~0xffff) >>> 16,
+            shared: true
         }) : null;
         this._config = config;
 
+
         const data = response.result;
         const arrayBuffer = new Uint8Array(data).buffer;
+        let wasmInstance = null;
 
         // Объект импортов
         const imports = {
             env: {
-                memory: this._memory,
                 abort(msgPtr, filePtr, line, col) {
-                    console.error("abort called at:", line, col, msgPtr, filePtr);
+                    const message = wasmInstance?.exports?.__getString ? wasmInstance.exports.__getString(msgPtr) : `ptr:${msgPtr}`;
+                    console.error("abort called at:", line, col, msgPtr, filePtr, "message:", message);
                 },
                 trace(msgPtr, n) {
-                    console.log("trace called");
+                    const message = wasmInstance?.exports?.__getString ? wasmInstance.exports.__getString(msgPtr) : `ptr:${msgPtr}`;
+                    console.log("trace:", message, "args:", n);
                 }
             },
-            config: config
         };
+
+        if(this._memory) {
+            imports.env.memory = this._memory;
+        }
+        if(Object.isPlainObject(config) && Object.countKeys(config) > 0) {
+            imports.config = config;
+        }
+
         const instance = await loader.instantiate(arrayBuffer, imports);
+        wasmInstance = instance;
         this._instance = instance;
 
         for (const key of Object.keys(instance.exports)) {
             if (typeof instance.exports[key] === "function") {
                 this[key] = (...args) => this._instance.exports[key](...args);
             }
+            if (typeof instance.exports[key] === "object" && instance.exports[key] instanceof WebAssembly.Global) {
+                this[key] = instance.exports[key];
+            }
         }
+
+        this._memory = this._memory || instance.exports.memory;
 
         this._loaded = true;
         this.Dispatch('Loaded');
