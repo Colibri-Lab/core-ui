@@ -29,6 +29,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._objectsSources = {};
         this._linesSources = {};
         this._pointsSources = {};
+        this._fillSources = {};
 
         this.GenerateChildren(element, this);
 
@@ -385,7 +386,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     _createLayers(sourceName, styles) {
         // Пример: полигоны
         if (styles?.polygons) {
-            if(!this._map.getLayer(sourceName + '-polygons')) {
+            if (!this._map.getLayer(sourceName + '-polygons')) {
                 this._map.addLayer({
                     id: sourceName + '-polygons',
                     type: 'fill',
@@ -398,7 +399,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         }
 
         if (styles?.lines) {
-            if(!this._map.getLayer(sourceName + '-lines')) {    
+            if (!this._map.getLayer(sourceName + '-lines')) {
                 this._map.addLayer({
                     id: sourceName + '-lines',
                     type: 'line',
@@ -411,7 +412,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         }
 
         if (styles?.points) {
-            if(!this._map.getLayer(sourceName + '-points')) {
+            if (!this._map.getLayer(sourceName + '-points')) {
                 this._map.addLayer({
                     id: sourceName + '-points',
                     type: 'circle',
@@ -424,7 +425,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         }
 
         if (styles?.texts) {
-            if(!this._map.getLayer(sourceName + '-symbols')) {
+            if (!this._map.getLayer(sourceName + '-symbols')) {
                 this._map.addLayer({
                     id: sourceName + '-symbols',
                     type: 'symbol',
@@ -624,6 +625,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 this._createPointSource(name);
             } else if (type === 'symbol') {
                 this._createObjectSource(name, properties?.[name] ?? {});
+            } else if (type === 'fill') {
+                this._createFillSource(name, properties?.[name] ?? {});
             }
         });
     }
@@ -692,6 +695,37 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         }
 
         return this._pointsSources[name];
+    }
+
+    _createFillSource(name) {
+        if (!this.loaded) {
+            return;
+        }
+        if (!this._fillSources[name]) {
+            this._map.addSource(name + '-source', {
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features: []
+                }
+            });
+
+            this._map.addLayer({
+                id: name,
+                type: 'fill',
+                source: name + '-source',
+                layout: {},
+                paint: {
+                    'fill-color': ['get', 'color'],
+                    'fill-opacity': ['get', 'opacity']
+                }
+            });
+
+            this._layersZIndex.push(name);
+            this._fillSources[name] = this._map.getSource(name + '-source');
+        }
+
+        return this._fillSources[name];
     }
 
     _createObjectSource(name, properties) {
@@ -960,6 +994,75 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         source.setData(data);
     }
 
+
+    _sourceAddFill(name, objectJson) {
+        const source = this._createFillSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        data.features.push(objectJson);
+        source.setData(data);
+    }
+
+    _sourceAddOrUpdateFills(name, objectsJson, updateIfExists = true, removeIfNotFoundInObjects = false) {
+        const source = this._createFillSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        if (updateIfExists && removeIfNotFoundInObjects) {
+            const objectIds = objectsJson.map(o => o.id);
+            data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
+        }
+        for (const objectJson of objectsJson) {
+            if (updateIfExists) {
+                let idx = data.features.findIndex(f => f.id === objectJson.id);
+                if (idx === -1) {
+                    data.features.push(objectJson);
+                } else {
+                    data.features.splice(idx, 1, objectJson);
+                }
+            } else {
+                data.features.push(objectJson);
+            }
+        }
+        source.setData(data);
+    }
+
+    _sourceRemoveFill(name, objectId) {
+        const source = this._createFillSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        data.features = data.features.filter(f => f.id !== objectId);
+        source.setData(data);
+    }
+
+    _sourceRemoveFills(name, objectIds) {
+        const source = this._createFillSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
+        source.setData(data);
+    }
+
+    _sourceUpdateFill(name, objectId, objectJson) {
+        const source = this._createFillSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        const idx = data.features.findIndex(f => f.id === objectId);
+        if (idx === -1) return;
+        data.features.splice(idx, 1, objectJson);
+        source.setData(data);
+    }
+
+
     ClearLineSource(sourceName) {
         if (this._linesSources[sourceName]) {
             const source = this._linesSources[sourceName];
@@ -976,6 +1079,15 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             data.features = [];
             source.setData(data);
 
+        }
+    }
+
+    ClearFillSource(sourceName) {
+        if (this._fillSources[sourceName]) {
+            const source = this._fillSources[sourceName];
+            const data = source._data.geojson;
+            data.features = [];
+            source.setData(data);
         }
     }
 
@@ -1135,6 +1247,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 }
             };
         }), updateIfExists, removeIfNotFoundInObjects);
+    }
+
+    AddFills(source, latLngsLike, updateIfExists = true, removeIfNotFoundInObjects = false) {
+        this._sourceAddOrUpdateFills(source, latLngsLike, updateIfExists, removeIfNotFoundInObjects);
     }
 
     UpdateLinesColor(source, color, condition = null) {
@@ -1408,12 +1524,12 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                     const id = features[0]?.properties?.id ?? null;
                     info = info + (id ? `, ID: ${id}` : '');
                 }
-                
+
                 if (callback) {
                     info = await callback(features, info, e, res);
                     loading = false;
                 }
-    
+
             } catch (err) {
                 console.log(err);
                 loading = false;
@@ -1423,8 +1539,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
             if (res.infoOnMousePoint) {
                 this._infoDiv.Show(null, true, { left: e.point.x + this.left, top: e.point.y + this.top });
             } else {
-                this._infoDiv.Show(null, true, { 
-                    left: this.left + this.width - this._infoDiv.width - 25, 
+                this._infoDiv.Show(null, true, {
+                    left: this.left + this.width - this._infoDiv.width - 25,
                     top: this.top + this.height - this._infoDiv.height - this.Children('commands').height - 15
                 });
             }
@@ -2188,5 +2304,377 @@ Colibri.UI.Maps.Turf = class {
             default: return total; // kilometers
         }
     }
+
+    distance(pointA, pointB, options = {}) {
+        const unit = options.units || "kilometers";
+        const d = this.haversineDistance(pointA.geometry.coordinates, pointB.geometry.coordinates);
+        switch (unit) {
+            case "meters": return d * 1000;
+            case "miles": return d * 0.621371;
+            case "nauticalmiles": return d * 0.539957;
+            default: return d; // kilometers
+        }
+    }
+
+    point(coordinates, properties = {}) {
+        return {
+            type: "Feature",
+            geometry: {
+                type: "Point",
+                coordinates
+            },
+            properties
+        };
+    }
+
+    circle(center, radiusKm, options = {}, project, unproject) {
+        const { steps = 64 } = options;
+        const R = 6371000; // радиус Земли в метрах
+
+        const centerProj = center;
+        const coords = [];
+
+        for (let i = 0; i < steps; i++) {
+            const theta = (i / steps) * 2 * Math.PI;
+            const x = centerProj[0] + radiusKm * 1000 * Math.cos(theta);
+            const y = centerProj[1] + radiusKm * 1000 * Math.sin(theta);
+            coords.push([x, y]);
+        }
+        coords.push(coords[0]); // замыкаем
+
+        return {
+            type: "Feature",
+            geometry: {
+                type: "Polygon",
+                coordinates: [coords]
+            },
+            properties: {
+                center: center,
+                radius: radiusKm
+            }
+        };
+    }
+
+    // intersect(circleA, circleB) → возвращает GeoJSON пересечения
+    intersect(circleA, circleB) {
+        // Центры окружностей
+        const c1 = circleA.properties.center;
+        const c2 = circleB.properties.center;
+
+        // Радиусы (в км)
+        const r1 = circleA.properties.radius;
+        const r2 = circleB.properties.radius;
+
+        // Переводим координаты в метры (простая проекция)
+        const R = 6371000; // радиус Земли в м
+        function project([lon, lat]) {
+            const x = (lon * Math.PI / 180) * R * Math.cos(lat * Math.PI / 180);
+            const y = (lat * Math.PI / 180) * R;
+            return [x, y];
+        }
+        function unproject([x, y]) {
+            const lat = (y / R) * 180 / Math.PI;
+            const lon = (x / (R * Math.cos(lat * Math.PI / 180))) * 180 / Math.PI;
+            return [lon, lat];
+        }
+
+        const p1 = project(c1);
+        const p2 = project(c2);
+
+        const dx = p2[0] - p1[0];
+        const dy = p2[1] - p1[1];
+        const d = Math.sqrt(dx * dx + dy * dy);
+
+        if (d > (r1 * 1000 + r2 * 1000) || d < Math.abs(r1 * 1000 - r2 * 1000)) {
+            return null; // нет пересечения
+        }
+
+        const a = (r1 * r1 * 1e6 - r2 * r2 * 1e6 + d * d) / (2 * d);
+        const h = Math.sqrt(r1 * r1 * 1e6 - a * a);
+
+        const xm = p1[0] + (a * dx) / d;
+        const ym = p1[1] + (a * dy) / d;
+
+        const rx = -(dy * (h / d));
+        const ry = dx * (h / d);
+
+        const pi1 = [xm + rx, ym + ry];
+        const pi2 = [xm - rx, ym - ry];
+
+        // Дуги окружностей
+        function arcPoints(center, radius, from, to, steps = 64) {
+            const angle1 = Math.atan2(from[1] - center[1], from[0] - center[0]);
+            const angle2 = Math.atan2(to[1] - center[1], to[0] - center[0]);
+            let sweep = angle2 - angle1;
+            if (sweep < 0) sweep += 2 * Math.PI;
+
+            const pts = [];
+            for (let i = 0; i <= steps; i++) {
+                const theta = angle1 + sweep * i / steps;
+                pts.push([
+                    center[0] + radius * 1000 * Math.cos(theta),
+                    center[1] + radius * 1000 * Math.sin(theta)
+                ]);
+            }
+            return pts;
+        }
+
+        const arc1 = arcPoints(p1, r1, pi1, pi2);
+        const arc2 = arcPoints(p2, r2, pi2, pi1);
+
+        const polygonCoords = [...arc1, ...arc2].map(unproject);
+
+        return {
+            type: "Feature",
+            geometry: {
+                type: "Polygon",
+                coordinates: [polygonCoords]
+            },
+            properties: {}
+        };
+    }
+
+    // вспомогательная функция для построения полигона пересечения
+    circleIntersectionPolygon(c1, r1, c2, r2, steps = 64) {
+        const dx = c2[0] - c1[0];
+        const dy = c2[1] - c1[1];
+        const d = Math.sqrt(dx * dx + dy * dy);
+
+        if (d > r1 + r2 || d < Math.abs(r1 - r2) || (d === 0 && r1 === r2)) {
+            return null; // нет пересечения
+        }
+
+        const a = (r1 * r1 - r2 * r2 + d * d) / (2 * d);
+        const h = Math.sqrt(r1 * r1 - a * a);
+
+        const xm = c1[0] + (a * dx) / d;
+        const ym = c1[1] + (a * dy) / d;
+
+        const rx = -(dy * (h / d));
+        const ry = dx * (h / d);
+
+        const p1 = [xm + rx, ym + ry];
+        const p2 = [xm - rx, ym - ry];
+
+        function arcPoints(center, radius, from, to, steps) {
+            const angle1 = Math.atan2(from[1] - center[1], from[0] - center[0]);
+            const angle2 = Math.atan2(to[1] - center[1], to[0] - center[0]);
+            let sweep = angle2 - angle1;
+            if (sweep < 0) sweep += 2 * Math.PI;
+
+            const pts = [];
+            for (let i = 0; i <= steps; i++) {
+                const theta = angle1 + (sweep * i / steps);
+                pts.push([
+                    center[0] + radius * Math.cos(theta),
+                    center[1] + radius * Math.sin(theta)
+                ]);
+            }
+            return pts;
+        }
+
+        const arc1 = arcPoints(c1, r1, p1, p2, steps);
+        const arc2 = arcPoints(c2, r2, p2, p1, steps);
+
+        const polygonCoords = [...arc1, ...arc2];
+
+        return {
+            type: "Feature",
+            geometry: {
+                type: "Polygon",
+                coordinates: [polygonCoords]
+            },
+            properties: {}
+        };
+
+    }
+
+    circleIntersections(c1, r1Km, c2, r2Km) {
+        const R = 6371000; // радиус Земли в метрах
+
+        // переводим координаты в метры (простая equirectangular проекция)
+        function project([lon, lat]) {
+            const x = (lon * Math.PI / 180) * R * Math.cos(lat * Math.PI / 180);
+            const y = (lat * Math.PI / 180) * R;
+            return [x, y];
+        }
+        function unproject([x, y]) {
+            const lat = (y / R) * 180 / Math.PI;
+            const lon = (x / (R * Math.cos(lat * Math.PI / 180))) * 180 / Math.PI;
+            return [lon, lat];
+        }
+
+        const p1 = project(c1);
+        const p2 = project(c2);
+
+        const dx = p2[0] - p1[0];
+        const dy = p2[1] - p1[1];
+        const d = Math.sqrt(dx * dx + dy * dy);
+
+        const r1 = r1Km * 1000;
+        const r2 = r2Km * 1000;
+
+        if (d > r1 + r2 || d < Math.abs(r1 - r2) || (d === 0 && r1 === r2)) {
+            return [];
+        }
+
+        const a = (r1 * r1 - r2 * r2 + d * d) / (2 * d);
+        const h = Math.sqrt(r1 * r1 - a * a);
+
+        const xm = p1[0] + (a * dx) / d;
+        const ym = p1[1] + (a * dy) / d;
+
+        const rx = -(dy * (h / d));
+        const ry = dx * (h / d);
+
+        const pi1 = [xm + rx, ym + ry];
+        const pi2 = [xm - rx, ym - ry];
+
+        return [unproject(pi1), unproject(pi2)];
+    }
+
+    circlePolygonDeg(center, radiusDeg, steps = 128) {
+        const [lon, lat] = center;
+        const coords = [];
+
+        for (let i = 0; i < steps; i++) {
+            const theta = (i / steps) * 2 * Math.PI;
+            const dx = radiusDeg * Math.cos(theta);
+            const dy = radiusDeg * Math.sin(theta);
+
+            coords.push([lon + dx, lat + dy]);
+        }
+
+        coords.push(coords[0]); // замыкаем полигон
+
+        return {
+            type: "Feature",
+            geometry: {
+                type: "Polygon",
+                coordinates: [coords]
+            },
+            properties: {}
+        };
+    }
+
+    degreeDistance(coord1, coord2) {
+        const [lon1, lat1] = coord1;
+        const [lon2, lat2] = coord2;
+
+        const dLon = lon2 - lon1;
+        const dLat = lat2 - lat1;
+
+        // Евклидово расстояние в градусах
+        return Math.sqrt(dLon * dLon + dLat * dLat);
+    }
+
+    lineIntersection(p1, p2, p3, p4) {
+        const x1 = p1[0], y1 = p1[1];
+        const x2 = p2[0], y2 = p2[1];
+        const x3 = p3[0], y3 = p3[1];
+        const x4 = p4[0], y4 = p4[1];
+
+        const denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+        if (denom === 0) return null; // параллельные
+
+        const px = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / denom;
+        const py = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / denom;
+
+        // Проверка, что точка лежит на обоих отрезках
+        if (
+            px < Math.min(x1, x2) - 1e-9 || px > Math.max(x1, x2) + 1e-9 ||
+            px < Math.min(x3, x4) - 1e-9 || px > Math.max(x3, x4) + 1e-9 ||
+            py < Math.min(y1, y2) - 1e-9 || py > Math.max(y1, y2) + 1e-9 ||
+            py < Math.min(y3, y4) - 1e-9 || py > Math.max(y3, y4) + 1e-9
+        ) {
+            return null;
+        }
+
+        return [px, py];
+    }
+
+    // Поиск всех точек пересечения двух полигонов
+    polygonIntersectionsPoints(poly1, poly2) {
+        const coords1 = poly1.geometry.coordinates[0];
+        const coords2 = poly2.geometry.coordinates[0];
+        const intersections = [];
+
+        for (let i = 0; i < coords1.length - 1; i++) {
+            for (let j = 0; j < coords2.length - 1; j++) {
+                const inter = this.lineIntersection(coords1[i], coords1[i + 1], coords2[j], coords2[j + 1]);
+                if (inter) intersections.push(inter);
+            }
+        }
+
+        return intersections;
+    }
+
+    difference(circle1, circle2) {
+        const coords1 = circle1.geometry.coordinates[0];
+        const coords2 = circle2.geometry.coordinates[0];
+
+        // Находим точки пересечения рёбер
+        const intersections = this.polygonIntersectionsPoints(circle1, circle2);
+        if (intersections.length < 2) return null;
+
+        const [p1, p2] = intersections;
+
+        // Функция для обхода полигона от точки до точки
+        function findClosestIndex(coords, point) {
+            let minDist = Infinity;
+            let idx = -1;
+            for (let i = 0; i < coords.length; i++) {
+                const dx = coords[i][0] - point[0];
+                const dy = coords[i][1] - point[1];
+                const dist = dx * dx + dy * dy;
+                if (dist < minDist) {
+                    minDist = dist;
+                    idx = i;
+                }
+            }
+            return idx;
+        }
+
+        function arcBetween(coords, from, to) {
+            const idxFrom = findClosestIndex(coords, from);
+            const idxTo = findClosestIndex(coords, to);
+
+            const arc = [];
+            let i = idxFrom;
+            while (true) {
+                arc.push(coords[i]);
+                if (i === idxTo) break;
+                i = (i + 1) % coords.length;
+            }
+            return arc;
+        }
+
+
+        // дуга первого круга от p1 до p2
+        const arc1 = arcBetween(coords1, p1, p2);
+        // дуга второго круга от p2 до p1
+        const arc2 = arcBetween(coords2, p2, p1);
+
+        const diff1 = {
+            type: "Feature",
+            geometry: { type: "Polygon", coordinates: [[...arc1, ...arc2]] },
+            properties: { name: "circle1 - circle2" }
+        };
+
+        // // обратный вариант
+        // const arc3 = arcBetween(coords2, p1, p2);
+        // const arc4 = arcBetween(coords1, p2, p1);
+
+        // const diff2 = {
+        //     type: "Feature",
+        //     geometry: { type: "Polygon", coordinates: [[...arc3, ...arc4]] },
+        //     properties: { name: "circle2 - circle1" }
+        // };
+
+        return diff1;
+    }
+
+
+
 
 }

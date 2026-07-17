@@ -72,6 +72,10 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         return !!this._db;
     }
 
+    Create(storage) {
+        return this._db.run(this._createTable(storage));
+    }
+
     _createTable(storage) {
         if (Object.isObject(storage)) {
 
@@ -100,7 +104,6 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
             });
             create.push(flds.join(',\n'));
             create.push(');');
-            console.log(create.join('\n'));
             return create.join('\n');
         } else {
             return storage;
@@ -190,7 +193,7 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         try {
             this._db.run('UPDATE "' + table + '" SET ' + d.join(', ') + ' WHERE ' + condition, fields.map(field => data[field]));
         } catch (e) {
-            console.error('Ошибка вставки: ' + e, values);
+            console.error('Ошибка обновления: ' + e);
             throw e;
         }
         this.Dispatch('Changed');
@@ -200,10 +203,19 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         try {
             this._db.run('DELETE FROM "' + table + '"' + (condition ? ' WHERE ' + condition : ''), []);
         } catch (e) {
-            console.error('Ошибка вставки: ' + e, values);
+            console.error('Ошибка удаления: ' + e);
             throw e;
         }
         this.Dispatch('Changed');
+    }
+
+    TableExists(table) {
+        try {
+            this._db.run('SELECT * FROM "' + table + '" LIMIT 1', []);
+        } catch (e) {
+            return false;
+        }
+        return true;
     }
 
     /**
