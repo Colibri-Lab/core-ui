@@ -36,6 +36,7 @@ Colibri.UI.ModelViewer = class extends Colibri.UI.Component {
      */
     set cameraControl(value) {
         value = this._convertProperty('Boolean', value);
+        this._element.cameraControl = value;
         this._element.attr('camera-controls', value);
     }
 
