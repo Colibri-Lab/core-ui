@@ -455,7 +455,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
     AddUrlToOptionsHandler(handlers, prepend = false) {
         if(prepend) {
-            this._urlToOptionsHandler.splice(0, 0, handlers);;
+            this._urlToOptionsHandler.splice(0, 0, handlers);
         } else {
             this._urlToOptionsHandler.push(handlers);
         }

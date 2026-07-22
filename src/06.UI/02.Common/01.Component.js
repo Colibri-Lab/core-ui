@@ -2244,8 +2244,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     }
 
     __clickedOutHandler(event, args) {
-        if (!this.ContainsElement(e.target)) {
-            this.Dispatch('ClickedOut', { domEvent: e });
+        if (!this.ContainsElement(args.domEvent.target)) {
+            this.Dispatch('ClickedOut', { domEvent: args.domEvent });
         }
     }
 

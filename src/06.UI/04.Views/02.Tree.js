@@ -563,6 +563,14 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         this._searchBoxUseEvent = value;
     }
 
+    get searchBoxText() {
+        return this._searchBox.value;
+    }
+
+    set searchBoxText(value) {
+        this._searchBox.value = value;
+    }
+
     /**
      * Sets the focus on searchbox
      */

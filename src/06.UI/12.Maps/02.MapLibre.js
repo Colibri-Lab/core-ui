@@ -721,6 +721,18 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
                 }
             });
 
+            this._map.addLayer({
+                id: name + '-outline',
+                type: 'line',
+                source: name + '-source',
+                layout: {},
+                paint: {
+                    'line-color': ['get', 'strokeColor'],
+                    'line-width': 1,
+                    'line-opacity': ['get', 'opacity']
+                }
+            });
+
             this._layersZIndex.push(name);
             this._fillSources[name] = this._map.getSource(name + '-source');
         }
@@ -2674,7 +2686,35 @@ Colibri.UI.Maps.Turf = class {
         return diff1;
     }
 
+    directionVector(azimuthDeg) {
+        const az = azimuthDeg * Math.PI / 180;
+        return [Math.sin(az), Math.cos(az)];
+    }
 
+    angleBetween(v1, v2) {
+        const dot = v1[0] * v2[0] + v1[1] * v2[1];
+        const mag1 = Math.sqrt(v1[0] ** 2 + v1[1] ** 2);
+        const mag2 = Math.sqrt(v2[0] ** 2 + v2[1] ** 2);
+        return Math.acos(dot / (mag1 * mag2)) * 180 / Math.PI;
+    }
 
+    sameDirection(az1, az2, toleranceDeg = 20) {
+        let diff = Math.abs(az1 - az2);
+        if (diff > 180) diff = 360 - diff;
+        return diff <= toleranceDeg;
+    }
+
+    pointInPolygon(pt, polygon) {
+        let inside = false;
+        const coords = polygon.geometry.coordinates[0];
+        for (let i = 0, j = coords.length - 1; i < coords.length; j = i++) {
+            const xi = coords[i][0], yi = coords[i][1];
+            const xj = coords[j][0], yj = coords[j][1];
+            const intersect = ((yi > pt[1]) !== (yj > pt[1])) &&
+                (pt[0] < (xj - xi) * (pt[1] - yi) / (yj - yi) + xi);
+            if (intersect) inside = !inside;
+        }
+        return inside;
+    }
 
 }

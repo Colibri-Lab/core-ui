@@ -2297,6 +2297,8 @@ String.prototype.removeXmlEntities = function () {
     s = s.replaceAll('&rdquo;', '”');
     s = s.replaceAll('&hellip;', '…');
     s = s.replaceAll('&harr;', '⇔');
+    s = s.replaceAll('&rarr;', '→');
+    s = s.replaceAll('&larr;', '←');
     return s;
 };
 
