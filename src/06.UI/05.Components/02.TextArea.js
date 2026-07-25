@@ -15,6 +15,8 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
 
         this.AddClass('app-textarea-component');
         this._visual = false;
+        this._hasClearIcon = true;
+
         this._createTextArea();
 
     }
@@ -93,7 +95,7 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
         } else {
             this._input.value = value;
         }
-        this._clear.shown = value.length > 0;
+        this._clear.shown = this._hasClearIcon && value.length > 0;
     }
 
     /**
@@ -214,7 +216,7 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
         });
 
         this._input.addEventListener('keyup', (e) => {
-            this._clear.shown = this.value.length > 0;
+            this._clear.shown = this._hasClearIcon && this.value.length > 0;
             this.Dispatch('KeyUp', { value: this.value, domEvent: e });
             if (this.value.length == 0) {
                 this.Dispatch('Cleared');
@@ -369,6 +371,41 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
     Blur() {
         this._input.blur();
     }
+
+    /**
+     * 
+     * @type {Boolean}
+     */
+    get hasClearIcon() {
+        return this._hasClearIcon;
+    }
+    /**
+     * 
+     * @type {Boolean}
+     */
+    set hasClearIcon(value) {
+        value = this._convertProperty('Boolean', value);
+        this._hasClearIcon = value;
+        this._clear.shown = this._hasClearIcon;
+    }
+
+    /** 
+     * Enable/disable input
+     * @type {Boolean} 
+     */
+    get enabled() {
+        return super.enabled;
+    }
+    /** 
+     * Enable/disable input
+     * @type {Boolean} 
+     */
+    set enabled(val) {
+        val = this._convertProperty('Boolean', val);
+        super.enabled = val;
+        this._input.attr('disabled', val === true || val === 'true' ? null : 'disabled');
+    }
+
 
 
 }

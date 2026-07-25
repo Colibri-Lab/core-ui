@@ -111,7 +111,8 @@ ui-validation-kpp-error2:
   tr: KPP yalnızca 9 karakterden oluşabilir (rakamlar veya A'dan Z'ye büyük
     harfler)
   zh: KPP只能由9个字符组成（数字或大写拉丁字母A-Z）
-  fa: کی‌پی‌پی فقط می‌تواند شامل ۹ کاراکتر باشد (اعداد یا حروف بزرگ لاتین از A تا Z)
+  fa: کی‌پی‌پی فقط می‌تواند شامل ۹ کاراکتر باشد (اعداد یا حروف بزرگ لاتین از A تا
+    Z)
 ui-validation-kpp-error3:
   ru: Неправильный формат КПП
   en: Wrong KPP format

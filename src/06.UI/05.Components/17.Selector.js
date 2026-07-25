@@ -932,5 +932,29 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._beforePopupHandler = value;
     }
 
+    get bindingParser() {
+        return this._bindingParser;
+    }
+
+    set bindingParser(value) {
+        value = this._convertProperty('Function', value);
+        this._bindingParser = value;
+    }
+
+    /**
+     * Render bounded to component data
+     * @protected
+     * @param {*} data 
+     * @param {String} path 
+     */
+    __renderBoundedValues(data, path) {
+        if(!data) {
+            return;
+        }
+        if(Array.isArray(data)) {
+            this.values = this._bindingParser ? this._bindingParser(data) : data;
+        }
+    }
+
 }
 

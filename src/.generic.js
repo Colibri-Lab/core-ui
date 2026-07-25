@@ -9,7 +9,7 @@ RegExp.SpecialChars = /(?![a-zA-Z0-9!"#\$%&'\(\)\*\+,-\.\/:;<=>\?@\[\\^\]_`{\|}~
 const nullhandler = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    return false; 
+    return false;
 };
 
 /**
@@ -33,19 +33,19 @@ const json_array = function (v) {
 };
 
 function stableStringify(obj) {
-  if (obj === null || typeof obj !== "object") {
-    return JSON.stringify(obj);
-  }
+    if (obj === null || typeof obj !== "object") {
+        return JSON.stringify(obj);
+    }
 
-  if (Array.isArray(obj)) {
-    return "[" + obj.map(stableStringify).join(",") + "]";
-  }
+    if (Array.isArray(obj)) {
+        return "[" + obj.map(stableStringify).join(",") + "]";
+    }
 
-  const keys = Object.keys(obj).sort();
+    const keys = Object.keys(obj).sort();
 
-  return "{" + keys.map(k => {
-    return JSON.stringify(k) + ":" + stableStringify(obj[k]);
-  }).join(",") + "}";
+    return "{" + keys.map(k => {
+        return JSON.stringify(k) + ":" + stableStringify(obj[k]);
+    }).join(",") + "}";
 }
 
 /**
@@ -87,7 +87,7 @@ Intl.NumberFormat.prototype.unformat = function (stringNumber) {
     );
 }
 
-Float32Array.prototype.extrapolate = function(max) {
+Float32Array.prototype.extrapolate = function (max) {
     const output = new Float32Array(max);
     const ratio = (this.length - 1) / (max - 1);
 
@@ -104,43 +104,43 @@ Float32Array.prototype.extrapolate = function(max) {
     return output;
 }
 
-Float32Array.prototype.appendTo = Float32Array.prototype.expandTo = function(max, valueCallback = null) {
+Float32Array.prototype.appendTo = Float32Array.prototype.expandTo = function (max, valueCallback = null) {
     const output = new Float32Array(max);
     const len = this.length;
     output.set(this, 0);
-    for(let i = len; i < max; i++) {
+    for (let i = len; i < max; i++) {
         output[i] = valueCallback ? valueCallback(i) : 0;
     }
     return output;
 }
 
-Float32Array.prototype.prependTo = function(max, valueCallback = null) {
+Float32Array.prototype.prependTo = function (max, valueCallback = null) {
     const output = new Float32Array(max);
-    let prependCount = max - this.length; 
+    let prependCount = max - this.length;
     output.set(this, prependCount);
-    while(prependCount >= 0) {
+    while (prependCount >= 0) {
         prependCount--;
         output[prependCount] = valueCallback ? valueCallback(prependCount) : 0;
     }
     return output;
 }
 
-Float32Array.prototype.crop = function(startIndex, endIndex) {
+Float32Array.prototype.crop = function (startIndex, endIndex) {
     // if(startIndex < 0 || endIndex > this.length || startIndex >= endIndex) {
     //     throw new Error('Invalid startIndex or endIndex for cropping Float32Array.');
     // }
     return this.subarray(startIndex, endIndex);
 }
 
-Float32Array.prototype.findByValue = function(value) {
-    if(value < this[0] || value > this[this.length - 1]) {
+Float32Array.prototype.findByValue = function (value) {
+    if (value < this[0] || value > this[this.length - 1]) {
         return -1;
     }
     let closestIndex = 0;
     let minDiff = Math.abs(this[0] - value);
-    for(let i = 1; i < this.length; i++) {
+    for (let i = 1; i < this.length; i++) {
         const diff = Math.abs(this[i] - value);
-        if(diff < minDiff) {
+        if (diff < minDiff) {
             minDiff = diff;
             closestIndex = i;
         }
@@ -148,43 +148,43 @@ Float32Array.prototype.findByValue = function(value) {
     return closestIndex;
 }
 
-Float32Array.prototype.max = function() {
+Float32Array.prototype.max = function () {
     return Math.max(...this);
 }
-Float32Array.prototype.min = function() {
+Float32Array.prototype.min = function () {
     return Math.min(...this);
 }
 
-Float64Array.prototype.appendTo = Float64Array.prototype.expandTo = function(max, valueCallback = null) {
+Float64Array.prototype.appendTo = Float64Array.prototype.expandTo = function (max, valueCallback = null) {
     const output = new Float64Array(max);
     const len = this.length;
     output.set(this, 0);
-    for(let i = len; i < max; i++) {
+    for (let i = len; i < max; i++) {
         output[i] = valueCallback ? valueCallback(i) : 0;
     }
     return output;
 }
 
-Float64Array.prototype.prependTo = function(max, valueCallback = null) {
+Float64Array.prototype.prependTo = function (max, valueCallback = null) {
     const output = new Float64Array(max);
-    let prependCount = max - this.length; 
+    let prependCount = max - this.length;
     output.set(this, prependCount);
-    while(prependCount >= 0) {
+    while (prependCount >= 0) {
         prependCount--;
         output[prependCount] = valueCallback ? valueCallback(prependCount) : 0;
     }
     return output;
 }
 
-Float64Array.prototype.findByValue = function(value) {
-    if(value < this[0] || value > this[this.length - 1]) {
+Float64Array.prototype.findByValue = function (value) {
+    if (value < this[0] || value > this[this.length - 1]) {
         return -1;
     }
     let closestIndex = 0;
     let minDiff = Math.abs(this[0] - value);
-    for(let i = 1; i < this.length; i++) {
+    for (let i = 1; i < this.length; i++) {
         const diff = Math.abs(this[i] - value);
-        if(diff < minDiff) {
+        if (diff < minDiff) {
             minDiff = diff;
             closestIndex = i;
         }
@@ -192,10 +192,10 @@ Float64Array.prototype.findByValue = function(value) {
     return closestIndex;
 }
 
-Float64Array.prototype.max = function() {
+Float64Array.prototype.max = function () {
     return Math.max(...this);
 }
-Float64Array.prototype.min = function() {
+Float64Array.prototype.min = function () {
     return Math.min(...this);
 }
 
@@ -391,7 +391,7 @@ Array.replaceObject = function (arr, field, value, replace = null, insertIfNotEx
         arr.push(replace);
     }
     return arr;
-}; 
+};
 
 /**
  * Calculates the average of all elements in the array.
@@ -939,10 +939,10 @@ Object.toQueryString = function (o, splittersArray, encode = true, removeEmpty =
     let ret = [];
     Object.keys(o).forEach((key) => {
         let val = o[key];
-        if(Object.isObject(val)) {
+        if (Object.isObject(val)) {
             val = Object.toQueryString(val, splittersArray, encode, removeEmpty);
-        } 
-        if(removeEmpty && !val) {
+        }
+        if (removeEmpty && !val) {
             return true;
         }
         ret.push(key + splittersArray[1] + (encode ? encodeURI(val) : val));
@@ -1556,7 +1556,7 @@ String.prototype.formatCurrent = function () {
 String.prototype.stripHtml = function () { return this.replace(/<[^>]+>/gim, "").replace(/<\/[^>]+>/gim, "").replace(/&nbsp;/gim, ""); }
 String.prototype.highliteTextInHtml = function (search) {
     const html = this + '';
-    
+
     if (!search) return html;
 
     const container = document.createElement('div');
@@ -1720,10 +1720,10 @@ String.prototype.isEmail2 = function () {
     if (/\d/.test(mainDomain)) return false;
 
     const knownTlds = new Set([
-        'com', 'net', 'org', 'edu', 'gov', 'mil', 
+        'com', 'net', 'org', 'edu', 'gov', 'mil',
         'io', 'ai', 'app', 'dev', 'info', 'biz',
         'ru', 'am', 'us', 'uk', 'de', 'fr', 'it', 'es',
-        'group','tech','online'
+        'group', 'tech', 'online'
     ]);
 
     if (!knownTlds.has(tld.split('.').pop())) return false;
@@ -1762,10 +1762,10 @@ String.prototype.expand = function (c, l) {
  * @returns {Date} Returns the Date object representing the date and time parsed from the string.
  */
 String.prototype.toDate = function () {
-   
-    if(this.length === 14) { // возможно формат YYYYMMDDHHMMSS
+
+    if (this.length === 14) { // возможно формат YYYYMMDDHHMMSS
         return new Date(this.substring(0, 4) + '-' + this.substring(4, 6) + '-' + this.substring(6, 8) + 'T' + this.substring(8, 10) + ':' + this.substring(10, 12) + ':' + this.substring(12, 14) + Date.getTimezoneString());
-    } else if(this.split('-').length === 6) { // возможно формат YYYY-MM-DD-HH-MM-SS
+    } else if (this.split('-').length === 6) { // возможно формат YYYY-MM-DD-HH-MM-SS
         const parts = this.split('-');
         return new Date(parts[0] + '-' + parts[1] + '-' + parts[2] + ' ' + parts[3] + ':' + parts[4] + ':' + (parts[5] || '00'));
     }
@@ -2553,6 +2553,66 @@ String.prototype.bin2hex = function () {
     }
     return hex;
 };
+
+String.prototype.markdownToHtml = function () {
+    let html = this;
+
+    // Заголовки
+    html = html.replace(/^###### (.*)$/gim, '<h6>$1</h6>');
+    html = html.replace(/^##### (.*)$/gim, '<h5>$1</h5>');
+    html = html.replace(/^#### (.*)$/gim, '<h4>$1</h4>');
+    html = html.replace(/^### (.*)$/gim, '<h3>$1</h3>');
+    html = html.replace(/^## (.*)$/gim, '<h2>$1</h2>');
+    html = html.replace(/^# (.*)$/gim, '<h1>$1</h1>');
+
+    // Жирный и курсив
+    html = html.replace(/\*\*\*(.*?)\*\*\*/gim, '<b><i>$1</i></b>');
+    html = html.replace(/\*\*(.*?)\*\*/gim, '<b>$1</b>');
+    html = html.replace(/\*(.*?)\*/gim, '<i>$1</i>');
+
+    // Блоки кода с языком (закрытые)
+    html = html.replace(/```(\w+)?\n([\s\S]*?)```/gim, function (match, lang, code) {
+        const escaped = code.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        const languageClass = lang ? ` lang="${lang}"` : "";
+        return `<pre><code${languageClass}>${escaped}</code></pre>`;
+    });
+
+    // Блоки кода без закрытия (до конца текста)
+    html = html.replace(/```(\w+)?\n([\s\S]*)$/gim, function (match, lang, code) {
+        const escaped = code.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        const languageClass = lang ? ` lang="${lang}"` : "";
+        return `<pre><code${languageClass}>${escaped}</code></pre>`;
+    });
+
+    // Инлайн‑код
+    html = html.replace(/`([^`]+)`/gim, '<code>$1</code>');
+
+    // Ссылки
+    html = html.replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2">$1</a>');
+
+    // Изображения
+    html = html.replace(/!\[(.*?)\]\((.*?)\)/gim, '<img alt="$1" src="$2" />');
+
+    // Цитаты
+    html = html.replace(/^> (.*)$/gim, '<blockquote>$1</blockquote>');
+
+    // Горизонтальная линия
+    html = html.replace(/^---$/gim, '<hr/>');
+
+    // Списки
+    html = html.replace(/^\s*-\s+(.*)$/gim, '<li>$1</li>');
+    html = html.replace(/(<li>.*<\/li>)/gim, '<ul>$1</ul>');
+
+    // Нумерованные списки
+    html = html.replace(/^\s*\d+\.\s+(.*)$/gim, '<li>$1</li>');
+    html = html.replace(/(<li>.*<\/li>)/gim, '<ol>$1</ol>');
+
+    // Переводы строк
+    html = html.replace(/\n/g, '<br>');
+
+    return html.trim();
+};
+
 
 Number.prototype.approximateCheck = function (tolerance, check) {
     return Math.abs(this - check) <= tolerance;
@@ -3968,8 +4028,8 @@ Element.prototype.bounds = function (includeBorders = false, includeMargin = fal
     position.outerHeight += (includeBorders ? ((parseInt(style.borderTopWidth ?? 0)) + (parseInt(style.borderBottomWidth ?? 0))) : 0)
     position.outerHeight += (includeMargin ? ((parseInt(style.marginTop ?? 0)) + (parseInt(style.marginBottom ?? 0))) : 0);
 
-    position.center = {left: position.left + position.outerWidth / 2, top: position.top + position.outerHeight / 2};
-    position.relativeCenter = {left: position.center.left - position.left, top: position.center.top - position.top};
+    position.center = { left: position.left + position.outerWidth / 2, top: position.top + position.outerHeight / 2 };
+    position.relativeCenter = { left: position.center.left - position.left, top: position.center.top - position.top };
 
     return position;
 
@@ -4519,7 +4579,7 @@ String.prototype.spkiPem2spkiDer = function () {
     return binaryDerString.toArrayBuffer();
 }
 
-String.prototype.isFunction = function() {
+String.prototype.isFunction = function () {
     let test = null;
     try {
         eval('test = ' + (this + '') + ';');
