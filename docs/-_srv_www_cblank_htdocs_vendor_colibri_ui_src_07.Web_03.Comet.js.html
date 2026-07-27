@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: /srv/www/cblank/htdocs/vendor/colibri/ui/src/07.Web/03.Comet.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: /srv/www/cblank/htdocs/vendor/colibri/ui/src/07.Web/03.Comet.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Handles the connection to the Comet server and message communication.
+ * @class 
+ * @extends Colibri.Events.Dispatcher
+ * @memberof Colibri.Web
+ */
+Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
+
+    /** @type {string} */
+    _url = '';
+    /** @type {object} */
+    _storage = null;
+    /** @type {Colibri.Storages.Store} */
+    _store = null;
+    /** @type {string} */
+    _storeMessages = '';
+    /** @type {string} */
+    _storeUnread = '';
+
+    /** @type {object} */
+    _settings = null;
+    /** @type {WebSocket|null} */
+    _ws = null;
+    /** @type {boolean} */
+    _connected = false;
+    /** @type {object} */
+    _user = null;
+    /** @type {string} */
+    _clientId = null;
+
+    __eventHandlers = {};
+    __sentMessages = {};
+
+    static Options = {
+        origin: location.host
+    };
+
+    /**
+     * @constructor
+     * @param {object} settings - Settings for the Comet connection.
+     */
+    constructor(settings) {
+        super();
+        
+        this._clientId = this._generateDeviceId();
+        this._settings = settings;
+        this.__specificHandlers = {};
+        this._registeredSuccess = false;
+        
+        this.RegisterEvent('MessageReceivng', false, 'Before message received');
+        this.RegisterEvent('MessageReceived', false, 'When a new message is received');
+        this.RegisterEvent('MessageUpdated', false, 'When message text is updated');
+        this.RegisterEvent('MessageSent', false, 'When a new message is sent');
+        this.RegisterEvent('MessagesMarkedAsRead', false, 'When all messages marked as read');
+        this.RegisterEvent('MessageRemoved', false, 'When message is removed');
+        this.RegisterEvent('ChatCleared', false, 'When chat with user is removed');
+        this.RegisterEvent('MessagesCleared', false, 'When all messages are cleared');
+        this.RegisterEvent('EventReceived', false, 'When event is received');
+        this.RegisterEvent('ConnectionError', false, 'When we can not connect to server');
+        this.RegisterEvent('Registered', false, 'When we registered to server');
+        this.RegisterEvent('FirebaseRegistered', false, 'When we registered with firebase to server');
+        this.RegisterEvent('Subscribed', false, 'When we subscribed to channel');
+        this.RegisterEvent('Unsubscribed', false, 'When we unsubscribed from channel');
+        this.RegisterEvent('RegistrationError', false, 'When we can not register to server');
+        this.RegisterEvent('MessageError', false, 'When can not send message, or message sending error');
+        
+    }
+
+    _transferToModuleStore(messages) {
+        this._storage.Get().then(messages => {
+            const unreadCount = messages.filter(v => v.read === false).length;
+            this._store.Set(this._storeMessages, {messages: messages, unread: unreadCount});
+        });
+    }
+
+    /**
+     * Destructor to close WebSocket connection when the object is destroyed.
+     */
+    destructor() {
+        super.destructor();
+        if(this._ws) {
+            this._ws.close();
+        }
+    }
+
+    get settings() {
+        return this._settings;
+    }
+
+    get User() {
+        return this._user;
+    }
+
+    get UserName() {
+        return this._userName;
+    }
+
+    get isReady() {
+        return this._ws.readyState === 1;
+    }
+
+    get isRegistered() {
+        return this._registeredSuccess;
+    }
+
+    /**
+     * Gets the client ID for the Comet connection.
+     * @type {string}
+     * @readonly
+     */
+    get clientId() {
+        return this._clientId;
+    }
+
+    get connected() {
+        return this._connected;       
+    }
+
+    /**
+     * Generates a unique device ID for the Comet connection.
+     * @private
+     * @returns {string} - The generated device ID.
+     */
+    _generateDeviceId() {
+        return App.Device.id;
+    }
+
+    /**
+     * Initializes the WebSocket connection.
+     * @private
+     */
+    _initConnection() {
+        
+
+        if((App.Device.isAndroid || App.Device.isIOs) &amp;&amp; window['ColibriAccessories'] &amp;&amp; window['ColibriAccessories']['Service']) {
+            ColibriAccessories.Service.handle(
+                () => {
+                    this.__onCometOpened(true);
+                }, 
+                () => {
+                    this._connected = false;
+                    try {
+                        this._ws.readyState = 0;
+                    } catch(e) {}
+                }, 
+                (messages) => {
+                    // connection is alive
+                    this._connected = true;
+                    this._ws.readyState = 1;
+                    if(!Array.isArray(messages)) {
+                        messages = [messages];
+                    }
+                    messages.forEach((message) => this.__onCometMessage({data: message}));
+                }, 
+                (log) => {
+                    console.log(log);
+                },
+                (error) => {
+                    this.__onCometError(error)
+                }
+
+            );
+
+            ColibriAccessories.Service.start(
+                App.Comet.settings.host, 
+                App.Comet.settings.port, 
+                App.Device.id,
+                Colibri.Web.Comet.Options.origin,
+                this._user,
+                Object.assign({name: this._userName}, this._handlers),
+                this._texts ?? {},
+                () => {console.log('Successed !!!');},
+                (err) => {console.log('Error !!!', err);}
+            );
+            this._ws = ColibriAccessories.Service;
+            this._ws.readyState = 1; 
+        } else {
+            this._ws &amp;&amp; this._ws.close();
+            this._ws = new WebSocket('wss://' + (this._websocketURI ?? this._settings.host + ':' + this._settings.port) + '/client/' + this._clientId);
+            this._ws.onopen = () => this.__onCometOpened();
+            this._ws.onmessage = (message) => this.__onCometMessage(message);
+            this._ws.onerror = error => this.__onCometError(error);
+            Colibri.Common.StartTimer('comet-timer', 5000, () => {
+                if(this._ws &amp;&amp; this._ws.readyState !== 1) {
+                    console.log('connection closed, may be server down');
+                    this._initConnection();
+                }
+            });
+        }
+
+    }
+    
+    /**
+     * Initializes the Comet object with user data and storage settings.
+     * @param {object} userData - The user data object containing user GUID and name.
+     * @param {Colibri.Storages.Store} store - The store to save messages.
+     * @param {string} storeMessages - The key for storing messages in the store.
+     * @param {object} handlers - Handlers for specific events.
+     * @param {object} texts - Texts for notifications.
+     * @param {object|null} firebaseServiceJson - Firebase service configuration JSON.
+     * @param {string|null} pushToken - Push token for notifications.
+     * @param {function|null} pushFunction - Function to handle push notifications.
+     * @returns {void}
+     */
+    Init(userData, store, storeMessages, handlers = {}, texts = {}, firebaseServiceJson = null, pushToken = null, pushFunction = null, websocketURI = null) {
+
+        this._websocketURI = websocketURI;
+        this._user = userData.guid;
+        this._userName = userData.name;
+        this._store = store;
+        this._storeMessages = storeMessages;
+        this._handlers = handlers;
+        this._texts = texts;
+        this._firebaseServiceJson = firebaseServiceJson;
+        this._pushToken = pushToken;
+        this._pushFunction = pushFunction;
+
+        if((App.Device.isAndroid || App.Device.isIOs) &amp;&amp; App.Device.SqLite.isAvailable) {
+            this._storage = new Colibri.Web.SqLiteStore();
+        } else {
+            let storeType = Colibri.Web.InternalStore;
+            if(this._settings.store) {
+                storeType = eval('Colibri.Web.' + this._settings.store);
+            }
+            this._storage = new storeType();
+        }
+        this._initConnection();
+        this._transferToModuleStore();
+
+        
+
+    }
+
+    SetPushToken(token, f) {
+        this._pushToken = token;
+        this._pushFunction = f; 
+        this.Command(this._user, 'register', {name: this._userName, storeHandler: this._handlers['storeHandler'] ?? null, closeHandler: this._handlers['closeHandler'] ?? null});
+        if(this._pushToken) {
+            this.Command(this._user, 'firebase', {name: this._userName, json: JSON.stringify(this._firebaseServiceJson), token: this._pushToken, f: this._pushFunction});
+        }
+    }
+  
+    /**
+     * Registers a handler for specific events.
+     * @param {String} handlerName 
+     * @param {Function} handler 
+     */
+    RegisterHandler(handlerName, handler, respondent) {
+        if(!this.__specificHandlers[handlerName]) {
+            this.__specificHandlers[handlerName] = [];
+        }
+        this.UnRegisterHandler(handlerName, handler, respondent);
+        this.__specificHandlers[handlerName].push([handler, respondent]);
+    }
+
+
+    /**
+     * Registers a handler for specific events.
+     * @param {String} handlerName 
+     * @param {Function} handler 
+     */
+    UnRegisterHandler(handlerName, handler, respondent) {
+        if(this.__specificHandlers[handlerName]) {
+            for (let i = 0; i &lt; this.__specificHandlers[handlerName].length; i++) {
+                if(this.__specificHandlers[handlerName][i][0] === handler &amp;&amp; this.__specificHandlers[handlerName][i][1] === respondent) {
+                    this.__specificHandlers[handlerName].splice(i, 1);
+                    break;
+                }
+            }
+        }
+    }
+
+    async DispatchHandlers(handlerName, args) {
+
+        const responses = [];
+        if(this.__specificHandlers[handlerName] &amp;&amp; isIterable(this.__specificHandlers[handlerName])) {
+            for(const handler of this.__specificHandlers[handlerName]) {
+                const han = handler[0];
+                const res = handler[1] || this;
+                responses.push(await han.apply(res, [args]));
+            }
+        }
+        return responses;
+    }
+
+    /**
+     * Disconnects from the Comet server.
+     */
+    Disconnect() {
+        if(this._ws) {
+            this._ws.close();
+            this._ws = null;
+            this._connected = false;
+            try {
+                this._ws.readyState = 0;
+            } catch(e) {}
+        }
+    }
+
+    /**
+     * Handles the WebSocket connection open event.
+     * @private
+     */
+    __onCometOpened(registered = false) {
+        this._connected = true;
+        if(!registered) {
+            this.Command(this._user, 'register', {name: this._userName, storeHandler: this._handlers?.['storeHandler'] ?? null, closeHandler: this._handlers?.['closeHandler'] ?? null});
+        }
+        if(this._pushToken) {
+            this.Command(this._user, 'firebase', {name: this._userName, json: JSON.stringify(this._firebaseServiceJson), token: this._pushToken, f: this._pushFunction});
+        }
+    }
+
+    Subscribe(channelGuid, params = {}) {
+        this.Command(channelGuid, 'subscribe', params);        
+    }
+
+    Unsubscribe(channelGuid, params = {}) {
+        this.Command(channelGuid, 'unsubscribe', params);
+    }
+
+    /**
+     * Handles incoming messages from the Comet server.
+     * @private
+     * @param {object} message - The received message object.
+     */
+    __onCometMessage(message) {
+        message = JSON.parse(message.data);
+        if(message.action == 'connection-success') {
+            console.log('Connection to Comet Server ok');
+            this.Dispatch('Connected');
+        }
+        else if(message.action == 'register-success') {
+            this._registeredSuccess = true;
+            console.log('User registered successfuly');
+            this.Dispatch('Registered');
+        }
+        else if(message.action == 'firebase-success') {
+            console.log('Firebase registered successfuly');
+            this.Dispatch('FirebaseRegistered');
+        }
+        else if(message.action == 'subscribe-success') {
+            console.log('Subscribed successfuly');
+            this.Dispatch('Subscribed');
+        }
+        else if(message.action == 'unsubscribe-success') {
+            console.log('Unsubscribed successfuly');
+            this.Dispatch('Unsubscribed');
+        }
+        else if(message.action == 'register-error') {
+            this._registeredSuccess = false;
+            console.log('User registration error');
+            this.Dispatch('RegistrationError', {message: message.message});
+        }
+        else if(message.action == 'debug-response') {
+            console.log('Debug', message.message);
+        }
+        else if(message.action.endsWith('-sent') || message.action.endsWith('-error')) {
+            const sentMessagePromise = this.__sentMessages[message.message.id];
+            if(sentMessagePromise) {
+                this.UpdateSetStatus(message.message.id, message.message.message.replaceAll('message ', '')).catch(() => {
+                    // do hothing
+                }).finally(() => {
+                    if(this.__sentMessages[message.message.id]) {
+                        clearTimeout(this.__sentMessages[message.message.id].rejectTimeout);
+                        delete this.__sentMessages[message.message.id];
+                        if(message.action.endsWith('-sent')) {
+                            sentMessagePromise.resolve(message);
+                        } else {
+                            sentMessagePromise.reject(message);
+                        } 
+                    }
+                });
+                
+            }
+
+        }
+        else if(message.action == 'message') {
+            this.DispatchHandlers('MessageReceiving', {message: message}).then((responses) => {
+                if(responses.filter(v => v === false).length > 0) {
+                    return;
+                }
+                const msg = Colibri.Common.CometMessage.FromReceivedObject(message);
+                this.AddLocalMessage(msg).then(() => {
+                    this.Dispatch('MessageReceived', {message: msg});
+                });
+            });
+        }
+        else {
+            const msg = Colibri.Common.CometEvent.FromReceivedObject(message);
+            this.DispatchHandlers('EventReceiving', {message: msg}).then((responses) => {
+                this.Dispatch('EventReceived', {event: msg});
+                this.DispatchEvent(msg);
+            });
+        }
+    }
+
+    /**
+     * Send the message and resolves or rejects a promise
+     * @param {Colibri.Common.CometMessage|Colibri.Common.CometEvent} msg 
+     * @returns Promise
+     */
+    _send(msg, resolve, reject) {
+
+        if(['register', 'firebase', 'debug', 'subscribe', 'unsubscribe'].indexOf(msg.action) !== -1) {
+            this._ws.send(msg.toJson());
+            resolve({id: msg.id, message: 'message sent'});
+            return;
+        }
+
+        this.__sentMessages[msg.id] = {  
+            resolve, 
+            reject, 
+            rejectTimeout: setTimeout(() => {
+                if(this.__sentMessages[msg.id]) {
+                    delete this.__sentMessages[msg.id];
+                    reject('Can not sent the message. Message timed out: ' + msg.action + ' (' + msg.id + ')');
+                }
+            }, 30000)
+        };
+        this._ws.send(msg.toJson());
+    }
+
+    UnwaitForEvent(eventName, handler, respondent) {
+        if(!this.__eventHandlers[eventName]) {
+            this.__eventHandlers[eventName] = [];
+        }
+
+        const newHandlers = [];
+        for(const h of this.__eventHandlers[eventName]) {
+            if(!(h[0] === handler &amp;&amp; h[1] === respondent)) {
+                newHandlers.push(h);
+            }
+        }
+        this.__eventHandlers[eventName] = newHandlers;
+
+    }
+
+    WaitForEvent(eventName, handler, respondent, args = {}) {
+        if(!this.__eventHandlers[eventName]) {
+            this.__eventHandlers[eventName] = [];
+        }
+        this.UnwaitForEvent(eventName, handler, respondent);
+        this.__eventHandlers[eventName].push([handler, respondent, args]);
+    }
+
+    async DispatchEvent(msg) {
+        if(this.__eventHandlers[msg.action]) {
+            for(const handler of this.__eventHandlers[msg.action]) {
+                const han = handler[0];
+                let resp = handler[1];
+                let args = handler[2];
+                if(!resp) {
+                    resp = this;
+                }
+                if(han.isAsync()) {
+                    await han.apply(resp, [msg, args]);
+                } else {
+                    han.apply(resp, [msg, args]);
+                }
+            }
+        }
+    }
+
+    /**
+     * Adds a message to the local storage.
+     * @param {Colibri.Common.CometMessage} message message to save
+     * @returns {Promise}
+     */
+    AddLocalMessage(message) {
+        return new Promise((resolve, reject) => {            
+            this._storage.Add(message).then((message) => {
+                this._transferToModuleStore();
+                resolve();
+            }).catch(error => reject(error));
+        });
+    }
+
+    /**
+     * Handles WebSocket connection errors.
+     * @private
+     * @param {object} error - The error object.
+     */
+    __onCometError(error) {
+        
+        console.log('#{ui-comet-connection-error}');
+        // App.Notices.Add(new Colibri.UI.Notice('#{ui-comet-connection-error}'));
+        // Colibri.Common.StopTimer('comet-timer');
+        this._connected = false;
+        try {
+            this._ws.readyState = 0;
+        } catch(e) {}
+    } 
+
+    GetMessages(options = {}) {
+        return new Promise((resolve, reject) => {
+            this._storage.Get(options).then(messages => {
+                resolve(messages.map(message => {
+                    const msg = new Colibri.Common.CometMessage();
+                    Object.forEach(message, (k, v) => {
+                        msg[k] = v;
+                    });
+                    if(!(msg.date instanceof Date)) {
+                        msg.date = typeof msg.date === 'string' ? msg.date : msg.date.toDateFromUnixTime();
+                    }
+                    msg.broadcast = (msg.broadcast === 'true' || msg.broadcast === true || msg.broadcast === 1);
+                    msg.read = (msg.read === 'true' || msg.read === true || msg.read === 1);
+                    msg.message = typeof msg.message === 'string' ? JSON.parse(msg.message) : msg.message;
+                    return msg;
+                }));
+            }).catch(error => reject(error));
+        });
+    }
+
+    GetConversation(userGuid, options = {}) {
+        return this.GetMessages(Object.assignRecursive(options, {
+            filter: [
+                {from: userGuid, broadcast: false}, 
+                {recipient: userGuid, broadcast: false}
+            ],
+        }));
+    }
+
+    GetBroadcast(options = {}) {
+        return this.GetMessages(Object.assignRecursive(options, {
+            filter: {
+                broadcast: true
+            },
+        }))
+    }
+
+    /**
+     * Clears stored messages.
+     */
+    ClearMessages(date = null) {
+        return new Promise((resolve, reject) => {
+            const res = () => {
+                this._transferToModuleStore();
+                this.Dispatch('MessagesCleared', {});
+                resolve();
+            };
+            if(!date) {
+                this._storage.Clear().then(res).catch(error => reject(error));
+            } else {
+                this._storage.Delete({filter: {date: ['>', date]}}).then(res).catch(error => reject(error));
+            }
+        });
+    }
+
+    /**
+     * Marks all messages as read.
+     */
+    MarkAsRead(ids = null, sendEvent = true) {
+        if(!ids) {
+            return Promise.resolve();
+        }
+        if(!Array.isArray(ids)) {
+            ids = [ids];
+        }
+        return new Promise((resolve, reject) => {
+            const promises = [];
+            for(const id of ids) {
+                promises.push(this._storage.Update({read: true}, id));
+            }
+            Promise.all(promises).then(() => {
+                this._transferToModuleStore();
+                sendEvent &amp;&amp; this.Dispatch('MessagesMarkedAsRead', {ids: ids});
+                resolve();            
+            }).catch(error => reject(error));
+        });
+    }
+
+    /**
+     * Removes a message from storage.
+     * @param {object|number} message - The message to be removed.
+     */
+    RemoveMessage(message) {
+        return new Promise((resolve, reject) => {
+            this._storage.Delete({filter: {id: Object.isObject(message) ? message.id : message}}).then(() => {
+                this._transferToModuleStore();
+                this.Dispatch('MessageRemoved', {message: message});            
+            }).catch(error => reject(error));
+        });
+    }
+
+    /**
+     * Removes a message from or to member.
+     * @param {string} user - The message to be removed.
+     */
+    ClearConversationWith(user) {
+        return new Promise((resolve, reject) => {
+            this._storage.Delete({filter: [{from: user}, {recipient: user}]}).then(() => {
+                this._transferToModuleStore();
+                this.Dispatch('ChatCleared', {member: user});
+            }).catch(error => reject(error));
+        });
+    }
+
+    UpdateMessage(id, textOrFiles) {
+        return new Promise((resolve, reject) => {
+            this._storage.Update({read: true, message: Array.isArray(textOrFiles) ? {files: textOrFiles} : {text: textOrFiles}}, id).then((msg) => {
+                this._transferToModuleStore();
+                this.Dispatch('MessageUpdated', {message: msg});
+            }).catch(error => reject(error));
+        });
+    }
+
+    UpdateSetStatus(id, status = 'sent') {
+        return new Promise((resolve, reject) => {
+            this._storage.Update({message: {status: status}, read: true}, id).then((msg) => {
+                this._transferToModuleStore();
+                this.Dispatch('MessageUpdated', {message: msg});
+            }).catch(error => reject(error));
+        });
+    }
+
+    /**
+     * Sends a command to the Comet server.
+     * @param {string} userGuid - The GUID of the user.
+     * @param {string} action - The action to be performed.
+     * @param {object} message - The message data.
+     */
+    Command(userGuid, action, message = null, activate = false, wakeup = false) {
+        return new Promise((resolve, reject) => {
+            try {
+                if(this._ws.readyState === 1) {
+                    const msg = Colibri.Common.CometEvent.CreateForSend(action, Colibri.Web.Comet.Options.origin, this._user, userGuid, message, 'untrusted', activate, wakeup);
+                    this._send(msg, resolve, reject);
+                }
+                else {
+                    reject('server goes away');
+                }
+            }
+            catch(e) {
+                reject(e);
+            }
+        });
+    }
+
+    /**
+     * Sends a broadcast message.
+     * @param {string} action - The action to be performed.
+     * @param {object} message - The message content.
+     * @returns {string|null} - The ID of the sent message. 
+     */
+    CommandBroadcast(action, message = null, activate = false, wakeup = false) {
+        return new Promise((resolve, reject) => {
+            try {
+                if(this._ws.readyState === 1) {
+                    const msg = Colibri.Common.CometEvent.CreateForSendBroadcast(action, Colibri.Web.Comet.Options.origin, this._user, message, activate, wakeup);
+                    this._send(msg, resolve, reject);
+                }
+                else {
+                    reject('server goes away');
+                }
+            }
+            catch(e) {
+                reject(e);
+            }
+        });
+    }
+
+    SendFor(msg, userGuids) {
+        return new Promise((resolve, reject) => {
+            try {
+                if(this._ws.readyState === 1) {
+                    for(const userGuid of userGuids) {
+                        const msgToSend = msg.clone();
+                        msgToSend.message.for = userGuid;
+                        this.DispatchHandlers(
+                            msgToSend.message?.files ? 'FilesSending' : 'MessageSending', 
+                            {message: msgToSend}
+                        ).then((responses) => {
+                            this._send(msgToSend, resolve, reject);
+                        }).catch(error => {
+                            this.Dispatch('MessageError', {error: error});
+                        });
+                    }
+
+                    const msgToSend = msg.clone();
+                    msgToSend.message.for = App.Comet.User;
+                    msgToSend.MarkAsRead();
+
+                    this.AddLocalMessage(msgToSend).then(() => {
+                        this.Dispatch('MessageSent', {message: msgToSend});
+                        this.DispatchHandlers(
+                            msgToSend.message?.files ? 'FilesSending' : 'MessageSending', 
+                            {message: msgToSend}
+                        ).then((responses) => {
+                            this._send(msgToSend, resolve, reject);
+                        }).catch(error => {
+                            this.Dispatch('MessageError', {error: error});
+                        });
+                    });
+
+                }
+                else {
+                    reject('server goes away');
+                }
+            }
+            catch(e) {
+                reject(e);
+            }
+        });
+    }
+
+    /**
+     * Sends a message to a specific user.
+     * @param {string} userGuid - The GUID of the recipient user.
+     * @param {string} message - The message content.
+     * @param {object} contact - The name of the contact.
+     * @returns {string|null} - The ID of the sent message.
+     */
+    SendTo(userGuid, message = null, contact = null, activate = false, wakeup = false, addLocal = true) {
+        return new Promise((resolve, reject) => {
+            try {
+
+                if(this._ws.readyState === 1) {
+                    const msg = Colibri.Common.CometMessage.CreateForSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, message, contact, activate, wakeup);
+                    msg.MarkAsRead();
+
+                    const realSend = () => {
+                        console.log('Sending message', msg);
+                        this.Dispatch('MessageSent', {message: msg});
+                        
+                        const msgToSend = msg.clone();
+                        this.DispatchHandlers('MessageSending', {message: msgToSend}).then((responses) => {
+                            this._send(msgToSend, resolve, reject);
+                        }).catch(error => {
+                            this.Dispatch('MessageError', {error: error});
+                        });
+
+                    };
+                    if(msg.from !== msg.recipient &amp;&amp; addLocal) {
+                        this.AddLocalMessage(msg).then(realSend);
+                    } else {
+                        realSend();
+                    }
+                }
+                else {
+                    reject('server goes away');
+                }
+            }
+            catch(e) {
+                reject(e);
+            }
+        });
+        
+    }
+
+    /**
+     * Sends a broadcast message.
+     * @param {string} action - The action to be performed.
+     * @param {string} message - The message content.
+     * @param {object} contact - The name of the contact.
+     * @returns {string|null} - The ID of the sent message. 
+     */
+    SendBroadcast(text = null, contact = null, activate = false, wakeup = false) {
+        return new Promise((resolve, reject) => {
+            try {
+                if(this._ws.readyState === 1) {
+                    const msg = Colibri.Common.CometMessage.CreateForSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, text, contact, activate, wakeup);
+                    this._send(msg, resolve, reject);
+                    this.Dispatch('MessageSent', {message: msg});
+                }
+                else {
+                    reject('server goes away');
+                }
+            }
+            catch(e) {
+                reject(e);
+            }
+        });
+    }
+    
+    /**
+     * Sends a message to a specific user.
+     * @param {string} userGuid - The GUID of the recipient user.
+     * @param {Array} files - The message content.
+     * @param {object} contact - The name of the contact.
+     * @returns {string|null} - The ID of the sent message.
+     * @description This method sends files to a specific user and updates the local message store.
+     */
+    SendFilesTo(userGuid, files = null, contact = null, activate = false, wakeup = false) {
+        return new Promise((resolve, reject) => {
+            try {
+                if(this._ws.readyState === 1) {
+                    const msg = Colibri.Common.CometMessage.CreateForFilesSend(Colibri.Web.Comet.Options.origin, this._user, userGuid, files, contact, activate, wakeup);
+                    msg.MarkAsRead();
+                    if(msg.from !== msg.recipient) {
+                        this.AddLocalMessage(msg).then(() => {
+                            this.Dispatch('MessageSent', {message: msg});
+                        });
+                    }
+                    const msgToSend = msg.clone();
+                    this.DispatchHandlers('FilesSending', {message: msgToSend}).then((responses) => {
+                        this._send(msgToSend, resolve, reject);
+                    }).catch(error => {
+                        this.Dispatch('MessageError', {error: error});
+                        reject(error);
+                    });
+                }
+                else {
+                    reject('server goes away');
+                }
+            }
+            catch(e) {
+                reject(e);
+            }
+        });
+    }
+
+    /**
+     * Sends a broadcast message.
+     * @param {string} action - The action to be performed.
+     * @param {Array} files - The message content.
+     * @param {object} contact - The name of the contact.
+     * @returns {string|null} - The ID of the sent message. 
+     */
+    SendFilesBroadcast(files = null, contact = null, activate = false, wakeup = false) {
+        return new Promise((resolve, reject) => {
+            try {
+                if(this._ws.readyState === 1) {
+                    const msg = Colibri.Common.CometMessage.CreateForFilesSendBroadcast(Colibri.Web.Comet.Options.origin, this._user, files, contact, activate, wakeup);
+                    this._send(msg, resolve, reject);
+                    this.Dispatch('MessageSent', {message: msg});
+                }
+                else {
+                    reject('server goes away');
+                }
+            }
+            catch(e) {
+                reject(e);
+            }
+        });
+    }
+
+
+}
+
+Colibri.Web.InternalStore = class extends Colibri.Common.AbstractMessageStore {
+
+    /**
+     * Add the message to the storage
+     * @param {Object} message - The message to add.
+     * @returns {Promise} A promise that resolves when the message is added.
+     */
+    Add(message) {
+        let messages = App.Browser.Get('comet.messages');
+        if(!messages) {
+            messages = [];
+        } else {
+            messages = JSON.parse(messages);
+        }
+        const existing = Array.findObject(messages, 'id', message.id);
+        if(!existing) {
+            messages.push(message);
+            App.Browser.Set('comet.messages', JSON.stringify(messages));
+        } else {
+            console.log('Message with ID ' + message.id + ' already exists in the store, not adding it again');
+        }
+        return Promise.resolve(message);
+    }
+
+    /**
+     * Updates a message in the store.
+     * @param {Object} message - The message to update.
+     * @param {number} id - The ID of the message to update.
+     * @returns {Promise} A promise that resolves when the message is updated.
+     */
+    Update(message, id) {
+        let messages = App.Browser.Get('comet.messages');
+        if(!messages) {
+            messages = [];
+        } else {
+            messages = JSON.parse(messages);
+        }
+        const messageIndex = Array.findIndex(messages, (v, i, l) => v.id === id);
+        if(messageIndex !== -1) {
+            messages[messageIndex] = Object.assignRecursive(message, messages[messageIndex]);
+            App.Browser.Set('comet.messages', JSON.stringify(messages));
+            return Promise.resolve(messages[messageIndex]);
+        }
+        return Promise.reject('Can not find message');
+    }
+
+     /**
+     * Store messages in the store.
+     * @param {Array} messages - The messages to store.
+     * @returns {Promise} A promise that resolves when the messages are stored.
+     */
+    Store(messages) {
+        App.Browser.Set('comet.messages', JSON.stringify(messages));
+        return Promise.resolve(messages);
+    }
+
+    /**
+     * Retrieves messages from the store.
+     * @param {Object} options - Options for retrieving messages.
+     * @param {string} options.fields - The fields to retrieve.
+     * @param {number} options.filter - The filter to apply to the messages.
+     * @param {number} options.order - The order in which to retrieve messages.
+     * @param {number} options.page - The page number for pagination.
+     * @param {number} options.pagesize - The number of messages per page.
+     * @returns {Promise} A promise that resolves with the retrieved messages.
+     */
+    Get(options = {}) {
+
+        return new Promise((resolve, reject) => {
+            let messages = App.Browser.Get('comet.messages');
+            if(!messages) {
+                messages = [];
+            } else {
+                messages = JSON.parse(messages);
+            }
+
+            options.order = options.order ?? ['date'];
+            options.direction = options.direction ?? 'asc';
+            options.filter = options.filter ?? {};
+            options.page = options.page ?? 0;
+            options.pagesize = options.pagesize ?? 100;
+            if(!Array.isArray(options.order)) {
+                options.order = [options.order];
+            }
+
+            messages.sort((a, b) => {
+                const akey = options.order.map(v => a[v]).join('');
+                const bkey = options.order.map(v => b[v]).join('');
+                if(options.direction === 'desc') {
+                    return akey &lt; bkey ? 1 : (akey > bkey ? -1 : 0);
+                } else {
+                    return akey &lt; bkey ? -1 : (akey > bkey ? 1 : 0);
+                }
+            });
+
+            if(options.filter &amp;&amp; (Object.isObject(options.filter) &amp;&amp; Object.countKeys(options.filter) > 0 || Array.isArray(options.filter) &amp;&amp; options.filter.length > 0)) {
+                const filterString = window.convertFilterToString(options.filter);
+                messages = messages.filter(row => {
+                    let result = false;
+                    eval('result = ' + filterString + ';');
+                    return result;
+                });
+            }
+
+            if(options.page > 0) {
+                messages = messages.splice((options.page - 1) * options.pagesize, options.pagesize);
+            }
+
+            resolve(messages);
+        });
+    }
+
+    /**
+     * Deletes messages from the store.
+     * @returns {Promise} A promise that resolves when the messages are deleted.
+     */
+    Clear() {
+        App.Browser.Set('comet.messages', JSON.stringify([]));
+        return Promise.resolve([]);
+    }
+
+    /**
+     * Deletes a message from the store.
+     * @param {Object} options - Options for deleting the message.
+     * @param {number} options.filter - The filter to apply to the messages.
+     * @returns {Promise} A promise that resolves when the message is deleted.
+     */
+    Delete(options) {
+        let messages = App.Browser.Get('comet.messages');
+        if(!messages) {
+            messages = [];
+        } else {
+            messages = JSON.parse(messages);
+        }
+
+        options.filter = options.filter ?? [];
+        if(options.filter) {
+            const filterString = window.convertFilterToString(options.filter);
+            messages = messages.filter(row => {
+                let result = false;
+                eval('result = ' + filterString + ';');
+                return !result;
+            });
+        }
+
+        App.Browser.Set('comet.messages', JSON.stringify(messages));
+        return Promise.resolve();
+    }
+}
+
+Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
+
+    constructor() {
+        super();
+
+        this._dbName = 'comet.messages';
+        this._storeName = 'messages';
+        this._version = 1;
+        this._db = null;
+
+        this._initDb();
+    }
+
+    _initDb() {
+        const request = indexedDB.open(this._dbName, this._version);
+
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains(this._storeName)) {
+                const store = db.createObjectStore(this._storeName, { keyPath: 'id' });
+                store.createIndex('action', 'action', { unique: false });
+                store.createIndex('domain', 'domain', { unique: false });
+                store.createIndex('date', 'date', { unique: false });
+                store.createIndex('from', 'from', { unique: false });
+                store.createIndex('recipient', 'recipient', { unique: false });
+                store.createIndex('read', 'read', { unique: false });
+                store.createIndex('message', 'message', { unique: false });
+                store.createIndex('delivery', 'delivery', { unique: false });
+                store.createIndex('broadcast', 'broadcast', { unique: false });
+                store.createIndex('activate', 'activate', { unique: false });
+                store.createIndex('wakeup', 'wakeup', { unique: false });
+            }
+        };
+
+        request.onsuccess = (event) => {
+            this._db = event.target.result;
+        };
+
+        request.onerror = (event) => {
+            console.error('IndexedDB error:', event.target.error);
+        };
+    }
+
+    _withStore(mode, callback) {
+        return new Promise((resolve, reject) => {
+            if (!this._db) {
+                const request = indexedDB.open(this._dbName, this._version);
+                request.onsuccess = () => {
+                    this._db = request.result;
+                    const tx = this._db.transaction(this._storeName, mode);
+                    const store = tx.objectStore(this._storeName);
+                    resolve(callback(store, tx));
+                };
+                request.onerror = e => reject(e.target.error);
+            } else {
+                const tx = this._db.transaction(this._storeName, mode);
+                const store = tx.objectStore(this._storeName);
+                resolve(callback(store, tx));
+            }
+        });
+    }
+
+    Add(message) {
+        return this.Get({ filter: { id: message.id } }).then(existing => {
+            if (existing.length > 0) {
+                console.log(`Message with ID ${message.id} already exists`);
+                return message;
+            }
+            return this._withStore('readwrite', (store) => {
+                store.add(message);
+                return message;
+            });
+        });
+    }
+
+    Update(message, id) {
+        return new Promise((resolve, reject) => {
+            this.Get({filter: {id: id}}).then((messages) => {            
+                if(messages.length == 0) {
+                    reject('Message not found');
+                    return;
+                }
+
+                let msg = messages[0];
+                msg = Object.assignRecursive(message, msg);
+
+                this._withStore('readwrite', (store) => {
+                    store.put(msg);
+                    resolve(msg);
+                });
+            });
+            
+        })
+    }
+
+    Store(messages) {
+        return this._withStore('readwrite', (store) => {
+            messages.forEach(msg => store.put(msg));
+            return messages;
+        });
+    }
+
+    Get(options = {}) {
+        options.order = options.order ?? ['date'];
+        options.direction = options.direction ?? 'asc';
+        options.filter = options.filter ?? {};
+        options.page = options.page ?? 1;
+        options.pagesize = options.pagesize ?? 100;
+
+        if(!Array.isArray(options.order)) {
+            options.order = [options.order];
+        }
+        
+        let filterString = '';
+        if(options.filter &amp;&amp; (Object.isObject(options.filter) &amp;&amp; Object.countKeys(options.filter) > 0 || Array.isArray(options.filter) &amp;&amp; options.filter.length > 0)) {
+            filterString = window.convertFilterToString(options.filter);
+        }
+
+        return this._withStore('readonly', (store) => {
+            return new Promise((resolve, reject) => {
+                const result = [];
+                const req = store.openCursor();
+                req.onsuccess = (e) => {
+                    const cursor = e.target.result;
+                    if (cursor) {
+
+                        const row = cursor.value;
+                        let res = !!filterString;
+                        if(filterString) {
+                            eval('res = ' + filterString + ';');
+                        }
+                        if(res) {
+                            result.push(row);
+                        }
+                        cursor.continue();
+                        
+                    } else {
+
+                        result.sort((a, b) => {
+                            const akey = options.order.map(v => a[v]).join('');
+                            const bkey = options.order.map(v => b[v]).join('');
+                            if(options.direction === 'desc') {
+                                return akey &lt; bkey ? 1 : (akey > bkey ? -1 : 0);
+                            } else {
+                                return akey &lt; bkey ? -1 : (akey > bkey ? 1 : 0);
+                            }
+                        });
+
+                        if(options.page > 0) {
+                            const offset = (options.page - 1) * options.pagesize;
+                            const paged = result.slice(offset, offset + options.pagesize);
+                            resolve(paged);
+                        } else {
+                            resolve(result);
+                        }
+
+                    }
+                };
+                req.onerror = e => reject(e.target.error);
+            });
+        });
+    }
+
+    Clear() {
+        return this._withStore('readwrite', (store) => {
+            store.clear();
+        });
+    }
+
+    Delete(options) {
+        
+        let filterString = '';
+        if(options.filter &amp;&amp; (Object.isObject(options.filter) &amp;&amp; Object.countKeys(options.filter) > 0 || Array.isArray(options.filter) &amp;&amp; options.filter.length > 0)) {
+            filterString = window.convertFilterToString(options.filter);
+        }
+
+        return this._withStore('readwrite', (store) => {
+            return new Promise((resolve, reject) => {
+                const req = store.openCursor();
+                req.onsuccess = (e) => {
+                    const cursor = e.target.result;
+                    if (cursor) {
+                        const row = cursor.value;
+                        let res = !!filterString;
+                        if(filterString) {
+                            eval('res = ' + filterString + ';');
+                        }
+                        if(res) {
+                            cursor.delete();
+                        }
+                        cursor.continue();
+                    } else {
+                        resolve();
+                    }
+                };
+                req.onerror = e => reject(e.target.error);
+            });
+        });
+    }
+
+}
+
+Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
+
+    constructor() {
+        super();
+
+        if(!App.Device.isAndroid &amp;&amp; !App.Device.isIOs) {
+            throw new Exception('Can not use SQLite store on this device');
+        }
+
+        this._db = App.Device.SqLite.Open('comet.messages', 'default');
+        this._fields = [
+            '"id" UNSIGNED BIG INT',
+            '"action" VARCHAR(255)',
+            '"domain" VARCHAR(255)',
+            '"date" BIGINT', 
+            '"from" VARCHAR(255)', 
+            '"recipient" VARCHAR(255)', 
+            '"read" BOOLEAN', 
+            '"message" TEXT', 
+            '"delivery" VARCHAR(50)', 
+            '"broadcast" BOOLEAN',
+            '"activate" BOOLEAN',
+            '"wakeup" BOOLEAN',
+        ];
+
+    }
+
+    /**
+     * Add the message to the storage
+     * @param {Object} message - The message to add.
+     * @returns {Promise} A promise that resolves when the message is added.
+     */
+    Add(message) {
+        return new Promise((resolve, reject) => {
+            if(message.date instanceof Date) {
+                message.date = message.date.toUnixTime();
+            } else if(typeof message.date === 'string') {
+                message.date = message.date.toDate().toUnixTime();
+            }
+            if(Object.isObject(message.message)) {
+                message.message = JSON.stringify(message.message);
+            }
+            
+            this.Get({filter: {
+                id: message.id
+            }}).then(existing => {
+                if(existing.length > 0) {
+                    console.log('Message with ID ' + message.id + ' already exists in the store, not adding it again');
+                    resolve(message);
+                } else {
+                    App.Device.SqLite.CreateTable(
+                        this._db,
+                        'messages',
+                        this._fields,
+                        [message]
+                    ).then(() => {
+                        if(typeof message.date == 'number') {
+                            message.date = message.date.toDateFromUnixTime();
+                        }
+                        if(typeof message.message === 'string') {
+                            message.message = JSON.parse(message.message);
+                        }
+                        resolve(message);
+                    }).catch(error => reject(error));
+                }
+            });
+
+        });
+    }
+
+    /**
+     * Updates a message in the store.
+     * @param {Object} message - The message to update.
+     * @param {number} id - The ID of the message to update.
+     * @returns {Promise} A promise that resolves when the message is updated.
+     */
+    Update(message, id) {
+        return new Promise((resolve, reject) => {
+
+            this.Get({filter: {id: id}}).then((messages) => {   
+
+                if(messages.length === 0) {
+                    reject('Message not found');
+                    return;
+                }
+
+                let msg = messages[0];                
+                msg = Object.assignRecursive(message, msg);
+
+                const saveMessage = Object.assign({}, msg, {id: id});
+                if(saveMessage.date instanceof Date) {
+                    saveMessage.date = saveMessage.date.toUnixTime();
+                } else if(typeof saveMessage.date === 'string') {
+                    saveMessage.date = saveMessage.date.toDate().toUnixTime();
+                }
+                if(Object.isObject(saveMessage.message)) {
+                    saveMessage.message = JSON.stringify(saveMessage.message);
+                }
+
+                App.Device.SqLite.Update(
+                    this._db,
+                    'messages',
+                    [saveMessage]
+                ).then(() => {
+                    if(typeof saveMessage.date == 'number') {
+                        saveMessage.date = saveMessage.date.toDateFromUnixTime();
+                    }
+                    if(typeof saveMessage.message === 'string') {
+                        saveMessage.message = JSON.parse(saveMessage.message);
+                    }
+                    resolve(saveMessage);
+                }).catch(error => reject(error));
+
+
+            });
+
+        });
+    }
+
+     /**
+     * Store messages in the store.
+     * @param {Array} messages - The messages to store.
+     * @returns {Promise} A promise that resolves when the messages are stored.
+     */
+    Store(messages) {
+        messages.forEach((m) => {
+            if(m.date instanceof Date) {
+                m.date = m.date.toUnixTime();
+            } else if(typeof m.date === 'string') {
+                m.date = m.date.toDate().toUnixTime();
+            }
+            if(Object.isObject(m.message)) {
+                m.message = JSON.stringify(m.message);
+            }
+        });
+        return new Promise((resolve, reject) => {
+            App.Device.SqLite.CreateTable(
+                this._db,
+                'messages',
+                this._fields,
+                messages
+            ).then(() => {
+                messages.forEach(m => {
+                    if(typeof m.date == 'number') {
+                        m.date = m.date.toDateFromUnixTime();
+                    }
+                    if(typeof m.message === 'string') {
+                        m.message = JSON.parse(m.message);
+                    }
+                });
+                resolve(messages);
+            }).catch(error => reject(error));
+        });
+    }
+
+    /**
+     * Retrieves messages from the store.
+     * @param {Object} options - Options for retrieving messages.
+     * @param {string} options.fields - The fields to retrieve.
+     * @param {number} options.filter - The filter to apply to the messages.
+     * @param {number} options.order - The order in which to retrieve messages.
+     * @param {number} options.page - The page number for pagination.
+     * @param {number} options.pagesize - The number of messages per page.
+     * @returns {Promise} A promise that resolves with the retrieved messages.
+     */
+    Get(options = {}) {
+
+        return new Promise((resolve, reject) => {
+
+            options.order = options.order ?? ['date'];
+            options.direction = options.direction ?? 'asc';
+            options.filter = options.filter ?? {};
+            options.page = options.page ?? 0;
+            options.pagesize = options.pagesize ?? 100;
+
+            if(!Array.isArray(options.order)) {
+                options.order = [options.order];
+            }
+
+            const limit = options.page > 0 ? options.pagesize + ' offset ' + ((options.page - 1) * options.pagesize) : '';
+            const orderby = options.order.map(v => v + ' ' + options.direction).join(',');
+            const filter = window.convertFilterToStringForSql(options.filter);
+            
+            App.Device.SqLite.CreateTable(
+                this._db,
+                'messages',
+                this._fields,
+            ).then(() => App.Device.SqLite.Select(
+                this._db,
+                'messages',
+                '*',
+                filter,
+                orderby,
+                limit
+            )).then((messages) => {
+                messages.forEach(m => {
+                    if(typeof m.date == 'number') {
+                        m.date = m.date.toDateFromUnixTime();
+                    }
+                    if(typeof m.message === 'string') {
+                        m.message = JSON.parse(m.message);
+                    }
+                });
+                resolve(messages);
+            }).catch(error => reject(error));
+
+        });
+    }
+
+    /**
+     * Deletes messages from the store.
+     * @returns {Promise} A promise that resolves when the messages are deleted.
+     */
+    Clear() {
+        return new Promise((resolve, reject) => {
+            App.Device.SqLite.CreateTable(
+                this._db,
+                'messages',
+                this._fields,
+            ).then(() => App.Device.SqLite.Delete(this._db, 'messages', 'true'))
+            .then(() => {
+                resolve()
+            }).catch(error => reject(error));
+        });
+    }
+
+    /**
+     * Deletes a message from the store.
+     * @param {Object} options - Options for deleting the message.
+     * @param {number} options.filter - The filter to apply to the messages.
+     * @returns {Promise} A promise that resolves when the message is deleted.
+     */
+    Delete(options) {
+        let messages = App.Browser.Get('comet.messages');
+        if(!messages) {
+            messages = [];
+        } else {
+            messages = JSON.parse(messages);
+        }
+        
+        const filterString = window.convertFilterToStringForSql(options.filter);
+        return new Promise((resolve, reject) => {
+            App.Device.SqLite.CreateTable(
+                this._db,
+                'messages',
+                this._fields,
+            ).then(() => App.Device.SqLite.Delete(this._db, 'messages', filterString))
+            .then(() => {
+                resolve()
+            }).catch(error => reject(error));
+        });
+    }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="App.Components.html">Components</a></li><li><a href="App.Modules.html">Modules</a></li><li><a href="Colibri.html">Colibri</a></li><li><a href="Colibri.UI.Chart.html">Chart</a></li><li><a href="Colibri.UI.Chooser.html">Chooser</a></li><li><a href="Colibri.UI.Forms.ArrayGrid.html">ArrayGrid</a></li><li><a href="Colibri.UI.Grid.html">Grid</a></li><li><a href="Colibri.UI.Input.html">Input</a></li><li><a href="Colibri.UI.List.html">List</a></li><li><a href="Colibri.UI.Select.html">Select</a></li><li><a href="Colibri.UI.Select.DefaultDropdown.html">DefaultDropdown</a></li><li><a href="Colibri.UI.Tree.html">Tree</a></li><li><a href="Colibri.UI.TreeNode.html">TreeNode</a></li><li><a href="Colibri.UI.TreeNodes.html">TreeNodes</a></li><li><a href="Colibri.UI.VirtualGrid.html">VirtualGrid</a></li></ul><h3>Classes</h3><ul><li><a href="AuditUIKit.UI.Informers.Colibri.UI.Informers.Download.html">Colibri.UI.Informers.Download</a></li><li><a href="Colibri.App.html">App</a></li><li><a href="Colibri.Common.AbstractMessageStore.html">AbstractMessageStore</a></li><li><a href="Colibri.Common.Audio.html">Audio</a></li><li><a href="Colibri.Common.Base64.html">Base64</a></li><li><a href="Colibri.Common.Blob.html">Blob</a></li><li><a href="Colibri.Common.BrowserStorage.html">BrowserStorage</a></li><li><a href="Colibri.Common.CometEvent.html">CometEvent</a></li><li><a href="Colibri.Common.CometMessage.html">CometMessage</a></li><li><a href="Colibri.Common.Cookie.html">Cookie</a></li><li><a href="Colibri.Common.Font.html">Font</a></li><li><a href="Colibri.Common.Graphics.html">Graphics</a></li><li><a href="Colibri.Common.HashActions.html">HashActions</a></li><li><a href="Colibri.Common.MimeType.html">MimeType</a></li><li><a href="Colibri.Common.Scrolling.html">Scrolling</a></li><li><a href="Colibri.Common.SessionStorage.html">SessionStorage</a></li><li><a href="Colibri.Common.Validation.html">Validation</a></li><li><a href="Colibri.Common.Video.html">Video</a></li><li><a href="Colibri.Devices.Auth.html">Auth</a></li><li><a href="Colibri.Devices.Camera.html">Camera</a></li><li><a href="Colibri.Devices.Camera_GetPicture.html">GetPicture</a></li><li><a href="Colibri.Devices.Capture.html">Capture</a></li><li><a href="Colibri.Devices.Device.html">Device</a></li><li><a href="Colibri.Devices.Dialogs.html">Dialogs</a></li><li><a href="Colibri.Devices.FileSystem.html">FileSystem</a></li><li><a href="Colibri.Devices.GeoLocation.html">GeoLocation</a></li><li><a href="Colibri.Devices.LocalNotifications.html">LocalNotifications</a></li><li><a href="Colibri.Devices.LocalNotificationsEmulator.html">LocalNotificationsEmulator</a></li><li><a href="Colibri.Devices.Media.html">Media</a></li><li><a href="Colibri.Devices.Notification.html">Notification</a></li><li><a href="Colibri.Devices.Sim.html">Sim</a></li><li><a href="Colibri.Devices.Sms.html">Sms</a></li><li><a href="Colibri.Devices.SqLite.html">SqLite</a></li><li><a href="Colibri.Devices.Vibrate.html">Vibrate</a></li><li><a href="Colibri.Events.Dispatcher.html">Dispatcher</a></li><li><a href="Colibri.Events.Event.html">Event</a></li><li><a href="Colibri.IO.Crypt.html">Crypt</a></li><li><a href="Colibri.IO.Request.html">Request</a></li><li><a href="Colibri.IO.RpcRequest.html">RpcRequest</a></li><li><a href="Colibri.IO-Colibri.IO.WebSocketStream.html">WebSocketStream</a></li><li><a href="Colibri.Modules.Colibri.Common.Wasm.html">Colibri.Common.Wasm</a></li><li><a href="Colibri.Modules.Module.html">Module</a></li><li><a href="Colibri.Sip.JsSip.html">JsSip</a></li><li><a href="Colibri.Storages.Models.Model.html">Model</a></li><li><a href="Colibri.Storages.Models.Table.html">Table</a></li><li><a href="Colibri.Storages.Store.html">Store</a></li><li><a href="Colibri.UI.AlertDialog.html">AlertDialog</a></li><li><a href="Colibri.UI.ArrayViewer.html">ArrayViewer</a></li><li><a href="Colibri.UI.AsLinkButton.html">AsLinkButton</a></li><li><a href="Colibri.UI.Audio.html">Audio</a></li><li><a href="Colibri.UI.Badge.html">Badge</a></li><li><a href="Colibri.UI.Blockquote.html">Blockquote</a></li><li><a href="Colibri.UI.BoolViewer.html">BoolViewer</a></li><li><a href="Colibri.UI.BorderViewer.html">BorderViewer</a></li><li><a href="Colibri.UI.Button.html">Button</a></li><li><a href="Colibri.UI.ButtonGroup.html">ButtonGroup</a></li><li><a href="Colibri.UI.Chart.Barchart.html">Barchart</a></li><li><a href="Colibri.UI.Checkbox.html">Checkbox</a></li><li><a href="Colibri.UI.CheckboxAsTextViewer.html">CheckboxAsTextViewer</a></li><li><a href="Colibri.UI.CheckboxEditor.html">CheckboxEditor</a></li><li><a href="Colibri.UI.CheckboxListEditor.html">CheckboxListEditor</a></li><li><a href="Colibri.UI.CheckboxViewer.html">CheckboxViewer</a></li><li><a href="Colibri.UI.Chooser.ChooseWindow.html">ChooseWindow</a></li><li><a href="Colibri.UI.Color.html">Color</a></li><li><a href="Colibri.UI.Color.Alpha.html">Alpha</a></li><li><a href="Colibri.UI.Color.Block.html">Block</a></li><li><a href="Colibri.UI.Color.Line.html">Line</a></li><li><a href="Colibri.UI.ColorViewer.html">ColorViewer</a></li><li><a href="Colibri.UI.Component.html">Component</a></li><li><a href="Colibri.UI.ConfirmDialog.html">ConfirmDialog</a></li><li><a href="Colibri.UI.ContextMenu.html">ContextMenu</a></li><li><a href="Colibri.UI.Counter.html">Counter</a></li><li><a href="Colibri.UI.DateDiffViewer.html">DateDiffViewer</a></li><li><a href="Colibri.UI.DatePicker.html">DatePicker</a></li><li><a href="Colibri.UI.DateRangeViewer.html">DateRangeViewer</a></li><li><a href="Colibri.UI.DateSelector.html">DateSelector</a></li><li><a href="Colibri.UI.DateSelectorPopup.html">DateSelectorPopup</a></li><li><a href="Colibri.UI.DateTimeSelector.html">DateTimeSelector</a></li><li><a href="Colibri.UI.DateTimeSelectorPopup.html">DateTimeSelectorPopup</a></li><li><a href="Colibri.UI.DateTimeViewer.html">DateTimeViewer</a></li><li><a href="Colibri.UI.DateViewer.html">DateViewer</a></li><li><a href="Colibri.UI.DeferredFormValidator.html">DeferredFormValidator</a></li><li><a href="Colibri.UI.DocumentViewer.html">DocumentViewer</a></li><li><a href="Colibri.UI.Drag.html">Drag</a></li><li><a href="Colibri.UI.DragManager.html">DragManager</a></li><li><a href="Colibri.UI.DropDown.html">DropDown</a></li><li><a href="Colibri.UI.Editor.html">Editor</a></li><li><a href="Colibri.UI.EmailEditor.html">EmailEditor</a></li><li><a href="Colibri.UI.ErrorButton.html">ErrorButton</a></li><li><a href="Colibri.UI.ExtendedButton.html">ExtendedButton</a></li><li><a href="Colibri.UI.FieldValidator.html">FieldValidator</a></li><li><a href="Colibri.UI.FieldsViewer.html">FieldsViewer</a></li><li><a href="Colibri.UI.FileDropManager.html">FileDropManager</a></li><li><a href="Colibri.UI.FileSizeViewer.html">FileSizeViewer</a></li><li><a href="Colibri.UI.FileViewer.html">FileViewer</a></li><li><a href="Colibri.UI.FilesDragAndDrop.html">FilesDragAndDrop</a></li><li><a href="Colibri.UI.FilesEditor.html">FilesEditor</a></li><li><a href="Colibri.UI.FilesViewer.html">FilesViewer</a></li><li><a href="Colibri.UI.FlexBox.html">FlexBox</a></li><li><a href="Colibri.UI.FontFamilySelector.html">FontFamilySelector</a></li><li><a href="Colibri.UI.FontFamilyViewer.html">FontFamilyViewer</a></li><li><a href="Colibri.UI.FormValidator.html">FormValidator</a></li><li><a href="Colibri.UI.FormValidator_Validate.html">Validate</a></li><li><a href="Colibri.UI.Forms.Array.html">Array</a></li><li><a href="Colibri.UI.Forms.ArrayGrid_Fields.html">Fields</a></li><li><a href="Colibri.UI.Forms.ArrayGrid.ObjectWindow.html">ObjectWindow</a></li><li><a href="Colibri.UI.Forms.Bool.html">Bool</a></li><li><a href="Colibri.UI.Forms.Checkbox.html">Checkbox</a></li><li><a href="Colibri.UI.Forms.CheckboxList.html">CheckboxList</a></li><li><a href="Colibri.UI.Forms.Choose.html">Choose</a></li><li><a href="Colibri.UI.Forms.Color.html">Color</a></li><li><a href="Colibri.UI.Forms.Date.html">Date</a></li><li><a href="Colibri.UI.Forms.DateRange.html">DateRange</a></li><li><a href="Colibri.UI.Forms.DateTime.html">DateTime</a></li><li><a href="Colibri.UI.Forms.DateTimeRange.html">DateTimeRange</a></li><li><a href="Colibri.UI.Forms.DayOfMonth.html">DayOfMonth</a></li><li><a href="Colibri.UI.Forms.DocumentGenerator.html">DocumentGenerator</a></li><li><a href="Colibri.UI.Forms.Email.html">Email</a></li><li><a href="Colibri.UI.Forms.Field.html">Field</a></li><li><a href="Colibri.UI.Forms.File.html">File</a></li><li><a href="Colibri.UI.Forms.FileLabel.html">FileLabel</a></li><li><a href="Colibri.UI.Forms.Files.html">Files</a></li><li><a href="Colibri.UI.Forms.FontFamily.html">FontFamily</a></li><li><a href="Colibri.UI.Forms.Form.html">Form</a></li><li><a href="Colibri.UI.Forms.HiddenField.html">HiddenField</a></li><li><a href="Colibri.UI.Forms.KeyValueObject.html">KeyValueObject</a></li><li><a href="Colibri.UI.Forms.Label.html">Label</a></li><li><a href="Colibri.UI.Forms.Link.html">Link</a></li><li><a href="Colibri.UI.Forms.List.html">List</a></li><li><a href="Colibri.UI.Forms.MonthYear.html">MonthYear</a></li><li><a href="Colibri.UI.Forms.Number.html">Number</a></li><li><a href="Colibri.UI.Forms.NumberRange.html">NumberRange</a></li><li><a href="Colibri.UI.Forms.Object.html">Object</a></li><li><a href="Colibri.UI.Forms.Passport.html">Passport</a></li><li><a href="Colibri.UI.Forms.Password.html">Password</a></li><li><a href="Colibri.UI.Forms.Period.html">Period</a></li><li><a href="Colibri.UI.Forms.Radio.html">Radio</a></li><li><a href="Colibri.UI.Forms.Select.html">Select</a></li><li><a href="Colibri.UI.Forms.SimpleArray.html">SimpleArray</a></li><li><a href="Colibri.UI.Forms.Tabs.html">Tabs</a></li><li><a href="Colibri.UI.Forms.Text.html">Text</a></li><li><a href="Colibri.UI.Forms.TextArea.html">TextArea</a></li><li><a href="Colibri.UI.Forms.Toggle.html">Toggle</a></li><li><a href="Colibri.UI.Forms.Token.html">Token</a></li><li><a href="Colibri.UI.Forms.Year.html">Year</a></li><li><a href="Colibri.UI.Frame.html">Frame</a></li><li><a href="Colibri.UI.GoogleChart.html">GoogleChart</a></li><li><a href="Colibri.UI.GrayButton.html">GrayButton</a></li><li><a href="Colibri.UI.Grid.Cell.html">Cell</a></li><li><a href="Colibri.UI.Grid.Column.html">Column</a></li><li><a href="Colibri.UI.Grid.Columns.html">Columns</a></li><li><a href="Colibri.UI.Grid.Header.html">Header</a></li><li><a href="Colibri.UI.Grid.Row.html">Row</a></li><li><a href="Colibri.UI.Grid.Rows.html">Rows</a></li><li><a href="Colibri.UI.GridFileViewer.html">GridFileViewer</a></li><li><a href="Colibri.UI.H1.html">H1</a></li><li><a href="Colibri.UI.H2.html">H2</a></li><li><a href="Colibri.UI.H3.html">H3</a></li><li><a href="Colibri.UI.H4.html">H4</a></li><li><a href="Colibri.UI.Heading.html">Heading</a></li><li><a href="Colibri.UI.Hr.html">Hr</a></li><li><a href="Colibri.UI.HtmlDataViewer.html">HtmlDataViewer</a></li><li><a href="Colibri.UI.IFrame.html">IFrame</a></li><li><a href="Colibri.UI.Icon.html">Icon</a></li><li><a href="Colibri.UI.IconViewer.html">IconViewer</a></li><li><a href="Colibri.UI.Image.html">Image</a></li><li><a href="Colibri.UI.ImageViewWindow.html">ImageViewWindow</a></li><li><a href="Colibri.UI.ImageViewer.html">ImageViewer</a></li><li><a href="Colibri.UI.ImagesViewer.html">ImagesViewer</a></li><li><a href="Colibri.UI.Img.html">Img</a></li><li><a href="Colibri.UI.Informers.DownloadItem.html">DownloadItem</a></li><li><a href="Colibri.UI.Input.File.html">File</a></li><li><a href="Colibri.UI.JsonViewer.html">JsonViewer</a></li><li><a href="Colibri.UI.Link.html">Link</a></li><li><a href="Colibri.UI.LinkEditor.html">LinkEditor</a></li><li><a href="Colibri.UI.LinkViewer.html">LinkViewer</a></li><li><a href="Colibri.UI.List.Group.html">Group</a></li><li><a href="Colibri.UI.List.Item.html">Item</a></li><li><a href="Colibri.UI.List.JsonRenderer.html">JsonRenderer</a></li><li><a href="Colibri.UI.List.SearchBox.html">SearchBox</a></li><li><a href="Colibri.UI.ListItem.html">ListItem</a></li><li><a href="Colibri.UI.Loading.html">Loading</a></li><li><a href="Colibri.UI.LoadingBallun.html">LoadingBallun</a></li><li><a href="Colibri.UI.LoadingContainer.html">LoadingContainer</a></li><li><a href="Colibri.UI.Logs.JsonLog.html">JsonLog</a></li><li><a href="Colibri.UI.Maps.Controls.Button.html">Button</a></li><li><a href="Colibri.UI.Maps.Controls.ButtonGroup.html">ButtonGroup</a></li><li><a href="Colibri.UI.Maps.Controls.FileButton.html">FileButton</a></li><li><a href="Colibri.UI.Maps.Controls.FilterButton.html">FilterButton</a></li><li><a href="Colibri.UI.Maps.Controls.LayersButton.html">LayersButton</a></li><li><a href="Colibri.UI.Maps.Controls.RotateButton.html">RotateButton</a></li><li><a href="Colibri.UI.Maps.Controls.StatesButton.html">StatesButton</a></li><li><a href="Colibri.UI.Maps.Controls.ToggleButton.html">ToggleButton</a></li><li><a href="Colibri.UI.Maps.Controls.ToolBox.html">ToolBox</a></li><li><a href="Colibri.UI.Maps.LeafletJs.html">LeafletJs</a></li><li><a href="Colibri.UI.Maps.MapLibre.html">MapLibre</a></li><li><a href="Colibri.UI.MassActionsMenu.html">MassActionsMenu</a></li><li><a href="Colibri.UI.MenuList.html">MenuList</a></li><li><a href="Colibri.UI.ModelViewer.html">ModelViewer</a></li><li><a href="Colibri.UI.ModelessWindow.html">ModelessWindow</a></li><li><a href="Colibri.UI.MonthPicker.html">MonthPicker</a></li><li><a href="Colibri.UI.MonthSelector.html">MonthSelector</a></li><li><a href="Colibri.UI.MonthYearViewer.html">MonthYearViewer</a></li><li><a href="Colibri.UI.MoveManager.html">MoveManager</a></li><li><a href="Colibri.UI.Note.html">Note</a></li><li><a href="Colibri.UI.Notice.html">Notice</a></li><li><a href="Colibri.UI.Notices.html">Notices</a></li><li><a href="Colibri.UI.NumberEditor.html">NumberEditor</a></li><li><a href="Colibri.UI.NumberViewer.html">NumberViewer</a></li><li><a href="Colibri.UI.ObjectViewer.html">ObjectViewer</a></li><li><a href="Colibri.UI.OrderedList.html">OrderedList</a></li><li><a href="Colibri.UI.OutlineBlueButton.html">OutlineBlueButton</a></li><li><a href="Colibri.UI.Pager.html">Pager</a></li><li><a href="Colibri.UI.Pane.html">Pane</a></li><li><a href="Colibri.UI.PaneGrid.html">PaneGrid</a></li><li><a href="Colibri.UI.PaneSwitcher.html">PaneSwitcher</a></li><li><a href="Colibri.UI.PeriodViewer.html">PeriodViewer</a></li><li><a href="Colibri.UI.PlayPauseButton.html">PlayPauseButton</a></li><li><a href="Colibri.UI.PointerControl.html">PointerControl</a></li><li><a href="Colibri.UI.Popup.html">Popup</a></li><li><a href="Colibri.UI.PopupList.html">PopupList</a></li><li><a href="Colibri.UI.ProgressBar.html">ProgressBar</a></li><li><a href="Colibri.UI.ProgressViewer.html">ProgressViewer</a></li><li><a href="Colibri.UI.PromptDialog.html">PromptDialog</a></li><li><a href="Colibri.UI.Radio.html">Radio</a></li><li><a href="Colibri.UI.RadioViewer.html">RadioViewer</a></li><li><a href="Colibri.UI.RangePicker.html">RangePicker</a></li><li><a href="Colibri.UI.ReadUnreadBadge.html">ReadUnreadBadge</a></li><li><a href="Colibri.UI.RemoteFileEditor.html">RemoteFileEditor</a></li><li><a href="Colibri.UI.Renderer.html">Renderer</a></li><li><a href="Colibri.UI.Rgb.html">Rgb</a></li><li><a href="Colibri.UI.Router.html">Router</a></li><li><a href="Colibri.UI.Ruler.html">Ruler</a></li><li><a href="Colibri.UI.SearchInput.html">SearchInput</a></li><li><a href="Colibri.UI.Select.DefaultDropdown.Options.html">Options</a></li><li><a href="Colibri.UI.Select.Dropdown.html">Dropdown</a></li><li><a href="Colibri.UI.SelectEditor.html">SelectEditor</a></li><li><a href="Colibri.UI.SelectViewer.html">SelectViewer</a></li><li><a href="Colibri.UI.Selector.html">Selector</a></li><li><a href="Colibri.UI.Shader.html">Shader</a></li><li><a href="Colibri.UI.ShadowViewer.html">ShadowViewer</a></li><li><a href="Colibri.UI.Shortcuts.html">Shortcuts</a></li><li><a href="Colibri.UI.SimpleButton.html">SimpleButton</a></li><li><a href="Colibri.UI.SimpleFormValidator.html">SimpleFormValidator</a></li><li><a href="Colibri.UI.SimplePieChart.html">SimplePieChart</a></li><li><a href="Colibri.UI.SingleTimeline.html">SingleTimeline</a></li><li><a href="Colibri.UI.SlideDown.html">SlideDown</a></li><li><a href="Colibri.UI.Spectrum.Graph.html">Graph</a></li><li><a href="Colibri.UI.Spectrum.Selections.html">Selections</a></li><li><a href="Colibri.UI.Split.html">Split</a></li><li><a href="Colibri.UI.Strong.html">Strong</a></li><li><a href="Colibri.UI.SuccessButton.html">SuccessButton</a></li><li><a href="Colibri.UI.Switcher.html">Switcher</a></li><li><a href="Colibri.UI.Table.html">Table</a></li><li><a href="Colibri.UI.TableCell.html">TableCell</a></li><li><a href="Colibri.UI.TableHeaderCell.html">TableHeaderCell</a></li><li><a href="Colibri.UI.TableRow.html">TableRow</a></li><li><a href="Colibri.UI.Tabs.html">Tabs</a></li><li><a href="Colibri.UI.Templates.html">Templates</a></li><li><a href="Colibri.UI.TextArea.html">TextArea</a></li><li><a href="Colibri.UI.TextAreaEditor.html">TextAreaEditor</a></li><li><a href="Colibri.UI.TextAreaViewer.html">TextAreaViewer</a></li><li><a href="Colibri.UI.TextEditor.html">TextEditor</a></li><li><a href="Colibri.UI.TextSpan.html">TextSpan</a></li><li><a href="Colibri.UI.TextViewer.html">TextViewer</a></li><li><a href="Colibri.UI.Timeline.html">Timeline</a></li><li><a href="Colibri.UI.ToggleBox.html">ToggleBox</a></li><li><a href="Colibri.UI.ToggleBoxEditor.html">ToggleBoxEditor</a></li><li><a href="Colibri.UI.ToggleButton.html">ToggleButton</a></li><li><a href="Colibri.UI.ToggleboxViewer.html">ToggleboxViewer</a></li><li><a href="Colibri.UI.ToolTip.html">ToolTip</a></li><li><a href="Colibri.UI.Toolbar.html">Toolbar</a></li><li><a href="Colibri.UI.Tree.JsonRenderer.html">JsonRenderer</a></li><li><a href="Colibri.UI.Tree.SearchBox.html">SearchBox</a></li><li><a href="Colibri.UI.UnorderedList.html">UnorderedList</a></li><li><a href="Colibri.UI.UploadButton.html">UploadButton</a></li><li><a href="Colibri.UI.Utilities.Mask.html">Mask</a></li><li><a href="Colibri.UI.Utilities.Validator.html">Validator</a></li><li><a href="Colibri.UI.Video.html">Video</a></li><li><a href="Colibri.UI.Viewer.html">Viewer</a></li><li><a href="Colibri.UI.WaterfallBuffer.html">WaterfallBuffer</a></li><li><a href="Colibri.UI.WebRTCVideo.html">WebRTCVideo</a></li><li><a href="Colibri.UI.Widget.html">Widget</a></li><li><a href="Colibri.UI.Window.html">Window</a></li><li><a href="Colibri.UI.YearMonthSelector.html">YearMonthSelector</a></li><li><a href="Colibri.UI.YearPicker.html">YearPicker</a></li><li><a href="Colibri.UI.YearQuarterSelector.html">YearQuarterSelector</a></li><li><a href="Colibri.UI.YearSelector.html">YearSelector</a></li><li><a href="Colibri.UI.YearViewer.html">YearViewer</a></li><li><a href="Colibri.Web.Comet.html">Comet</a></li><li><a href="Colibri.Web.IndexDB.html">IndexDB</a></li><li><a href="Colibri.Web.Request.html">Request</a></li><li><a href="Colibri.Web.Router.html">Router</a></li><li><a href="Destructable.html">Destructable</a></li><li><a href="DestructableRegistry.html">DestructableRegistry</a></li><li><a href="MediaMTXWebRTCReader.html">MediaMTXWebRTCReader</a></li></ul><h3>Global</h3><ul><li><a href="global.html#App">App</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sun Jul 26 2026 13:08:05 GMT+0400 (Armenia Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+npx jsdoc -c config.json

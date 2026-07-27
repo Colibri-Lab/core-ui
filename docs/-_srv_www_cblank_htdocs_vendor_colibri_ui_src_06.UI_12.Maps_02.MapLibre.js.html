@@ -1,0 +1,2771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: /srv/www/cblank/htdocs/vendor/colibri/ui/src/06.UI/12.Maps/02.MapLibre.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: /srv/www/cblank/htdocs/vendor/colibri/ui/src/06.UI/12.Maps/02.MapLibre.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Map using MapLibre
+ * @class
+ * @extends Colibri.UI.Pane
+ * @memberof Colibri.UI.Maps
+ */
+Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
+
+    constructor(name, container, element) {
+        super(name, container, Colibri.UI.Templates['Colibri.UI.Maps.MapLibre']);
+        this.AddClass('colibri-ui-maps-maplibre');
+
+        this._loaded = false;
+        this._map = null;
+        this._objects = {};
+        this._icons = {};
+        this._layers = {};
+        this._selectedIds = [];
+        this._disableChangeEvent = false;
+
+        this._zoomZoomIn = this.Children('zoom/zoom-in');
+        this._zoomZoomOut = this.Children('zoom/zoom-out');
+        this._zoomRotate = this.Children('zoom/rotate');
+        this._zoomSetCenter = this.Children('zoom/set-center');
+        this._layersSwitch = this.Children('layers/switch');
+        this._mapContainer = this.Children('map-container');
+
+        this._layersZIndex = [];
+        this._objectsSources = {};
+        this._linesSources = {};
+        this._pointsSources = {};
+        this._fillSources = {};
+
+        this.GenerateChildren(element, this);
+
+        this._loadMap();
+
+        this._zoomZoomIn.AddHandler('Clicked', this.__zoomZoomInClicked, false, this);
+        this._zoomZoomOut.AddHandler('Clicked', this.__zoomZoomOutClicked, false, this);
+        this._zoomRotate.AddHandler('Rotating', this.__zoomRotateRotating, false, this);
+        this._zoomRotate.AddHandler('Rotated', this.__zoomRotateRotated, false, this);
+        this._zoomSetCenter.AddHandler('Clicked', this.__zoomSetCenterClicked, false, this);
+        this._layersSwitch.AddHandler('Changed', this.__layersSwitchChanged, false, this);
+
+    }
+
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('Loaded', false, 'When map is fully loaded');
+        this.RegisterEvent('Changed', false, 'When zoom or move event is faired');
+        this.RegisterEvent('SelectionChanged', false, 'When selection is changed');
+        this.RegisterEvent('MbTilesProtocol', false, 'When mbtiles protocol is requested');
+        this.RegisterEvent('LayerSwitched', false, 'When mbtiles protocol is requested');
+        this.RegisterEvent('MapContextMenuItemClicked', false, 'When contextmenu item is clicked on map');
+        this.RegisterEvent('MarkAdded', false, 'When user adds a mark to the map');
+    }
+
+    _loadScriptsAndStyles() {
+        return new Promise((resolve, reject) => {
+            if (this._resourcesLoaded) {
+                resolve();
+                return;
+            }
+
+            this._resourcesLoaded = false;
+            Promise.all([
+                Colibri.Common.LoadScript((!App.Device.isElectron ? '/' : '') + 'res/maplibre/maplibre-gl.js'),
+                Colibri.Common.LoadStyles((!App.Device.isElectron ? '/' : '') + 'res/maplibre/maplibre-gl.css')
+            ]).then(() => {
+                this._resourcesLoaded = true;
+                resolve();
+            }).catch(() => {
+                Promise.all([
+                    Colibri.Common.LoadScript('https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js'),
+                    Colibri.Common.LoadStyles('https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css'),
+                ]).then(() => {
+                    this._resourcesLoaded = true;
+                    resolve();
+                }).catch(() => {
+                    reject();
+                });
+            });
+        })
+    }
+
+    _loadMap() {
+
+        this._loadScriptsAndStyles().then(() => {
+
+            this._loaded = true;
+            this._map = new maplibregl.Map({
+                container: this._mapContainer.container,
+                // center: {lng: 45.29590878451711, lat: 40.06732341520765}, // lng, lat
+                // zoom: 24,
+                bearing: 0,
+                pitch: 0,
+                renderWorldCopies: false,
+                maxBounds: [
+                    [-178, -85], // юго-западная граница (minLng, minLat)
+                    [178, 85] // северо-восточная граница (maxLng, maxLat)
+                ],
+            });
+
+            this._map.boxZoom.disable();
+            this._map.dragRotate.disable();
+            this._map.touchZoomRotate.disableRotation();
+
+            this._map.on('load', () => {
+                this.Dispatch('Loaded', {});
+            });
+
+            this._map.on('moveend', (e) => {
+                if (this._zoomRotate.rotating) {
+                    return;
+                }
+
+                this._getProperties();
+                !this._disableChangeEvent &amp;&amp; this.Dispatch('Changed', {});
+            });
+
+            this._map.on('zoomend', (e) => {
+                if (this._zoomRotate.rotating) {
+                    return;
+                }
+                this._getProperties();
+                !this._disableChangeEvent &amp;&amp; this.Dispatch('Changed', {});
+            });
+
+            this._map.on('rotatestart', (e) => {
+                this._rotating = true;
+            });
+
+            this._map.on('rotateend', (e) => {
+                if (this._zoomRotate.rotating) {
+                    return;
+                }
+                this._getProperties();
+
+                !this._disableChangeEvent &amp;&amp; this.Dispatch('Changed', {});
+                this._rotating = false;
+            });
+
+            this._map.on('styleimagemissing', async (e) => {
+                const iconData = this._icons[e.id];
+                if (!iconData) {
+                    return;
+                }
+
+                const svg = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(iconData.content);
+                const image = new Image();
+                image.width = iconData.width;
+                image.height = iconData.height;
+                const promise = new Promise((resolve) => {
+                    image.onload = resolve;
+                });
+                image.src = svg;
+                await promise;
+
+                if (this._map.hasImage(e.id)) {
+                    this._map.removeImage(e.id);
+                }
+                this._map.addImage(e.id, image);
+            });
+
+
+        });
+    }
+
+    get layersButtonGroup() {
+        return this.Children('layers').container;
+    }
+
+    get additionalButtonGroup() {
+        return this.Children('additional').container;
+    }
+
+    get commandsButtonGroup() {
+        return this.Children('commands').container;
+    }
+
+    get filtersButtonGroup() {
+        return this.Children('filters').container;
+    }
+
+    get extensionsButtonGroup() {
+        return this.Children('extensions').container;
+    }
+
+    get zoomButtonGroup() {
+        return this.Children('zoom').container;
+    }
+
+    _getProperties() {
+        const bounds = this._map.getBounds();
+        const southWest = bounds.getSouthWest();
+        const northEast = bounds.getNorthEast();
+
+        this._bbox = [
+            { lng: southWest.lng, lat: southWest.lat },
+            { lng: northEast.lng, lat: northEast.lat }
+        ];
+        this._zoom = this._map.getZoom();
+        this._center = { lat: this._map.getCenter().lat, lng: this._map.getCenter().lng };
+        this._rotation = this._map.getBearing();
+    }
+
+    __layersSwitchChanged(event, args) {
+        this.SwitchToLayer(args.current);
+        this.Dispatch('Changed', {});
+    }
+    __zoomSetCenterClicked() {
+        this._map.flyTo({ center: this._center, zoom: this._zoom });
+    }
+    __zoomRotateRotating(event, args) {
+        this._map.rotateTo(args.angle);
+    }
+    __zoomRotateRotated(event, args) {
+        this._map.rotateTo(args.angle);
+        this.Dispatch('Changed', {});
+    }
+    __zoomZoomInClicked() {
+        if (this.zoom >= 18) {
+            return;
+        }
+        this._map.zoomIn();
+    }
+    __zoomZoomOutClicked() {
+        if (this.zoom &lt;= 1) {
+            return;
+        }
+        this._map.zoomOut();
+    }
+
+    Fly(center, zoom) {
+        Colibri.Common.Wait(() => this._loaded).then(() => {
+            this._map.jumpTo({ center: center, zoom: zoom });
+        });
+    }
+
+    get loaded() {
+        return this._loaded;
+    }
+
+    get center() { return this._center; }
+    set center(value) {
+        value = this._convertProperty('Array', value);
+        this._center = value;
+        this._showCenter();
+    }
+    _showCenter() {
+        Colibri.Common.Wait(() => this._loaded).then(() => {
+            this.SetCenter(this._center);
+        });
+    }
+    SetCenter(latLngLike) {
+        this._map.setCenter(Array.isArray(latLngLike) ? latLngLike : [latLngLike.lng, latLngLike.lat]);
+    }
+
+    get zoom() { return this._zoom; }
+    set zoom(value) {
+        this._zoom = value;
+        this._showZoom();
+    }
+    _showZoom() {
+        Colibri.Common.Wait(() => this._loaded).then(() => {
+            this.SetZoom(this._zoom);
+        });
+    }
+    SetZoom(zoom) {
+        this._map.setZoom(zoom);
+    }
+
+    get bbox() { return this._bbox; }
+    set bbox(value) {
+        this._bbox = value;
+        this._showBbox();
+    }
+    _showBbox() {
+        Colibri.Common.Wait(() => this._loaded).then(() => {
+            this.SetBBox(this._bbox);
+        });
+    }
+    SetBBox(bbox) {
+        this._map.fitBounds([
+            [bbox[0][1], bbox[0][0]], // [lat, lng]
+            [bbox[1][1], bbox[1][0]]  // [lat, lng]
+        ]);
+    }
+
+    _getBBox(points) {
+
+        const OFFSET_KM = 50;
+
+        let minLat = Infinity;
+        let maxLat = -Infinity;
+
+        let minLng = Infinity;
+        let maxLng = -Infinity;
+
+        for (const p of points) {
+
+            if (p.lat &lt; minLat) minLat = p.lat;
+            if (p.lat > maxLat) maxLat = p.lat;
+
+            if (p.lng &lt; minLng) minLng = p.lng;
+            if (p.lng > maxLng) maxLng = p.lng;
+        }
+
+        // km -> degrees latitude
+        const latOffset =
+            OFFSET_KM / 111;
+
+        // km -> degrees longitude
+        const centerLat =
+            (minLat + maxLat) / 2;
+
+        const lngOffset =
+            OFFSET_KM /
+            (
+                111 *
+                Math.cos(
+                    centerLat * Math.PI / 180
+                )
+            );
+
+        minLat -= latOffset;
+        maxLat += latOffset;
+
+        minLng -= lngOffset;
+        maxLng += lngOffset;
+
+        return [
+            [minLat, minLng], // southwest
+            [maxLat, maxLng]  // northeast
+        ];
+    }
+
+    ShowFeatures(featuresPoints) {
+        const bbox = this._getBBox(featuresPoints);
+        this.SetBBox(bbox);
+    }
+
+    /**
+     * Set or get administrative data geojson url
+     * @type {String}
+     */
+    get administrativeDataJson() {
+        return this._administrativeDataJson;
+    }
+    /**
+     * Set or get administrative data geojson url
+     * @type {String}
+     */
+    set administrativeDataJson(value) {
+        this._administrativeDataJson = value;
+        this._showAdministrativeDataJson();
+    }
+    _showAdministrativeDataJson() {
+        Colibri.Common.Wait(() => this._loaded).then(() => {
+            Object.forEach(this._administrativeDataJson, (name, arr) => {
+                let index = 1;
+                for (const geodata of arr) {
+                    this._map.addSource(name + index, {
+                        type: 'geojson',
+                        data: Array.isArray(geodata) ? geodata[0] : geodata
+                    });
+                    index++;
+                }
+            });
+        });
+    }
+
+    _moveBack(name) {
+        try {
+            if (!this._map.getLayer(name)) {
+                return;
+            }
+
+            const linesSourceName = this._layersZIndex[0];
+            if (linesSourceName &amp;&amp; this._map.getLayer(linesSourceName)) {
+                this._map.moveLayer(name, linesSourceName);
+            }
+        } catch (e) { }
+    }
+
+    _createLayers(sourceName, styles) {
+        // Пример: полигоны
+        if (styles?.polygons) {
+            if (!this._map.getLayer(sourceName + '-polygons')) {
+                this._map.addLayer({
+                    id: sourceName + '-polygons',
+                    type: 'fill',
+                    source: sourceName,
+                    paint: styles?.polygons?.paint,
+                    minzoom: styles?.polygons?.minzoom ?? 0,
+                    maxzoom: styles?.polygons?.maxzoom ?? 24
+                });
+            }
+        }
+
+        if (styles?.lines) {
+            if (!this._map.getLayer(sourceName + '-lines')) {
+                this._map.addLayer({
+                    id: sourceName + '-lines',
+                    type: 'line',
+                    source: sourceName,
+                    paint: styles?.lines?.paint,
+                    minzoom: styles?.lines?.minzoom ?? 0,
+                    maxzoom: styles?.lines?.maxzoom ?? 24
+                });
+            }
+        }
+
+        if (styles?.points) {
+            if (!this._map.getLayer(sourceName + '-points')) {
+                this._map.addLayer({
+                    id: sourceName + '-points',
+                    type: 'circle',
+                    source: sourceName,
+                    paint: styles?.points?.paint,
+                    minzoom: styles?.points?.minzoom ?? 0,
+                    maxzoom: styles?.points?.maxzoom ?? 24
+                });
+            }
+        }
+
+        if (styles?.texts) {
+            if (!this._map.getLayer(sourceName + '-symbols')) {
+                this._map.addLayer({
+                    id: sourceName + '-symbols',
+                    type: 'symbol',
+                    source: sourceName,
+                    layout: styles?.texts.layout,
+                    paint: styles?.texts.paint,
+                    filter: ['!', ['==', ['get', 'name'], '']],
+                    minzoom: styles?.texts?.minzoom ?? 0,
+                    maxzoom: styles?.texts?.maxzoom ?? 24
+                });
+            }
+        }
+
+        this._moveBack(sourceName + '-points');
+        this._moveBack(sourceName + '-lines');
+        this._moveBack(sourceName + '-polygons');
+        this._moveBack(sourceName + '-symbols');
+
+    }
+    _removeLayers(sourceName) {
+
+        if (this._map.getLayer(sourceName + '-polygons')) {
+            this._map.removeLayer(sourceName + '-polygons');
+        }
+        if (this._map.getLayer(sourceName + '-lines')) {
+            this._map.removeLayer(sourceName + '-lines');
+        }
+        if (this._map.getLayer(sourceName + '-points')) {
+            this._map.removeLayer(sourceName + '-points');
+        }
+        if (this._map.getLayer(sourceName + '-symbols')) {
+            this._map.removeLayer(sourceName + '-symbols');
+        }
+    }
+
+    /**
+     * Glyphs url
+     * @type {String}
+     */
+    get glyphs() {
+        return this._glyphs;
+    }
+    /**
+     * Glyphs url
+     * @type {String}
+     */
+    set glyphs(value) {
+        this._glyphs = value;
+        this._showGlyphs();
+    }
+    _showGlyphs() {
+        Colibri.Common.Wait(() => this._loaded &amp;&amp; !!this._map.getStyle()).then(() => {
+            const oldstyle = this._map.getStyle();
+            this._map.setStyle({ ...oldstyle, glyphs: this._glyphs });
+        });
+    }
+
+    ShowAdministrativeLayers() {
+        this.HideAdministrativeLayers();
+        Object.forEach(this._administrativeDataJson, (name, arr) => {
+            let index = 1;
+            for (let geodata of arr) {
+                let layers = { polygons: null, lines: null, points: null, texts: null };
+                if (Array.isArray(geodata)) {
+                    layers = geodata[1];
+                    geodata = geodata[0];
+                }
+                Colibri.Common.Wait((params) => {
+                    return !!this._map.getSource(name + params.index);
+                }, null, 100, false, { index }).then((params) => {
+                    this._createLayers(name + params.index, layers);
+                });
+                index++;
+            }
+        });
+
+        this._administrativeDataShown = true;
+
+    }
+
+    HideAdministrativeLayers() {
+        Object.forEach(this._administrativeDataJson, (name, arr) => {
+            let index = 1;
+            for (const geodata of arr ?? []) {
+                this._removeLayers(name + index);
+                index++;
+            }
+        });
+
+        this._administrativeDataShown = false;
+    }
+
+    /**
+     * Tiles string in format https://tile.openstreetmap.org/{z}/{x}/{y}.png
+     * @type {Object}
+     */
+    get tiles() {
+        return this._tiles;
+    }
+    /**
+     * Tiles string in format https://tile.openstreetmap.org/{z}/{x}/{y}.png
+     * @type {Array&lt;{name, title, url}>}
+     */
+    set tiles(value) {
+        value = this._convertProperty('Array', value);
+        this._tiles = value;
+        this._showTiles();
+    }
+    _showTiles() {
+        Colibri.Common.Wait(() => this._loaded).then(() => {
+            this._tiles.forEach(tile => {
+                this.AddTiles(tile);
+            });
+            this.SwitchToLayer(Object.keys(this._layers)[0]);
+        });
+    }
+
+    AddTiles(tile) {
+
+        if (typeof tile.url === 'string' &amp;&amp; tile.url.indexOf('style.json') !== -1) {
+            Colibri.IO.Request.Get(tile.url, {}, {}, false).then(response => {
+                const style = JSON.parse(response.result);
+                if (style.glyphs) {
+                    const oldstyle = this._map.getStyle();
+                    this._map.setStyle({ ...oldstyle, glyphs: style.glyphs });
+                }
+                tile.style = style;
+                this._layers[tile.name] = tile;
+                for (const [sourceId, sourceDef] of Object.entries(style.sources)) {
+                    this._disableChangeEvent = true;
+                    this._map.addSource(sourceId, sourceDef);
+                    this._disableChangeEvent = false;
+                }
+                this._layersSwitch.AddLayer(tile);
+            });
+
+        } else {
+            this._layers[tile.name] = tile;
+            this._disableChangeEvent = true;
+            this._map.addSource(tile.name, {
+                type: tile?.type ?? 'raster',
+                tiles: [tile.url],
+                tileSize: tile?.size ?? 256,
+                minzoom: tile?.minzoom ?? 0,
+                maxzoom: tile?.maxzoom ?? 22
+            });
+            this._disableChangeEvent = false;
+            this._layersSwitch.AddLayer(tile);
+        }
+
+    }
+
+    SwitchToLayer(name) {
+        if (this._layers[name]) {
+
+            if (this._currentLayer) {
+                (!Array.isArray(this._currentLayer) ? [this._currentLayer] : this._currentLayer).forEach(v => {
+                    this._map.removeLayer(v);
+                });
+            }
+
+            if (this._layers[name]?.style) {
+                const layers = [];
+                const style = this._layers[name]?.style;
+                for (const layer of style.layers) {
+                    this._map.addLayer({ ...layer, id: `${name}-${layer.id}` });
+                    this._moveBack(`${name}-${layer.id}`);
+                    layers.push(`${name}-${layer.id}`);
+                }
+                this._currentLayer = layers;
+                this.Dispatch('LayerSwitched', { name: name, layer: this._layers[name] });
+
+            } else {
+                this._map.addLayer({
+                    id: name,
+                    type: 'raster',
+                    source: name
+                });
+                this._currentLayer = name;
+                this._moveBack(name);
+                this.Dispatch('LayerSwitched', { name: name, layer: this._layers[name] });
+            }
+
+            if (this._administrativeDataShown) {
+                this.ShowAdministrativeLayers();
+            }
+
+
+        }
+    }
+
+    CreateSources(sources, properties) {
+        Object.map(sources, (name, type) => {
+            if (type === 'line') {
+                this._createLineSource(name);
+            } else if (type === 'circle') {
+                this._createPointSource(name);
+            } else if (type === 'symbol') {
+                this._createObjectSource(name, properties?.[name] ?? {});
+            } else if (type === 'fill') {
+                this._createFillSource(name, properties?.[name] ?? {});
+            }
+        });
+    }
+
+    _createLineSource(name) {
+        if (!this.loaded) {
+            return;
+        }
+        if (!this._linesSources[name]) {
+            this._map.addSource(name + '-source', {
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features: [],
+                    lineMetrics: true,
+                    wrap: false
+                }
+            });
+            this._map.addLayer({
+                id: name,
+                type: 'line',
+                source: name + '-source',
+                layout: {
+                    'line-cap': 'round',
+                    'line-join': 'round'
+                },
+                paint: {
+                    'line-color': ['get', 'color'],
+                    'line-width': ['get', 'weight'],
+                    'line-opacity': ['get', 'opacity'],
+                }
+            });
+            this._layersZIndex.push(name);
+            this._linesSources[name] = this._map.getSource(name + '-source');
+        }
+        return this._linesSources[name];
+    }
+
+    _createPointSource(name) {
+        if (!this.loaded) {
+            return;
+        }
+        if (!this._pointsSources[name]) {
+            this._map.addSource(name + '-source', {
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features: []
+                }
+            });
+
+            this._map.addLayer({
+                id: name,
+                type: 'circle',
+                source: name + '-source',
+                layout: {},
+                paint: {
+                    'circle-radius': ['get', 'radius'],
+                    'circle-color': ['get', 'color'],
+                    'circle-opacity': ['get', 'opacity']
+                }
+            });
+
+            this._layersZIndex.push(name);
+            this._pointsSources[name] = this._map.getSource(name + '-source');
+        }
+
+        return this._pointsSources[name];
+    }
+
+    _createFillSource(name) {
+        if (!this.loaded) {
+            return;
+        }
+        if (!this._fillSources[name]) {
+            this._map.addSource(name + '-source', {
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features: []
+                }
+            });
+
+            this._map.addLayer({
+                id: name,
+                type: 'fill',
+                source: name + '-source',
+                layout: {},
+                paint: {
+                    'fill-color': ['get', 'color'],
+                    'fill-opacity': ['get', 'opacity']
+                }
+            });
+
+            this._map.addLayer({
+                id: name + '-outline',
+                type: 'line',
+                source: name + '-source',
+                layout: {},
+                paint: {
+                    'line-color': ['get', 'strokeColor'],
+                    'line-width': 1,
+                    'line-opacity': ['get', 'opacity']
+                }
+            });
+
+            this._layersZIndex.push(name);
+            this._fillSources[name] = this._map.getSource(name + '-source');
+        }
+
+        return this._fillSources[name];
+    }
+
+    _createObjectSource(name, properties) {
+        if (!this.loaded) {
+            return;
+        }
+        if (!this._objectsSources[name]) {
+            this._map.addSource(name + '-source', {
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features: []
+                }
+            });
+
+            const paint = {
+                'text-halo-color': '#000',
+                'text-halo-width': 2
+            };
+            const layout = {
+                'icon-image': ['get', 'type'],
+                'icon-rotate': ['get', 'angle'],
+                'icon-allow-overlap': true,
+                'icon-rotation-alignment': 'map',
+                'icon-anchor': 'center',
+                'text-field': ['get', 'label'],
+                'text-font': ['Open Sans Bold'],
+                'text-size': 12,
+                'text-offset': [0, 1.5],
+                'text-anchor': 'top',
+                'text-allow-overlap': true
+            };
+            if (properties?.['size']) {
+                layout['icon-size'] = properties['size'];
+                layout['text-size'] = properties['size'];
+            }
+            if (properties?.['offset']) {
+                layout['icon-offset'] = properties['offset'];
+                layout['text-offset'] = properties['offset'];
+            }
+            if (properties?.['opacity']) {
+                paint['icon-opacity'] = properties['opacity'];
+                paint['text-opacity'] = properties['opacity'];
+            }
+            if (properties?.['color']) {
+                paint['text-color'] = properties['color'];
+            }
+            if (properties?.['font']) {
+                layout['text-font'] = properties['font'];
+            }
+
+            this._map.addLayer({
+                id: name,
+                type: 'symbol',
+                source: name + '-source',
+                layout: layout,
+                paint: paint
+            });
+
+            this._layersZIndex.push(name);
+            this._objectsSources[name] = this._map.getSource(name + '-source');
+        }
+        return this._objectsSources[name];
+    }
+
+    _sourceAddObject(name, objectJson) {
+        const source = this._createObjectSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        data.features.push(objectJson);
+        source.setData(data);
+    }
+
+    _sourceAddOrUpdateObjects(name, objectsJson, updateIfExists = true, removeIfNotFoundInObjects = false) {
+        const source = this._createObjectSource(name);
+        if (!source) {
+            return;
+        }
+
+        const data = source._data.geojson;
+        // remove unexistance objects if updateIfExists = true
+        if (updateIfExists &amp;&amp; removeIfNotFoundInObjects) {
+            const objectIds = objectsJson.map(o => o.id);
+            data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
+        }
+        for (const objectJson of objectsJson) {
+            if (updateIfExists) {
+                const idx = data.features.findIndex(f => f.id === objectJson.id);
+                if (idx === -1) {
+                    data.features.push(objectJson)
+                } else {
+                    data.features.splice(idx, 1, objectJson);
+                }
+            } else {
+                data.features.push(objectJson)
+            }
+        }
+        source.setData(data);
+    }
+
+    _sourceRemoveObject(name, objectId) {
+        const source = this._createObjectSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        data.features = data.features.filter(f => f.id !== objectId);
+        source.setData(data);
+    }
+
+    _sourceRemoveObjects(name, objectIds) {
+        const source = this._createObjectSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
+        source.setData(data);
+    }
+
+    _sourceUpdateObject(name, objectId, objectJson) {
+        const source = this._createObjectSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        const idx = data.features.findIndex(f => f.id === objectId);
+        if (idx === -1) return;
+        data.features.splice(idx, 1, objectJson);
+        source.setData(data);
+    }
+
+    _sourceAddLine(name, objectJson) {
+        const source = this._createLineSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        data.features.push(objectJson);
+        source.setData(data);
+    }
+
+    _sourceAddOrUpdateLines(name, objectsJson, updateIfExists = true, removeIfNotFoundInObjects = false) {
+        const source = this._createLineSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        if (updateIfExists &amp;&amp; removeIfNotFoundInObjects) {
+            const objectIds = objectsJson.map(o => o.id);
+            data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
+        }
+        for (const objectJson of objectsJson) {
+            if (updateIfExists) {
+                const idx = data.features.findIndex(f => f.id === objectJson.id);
+                if (idx === -1) {
+                    data.features.push(objectJson)
+                } else {
+                    data.features.splice(idx, 1, objectJson);
+                }
+            } else {
+                data.features.push(objectJson)
+            }
+        }
+        source.setData(data);
+    }
+
+    _sourceRemoveLine(name, objectId) {
+        const source = this._createLineSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        data.features = data.features.filter(f => f.id !== objectId);
+        source.setData(data);
+    }
+
+    _sourceRemoveLines(name, objectIds) {
+        const source = this._createLineSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
+        source.setData(data);
+    }
+
+    _sourceUpdateLine(name, objectId, objectJson) {
+        const source = this._createLineSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        const idx = data.features.findIndex(f => f.id === objectId);
+        if (idx === -1) return;
+        data.features.splice(idx, 1, objectJson);
+        source.setData(data);
+    }
+
+    _sourceAddPoint(name, objectJson) {
+        const source = this._createPointSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        data.features.push(objectJson);
+        source.setData(data);
+    }
+
+    _sourceAddOrUpdatePoints(name, objectsJson, updateIfExists = true, removeIfNotFoundInObjects = false) {
+        const source = this._createPointSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        if (updateIfExists &amp;&amp; removeIfNotFoundInObjects) {
+            const objectIds = objectsJson.map(o => o.id);
+            data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
+        }
+        for (const objectJson of objectsJson) {
+            if (updateIfExists) {
+                let idx = data.features.findIndex(f => f.id === objectJson.id);
+                if (idx === -1) {
+                    data.features.push(objectJson);
+                } else {
+                    data.features.splice(idx, 1, objectJson);
+                }
+            } else {
+                data.features.push(objectJson);
+            }
+        }
+        source.setData(data);
+    }
+
+    _sourceRemovePoint(name, objectId) {
+        const source = this._createPointSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        data.features = data.features.filter(f => f.id !== objectId);
+        source.setData(data);
+    }
+
+    _sourceRemovePoints(name, objectIds) {
+        const source = this._createPointSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
+        source.setData(data);
+    }
+
+    _sourceUpdatePoint(name, objectId, objectJson) {
+        const source = this._createPointSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        const idx = data.features.findIndex(f => f.id === objectId);
+        if (idx === -1) return;
+        data.features.splice(idx, 1, objectJson);
+        source.setData(data);
+    }
+
+
+    _sourceAddFill(name, objectJson) {
+        const source = this._createFillSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        data.features.push(objectJson);
+        source.setData(data);
+    }
+
+    _sourceAddOrUpdateFills(name, objectsJson, updateIfExists = true, removeIfNotFoundInObjects = false) {
+        const source = this._createFillSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        if (updateIfExists &amp;&amp; removeIfNotFoundInObjects) {
+            const objectIds = objectsJson.map(o => o.id);
+            data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
+        }
+        for (const objectJson of objectsJson) {
+            if (updateIfExists) {
+                let idx = data.features.findIndex(f => f.id === objectJson.id);
+                if (idx === -1) {
+                    data.features.push(objectJson);
+                } else {
+                    data.features.splice(idx, 1, objectJson);
+                }
+            } else {
+                data.features.push(objectJson);
+            }
+        }
+        source.setData(data);
+    }
+
+    _sourceRemoveFill(name, objectId) {
+        const source = this._createFillSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        data.features = data.features.filter(f => f.id !== objectId);
+        source.setData(data);
+    }
+
+    _sourceRemoveFills(name, objectIds) {
+        const source = this._createFillSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        data.features = data.features.filter(f => objectIds.indexOf(f.id) !== -1);
+        source.setData(data);
+    }
+
+    _sourceUpdateFill(name, objectId, objectJson) {
+        const source = this._createFillSource(name);
+        if (!source) {
+            return;
+        }
+        const data = source._data.geojson;
+        const idx = data.features.findIndex(f => f.id === objectId);
+        if (idx === -1) return;
+        data.features.splice(idx, 1, objectJson);
+        source.setData(data);
+    }
+
+
+    ClearLineSource(sourceName) {
+        if (this._linesSources[sourceName]) {
+            const source = this._linesSources[sourceName];
+            const data = source._data.geojson;
+            data.features = [];
+            source.setData(data);
+        }
+    }
+
+    ClearPointsSource(sourceName) {
+        if (this._pointsSources[sourceName]) {
+            const source = this._pointsSources[sourceName];
+            const data = source._data.geojson;
+            data.features = [];
+            source.setData(data);
+
+        }
+    }
+
+    ClearFillSource(sourceName) {
+        if (this._fillSources[sourceName]) {
+            const source = this._fillSources[sourceName];
+            const data = source._data.geojson;
+            data.features = [];
+            source.setData(data);
+        }
+    }
+
+    ClearObjectsSource(sourceName) {
+        if (this._objectsSources[sourceName]) {
+            const source = this._objectsSources[sourceName];
+            const data = source._data.geojson;
+            data.features = [];
+            source.setData(data);
+        }
+    }
+
+
+    MarkerPosition(id, name) {
+        const source = this._createObjectSource(name);
+        if (!source) return null;
+
+        const data = source._data.geojson; // GeoJSON FeatureCollection
+        if (!data || !data.features) return null;
+
+        const feature = data.features.find(f => f.id === id);
+        if (!feature) return null;
+
+        const [lng, lat] = feature.geometry.coordinates;
+        return { lat, lng };
+    }
+
+    AddMarker(source, name, latLngLike, icon = null, opacity = 1, azimuth = 0) {
+        const geoData = {
+            type: 'Feature',
+            id: name,
+            geometry: { type: 'Point', coordinates: [latLngLike.lng, latLngLike.lat] },
+            properties: { id: name, angle: azimuth, type: icon }
+        };
+        if (this._objectExists(source, name)) {
+            this._sourceUpdateObject(source, name, geoData);
+        } else {
+            this._sourceAddObject(source, geoData);
+        }
+    }
+
+    AddMarkers(source, latLngsLike, icon = null, updateIfExists = true, removeIfNotFoundInObjects = false) {
+        this._sourceAddOrUpdateObjects(source, latLngsLike.map(latLngLike => {
+            if (latLngLike.type === 'Feature') {
+                return latLngLike;
+            } else {
+                return {
+                    type: 'Feature',
+                    id: latLngLike.id,
+                    geometry: { type: 'Point', coordinates: [latLngLike.lng, latLngLike.lat] },
+                    properties: Object.assign(latLngLike, { id: latLngLike.id, angle: latLngLike.azimuth, type: latLngLike.type ?? icon })
+                };
+            }
+        }), updateIfExists, removeIfNotFoundInObjects);
+    }
+
+    AddPopup(name, popupHtml) {
+        // const object = this._objects[name];
+        // if(!object) return;
+        // const data = this._map.getSource(name).getData();
+        // data.properties.description = popupHtml;
+        // this._map.getSource(name).setData(data);
+    }
+
+    AddTooltip(name, toolTipHtml) {
+        // const object = this._objects[name];
+        // if(!object) return;
+        // const data = this._map.getSource(name).getData();
+        // data.properties.description = toolTipHtml;
+        // this._map.getSource(name).setData(data);
+    }
+
+    OpenPopup(name) {
+        const object = this._objects[name];
+        if (!object) return;
+        this._map.getLayer(name).togglePopup();
+    }
+
+    AddPolyline(source, name, latLngArray, color = 'red', weight = 1) {
+        const geoData = {
+            type: 'Feature',
+            geometry: {
+                type: 'LineString',
+                coordinates: latLngArray.map(ll => [ll?.lng || ll[1], ll?.lat || ll[0]])
+            },
+            properties: {
+                id: name,
+                'line-color': color,
+                'line-width': weight
+            }
+        };
+
+        if (this._lineExists(source, name)) {
+            this._sourceUpdateLine(source, name, geoData);
+        } else {
+            this._sourceAddLine(source, geoData);
+        }
+    }
+
+    AddCircle(source, name, latLngLike, radius, color = 'red') {
+
+        const geoData = {
+            type: 'Feature',
+            id: name,
+            geometry: {
+                type: 'Point',
+                coordinates: [latLngLike.lng, latLngLike.lat]
+            },
+            properties: {
+                id: name,
+                'radius': latLngLike.radius ?? radius,
+                'color': latLngLike.color ?? color,
+                'opacity': 1
+            }
+        };
+
+        if (this._pointExists(source, name)) {
+            this._sourceUpdatePoint(source, name, geoData);
+        } else {
+            this._sourceAddPoint(source, geoData);
+        }
+    }
+
+    UpdateCirclesColor(source, color, condition = null) {
+        const sourceObj = this._createPointSource(source);
+        if (!sourceObj) {
+            return;
+        }
+        const data = sourceObj._data.geojson;
+        data.features = data.features.map(feature => {
+            if (!condition || condition(feature)) {
+                feature.properties.color = color;
+            }
+            return feature;
+        });
+        sourceObj.setData(data);
+    }
+
+    AddCircles(source, latLngsLike, radius, color = 'red', updateIfExists = true, removeIfNotFoundInObjects = false) {
+
+        this._sourceAddOrUpdatePoints(source, latLngsLike.map(latLngLike => {
+            if (latLngLike.type === 'Feature') {
+                return latLngLike;
+            }
+            return {
+                type: 'Feature',
+                id: latLngLike.id,
+                geometry: {
+                    type: 'Point',
+                    coordinates: [latLngLike.lng, latLngLike.lat]
+                },
+                properties: {
+                    id: latLngLike.id,
+                    'radius': latLngLike.radius ?? radius,
+                    'color': latLngLike.color ?? color,
+                    'opacity': 1
+                }
+            };
+        }), updateIfExists, removeIfNotFoundInObjects);
+    }
+
+    AddFills(source, latLngsLike, updateIfExists = true, removeIfNotFoundInObjects = false) {
+        this._sourceAddOrUpdateFills(source, latLngsLike, updateIfExists, removeIfNotFoundInObjects);
+    }
+
+    UpdateLinesColor(source, color, condition = null) {
+        const sourceObj = this._createLineSource(source);
+        if (!sourceObj) {
+            return;
+        }
+        const data = sourceObj._data.geojson;
+        data.features = data.features.map(feature => {
+            if (!condition || condition(feature)) {
+                feature.properties.color = color;
+            }
+            return feature;
+        });
+        sourceObj.setData(data);
+    }
+
+    AddLinesFromGeo(source, geolineObjects, color = 'red', weight = 1, updateIfExists = true, removeIfNotFoundInObjects = false) {
+        this._sourceAddOrUpdateLines(source, geolineObjects.map(v => {
+            if (v.type === 'Feature') {
+                return v;
+            } else {
+                return {
+                    type: 'Feature',
+                    id: v.id,
+                    geometry: v,
+                    properties: {
+                        id: v.id,
+                        'color': v?.color ?? color,
+                        'weight': v?.weight ?? weight
+                    }
+                };
+            }
+        }), updateIfExists, removeIfNotFoundInObjects);
+    }
+
+    AddLineFromGeo(source, name, geolineObject, color = 'red', weight = 1) {
+        const geoData = {
+            type: 'Feature',
+            id: name,
+            geometry: geolineObject,
+            properties: {
+                id: name,
+                'color': color,
+                'weight': weight
+            }
+        };
+
+        if (this._lineExists(source, name)) {
+            this._sourceUpdateLine(source, name, geoData);
+        } else {
+            this._sourceAddLine(source, geoData);
+        }
+    }
+
+
+    _getIcons() {
+        const ret = [];
+        const icons = Object.keys(this._icons);
+        for (const i of icons) {
+            ret.push(i);
+            ret.push(i);
+        }
+        return ret;
+    }
+
+    AddIcon(iconName, iconContent, width, height) {
+        this._icons[iconName] = { content: iconContent, width, height };
+    }
+
+    RemoveIcon(iconName) {
+        delete this._icons[iconName];
+        if (this._map.hasImage(iconName)) {
+            this._map.removeImage(iconName);
+        }
+    }
+
+    AddDivIcon(iconName, className, width, height) {
+        this._icons[iconName] = `&lt;div class="${className}" style="width:${width}px;height:${height}px">&lt;/div>`;
+    }
+
+    DeleteByName(name) {
+        this._sourceRemoveObject(name);
+        this._sourceRemoveLine(name);
+        this._sourceRemovePoint(name);
+    }
+
+    DeleteLinesLike(sourceName, like) {
+        let source = this._createLineSource(sourceName);
+        let data = source._data.geojson;
+        data.features = data.features.filter(feature => feature.id.indexOf(like) === -1);
+        source.setData(data);
+    }
+    DeleteLinesAllExcept(sourceName, except) {
+        let source = this._createLineSource(sourceName);
+        let data = source._data.geojson;
+        data.features = data.features.filter(feature => except.indexOf(feature.id) !== -1);
+        source.setData(data);
+    }
+    DeletePointsLike(sourceName, like) {
+        let source = this._createPointSource(sourceName);
+        let data = source._data.geojson;
+        data.features = data.features.filter(feature => feature.id.indexOf(like) === -1);
+        source.setData(data);
+    }
+    DeletePointsAllExcept(sourceName, except) {
+        let source = this._createPointSource(sourceName);
+        let data = source._data.geojson;
+        data.features = data.features.filter(feature => except.indexOf(feature.id) !== -1);
+        source.setData(data);
+    }
+    DeleteObjectsLike(sourceName, like) {
+        let source = this._createObjectSource(sourceName);
+        let data = source._data.geojson;
+        data.features = data.features.filter(feature => feature.id.indexOf(like) === -1);
+        source.setData(data);
+    }
+    DeleteObjectsAllExcept(sourceName, except) {
+        let source = this._createObjectSource(sourceName);
+        let data = source._data.geojson;
+        data.features = data.features.filter(feature => except.indexOf(feature.id) !== -1);
+        source.setData(data);
+    }
+
+    _objectExists(sourceName, name) {
+        const source = this._createObjectSource(sourceName);
+        const data = source._data.geojson;
+        const idx = data.features.findIndex(f => f.id === name);
+        return idx !== -1;
+    }
+    _lineExists(sourceName, name) {
+        const source = this._createLineSource(sourceName);
+        const data = source._data.geojson;
+        const idx = data.features.findIndex(f => f.id === name);
+        return idx !== -1;
+    }
+    _pointExists(sourceName, name) {
+        const source = this._createPointSource(sourceName);
+        const data = source._data.geojson;
+        const idx = data.features.findIndex(f => f.id === name);
+        return idx !== -1;
+    }
+
+    Feature(sourceName, name) {
+        if (this._objectsSources[sourceName]) {
+            return this.Object(sourceName, name);
+        } else if (this._linesSources[sourceName]) {
+            return this.Line(sourceName, name);
+        } else if (this._pointsSources[sourceName]) {
+            return this.Point(sourceName, name);
+        }
+    }
+
+    Object(sourceName, name) {
+        const source = this._createObjectSource(sourceName);
+        const data = source._data.geojson;
+        const found = data.features.filter(v => v.id === name);
+        if (found.length === 0) {
+            return null;
+        }
+        return found[0];
+    }
+    UpdateObject(sourceName, name, geoData) {
+        this._sourceUpdateObject(sourceName, name, geoData);
+    }
+    Line(sourceName, name) {
+        const source = this._createLineSource(sourceName);
+        const data = source._data.geojson;
+        const found = data.features.filter(v => v.id === name);
+        if (found.length === 0) {
+            return null;
+        }
+        return found[0];
+    }
+    UpdateLine(sourceName, name, geoData) {
+        this._sourceUpdateLine(sourceName, name, geoData);
+    }
+    Point(sourceName, name) {
+        const source = this._createPointSource(sourceName);
+        const data = source._data.geojson;
+        const found = data.features.filter(v => v.id === name);
+        if (found.length === 0) {
+            return null;
+        }
+        return found[0];
+    }
+    UpdatePoint(sourceName, name, geoData) {
+        this._sourceUpdatePoint(sourceName, name, geoData);
+    }
+
+    EnableContextMenu(contextmenuFn, tolerance = 10) {
+        this._contextMenuHandler = this._contextMenuHandler || ((e) => {
+
+            this._map.addSource('contextmenupoints', {
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features: []
+                }
+            });
+            this._map.addLayer({
+                id: 'contextmenu-layer',
+                type: 'circle',
+                source: 'contextmenupoints',
+                paint: {
+                    'circle-radius': ['get', 'radius'],
+                    'circle-color': ['get', 'color'],
+                    'circle-opacity': ['get', 'opacity']
+                }
+            });
+
+            const rect = this._map.getContainer().getBoundingClientRect();
+            const point = [e.clientX - rect.left, e.clientY - rect.top];
+            const rectTol = [
+                [point[0] - tolerance, point[0] - tolerance],
+                [point[1] + tolerance, point[1] + tolerance]
+            ];
+            const latLng = this._map.unproject(point);
+            const features = this._map.queryRenderedFeatures(rectTol);
+
+            this.AddCircle('contextmenupoints', 'contextmenu-point', latLng, 4, '#c0c0c0');
+
+            this.contextmenu = contextmenuFn(features, latLng) || [];
+            this.ShowContextMenu([Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT], '', { left: e.clientX, top: e.clientY }, true);
+        });
+        this.AddHandler('ContextMenuItemClicked', (event, args) => {
+            this._sourceRemovePoint('contextmenupoints', 'contextmenu-point');
+            this._map.removeLayer('contextmenu-layer');
+            this._map.removeSource('contextmenupoints');
+            this.Dispatch('MapContextMenuItemClicked', { name: args?.menuData?.name, point: args?.menuData?.point, data: args?.menuData?.data });
+
+        });
+        this._map.getContainer().addEventListener('contextmenu', this._contextMenuHandler);
+    }
+
+    DisableContextMenu() {
+        this._map.getContainer().removeEventListener('contextmenu', this._contextMenuHandler);
+
+        this._map.removeLayer('contextmenu-layer');
+        this._map.removeSource('contextmenupoints');
+    }
+
+    EnableHover(callback, tolerance = 10) {
+        this._infoDiv = new Colibri.UI.ToolTip('maplibre-tooltip', document.body, [Colibri.UI.ToolTip.RB, Colibri.UI.ToolTip.LT]);
+        this._infoDiv.Hide();
+        // this._map.getContainer().appendChild(this._infoDiv);
+
+        let loading = null;
+        this._mousemoveHoverHandler = async e => {
+            if (loading) {
+                return false;
+            }
+
+
+            let info = '';
+            loading = true;
+            let res = { infoOnMousePoint: false };
+            try {
+
+                const lat = e.lngLat.lat.toFixed(6);
+                const lng = e.lngLat.lng.toFixed(6);
+                const zoom = this._map.getZoom().toFixed(2);
+                const rect = [
+                    [e.point.x - tolerance, e.point.y - tolerance],
+                    [e.point.x + tolerance, e.point.y + tolerance]
+                ];
+                info = `Lat: ${lat}, Lng: ${lng}, Zoom: ${zoom}`;
+
+                const features = this._map.queryRenderedFeatures(rect);
+                if (features.length) {
+                    const id = features[0]?.properties?.id ?? null;
+                    info = info + (id ? `, ID: ${id}` : '');
+                }
+
+                if (callback) {
+                    info = await callback(features, info, e, res);
+                    loading = false;
+                }
+
+            } catch (err) {
+                console.log(err);
+                loading = false;
+            }
+
+            this._infoDiv.value = info;
+            if (res.infoOnMousePoint) {
+                this._infoDiv.Show(null, true, { left: e.point.x + this.left, top: e.point.y + this.top });
+            } else {
+                this._infoDiv.Show(null, true, {
+                    left: this.left + this.width - this._infoDiv.width - 25,
+                    top: this.top + this.height - this._infoDiv.height - this.Children('commands').height - 15
+                });
+            }
+        };
+
+        this._map.on('mousemove', this._mousemoveHoverHandler);
+        this._map.on('mouseout', () => {
+            this._infoDiv.Hide();
+        });
+    }
+
+    DisableHover() {
+        if (this._mousemoveHoverHandler) {
+            this._map.off('mousemove', this._mousemoveHoverHandler);
+            this._map.off('mouseout', this._mousemoveHoverHandler);
+            this._mousemoveHoverHandler = null;
+        }
+        if (this._infoDiv) {
+            this._infoDiv.remove();
+            this._infoDiv = null;
+        }
+    }
+
+
+    EnableDebugger() {
+        this._coordsDiv = document.createElement('div');
+        this._coordsDiv.style.position = 'absolute';
+        this._coordsDiv.style.bottom = '10px';
+        this._coordsDiv.style.right = '10px';
+        this._coordsDiv.style.padding = '6px 10px';
+        this._coordsDiv.style.background = 'rgba(0,0,0,0.6)';
+        this._coordsDiv.style.color = '#fff';
+        this._coordsDiv.style.fontFamily = 'monospace';
+        this._coordsDiv.style.borderRadius = '4px';
+        this._coordsDiv.textContent = 'Move mouse...';
+        this._map.getContainer().appendChild(this._coordsDiv);
+        this._map.getContainer().style.cursor = 'crosshair';
+
+        this._mousemoveHandler = e => {
+            const lat = e.lngLat.lat.toFixed(6);
+            const lng = e.lngLat.lng.toFixed(6);
+
+            // Получаем все объекты под курсором
+            const features = this._map.queryRenderedFeatures(e.point);
+            let info = `Lat: ${lat}, Lng: ${lng}`;
+            if (features.length) {
+                // Если есть, выводим ID первого объекта
+                const id = features[0]?.properties?.id ?? 'no-id';
+                info += `, ID: ${id}`;
+            }
+
+            this._coordsDiv.textContent = info;
+        };
+
+        this._clickHandler = e => {
+            const features = this._map.queryRenderedFeatures(e.point);
+            if (features.length) {
+                const id = features[0].properties?.id;
+                if (id != null) {
+                    navigator.clipboard.writeText(id.toString())
+                        .then(() => console.log(`Copied ID: ${id}`))
+                        .catch(err => console.error('Copy failed', err));
+                }
+            }
+        };
+
+        this._map.on('mousemove', this._mousemoveHandler);
+        this._map.on('click', this._clickHandler);
+    }
+
+    DisableDebugger() {
+        if (this._mousemoveHandler) {
+            this._map.off('mousemove', this._mousemoveHandler);
+            this._mousemoveHandler = null;
+        }
+        if (this._clickHandler) {
+            this._map.off('click', this._clickHandler);
+            this._clickHandler = null;
+        }
+        if (this._coordsDiv) {
+            this._coordsDiv.remove();
+            this._coordsDiv = null;
+        }
+        this._map.getContainer().style.cursor = '';
+    }
+
+    EnableBoxSelection() {
+
+        let start, current, box;
+
+        this._map.getCanvas().style.cursor = 'crosshair';
+
+        function beginSelection(x, y) {
+            start = [x, y];
+            box = document.createElement('div');
+            box.className = 'selection-box';
+            box.style.position = 'absolute';
+            box.style.border = '2px dashed #1976d2';
+            box.style.background = 'rgba(25,118,210,0.1)';
+            box.style.pointerEvents = 'none';
+            document.body.appendChild(box);
+        }
+
+        function updateSelection(x, y) {
+            current = [x, y];
+            const minX = Math.min(start[0], current[0]);
+            const maxX = Math.max(start[0], current[0]);
+            const minY = Math.min(start[1], current[1]);
+            const maxY = Math.max(start[1], current[1]);
+            box.style.left = minX + 'px';
+            box.style.top = minY + 'px';
+            box.style.width = (maxX - minX) + 'px';
+            box.style.height = (maxY - minY) + 'px';
+        }
+
+        const finishSelection = (x, y) => {
+            if (!box) {
+                this._selectedIds = [];
+                this.Dispatch('SelectionChanged', { ids: [] });
+                return;
+            }
+            box.remove();
+            box = null;
+            const rect = [
+                [Math.min(start[0], x), Math.min(start[1], y)],
+                [Math.max(start[0], x), Math.max(start[1], y)]
+            ];
+            const features = this._map.queryRenderedFeatures(rect, { layers: [...Object.keys(this._linesSources), ...Object.keys(this._pointsSources), ...Object.keys(this._objectsSources)] });
+            features.forEach(f => {
+                if (!this._selectedIds[f.source.replaceAll('-source', '')]) {
+                    this._selectedIds[f.source.replaceAll('-source', '')] = [];
+                }
+                this._selectedIds[f.source.replaceAll('-source', '')].push(f.properties.id);
+            });
+            this.Dispatch('SelectionChanged', { ids: this._selectedIds });
+        }
+
+        this._mousedownHandler = this._mousedownHandler || ((e) => {
+            // if (!e.shiftKey) return true;
+
+            this._selectedIds = {};
+            this.Dispatch('SelectionChanged', { ids: [] });
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            beginSelection(e.clientX, e.clientY);
+
+            function move(ev) { updateSelection(ev.clientX, ev.clientY); }
+            function up(ev) {
+                document.removeEventListener('mousemove', move);
+                document.removeEventListener('mouseup', up);
+                finishSelection(ev.clientX, ev.clientY);
+            }
+            document.addEventListener('mousemove', move);
+            document.addEventListener('mouseup', up);
+            return false;
+        });
+
+        this._touchHandler = this._touchHandler || ((e) => {
+            if (e.touches.length !== 1) return true;
+            const t = e.touches[0];
+            beginSelection(t.clientX, t.clientY);
+
+            function move(ev) {
+                if (ev.touches.length !== 1) return;
+                const t2 = ev.touches[0];
+                updateSelection(t2.clientX, t2.clientY);
+            }
+            function end(ev) {
+                document.removeEventListener('touchmove', move);
+                document.removeEventListener('touchend', end);
+                const t2 = (ev.changedTouches &amp;&amp; ev.changedTouches[0]) || t;
+                finishSelection(t2.clientX, t2.clientY);
+            }
+            document.addEventListener('touchmove', move);
+            document.addEventListener('touchend', end);
+            return false;
+        });
+
+        this._map.getCanvas().addEventListener('mousedown', this._mousedownHandler);
+        this._map.getCanvas().addEventListener('touchstart', this._touchHandler);
+    }
+
+    DisableBoxSelection() {
+        try {
+            this._map.getCanvas().style.cursor = null;
+            this._map.getCanvas().removeEventListener('mousedown', this._mousedownHandler);
+            this._map.getCanvas().removeEventListener('touchstart', this._touchHandler);
+        } catch (e) {
+
+        }
+    }
+
+    EnableSingleSelection(tolerance = 10) {
+        this._map.getCanvas().style.cursor = 'default';
+        this._mapClicked = this._mapClicked || ((e) => {
+            const rect = [
+                [e.point.x - tolerance, e.point.y - tolerance],
+                [e.point.x + tolerance, e.point.y + tolerance]
+            ];
+            const features = this._map.queryRenderedFeatures(rect, { layers: [...Object.keys(this._linesSources), ...Object.keys(this._pointsSources), ...Object.keys(this._objectsSources)] });
+            const ids = features.map(f => f.properties.id);
+            if (!e.originalEvent.shiftKey) {
+                this._selectedIds = {};
+            }
+            features.forEach(f => {
+                if (!this._selectedIds[f.source.replaceAll('-source', '')]) {
+                    this._selectedIds[f.source.replaceAll('-source', '')] = [];
+                }
+                this._selectedIds[f.source.replaceAll('-source', '')].push(f.properties.id);
+            });
+            this.Dispatch('SelectionChanged', { ids: this._selectedIds });
+        });
+        this._map.on('click', this._mapClicked);
+    }
+
+    DisableSingleSelection() {
+        try {
+            this._map.off('click', this._mapClicked);
+            this._map.getCanvas().style.cursor = "";
+        } catch (e) {
+
+        }
+    }
+
+    EnableClickToMark(icon) {
+        this._mapClickToMarkClicked = this._mapClickToMarkClicked || (async (e) => {
+            const args = { point: { lat: e.lngLat.lat, lng: e.lngLat.lng } };
+            await this.Dispatch('MarkAdded', args);
+            // if(await this.Dispatch('MarkAdded', args)) {
+            //     this.AddMarker('markers', 'marker-' + Date.Mc(), e.lngLat, icon);
+            // }  
+        });
+        this._map.getCanvas().style.cursor = 'crosshair';
+        this._map.on('click', this._mapClickToMarkClicked);
+    }
+
+    DisableClickToMark() {
+        try {
+            // this.DeleteObjectsLike('markers', 'marker-');
+            this._map.getCanvas().style.cursor = null;
+            this._map.off('click', this._mapClickToMarkClicked);
+        } catch (e) {
+
+        }
+    }
+
+    EnableMeasure() {
+        let drawing = false;
+        let lineCoordinates = [];
+        let tempLineSourceId = 'measure-line';
+        this._measurePopup = null;
+        const turf = new Colibri.UI.Maps.Turf();
+        this._map.getCanvas().style.cursor = 'crosshair';
+        const beginDrawing = (x, y) => {
+            drawing = true;
+            lineCoordinates = [this._map.unproject([x, y]).toArray()]; // координаты lng/lat
+            this._map.dragPan.disable();
+            if (!this._measurePopup) {
+                this._measurePopup = new maplibregl.Popup({ closeButton: false, closeOnClick: false })
+                    .setLngLat(this._map.unproject([x, y]))
+                    .setHTML('0 км')
+                    .addTo(this._map);
+            }
+        };
+
+        const updateDrawing = (x, y) => {
+            if (!drawing) return;
+
+            const lngLat = this._map.unproject([x, y]).toArray();
+            const coords = [...lineCoordinates, lngLat];
+            const lineCoords = turf.greatCircle([coords[0][0], coords[0][1]], [coords[1][0], coords[1][1]], { npoints: 100 });
+
+            // обновляем линию на карте
+            if (!this._map.getSource(tempLineSourceId)) {
+                this._map.addSource(tempLineSourceId, {
+                    type: 'geojson',
+                    data: lineCoords
+                });
+                this._map.addLayer({
+                    id: tempLineSourceId + '-layer',
+                    type: 'line',
+                    source: tempLineSourceId,
+                    paint: { 'line-color': '#1976d2', 'line-width': 3 }
+                });
+            } else {
+                this._map.getSource(tempLineSourceId).setData(lineCoords);
+            }
+
+            // считаем длину только если больше одной точки
+            let length = 0;
+            if (coords.length > 1) {
+                const line = turf.lineString(coords);
+                length = turf.length(line, { units: 'kilometers' });
+            }
+
+            // обновляем popup
+            this._measurePopup.setLngLat(this._map.unproject([x, y]))
+                .setHTML(length.toFixed(3) + ' км');
+        };
+
+        const finishDrawing = (x, y) => {
+            if (!drawing) return;
+            drawing = false;
+            const lngLat = this._map.unproject([x, y]).toArray();
+            lineCoordinates.push(lngLat);
+
+            // считаем длину через Turf.js
+            const line = turf.lineString(lineCoordinates);
+            const length = turf.length(line, { units: 'kilometers' });
+
+            console.log('Длина линии:', length, 'км');
+
+            this._map.dragPan.enable();
+
+            // оставляем линию на карте, больше ничего не рисуем
+        };
+
+        this._mousedownHandler2 = this._mousedownHandler2 || ((e) => {
+            e.preventDefault();
+            beginDrawing(e.clientX - this._element.bounds().left, e.clientY - this._element.bounds().top);
+
+            const move = (ev) => updateDrawing(ev.clientX - this._element.bounds().left, ev.clientY - this._element.bounds().top);
+            const up = (ev) => {
+                document.removeEventListener('mousemove', move);
+                document.removeEventListener('mouseup', up);
+                finishDrawing(ev.clientX - this._element.bounds().left, ev.clientY - this._element.bounds().top);
+            };
+
+            document.addEventListener('mousemove', move);
+            document.addEventListener('mouseup', up);
+            return false;
+        });
+
+        this._touchHandler2 = this._touchHandler2 || ((e) => {
+            if (e.touches.length !== 1) return true;
+            const t = e.touches[0];
+            beginDrawing(t.clientX, t.clientY);
+
+            const move = (ev) => {
+                if (ev.touches.length !== 1) return;
+                const t2 = ev.touches[0];
+                updateDrawing(t2.clientX, t2.clientY);
+            };
+            const end = (ev) => {
+                document.removeEventListener('touchmove', move);
+                document.removeEventListener('touchend', end);
+                const t2 = (ev.changedTouches &amp;&amp; ev.changedTouches[0]) || t;
+                finishDrawing(t2.clientX, t2.clientY);
+            };
+
+            document.addEventListener('touchmove', move);
+            document.addEventListener('touchend', end);
+            return false;
+        });
+
+        this._map.getCanvas().addEventListener('mousedown', this._mousedownHandler2);
+        this._map.getCanvas().addEventListener('touchstart', this._touchHandler2);
+    }
+
+    DisableMeasure() {
+        try {
+            this._map.getCanvas().removeEventListener('mousedown', this._mousedownHandler2);
+            this._map.getCanvas().removeEventListener('touchstart', this._touchHandler2);
+
+            if (this._measurePopup) {
+                this._measurePopup.remove();
+                this._measurePopup = null;
+            }
+            const tempLineSourceId = 'measure-line';
+            if (this._map.getLayer(tempLineSourceId + '-layer')) {
+                this._map.removeLayer(tempLineSourceId + '-layer');
+            }
+            if (this._map.getSource(tempLineSourceId)) {
+                this._map.removeSource(tempLineSourceId);
+            }
+            this._map.getCanvas().style.cursor = null;
+        } catch (e) {
+
+        }
+    }
+
+    EnableAngleMeasure() {
+        let drawing = false;
+        let points = []; // max 3
+        const srcId = 'angle-measure';
+        this._anglePopup = null;
+        const turf = new Colibri.UI.Maps.Turf();
+
+        this._map.getCanvas().style.cursor = 'crosshair';
+
+        const ensureLayer = (data) => {
+            if (!this._map.getSource(srcId)) {
+                this._map.addSource(srcId, { type: 'geojson', data });
+                this._map.addLayer({
+                    id: srcId + '-line',
+                    type: 'line',
+                    source: srcId,
+                    paint: { 'line-color': '#1976d2', 'line-width': 2 }
+                });
+                this._map.addLayer({
+                    id: srcId + '-points',
+                    type: 'circle',
+                    source: srcId,
+                    paint: { 'circle-radius': 2, 'circle-color': '#1976d2' }
+                });
+            } else {
+                this._map.getSource(srcId).setData(data);
+            }
+        };
+
+        const redraw = (cursorLngLat = null) => {
+            const features = [];
+
+            // points
+            points.forEach(p => {
+                features.push({
+                    type: 'Feature',
+                    geometry: { type: 'Point', coordinates: p }
+                });
+            });
+
+            // first segment
+            if (points.length >= 2) {
+                features.push({
+                    type: 'Feature',
+                    geometry: turf.greatCircle(points[0], points[1], { npoints: 100 }).geometry
+                });
+            }
+
+            // second segment (dynamic)
+            if (points.length === 2 &amp;&amp; cursorLngLat) {
+                features.push({
+                    type: 'Feature',
+                    geometry: turf.greatCircle(points[1], cursorLngLat, { npoints: 100 }).geometry
+                });
+            }
+
+            if (points.length === 3) {
+                features.push({
+                    type: 'Feature',
+                    geometry: turf.greatCircle(points[1], points[2], { npoints: 100 }).geometry
+                });
+            }
+
+            ensureLayer({
+                type: 'FeatureCollection',
+                features
+            });
+        };
+
+        const calcAngle = (p1, p2, p3) => {
+            const toRad = d => d * Math.PI / 180;
+
+            const a = [
+                toRad(p1[0] - p2[0]),
+                toRad(p1[1] - p2[1])
+            ];
+            const b = [
+                toRad(p3[0] - p2[0]),
+                toRad(p3[1] - p2[1])
+            ];
+
+            const dot = a[0] * b[0] + a[1] * b[1];
+            const ma = Math.hypot(a[0], a[1]);
+            const mb = Math.hypot(b[0], b[1]);
+
+            const angle = Math.acos(dot / (ma * mb)) * 180 / Math.PI;
+
+            return isNaN(angle) ? 0 : angle;
+        };
+
+        const begin = (x, y) => {
+            const ll = this._map.unproject([x, y]).toArray();
+
+            if (!drawing) {
+                drawing = true;
+                points = [];
+            }
+
+            points.push(ll);
+
+            if (!this._anglePopup) {
+                this._anglePopup = new maplibregl.Popup({ closeButton: false, closeOnClick: false })
+                    .setLngLat(ll)
+                    .setHTML('0°')
+                    .addTo(this._map);
+            }
+
+            redraw();
+            this._map.dragPan.disable();
+
+            if (points.length === 3) {
+                const angle = calcAngle(points[0], points[1], points[2]);
+                this._anglePopup
+                    .setLngLat(points[1])
+                    .setHTML(angle.toFixed(2) + '°');
+
+                drawing = false;
+                this._map.dragPan.enable();
+            }
+        };
+
+        const move = (x, y) => {
+            if (!drawing || points.length !== 2) return;
+            const ll = this._map.unproject([x, y]).toArray();
+            redraw(ll);
+
+            const angle = calcAngle(points[0], points[1], ll);
+            this._anglePopup
+                .setLngLat(points[1])
+                .setHTML('&lt;span style="vertical-align: middle;">' + Colibri.UI.AzimuthIcon + '&lt;/span> ' + angle.toFixed(2) + '°');
+        };
+
+        this._mousedownHandlerAngle = (e) => {
+            e.preventDefault();
+            begin(e.clientX - this._element.bounds().left, e.clientY - this._element.bounds().top);
+
+            const mm = ev => move(e.clientX - this._element.bounds().left, e.clientY - this._element.bounds().top);
+            const up = () => {
+                document.removeEventListener('mousemove', mm);
+                document.removeEventListener('mouseup', up);
+            };
+
+            document.addEventListener('mousemove', mm);
+            document.addEventListener('mouseup', up);
+            return false;
+        };
+
+        this._touchHandlerAngle = (e) => {
+            if (e.touches.length !== 1) return true;
+            const t = e.touches[0];
+            begin(t.clientX - this._element.bounds().left, t.clientY - this._element.bounds().top);
+
+            const mm = ev => {
+                if (ev.touches.length !== 1) return;
+                const t2 = ev.touches[0];
+                move(t2.clientX - this._element.bounds().left, t2.clientY - this._element.bounds().top);
+            };
+            const end = () => {
+                document.removeEventListener('touchmove', mm);
+                document.removeEventListener('touchend', end);
+            };
+
+            document.addEventListener('touchmove', mm);
+            document.addEventListener('touchend', end);
+            return false;
+        };
+
+        this._map.getCanvas().addEventListener('mousedown', this._mousedownHandlerAngle);
+        this._map.getCanvas().addEventListener('touchstart', this._touchHandlerAngle);
+    }
+
+    DisableAngleMeasure() {
+        try {
+            this._map.getCanvas().removeEventListener('mousedown', this._mousedownHandlerAngle);
+            this._map.getCanvas().removeEventListener('touchstart', this._touchHandlerAngle);
+
+            if (this._anglePopup) {
+                this._anglePopup.remove();
+                this._anglePopup = null;
+            }
+
+            const srcId = 'angle-measure';
+            if (this._map.getLayer(srcId + '-line')) this._map.removeLayer(srcId + '-line');
+            if (this._map.getLayer(srcId + '-points')) this._map.removeLayer(srcId + '-points');
+            if (this._map.getSource(srcId)) this._map.removeSource(srcId);
+
+            this._map.getCanvas().style.cursor = null;
+        } catch (e) { }
+    }
+
+
+    /**
+     * Can rotate (Show rotate button)
+     * @type {Boolean}
+     */
+    get rotatable() {
+        return this._zoomRotate.shown;
+    }
+    /**
+     * Can rotate (Show rotate button)
+     * @type {Boolean}
+     */
+    set rotatable(value) {
+        value = this._convertProperty('Boolean', value);
+        this._zoomRotate.shown = value;
+    }
+
+}
+
+Colibri.UI.Maps.Intersections = class {
+
+    // Helper: Check orientation of ordered triplet (p, q, r)
+    orientation(p, q, r) {
+        const val = (q[1] - p[1]) * (r[0] - q[0]) - (q[0] - p[0]) * (r[1] - q[1]);
+        if (val === 0) return 0; // colinear
+        return val > 0 ? 1 : 2; // clock or counterclock wise
+    }
+
+    // Helper: Check if point q lies on segment pr
+    onSegment(p, q, r) {
+        return (
+            q[0] &lt;= Math.max(p[0], r[0]) &amp;&amp;
+            q[0] >= Math.min(p[0], r[0]) &amp;&amp;
+            q[1] &lt;= Math.max(p[1], r[1]) &amp;&amp;
+            q[1] >= Math.min(p[1], r[1])
+        );
+    }
+
+    // Check if two segments (p1,q1) and (p2,q2) intersect
+    doIntersect(p1, q1, p2, q2) {
+        const o1 = this.orientation(p1, q1, p2);
+        const o2 = this.orientation(p1, q1, q2);
+        const o3 = this.orientation(p2, q2, p1);
+        const o4 = this.orientation(p2, q2, q1);
+
+        if (o1 !== o2 &amp;&amp; o3 !== o4) return true;
+
+        // Special cases
+        if (o1 === 0 &amp;&amp; this.onSegment(p1, p2, q1)) return true;
+        if (o2 === 0 &amp;&amp; this.onSegment(p1, q2, q1)) return true;
+        if (o3 === 0 &amp;&amp; this.onSegment(p2, p1, q2)) return true;
+        if (o4 === 0 &amp;&amp; this.onSegment(p2, q1, q2)) return true;
+
+        return false;
+    }
+
+    // Compute intersection point (if any) using line equations
+    getIntersection(p1, q1, p2, q2) {
+        const [x1, y1] = p1;
+        const [x2, y2] = q1;
+        const [x3, y3] = p2;
+        const [x4, y4] = q2;
+
+        const denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+        if (denom === 0) return null; // parallel or colinear
+
+        const px =
+            ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / denom;
+        const py =
+            ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / denom;
+
+        return [px, py];
+    }
+
+    // Main function: find all intersections between two polylines
+    findIntersections(line1, line2) {
+        const intersections = [];
+
+        for (let i = 0; i &lt; line1.length - 1; i++) {
+            const p1 = line1[i];
+            const q1 = line1[i + 1];
+
+            for (let j = 0; j &lt; line2.length - 1; j++) {
+                const p2 = line2[j];
+                const q2 = line2[j + 1];
+
+                if (this.doIntersect(p1, q1, p2, q2)) {
+                    const pt = this.getIntersection(p1, q1, p2, q2);
+                    if (pt) intersections.push(pt);
+                }
+            }
+        }
+
+        return intersections;
+    }
+
+    static intersections(lines) {
+        const inn = new Colibri.UI.Maps.Intersections();
+        const intersections = [];
+        for (const v1 of lines) {
+            for (const v2 of lines) {
+                if (v1.id != v2.id) {
+                    const ints = inn.findIntersections(v1.coordinates[0], v2.coordinates[0])
+                    if (ints.length > 0) {
+                        intersections.push(...ints.map(pt => ({ id1: v1.id, id2: v2.id, lat: pt[0], lng: pt[1] })));
+                    }
+                }
+            }
+        }
+        return intersections;
+    }
+
+}
+
+Colibri.UI.Maps.Turf = class {
+
+    lineString(coordinates, properties = {}) {
+        return {
+            type: "Feature",
+            geometry: {
+                type: "LineString",
+                coordinates
+            },
+            properties
+        };
+    }
+
+    greatCircle(start, end, options = {}) {
+        const { npoints = 100, includeEndpoints = true } = options;
+
+        const [lon1, lat1] = start.map(Colibri.UI.Utilities.Vincenty.radians);
+        const [lon2, lat2] = end.map(Colibri.UI.Utilities.Vincenty.radians);
+
+        const d = 2 * Math.asin(Math.sqrt(
+            Math.sin((lat2 - lat1) / 2) ** 2 +
+            Math.cos(lat1) * Math.cos(lat2) * Math.sin((lon2 - lon1) / 2) ** 2
+        ));
+
+        const coords = [];
+
+        for (let i = 0; i &lt;= npoints; i++) {
+            const f = i / npoints;
+
+            const A = Math.sin((1 - f) * d) / Math.sin(d);
+            const B = Math.sin(f * d) / Math.sin(d);
+
+            const x = A * Math.cos(lat1) * Math.cos(lon1) + B * Math.cos(lat2) * Math.cos(lon2);
+            const y = A * Math.cos(lat1) * Math.sin(lon1) + B * Math.cos(lat2) * Math.sin(lon2);
+            const z = A * Math.sin(lat1) + B * Math.sin(lat2);
+
+            const lat = Math.atan2(z, Math.sqrt(x * x + y * y));
+            const lon = Math.atan2(y, x);
+
+            if (includeEndpoints || (i > 0 &amp;&amp; i &lt; npoints))
+                coords.push([Colibri.UI.Utilities.Vincenty.degrees(lon), Colibri.UI.Utilities.Vincenty.degrees(lat)]);
+        }
+
+        return this.lineString(coords);
+    }
+
+    haversineDistance(a, b) {
+        const [lon1, lat1] = a.map(Colibri.UI.Utilities.Vincenty.radians);
+        const [lon2, lat2] = b.map(Colibri.UI.Utilities.Vincenty.radians);
+        const R = 6371; // km
+
+        const dlat = lat2 - lat1;
+        const dlon = lon2 - lon1;
+
+        const h = Math.sin(dlat / 2) ** 2 +
+            Math.cos(lat1) * Math.cos(lat2) * Math.sin(dlon / 2) ** 2;
+
+        return 2 * R * Math.asin(Math.sqrt(h));
+    }
+
+    length(feature, options = {}) {
+        const unit = options.units || "kilometers";
+        const coords = feature.geometry.coordinates;
+        let total = 0;
+
+        for (let i = 0; i &lt; coords.length - 1; i++) {
+            total += this.haversineDistance(coords[i], coords[i + 1]);
+        }
+
+        switch (unit) {
+            case "meters": return total * 1000;
+            case "miles": return total * 0.621371;
+            case "nauticalmiles": return total * 0.539957;
+            default: return total; // kilometers
+        }
+    }
+
+    distance(pointA, pointB, options = {}) {
+        const unit = options.units || "kilometers";
+        const d = this.haversineDistance(pointA.geometry.coordinates, pointB.geometry.coordinates);
+        switch (unit) {
+            case "meters": return d * 1000;
+            case "miles": return d * 0.621371;
+            case "nauticalmiles": return d * 0.539957;
+            default: return d; // kilometers
+        }
+    }
+
+    point(coordinates, properties = {}) {
+        return {
+            type: "Feature",
+            geometry: {
+                type: "Point",
+                coordinates
+            },
+            properties
+        };
+    }
+
+    circle(center, radiusKm, options = {}, project, unproject) {
+        const { steps = 64 } = options;
+        const R = 6371000; // радиус Земли в метрах
+
+        const centerProj = center;
+        const coords = [];
+
+        for (let i = 0; i &lt; steps; i++) {
+            const theta = (i / steps) * 2 * Math.PI;
+            const x = centerProj[0] + radiusKm * 1000 * Math.cos(theta);
+            const y = centerProj[1] + radiusKm * 1000 * Math.sin(theta);
+            coords.push([x, y]);
+        }
+        coords.push(coords[0]); // замыкаем
+
+        return {
+            type: "Feature",
+            geometry: {
+                type: "Polygon",
+                coordinates: [coords]
+            },
+            properties: {
+                center: center,
+                radius: radiusKm
+            }
+        };
+    }
+
+    // intersect(circleA, circleB) → возвращает GeoJSON пересечения
+    intersect(circleA, circleB) {
+        // Центры окружностей
+        const c1 = circleA.properties.center;
+        const c2 = circleB.properties.center;
+
+        // Радиусы (в км)
+        const r1 = circleA.properties.radius;
+        const r2 = circleB.properties.radius;
+
+        // Переводим координаты в метры (простая проекция)
+        const R = 6371000; // радиус Земли в м
+        function project([lon, lat]) {
+            const x = (lon * Math.PI / 180) * R * Math.cos(lat * Math.PI / 180);
+            const y = (lat * Math.PI / 180) * R;
+            return [x, y];
+        }
+        function unproject([x, y]) {
+            const lat = (y / R) * 180 / Math.PI;
+            const lon = (x / (R * Math.cos(lat * Math.PI / 180))) * 180 / Math.PI;
+            return [lon, lat];
+        }
+
+        const p1 = project(c1);
+        const p2 = project(c2);
+
+        const dx = p2[0] - p1[0];
+        const dy = p2[1] - p1[1];
+        const d = Math.sqrt(dx * dx + dy * dy);
+
+        if (d > (r1 * 1000 + r2 * 1000) || d &lt; Math.abs(r1 * 1000 - r2 * 1000)) {
+            return null; // нет пересечения
+        }
+
+        const a = (r1 * r1 * 1e6 - r2 * r2 * 1e6 + d * d) / (2 * d);
+        const h = Math.sqrt(r1 * r1 * 1e6 - a * a);
+
+        const xm = p1[0] + (a * dx) / d;
+        const ym = p1[1] + (a * dy) / d;
+
+        const rx = -(dy * (h / d));
+        const ry = dx * (h / d);
+
+        const pi1 = [xm + rx, ym + ry];
+        const pi2 = [xm - rx, ym - ry];
+
+        // Дуги окружностей
+        function arcPoints(center, radius, from, to, steps = 64) {
+            const angle1 = Math.atan2(from[1] - center[1], from[0] - center[0]);
+            const angle2 = Math.atan2(to[1] - center[1], to[0] - center[0]);
+            let sweep = angle2 - angle1;
+            if (sweep &lt; 0) sweep += 2 * Math.PI;
+
+            const pts = [];
+            for (let i = 0; i &lt;= steps; i++) {
+                const theta = angle1 + sweep * i / steps;
+                pts.push([
+                    center[0] + radius * 1000 * Math.cos(theta),
+                    center[1] + radius * 1000 * Math.sin(theta)
+                ]);
+            }
+            return pts;
+        }
+
+        const arc1 = arcPoints(p1, r1, pi1, pi2);
+        const arc2 = arcPoints(p2, r2, pi2, pi1);
+
+        const polygonCoords = [...arc1, ...arc2].map(unproject);
+
+        return {
+            type: "Feature",
+            geometry: {
+                type: "Polygon",
+                coordinates: [polygonCoords]
+            },
+            properties: {}
+        };
+    }
+
+    // вспомогательная функция для построения полигона пересечения
+    circleIntersectionPolygon(c1, r1, c2, r2, steps = 64) {
+        const dx = c2[0] - c1[0];
+        const dy = c2[1] - c1[1];
+        const d = Math.sqrt(dx * dx + dy * dy);
+
+        if (d > r1 + r2 || d &lt; Math.abs(r1 - r2) || (d === 0 &amp;&amp; r1 === r2)) {
+            return null; // нет пересечения
+        }
+
+        const a = (r1 * r1 - r2 * r2 + d * d) / (2 * d);
+        const h = Math.sqrt(r1 * r1 - a * a);
+
+        const xm = c1[0] + (a * dx) / d;
+        const ym = c1[1] + (a * dy) / d;
+
+        const rx = -(dy * (h / d));
+        const ry = dx * (h / d);
+
+        const p1 = [xm + rx, ym + ry];
+        const p2 = [xm - rx, ym - ry];
+
+        function arcPoints(center, radius, from, to, steps) {
+            const angle1 = Math.atan2(from[1] - center[1], from[0] - center[0]);
+            const angle2 = Math.atan2(to[1] - center[1], to[0] - center[0]);
+            let sweep = angle2 - angle1;
+            if (sweep &lt; 0) sweep += 2 * Math.PI;
+
+            const pts = [];
+            for (let i = 0; i &lt;= steps; i++) {
+                const theta = angle1 + (sweep * i / steps);
+                pts.push([
+                    center[0] + radius * Math.cos(theta),
+                    center[1] + radius * Math.sin(theta)
+                ]);
+            }
+            return pts;
+        }
+
+        const arc1 = arcPoints(c1, r1, p1, p2, steps);
+        const arc2 = arcPoints(c2, r2, p2, p1, steps);
+
+        const polygonCoords = [...arc1, ...arc2];
+
+        return {
+            type: "Feature",
+            geometry: {
+                type: "Polygon",
+                coordinates: [polygonCoords]
+            },
+            properties: {}
+        };
+
+    }
+
+    circleIntersections(c1, r1Km, c2, r2Km) {
+        const R = 6371000; // радиус Земли в метрах
+
+        // переводим координаты в метры (простая equirectangular проекция)
+        function project([lon, lat]) {
+            const x = (lon * Math.PI / 180) * R * Math.cos(lat * Math.PI / 180);
+            const y = (lat * Math.PI / 180) * R;
+            return [x, y];
+        }
+        function unproject([x, y]) {
+            const lat = (y / R) * 180 / Math.PI;
+            const lon = (x / (R * Math.cos(lat * Math.PI / 180))) * 180 / Math.PI;
+            return [lon, lat];
+        }
+
+        const p1 = project(c1);
+        const p2 = project(c2);
+
+        const dx = p2[0] - p1[0];
+        const dy = p2[1] - p1[1];
+        const d = Math.sqrt(dx * dx + dy * dy);
+
+        const r1 = r1Km * 1000;
+        const r2 = r2Km * 1000;
+
+        if (d > r1 + r2 || d &lt; Math.abs(r1 - r2) || (d === 0 &amp;&amp; r1 === r2)) {
+            return [];
+        }
+
+        const a = (r1 * r1 - r2 * r2 + d * d) / (2 * d);
+        const h = Math.sqrt(r1 * r1 - a * a);
+
+        const xm = p1[0] + (a * dx) / d;
+        const ym = p1[1] + (a * dy) / d;
+
+        const rx = -(dy * (h / d));
+        const ry = dx * (h / d);
+
+        const pi1 = [xm + rx, ym + ry];
+        const pi2 = [xm - rx, ym - ry];
+
+        return [unproject(pi1), unproject(pi2)];
+    }
+
+    circlePolygonDeg(center, radiusDeg, steps = 128) {
+        const [lon, lat] = center;
+        const coords = [];
+
+        for (let i = 0; i &lt; steps; i++) {
+            const theta = (i / steps) * 2 * Math.PI;
+            const dx = radiusDeg * Math.cos(theta);
+            const dy = radiusDeg * Math.sin(theta);
+
+            coords.push([lon + dx, lat + dy]);
+        }
+
+        coords.push(coords[0]); // замыкаем полигон
+
+        return {
+            type: "Feature",
+            geometry: {
+                type: "Polygon",
+                coordinates: [coords]
+            },
+            properties: {}
+        };
+    }
+
+    degreeDistance(coord1, coord2) {
+        const [lon1, lat1] = coord1;
+        const [lon2, lat2] = coord2;
+
+        const dLon = lon2 - lon1;
+        const dLat = lat2 - lat1;
+
+        // Евклидово расстояние в градусах
+        return Math.sqrt(dLon * dLon + dLat * dLat);
+    }
+
+    lineIntersection(p1, p2, p3, p4) {
+        const x1 = p1[0], y1 = p1[1];
+        const x2 = p2[0], y2 = p2[1];
+        const x3 = p3[0], y3 = p3[1];
+        const x4 = p4[0], y4 = p4[1];
+
+        const denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+        if (denom === 0) return null; // параллельные
+
+        const px = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / denom;
+        const py = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / denom;
+
+        // Проверка, что точка лежит на обоих отрезках
+        if (
+            px &lt; Math.min(x1, x2) - 1e-9 || px > Math.max(x1, x2) + 1e-9 ||
+            px &lt; Math.min(x3, x4) - 1e-9 || px > Math.max(x3, x4) + 1e-9 ||
+            py &lt; Math.min(y1, y2) - 1e-9 || py > Math.max(y1, y2) + 1e-9 ||
+            py &lt; Math.min(y3, y4) - 1e-9 || py > Math.max(y3, y4) + 1e-9
+        ) {
+            return null;
+        }
+
+        return [px, py];
+    }
+
+    // Поиск всех точек пересечения двух полигонов
+    polygonIntersectionsPoints(poly1, poly2) {
+        const coords1 = poly1.geometry.coordinates[0];
+        const coords2 = poly2.geometry.coordinates[0];
+        const intersections = [];
+
+        for (let i = 0; i &lt; coords1.length - 1; i++) {
+            for (let j = 0; j &lt; coords2.length - 1; j++) {
+                const inter = this.lineIntersection(coords1[i], coords1[i + 1], coords2[j], coords2[j + 1]);
+                if (inter) intersections.push(inter);
+            }
+        }
+
+        return intersections;
+    }
+
+    difference(circle1, circle2) {
+        const coords1 = circle1.geometry.coordinates[0];
+        const coords2 = circle2.geometry.coordinates[0];
+
+        // Находим точки пересечения рёбер
+        const intersections = this.polygonIntersectionsPoints(circle1, circle2);
+        if (intersections.length &lt; 2) return null;
+
+        const [p1, p2] = intersections;
+
+        // Функция для обхода полигона от точки до точки
+        function findClosestIndex(coords, point) {
+            let minDist = Infinity;
+            let idx = -1;
+            for (let i = 0; i &lt; coords.length; i++) {
+                const dx = coords[i][0] - point[0];
+                const dy = coords[i][1] - point[1];
+                const dist = dx * dx + dy * dy;
+                if (dist &lt; minDist) {
+                    minDist = dist;
+                    idx = i;
+                }
+            }
+            return idx;
+        }
+
+        function arcBetween(coords, from, to) {
+            const idxFrom = findClosestIndex(coords, from);
+            const idxTo = findClosestIndex(coords, to);
+
+            const arc = [];
+            let i = idxFrom;
+            while (true) {
+                arc.push(coords[i]);
+                if (i === idxTo) break;
+                i = (i + 1) % coords.length;
+            }
+            return arc;
+        }
+
+
+        // дуга первого круга от p1 до p2
+        const arc1 = arcBetween(coords1, p1, p2);
+        // дуга второго круга от p2 до p1
+        const arc2 = arcBetween(coords2, p2, p1);
+
+        const diff1 = {
+            type: "Feature",
+            geometry: { type: "Polygon", coordinates: [[...arc1, ...arc2]] },
+            properties: { name: "circle1 - circle2" }
+        };
+
+        // // обратный вариант
+        // const arc3 = arcBetween(coords2, p1, p2);
+        // const arc4 = arcBetween(coords1, p2, p1);
+
+        // const diff2 = {
+        //     type: "Feature",
+        //     geometry: { type: "Polygon", coordinates: [[...arc3, ...arc4]] },
+        //     properties: { name: "circle2 - circle1" }
+        // };
+
+        return diff1;
+    }
+
+    directionVector(azimuthDeg) {
+        const az = azimuthDeg * Math.PI / 180;
+        return [Math.sin(az), Math.cos(az)];
+    }
+
+    angleBetween(v1, v2) {
+        const dot = v1[0] * v2[0] + v1[1] * v2[1];
+        const mag1 = Math.sqrt(v1[0] ** 2 + v1[1] ** 2);
+        const mag2 = Math.sqrt(v2[0] ** 2 + v2[1] ** 2);
+        return Math.acos(dot / (mag1 * mag2)) * 180 / Math.PI;
+    }
+
+    sameDirection(az1, az2, toleranceDeg = 20) {
+        let diff = Math.abs(az1 - az2);
+        if (diff > 180) diff = 360 - diff;
+        return diff &lt;= toleranceDeg;
+    }
+
+    pointInPolygon(pt, polygon) {
+        let inside = false;
+        const coords = polygon.geometry.coordinates[0];
+        for (let i = 0, j = coords.length - 1; i &lt; coords.length; j = i++) {
+            const xi = coords[i][0], yi = coords[i][1];
+            const xj = coords[j][0], yj = coords[j][1];
+            const intersect = ((yi > pt[1]) !== (yj > pt[1])) &amp;&amp;
+                (pt[0] &lt; (xj - xi) * (pt[1] - yi) / (yj - yi) + xi);
+            if (intersect) inside = !inside;
+        }
+        return inside;
+    }
+
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="App.Components.html">Components</a></li><li><a href="App.Modules.html">Modules</a></li><li><a href="Colibri.html">Colibri</a></li><li><a href="Colibri.UI.Chart.html">Chart</a></li><li><a href="Colibri.UI.Chooser.html">Chooser</a></li><li><a href="Colibri.UI.Forms.ArrayGrid.html">ArrayGrid</a></li><li><a href="Colibri.UI.Grid.html">Grid</a></li><li><a href="Colibri.UI.Input.html">Input</a></li><li><a href="Colibri.UI.List.html">List</a></li><li><a href="Colibri.UI.Select.html">Select</a></li><li><a href="Colibri.UI.Select.DefaultDropdown.html">DefaultDropdown</a></li><li><a href="Colibri.UI.Tree.html">Tree</a></li><li><a href="Colibri.UI.TreeNode.html">TreeNode</a></li><li><a href="Colibri.UI.TreeNodes.html">TreeNodes</a></li><li><a href="Colibri.UI.VirtualGrid.html">VirtualGrid</a></li></ul><h3>Classes</h3><ul><li><a href="AuditUIKit.UI.Informers.Colibri.UI.Informers.Download.html">Colibri.UI.Informers.Download</a></li><li><a href="Colibri.App.html">App</a></li><li><a href="Colibri.Common.AbstractMessageStore.html">AbstractMessageStore</a></li><li><a href="Colibri.Common.Audio.html">Audio</a></li><li><a href="Colibri.Common.Base64.html">Base64</a></li><li><a href="Colibri.Common.Blob.html">Blob</a></li><li><a href="Colibri.Common.BrowserStorage.html">BrowserStorage</a></li><li><a href="Colibri.Common.CometEvent.html">CometEvent</a></li><li><a href="Colibri.Common.CometMessage.html">CometMessage</a></li><li><a href="Colibri.Common.Cookie.html">Cookie</a></li><li><a href="Colibri.Common.Font.html">Font</a></li><li><a href="Colibri.Common.Graphics.html">Graphics</a></li><li><a href="Colibri.Common.HashActions.html">HashActions</a></li><li><a href="Colibri.Common.MimeType.html">MimeType</a></li><li><a href="Colibri.Common.Scrolling.html">Scrolling</a></li><li><a href="Colibri.Common.SessionStorage.html">SessionStorage</a></li><li><a href="Colibri.Common.Validation.html">Validation</a></li><li><a href="Colibri.Common.Video.html">Video</a></li><li><a href="Colibri.Devices.Auth.html">Auth</a></li><li><a href="Colibri.Devices.Camera.html">Camera</a></li><li><a href="Colibri.Devices.Camera_GetPicture.html">GetPicture</a></li><li><a href="Colibri.Devices.Capture.html">Capture</a></li><li><a href="Colibri.Devices.Device.html">Device</a></li><li><a href="Colibri.Devices.Dialogs.html">Dialogs</a></li><li><a href="Colibri.Devices.FileSystem.html">FileSystem</a></li><li><a href="Colibri.Devices.GeoLocation.html">GeoLocation</a></li><li><a href="Colibri.Devices.LocalNotifications.html">LocalNotifications</a></li><li><a href="Colibri.Devices.LocalNotificationsEmulator.html">LocalNotificationsEmulator</a></li><li><a href="Colibri.Devices.Media.html">Media</a></li><li><a href="Colibri.Devices.Notification.html">Notification</a></li><li><a href="Colibri.Devices.Sim.html">Sim</a></li><li><a href="Colibri.Devices.Sms.html">Sms</a></li><li><a href="Colibri.Devices.SqLite.html">SqLite</a></li><li><a href="Colibri.Devices.Vibrate.html">Vibrate</a></li><li><a href="Colibri.Events.Dispatcher.html">Dispatcher</a></li><li><a href="Colibri.Events.Event.html">Event</a></li><li><a href="Colibri.IO.Crypt.html">Crypt</a></li><li><a href="Colibri.IO.Request.html">Request</a></li><li><a href="Colibri.IO.RpcRequest.html">RpcRequest</a></li><li><a href="Colibri.IO-Colibri.IO.WebSocketStream.html">WebSocketStream</a></li><li><a href="Colibri.Modules.Colibri.Common.Wasm.html">Colibri.Common.Wasm</a></li><li><a href="Colibri.Modules.Module.html">Module</a></li><li><a href="Colibri.Sip.JsSip.html">JsSip</a></li><li><a href="Colibri.Storages.Models.Model.html">Model</a></li><li><a href="Colibri.Storages.Models.Table.html">Table</a></li><li><a href="Colibri.Storages.Store.html">Store</a></li><li><a href="Colibri.UI.AlertDialog.html">AlertDialog</a></li><li><a href="Colibri.UI.ArrayViewer.html">ArrayViewer</a></li><li><a href="Colibri.UI.AsLinkButton.html">AsLinkButton</a></li><li><a href="Colibri.UI.Audio.html">Audio</a></li><li><a href="Colibri.UI.Badge.html">Badge</a></li><li><a href="Colibri.UI.Blockquote.html">Blockquote</a></li><li><a href="Colibri.UI.BoolViewer.html">BoolViewer</a></li><li><a href="Colibri.UI.BorderViewer.html">BorderViewer</a></li><li><a href="Colibri.UI.Button.html">Button</a></li><li><a href="Colibri.UI.ButtonGroup.html">ButtonGroup</a></li><li><a href="Colibri.UI.Chart.Barchart.html">Barchart</a></li><li><a href="Colibri.UI.Checkbox.html">Checkbox</a></li><li><a href="Colibri.UI.CheckboxAsTextViewer.html">CheckboxAsTextViewer</a></li><li><a href="Colibri.UI.CheckboxEditor.html">CheckboxEditor</a></li><li><a href="Colibri.UI.CheckboxListEditor.html">CheckboxListEditor</a></li><li><a href="Colibri.UI.CheckboxViewer.html">CheckboxViewer</a></li><li><a href="Colibri.UI.Chooser.ChooseWindow.html">ChooseWindow</a></li><li><a href="Colibri.UI.Color.html">Color</a></li><li><a href="Colibri.UI.Color.Alpha.html">Alpha</a></li><li><a href="Colibri.UI.Color.Block.html">Block</a></li><li><a href="Colibri.UI.Color.Line.html">Line</a></li><li><a href="Colibri.UI.ColorViewer.html">ColorViewer</a></li><li><a href="Colibri.UI.Component.html">Component</a></li><li><a href="Colibri.UI.ConfirmDialog.html">ConfirmDialog</a></li><li><a href="Colibri.UI.ContextMenu.html">ContextMenu</a></li><li><a href="Colibri.UI.Counter.html">Counter</a></li><li><a href="Colibri.UI.DateDiffViewer.html">DateDiffViewer</a></li><li><a href="Colibri.UI.DatePicker.html">DatePicker</a></li><li><a href="Colibri.UI.DateRangeViewer.html">DateRangeViewer</a></li><li><a href="Colibri.UI.DateSelector.html">DateSelector</a></li><li><a href="Colibri.UI.DateSelectorPopup.html">DateSelectorPopup</a></li><li><a href="Colibri.UI.DateTimeSelector.html">DateTimeSelector</a></li><li><a href="Colibri.UI.DateTimeSelectorPopup.html">DateTimeSelectorPopup</a></li><li><a href="Colibri.UI.DateTimeViewer.html">DateTimeViewer</a></li><li><a href="Colibri.UI.DateViewer.html">DateViewer</a></li><li><a href="Colibri.UI.DeferredFormValidator.html">DeferredFormValidator</a></li><li><a href="Colibri.UI.DocumentViewer.html">DocumentViewer</a></li><li><a href="Colibri.UI.Drag.html">Drag</a></li><li><a href="Colibri.UI.DragManager.html">DragManager</a></li><li><a href="Colibri.UI.DropDown.html">DropDown</a></li><li><a href="Colibri.UI.Editor.html">Editor</a></li><li><a href="Colibri.UI.EmailEditor.html">EmailEditor</a></li><li><a href="Colibri.UI.ErrorButton.html">ErrorButton</a></li><li><a href="Colibri.UI.ExtendedButton.html">ExtendedButton</a></li><li><a href="Colibri.UI.FieldValidator.html">FieldValidator</a></li><li><a href="Colibri.UI.FieldsViewer.html">FieldsViewer</a></li><li><a href="Colibri.UI.FileDropManager.html">FileDropManager</a></li><li><a href="Colibri.UI.FileSizeViewer.html">FileSizeViewer</a></li><li><a href="Colibri.UI.FileViewer.html">FileViewer</a></li><li><a href="Colibri.UI.FilesDragAndDrop.html">FilesDragAndDrop</a></li><li><a href="Colibri.UI.FilesEditor.html">FilesEditor</a></li><li><a href="Colibri.UI.FilesViewer.html">FilesViewer</a></li><li><a href="Colibri.UI.FlexBox.html">FlexBox</a></li><li><a href="Colibri.UI.FontFamilySelector.html">FontFamilySelector</a></li><li><a href="Colibri.UI.FontFamilyViewer.html">FontFamilyViewer</a></li><li><a href="Colibri.UI.FormValidator.html">FormValidator</a></li><li><a href="Colibri.UI.FormValidator_Validate.html">Validate</a></li><li><a href="Colibri.UI.Forms.Array.html">Array</a></li><li><a href="Colibri.UI.Forms.ArrayGrid_Fields.html">Fields</a></li><li><a href="Colibri.UI.Forms.ArrayGrid.ObjectWindow.html">ObjectWindow</a></li><li><a href="Colibri.UI.Forms.Bool.html">Bool</a></li><li><a href="Colibri.UI.Forms.Checkbox.html">Checkbox</a></li><li><a href="Colibri.UI.Forms.CheckboxList.html">CheckboxList</a></li><li><a href="Colibri.UI.Forms.Choose.html">Choose</a></li><li><a href="Colibri.UI.Forms.Color.html">Color</a></li><li><a href="Colibri.UI.Forms.Date.html">Date</a></li><li><a href="Colibri.UI.Forms.DateRange.html">DateRange</a></li><li><a href="Colibri.UI.Forms.DateTime.html">DateTime</a></li><li><a href="Colibri.UI.Forms.DateTimeRange.html">DateTimeRange</a></li><li><a href="Colibri.UI.Forms.DayOfMonth.html">DayOfMonth</a></li><li><a href="Colibri.UI.Forms.DocumentGenerator.html">DocumentGenerator</a></li><li><a href="Colibri.UI.Forms.Email.html">Email</a></li><li><a href="Colibri.UI.Forms.Field.html">Field</a></li><li><a href="Colibri.UI.Forms.File.html">File</a></li><li><a href="Colibri.UI.Forms.FileLabel.html">FileLabel</a></li><li><a href="Colibri.UI.Forms.Files.html">Files</a></li><li><a href="Colibri.UI.Forms.FontFamily.html">FontFamily</a></li><li><a href="Colibri.UI.Forms.Form.html">Form</a></li><li><a href="Colibri.UI.Forms.HiddenField.html">HiddenField</a></li><li><a href="Colibri.UI.Forms.KeyValueObject.html">KeyValueObject</a></li><li><a href="Colibri.UI.Forms.Label.html">Label</a></li><li><a href="Colibri.UI.Forms.Link.html">Link</a></li><li><a href="Colibri.UI.Forms.List.html">List</a></li><li><a href="Colibri.UI.Forms.MonthYear.html">MonthYear</a></li><li><a href="Colibri.UI.Forms.Number.html">Number</a></li><li><a href="Colibri.UI.Forms.NumberRange.html">NumberRange</a></li><li><a href="Colibri.UI.Forms.Object.html">Object</a></li><li><a href="Colibri.UI.Forms.Passport.html">Passport</a></li><li><a href="Colibri.UI.Forms.Password.html">Password</a></li><li><a href="Colibri.UI.Forms.Period.html">Period</a></li><li><a href="Colibri.UI.Forms.Radio.html">Radio</a></li><li><a href="Colibri.UI.Forms.Select.html">Select</a></li><li><a href="Colibri.UI.Forms.SimpleArray.html">SimpleArray</a></li><li><a href="Colibri.UI.Forms.Tabs.html">Tabs</a></li><li><a href="Colibri.UI.Forms.Text.html">Text</a></li><li><a href="Colibri.UI.Forms.TextArea.html">TextArea</a></li><li><a href="Colibri.UI.Forms.Toggle.html">Toggle</a></li><li><a href="Colibri.UI.Forms.Token.html">Token</a></li><li><a href="Colibri.UI.Forms.Year.html">Year</a></li><li><a href="Colibri.UI.Frame.html">Frame</a></li><li><a href="Colibri.UI.GoogleChart.html">GoogleChart</a></li><li><a href="Colibri.UI.GrayButton.html">GrayButton</a></li><li><a href="Colibri.UI.Grid.Cell.html">Cell</a></li><li><a href="Colibri.UI.Grid.Column.html">Column</a></li><li><a href="Colibri.UI.Grid.Columns.html">Columns</a></li><li><a href="Colibri.UI.Grid.Header.html">Header</a></li><li><a href="Colibri.UI.Grid.Row.html">Row</a></li><li><a href="Colibri.UI.Grid.Rows.html">Rows</a></li><li><a href="Colibri.UI.GridFileViewer.html">GridFileViewer</a></li><li><a href="Colibri.UI.H1.html">H1</a></li><li><a href="Colibri.UI.H2.html">H2</a></li><li><a href="Colibri.UI.H3.html">H3</a></li><li><a href="Colibri.UI.H4.html">H4</a></li><li><a href="Colibri.UI.Heading.html">Heading</a></li><li><a href="Colibri.UI.Hr.html">Hr</a></li><li><a href="Colibri.UI.HtmlDataViewer.html">HtmlDataViewer</a></li><li><a href="Colibri.UI.IFrame.html">IFrame</a></li><li><a href="Colibri.UI.Icon.html">Icon</a></li><li><a href="Colibri.UI.IconViewer.html">IconViewer</a></li><li><a href="Colibri.UI.Image.html">Image</a></li><li><a href="Colibri.UI.ImageViewWindow.html">ImageViewWindow</a></li><li><a href="Colibri.UI.ImageViewer.html">ImageViewer</a></li><li><a href="Colibri.UI.ImagesViewer.html">ImagesViewer</a></li><li><a href="Colibri.UI.Img.html">Img</a></li><li><a href="Colibri.UI.Informers.DownloadItem.html">DownloadItem</a></li><li><a href="Colibri.UI.Input.File.html">File</a></li><li><a href="Colibri.UI.JsonViewer.html">JsonViewer</a></li><li><a href="Colibri.UI.Link.html">Link</a></li><li><a href="Colibri.UI.LinkEditor.html">LinkEditor</a></li><li><a href="Colibri.UI.LinkViewer.html">LinkViewer</a></li><li><a href="Colibri.UI.List.Group.html">Group</a></li><li><a href="Colibri.UI.List.Item.html">Item</a></li><li><a href="Colibri.UI.List.JsonRenderer.html">JsonRenderer</a></li><li><a href="Colibri.UI.List.SearchBox.html">SearchBox</a></li><li><a href="Colibri.UI.ListItem.html">ListItem</a></li><li><a href="Colibri.UI.Loading.html">Loading</a></li><li><a href="Colibri.UI.LoadingBallun.html">LoadingBallun</a></li><li><a href="Colibri.UI.LoadingContainer.html">LoadingContainer</a></li><li><a href="Colibri.UI.Logs.JsonLog.html">JsonLog</a></li><li><a href="Colibri.UI.Maps.Controls.Button.html">Button</a></li><li><a href="Colibri.UI.Maps.Controls.ButtonGroup.html">ButtonGroup</a></li><li><a href="Colibri.UI.Maps.Controls.FileButton.html">FileButton</a></li><li><a href="Colibri.UI.Maps.Controls.FilterButton.html">FilterButton</a></li><li><a href="Colibri.UI.Maps.Controls.LayersButton.html">LayersButton</a></li><li><a href="Colibri.UI.Maps.Controls.RotateButton.html">RotateButton</a></li><li><a href="Colibri.UI.Maps.Controls.StatesButton.html">StatesButton</a></li><li><a href="Colibri.UI.Maps.Controls.ToggleButton.html">ToggleButton</a></li><li><a href="Colibri.UI.Maps.Controls.ToolBox.html">ToolBox</a></li><li><a href="Colibri.UI.Maps.LeafletJs.html">LeafletJs</a></li><li><a href="Colibri.UI.Maps.MapLibre.html">MapLibre</a></li><li><a href="Colibri.UI.MassActionsMenu.html">MassActionsMenu</a></li><li><a href="Colibri.UI.MenuList.html">MenuList</a></li><li><a href="Colibri.UI.ModelViewer.html">ModelViewer</a></li><li><a href="Colibri.UI.ModelessWindow.html">ModelessWindow</a></li><li><a href="Colibri.UI.MonthPicker.html">MonthPicker</a></li><li><a href="Colibri.UI.MonthSelector.html">MonthSelector</a></li><li><a href="Colibri.UI.MonthYearViewer.html">MonthYearViewer</a></li><li><a href="Colibri.UI.MoveManager.html">MoveManager</a></li><li><a href="Colibri.UI.Note.html">Note</a></li><li><a href="Colibri.UI.Notice.html">Notice</a></li><li><a href="Colibri.UI.Notices.html">Notices</a></li><li><a href="Colibri.UI.NumberEditor.html">NumberEditor</a></li><li><a href="Colibri.UI.NumberViewer.html">NumberViewer</a></li><li><a href="Colibri.UI.ObjectViewer.html">ObjectViewer</a></li><li><a href="Colibri.UI.OrderedList.html">OrderedList</a></li><li><a href="Colibri.UI.OutlineBlueButton.html">OutlineBlueButton</a></li><li><a href="Colibri.UI.Pager.html">Pager</a></li><li><a href="Colibri.UI.Pane.html">Pane</a></li><li><a href="Colibri.UI.PaneGrid.html">PaneGrid</a></li><li><a href="Colibri.UI.PaneSwitcher.html">PaneSwitcher</a></li><li><a href="Colibri.UI.PeriodViewer.html">PeriodViewer</a></li><li><a href="Colibri.UI.PlayPauseButton.html">PlayPauseButton</a></li><li><a href="Colibri.UI.PointerControl.html">PointerControl</a></li><li><a href="Colibri.UI.Popup.html">Popup</a></li><li><a href="Colibri.UI.PopupList.html">PopupList</a></li><li><a href="Colibri.UI.ProgressBar.html">ProgressBar</a></li><li><a href="Colibri.UI.ProgressViewer.html">ProgressViewer</a></li><li><a href="Colibri.UI.PromptDialog.html">PromptDialog</a></li><li><a href="Colibri.UI.Radio.html">Radio</a></li><li><a href="Colibri.UI.RadioViewer.html">RadioViewer</a></li><li><a href="Colibri.UI.RangePicker.html">RangePicker</a></li><li><a href="Colibri.UI.ReadUnreadBadge.html">ReadUnreadBadge</a></li><li><a href="Colibri.UI.RemoteFileEditor.html">RemoteFileEditor</a></li><li><a href="Colibri.UI.Renderer.html">Renderer</a></li><li><a href="Colibri.UI.Rgb.html">Rgb</a></li><li><a href="Colibri.UI.Router.html">Router</a></li><li><a href="Colibri.UI.Ruler.html">Ruler</a></li><li><a href="Colibri.UI.SearchInput.html">SearchInput</a></li><li><a href="Colibri.UI.Select.DefaultDropdown.Options.html">Options</a></li><li><a href="Colibri.UI.Select.Dropdown.html">Dropdown</a></li><li><a href="Colibri.UI.SelectEditor.html">SelectEditor</a></li><li><a href="Colibri.UI.SelectViewer.html">SelectViewer</a></li><li><a href="Colibri.UI.Selector.html">Selector</a></li><li><a href="Colibri.UI.Shader.html">Shader</a></li><li><a href="Colibri.UI.ShadowViewer.html">ShadowViewer</a></li><li><a href="Colibri.UI.Shortcuts.html">Shortcuts</a></li><li><a href="Colibri.UI.SimpleButton.html">SimpleButton</a></li><li><a href="Colibri.UI.SimpleFormValidator.html">SimpleFormValidator</a></li><li><a href="Colibri.UI.SimplePieChart.html">SimplePieChart</a></li><li><a href="Colibri.UI.SingleTimeline.html">SingleTimeline</a></li><li><a href="Colibri.UI.SlideDown.html">SlideDown</a></li><li><a href="Colibri.UI.Spectrum.Graph.html">Graph</a></li><li><a href="Colibri.UI.Spectrum.Selections.html">Selections</a></li><li><a href="Colibri.UI.Split.html">Split</a></li><li><a href="Colibri.UI.Strong.html">Strong</a></li><li><a href="Colibri.UI.SuccessButton.html">SuccessButton</a></li><li><a href="Colibri.UI.Switcher.html">Switcher</a></li><li><a href="Colibri.UI.Table.html">Table</a></li><li><a href="Colibri.UI.TableCell.html">TableCell</a></li><li><a href="Colibri.UI.TableHeaderCell.html">TableHeaderCell</a></li><li><a href="Colibri.UI.TableRow.html">TableRow</a></li><li><a href="Colibri.UI.Tabs.html">Tabs</a></li><li><a href="Colibri.UI.Templates.html">Templates</a></li><li><a href="Colibri.UI.TextArea.html">TextArea</a></li><li><a href="Colibri.UI.TextAreaEditor.html">TextAreaEditor</a></li><li><a href="Colibri.UI.TextAreaViewer.html">TextAreaViewer</a></li><li><a href="Colibri.UI.TextEditor.html">TextEditor</a></li><li><a href="Colibri.UI.TextSpan.html">TextSpan</a></li><li><a href="Colibri.UI.TextViewer.html">TextViewer</a></li><li><a href="Colibri.UI.Timeline.html">Timeline</a></li><li><a href="Colibri.UI.ToggleBox.html">ToggleBox</a></li><li><a href="Colibri.UI.ToggleBoxEditor.html">ToggleBoxEditor</a></li><li><a href="Colibri.UI.ToggleButton.html">ToggleButton</a></li><li><a href="Colibri.UI.ToggleboxViewer.html">ToggleboxViewer</a></li><li><a href="Colibri.UI.ToolTip.html">ToolTip</a></li><li><a href="Colibri.UI.Toolbar.html">Toolbar</a></li><li><a href="Colibri.UI.Tree.JsonRenderer.html">JsonRenderer</a></li><li><a href="Colibri.UI.Tree.SearchBox.html">SearchBox</a></li><li><a href="Colibri.UI.UnorderedList.html">UnorderedList</a></li><li><a href="Colibri.UI.UploadButton.html">UploadButton</a></li><li><a href="Colibri.UI.Utilities.Mask.html">Mask</a></li><li><a href="Colibri.UI.Utilities.Validator.html">Validator</a></li><li><a href="Colibri.UI.Video.html">Video</a></li><li><a href="Colibri.UI.Viewer.html">Viewer</a></li><li><a href="Colibri.UI.WaterfallBuffer.html">WaterfallBuffer</a></li><li><a href="Colibri.UI.WebRTCVideo.html">WebRTCVideo</a></li><li><a href="Colibri.UI.Widget.html">Widget</a></li><li><a href="Colibri.UI.Window.html">Window</a></li><li><a href="Colibri.UI.YearMonthSelector.html">YearMonthSelector</a></li><li><a href="Colibri.UI.YearPicker.html">YearPicker</a></li><li><a href="Colibri.UI.YearQuarterSelector.html">YearQuarterSelector</a></li><li><a href="Colibri.UI.YearSelector.html">YearSelector</a></li><li><a href="Colibri.UI.YearViewer.html">YearViewer</a></li><li><a href="Colibri.Web.Comet.html">Comet</a></li><li><a href="Colibri.Web.IndexDB.html">IndexDB</a></li><li><a href="Colibri.Web.Request.html">Request</a></li><li><a href="Colibri.Web.Router.html">Router</a></li><li><a href="Destructable.html">Destructable</a></li><li><a href="DestructableRegistry.html">DestructableRegistry</a></li><li><a href="MediaMTXWebRTCReader.html">MediaMTXWebRTCReader</a></li></ul><h3>Global</h3><ul><li><a href="global.html#App">App</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sun Jul 26 2026 13:08:05 GMT+0400 (Armenia Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

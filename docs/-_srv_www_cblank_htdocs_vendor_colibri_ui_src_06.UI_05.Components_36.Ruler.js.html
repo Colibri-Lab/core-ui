@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: /srv/www/cblank/htdocs/vendor/colibri/ui/src/06.UI/05.Components/36.Ruler.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: /srv/www/cblank/htdocs/vendor/colibri/ui/src/06.UI/05.Components/36.Ruler.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Ruler component
+ * @class
+ * @extends Colibri.UI.Pane
+ * @memberof Colibri.UI
+ */
+Colibri.UI.Ruler = class extends Colibri.UI.Pane {
+
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.component} container container of component
+     */
+    constructor(name, container) {
+        /* создаем компонент и передаем шаблон */
+        super(name, container, Colibri.UI.Templates['Colibri.UI.Ruler']);
+        this.AddClass('colibri-ui-ruler');
+
+        this._canvas = this._element.querySelector('canvas');
+        this._ctx = this._canvas.getContext('2d', { willReadFrequently: true });
+
+        this._min = 0;
+        this._max = 100;
+        this._step = 1;
+        this._largeStep = 10;
+        this._orientation = 'horizontal';
+        this._align = 'end';
+
+        this.handleResize = true;
+        this.AddHandler('Resize', this.ResizeCanvas, false, this);
+
+        this.ResizeCanvas();
+    }
+
+    /**
+     * Register events
+     * @protected
+     */
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('Changed', false, 'When selection is changed');
+        this.RegisterEvent('BeforeChanged', false, 'Before selection is changed');
+        this.RegisterEvent('AfterChanged', false, 'After selection is changed');
+    }
+
+    ResizeCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = this._canvas.getBoundingClientRect();
+        this._canvas.width = rect.width * dpr;
+        this._canvas.height = rect.height * dpr;
+        this._ctx.scale(dpr, dpr);
+        this._render();
+        if (this._hasSelector) {
+            this._pane.bottom = this._align === 'end' ? 0 : null;
+            this._pane.top = this._align === 'start' ? 0 : null;
+        }
+    }
+
+    /**
+     * Minimum value
+     * @type {Number}
+     */
+    get min() {
+        return this._min;
+    }
+    /**
+     * Minimum value
+     * @type {Number}
+     */
+    set min(value) {
+        value = this._convertProperty('Number', value);
+        this._min = value;
+        this.ResizeCanvas();
+    }
+
+    /**
+     * Maximum value
+     * @type {Number}
+     */
+    get max() {
+        return this._max;
+    }
+    /**
+     * Maximum value
+     * @type {Number}
+     */
+    set max(value) {
+        value = this._convertProperty('Number', value);
+        this._max = value;
+        this.ResizeCanvas();
+    }
+
+    /**
+     * Points count for one ruler step
+     * @type {Number}
+     */
+    get step() {
+        return this._step;
+    }
+    /**
+     * Points count for one ruler step
+     * @type {Number}
+     */
+    set step(value) {
+        value = this._convertProperty('Number', value);
+        this._step = value;
+        this.ResizeCanvas();
+    }
+
+    /**
+     * Large ruller step
+     * @type {Number}
+     */
+    get largeStep() {
+        return this._largeStep;
+    }
+    /**
+     * Large ruller step
+     * @type {Number}
+     */
+    set largeStep(value) {
+        value = this._convertProperty('Number', value);
+        this._largeStep = value;
+        this.ResizeCanvas();
+    }
+
+    /**
+     * Orientation of ruler
+     * @type {horizontal,vertical}
+     */
+    get orientation() {
+        return this._orientation;
+    }
+    /**
+     * Orientation of ruler
+     * @type {horizontal,vertical}
+     */
+    set orientation(value) {
+        this._orientation = value;
+        this.RemoveClass(['-vertical', '-horizontal']);
+        this.AddClass('-' + value);
+        this.ResizeCanvas();
+    }
+
+    /**
+     * Align of ruller, start of bounds or end of bounds
+     * @type {start,end}
+     */
+    get align() {
+        return this._align;
+    }
+    /**
+     * Align of ruller, start of bounds or end of bounds
+     * @type {start,end}
+     */
+    set align(value) {
+        this._align = value;
+        this.ResizeCanvas();
+    }
+
+
+    /**
+     * Label color string
+     * @type {String}
+     */
+    get labelColor() {
+        return this._labelColor;
+    }
+    /**
+     * Label color string
+     * @type {String}
+     */
+    set labelColor(value) {
+        this._labelColor = value;
+        this.ResizeCanvas();
+    }
+
+    /**
+     * Labels font and size, i.e. 10px monospace
+     * @type {String}
+     */
+    get labelFontAndSize() {
+        return this._labelFontAndSize;
+    }
+    /**
+     * Labels font and size, i.e. 10px monospace
+     * @type {String}
+     */
+    set labelFontAndSize(value) {
+        this._labelFontAndSize = value;
+        this.ResizeCanvas();
+    }
+
+    /**
+     * Label align
+     * @type {center,left,right}
+     */
+    get labelAlign() {
+        return this._labelAlign;
+    }
+    /**
+     * Label align
+     * @type {center,left,right}
+     */
+    set labelAlign(value) {
+        this._labelAlign = value;
+        this.ResizeCanvas();
+    }
+
+    /**
+     * Label formatter function, i.e. (label, axis) => {}
+     * @type {Function}
+     */
+    get labelFormatter() {
+        return this._labelFormatter;
+    }
+    /**
+     * Label formatter function, i.e. (label, axis) => {}
+     * @type {Function}
+     */
+    set labelFormatter(value) {
+        value = this._convertProperty('Function', value);
+        this._labelFormatter = value;
+        this.ResizeCanvas();
+    }
+
+    /**
+     * Color of ruler lines
+     * @type {String}
+     */
+    get rulerColor() {
+        return this._rulerColor;
+    }
+    /**
+     * Color of ruler lines
+     * @type {String}
+     */
+    set rulerColor(value) {
+        this._rulerColor = value;
+        this.ResizeCanvas();
+    }
+
+    /**
+     * Has the selector picker
+     * @type {Boolean}
+     */
+    get hasSelector() {
+        return this._hasSelector;
+    }
+    /**
+     * Has the selector picker
+     * @type {Boolean}
+     */
+    set hasSelector(value) {
+        value = this._convertProperty('Boolean', value);
+        this._hasSelector = value;
+        this._showHasSelector();
+    }
+    _showHasSelector() {
+
+        this._pane = new Colibri.UI.Pane('pane', this);
+        this._pane.AddClass('colibri-ui-rangepicker-rangepicker-progress-pane');
+
+        this._progress = new Colibri.UI.Pane('progress', this._pane);
+        this._span1 = new Colibri.UI.Pane('span1', this._progress);
+        this._span2 = new Colibri.UI.Pane('span2', this._progress);
+
+        this._pane.shown = this._progress.shown = this._span1.shown = this._span2.shown = true;
+
+        this._drag0 = new Colibri.UI.Drag(this._progress.container, this._pane.container, (newLeft, newTop) => this._progressMoved(newLeft, newTop), () => this.Dispatch('BeforeChanged'), () => this.Dispatch('AfterChanged'));
+        this._drag1 = new Colibri.UI.Drag(this._span1.container, this._pane.container, (newLeft, newTop) => this._span1Moved(newLeft, newTop), () => this.Dispatch('BeforeChanged'), () => this.Dispatch('AfterChanged'));
+        this._drag2 = new Colibri.UI.Drag(this._span2.container, this._pane.container, (newLeft, newTop) => this._span2Moved(newLeft, newTop), () => this.Dispatch('BeforeChanged'), () => this.Dispatch('AfterChanged'));
+
+        this.handleWheel = true;
+        this.AddHandler('MouseWheel', this.__thisMouseWheel);
+
+    }
+
+    get progressStartPerc() {
+        if (this._orientation === 'vertical') {
+            return (this._progress.top - this.top) * 100 / this.height;
+        } else {
+            return (this._progress.left - this.left) * 100 / this.width;
+        }
+    }
+
+    get progressEndPerc() {
+        if (this._orientation === 'vertical') {
+            return (this._progress.top - this.top + this._progress.height) * 100 / this.height;
+        } else {
+            return (this._progress.left - this.left + this._progress.width) * 100 / this.width;
+        }
+    }
+
+    /**
+     * Selector fixed width or height
+     * @type {Number}
+     */
+    get fixedSelector() {
+        return this._fixedSelector;
+    }
+    /**
+     * Selector fixed width or height
+     * @type {Number}
+     */
+    set fixedSelector(value) {
+        value = this._convertProperty('Number', value);
+        this._fixedSelector = value;
+    }
+
+    __thisMouseWheel(event, args) {
+        if (this._orientation === 'horizontal') {
+            this._calculateValue(this._progress.left - this.left + (args.domEvent.deltaY / 10), null, true);
+        } else {
+            this._calculateValue(this._progress.top - this.top + (args.domEvent.deltaY / 10), null, true);
+        }
+        this.Dispatch('BeforeChanged');
+        this.Dispatch('Changed', { value: this.value, right: true, left: true });
+        this.Dispatch('AfterChanged');
+    }
+
+    _progressMoved(newLeft, newTop) {
+        if (this._orientation === 'horizontal') {
+            this._calculateValue(newLeft, null, true);
+        } else {
+            this._calculateValue(newTop, null, true);
+        }
+        this.Dispatch('Changed', { value: this.value, right: true, left: true });
+    }
+
+    StartMove() {
+        this.Dispatch('BeforeChanged');
+        this._startMovePoint = { left: this._progress.left - this.left, top: this._progress.top - this.top };
+    }
+
+    EndMove() {
+        this._startMovePoint = null;
+        this.Dispatch('AfterChanged');
+    }
+
+    Move(delta) {
+        if (!this._startMovePoint) {
+            return;
+        }
+        if (this._orientation === 'horizontal') {
+            this._calculateValue(this._startMovePoint.left - delta, null, true);
+        } else {
+            this._calculateValue(this._startMovePoint.top - delta, null, true);
+        }
+        this.Dispatch('Changed', { value: this.value, right: true, left: true });
+    }
+
+    _span1Moved(newLeft, newTop, dispatch = true) {
+        if (this._orientation === 'horizontal') {
+            this._calculateValue(newLeft, null);
+        } else {
+            this._calculateValue(newTop, null);
+        }
+        dispatch &amp;&amp; this.Dispatch('Changed', { value: this.value, right: false, left: true });
+    }
+
+    _span2Moved(newLeft, newTop, dispatch = true) {
+        if (this._orientation === 'horizontal') {
+            this._calculateValue(null, newLeft);
+        } else {
+            this._calculateValue(null, newTop);
+        }
+        dispatch &amp;&amp; this.Dispatch('Changed', { value: this.value, right: true, left: false });
+    }
+
+    _calculateValue(left, right, saveWidth = false) {
+        if (this._orientation === 'vertical') {
+            if (left !== null) {
+                this._setTopPoint(left, saveWidth);
+            }
+            else if (right !== null) {
+                this._setBottomPoint(right, saveWidth);
+            }
+        } else {
+            if (left !== null) {
+                this._setLeftPoint(left, saveWidth);
+            }
+            else if (right !== null) {
+                this._setRightPoint(right, saveWidth);
+            }
+        }
+    }
+
+    _setLeftPoint(left, saveWidth = false) {
+        const width = this._pane.width;
+        const perc = (left) * 100 / width;
+        const max = this._max;
+        const min = this._min;
+        if(!this._value) {
+            this._value = [min, max];
+        }
+
+        let newValue = min + ((max - min) * perc / 100);
+        // newValue = Math.ceil(newValue / step) * step - step;
+        if (newValue >= max) {
+            newValue = max;
+        }
+        if (newValue &lt;= min) {
+            newValue = min;
+        }
+        if (saveWidth) {
+            if (newValue + (this._value?.[1] - this._value?.[0]) > max) {
+                newValue = max - (this._value?.[1] - this._value?.[0]);
+            }
+            this._value[1] = newValue + (this._value?.[1] - this._value?.[0]);
+        }
+        this._value = [newValue, this._fixedSelector ? newValue + this._fixedSelector : this._value?.[1]];
+        this._renderSelector(newValue, this._value?.[1] ?? 100);
+    }
+
+    _setTopPoint(top, saveHeight = false) {
+        const height = this._pane.height;
+        const perc = 100 - (top + this._span1.height / 2) * 100 / height;
+        const max = this._max;
+        const min = this._min;
+        if(!this._value) {
+            this._value = [min, max];
+        }
+
+        let newValue = min + ((max - min) * perc / 100);
+        // newValue = Math.ceil(newValue / step) * step - step;
+        if (newValue >= max) {
+            newValue = max;
+        }
+        if (newValue &lt;= min) {
+            newValue = min;
+        }
+        if (saveHeight) {
+            if ((this._value?.[0] - this._value?.[1]) + newValue &lt;= min) {
+                newValue = min - (this._value?.[0] - this._value?.[1]);
+            }
+            this._value[0] = (this._value?.[0] - this._value?.[1]) + newValue;
+        }
+        this._value = [this._fixedSelector ? newValue - this._fixedSelector : this._value?.[0], newValue];
+
+        this._renderSelector(this._value?.[0] ?? 0, newValue);
+    }
+
+    _setBottomPoint(bottom, saveHeight = false) {
+
+        const height = this._pane.height;
+        const perc = 100 - (bottom + this._span1.height / 2) * 100 / height;
+        const max = this._max;
+        const min = this._min;
+
+        let newValue = min + ((max - min) * perc / 100);
+        // newValue = Math.ceil(newValue / step) * step + step;
+        if (newValue >= max) {
+            newValue = max;
+        }
+        if (newValue &lt;= min) {
+            newValue = min;
+        }
+
+        if (saveHeight) {
+            this._value[1] = newValue - (this._value?.[1] - this._value?.[0]);
+        }
+
+        this._value = [newValue, this._value?.[1]];
+        this._renderSelector(newValue, this._fixedSelector ? newValue + this._fixedSelector : this._value?.[1] ?? 100);
+    }
+
+    _setRightPoint(left, saveWidth = false) {
+        const width = this._pane.width;
+        const perc = (left) * 100 / width;
+        const max = this._max;
+        const min = this._min;
+        const step = this._step;
+
+        let newValue = min + ((max - min) * perc / 100);
+        // newValue = Math.ceil(newValue / step) * step + step;
+        if (newValue >= max) {
+            newValue = max;
+        }
+        if (newValue &lt;= min) {
+            newValue = min;
+        }
+
+        if (saveWidth) {
+            this._value[0] = newValue - (this._value?.[1] - this._value?.[0]);
+        }
+
+        this._value = [this._fixedSelector ? newValue - this._fixedSelector : this._value?.[0] ?? 0, newValue];
+        this._renderSelector(this._value?.[0], newValue);
+    }
+
+
+    /**
+     * Value of ruler selector
+     * @type {Array}
+     */
+    get value() {
+        return this._value;
+    }
+    /**
+     * Value of ruler selector
+     * @type {Array}
+     */
+    set value(value) {
+        if (!this._hasSelector) {
+            return;
+        }
+        value = this._convertProperty('Array', value);
+
+        let left1 = parseFloat(value[0]);
+        let left2 = parseFloat(value[1]);
+
+        // сортировка — чтобы нижний всегда был меньше верхнего
+        if (left1 > left2) {
+            [left1, left2] = [left2, left1];
+        }
+
+        if (left1 >= this._max) left1 = this._max;
+        if (left1 &lt;= this._min) left1 = this._min;
+
+        if (left2 >= this._max) left2 = this._max;
+        if (left2 &lt;= this._min) left2 = this._min;
+
+        this._value = [left1, left2];
+        this._renderSelector(left1, left2);
+
+    }
+
+    Set(min, max) {
+        this._min = min;
+        this._max = max;
+        this._render();
+    }
+
+    Delta(delta) {
+        this.min = this.min + delta;
+        this.max = this.max + delta;
+        if (!this._hasSelector) {
+            return;
+        }
+        
+        this.value = [this._value[0] + delta, this._value[1] + delta];
+    }
+
+    _renderSelector(leftOrTop, rightOrBottom) {
+
+        if (this._orientation === 'vertical') {
+
+            const height = parseFloat(this._pane.height) ?? 0;
+            if (isNaN(height)) return;
+
+            const max = parseFloat(this._max);
+            const min = parseFloat(this._min);
+
+            let val1 = parseFloat(leftOrTop);
+            let val2 = parseFloat(rightOrBottom);
+
+            // нормализуем в проценты
+            let perc1 = (val1 - min) * 100 / (max - min);
+            let perc2 = (val2 - min) * 100 / (max - min);
+
+            // ограничиваем диапазон
+            perc1 = Math.max(0, Math.min(100, perc1));
+            perc2 = Math.max(0, Math.min(100, perc2));
+
+            // считаем "снизу вверх"
+            const bottom = Math.min(perc1, perc2);
+            const top = Math.max(perc1, perc2);
+
+            const topPx = height * (100 - top) / 100;
+            const realHeight = height * (top - bottom) / 100;
+
+            this._progress.container.css({
+                top: topPx.toFixed(2) + 'px',
+                height: realHeight.toFixed(2) + 'px'
+            });
+
+        } else {
+
+            const width = parseFloat(this._pane.width) ?? 0;
+            if (isNaN(width)) {
+                return;
+            }
+
+            const max = parseFloat(this._max);
+            const min = parseFloat(this._min);
+
+            // max - min = 100
+            // value - min = x
+            // x = (min + value) * 100 / (max - min)
+            let perc1 = (parseFloat(leftOrTop) - min) * 100 / (max - min);
+            let perc2 = (parseFloat(rightOrBottom) - min) * 100 / (max - min);
+
+            if (perc1 &lt; 0) {
+                perc1 = 0;
+            }
+
+            if (perc2 &lt; 0) {
+                perc2 = 0;
+            }
+
+
+            // width = 100
+            // left = perc
+            const perc = width * perc1 / 100;
+            const percWidth = width * perc2 / 100;
+            let realWidth = (percWidth - perc);
+            if (realWidth > width) {
+                realWidth = width;
+            }
+
+            this._progress.container.css('width', realWidth.toFixed(4) + 'px');
+            this._progress.container.css('left', perc.toFixed(4) + 'px');
+        }
+
+
+    }
+
+    _render() {
+
+        const canvas = this._canvas;
+        const ctx = this._ctx;
+        const width = canvas.offsetWidth - 1;
+        const height = canvas.offsetHeight - 1;
+        if (canvas.offsetWidth === 0 || canvas.offsetHeight === 0) {
+            return;
+        }
+
+        if(this.maxPoints === Infinity || this.maxPoints === -Infinity) {
+            return;
+        }
+
+        const maxHeight = (height - 10) * 2 / 3;
+        const maxWidth = width;
+
+        ctx.clearRect(0, 0, width, height);
+        ctx.strokeStyle = this._rulerColor || '#000';
+        ctx.fillStyle = this._labelColor || '#000';
+        ctx.lineWidth = 1;
+
+        ctx.font = this._labelFontAndSize || '10px monospace';
+        ctx.textBaseline = this._align === 'start' ? 'top' : 'bottom';
+
+        const range = this.max - this.min;
+        if (range &lt;= 0) {
+            return;
+        }
+
+        const pxPerPoint = (this._orientation === 'vertical' ? height : width) / this.maxPoints;
+        let pointsInStep = range / this.maxPoints;
+        if(pointsInStep == 0) {
+            pointsInStep = 1;
+        }
+        
+        const labels = [];
+        for (let i = 0; i &lt;= this.maxPoints; i++) {
+            const value = this.min + i * pointsInStep;
+            const isLarge = (i % this.largeStep) === 0;
+            if (isLarge) {
+                labels.push(ctx.measureText((this._labelFormatter || ((c, v) => v))(this, value)));
+            }
+        }
+
+        const maxLabelWidth = Math.max(...labels.map(l => l.width)) + 2;
+
+        for (let i = 0; i &lt;= this.maxPoints; i++) {
+            const value = this.min + i * pointsInStep;
+
+            const isStep = (i % this.step) === 0;
+            const isLarge = (i % this.largeStep) === 0;
+
+            if (this._orientation === 'vertical') {
+                const y = Math.round(height - i * pxPerPoint);
+                const lineLength = isLarge ? maxWidth - maxLabelWidth : (maxWidth - maxLabelWidth) / 3;
+
+                if(isStep &amp;&amp; !isLarge) {
+                    ctx.beginPath();
+                    if (this._align === 'start') {
+                        ctx.moveTo(0.5, y - 0.5);
+                        ctx.lineTo(lineLength + 0.5, y - 0.5);
+                    } else {
+                        ctx.moveTo(width - lineLength - 0.5, y - 0.5);
+                        ctx.lineTo(width - 0.5, y - 0.5);
+                    }
+                    ctx.stroke();
+                } else if (isLarge) {
+
+                    const label = (this._labelFormatter || ((c, v) => v))(this, value);
+                    if (i === 0) ctx.textBaseline = 'bottom';
+                    else if (i === this.maxPoints) ctx.textBaseline = 'top';
+                    else ctx.textBaseline = 'middle';
+
+                    if (this._align === 'start') {
+                        ctx.textAlign = 'left';
+                        ctx.fillText(label, lineLength + 2, y - 2);
+                    } else if (this._align === 'end') {
+                        ctx.textAlign = 'right';
+                        ctx.fillText(label, width - lineLength - 2, y + 2);
+                    }
+
+                    ctx.beginPath();
+                    if (this._align === 'start') {
+                        ctx.moveTo(0.5, y - 0.5);
+                        ctx.lineTo(lineLength + 0.5, y - 0.5);
+                    } else {
+                        ctx.moveTo(width - lineLength - 0.5, y - 0.5);
+                        ctx.lineTo(width - 0.5, y - 0.5);
+                    }
+                    ctx.stroke();
+                }
+
+            } else {
+                const x = Math.round(i * pxPerPoint);
+                const lineLength = isLarge ? maxHeight : maxHeight / 3;
+
+                if(isStep &amp;&amp; !isLarge) {
+                    ctx.beginPath();
+                    if (this._align === 'start') {
+                        ctx.moveTo(x + 0.5, 0.5);
+                        ctx.lineTo(x + 0.5, lineLength + 0.5);
+                    } else {
+                        ctx.moveTo(x + 0.5, height - lineLength - 0.5);
+                        ctx.lineTo(x + 0.5, height - 0.5);
+                    }
+                    ctx.stroke();
+                } else if (isLarge) {
+                    const label = (this._labelFormatter || ((c, v) => v))(this, value);
+                    if (i === 0) ctx.textAlign = 'left';
+                    else if (i === this.maxPoints) ctx.textAlign = 'right';
+                    else ctx.textAlign = this._labelAlign || 'center';
+
+                    if (this._align === 'start') {
+                        ctx.textBaseline = 'top';
+                        ctx.fillText(label, x, maxHeight + 4);
+                    } else {
+                        ctx.textBaseline = 'bottom';
+                        ctx.fillText(label, x, height - maxHeight - 4);
+                    }
+
+                    ctx.beginPath();
+                    if (this._align === 'start') {
+                        ctx.moveTo(x + 0.5, 0.5);
+                        ctx.lineTo(x + 0.5, lineLength + 0.5);
+                    } else {
+                        ctx.moveTo(x + 0.5, height - lineLength - 0.5);
+                        ctx.lineTo(x + 0.5, height - 0.5);
+                    }
+                    ctx.stroke();
+                }
+            }
+        }
+
+    }
+
+    Resized() {
+        this.value = this.value || [this.min, this.max];
+    }
+
+
+    Recalculate(left, right) {
+
+        const length = (this._orientation === 'horizontal' ? this.width : this.height);
+
+        const percLeft = left * 100 / length;
+        const percRight = right * 100 / length;
+
+        const xStart = this.progressStartPerc + (percLeft / 100) * (this.progressEndPerc - this.progressStartPerc);
+        const xEnd = this.progressStartPerc + (percRight / 100) * (this.progressEndPerc - this.progressStartPerc);
+
+        let newLeft = xStart * length / 100;
+        let newRight = xEnd * length / 100;
+
+        this._span1Moved(newLeft, newLeft, false);
+        this._span2Moved(newRight, newRight, false);
+        
+
+        this.Dispatch('BeforeChanged');
+        this.Dispatch('Changed', {right: true, left: true});
+        this.Dispatch('AfterChanged');
+
+    }
+
+    Expand() {
+        this.value = [this.min, this.max];
+        this.Dispatch('BeforeChanged');
+        this.Dispatch('Changed', {right: true, left: true});
+        this.Dispatch('AfterChanged');
+    }
+
+    /**
+     * Maximum points in ruler
+     * @type {Number}
+     */
+    get maxPoints() {
+        return this._maxPoints;
+    }
+    /**
+     * Maximum points in ruler
+     * @type {Number}
+     */
+    set maxPoints(value) {
+        value = this._convertProperty('Number', value);
+        this._maxPoints = value;
+        this.ResizeCanvas();
+    }
+
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="App.Components.html">Components</a></li><li><a href="App.Modules.html">Modules</a></li><li><a href="Colibri.html">Colibri</a></li><li><a href="Colibri.UI.Chart.html">Chart</a></li><li><a href="Colibri.UI.Chooser.html">Chooser</a></li><li><a href="Colibri.UI.Forms.ArrayGrid.html">ArrayGrid</a></li><li><a href="Colibri.UI.Grid.html">Grid</a></li><li><a href="Colibri.UI.Input.html">Input</a></li><li><a href="Colibri.UI.List.html">List</a></li><li><a href="Colibri.UI.Select.html">Select</a></li><li><a href="Colibri.UI.Select.DefaultDropdown.html">DefaultDropdown</a></li><li><a href="Colibri.UI.Tree.html">Tree</a></li><li><a href="Colibri.UI.TreeNode.html">TreeNode</a></li><li><a href="Colibri.UI.TreeNodes.html">TreeNodes</a></li><li><a href="Colibri.UI.VirtualGrid.html">VirtualGrid</a></li></ul><h3>Classes</h3><ul><li><a href="AuditUIKit.UI.Informers.Colibri.UI.Informers.Download.html">Colibri.UI.Informers.Download</a></li><li><a href="Colibri.App.html">App</a></li><li><a href="Colibri.Common.AbstractMessageStore.html">AbstractMessageStore</a></li><li><a href="Colibri.Common.Audio.html">Audio</a></li><li><a href="Colibri.Common.Base64.html">Base64</a></li><li><a href="Colibri.Common.Blob.html">Blob</a></li><li><a href="Colibri.Common.BrowserStorage.html">BrowserStorage</a></li><li><a href="Colibri.Common.CometEvent.html">CometEvent</a></li><li><a href="Colibri.Common.CometMessage.html">CometMessage</a></li><li><a href="Colibri.Common.Cookie.html">Cookie</a></li><li><a href="Colibri.Common.Font.html">Font</a></li><li><a href="Colibri.Common.Graphics.html">Graphics</a></li><li><a href="Colibri.Common.HashActions.html">HashActions</a></li><li><a href="Colibri.Common.MimeType.html">MimeType</a></li><li><a href="Colibri.Common.Scrolling.html">Scrolling</a></li><li><a href="Colibri.Common.SessionStorage.html">SessionStorage</a></li><li><a href="Colibri.Common.Validation.html">Validation</a></li><li><a href="Colibri.Common.Video.html">Video</a></li><li><a href="Colibri.Devices.Auth.html">Auth</a></li><li><a href="Colibri.Devices.Camera.html">Camera</a></li><li><a href="Colibri.Devices.Camera_GetPicture.html">GetPicture</a></li><li><a href="Colibri.Devices.Capture.html">Capture</a></li><li><a href="Colibri.Devices.Device.html">Device</a></li><li><a href="Colibri.Devices.Dialogs.html">Dialogs</a></li><li><a href="Colibri.Devices.FileSystem.html">FileSystem</a></li><li><a href="Colibri.Devices.GeoLocation.html">GeoLocation</a></li><li><a href="Colibri.Devices.LocalNotifications.html">LocalNotifications</a></li><li><a href="Colibri.Devices.LocalNotificationsEmulator.html">LocalNotificationsEmulator</a></li><li><a href="Colibri.Devices.Media.html">Media</a></li><li><a href="Colibri.Devices.Notification.html">Notification</a></li><li><a href="Colibri.Devices.Sim.html">Sim</a></li><li><a href="Colibri.Devices.Sms.html">Sms</a></li><li><a href="Colibri.Devices.SqLite.html">SqLite</a></li><li><a href="Colibri.Devices.Vibrate.html">Vibrate</a></li><li><a href="Colibri.Events.Dispatcher.html">Dispatcher</a></li><li><a href="Colibri.Events.Event.html">Event</a></li><li><a href="Colibri.IO.Crypt.html">Crypt</a></li><li><a href="Colibri.IO.Request.html">Request</a></li><li><a href="Colibri.IO.RpcRequest.html">RpcRequest</a></li><li><a href="Colibri.IO-Colibri.IO.WebSocketStream.html">WebSocketStream</a></li><li><a href="Colibri.Modules.Colibri.Common.Wasm.html">Colibri.Common.Wasm</a></li><li><a href="Colibri.Modules.Module.html">Module</a></li><li><a href="Colibri.Sip.JsSip.html">JsSip</a></li><li><a href="Colibri.Storages.Models.Model.html">Model</a></li><li><a href="Colibri.Storages.Models.Table.html">Table</a></li><li><a href="Colibri.Storages.Store.html">Store</a></li><li><a href="Colibri.UI.AlertDialog.html">AlertDialog</a></li><li><a href="Colibri.UI.ArrayViewer.html">ArrayViewer</a></li><li><a href="Colibri.UI.AsLinkButton.html">AsLinkButton</a></li><li><a href="Colibri.UI.Audio.html">Audio</a></li><li><a href="Colibri.UI.Badge.html">Badge</a></li><li><a href="Colibri.UI.Blockquote.html">Blockquote</a></li><li><a href="Colibri.UI.BoolViewer.html">BoolViewer</a></li><li><a href="Colibri.UI.BorderViewer.html">BorderViewer</a></li><li><a href="Colibri.UI.Button.html">Button</a></li><li><a href="Colibri.UI.ButtonGroup.html">ButtonGroup</a></li><li><a href="Colibri.UI.Chart.Barchart.html">Barchart</a></li><li><a href="Colibri.UI.Checkbox.html">Checkbox</a></li><li><a href="Colibri.UI.CheckboxAsTextViewer.html">CheckboxAsTextViewer</a></li><li><a href="Colibri.UI.CheckboxEditor.html">CheckboxEditor</a></li><li><a href="Colibri.UI.CheckboxListEditor.html">CheckboxListEditor</a></li><li><a href="Colibri.UI.CheckboxViewer.html">CheckboxViewer</a></li><li><a href="Colibri.UI.Chooser.ChooseWindow.html">ChooseWindow</a></li><li><a href="Colibri.UI.Color.html">Color</a></li><li><a href="Colibri.UI.Color.Alpha.html">Alpha</a></li><li><a href="Colibri.UI.Color.Block.html">Block</a></li><li><a href="Colibri.UI.Color.Line.html">Line</a></li><li><a href="Colibri.UI.ColorViewer.html">ColorViewer</a></li><li><a href="Colibri.UI.Component.html">Component</a></li><li><a href="Colibri.UI.ConfirmDialog.html">ConfirmDialog</a></li><li><a href="Colibri.UI.ContextMenu.html">ContextMenu</a></li><li><a href="Colibri.UI.Counter.html">Counter</a></li><li><a href="Colibri.UI.DateDiffViewer.html">DateDiffViewer</a></li><li><a href="Colibri.UI.DatePicker.html">DatePicker</a></li><li><a href="Colibri.UI.DateRangeViewer.html">DateRangeViewer</a></li><li><a href="Colibri.UI.DateSelector.html">DateSelector</a></li><li><a href="Colibri.UI.DateSelectorPopup.html">DateSelectorPopup</a></li><li><a href="Colibri.UI.DateTimeSelector.html">DateTimeSelector</a></li><li><a href="Colibri.UI.DateTimeSelectorPopup.html">DateTimeSelectorPopup</a></li><li><a href="Colibri.UI.DateTimeViewer.html">DateTimeViewer</a></li><li><a href="Colibri.UI.DateViewer.html">DateViewer</a></li><li><a href="Colibri.UI.DeferredFormValidator.html">DeferredFormValidator</a></li><li><a href="Colibri.UI.DocumentViewer.html">DocumentViewer</a></li><li><a href="Colibri.UI.Drag.html">Drag</a></li><li><a href="Colibri.UI.DragManager.html">DragManager</a></li><li><a href="Colibri.UI.DropDown.html">DropDown</a></li><li><a href="Colibri.UI.Editor.html">Editor</a></li><li><a href="Colibri.UI.EmailEditor.html">EmailEditor</a></li><li><a href="Colibri.UI.ErrorButton.html">ErrorButton</a></li><li><a href="Colibri.UI.ExtendedButton.html">ExtendedButton</a></li><li><a href="Colibri.UI.FieldValidator.html">FieldValidator</a></li><li><a href="Colibri.UI.FieldsViewer.html">FieldsViewer</a></li><li><a href="Colibri.UI.FileDropManager.html">FileDropManager</a></li><li><a href="Colibri.UI.FileSizeViewer.html">FileSizeViewer</a></li><li><a href="Colibri.UI.FileViewer.html">FileViewer</a></li><li><a href="Colibri.UI.FilesDragAndDrop.html">FilesDragAndDrop</a></li><li><a href="Colibri.UI.FilesEditor.html">FilesEditor</a></li><li><a href="Colibri.UI.FilesViewer.html">FilesViewer</a></li><li><a href="Colibri.UI.FlexBox.html">FlexBox</a></li><li><a href="Colibri.UI.FontFamilySelector.html">FontFamilySelector</a></li><li><a href="Colibri.UI.FontFamilyViewer.html">FontFamilyViewer</a></li><li><a href="Colibri.UI.FormValidator.html">FormValidator</a></li><li><a href="Colibri.UI.FormValidator_Validate.html">Validate</a></li><li><a href="Colibri.UI.Forms.Array.html">Array</a></li><li><a href="Colibri.UI.Forms.ArrayGrid_Fields.html">Fields</a></li><li><a href="Colibri.UI.Forms.ArrayGrid.ObjectWindow.html">ObjectWindow</a></li><li><a href="Colibri.UI.Forms.Bool.html">Bool</a></li><li><a href="Colibri.UI.Forms.Checkbox.html">Checkbox</a></li><li><a href="Colibri.UI.Forms.CheckboxList.html">CheckboxList</a></li><li><a href="Colibri.UI.Forms.Choose.html">Choose</a></li><li><a href="Colibri.UI.Forms.Color.html">Color</a></li><li><a href="Colibri.UI.Forms.Date.html">Date</a></li><li><a href="Colibri.UI.Forms.DateRange.html">DateRange</a></li><li><a href="Colibri.UI.Forms.DateTime.html">DateTime</a></li><li><a href="Colibri.UI.Forms.DateTimeRange.html">DateTimeRange</a></li><li><a href="Colibri.UI.Forms.DayOfMonth.html">DayOfMonth</a></li><li><a href="Colibri.UI.Forms.DocumentGenerator.html">DocumentGenerator</a></li><li><a href="Colibri.UI.Forms.Email.html">Email</a></li><li><a href="Colibri.UI.Forms.Field.html">Field</a></li><li><a href="Colibri.UI.Forms.File.html">File</a></li><li><a href="Colibri.UI.Forms.FileLabel.html">FileLabel</a></li><li><a href="Colibri.UI.Forms.Files.html">Files</a></li><li><a href="Colibri.UI.Forms.FontFamily.html">FontFamily</a></li><li><a href="Colibri.UI.Forms.Form.html">Form</a></li><li><a href="Colibri.UI.Forms.HiddenField.html">HiddenField</a></li><li><a href="Colibri.UI.Forms.KeyValueObject.html">KeyValueObject</a></li><li><a href="Colibri.UI.Forms.Label.html">Label</a></li><li><a href="Colibri.UI.Forms.Link.html">Link</a></li><li><a href="Colibri.UI.Forms.List.html">List</a></li><li><a href="Colibri.UI.Forms.MonthYear.html">MonthYear</a></li><li><a href="Colibri.UI.Forms.Number.html">Number</a></li><li><a href="Colibri.UI.Forms.NumberRange.html">NumberRange</a></li><li><a href="Colibri.UI.Forms.Object.html">Object</a></li><li><a href="Colibri.UI.Forms.Passport.html">Passport</a></li><li><a href="Colibri.UI.Forms.Password.html">Password</a></li><li><a href="Colibri.UI.Forms.Period.html">Period</a></li><li><a href="Colibri.UI.Forms.Radio.html">Radio</a></li><li><a href="Colibri.UI.Forms.Select.html">Select</a></li><li><a href="Colibri.UI.Forms.SimpleArray.html">SimpleArray</a></li><li><a href="Colibri.UI.Forms.Tabs.html">Tabs</a></li><li><a href="Colibri.UI.Forms.Text.html">Text</a></li><li><a href="Colibri.UI.Forms.TextArea.html">TextArea</a></li><li><a href="Colibri.UI.Forms.Toggle.html">Toggle</a></li><li><a href="Colibri.UI.Forms.Token.html">Token</a></li><li><a href="Colibri.UI.Forms.Year.html">Year</a></li><li><a href="Colibri.UI.Frame.html">Frame</a></li><li><a href="Colibri.UI.GoogleChart.html">GoogleChart</a></li><li><a href="Colibri.UI.GrayButton.html">GrayButton</a></li><li><a href="Colibri.UI.Grid.Cell.html">Cell</a></li><li><a href="Colibri.UI.Grid.Column.html">Column</a></li><li><a href="Colibri.UI.Grid.Columns.html">Columns</a></li><li><a href="Colibri.UI.Grid.Header.html">Header</a></li><li><a href="Colibri.UI.Grid.Row.html">Row</a></li><li><a href="Colibri.UI.Grid.Rows.html">Rows</a></li><li><a href="Colibri.UI.GridFileViewer.html">GridFileViewer</a></li><li><a href="Colibri.UI.H1.html">H1</a></li><li><a href="Colibri.UI.H2.html">H2</a></li><li><a href="Colibri.UI.H3.html">H3</a></li><li><a href="Colibri.UI.H4.html">H4</a></li><li><a href="Colibri.UI.Heading.html">Heading</a></li><li><a href="Colibri.UI.Hr.html">Hr</a></li><li><a href="Colibri.UI.HtmlDataViewer.html">HtmlDataViewer</a></li><li><a href="Colibri.UI.IFrame.html">IFrame</a></li><li><a href="Colibri.UI.Icon.html">Icon</a></li><li><a href="Colibri.UI.IconViewer.html">IconViewer</a></li><li><a href="Colibri.UI.Image.html">Image</a></li><li><a href="Colibri.UI.ImageViewWindow.html">ImageViewWindow</a></li><li><a href="Colibri.UI.ImageViewer.html">ImageViewer</a></li><li><a href="Colibri.UI.ImagesViewer.html">ImagesViewer</a></li><li><a href="Colibri.UI.Img.html">Img</a></li><li><a href="Colibri.UI.Informers.DownloadItem.html">DownloadItem</a></li><li><a href="Colibri.UI.Input.File.html">File</a></li><li><a href="Colibri.UI.JsonViewer.html">JsonViewer</a></li><li><a href="Colibri.UI.Link.html">Link</a></li><li><a href="Colibri.UI.LinkEditor.html">LinkEditor</a></li><li><a href="Colibri.UI.LinkViewer.html">LinkViewer</a></li><li><a href="Colibri.UI.List.Group.html">Group</a></li><li><a href="Colibri.UI.List.Item.html">Item</a></li><li><a href="Colibri.UI.List.JsonRenderer.html">JsonRenderer</a></li><li><a href="Colibri.UI.List.SearchBox.html">SearchBox</a></li><li><a href="Colibri.UI.ListItem.html">ListItem</a></li><li><a href="Colibri.UI.Loading.html">Loading</a></li><li><a href="Colibri.UI.LoadingBallun.html">LoadingBallun</a></li><li><a href="Colibri.UI.LoadingContainer.html">LoadingContainer</a></li><li><a href="Colibri.UI.Logs.JsonLog.html">JsonLog</a></li><li><a href="Colibri.UI.Maps.Controls.Button.html">Button</a></li><li><a href="Colibri.UI.Maps.Controls.ButtonGroup.html">ButtonGroup</a></li><li><a href="Colibri.UI.Maps.Controls.FileButton.html">FileButton</a></li><li><a href="Colibri.UI.Maps.Controls.FilterButton.html">FilterButton</a></li><li><a href="Colibri.UI.Maps.Controls.LayersButton.html">LayersButton</a></li><li><a href="Colibri.UI.Maps.Controls.RotateButton.html">RotateButton</a></li><li><a href="Colibri.UI.Maps.Controls.StatesButton.html">StatesButton</a></li><li><a href="Colibri.UI.Maps.Controls.ToggleButton.html">ToggleButton</a></li><li><a href="Colibri.UI.Maps.Controls.ToolBox.html">ToolBox</a></li><li><a href="Colibri.UI.Maps.LeafletJs.html">LeafletJs</a></li><li><a href="Colibri.UI.Maps.MapLibre.html">MapLibre</a></li><li><a href="Colibri.UI.MassActionsMenu.html">MassActionsMenu</a></li><li><a href="Colibri.UI.MenuList.html">MenuList</a></li><li><a href="Colibri.UI.ModelViewer.html">ModelViewer</a></li><li><a href="Colibri.UI.ModelessWindow.html">ModelessWindow</a></li><li><a href="Colibri.UI.MonthPicker.html">MonthPicker</a></li><li><a href="Colibri.UI.MonthSelector.html">MonthSelector</a></li><li><a href="Colibri.UI.MonthYearViewer.html">MonthYearViewer</a></li><li><a href="Colibri.UI.MoveManager.html">MoveManager</a></li><li><a href="Colibri.UI.Note.html">Note</a></li><li><a href="Colibri.UI.Notice.html">Notice</a></li><li><a href="Colibri.UI.Notices.html">Notices</a></li><li><a href="Colibri.UI.NumberEditor.html">NumberEditor</a></li><li><a href="Colibri.UI.NumberViewer.html">NumberViewer</a></li><li><a href="Colibri.UI.ObjectViewer.html">ObjectViewer</a></li><li><a href="Colibri.UI.OrderedList.html">OrderedList</a></li><li><a href="Colibri.UI.OutlineBlueButton.html">OutlineBlueButton</a></li><li><a href="Colibri.UI.Pager.html">Pager</a></li><li><a href="Colibri.UI.Pane.html">Pane</a></li><li><a href="Colibri.UI.PaneGrid.html">PaneGrid</a></li><li><a href="Colibri.UI.PaneSwitcher.html">PaneSwitcher</a></li><li><a href="Colibri.UI.PeriodViewer.html">PeriodViewer</a></li><li><a href="Colibri.UI.PlayPauseButton.html">PlayPauseButton</a></li><li><a href="Colibri.UI.PointerControl.html">PointerControl</a></li><li><a href="Colibri.UI.Popup.html">Popup</a></li><li><a href="Colibri.UI.PopupList.html">PopupList</a></li><li><a href="Colibri.UI.ProgressBar.html">ProgressBar</a></li><li><a href="Colibri.UI.ProgressViewer.html">ProgressViewer</a></li><li><a href="Colibri.UI.PromptDialog.html">PromptDialog</a></li><li><a href="Colibri.UI.Radio.html">Radio</a></li><li><a href="Colibri.UI.RadioViewer.html">RadioViewer</a></li><li><a href="Colibri.UI.RangePicker.html">RangePicker</a></li><li><a href="Colibri.UI.ReadUnreadBadge.html">ReadUnreadBadge</a></li><li><a href="Colibri.UI.RemoteFileEditor.html">RemoteFileEditor</a></li><li><a href="Colibri.UI.Renderer.html">Renderer</a></li><li><a href="Colibri.UI.Rgb.html">Rgb</a></li><li><a href="Colibri.UI.Router.html">Router</a></li><li><a href="Colibri.UI.Ruler.html">Ruler</a></li><li><a href="Colibri.UI.SearchInput.html">SearchInput</a></li><li><a href="Colibri.UI.Select.DefaultDropdown.Options.html">Options</a></li><li><a href="Colibri.UI.Select.Dropdown.html">Dropdown</a></li><li><a href="Colibri.UI.SelectEditor.html">SelectEditor</a></li><li><a href="Colibri.UI.SelectViewer.html">SelectViewer</a></li><li><a href="Colibri.UI.Selector.html">Selector</a></li><li><a href="Colibri.UI.Shader.html">Shader</a></li><li><a href="Colibri.UI.ShadowViewer.html">ShadowViewer</a></li><li><a href="Colibri.UI.Shortcuts.html">Shortcuts</a></li><li><a href="Colibri.UI.SimpleButton.html">SimpleButton</a></li><li><a href="Colibri.UI.SimpleFormValidator.html">SimpleFormValidator</a></li><li><a href="Colibri.UI.SimplePieChart.html">SimplePieChart</a></li><li><a href="Colibri.UI.SingleTimeline.html">SingleTimeline</a></li><li><a href="Colibri.UI.SlideDown.html">SlideDown</a></li><li><a href="Colibri.UI.Spectrum.Graph.html">Graph</a></li><li><a href="Colibri.UI.Spectrum.Selections.html">Selections</a></li><li><a href="Colibri.UI.Split.html">Split</a></li><li><a href="Colibri.UI.Strong.html">Strong</a></li><li><a href="Colibri.UI.SuccessButton.html">SuccessButton</a></li><li><a href="Colibri.UI.Switcher.html">Switcher</a></li><li><a href="Colibri.UI.Table.html">Table</a></li><li><a href="Colibri.UI.TableCell.html">TableCell</a></li><li><a href="Colibri.UI.TableHeaderCell.html">TableHeaderCell</a></li><li><a href="Colibri.UI.TableRow.html">TableRow</a></li><li><a href="Colibri.UI.Tabs.html">Tabs</a></li><li><a href="Colibri.UI.Templates.html">Templates</a></li><li><a href="Colibri.UI.TextArea.html">TextArea</a></li><li><a href="Colibri.UI.TextAreaEditor.html">TextAreaEditor</a></li><li><a href="Colibri.UI.TextAreaViewer.html">TextAreaViewer</a></li><li><a href="Colibri.UI.TextEditor.html">TextEditor</a></li><li><a href="Colibri.UI.TextSpan.html">TextSpan</a></li><li><a href="Colibri.UI.TextViewer.html">TextViewer</a></li><li><a href="Colibri.UI.Timeline.html">Timeline</a></li><li><a href="Colibri.UI.ToggleBox.html">ToggleBox</a></li><li><a href="Colibri.UI.ToggleBoxEditor.html">ToggleBoxEditor</a></li><li><a href="Colibri.UI.ToggleButton.html">ToggleButton</a></li><li><a href="Colibri.UI.ToggleboxViewer.html">ToggleboxViewer</a></li><li><a href="Colibri.UI.ToolTip.html">ToolTip</a></li><li><a href="Colibri.UI.Toolbar.html">Toolbar</a></li><li><a href="Colibri.UI.Tree.JsonRenderer.html">JsonRenderer</a></li><li><a href="Colibri.UI.Tree.SearchBox.html">SearchBox</a></li><li><a href="Colibri.UI.UnorderedList.html">UnorderedList</a></li><li><a href="Colibri.UI.UploadButton.html">UploadButton</a></li><li><a href="Colibri.UI.Utilities.Mask.html">Mask</a></li><li><a href="Colibri.UI.Utilities.Validator.html">Validator</a></li><li><a href="Colibri.UI.Video.html">Video</a></li><li><a href="Colibri.UI.Viewer.html">Viewer</a></li><li><a href="Colibri.UI.WaterfallBuffer.html">WaterfallBuffer</a></li><li><a href="Colibri.UI.WebRTCVideo.html">WebRTCVideo</a></li><li><a href="Colibri.UI.Widget.html">Widget</a></li><li><a href="Colibri.UI.Window.html">Window</a></li><li><a href="Colibri.UI.YearMonthSelector.html">YearMonthSelector</a></li><li><a href="Colibri.UI.YearPicker.html">YearPicker</a></li><li><a href="Colibri.UI.YearQuarterSelector.html">YearQuarterSelector</a></li><li><a href="Colibri.UI.YearSelector.html">YearSelector</a></li><li><a href="Colibri.UI.YearViewer.html">YearViewer</a></li><li><a href="Colibri.Web.Comet.html">Comet</a></li><li><a href="Colibri.Web.IndexDB.html">IndexDB</a></li><li><a href="Colibri.Web.Request.html">Request</a></li><li><a href="Colibri.Web.Router.html">Router</a></li><li><a href="Destructable.html">Destructable</a></li><li><a href="DestructableRegistry.html">DestructableRegistry</a></li><li><a href="MediaMTXWebRTCReader.html">MediaMTXWebRTCReader</a></li></ul><h3>Global</h3><ul><li><a href="global.html#App">App</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sun Jul 26 2026 13:08:05 GMT+0400 (Armenia Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

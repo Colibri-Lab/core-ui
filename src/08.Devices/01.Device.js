@@ -87,6 +87,11 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Retrieves the unique device ID.
+     * If the device ID is not already stored, it generates a new one using MD5 hash of the current timestamp and stores it in the browser's local storage.
+     * @returns {string} The unique device ID.
+     */
     get id() {
         let deviceId = App.Browser.Get('device-id');
         if(!deviceId) {
@@ -228,6 +233,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Detects the browser type and sets the _browser property accordingly.
+     * @private
+     */
     _detectBrowser() {
         if(navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') === -1) {
             this._browser = 'safari';
@@ -242,30 +251,51 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Browser
+     */
     get browser() {
         return this._browser;
     }
 
+    /**
+     * Browser is safari
+     */
     get isSafari() {
         return this._browser === 'safari';
     }
 
+    /**
+     * Browser is firefox 
+     */
     get isFirefox() {
         return this._browser === 'firefox';
     }
 
+    /**
+     * Browser is Edge
+     */
     get isEdge() {
         return this._browser === 'edge';
     }
 
+    /**
+     * Browser is Opera
+     */
     get isOpera() {
         return this._browser === 'opera';
     }
 
+    /**
+     * Is application runs standalone
+     */
     get isStandalone() {
         return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     }
 
+    /**
+     * Clear notifications
+     */
     ClearNotifications() {
         this._pushNotifications = this.Plugin('firebase.messaging');
         if(this._pushNotifications) {
@@ -274,12 +304,18 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return Promise.reject();
     }
 
+    /**
+     * Start proximity screen off
+     */
     StartProximityScreenOff() {
         if(window?.ColibriAccessories?.Proximity) {
             window.ColibriAccessories.Proximity.screenOff();
         }
     }
 
+    /**
+     * Stop proximity screen off
+     */
     StopProximityScreenOff() {
         if(window?.ColibriAccessories?.Proximity) {
             window.ColibriAccessories.Proximity.stopScreenOff();
@@ -312,6 +348,11 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         
     }
 
+    /**
+     * Requests a specific permission from the user.
+     * @param {string} perm - The permission to request.
+     * @returns {Promise<boolean>} A promise that resolves to true if the permission is granted, otherwise false.
+     */
     RequestPermission(perm) {
         if(!cordova.plugins.permissions) {
             return Promise.resolve();
@@ -324,6 +365,11 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         })
     }
 
+    /**
+     * Requests multiple permissions from the user.
+     * @param {Array<string>} perms - An array of permissions to request.
+     * @returns {Promise<Array<Object>>} A promise that resolves with an array of permission statuses.
+     */
     RequestPermissions(perms) {
         if(!cordova.plugins.permissions) {
             return Promise.resolve();
@@ -386,10 +432,18 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return this._platform === Colibri.Devices.Device.Platform.Web;
     }
 
+    /**
+     * Auto start
+     * @type {boolean}
+     */
     get autoStart() {
         return this._autoStart;
     }
 
+    /**
+     * Auto start
+     * @type {boolean}
+     */
     set autoStart(value) {
         if(value) {
             cordova.plugins.autoStart.enable();
@@ -398,10 +452,16 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Enable autostart service
+     */
     enableAutoStartService(id) {
         cordova.plugins.autoStart.enableService(id);
     }
 
+    /**
+     * Send the application to foreground
+     */
     Foreground() {
         if(!window.ColibriAccessories?.App) {
             throw 'Please enable \'cordova-plugin-colibri-accessories\' plugin';
@@ -409,6 +469,9 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         window.ColibriAccessories?.App.moveForeground();
     }
     
+    /**
+     * Send the application to background
+     */
     Background() {
         if(!window.ColibriAccessories?.App) {
             throw 'Please enable \'cordova-plugin-colibri-accessories\' plugin';
@@ -437,6 +500,12 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Search query in object
+     * @param {Object} object
+     * @param {string} query
+     * @returns {*}
+     */
     _searchInObject(object, query) {
         let ret = null;
         try {
@@ -573,6 +642,9 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Retrieves the current version of Android SDK
+     */
     _getAndroidSdkVersion() {
         const match = navigator.userAgent.match(/Android\s+(\d+)/);
         if (match) {
@@ -619,6 +691,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return this._sim;
     }
 
+    /**
+     * Get the vibrate module.
+     * @returns {Colibri.Devices.Vibrate} The vibrate module instance.
+     */
     get Vibrate() {
         if(!this._vibrate) {
             this._vibrate = new Colibri.Devices.Vibrate(this);
@@ -626,6 +702,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return this._vibrate;
     }
 
+    /**
+     * Get the sqlite module.
+     * @returns {Colibri.Devices.SqLite}
+     */
     get SqLite() {
         if(!this._sqLite) {
             this._sqLite = new Colibri.Devices.SqLite(this);
@@ -633,21 +713,41 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return this._sqLite;
     }
 
+    /**
+     * Push token
+     * @type {string|null}
+     */
     get pushToken() {
         return this._pushToken;
     }
-
+    
+    /**
+     * Push token
+     * @type {string|null}
+     */
     set pushToken(value) {
         this._pushToken = value;
     }
 
+    /**
+     * Push function
+     * @type {Function|null}
+     */
     set pushFunction(value) {
         this._pushFunction = value;
     }
+    /**
+     * Push function
+     * @type {Function|null}
+     */
     get pushFunction() { 
         return this._pushFunction;
     }
 
+    /**
+     * Get capture module
+     * @returns {Colibri.Devices.Capture} The capture module instance.
+     */
     get Capture() {
         if(!this._capture) {
             this._capture = new Colibri.Devices.Capture();
@@ -655,6 +755,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return this._capture;
     }
 
+    /**
+     * Get auth module  
+     * @returns {Colibri.Devices.Auth} The auth module instance.
+     */
     get Auth() {
         if(!this._auth) {
             this._auth = new Colibri.Devices.Auth(this);
@@ -662,10 +766,13 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         return this._auth;
     }
 
+    /**
+     * Has ringtones
+     * @type {boolean}
+     */
     get hasRingtones() {
         return !!this._ringtones;
     }
-
 
     /**
      * Get the list of ringtones available on the device
@@ -680,6 +787,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Play the ringtone from device
+     * @param {string} url 
+     */
     PlayRingtone(url) {
         return new Promise((resolve, reject) => {
             this._ringtones.playRingtone(url, () => {
@@ -690,6 +801,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Stop the ringtone from device
+     * @returns Promise
+     */
     StopRingtone() {
         return new Promise((resolve, reject) => {
             this._ringtones.stopRingtone(() => {
@@ -700,22 +815,35 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Get the local audio device
+     * @returns {string} The local audio device
+     */
     AudioDevice() {
         return this._audioDevice;
     }
 
+    /**
+     * Set the audo to default
+     */
     SetAudioToDefault() {
         if(window['AudioToggle'] !== undefined) {
             window['AudioToggle'].setAudioMode(AudioToggle.NORMAL); 
             this._audioDevice = 'default';
         }
     }
+    /**
+     * Set audio to speackers
+     */
     SetAudioToSpeakers() {
         if(window['AudioToggle'] !== undefined) {
             window['AudioToggle'].setAudioMode(AudioToggle.SPEAKER);
             this._audioDevice = 'speakers';
         }
     }
+    /**
+     * Set audio to earpiece
+     */
     SetAudioToEarpiece() {
         if(window['AudioToggle'] !== undefined) {
             window['AudioToggle'].setAudioMode(AudioToggle.EARPIECE);
@@ -723,6 +851,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Get the system speaker volume
+     * @returns {Promise<number>} The system speaker volume
+     */
     GetSystemSpeakerVolume() {
         return new Promise((resolve, reject) => {
             if(cordova.plugins?.VolumeControl) {
@@ -736,6 +868,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         })
     }
 
+    /**
+     * Check if the system audio is muted
+     * @returns {Promise<boolean>} True if the system audio is muted, false otherwise
+     */
     IsMuted() {
         if(!window?.cordova?.plugins?.VolumeControl) {
             return Promise.resolve(false);
@@ -748,6 +884,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         })
     }
 
+    /**
+     * Toggle the system audio mute state
+     * @returns {Promise<void>}
+     */
     ToggleMute() {
         if(!window?.cordova?.plugins?.VolumeControl) {
             return Promise.resolve();
@@ -760,6 +900,10 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         })
     }
 
+    /**
+     * Mute the system audio
+     * @returns {Promise<void>}
+     */
     Mute() {
         if(!window?.cordova?.plugins?.VolumeControl) {
             return Promise.resolve();
@@ -771,6 +915,9 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Unmute the system audio
+     */
     UnMute() {
         return this.IsMuted().then(muted => {
             if(muted) {
@@ -779,18 +926,38 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Is device is locked
+     * @type {boolean}
+     */
     get isLocked() {
         return this._deviceLocked || false;
     }
 
+    /**
+     * Is device is active
+     * @type {boolean}
+     */
     get isActive() {
         return this._applicationActivated || false;
     }
 
+    /**
+     * Is device is near the proximity sensor
+     * @returns {string} 'near' or 'far'
+     */
     get priximityState() {
         return this._proximityState || 'far';
     }
 
+    /**
+     * Notify user with a message
+     * @param {string} title - The title of the notification
+     * @param {string} text - The text of the notification
+     * @param {string} contact - The contact associated with the notification
+     * @param {string} photo - The photo associated with the notification
+     * @returns {Promise<string>} A promise that resolves with the notification token when the notification is tapped
+     */
     Notify(title, text, contact, photo) {
         return new Promise((resolve, reject) => {
             if(this.isAndroid || this.isIOs || this.isWindows) {
@@ -833,6 +1000,9 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Set the ready state to notification module
+     */
     NotifyReady() {
         if(window.ColibriAccessories) {
             window.ColibriAccessories.App.NotifyReady();

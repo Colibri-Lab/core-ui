@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: /srv/www/cblank/htdocs/vendor/colibri/ui/src/06.UI/13.Spectrum/__backup/01.Waterfall.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: /srv/www/cblank/htdocs/vendor/colibri/ui/src/06.UI/13.Spectrum/__backup/01.Waterfall.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
+
+    constructor(name, container, element) {
+        super(name, container, Colibri.UI.Templates['Colibri.UI.Spectrum.Waterfall']);
+
+        this.AddClass('colibri-ui-spectrum-waterfall');
+
+        this._dataType = Float32Array;
+
+        this.GenerateChildren(element, this);
+
+        this._canvas = Element.create('canvas').appendTo(this._element);
+        this._ctx = this._canvas.getContext('webgl2', { preserveDrawingBuffer: true });
+
+        if (!this._ctx) {
+            throw new Error("WebGL2 not supported");
+        }
+
+        this._selections = new Colibri.UI.Spectrum.Selections('selections', this);
+        this._selections.shown = true;
+        this._selectionMode = 'none';
+        this._selections.AddClass('-light');
+
+        this.enablePointerControl = true;
+
+        this.handleResize = true;
+        this.AddHandler('Resize', this.ResizeCanvas, false, this);
+
+        this._length = 1000;
+
+        this._createPalette();
+        this._uploadPalette();
+
+        this._historyClass = 'Colibri.Common.History';
+        const cls = eval(this._historyClass);
+        this._history = new cls(this._length, true);
+
+        this._startIndex = 0;
+        this._endIndex = this._length;
+
+        this.AddHandler('PointerControlStart', this.__thisPointerControlStart);
+        this.AddHandler('PointerControlEnd', this.__thisPointerControlEnd);
+        this.AddHandler('PointerControlMove', this.__thisPointerControlMove);
+
+        this.AddHandler('Shown', this.__thisShown);
+
+        this._selections.AddHandler('ContextMenu', this.__thisBubble, false, this);
+        this._selections.AddHandler('ContextMenuItemClicked', this.__thisBubble, false, this);
+
+        this._waterfallSelector = new Colibri.UI.Selector('waterfall-selector', this);
+        this._waterfallSelector.shown = true;
+        this._waterfallSelector.multiple = false;
+        this._waterfallSelector.searchable = false;
+        this._waterfallSelector.readonly = false;
+
+        this._waterfallSelector.AddHandler('Changed', this.__waterfallSelectorChanged, false, this);
+
+        this._initGL();
+        this._initQuad();
+    }
+
+    __waterfallSelectorChanged(event, args) {
+        this.Redraw();
+    }
+
+    /**
+     * Register events
+     * @protected
+     */
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('GrabStart', false, 'When graph is grabbed');
+        this.RegisterEvent('Grabbing', false, 'When graph is grabbed');
+        this.RegisterEvent('GrabEnd', false, 'When graph is grabbed');
+    }
+
+
+    /* ===================== HISTORY ===================== */
+
+    get history() {
+        if(Object.isPlainObject(this._history)) {
+            if(this._waterfallSelector?.value?.value ?? this._waterfallSelector?.value) {
+                return this._history[this._waterfallSelector?.value?.value ?? this._waterfallSelector?.value].getAll();
+            } else {
+                return this._history[Object.keys(this._history)[0]].getAll();
+            }
+        } else {
+            return this._history.getAll();
+        }
+    }
+
+    set history(value) {
+        if(Object.isPlainObject(this._history)) {
+            if(this._waterfallSelector?.value?.value ?? this._waterfallSelector?.value) {
+                this._history[this._waterfallSelector?.value?.value ?? this._waterfallSelector?.value].setAll(value);
+            } else {
+                this._history[Object.keys(this._history)[0]].setAll(value);
+            }
+        } else {
+            this._history.setAll(value);
+        }
+        this.Redraw();
+    }
+
+    /**
+     * Class of history
+     * @type {String}
+     */
+    get historyClass() {
+        return this._historyClass;
+    }
+
+    /**
+     * Class of history
+     * @type {String}
+     */
+    set historyClass(value) {
+        this._historyClass = value;
+        const cls = eval(this._historyClass);
+        if(Object.isPlainObject(this._history)) {
+            for(const key in this._history) {
+                if (!(this._history[key] instanceof cls)) {
+                    this._history[key] = new cls(this._length, true);
+                }
+            }
+        } else if (!(this._history instanceof cls)) {
+            this._history = new cls(this._length, true);
+        }
+    }
+
+    /* ===================== DATA TYPE ===================== */
+
+    set dataType(value) {
+        value = this._convertProperty('Function', value);
+        this._dataType = value;
+    }
+
+    get dataType() {
+        return this._dataType;
+    }
+
+    /* ===================== MIN / MAX ===================== */
+
+    /** Minimum date value */
+    get min() { return this._min; }
+    set min(value) {
+        this._min = value;
+        this.Redraw();
+    }
+
+    /** Maximum date value */
+    get max() { return this._max; }
+    set max(value) {
+        this._max = value;
+        this.Redraw();
+    }
+
+    /** Rearrange dates from min to max */
+    Rearrange(min, max) {
+        this.min = min;
+        this.max = max;
+        this.Redraw();
+    }
+
+    /**
+     * Start index for every history row to crop
+     * @type {Number}
+     */
+    get start() {
+        return this._start;
+    }
+    /**
+     * Start index for every history row to crop
+     * @type {Number}
+     */
+    set start(value) {
+        value = this._convertProperty('Number', value);
+        this._start = parseInt(value);
+        this.Redraw();
+    }
+
+    /**
+     * End index for every history row to crop
+     * @type {Number}
+     */
+    get end() {
+        return this._end;
+    }
+    /**
+     * End index for every history row to crop
+     * @type {Number}
+     */
+    set end(value) {
+        value = this._convertProperty('Number', value);
+        this._end = parseInt(value);
+        this.Redraw();
+    }
+
+    /** Resize waterfall width from start index to end */
+    Resize(start, end) {
+        this._start = parseInt(start);
+        this._end = parseInt(end);
+        this.Redraw();
+    }
+
+    Expand() {
+        this._start = 0;
+        this._end = null;
+        this.Redraw();
+    }
+
+    /* ===================== SELECTION ===================== */
+
+    /** Selection mode */
+    get selectionMode() {
+        return this._selectionMode;
+    }
+
+    /** Selection mode */
+    set selectionMode(value) {
+        this._selectionMode = value;
+
+        switch (value) {
+            case 'select-column':
+                this.cursor = 'col-resize';
+                break;
+            case 'select-row':
+                this.cursor = 'row-resize';
+                break;
+            case 'select-rect':
+                this.cursor = 'crosshair';
+                break;
+            default:
+                this.cursor = 'default';
+        }
+    }
+
+    __thisPointerControlStart(event, args) {
+        if (this.selectionMode !== 'none') {
+            this._selection = this._selections.Add(args.point, this._selectionMode, document.keysPressed.ctrl);
+        } else {
+            this.cursor = 'grab';
+            this.Dispatch('GrabStart', args);
+        }
+    }
+
+    __thisPointerControlEnd(event, args) {
+        if (this.selectionMode !== 'none') {
+            if (args.rect.width === 0 || args.rect.height === 0) {
+                this._selections.Remove(this._selection);
+            } else {
+                this._selections.Update(this._selection, args.rect);
+            }
+        } else {
+            this.cursor = 'default';
+            this.Dispatch('GrabEnd', args);
+        }
+    }
+
+    __thisPointerControlMove(event, args) {
+        if (this._selectionMode !== 'none') {
+            this._selections.Update(this._selection, args.rect);
+        } else {
+            this.cursor = 'grabbing';
+            this.Dispatch('Grabbing', args);
+        }
+    }
+
+    Clear() {
+        this._history.clear();
+        this.Redraw();
+    }
+
+    ResizeCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        const r = this._canvas.getBoundingClientRect();
+
+        this._canvas.width = r.width * dpr;
+        this._canvas.height = r.height * dpr;
+
+        this.Redraw();
+    }
+
+    /* ===================== DRAW ===================== */
+
+    Draw(data, name = null, show = true) {
+        if(name) {
+
+            let values = this._waterfallSelector.values;
+            if(!values) {
+                values = [{value: name, title: name}];
+            } else {
+                if(values.filter(v => v.value === name).length === 0) {
+                    values.push({value: name, title: name});
+                }
+            }
+            this._waterfallSelector.values = values;
+            this._waterfallSelector.value = name;
+
+            if(!Object.isPlainObject(this._history)) {
+                const existingHistory = this._history;
+                this._history = {};
+                this._history[name] = existingHistory;
+            }
+
+            if(!this._history[name]) {
+                const cls = eval(this._historyClass);
+                this._history[name] = new cls(this._length, true);
+            }
+
+            if (Array.isArray(data)) {
+                this._history[name].add(data);
+            } else {
+                this._history[name].addObject(data);
+            }
+
+        } else {
+            if (Array.isArray(data)) {
+                this._history.add(data);
+            } else {
+                this._history.addObject(data);
+            }
+
+        }    
+        if (show) this.Redraw();
+    }
+
+
+    /**
+     * Normalization function
+     * @type {Function}
+     */
+    get normalizationFunction() {
+        return this._normalizationFunction;
+    }
+    /**
+     * Normalization function
+     * @type {Function}
+     */
+    set normalizationFunction(value) {
+        value = this._convertProperty('Function', value);
+        this._normalizationFunction = value;
+    }
+    /* ===================== PALETTE ===================== */
+
+    get palette() {
+        return this._palette;
+    }
+
+    set palette(palette) {
+        this._palette = new Uint8ClampedArray(palette);
+        this._paletteSize = this._palette.length / 4;
+        this._uploadPalette();
+    }
+
+    _createPalette() {
+        this._palette = new Uint8ClampedArray([
+            255, 255, 255, 255,
+            0, 0, 255, 255,
+            0, 255, 0, 255,
+            255, 0, 0, 255
+        ]);
+        this._paletteSize = this._palette.length / 4;
+    }
+
+    _uploadPalette() {
+        const gl = this._ctx;
+
+        if (!this._paletteTexture) {
+            this._paletteTexture = gl.createTexture();
+        }
+
+        gl.bindTexture(gl.TEXTURE_2D, this._paletteTexture);
+
+        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+
+        gl.texImage2D(
+            gl.TEXTURE_2D,
+            0,
+            gl.RGBA,
+            this._paletteSize,
+            1,
+            0,
+            gl.RGBA,
+            gl.UNSIGNED_BYTE,
+            this._palette
+        );
+
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+        console.log("WebGL2:", gl instanceof WebGL2RenderingContext);
+        console.log("FLOAT texture support:", gl.getExtension("EXT_color_buffer_float"));
+        console.log("RED:", gl.RED, "R32F:", gl.R32F);
+    }
+
+    /* ===================== INIT GL ===================== */
+
+    _initGL() {
+        const gl = this._ctx;
+
+        const vs = `#version 300 es
+in vec2 a_position;
+out vec2 v_uv;
+
+void main() {
+    gl_Position = vec4(a_position, 0.0, 1.0);
+
+    v_uv = vec2(
+        (a_position.x + 1.0) * 0.5,
+        1.0 - (a_position.y + 1.0) * 0.5
+    );
+}`;
+
+        const fs = `#version 300 es
+precision highp float;
+precision highp sampler2D;
+
+in vec2 v_uv;
+
+uniform sampler2D u_data;
+uniform sampler2D u_palette;
+
+out vec4 outColor;
+
+void main() {
+    float v = texture(u_data, v_uv).r;
+    v = clamp(v, 0.0, 1.0);
+
+    vec4 color = texture(u_palette, vec2(v, 0.5));
+    outColor = color;
+}`;
+
+        const compile = (src, type) => {
+            const s = gl.createShader(type);
+            gl.shaderSource(s, src);
+            gl.compileShader(s);
+
+            if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+                console.error(gl.getShaderInfoLog(s));
+                throw new Error("Shader compile failed");
+            }
+
+            return s;
+        };
+
+        const p = gl.createProgram();
+        gl.attachShader(p, compile(vs, gl.VERTEX_SHADER));
+        gl.attachShader(p, compile(fs, gl.FRAGMENT_SHADER));
+        gl.linkProgram(p);
+
+        if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
+            console.error(gl.getProgramInfoLog(p));
+            throw new Error("Program link failed");
+        }
+
+        this._program = p;
+
+        this._aPosition = gl.getAttribLocation(p, "a_position");
+        this._uData = gl.getUniformLocation(p, "u_data");
+        this._uPalette = gl.getUniformLocation(p, "u_palette");
+
+        this._texture = gl.createTexture();
+        this._paletteTexture = gl.createTexture();
+    }
+
+    _initQuad() {
+        const gl = this._ctx;
+
+        this._quad = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._quad);
+
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+            -1, -1, 1, -1, -1, 1,
+            -1, 1, 1, -1, 1, 1
+        ]), gl.STATIC_DRAW);
+    }
+
+    _crop(floatArray) {
+        const start = this._start || 0;
+        const end = this._end != null ? this._end : floatArray.length;
+        let ret = floatArray ? floatArray.subarray(start, end) : new this._dataType(end - start);
+        // if(end - start > 0) {
+        //     ret = ret.expandTo(end - start);
+        // }
+        return ret;
+    }
+
+    /* ===================== CORE RENDER ===================== */
+
+    Redraw() {
+        const gl = this._ctx;
+
+        // --- resize ONLY if needed ---
+        const dpr = window.devicePixelRatio || 1;
+        const rect = this._canvas.getBoundingClientRect();
+
+        const width = Math.round(rect.width * dpr);
+        const height = Math.round(rect.height * dpr);
+
+        if (this._canvas.width !== width || this._canvas.height !== height) {
+            this._canvas.width = width;
+            this._canvas.height = height;
+        }
+
+        // --- viewport MUST match drawing buffer ---
+        gl.viewport(0, 0, this._canvas.width, this._canvas.height);
+
+        gl.clearColor(0, 0, 0, 1);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        gl.useProgram(this._program);
+
+        let currentHistory = null;
+        if(Object.isPlainObject(this._history)) {
+            currentHistory = this._history[this._waterfallSelector?.value?.value ?? this._waterfallSelector?.value];
+        } else {
+            currentHistory = this._history;
+        }
+
+        const all = currentHistory.crop((v) => {
+            return v.date.toDate().toUnixTime() >= this._min;
+        }, (v) => {
+            return v.date.toDate().toUnixTime() &lt;= this._max;
+        });
+
+        let chunkLength = 0;
+        if(all?.length > 0) {
+            chunkLength = all[0].chunk.length;
+        }
+
+
+        const start = Math.max(0, (this._start = this._start || 0));
+        const end = Math.min(chunkLength, (this._end = this._end || chunkLength));
+
+        const rows = Math.max(all?.length, this._length);
+        const cols = end - start;
+        const length = rows * cols;
+
+        if(length &lt;= 0) {
+            return;
+        }
+
+        const data = new this._dataType(length);
+
+        let offset = 0;
+
+        for (let i = 0; i &lt; all?.length; i++) {
+            let chunk = this._crop(all[i]?.chunk);
+
+            for (let j = 0; j &lt; cols; j++) {
+                const v = chunk?.[j] ?? 0;
+                data[offset + j] = this._normalizationFunction(v);
+            }
+
+            offset += cols;
+        }
+
+        // --- texture upload ---
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this._texture);
+
+        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+        gl.texImage2D(
+            gl.TEXTURE_2D,
+            0,
+            gl.R32F,
+            cols,
+            rows,
+            0,
+            gl.RED,
+            gl.FLOAT,
+            data
+        );
+
+        gl.uniform1i(this._uData, 0);
+
+        // --- palette ---
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, this._paletteTexture);
+        gl.uniform1i(this._uPalette, 1);
+
+        // --- quad ---
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._quad);
+        gl.enableVertexAttribArray(this._aPosition);
+        gl.vertexAttribPointer(this._aPosition, 2, gl.FLOAT, false, 0, 0);
+
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
+
+    /**
+     * Values for X axis
+     * @type {Float64Array|Float32Array|Int32Array|Int16Array|Int8Array|Uint32Array|Uint16Array|Uint8Array}
+     */
+    get xAxisValues() {
+        return this._xAxisValues;
+    }
+    /**
+     * Values for X axis
+     * @type {Float64Array|Float32Array|Int32Array|Int16Array|Int8Array|Uint32Array|Uint16Array|Uint8Array}
+     */
+    set xAxisValues(value) {
+        this._xAxisValues = value;
+    }
+
+    GenerateValues(points, start_x, delta_x, valueDataType = Float64Array) {
+        this._start_x = start_x;
+        this._delta_x = delta_x;
+        const values = new valueDataType(points);
+        for(let i = 0; i &lt; points; i++) {
+            values[i] = start_x + i * delta_x;
+        }
+        this.xAxisValues = values;
+
+    }
+
+    Reorganize(minValue, maxValue) {
+        if(!this._xAxisValues) {
+            return;
+        }
+
+        let startIndex = this._xAxisValues.findByValue(minValue);
+        let endIndex = this._xAxisValues.findByValue(maxValue);
+
+        if(startIndex === -1) {
+            const firstValue = this._xAxisValues[0];
+            if(minValue &lt; firstValue &amp;&amp; this._delta_x > 0) {
+                const prependCount = Math.ceil((firstValue - minValue) / this._delta_x);
+                this._xAxisValues = this._xAxisValues.prependTo(this._xAxisValues.length + prependCount, (i) => {
+                    return firstValue - (prependCount - i) * this._delta_x;
+                });
+
+
+                if(Object.isPlainObject(this._history)) {
+                    for(const name in this._history) {
+                        this._history[name].prependTo(prependCount);
+                    }
+                } else {
+                    this._history.prependTo(prependCount);
+                }
+                startIndex = this._xAxisValues.findByValue(minValue);
+            }
+        }
+
+        if(endIndex === -1) {
+            const lastValue = this._xAxisValues[this._xAxisValues.length - 1];
+            if(maxValue > lastValue &amp;&amp; this._delta_x > 0) {
+                const appendCount = Math.ceil((maxValue - lastValue) / this._delta_x);
+                const len = this._xAxisValues.length;
+                this._xAxisValues = this._xAxisValues.appendTo(this._xAxisValues.length + appendCount, (i) => {
+                    return lastValue + (i - (len - 1)) * this._delta_x;
+                });
+                if(Object.isPlainObject(this._history)) {
+                    for(const name in this._history) {
+                        this._history[name].appendTo(appendCount);
+                    }
+                } else {
+                    this._history.appendTo(appendCount);
+                }
+                endIndex = this._xAxisValues.findByValue(maxValue);
+            }
+
+        }
+
+        // if(Object.isPlainObject(this._history)) {
+        //     for(const name in this._history) {
+        //         this._history[name].cropItems(startIndex, endIndex);
+        //     }
+        // } else {
+        //     this._history.cropItems(startIndex, endIndex);
+        // }
+        // this.Redraw();
+        this.Resize(startIndex, endIndex);
+    }
+
+
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="App.Components.html">Components</a></li><li><a href="App.Modules.html">Modules</a></li><li><a href="Colibri.html">Colibri</a></li><li><a href="Colibri.UI.Chart.html">Chart</a></li><li><a href="Colibri.UI.Chooser.html">Chooser</a></li><li><a href="Colibri.UI.Forms.ArrayGrid.html">ArrayGrid</a></li><li><a href="Colibri.UI.Grid.html">Grid</a></li><li><a href="Colibri.UI.Input.html">Input</a></li><li><a href="Colibri.UI.List.html">List</a></li><li><a href="Colibri.UI.Select.html">Select</a></li><li><a href="Colibri.UI.Select.DefaultDropdown.html">DefaultDropdown</a></li><li><a href="Colibri.UI.Tree.html">Tree</a></li><li><a href="Colibri.UI.TreeNode.html">TreeNode</a></li><li><a href="Colibri.UI.TreeNodes.html">TreeNodes</a></li><li><a href="Colibri.UI.VirtualGrid.html">VirtualGrid</a></li></ul><h3>Classes</h3><ul><li><a href="AuditUIKit.UI.Informers.Colibri.UI.Informers.Download.html">Colibri.UI.Informers.Download</a></li><li><a href="Colibri.App.html">App</a></li><li><a href="Colibri.Common.AbstractMessageStore.html">AbstractMessageStore</a></li><li><a href="Colibri.Common.Audio.html">Audio</a></li><li><a href="Colibri.Common.Base64.html">Base64</a></li><li><a href="Colibri.Common.Blob.html">Blob</a></li><li><a href="Colibri.Common.BrowserStorage.html">BrowserStorage</a></li><li><a href="Colibri.Common.CometEvent.html">CometEvent</a></li><li><a href="Colibri.Common.CometMessage.html">CometMessage</a></li><li><a href="Colibri.Common.Cookie.html">Cookie</a></li><li><a href="Colibri.Common.Font.html">Font</a></li><li><a href="Colibri.Common.Graphics.html">Graphics</a></li><li><a href="Colibri.Common.HashActions.html">HashActions</a></li><li><a href="Colibri.Common.MimeType.html">MimeType</a></li><li><a href="Colibri.Common.Scrolling.html">Scrolling</a></li><li><a href="Colibri.Common.SessionStorage.html">SessionStorage</a></li><li><a href="Colibri.Common.Validation.html">Validation</a></li><li><a href="Colibri.Common.Video.html">Video</a></li><li><a href="Colibri.Devices.Auth.html">Auth</a></li><li><a href="Colibri.Devices.Camera.html">Camera</a></li><li><a href="Colibri.Devices.Camera_GetPicture.html">GetPicture</a></li><li><a href="Colibri.Devices.Capture.html">Capture</a></li><li><a href="Colibri.Devices.Device.html">Device</a></li><li><a href="Colibri.Devices.Dialogs.html">Dialogs</a></li><li><a href="Colibri.Devices.FileSystem.html">FileSystem</a></li><li><a href="Colibri.Devices.GeoLocation.html">GeoLocation</a></li><li><a href="Colibri.Devices.LocalNotifications.html">LocalNotifications</a></li><li><a href="Colibri.Devices.LocalNotificationsEmulator.html">LocalNotificationsEmulator</a></li><li><a href="Colibri.Devices.Media.html">Media</a></li><li><a href="Colibri.Devices.Notification.html">Notification</a></li><li><a href="Colibri.Devices.Sim.html">Sim</a></li><li><a href="Colibri.Devices.Sms.html">Sms</a></li><li><a href="Colibri.Devices.SqLite.html">SqLite</a></li><li><a href="Colibri.Devices.Vibrate.html">Vibrate</a></li><li><a href="Colibri.Events.Dispatcher.html">Dispatcher</a></li><li><a href="Colibri.Events.Event.html">Event</a></li><li><a href="Colibri.IO.Crypt.html">Crypt</a></li><li><a href="Colibri.IO.Request.html">Request</a></li><li><a href="Colibri.IO.RpcRequest.html">RpcRequest</a></li><li><a href="Colibri.IO-Colibri.IO.WebSocketStream.html">WebSocketStream</a></li><li><a href="Colibri.Modules.Colibri.Common.Wasm.html">Colibri.Common.Wasm</a></li><li><a href="Colibri.Modules.Module.html">Module</a></li><li><a href="Colibri.Sip.JsSip.html">JsSip</a></li><li><a href="Colibri.Storages.Models.Model.html">Model</a></li><li><a href="Colibri.Storages.Models.Table.html">Table</a></li><li><a href="Colibri.Storages.Store.html">Store</a></li><li><a href="Colibri.UI.AlertDialog.html">AlertDialog</a></li><li><a href="Colibri.UI.ArrayViewer.html">ArrayViewer</a></li><li><a href="Colibri.UI.AsLinkButton.html">AsLinkButton</a></li><li><a href="Colibri.UI.Audio.html">Audio</a></li><li><a href="Colibri.UI.Badge.html">Badge</a></li><li><a href="Colibri.UI.Blockquote.html">Blockquote</a></li><li><a href="Colibri.UI.BoolViewer.html">BoolViewer</a></li><li><a href="Colibri.UI.BorderViewer.html">BorderViewer</a></li><li><a href="Colibri.UI.Button.html">Button</a></li><li><a href="Colibri.UI.ButtonGroup.html">ButtonGroup</a></li><li><a href="Colibri.UI.Chart.Barchart.html">Barchart</a></li><li><a href="Colibri.UI.Checkbox.html">Checkbox</a></li><li><a href="Colibri.UI.CheckboxAsTextViewer.html">CheckboxAsTextViewer</a></li><li><a href="Colibri.UI.CheckboxEditor.html">CheckboxEditor</a></li><li><a href="Colibri.UI.CheckboxListEditor.html">CheckboxListEditor</a></li><li><a href="Colibri.UI.CheckboxViewer.html">CheckboxViewer</a></li><li><a href="Colibri.UI.Chooser.ChooseWindow.html">ChooseWindow</a></li><li><a href="Colibri.UI.Color.html">Color</a></li><li><a href="Colibri.UI.Color.Alpha.html">Alpha</a></li><li><a href="Colibri.UI.Color.Block.html">Block</a></li><li><a href="Colibri.UI.Color.Line.html">Line</a></li><li><a href="Colibri.UI.ColorViewer.html">ColorViewer</a></li><li><a href="Colibri.UI.Component.html">Component</a></li><li><a href="Colibri.UI.ConfirmDialog.html">ConfirmDialog</a></li><li><a href="Colibri.UI.ContextMenu.html">ContextMenu</a></li><li><a href="Colibri.UI.Counter.html">Counter</a></li><li><a href="Colibri.UI.DateDiffViewer.html">DateDiffViewer</a></li><li><a href="Colibri.UI.DatePicker.html">DatePicker</a></li><li><a href="Colibri.UI.DateRangeViewer.html">DateRangeViewer</a></li><li><a href="Colibri.UI.DateSelector.html">DateSelector</a></li><li><a href="Colibri.UI.DateSelectorPopup.html">DateSelectorPopup</a></li><li><a href="Colibri.UI.DateTimeSelector.html">DateTimeSelector</a></li><li><a href="Colibri.UI.DateTimeSelectorPopup.html">DateTimeSelectorPopup</a></li><li><a href="Colibri.UI.DateTimeViewer.html">DateTimeViewer</a></li><li><a href="Colibri.UI.DateViewer.html">DateViewer</a></li><li><a href="Colibri.UI.DeferredFormValidator.html">DeferredFormValidator</a></li><li><a href="Colibri.UI.DocumentViewer.html">DocumentViewer</a></li><li><a href="Colibri.UI.Drag.html">Drag</a></li><li><a href="Colibri.UI.DragManager.html">DragManager</a></li><li><a href="Colibri.UI.DropDown.html">DropDown</a></li><li><a href="Colibri.UI.Editor.html">Editor</a></li><li><a href="Colibri.UI.EmailEditor.html">EmailEditor</a></li><li><a href="Colibri.UI.ErrorButton.html">ErrorButton</a></li><li><a href="Colibri.UI.ExtendedButton.html">ExtendedButton</a></li><li><a href="Colibri.UI.FieldValidator.html">FieldValidator</a></li><li><a href="Colibri.UI.FieldsViewer.html">FieldsViewer</a></li><li><a href="Colibri.UI.FileDropManager.html">FileDropManager</a></li><li><a href="Colibri.UI.FileSizeViewer.html">FileSizeViewer</a></li><li><a href="Colibri.UI.FileViewer.html">FileViewer</a></li><li><a href="Colibri.UI.FilesDragAndDrop.html">FilesDragAndDrop</a></li><li><a href="Colibri.UI.FilesEditor.html">FilesEditor</a></li><li><a href="Colibri.UI.FilesViewer.html">FilesViewer</a></li><li><a href="Colibri.UI.FlexBox.html">FlexBox</a></li><li><a href="Colibri.UI.FontFamilySelector.html">FontFamilySelector</a></li><li><a href="Colibri.UI.FontFamilyViewer.html">FontFamilyViewer</a></li><li><a href="Colibri.UI.FormValidator.html">FormValidator</a></li><li><a href="Colibri.UI.FormValidator_Validate.html">Validate</a></li><li><a href="Colibri.UI.Forms.Array.html">Array</a></li><li><a href="Colibri.UI.Forms.ArrayGrid_Fields.html">Fields</a></li><li><a href="Colibri.UI.Forms.ArrayGrid.ObjectWindow.html">ObjectWindow</a></li><li><a href="Colibri.UI.Forms.Bool.html">Bool</a></li><li><a href="Colibri.UI.Forms.Checkbox.html">Checkbox</a></li><li><a href="Colibri.UI.Forms.CheckboxList.html">CheckboxList</a></li><li><a href="Colibri.UI.Forms.Choose.html">Choose</a></li><li><a href="Colibri.UI.Forms.Color.html">Color</a></li><li><a href="Colibri.UI.Forms.Date.html">Date</a></li><li><a href="Colibri.UI.Forms.DateRange.html">DateRange</a></li><li><a href="Colibri.UI.Forms.DateTime.html">DateTime</a></li><li><a href="Colibri.UI.Forms.DateTimeRange.html">DateTimeRange</a></li><li><a href="Colibri.UI.Forms.DayOfMonth.html">DayOfMonth</a></li><li><a href="Colibri.UI.Forms.DocumentGenerator.html">DocumentGenerator</a></li><li><a href="Colibri.UI.Forms.Email.html">Email</a></li><li><a href="Colibri.UI.Forms.Field.html">Field</a></li><li><a href="Colibri.UI.Forms.File.html">File</a></li><li><a href="Colibri.UI.Forms.FileLabel.html">FileLabel</a></li><li><a href="Colibri.UI.Forms.Files.html">Files</a></li><li><a href="Colibri.UI.Forms.FontFamily.html">FontFamily</a></li><li><a href="Colibri.UI.Forms.Form.html">Form</a></li><li><a href="Colibri.UI.Forms.HiddenField.html">HiddenField</a></li><li><a href="Colibri.UI.Forms.KeyValueObject.html">KeyValueObject</a></li><li><a href="Colibri.UI.Forms.Label.html">Label</a></li><li><a href="Colibri.UI.Forms.Link.html">Link</a></li><li><a href="Colibri.UI.Forms.List.html">List</a></li><li><a href="Colibri.UI.Forms.MonthYear.html">MonthYear</a></li><li><a href="Colibri.UI.Forms.Number.html">Number</a></li><li><a href="Colibri.UI.Forms.NumberRange.html">NumberRange</a></li><li><a href="Colibri.UI.Forms.Object.html">Object</a></li><li><a href="Colibri.UI.Forms.Passport.html">Passport</a></li><li><a href="Colibri.UI.Forms.Password.html">Password</a></li><li><a href="Colibri.UI.Forms.Period.html">Period</a></li><li><a href="Colibri.UI.Forms.Radio.html">Radio</a></li><li><a href="Colibri.UI.Forms.Select.html">Select</a></li><li><a href="Colibri.UI.Forms.SimpleArray.html">SimpleArray</a></li><li><a href="Colibri.UI.Forms.Tabs.html">Tabs</a></li><li><a href="Colibri.UI.Forms.Text.html">Text</a></li><li><a href="Colibri.UI.Forms.TextArea.html">TextArea</a></li><li><a href="Colibri.UI.Forms.Toggle.html">Toggle</a></li><li><a href="Colibri.UI.Forms.Token.html">Token</a></li><li><a href="Colibri.UI.Forms.Year.html">Year</a></li><li><a href="Colibri.UI.Frame.html">Frame</a></li><li><a href="Colibri.UI.GoogleChart.html">GoogleChart</a></li><li><a href="Colibri.UI.GrayButton.html">GrayButton</a></li><li><a href="Colibri.UI.Grid.Cell.html">Cell</a></li><li><a href="Colibri.UI.Grid.Column.html">Column</a></li><li><a href="Colibri.UI.Grid.Columns.html">Columns</a></li><li><a href="Colibri.UI.Grid.Header.html">Header</a></li><li><a href="Colibri.UI.Grid.Row.html">Row</a></li><li><a href="Colibri.UI.Grid.Rows.html">Rows</a></li><li><a href="Colibri.UI.GridFileViewer.html">GridFileViewer</a></li><li><a href="Colibri.UI.H1.html">H1</a></li><li><a href="Colibri.UI.H2.html">H2</a></li><li><a href="Colibri.UI.H3.html">H3</a></li><li><a href="Colibri.UI.H4.html">H4</a></li><li><a href="Colibri.UI.Heading.html">Heading</a></li><li><a href="Colibri.UI.Hr.html">Hr</a></li><li><a href="Colibri.UI.HtmlDataViewer.html">HtmlDataViewer</a></li><li><a href="Colibri.UI.IFrame.html">IFrame</a></li><li><a href="Colibri.UI.Icon.html">Icon</a></li><li><a href="Colibri.UI.IconViewer.html">IconViewer</a></li><li><a href="Colibri.UI.Image.html">Image</a></li><li><a href="Colibri.UI.ImageViewWindow.html">ImageViewWindow</a></li><li><a href="Colibri.UI.ImageViewer.html">ImageViewer</a></li><li><a href="Colibri.UI.ImagesViewer.html">ImagesViewer</a></li><li><a href="Colibri.UI.Img.html">Img</a></li><li><a href="Colibri.UI.Informers.DownloadItem.html">DownloadItem</a></li><li><a href="Colibri.UI.Input.File.html">File</a></li><li><a href="Colibri.UI.JsonViewer.html">JsonViewer</a></li><li><a href="Colibri.UI.Link.html">Link</a></li><li><a href="Colibri.UI.LinkEditor.html">LinkEditor</a></li><li><a href="Colibri.UI.LinkViewer.html">LinkViewer</a></li><li><a href="Colibri.UI.List.Group.html">Group</a></li><li><a href="Colibri.UI.List.Item.html">Item</a></li><li><a href="Colibri.UI.List.JsonRenderer.html">JsonRenderer</a></li><li><a href="Colibri.UI.List.SearchBox.html">SearchBox</a></li><li><a href="Colibri.UI.ListItem.html">ListItem</a></li><li><a href="Colibri.UI.Loading.html">Loading</a></li><li><a href="Colibri.UI.LoadingBallun.html">LoadingBallun</a></li><li><a href="Colibri.UI.LoadingContainer.html">LoadingContainer</a></li><li><a href="Colibri.UI.Logs.JsonLog.html">JsonLog</a></li><li><a href="Colibri.UI.Maps.Controls.Button.html">Button</a></li><li><a href="Colibri.UI.Maps.Controls.ButtonGroup.html">ButtonGroup</a></li><li><a href="Colibri.UI.Maps.Controls.FileButton.html">FileButton</a></li><li><a href="Colibri.UI.Maps.Controls.FilterButton.html">FilterButton</a></li><li><a href="Colibri.UI.Maps.Controls.LayersButton.html">LayersButton</a></li><li><a href="Colibri.UI.Maps.Controls.RotateButton.html">RotateButton</a></li><li><a href="Colibri.UI.Maps.Controls.StatesButton.html">StatesButton</a></li><li><a href="Colibri.UI.Maps.Controls.ToggleButton.html">ToggleButton</a></li><li><a href="Colibri.UI.Maps.Controls.ToolBox.html">ToolBox</a></li><li><a href="Colibri.UI.Maps.LeafletJs.html">LeafletJs</a></li><li><a href="Colibri.UI.Maps.MapLibre.html">MapLibre</a></li><li><a href="Colibri.UI.MassActionsMenu.html">MassActionsMenu</a></li><li><a href="Colibri.UI.MenuList.html">MenuList</a></li><li><a href="Colibri.UI.ModelViewer.html">ModelViewer</a></li><li><a href="Colibri.UI.ModelessWindow.html">ModelessWindow</a></li><li><a href="Colibri.UI.MonthPicker.html">MonthPicker</a></li><li><a href="Colibri.UI.MonthSelector.html">MonthSelector</a></li><li><a href="Colibri.UI.MonthYearViewer.html">MonthYearViewer</a></li><li><a href="Colibri.UI.MoveManager.html">MoveManager</a></li><li><a href="Colibri.UI.Note.html">Note</a></li><li><a href="Colibri.UI.Notice.html">Notice</a></li><li><a href="Colibri.UI.Notices.html">Notices</a></li><li><a href="Colibri.UI.NumberEditor.html">NumberEditor</a></li><li><a href="Colibri.UI.NumberViewer.html">NumberViewer</a></li><li><a href="Colibri.UI.ObjectViewer.html">ObjectViewer</a></li><li><a href="Colibri.UI.OrderedList.html">OrderedList</a></li><li><a href="Colibri.UI.OutlineBlueButton.html">OutlineBlueButton</a></li><li><a href="Colibri.UI.Pager.html">Pager</a></li><li><a href="Colibri.UI.Pane.html">Pane</a></li><li><a href="Colibri.UI.PaneGrid.html">PaneGrid</a></li><li><a href="Colibri.UI.PaneSwitcher.html">PaneSwitcher</a></li><li><a href="Colibri.UI.PeriodViewer.html">PeriodViewer</a></li><li><a href="Colibri.UI.PlayPauseButton.html">PlayPauseButton</a></li><li><a href="Colibri.UI.PointerControl.html">PointerControl</a></li><li><a href="Colibri.UI.Popup.html">Popup</a></li><li><a href="Colibri.UI.PopupList.html">PopupList</a></li><li><a href="Colibri.UI.ProgressBar.html">ProgressBar</a></li><li><a href="Colibri.UI.ProgressViewer.html">ProgressViewer</a></li><li><a href="Colibri.UI.PromptDialog.html">PromptDialog</a></li><li><a href="Colibri.UI.Radio.html">Radio</a></li><li><a href="Colibri.UI.RadioViewer.html">RadioViewer</a></li><li><a href="Colibri.UI.RangePicker.html">RangePicker</a></li><li><a href="Colibri.UI.ReadUnreadBadge.html">ReadUnreadBadge</a></li><li><a href="Colibri.UI.RemoteFileEditor.html">RemoteFileEditor</a></li><li><a href="Colibri.UI.Renderer.html">Renderer</a></li><li><a href="Colibri.UI.Rgb.html">Rgb</a></li><li><a href="Colibri.UI.Router.html">Router</a></li><li><a href="Colibri.UI.Ruler.html">Ruler</a></li><li><a href="Colibri.UI.SearchInput.html">SearchInput</a></li><li><a href="Colibri.UI.Select.DefaultDropdown.Options.html">Options</a></li><li><a href="Colibri.UI.Select.Dropdown.html">Dropdown</a></li><li><a href="Colibri.UI.SelectEditor.html">SelectEditor</a></li><li><a href="Colibri.UI.SelectViewer.html">SelectViewer</a></li><li><a href="Colibri.UI.Selector.html">Selector</a></li><li><a href="Colibri.UI.Shader.html">Shader</a></li><li><a href="Colibri.UI.ShadowViewer.html">ShadowViewer</a></li><li><a href="Colibri.UI.Shortcuts.html">Shortcuts</a></li><li><a href="Colibri.UI.SimpleButton.html">SimpleButton</a></li><li><a href="Colibri.UI.SimpleFormValidator.html">SimpleFormValidator</a></li><li><a href="Colibri.UI.SimplePieChart.html">SimplePieChart</a></li><li><a href="Colibri.UI.SingleTimeline.html">SingleTimeline</a></li><li><a href="Colibri.UI.SlideDown.html">SlideDown</a></li><li><a href="Colibri.UI.Spectrum.Graph.html">Graph</a></li><li><a href="Colibri.UI.Spectrum.Selections.html">Selections</a></li><li><a href="Colibri.UI.Split.html">Split</a></li><li><a href="Colibri.UI.Strong.html">Strong</a></li><li><a href="Colibri.UI.SuccessButton.html">SuccessButton</a></li><li><a href="Colibri.UI.Switcher.html">Switcher</a></li><li><a href="Colibri.UI.Table.html">Table</a></li><li><a href="Colibri.UI.TableCell.html">TableCell</a></li><li><a href="Colibri.UI.TableHeaderCell.html">TableHeaderCell</a></li><li><a href="Colibri.UI.TableRow.html">TableRow</a></li><li><a href="Colibri.UI.Tabs.html">Tabs</a></li><li><a href="Colibri.UI.Templates.html">Templates</a></li><li><a href="Colibri.UI.TextArea.html">TextArea</a></li><li><a href="Colibri.UI.TextAreaEditor.html">TextAreaEditor</a></li><li><a href="Colibri.UI.TextAreaViewer.html">TextAreaViewer</a></li><li><a href="Colibri.UI.TextEditor.html">TextEditor</a></li><li><a href="Colibri.UI.TextSpan.html">TextSpan</a></li><li><a href="Colibri.UI.TextViewer.html">TextViewer</a></li><li><a href="Colibri.UI.Timeline.html">Timeline</a></li><li><a href="Colibri.UI.ToggleBox.html">ToggleBox</a></li><li><a href="Colibri.UI.ToggleBoxEditor.html">ToggleBoxEditor</a></li><li><a href="Colibri.UI.ToggleButton.html">ToggleButton</a></li><li><a href="Colibri.UI.ToggleboxViewer.html">ToggleboxViewer</a></li><li><a href="Colibri.UI.ToolTip.html">ToolTip</a></li><li><a href="Colibri.UI.Toolbar.html">Toolbar</a></li><li><a href="Colibri.UI.Tree.JsonRenderer.html">JsonRenderer</a></li><li><a href="Colibri.UI.Tree.SearchBox.html">SearchBox</a></li><li><a href="Colibri.UI.UnorderedList.html">UnorderedList</a></li><li><a href="Colibri.UI.UploadButton.html">UploadButton</a></li><li><a href="Colibri.UI.Utilities.Mask.html">Mask</a></li><li><a href="Colibri.UI.Utilities.Validator.html">Validator</a></li><li><a href="Colibri.UI.Video.html">Video</a></li><li><a href="Colibri.UI.Viewer.html">Viewer</a></li><li><a href="Colibri.UI.WaterfallBuffer.html">WaterfallBuffer</a></li><li><a href="Colibri.UI.WebRTCVideo.html">WebRTCVideo</a></li><li><a href="Colibri.UI.Widget.html">Widget</a></li><li><a href="Colibri.UI.Window.html">Window</a></li><li><a href="Colibri.UI.YearMonthSelector.html">YearMonthSelector</a></li><li><a href="Colibri.UI.YearPicker.html">YearPicker</a></li><li><a href="Colibri.UI.YearQuarterSelector.html">YearQuarterSelector</a></li><li><a href="Colibri.UI.YearSelector.html">YearSelector</a></li><li><a href="Colibri.UI.YearViewer.html">YearViewer</a></li><li><a href="Colibri.Web.Comet.html">Comet</a></li><li><a href="Colibri.Web.IndexDB.html">IndexDB</a></li><li><a href="Colibri.Web.Request.html">Request</a></li><li><a href="Colibri.Web.Router.html">Router</a></li><li><a href="Destructable.html">Destructable</a></li><li><a href="DestructableRegistry.html">DestructableRegistry</a></li><li><a href="MediaMTXWebRTCReader.html">MediaMTXWebRTCReader</a></li></ul><h3>Global</h3><ul><li><a href="global.html#App">App</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sun Jul 26 2026 13:08:05 GMT+0400 (Armenia Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -354,7 +354,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
     /**
      * Returns the current URL.
-     * @type {string} - The current URL.
+     * @returns {string} - The current URL.
      */
     get current() {
         return this._url;
@@ -362,7 +362,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
     /**
      * Returns the path segments of the current URL.
-     * @type {Array} - The path segments of the current URL.
+     * @returns {Array} - The path segments of the current URL.
      */
     get path() {
         return this._path;
@@ -370,7 +370,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
     /**
      * Returns the query parameters of the current URL.
-     * @type {Object} - The query parameters of the current URL.
+     * @returns {Object} - The query parameters of the current URL.
      */
     get options() {
         return this._options;
@@ -378,7 +378,7 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
     /**
      * History object
-     * @type {Array}
+     * @returns {Array}
      * @readonly
      */
     get history() {
@@ -410,14 +410,14 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
     /**
      * Array of query params to save in query string
-     * @type {Array}
+     * @returns {Array}
      */
     get safeParams() {
         return this._safeParams ?? [];
     }
     /**
      * Array of query params to save in query string
-     * @type {Array}
+     * @returns {Array}
      */
     set safeParams(value) {
         this._safeParams = value;

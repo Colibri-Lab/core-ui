@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: /srv/www/cblank/htdocs/vendor/colibri/ui/src/02.Common/04.MimeType.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: /srv/www/cblank/htdocs/vendor/colibri/ui/src/02.Common/04.MimeType.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Represents a utility class for handling MIME types.
+ * @class
+ * @memberof Colibri.Common
+ */
+Colibri.Common.MimeType = class {
+
+    /**
+     * A map of file extensions to MIME types.
+     * @type {Object&lt;string, string>}
+     */
+    static types = {
+        "acx": "application/internet-property-stream",
+        "ai": "application/postscript",
+        "aif": "audio/x-aiff",
+        "aifc": "audio/x-aiff",
+        "aiff": "audio/x-aiff",
+        "asf": "video/x-ms-asf",
+        "asr": "video/x-ms-asf",
+        "asx": "video/x-ms-asf",
+        "au": "audio/basic",
+        "avi": "video/x-msvideo",
+        "flv": "video/x-msvideo",
+        "axs": "application/olescript",
+        "bas": "text/plain",
+        "bcpio": "application/x-bcpio",
+        "bin": "application/octet-stream",
+        "bmp": "image/bmp",
+        "c": "text/plain",
+        "cat": "application/vnd.ms-pkiseccat",
+        "cdf": "application/x-cdf",
+        "cer": "application/x-x509-ca-cert",
+        "class": "application/octet-stream",
+        "clp": "application/x-msclip",
+        "cmx": "image/x-cmx",
+        "cod": "image/cis-cod",
+        "cpio": "application/x-cpio",
+        "crd": "application/x-mscardfile",
+        "crl": "application/pkix-crl",
+        "crt": "application/x-x509-ca-cert",
+        "csh": "application/x-csh",
+        "css": "text/css",
+        "dcr": "application/x-director",
+        "der": "application/x-x509-ca-cert",
+        "dir": "application/x-director",
+        "dll": "application/x-msdownload",
+        "dms": "application/octet-stream",
+        "doc": "application/msword",
+        "docx": "application/msword",
+        "dot": "application/msword",
+        "dvi": "application/x-dvi",
+        "dxr": "application/x-director",
+        "eps": "application/postscript",
+        "etx": "text/x-setext",
+        "evy": "application/envoy",
+        "exe": "application/octet-stream",
+        "fif": "application/fractals",
+        "flr": "x-world/x-vrml",
+        "gif": "image/gif",
+        "webp": "image/webp",
+        "gtar": "application/x-gtar",
+        "gz": "application/x-gzip",
+        "h": "text/plain",
+        "hdf": "application/x-hdf",
+        "hlp": "application/winhlp",
+        "hqx": "application/mac-binhex40",
+        "hta": "application/hta",
+        "htc": "text/x-component",
+        "html": "text/html",
+        "htt": "text/webviewhtml",
+        "ico": "image/x-icon",
+        "ief": "image/ief",
+        "iii": "application/x-iphone",
+        "ins": "application/x-internet-signup",
+        "isp": "application/x-internet-signup",
+        "jfif": "image/pipeg",
+        "jpg": "image/jpeg",
+        "jpe": "image/jpeg",
+        "jpeg": "image/jpeg",
+        "png": "image/png",
+        "js": "text/javascript",
+        "latex": "application/x-latex",
+        "lha": "application/octet-stream",
+        "lsf": "video/x-la-asf",
+        "lsx": "video/x-la-asf",
+        "lzh": "application/octet-stream",
+        "m13": "application/x-msmediaview",
+        "m14": "application/x-msmediaview",
+        "m3u": "audio/x-mpegurl",
+        "man": "application/x-troff-man",
+        "mdb": "application/x-msaccess",
+        "me": "application/x-troff-me",
+        "mht": "message/rfc822",
+        "mhtml": "message/rfc822",
+        "mid": "audio/mid",
+        "mny": "application/x-msmoney",
+        "mov": "video/quicktime",
+        "movie": "video/x-sgi-movie",
+        "mp2": "video/mpeg",
+        "mp3": "audio/mpeg",
+        "wav": "audio/wav",
+        "mpa": "video/mpeg",
+        "mpe": "video/mpeg",
+        "mpeg": "video/mpeg",
+        "mpg": "video/mpeg",
+        "mp4": "video/mp4",
+        "mpp": "application/vnd.ms-project",
+        "mpv2": "video/mpeg",
+        "ms": "application/x-troff-ms",
+        "mvb": "application/x-msmediaview",
+        "nws": "message/rfc822",
+        "oda": "application/oda",
+        "p10": "application/pkcs10",
+        "p12": "application/x-pkcs12",
+        "p7b": "application/x-pkcs7-certificates",
+        "p7c": "application/x-pkcs7-mime",
+        "p7m": "application/x-pkcs7-mime",
+        "p7r": "application/x-pkcs7-certreqresp",
+        "p7s": "application/x-pkcs7-signature",
+        "pbm": "image/x-portable-bitmap",
+        "pdf": "application/pdf",
+        "pfx": "application/x-pkcs12",
+        "pgm": "image/x-portable-graymap",
+        "pko": "application/ynd.ms-pkipko",
+        "pma": "application/x-perfmon",
+        "pmc": "application/x-perfmon",
+        "pml": "application/x-perfmon",
+        "pmr": "application/x-perfmon",
+        "pmw": "application/x-perfmon",
+        "pnm": "image/x-portable-anymap",
+        "pot": "application/vnd.ms-powerpoint",
+        "ppm": "image/x-portable-pixmap",
+        "pps": "application/vnd.ms-powerpoint",
+        "ppt": "application/vnd.ms-powerpoint",
+        "prf": "application/pics-rules",
+        "ps": "application/postscript",
+        "pub": "application/x-mspublisher",
+        "qt": "video/quicktime",
+        "ra": "audio/x-pn-realaudio",
+        "ram": "audio/x-pn-realaudio",
+        "ras": "image/x-cmu-raster",
+        "rgb": "image/x-rgb",
+        "rmi": "audio/mid",
+        "roff": "application/x-troff",
+        "rtf": "application/rtf",
+        "rtx": "text/richtext",
+        "scd": "application/x-msschedule",
+        "sct": "text/scriptlet",
+        "setpay": "application/set-payment-initiation",
+        "setreg": "application/set-registration-initiation",
+        "sh": "application/x-sh",
+        "shar": "application/x-shar",
+        "sit": "application/x-stuffit",
+        "snd": "audio/basic",
+        "spc": "application/x-pkcs7-certificates",
+        "spl": "application/futuresplash",
+        "src": "application/x-wais-source",
+        "sst": "application/vnd.ms-pkicertstore",
+        "stl": "application/vnd.ms-pkistl",
+        "sv4cpio": "application/x-sv4cpio",
+        "sv4crc": "application/x-sv4crc",
+        "t": "application/x-troff",
+        "tar": "application/x-tar",
+        "tcl": "application/x-tcl",
+        "tex": "application/x-tex",
+        "texi": "application/x-texinfo",
+        "texinfo": "application/x-texinfo",
+        "tgz": "application/x-compressed",
+        "tif": "image/tiff",
+        "tiff": "image/tiff",
+        "tr": "application/x-troff",
+        "trm": "application/x-msterminal",
+        "tsv": "text/tab-separated-values",
+        "txt": "text/plain",
+        "uls": "text/iuls",
+        "ustar": "application/x-ustar",
+        "vcf": "text/x-vcard",
+        "vrml": "x-world/x-vrml",
+        "wcm": "application/vnd.ms-works",
+        "wdb": "application/vnd.ms-works",
+        "wks": "application/vnd.ms-works",
+        "wmf": "application/x-msmetafile",
+        "wps": "application/vnd.ms-works",
+        "wri": "application/x-mswrite",
+        "wrl": "x-world/x-vrml",
+        "wrz": "x-world/x-vrml",
+        "xaf": "x-world/x-vrml",
+        "xbm": "image/x-xbitmap",
+        "xla": "application/vnd.ms-excel",
+        "xlc": "application/vnd.ms-excel",
+        "xlm": "application/vnd.ms-excel",
+        "xls": "application/vnd.ms-excel",
+        "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "xlt": "application/vnd.ms-excel",
+        "xlw": "application/vnd.ms-excel",
+        "xof": "x-world/x-vrml",
+        "xpm": "image/x-xpixmap",
+        "xwd": "image/x-xwindowdump",
+        "z": "application/x-compress",
+        "zip": "application/zip",
+        "swf": "application/x-shockwave-flash",
+        "svg": "image/svg+xml",
+        "xml": "application/xml",
+        "json": "application/json"
+
+    }
+
+    static externalTypes = {};
+
+    /**
+     * Returns the MIME type associated with the given file extension.
+     * @param {string} ext - The file extension.
+     * @returns {string|undefined} The MIME type, or undefined if not found.
+     */
+    static ext2type(ext) {
+        if (Colibri.Common.MimeType.externalTypes) {
+            let founded = null;
+            Object.forEach(Colibri.Common.MimeType.externalTypes, (mimetype, value) => {
+                const found = value.extensions ? value.extensions.filter(v => ext === v) : [];
+                if (found.length > 0) {
+                    founded = mimetype;
+                    return false;
+                }
+                return true;
+            });
+            return founded;
+        }
+        return Colibri.Common.MimeType.types[ext];
+    }
+
+    /**
+     * Returns the file extension associated with the given MIME type.
+     * @param {string} type - The MIME type.
+     * @returns {string|false} The file extension, or false if not found.
+     */
+    static type2ext(type) {
+        if (Colibri.Common.MimeType.externalTypes &amp;&amp; Object.countKeys(Colibri.Common.MimeType.externalTypes) > 0) {
+            if (Colibri.Common.MimeType.externalTypes[type]) {
+                return Colibri.Common.MimeType.externalTypes[type].extensions[0];
+            } else {
+                return null;
+            }
+        } else {
+            for (const key of Object.keys(Colibri.Common.MimeType.types)) {
+                if (type == Colibri.Common.MimeType.types[key]) {
+                    return key;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns the file extension associated with the given base64 encoded data.
+     * @param {string} base - The base64 encoded data.
+     * @returns {string|false} The file extension, or false if not found.
+     */
+    static base2type(base) {
+        var ret = false;
+        var type = base.split('data:')[1];
+        type = type.split(';')[0];
+        Object.keys(Colibri.Common.MimeType.types).forEach(key => {
+            if (type == Colibri.Common.MimeType.types[key]) { ret = key; return false; }
+            return true;
+        });
+        return ret;
+    }
+
+    static name2type(name) {
+        var parts = name.split('.');
+        var ext = parts[parts.length - 1];
+        return Colibri.Common.MimeType.ext2type(ext);
+    }
+
+    /**
+     * Check if a file with the given extension is an image.
+     * @param {string} ext - The file extension.
+     * @returns {boolean} True if the file is an image, otherwise false.
+     */
+    static isImage(ext) {
+        if (ext.indexOf('/') !== -1) {
+            return ext.split('/')[0] === 'image';
+        }
+        return ["gif", "jpeg", "jpg", "png", "bmp", "dib", "svg", "webp"].indexOf(ext.toLowerCase()) != -1;
+    }
+    /**
+     * Check if a file with the given extension is an audio file.
+     * @param {string} ext - The file extension.
+     * @returns {boolean} True if the file is an audio file, otherwise false.
+     */
+    static isAudio(ext) {
+        if (ext.indexOf('/') !== -1) {
+            return ext.split('/')[0] === 'audio';
+        }
+        return ["mid", "mp3", "au", "wav"].indexOf(ext.toLowerCase()) != -1;
+    }
+    /**
+     * Check if a file with the given extension is a video file.
+     * @param {string} ext - The file extension.
+     * @returns {boolean} True if the file is a video file, otherwise false.
+     */
+    static isVideo(ext) {
+        if (ext.indexOf('/') !== -1) {
+            return ext.split('/')[0] === 'video';
+        }
+        return ["wmv", "mpg", "mp4", "webm"].indexOf(ext.toLowerCase()) != -1;
+    }
+    /**
+     * Check if a file with the given extension is a Flash file.
+     * @param {string} ext - The file extension.
+     * @returns {boolean} True if the file is a Flash file, otherwise false.
+     */
+    static isFlash(ext) { return ["swf"].indexOf(ext.toLowerCase()) != -1; }
+    /**
+     * Check if a file with the given extension is editable.
+     * @param {string} ext - The file extension.
+     * @returns {boolean} True if the file is editable, otherwise false.
+     */
+    static isEditable(ext) { return ["txt", "js", "css", "scss", "less", "layout", "php", "htm", "html", "service", "xml", "xsl"].indexOf(ext.toLowerCase()) != -1; }
+    /**
+     * Check if a file with the given extension is viewable.
+     * @param {string} ext - The file extension.
+     * @returns {boolean} True if the file is viewable, otherwise false.
+     */
+    static isBrowserCapable(ext) { return ["jpg", "png", "gif", "swf", "html", "htm", "txt", "css", "js", "pdf", "wmv", "mpg", "mp4", "mid", "mp3", "au"].indexOf(ext.toLowerCase()) != -1; }
+    /**
+     * Get the icon class for a file with the given extension.
+     * @param {string} ext - The file extension.
+     * @returns {string} The icon class.
+     */
+    static isViewable(ext) { return isImage(ext) || isFlash(ext); }
+    /**
+     * Get the CodeMirror mode associated with a given file extension.
+     * @param {string} ext - The file extension.
+     * @returns {string} The CodeMirror mode.
+     */
+    static icon(ext) { return 'icon-file-' + ext; }
+
+    /**
+     * Get the CodeMirror mode associated with a given file extension.
+     * @param {string} ext - The file extension.
+     * @returns {string} The CodeMirror mode.
+     */
+    static ext2mode(ext) {
+
+        if (ext == 'js') return 'javascript';
+        else if (ext == 'css') return 'css';
+        else if (ext == 'less') return 'text/x-less';
+        else if (ext == 'scss') return 'text/x-scss';
+        else if (ext == 'html' || ext == 'htm') return 'htmlmixed';
+        else if (ext == 'php' || ext == 'layout' || ext == 'release' || ext == 'service') return 'php';
+        else if (ext == 'xml') return 'xml';
+        else if (ext == 'yaml') return 'yaml';
+        else return Colibri.Common.MimeType.ext2type(ext);
+
+    }
+
+    /**
+     * Get the CodeMirror requirements for a given file extension.
+     * @param {string} ext - The file extension.
+     * @param {string} [path='/res/codemirror'] - The base path for resources.
+     * @returns {Object&lt;string, string[]>} The CodeMirror requirements.
+     */
+    static extrequirements(ext, path = '/res/codemirror') {
+
+        if (ext == 'js') return {
+            js: [path + '/addon/hint/show-hint.js', path + '/addon/hint/javascript-hint.js', path + '/mode/javascript/javascript.js', path + '/addon/selection/active-line.js', path + '/addon/edit/matchbrackets.js', path + '/addon/fold/foldcode.js', path + '/addon/fold/foldgutter.js', path + '/addon/fold/brace-fold.js', path + '/addon/fold/xml-fold.js', path + '/addon/fold/indent-fold.js', path + '/addon/fold/comment-fold.js', path + '/addon/dialog/dialog.js', path + '/addon/search/searchcursor.js', path + '/addon/search/search.js', path + '/addon/scroll/annotatescrollbar.js', path + '/addon/search/matchesonscrollbar.js', path + '/addon/search/jump-to-line.js', path + '/addon/display/placeholder.js'],
+            css: [path + '/addon/hint/show-hint.css', path + '/addon/fold/foldgutter.css', path + '/addon/dialog/dialog.css', path + '/addon/search/matchesonscrollbar.css']
+        };
+        else if (ext == 'css' || ext == 'scss' || ext == 'less') return {
+            js: [path + '/addon/hint/show-hint.js', path + '/addon/hint/css-hint.js', path + '/addon/hint/show-hint.js', path + '/addon/hint/css-hint.js', path + '/mode/css/css.js', path + '/addon/selection/active-line.js', path + '/addon/edit/matchbrackets.js', path + '/addon/fold/foldcode.js', path + '/addon/fold/foldgutter.js', path + '/addon/fold/brace-fold.js', path + '/addon/fold/xml-fold.js', path + '/addon/fold/indent-fold.js', path + '/addon/fold/comment-fold.js', path + '/addon/dialog/dialog.js', path + '/addon/search/searchcursor.js', path + '/addon/search/search.js', path + '/addon/scroll/annotatescrollbar.js', path + '/addon/search/matchesonscrollbar.js', path + '/addon/search/jump-to-line.js', path + '/addon/display/placeholder.js'],
+            css: [path + '/addon/hint/show-hint.css', path + '/addon/fold/foldgutter.css', path + '/addon/dialog/dialog.css', path + '/addon/search/matchesonscrollbar.css']
+        };
+        else if (ext == 'html' || ext == 'htm') return {
+            js: [path + '/mode/xml/xml.js', path + '/addon/hint/show-hint.js', path + '/addon/hint/html-hint.js', path + '/mode/htmlmixed/htmlmixed.js', path + '/addon/selection/active-line.js', path + '/addon/edit/matchbrackets.js', path + '/addon/fold/foldcode.js', path + '/addon/fold/foldgutter.js', path + '/addon/fold/brace-fold.js', path + '/addon/fold/xml-fold.js', path + '/addon/fold/indent-fold.js', path + '/addon/fold/comment-fold.js', path + '/addon/dialog/dialog.js', path + '/addon/search/searchcursor.js', path + '/addon/search/search.js', path + '/addon/scroll/annotatescrollbar.js', path + '/addon/search/matchesonscrollbar.js', path + '/addon/search/jump-to-line.js', path + '/addon/display/placeholder.js'],
+            css: [path + '/addon/hint/show-hint.css', path + '/addon/fold/foldgutter.css', path + '/addon/dialog/dialog.css', path + '/addon/search/matchesonscrollbar.css']
+        };
+        else if (ext == 'php') return {
+            js: [path + '/addon/hint/show-hint.js', path + '/addon/hint/html-hint.js', path + '/mode/htmlmixed/htmlmixed.js', path + '/mode/xml/xml.js', path + '/mode/javascript/javascript.js', path + '/mode/css/css.js', path + '/mode/clike/clike.js', path + '/mode/php/php.js', path + '/addon/selection/active-line.js', path + '/addon/edit/matchbrackets.js', path + '/addon/fold/foldcode.js', path + '/addon/fold/foldgutter.js', path + '/addon/fold/brace-fold.js', path + '/addon/fold/xml-fold.js', path + '/addon/fold/indent-fold.js', path + '/addon/fold/comment-fold.js', path + '/addon/dialog/dialog.js', path + '/addon/search/searchcursor.js', path + '/addon/search/search.js', path + '/addon/scroll/annotatescrollbar.js', path + '/addon/search/matchesonscrollbar.js', path + '/addon/search/jump-to-line.js', path + '/addon/display/placeholder.js'],
+            css: [path + '/addon/hint/show-hint.css', path + '/addon/fold/foldgutter.css', path + '/addon/dialog/dialog.css', path + '/addon/search/matchesonscrollbar.css']
+        };
+        else if (ext == 'xml') return {
+            js: [path + '/addon/hint/show-hint.js', path + '/addon/hint/xml-hint.js', path + '/mode/xml/xml.js', path + '/addon/selection/active-line.js', path + '/addon/edit/matchbrackets.js', path + '/addon/fold/foldcode.js', path + '/addon/fold/foldgutter.js', path + '/addon/fold/brace-fold.js', path + '/addon/fold/xml-fold.js', path + '/addon/fold/indent-fold.js', path + '/addon/fold/comment-fold.js', path + '/addon/dialog/dialog.js', path + '/addon/search/searchcursor.js', path + '/addon/search/search.js', path + '/addon/scroll/annotatescrollbar.js', path + '/addon/search/matchesonscrollbar.js', path + '/addon/search/jump-to-line.js', path + '/addon/display/placeholder.js'],
+            css: [path + '/addon/hint/show-hint.css', path + '/addon/fold/foldgutter.css', path + '/addon/dialog/dialog.css', path + '/addon/search/matchesonscrollbar.css']
+        };
+        else if (ext == 'yaml') return {
+            js: [path + '/mode/yaml/yaml.js', path + '/addon/selection/active-line.js', path + '/addon/edit/matchbrackets.js', path + '/addon/fold/foldcode.js', path + '/addon/fold/foldgutter.js', path + '/addon/fold/brace-fold.js', path + '/addon/fold/xml-fold.js', path + '/addon/fold/indent-fold.js', path + '/addon/fold/comment-fold.js', path + '/addon/dialog/dialog.js', path + '/addon/search/searchcursor.js', path + '/addon/search/search.js', path + '/addon/scroll/annotatescrollbar.js', path + '/addon/search/matchesonscrollbar.js', path + '/addon/search/jump-to-line.js', path + '/addon/display/placeholder.js'],
+            css: [path + '/addon/fold/foldgutter.css', path + '/addon/dialog/dialog.css', path + '/addon/search/matchesonscrollbar.css']
+        };
+        else return {
+            js: [path + '/mode/xml/xml.js', path + '/addon/hint/show-hint.js', path + '/addon/hint/javascript-hint.js', path + '/addon/selection/active-line.js', path + '/addon/edit/matchbrackets.js', path + '/addon/fold/foldcode.js', path + '/addon/fold/foldgutter.js', path + '/addon/fold/brace-fold.js', path + '/addon/fold/xml-fold.js', path + '/addon/fold/indent-fold.js', path + '/addon/fold/comment-fold.js', path + '/addon/dialog/dialog.js', path + '/addon/search/searchcursor.js', path + '/addon/search/search.js', path + '/addon/scroll/annotatescrollbar.js', path + '/addon/search/matchesonscrollbar.js', path + '/addon/search/jump-to-line.js', path + '/addon/display/placeholder.js'],
+            css: [path + '/addon/hint/show-hint.css', path + '/addon/fold/foldgutter.css', path + '/addon/dialog/dialog.css', path + '/addon/search/matchesonscrollbar.css']
+        };
+
+    }
+
+
+}
+
+Colibri.Common.MimeType.Reload = () => {
+    return new Promise((resolve, reject) => {
+        Colibri.IO.Request.Get((!App.Device.isElectron ? '/' : '') + 'res/mime.json', {}, {}, false).then((response) => {
+            Colibri.Common.MimeType.externalTypes = JSON.parse(response.result);
+            resolve();
+        }).catch(() => {
+            Colibri.IO.Request.Get('https://cdn.jsdelivr.net/gh/jshttp/mime-db/db.json', {}, {}, false).then((response) => {
+                Colibri.Common.MimeType.externalTypes = JSON.parse(response.result);
+                resolve();
+            }).catch((error) => {
+                console.log(error);
+                reject(error);
+            });
+        });
+    });
+}
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="App.Components.html">Components</a></li><li><a href="App.Modules.html">Modules</a></li><li><a href="Colibri.html">Colibri</a></li><li><a href="Colibri.UI.Chart.html">Chart</a></li><li><a href="Colibri.UI.Chooser.html">Chooser</a></li><li><a href="Colibri.UI.Forms.ArrayGrid.html">ArrayGrid</a></li><li><a href="Colibri.UI.Grid.html">Grid</a></li><li><a href="Colibri.UI.Input.html">Input</a></li><li><a href="Colibri.UI.List.html">List</a></li><li><a href="Colibri.UI.Select.html">Select</a></li><li><a href="Colibri.UI.Select.DefaultDropdown.html">DefaultDropdown</a></li><li><a href="Colibri.UI.Tree.html">Tree</a></li><li><a href="Colibri.UI.TreeNode.html">TreeNode</a></li><li><a href="Colibri.UI.TreeNodes.html">TreeNodes</a></li><li><a href="Colibri.UI.VirtualGrid.html">VirtualGrid</a></li></ul><h3>Classes</h3><ul><li><a href="AuditUIKit.UI.Informers.Colibri.UI.Informers.Download.html">Colibri.UI.Informers.Download</a></li><li><a href="Colibri.App.html">App</a></li><li><a href="Colibri.Common.AbstractMessageStore.html">AbstractMessageStore</a></li><li><a href="Colibri.Common.Audio.html">Audio</a></li><li><a href="Colibri.Common.Base64.html">Base64</a></li><li><a href="Colibri.Common.Blob.html">Blob</a></li><li><a href="Colibri.Common.BrowserStorage.html">BrowserStorage</a></li><li><a href="Colibri.Common.CometEvent.html">CometEvent</a></li><li><a href="Colibri.Common.CometMessage.html">CometMessage</a></li><li><a href="Colibri.Common.Cookie.html">Cookie</a></li><li><a href="Colibri.Common.Font.html">Font</a></li><li><a href="Colibri.Common.Graphics.html">Graphics</a></li><li><a href="Colibri.Common.HashActions.html">HashActions</a></li><li><a href="Colibri.Common.MimeType.html">MimeType</a></li><li><a href="Colibri.Common.Scrolling.html">Scrolling</a></li><li><a href="Colibri.Common.SessionStorage.html">SessionStorage</a></li><li><a href="Colibri.Common.Validation.html">Validation</a></li><li><a href="Colibri.Common.Video.html">Video</a></li><li><a href="Colibri.Devices.Auth.html">Auth</a></li><li><a href="Colibri.Devices.Camera.html">Camera</a></li><li><a href="Colibri.Devices.Camera_GetPicture.html">GetPicture</a></li><li><a href="Colibri.Devices.Capture.html">Capture</a></li><li><a href="Colibri.Devices.Device.html">Device</a></li><li><a href="Colibri.Devices.Dialogs.html">Dialogs</a></li><li><a href="Colibri.Devices.FileSystem.html">FileSystem</a></li><li><a href="Colibri.Devices.GeoLocation.html">GeoLocation</a></li><li><a href="Colibri.Devices.LocalNotifications.html">LocalNotifications</a></li><li><a href="Colibri.Devices.LocalNotificationsEmulator.html">LocalNotificationsEmulator</a></li><li><a href="Colibri.Devices.Media.html">Media</a></li><li><a href="Colibri.Devices.Notification.html">Notification</a></li><li><a href="Colibri.Devices.Sim.html">Sim</a></li><li><a href="Colibri.Devices.Sms.html">Sms</a></li><li><a href="Colibri.Devices.SqLite.html">SqLite</a></li><li><a href="Colibri.Devices.Vibrate.html">Vibrate</a></li><li><a href="Colibri.Events.Dispatcher.html">Dispatcher</a></li><li><a href="Colibri.Events.Event.html">Event</a></li><li><a href="Colibri.IO.Crypt.html">Crypt</a></li><li><a href="Colibri.IO.Request.html">Request</a></li><li><a href="Colibri.IO.RpcRequest.html">RpcRequest</a></li><li><a href="Colibri.IO-Colibri.IO.WebSocketStream.html">WebSocketStream</a></li><li><a href="Colibri.Modules.Colibri.Common.Wasm.html">Colibri.Common.Wasm</a></li><li><a href="Colibri.Modules.Module.html">Module</a></li><li><a href="Colibri.Sip.JsSip.html">JsSip</a></li><li><a href="Colibri.Storages.Models.Model.html">Model</a></li><li><a href="Colibri.Storages.Models.Table.html">Table</a></li><li><a href="Colibri.Storages.Store.html">Store</a></li><li><a href="Colibri.UI.AlertDialog.html">AlertDialog</a></li><li><a href="Colibri.UI.ArrayViewer.html">ArrayViewer</a></li><li><a href="Colibri.UI.AsLinkButton.html">AsLinkButton</a></li><li><a href="Colibri.UI.Audio.html">Audio</a></li><li><a href="Colibri.UI.Badge.html">Badge</a></li><li><a href="Colibri.UI.Blockquote.html">Blockquote</a></li><li><a href="Colibri.UI.BoolViewer.html">BoolViewer</a></li><li><a href="Colibri.UI.BorderViewer.html">BorderViewer</a></li><li><a href="Colibri.UI.Button.html">Button</a></li><li><a href="Colibri.UI.ButtonGroup.html">ButtonGroup</a></li><li><a href="Colibri.UI.Chart.Barchart.html">Barchart</a></li><li><a href="Colibri.UI.Checkbox.html">Checkbox</a></li><li><a href="Colibri.UI.CheckboxAsTextViewer.html">CheckboxAsTextViewer</a></li><li><a href="Colibri.UI.CheckboxEditor.html">CheckboxEditor</a></li><li><a href="Colibri.UI.CheckboxListEditor.html">CheckboxListEditor</a></li><li><a href="Colibri.UI.CheckboxViewer.html">CheckboxViewer</a></li><li><a href="Colibri.UI.Chooser.ChooseWindow.html">ChooseWindow</a></li><li><a href="Colibri.UI.Color.html">Color</a></li><li><a href="Colibri.UI.Color.Alpha.html">Alpha</a></li><li><a href="Colibri.UI.Color.Block.html">Block</a></li><li><a href="Colibri.UI.Color.Line.html">Line</a></li><li><a href="Colibri.UI.ColorViewer.html">ColorViewer</a></li><li><a href="Colibri.UI.Component.html">Component</a></li><li><a href="Colibri.UI.ConfirmDialog.html">ConfirmDialog</a></li><li><a href="Colibri.UI.ContextMenu.html">ContextMenu</a></li><li><a href="Colibri.UI.Counter.html">Counter</a></li><li><a href="Colibri.UI.DateDiffViewer.html">DateDiffViewer</a></li><li><a href="Colibri.UI.DatePicker.html">DatePicker</a></li><li><a href="Colibri.UI.DateRangeViewer.html">DateRangeViewer</a></li><li><a href="Colibri.UI.DateSelector.html">DateSelector</a></li><li><a href="Colibri.UI.DateSelectorPopup.html">DateSelectorPopup</a></li><li><a href="Colibri.UI.DateTimeSelector.html">DateTimeSelector</a></li><li><a href="Colibri.UI.DateTimeSelectorPopup.html">DateTimeSelectorPopup</a></li><li><a href="Colibri.UI.DateTimeViewer.html">DateTimeViewer</a></li><li><a href="Colibri.UI.DateViewer.html">DateViewer</a></li><li><a href="Colibri.UI.DeferredFormValidator.html">DeferredFormValidator</a></li><li><a href="Colibri.UI.DocumentViewer.html">DocumentViewer</a></li><li><a href="Colibri.UI.Drag.html">Drag</a></li><li><a href="Colibri.UI.DragManager.html">DragManager</a></li><li><a href="Colibri.UI.DropDown.html">DropDown</a></li><li><a href="Colibri.UI.Editor.html">Editor</a></li><li><a href="Colibri.UI.EmailEditor.html">EmailEditor</a></li><li><a href="Colibri.UI.ErrorButton.html">ErrorButton</a></li><li><a href="Colibri.UI.ExtendedButton.html">ExtendedButton</a></li><li><a href="Colibri.UI.FieldValidator.html">FieldValidator</a></li><li><a href="Colibri.UI.FieldsViewer.html">FieldsViewer</a></li><li><a href="Colibri.UI.FileDropManager.html">FileDropManager</a></li><li><a href="Colibri.UI.FileSizeViewer.html">FileSizeViewer</a></li><li><a href="Colibri.UI.FileViewer.html">FileViewer</a></li><li><a href="Colibri.UI.FilesDragAndDrop.html">FilesDragAndDrop</a></li><li><a href="Colibri.UI.FilesEditor.html">FilesEditor</a></li><li><a href="Colibri.UI.FilesViewer.html">FilesViewer</a></li><li><a href="Colibri.UI.FlexBox.html">FlexBox</a></li><li><a href="Colibri.UI.FontFamilySelector.html">FontFamilySelector</a></li><li><a href="Colibri.UI.FontFamilyViewer.html">FontFamilyViewer</a></li><li><a href="Colibri.UI.FormValidator.html">FormValidator</a></li><li><a href="Colibri.UI.FormValidator_Validate.html">Validate</a></li><li><a href="Colibri.UI.Forms.Array.html">Array</a></li><li><a href="Colibri.UI.Forms.ArrayGrid_Fields.html">Fields</a></li><li><a href="Colibri.UI.Forms.ArrayGrid.ObjectWindow.html">ObjectWindow</a></li><li><a href="Colibri.UI.Forms.Bool.html">Bool</a></li><li><a href="Colibri.UI.Forms.Checkbox.html">Checkbox</a></li><li><a href="Colibri.UI.Forms.CheckboxList.html">CheckboxList</a></li><li><a href="Colibri.UI.Forms.Choose.html">Choose</a></li><li><a href="Colibri.UI.Forms.Color.html">Color</a></li><li><a href="Colibri.UI.Forms.Date.html">Date</a></li><li><a href="Colibri.UI.Forms.DateRange.html">DateRange</a></li><li><a href="Colibri.UI.Forms.DateTime.html">DateTime</a></li><li><a href="Colibri.UI.Forms.DateTimeRange.html">DateTimeRange</a></li><li><a href="Colibri.UI.Forms.DayOfMonth.html">DayOfMonth</a></li><li><a href="Colibri.UI.Forms.DocumentGenerator.html">DocumentGenerator</a></li><li><a href="Colibri.UI.Forms.Email.html">Email</a></li><li><a href="Colibri.UI.Forms.Field.html">Field</a></li><li><a href="Colibri.UI.Forms.File.html">File</a></li><li><a href="Colibri.UI.Forms.FileLabel.html">FileLabel</a></li><li><a href="Colibri.UI.Forms.Files.html">Files</a></li><li><a href="Colibri.UI.Forms.FontFamily.html">FontFamily</a></li><li><a href="Colibri.UI.Forms.Form.html">Form</a></li><li><a href="Colibri.UI.Forms.HiddenField.html">HiddenField</a></li><li><a href="Colibri.UI.Forms.KeyValueObject.html">KeyValueObject</a></li><li><a href="Colibri.UI.Forms.Label.html">Label</a></li><li><a href="Colibri.UI.Forms.Link.html">Link</a></li><li><a href="Colibri.UI.Forms.List.html">List</a></li><li><a href="Colibri.UI.Forms.MonthYear.html">MonthYear</a></li><li><a href="Colibri.UI.Forms.Number.html">Number</a></li><li><a href="Colibri.UI.Forms.NumberRange.html">NumberRange</a></li><li><a href="Colibri.UI.Forms.Object.html">Object</a></li><li><a href="Colibri.UI.Forms.Passport.html">Passport</a></li><li><a href="Colibri.UI.Forms.Password.html">Password</a></li><li><a href="Colibri.UI.Forms.Period.html">Period</a></li><li><a href="Colibri.UI.Forms.Radio.html">Radio</a></li><li><a href="Colibri.UI.Forms.Select.html">Select</a></li><li><a href="Colibri.UI.Forms.SimpleArray.html">SimpleArray</a></li><li><a href="Colibri.UI.Forms.Tabs.html">Tabs</a></li><li><a href="Colibri.UI.Forms.Text.html">Text</a></li><li><a href="Colibri.UI.Forms.TextArea.html">TextArea</a></li><li><a href="Colibri.UI.Forms.Toggle.html">Toggle</a></li><li><a href="Colibri.UI.Forms.Token.html">Token</a></li><li><a href="Colibri.UI.Forms.Year.html">Year</a></li><li><a href="Colibri.UI.Frame.html">Frame</a></li><li><a href="Colibri.UI.GoogleChart.html">GoogleChart</a></li><li><a href="Colibri.UI.GrayButton.html">GrayButton</a></li><li><a href="Colibri.UI.Grid.Cell.html">Cell</a></li><li><a href="Colibri.UI.Grid.Column.html">Column</a></li><li><a href="Colibri.UI.Grid.Columns.html">Columns</a></li><li><a href="Colibri.UI.Grid.Header.html">Header</a></li><li><a href="Colibri.UI.Grid.Row.html">Row</a></li><li><a href="Colibri.UI.Grid.Rows.html">Rows</a></li><li><a href="Colibri.UI.GridFileViewer.html">GridFileViewer</a></li><li><a href="Colibri.UI.H1.html">H1</a></li><li><a href="Colibri.UI.H2.html">H2</a></li><li><a href="Colibri.UI.H3.html">H3</a></li><li><a href="Colibri.UI.H4.html">H4</a></li><li><a href="Colibri.UI.Heading.html">Heading</a></li><li><a href="Colibri.UI.Hr.html">Hr</a></li><li><a href="Colibri.UI.HtmlDataViewer.html">HtmlDataViewer</a></li><li><a href="Colibri.UI.IFrame.html">IFrame</a></li><li><a href="Colibri.UI.Icon.html">Icon</a></li><li><a href="Colibri.UI.IconViewer.html">IconViewer</a></li><li><a href="Colibri.UI.Image.html">Image</a></li><li><a href="Colibri.UI.ImageViewWindow.html">ImageViewWindow</a></li><li><a href="Colibri.UI.ImageViewer.html">ImageViewer</a></li><li><a href="Colibri.UI.ImagesViewer.html">ImagesViewer</a></li><li><a href="Colibri.UI.Img.html">Img</a></li><li><a href="Colibri.UI.Informers.DownloadItem.html">DownloadItem</a></li><li><a href="Colibri.UI.Input.File.html">File</a></li><li><a href="Colibri.UI.JsonViewer.html">JsonViewer</a></li><li><a href="Colibri.UI.Link.html">Link</a></li><li><a href="Colibri.UI.LinkEditor.html">LinkEditor</a></li><li><a href="Colibri.UI.LinkViewer.html">LinkViewer</a></li><li><a href="Colibri.UI.List.Group.html">Group</a></li><li><a href="Colibri.UI.List.Item.html">Item</a></li><li><a href="Colibri.UI.List.JsonRenderer.html">JsonRenderer</a></li><li><a href="Colibri.UI.List.SearchBox.html">SearchBox</a></li><li><a href="Colibri.UI.ListItem.html">ListItem</a></li><li><a href="Colibri.UI.Loading.html">Loading</a></li><li><a href="Colibri.UI.LoadingBallun.html">LoadingBallun</a></li><li><a href="Colibri.UI.LoadingContainer.html">LoadingContainer</a></li><li><a href="Colibri.UI.Logs.JsonLog.html">JsonLog</a></li><li><a href="Colibri.UI.Maps.Controls.Button.html">Button</a></li><li><a href="Colibri.UI.Maps.Controls.ButtonGroup.html">ButtonGroup</a></li><li><a href="Colibri.UI.Maps.Controls.FileButton.html">FileButton</a></li><li><a href="Colibri.UI.Maps.Controls.FilterButton.html">FilterButton</a></li><li><a href="Colibri.UI.Maps.Controls.LayersButton.html">LayersButton</a></li><li><a href="Colibri.UI.Maps.Controls.RotateButton.html">RotateButton</a></li><li><a href="Colibri.UI.Maps.Controls.StatesButton.html">StatesButton</a></li><li><a href="Colibri.UI.Maps.Controls.ToggleButton.html">ToggleButton</a></li><li><a href="Colibri.UI.Maps.Controls.ToolBox.html">ToolBox</a></li><li><a href="Colibri.UI.Maps.LeafletJs.html">LeafletJs</a></li><li><a href="Colibri.UI.Maps.MapLibre.html">MapLibre</a></li><li><a href="Colibri.UI.MassActionsMenu.html">MassActionsMenu</a></li><li><a href="Colibri.UI.MenuList.html">MenuList</a></li><li><a href="Colibri.UI.ModelViewer.html">ModelViewer</a></li><li><a href="Colibri.UI.ModelessWindow.html">ModelessWindow</a></li><li><a href="Colibri.UI.MonthPicker.html">MonthPicker</a></li><li><a href="Colibri.UI.MonthSelector.html">MonthSelector</a></li><li><a href="Colibri.UI.MonthYearViewer.html">MonthYearViewer</a></li><li><a href="Colibri.UI.MoveManager.html">MoveManager</a></li><li><a href="Colibri.UI.Note.html">Note</a></li><li><a href="Colibri.UI.Notice.html">Notice</a></li><li><a href="Colibri.UI.Notices.html">Notices</a></li><li><a href="Colibri.UI.NumberEditor.html">NumberEditor</a></li><li><a href="Colibri.UI.NumberViewer.html">NumberViewer</a></li><li><a href="Colibri.UI.ObjectViewer.html">ObjectViewer</a></li><li><a href="Colibri.UI.OrderedList.html">OrderedList</a></li><li><a href="Colibri.UI.OutlineBlueButton.html">OutlineBlueButton</a></li><li><a href="Colibri.UI.Pager.html">Pager</a></li><li><a href="Colibri.UI.Pane.html">Pane</a></li><li><a href="Colibri.UI.PaneGrid.html">PaneGrid</a></li><li><a href="Colibri.UI.PaneSwitcher.html">PaneSwitcher</a></li><li><a href="Colibri.UI.PeriodViewer.html">PeriodViewer</a></li><li><a href="Colibri.UI.PlayPauseButton.html">PlayPauseButton</a></li><li><a href="Colibri.UI.PointerControl.html">PointerControl</a></li><li><a href="Colibri.UI.Popup.html">Popup</a></li><li><a href="Colibri.UI.PopupList.html">PopupList</a></li><li><a href="Colibri.UI.ProgressBar.html">ProgressBar</a></li><li><a href="Colibri.UI.ProgressViewer.html">ProgressViewer</a></li><li><a href="Colibri.UI.PromptDialog.html">PromptDialog</a></li><li><a href="Colibri.UI.Radio.html">Radio</a></li><li><a href="Colibri.UI.RadioViewer.html">RadioViewer</a></li><li><a href="Colibri.UI.RangePicker.html">RangePicker</a></li><li><a href="Colibri.UI.ReadUnreadBadge.html">ReadUnreadBadge</a></li><li><a href="Colibri.UI.RemoteFileEditor.html">RemoteFileEditor</a></li><li><a href="Colibri.UI.Renderer.html">Renderer</a></li><li><a href="Colibri.UI.Rgb.html">Rgb</a></li><li><a href="Colibri.UI.Router.html">Router</a></li><li><a href="Colibri.UI.Ruler.html">Ruler</a></li><li><a href="Colibri.UI.SearchInput.html">SearchInput</a></li><li><a href="Colibri.UI.Select.DefaultDropdown.Options.html">Options</a></li><li><a href="Colibri.UI.Select.Dropdown.html">Dropdown</a></li><li><a href="Colibri.UI.SelectEditor.html">SelectEditor</a></li><li><a href="Colibri.UI.SelectViewer.html">SelectViewer</a></li><li><a href="Colibri.UI.Selector.html">Selector</a></li><li><a href="Colibri.UI.Shader.html">Shader</a></li><li><a href="Colibri.UI.ShadowViewer.html">ShadowViewer</a></li><li><a href="Colibri.UI.Shortcuts.html">Shortcuts</a></li><li><a href="Colibri.UI.SimpleButton.html">SimpleButton</a></li><li><a href="Colibri.UI.SimpleFormValidator.html">SimpleFormValidator</a></li><li><a href="Colibri.UI.SimplePieChart.html">SimplePieChart</a></li><li><a href="Colibri.UI.SingleTimeline.html">SingleTimeline</a></li><li><a href="Colibri.UI.SlideDown.html">SlideDown</a></li><li><a href="Colibri.UI.Spectrum.Graph.html">Graph</a></li><li><a href="Colibri.UI.Spectrum.Selections.html">Selections</a></li><li><a href="Colibri.UI.Split.html">Split</a></li><li><a href="Colibri.UI.Strong.html">Strong</a></li><li><a href="Colibri.UI.SuccessButton.html">SuccessButton</a></li><li><a href="Colibri.UI.Switcher.html">Switcher</a></li><li><a href="Colibri.UI.Table.html">Table</a></li><li><a href="Colibri.UI.TableCell.html">TableCell</a></li><li><a href="Colibri.UI.TableHeaderCell.html">TableHeaderCell</a></li><li><a href="Colibri.UI.TableRow.html">TableRow</a></li><li><a href="Colibri.UI.Tabs.html">Tabs</a></li><li><a href="Colibri.UI.Templates.html">Templates</a></li><li><a href="Colibri.UI.TextArea.html">TextArea</a></li><li><a href="Colibri.UI.TextAreaEditor.html">TextAreaEditor</a></li><li><a href="Colibri.UI.TextAreaViewer.html">TextAreaViewer</a></li><li><a href="Colibri.UI.TextEditor.html">TextEditor</a></li><li><a href="Colibri.UI.TextSpan.html">TextSpan</a></li><li><a href="Colibri.UI.TextViewer.html">TextViewer</a></li><li><a href="Colibri.UI.Timeline.html">Timeline</a></li><li><a href="Colibri.UI.ToggleBox.html">ToggleBox</a></li><li><a href="Colibri.UI.ToggleBoxEditor.html">ToggleBoxEditor</a></li><li><a href="Colibri.UI.ToggleButton.html">ToggleButton</a></li><li><a href="Colibri.UI.ToggleboxViewer.html">ToggleboxViewer</a></li><li><a href="Colibri.UI.ToolTip.html">ToolTip</a></li><li><a href="Colibri.UI.Toolbar.html">Toolbar</a></li><li><a href="Colibri.UI.Tree.JsonRenderer.html">JsonRenderer</a></li><li><a href="Colibri.UI.Tree.SearchBox.html">SearchBox</a></li><li><a href="Colibri.UI.UnorderedList.html">UnorderedList</a></li><li><a href="Colibri.UI.UploadButton.html">UploadButton</a></li><li><a href="Colibri.UI.Utilities.Mask.html">Mask</a></li><li><a href="Colibri.UI.Utilities.Validator.html">Validator</a></li><li><a href="Colibri.UI.Video.html">Video</a></li><li><a href="Colibri.UI.Viewer.html">Viewer</a></li><li><a href="Colibri.UI.WaterfallBuffer.html">WaterfallBuffer</a></li><li><a href="Colibri.UI.WebRTCVideo.html">WebRTCVideo</a></li><li><a href="Colibri.UI.Widget.html">Widget</a></li><li><a href="Colibri.UI.Window.html">Window</a></li><li><a href="Colibri.UI.YearMonthSelector.html">YearMonthSelector</a></li><li><a href="Colibri.UI.YearPicker.html">YearPicker</a></li><li><a href="Colibri.UI.YearQuarterSelector.html">YearQuarterSelector</a></li><li><a href="Colibri.UI.YearSelector.html">YearSelector</a></li><li><a href="Colibri.UI.YearViewer.html">YearViewer</a></li><li><a href="Colibri.Web.Comet.html">Comet</a></li><li><a href="Colibri.Web.IndexDB.html">IndexDB</a></li><li><a href="Colibri.Web.Request.html">Request</a></li><li><a href="Colibri.Web.Router.html">Router</a></li><li><a href="Destructable.html">Destructable</a></li><li><a href="DestructableRegistry.html">DestructableRegistry</a></li><li><a href="MediaMTXWebRTCReader.html">MediaMTXWebRTCReader</a></li></ul><h3>Global</h3><ul><li><a href="global.html#App">App</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sun Jul 26 2026 13:08:05 GMT+0400 (Armenia Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

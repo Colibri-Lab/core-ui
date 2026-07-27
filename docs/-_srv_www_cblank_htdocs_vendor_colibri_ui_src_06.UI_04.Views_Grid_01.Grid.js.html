@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: /srv/www/cblank/htdocs/vendor/colibri/ui/src/06.UI/04.Views/Grid/01.Grid.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: /srv/www/cblank/htdocs/vendor/colibri/ui/src/06.UI/04.Views/Grid/01.Grid.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Grid component
+ * @class
+ * @namespace
+ * @extends Colibri.UI.Pane
+ * @memberof Colibri.UI
+ */
+Colibri.UI.Grid = class extends Colibri.UI.Pane {
+
+    /** выделять строки целиком */
+    static FullRow = 'fullrow';
+    /** Выделять ячейки отдельно */
+    static EveryCell = 'everycell';
+
+    /** Сортировка по возрастанию */
+    static SortAsc = 'asc';
+    /** Сортировка по убыванию */
+    static SortDesc = 'desc';
+
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     * @param {string|Element} element element to create in
+     */
+    constructor(name, container, element) {
+        super(name, container);
+
+        this.AddClass('app-ui-grid-container');
+
+        this._recalculateTimerCellPositions = null;
+
+        this._groups = false;
+        this._rowSelectionCheckbox = new Set();
+        this._showCheckboxes = false;
+        this._multiple = false;
+        this._selectionMode = Colibri.UI.Grid.EveryCell;
+        this._cycleSelection = false;
+        this._hasMassActionsMenu = false;
+        this._massActionsMenuClass = Colibri.UI.MassActionsMenu;
+
+        this._gridContent = new Colibri.UI.Component('app-ui-grid-content', this, Element.create('table'));
+        this._gridContent.shown = true;
+
+        this._header = this.AddHeader('header');
+
+        this._rows = this.AddGroup('default', null);
+        this._norows = new Colibri.UI.Pane('app-ui-grid-norows', this, Element.create('div'));
+        this._norows.shown = true;
+
+        this._footer = this.AddFooter('footer');
+        
+        this.GenerateChildren(element);
+
+        this.handleScrollProperties = true;
+
+        this.tabIndex = 0;
+
+        
+    }
+
+
+    /** @protected */
+    _registerEvents() {
+        super._registerEvents();
+
+        this.RegisterEvent('HighlightedItemChanged', false, 'When item is highlighted');
+        this.RegisterEvent('SelectionChanged', false, 'When selection is changed');
+        this.RegisterEvent('CheckChanged', false, 'When checks are changed');
+        this.RegisterEvent('SortChanged', false, 'When sort column or order is changed');
+        this.RegisterEvent('ScrolledToBottom', false, 'When scrolled to bottom of grid');
+
+        this.RegisterEvent('RowsCheckboxClicked', false, 'Rows checkbox clicked');
+        this.RegisterEvent('RowsCheckboxContextMenuItemClicked', false, 'Rows checkbox contextmenu clicked');
+
+
+        this.RegisterEvent('HeaderCheckboxChanged', false, 'When header checkbox state changed');
+        this.RegisterEvent('ColumnPropertyChanged', false, 'When changed the column property');
+        this.RegisterEvent('ColumnClicked', false, 'When column header is clicked');
+        this.RegisterEvent('ColumnContextMenu', false, 'When column header contextmenu is clicked');
+        this.RegisterEvent('ColumnContextMenuItemClicked', false, 'When column header contextmenu item is clicked');
+        this.RegisterEvent('ColumnDisposed', false, 'When column is disposed');
+        this.RegisterEvent('ColumnAdded', false, 'When column is added');
+        this.RegisterEvent('ColumnMoved', false, 'When column is moved');
+
+
+        this.RegisterEvent('RowStickyChanged', false, 'When row sticky state changed');
+        this.RegisterEvent('RowCheckChanged', false, 'When row check state changed');
+        this.RegisterEvent('RowSelected', false, 'When row is selected');
+        this.RegisterEvent('RowDisposed', false, 'When row is disposed');
+        this.RegisterEvent('RowAdded', false, 'When row is added');
+        this.RegisterEvent('RowUpdated', false, 'When row is updated');
+        this.RegisterEvent('RowDoubleClicked', false, 'When row is double clicked');
+
+        this.RegisterEvent('CellClicked', false, 'When clicked on cell value container');
+        this.RegisterEvent('CellViewerClicked', false, 'When clicked on cell viewer component');
+        this.RegisterEvent('CellEditorChanged', false, 'When cell editor is changed');
+        this.RegisterEvent('MassActionsMenuActionClicked', false, 'When clicked on button inside mass actions menu');
+        this.RegisterEvent('CustomContextMenuButtonClicked', false, 'When custom context menu button is clicked');
+        this.RegisterEvent('CustomContextMenuButtonContextMenuItemClicked', false, 'When custom context menu button item is clicked');
+
+    }
+
+    _registerEventHandlers() {
+        super._registerEventHandlers();
+
+        this.AddHandler('RowStickyChanged', this.__rowsStickyChanged);
+
+        this.AddHandler('RowCheckChanged', this.__rowsRowCheckChanged);
+        this.AddHandler('RowDisposed', this.__rowsRowDisposed);
+        this.AddHandler('RowAdded', this.__rowsRowAdded);
+
+        this.AddHandler('HeaderCheckboxChanged', this.__headerCheckboxChanged);
+
+        this.AddHandler('Clicked', this.__clickedProcessing);
+        this.AddHandler('SelectionChanged', this.__thisSelectionChanged);
+        this.AddHandler('KeyDown', this.__thisKeyDown);
+        this.AddHandler('ColumnPropertyChanged', this.__thisColumnPropertyChanged);
+
+        this.AddHandler('ColumnMoved', this.__columnColumnMoved);
+        this.AddHandler('ColumnAdded', this.__columnColumnAdded);
+
+        this.AddHandler('ColumnDisposed', this.__headerColumnDisposed);
+        this.AddHandler('ColumnStickyChange', this.__headerColumnStickyChange);
+        this.AddHandler('ColumnClicked', this.__headerColumnClicked);
+
+        this.AddHandler('VerticalAlignChanged', this.__thisVerticalAlignChanged);
+        this.AddHandler('ChildsProcessed', this.__thisChildsProcessed);
+        this.AddHandler('ComponentRendered', this.__thisComponentRendered);
+
+        this.handleResize = true;
+        this.AddHandler('Resized', (event, args) => {
+            this._customContextMenuIcon &amp;&amp; (this._customContextMenuIcon.top = this.top - this.parent.top);
+        });
+
+    }
+
+    AddCustomContextMenuButton(icon, top = null, right = 0) {
+        if(this._customContextMenuIcon) {
+            return;
+        }        
+
+        if(icon instanceof Colibri.UI.Component) {
+            this._customContextMenuIcon = icon;
+            this._customContextMenuIcon.parent = this;
+            this._customContextMenuIcon.AddClass('-custom-contextmenu-icon');
+            this._customContextMenuIcon.right = right;
+            this._customContextMenuIcon.top = !top ? this.top - this.parent.top : top;
+        } else {
+            this._customContextMenuIcon = new Colibri.UI.Icon('contextmenu-icon', this.parent);
+            this._customContextMenuIcon.AddClass('-custom-contextmenu-icon');
+            this._customContextMenuIcon.iconSVG = icon;
+            this._customContextMenuIcon.shown = true;
+            this.parent.styles = {position: 'relative'};
+            this._customContextMenuIcon.right = right;
+            this._customContextMenuIcon.top = !top ? this.top - this.parent.top : top;
+
+        }
+
+        this._customContextMenuIcon.AddHandler('Clicked', this.__customContextMenuIconClicked, false, this);
+        this._customContextMenuIcon.AddHandler('ContextMenuItemClicked', this.__customContextMenuIconContextMenuItemClicked, false, this);
+
+    }
+    RemoveCustomContextMenuButton() {
+        if(!this._customContextMenuIcon) {
+            return;
+        }
+        this.parent.styles = {position: null};
+        this._customContextMenuIcon.Dispose();
+        this._customContextMenuIcon = null;
+    }
+
+    __customContextMenuIconContextMenuItemClicked(event, args) {
+        return this.Dispatch('CustomContextMenuButtonContextMenuItemClicked', Object.assign(args, {icon: this._customContextMenuIcon}));
+    }
+    __customContextMenuIconClicked(event, args) { 
+        return this.Dispatch('CustomContextMenuButtonClicked', Object.assign(args, {icon: this._customContextMenuIcon}));
+    }
+
+
+    __thisChildsProcessed(event, args) {
+        this._completeRender();
+    }
+
+    __thisComponentRendered(event, args) {
+        this._completeRender();
+    }
+
+    RegisterCheckbox(container) {
+        this._rowSelectionCheckbox.add(container);
+    }
+
+    UnregisterCheckbox(container) {
+        this._rowSelectionCheckbox.delete(container);
+    }
+
+    /**
+     * Возвращает хедер
+     * @type {Colibri.UI.Grid.Header}
+     */
+    get header() {
+        return this._header;
+    }
+
+    /**
+     * Возвращает подвал
+     * @type {Colibri.UI.Pane}
+     */
+    get footer() {
+        return this._footer;
+    }
+
+    /**
+     * Возвращает группу строк по умолчамнию
+     * @type {Colibri.UI.Grid.Rows}
+     */
+    get rows() {
+        return this._rows;
+    }
+
+    /**
+     * Возвращает массив групп строк
+     * @type {Colibri.UI.Grid.Rows[]}
+     */
+    get groups() {
+        let ret = {};
+        this._gridContent.ForEach((name, component) => {
+            if (component instanceof Colibri.UI.Grid.Rows) {
+                ret[name] = component;
+            }
+        });
+        return ret;
+    }
+
+    /**
+     * Возвращает сыделенные строки/ячейки
+     * @type {Colibri.UI.Component[]}
+     */
+    get selected() {
+        let selected = [];
+        if (this.selectionMode === Colibri.UI.Grid.FullRow) {
+            Object.forEach(this.groups, (name, group) => {
+                if (group.selected) {
+                    selected = selected.concat(group.selected);
+                }
+            });
+        } else if (this.selectionMode === Colibri.UI.Grid.EveryCell) {
+            let selectedCell = [];
+            this.ForEveryRow((nameRow, row) => {
+                row.ForEach((nameCell, cell) => {
+                    cell.selected ? selectedCell.push(cell) : '';
+                });
+            });
+            selected = selectedCell;
+        }
+        if (this.multiple) {
+            return selected;
+        } else {
+            return selected[0];
+        }
+    }
+    /**
+     * Возвращает сыделенные строки/ячейки
+     * @type {Colibri.UI.Component[]}
+     */
+    set selected(value) {
+
+        if (value === null) {
+            this.UnselectAllRows();
+            return;
+        }
+
+        let cell = value instanceof Colibri.UI.Grid.Cell ? value : null;
+        let row = value instanceof Colibri.UI.Grid.Row ? value : null;
+
+        if (!cell &amp;&amp; !row) {
+            return;
+        }
+
+        let args = {};
+        args.cell = cell;
+        args.row = row;
+
+        switch (this.selectionMode) {
+            case Colibri.UI.Grid.EveryCell:
+                if (cell) {
+                    this.DeactivateAllCells();
+                    if (!this.multiple) {
+                        this.DeselectAllCells();
+                    }
+                    cell.activated = !cell.activated;
+                    cell.selected = !cell.selected;
+                }
+                break;
+            case Colibri.UI.Grid.FullRow:
+                if (row) {
+                    this.DeactivateAllRows();
+                    if (!this.multiple) {
+                        this.UnselectAllRows();
+                    }
+                    row.activated = !row.activated;
+                    row.selected = !row.selected;
+                }
+                break;
+        }
+
+        args.item = this.selected;
+        this.Dispatch('SelectionChanged', args);
+    }
+
+    /**
+     * Возвращает список прочеканных строк  
+     * @type {Colibri.UI.Component[]}
+     */
+    get checked() {
+        let checked = [];
+        this.ForEveryRow((name, row) => {
+            if (row.checked) {
+                checked.push(row);
+            }
+        });
+        return checked;
+    }
+
+    /**
+     * Отобразить чекболксы
+     * @type {bool}
+     */
+    get showCheckboxes() {
+        return this._showCheckboxes;
+    }
+
+    /**
+     * Отобразить чекбоксы  
+     * @type {bool}
+     */
+    set showCheckboxes(value) {
+        value = this._convertProperty('Boolean', value);
+        this._showCheckboxes = value;
+        this._showShowCheckboxes();
+    }
+    _showShowCheckboxes() {
+        this.header.columns.showCheckboxes = this._showCheckboxes;
+        Object.forEach(this.groups, (name, group) => {
+            group.showCheckboxes = this._showCheckboxes;
+        });
+    }
+
+    /**
+     * Мультиселект
+     * @type bool
+     */
+    get multiple() {
+        return this._multiple;
+    }
+
+    /**
+     * Режим выделения
+     * @type {bool}
+     */
+    set multiple(value) {
+        this._multiple = value === 'true' || value === true;
+    }
+
+    /**
+     * Режим выделения
+     * @type {fullrow,everycell}
+     */
+    get selectionMode() {
+        return this._selectionMode;
+    }
+
+    /**
+     * Режим выделения
+     * @type {fullrow,everycell}
+     */
+    set selectionMode(value) {
+        this._selectionMode = value;
+    }
+
+    /**
+     * Режим циклического селекта
+     * @type {bool}
+     */
+    get cycleSelection() {
+        return this._cycleSelection;
+    }
+
+    /**
+     * Режим циклического селекта
+     * @type {bool} value
+     */
+    set cycleSelection(value) {
+        this._cycleSelection = value;
+    }
+
+    /**
+     * Активная ячейка
+     * @type {Colibri.UI.Cell}
+     */
+    get activeCell() {
+        if (!this.activeGroup || !this.activeGroup.activeRow || !this.activeGroup.activeRow.activeCell) {
+            return null;
+        }
+        return this.activeGroup.activeRow.activeCell;
+    }
+
+    /**
+     * Активная строка
+     * @returns Colibri.UI.Row
+     */
+    get activeRow() {
+        if (!this.activeGroup || !this.activeGroup.activeRow) {
+            return null;
+        }
+        return this.activeGroup.activeRow;
+    }
+
+    /**
+     * Активная группа
+     * @returns Colibri.UI.Rows
+     */
+    get activeGroup() {
+        let activeGroup = null;
+        Object.forEach(this.groups, (name, group) => {
+            if (group.activeRow) {
+                activeGroup = group;
+                return false;
+            }
+            return true;
+        });
+        return activeGroup;
+    }
+
+    /**
+     * Первая группа
+     * @returns Colibri.UI.Rows
+     */
+    get firstGroup() {
+        return this.groups[Object.keys(this.groups)[0]];
+    }
+
+    /**
+     * Последняя группа
+     * @returns Colibri.UI.Rows
+     */
+    get lastGroup() {
+        let groupNames = Object.keys(this.groups);
+        return this.groups[groupNames[groupNames.length - 1]];
+    }
+
+    /**
+     * Возвращает количество строк
+     */
+    get rowsCount() {
+        let count = 0;
+        Object.forEach(this.groups, (name, rows) => {
+            count += rows.rowsCount;
+        });
+        return count;
+    }
+
+    get emptyMessage() {
+        return this._norows.value;
+    }
+
+    set emptyMessage(value) {
+        this._norows.value = value;
+    }
+
+    get sortColumn() {
+        return this._sortColumn;
+    }
+    get sortOrder() {
+        return this._sortOrder;
+    }
+
+    ResetSort() {
+        this._sortColumn = null;
+        this._sortOrder = null;
+    }
+
+    /**
+     * Найти строку во всех группах
+     * @param {string} key название строки
+     * @returns Colibri.UI.Row
+     */
+    FindRow(key) {
+        let found = null;
+        Object.forEach(this.groups, (name, group) => {
+            let f = group.Children(key);
+            if (f) {
+                found = f;
+                return false;
+            }
+            return true;
+        });
+        return found;
+    }
+
+    /**
+     * Снять выделение со всех ячеек 
+     */
+    DeselectAllCells() {
+        Object.forEach(this.groups, (name, group) => {
+            group.ForEach((nameRow, row) => {
+                row.ForEach((nameCell, cell) => {
+                    if (nameCell !== 'checkbox-column') {
+                        cell.selected = false;
+                    }
+                })
+            });
+        });
+    }
+
+    /**
+     * Снять активность со всех ячеек 
+     */
+    DeactivateAllCells() {
+        Object.forEach(this.groups, (name, group) => {
+            group.ForEach((nameRow, row) => {
+                row.ForEach((nameCell, cell) => {
+                    if (nameCell !== 'checkbox-column') {
+                        cell.activated = false;
+                    }
+                })
+            });
+        });
+    }
+
+    /**
+     * Снять активность со всех строк 
+     */
+    DeactivateAllRows() {
+        Object.forEach(this.groups, (name, group) => {
+            group.ForEach((rowName, row) => {
+                row.activated = false;
+            });
+        });
+    }
+
+    /**
+     * Снять выделение со всех строк
+     */
+    UnselectAllRows() {
+        Object.forEach(this.groups, (name, group) => {
+            group.ForEach((rowName, row) => {
+                row.selected = false;
+            });
+        });
+        this.Dispatch('SelectionChanged', {});
+    }
+
+    /**
+     * Снять выделение со всех строк
+     */
+    UncheckAllRows() {
+        Object.forEach(this.groups, (name, group) => {
+            group.ForEach((rowName, row) => {
+                row.checked = false;
+            });
+            group.checkbox.checked = false;
+        });
+        this.header.checkbox.checked = false;
+        if (this._massActionsMenuObject) {
+            this._massActionsMenuObject.Dispose();
+            this._massActionsMenuObject = null;
+        }
+        this.Dispatch('CheckChanged', {});
+    }
+
+    /**
+     * Создает колонку  
+     * @param {string} name название колонки
+     * @returns Colibri.UI.Grid.Column
+     */
+    AddHeader(name) {
+        const header = new Colibri.UI.Grid.Header(name, this._gridContent);
+        header.AddClass('app-ui-grid-head');
+        header.shown = true;
+        return header;
+    }
+
+    /**
+     * Создает группу строк (таблицу)
+     * @param {string} name название строки
+     * @param {string} title заголовок строки
+     * @returns Colibri.UI.Grid.Rows
+     */
+    AddGroup(name, title) {
+        const rows = new Colibri.UI.Grid.Rows(name, this._gridContent);
+        rows.AddClass('app-ui-grid-rows');
+        if (title) {
+            rows.title = title;
+        }
+
+        rows.AddHandler('GridCellsChanged', this.__rowsGridCellsChanged, false, this);
+        rows.AddHandler('RowUpdated', this.__rowsRowUpdated, false, this);
+
+        return rows;
+    }
+
+    Groups(name) {
+        return this._gridContent.Children(name);
+    }
+
+    __rowsRowDisposed(event, args) {
+        Object.forEach(this.groups, (name, rows) => {
+            rows.columns = this.header.columnsCount;
+        });
+        this.RecalculateCellPositions();
+    }
+
+    __rowsStickyChanged(event, args) {
+        this.RecalculateCellPositions();
+    }
+
+    __rowsGridCellsChanged(event, args) {
+        this.RecalculateCellPositions();
+    }
+
+    __rowsRowAdded(event, args) {
+        this._norows.shown = false;
+        this._gridContent.shown = true;
+        Object.forEach(this.groups, (name, rows) => {
+            rows.columns = this.header.columnsCount;
+            rows.hasContextMenu = this.hasContextMenu;
+        });
+        this.RecalculateCellPositions();
+    }
+
+    __rowsRowUpdated(event, args) {
+        this.RecalculateCellPositions();
+        this.Dispatch('RowUpdated', { row: args.row });
+    }
+
+    /**
+     * Создает подвал для таблицы
+     * @param {string} name название
+     * @returns Colibri.UI.Pane
+     */
+    AddFooter(name) {
+        const footer = new Colibri.UI.Pane(name, this);
+        footer.AddClass('app-ui-grid-footer');
+        footer.shown = false;
+        return footer;
+    }
+
+    /**
+     * Обработчик события нажатия кнопки на гриде
+     * @param {Object} sender 
+     * @param {Object} args 
+     * @returns 
+     */
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
+    __thisKeyDown(event, args) {
+        const e = args.domEvent;
+
+        if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Enter', 'NumpadEnter'].indexOf(e.code) !== -1) {
+
+            let activeItem;
+            let newActiveItem;
+            let correctionCoefficient = 0;
+            let direction = 'all';
+
+            if (this.selectionMode === Colibri.UI.Grid.FullRow) {
+                direction = 'Y';
+                let activeRow = this.activeRow;
+                let activeGroup = this.activeGroup;
+                if (!activeGroup) {
+                    activeGroup = this.firstGroup;
+                }
+                let lastGroup = this.lastGroup;
+
+                let newActiveRow = null;
+
+                if (activeRow === null) {
+                    if (['ArrowDown', 'ArrowRight'].indexOf(e.code) !== -1) {
+                        newActiveRow = activeGroup.firstRow;
+                    }
+                    else if (['ArrowUp', 'ArrowLeft'].indexOf(e.code) !== -1) {
+                        newActiveRow = lastGroup.lastRow;
+                    }
+                } else {
+                    if (e.code !== 'Enter') {
+                        if (['ArrowDown', 'ArrowRight'].indexOf(e.code) !== -1) {
+                            if (activeRow.nextRow !== null) {
+                                newActiveRow = activeRow.nextRow;
+                            }
+                            else {
+                                newActiveRow = activeGroup.nextGroup ? activeGroup.nextGroup.firstRow : this.firstGroup.firstRow;
+                            }
+                        } else {
+                            if (activeRow.prevRow !== null) {
+                                newActiveRow = activeRow.prevRow;
+                            }
+                            else {
+                                newActiveRow = activeGroup.prevGroup ? activeGroup.prevGroup.lastRow : this.lastGroup.lastRow;
+                            }
+                        }
+                        if (newActiveRow) {
+                            correctionCoefficient = newActiveRow._heightPrevStickyRow;
+                        }
+                    } else if (e.code === 'Enter') {
+                        if (!this.multiple) {
+                            this.UnselectAllRows();
+                            activeRow.selected = true;
+                        } else {
+                            activeRow.selected = !activeRow.selected;
+                        }
+                        this.Dispatch('SelectionChanged', { item: activeRow });
+                    }
+                }
+
+                activeItem = activeRow !== null ? activeRow : null;
+                newActiveItem = newActiveRow;
+
+            } else {
+
+                let activeCell = this.activeCell;
+                let newActiveCell = null;
+
+                if (activeCell === null) {
+                    newActiveCell = this.firstGroup.firstRow.firstCell;
+
+                } else {
+
+                    if (e.code === 'ArrowRight') {
+                        if (activeCell.nextCell !== null) {
+                            newActiveCell = activeCell.nextCell;
+                            correctionCoefficient = newActiveCell.parentColumn._widthPrevStickyCell;
+                        } else if (activeCell.parent.nextRow !== null) {
+                            if (this.cycleSelection) {
+                                newActiveCell = activeCell.parent.nextRow.firstCell;
+                                correctionCoefficient = newActiveCell.parentColumn._widthPrevStickyCell;
+                            }
+                        } else {
+                            if (this.cycleSelection) {
+                                newActiveCell = activeCell.parent.parent.firstRow.firstCell;
+                                correctionCoefficient = newActiveCell.parent._heightPrevStickyRow;
+                            }
+                        }
+                    } else if (e.code === 'ArrowLeft') {
+                        if (activeCell.prevCell !== null) {
+                            newActiveCell = activeCell.prevCell;
+                            correctionCoefficient = newActiveCell.parentColumn._widthPrevStickyCell;
+                        } else if (activeCell.parent.prevRow !== null) {
+                            if (this.cycleSelection) {
+                                newActiveCell = activeCell.parent.prevRow.lastCell;
+                                correctionCoefficient = newActiveCell.parentColumn._widthPrevStickyCell;
+                            }
+                        } else {
+                            if (this.cycleSelection) {
+                                newActiveCell = activeCell.parent.parent.lastRow.lastCell;
+                                correctionCoefficient = newActiveCell.parentColumn._widthPrevStickyCell;
+                            }
+                        }
+                    } else if (e.code === 'ArrowDown') {
+                        if (activeCell.parent.nextRow !== null) {
+                            let nameNewCell = 'app-ui-cell-' + activeCell.parent.nextRow.name + '-' + activeCell.parentColumn.name;
+                            newActiveCell = activeCell.parent.nextRow.Children(nameNewCell);
+                            correctionCoefficient = newActiveCell.parentRow._heightPrevStickyRow;
+                        } else {
+                            if (this.cycleSelection) {
+                                let nameNewCell = 'app-ui-cell-' + activeCell.parent.parent.firstRow.name + '-' + activeCell.parentColumn.name;
+                                newActiveCell = activeCell.parent.parent.firstRow.Children(nameNewCell);
+                                correctionCoefficient = newActiveCell.parentRow._heightPrevStickyRow;
+                            }
+                        }
+                    } else if (e.code === 'ArrowUp') {
+                        if (activeCell.parent.prevRow !== null) {
+                            let nameNewCell = 'app-ui-cell-' + activeCell.parent.prevRow.name + '-' + activeCell.parentColumn.name;
+                            newActiveCell = activeCell.parent.prevRow.Children(nameNewCell);
+                            correctionCoefficient = newActiveCell.parentRow._heightPrevStickyRow;
+                        } else {
+                            if (this.cycleSelection) {
+                                let nameNewCell = 'app-ui-cell-' + activeCell.parent.parent.lastRow.name + '-' + activeCell.parentColumn.name;
+                                newActiveCell = activeCell.parent.parent.lastRow.Children(nameNewCell);
+                                correctionCoefficient = 0;
+                            }
+                        }
+                    } else if (e.code === 'Enter') {
+                        if (!this.multiple) {
+                            this.DeselectAllCells();
+                        }
+                        activeCell.selected = !activeCell.selected;
+                        newActiveCell = activeCell;
+                        this.Dispatch('SelectionChanged', { item: newActiveCell });
+                    }
+
+                }
+
+                if (newActiveCell !== null) {
+                    if (activeCell !== null) {
+                        activeItem = activeCell;
+                    }
+                    newActiveItem = newActiveCell;
+                }
+            }
+
+            if (newActiveItem !== null &amp;&amp; newActiveItem !== undefined) {
+                if (activeItem !== null &amp;&amp; activeItem !== undefined) {
+                    activeItem.activated = false;
+                }
+                newActiveItem.activated = true;
+                this.__customScroll(newActiveItem._element, this.container, correctionCoefficient, direction);
+                this.Dispatch('HighlightedItemChanged', { item: newActiveItem });
+            }
+            e.stopPropagation();
+            e.preventDefault();
+            return false;
+        }
+        else if (e.code === 'Space' &amp;&amp; !(e.target.is('input') || e.target.is('textarea'))) {
+            this.selected = null;
+            this.activeRow.checked = !this.activeRow.checked;
+            this.Dispatch('CheckChanged');
+            e.stopPropagation();
+            e.preventDefault();
+            return false;
+        } else if (e.code === 'Tab') {
+            const editors = this.CollectEditors();
+            const editor = args.domEvent.target?.closestComponent().Closest(v => v instanceof Colibri.UI.Editor);
+            const editorIndex = editors.indexOf(editor);
+            if (e.shiftKey) {
+                if (editorIndex > 0) {
+                    editors[editorIndex - 1].Focus();
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                } else {
+                    this.parent.Dispatch('KeyDown', {component: this});
+                }
+            } else {
+                if(editorIndex &lt; editors.length - 1) {
+                    editors[editorIndex + 1].Focus();
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                } else {
+                    this.parent.Dispatch('KeyDown', {component: this});
+                }
+            }
+            return false;
+        }
+
+        return true;
+    }
+
+
+    /**
+     * @protected
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
+    __clickedProcessing(event, args) {
+
+        const target = args.domEvent.target;
+        // const cell = target.closest('.app-ui-row-cell')?.getUIComponent();
+        const cell = target.closest('.app-ui-row-cell')?.getUIComponent();
+
+        if (!cell) {
+            return false;
+        }
+
+        const row = target.closest('.app-ui-row').getUIComponent();
+
+        args.cell = cell;
+        args.row = row;
+
+        this._element.focus();
+
+        switch (this.selectionMode) {
+            case Colibri.UI.Grid.EveryCell:
+                this.DeactivateAllCells();
+                if (!this.multiple || !document.keysPressed.ctrl) {
+                    this.DeselectAllCells();
+                }
+                cell.activated = !cell.activated;
+                cell.selected = !cell.selected;
+                break;
+            case Colibri.UI.Grid.FullRow:
+                this.DeactivateAllRows();
+
+                if (!this.multiple || (!document.keysPressed.ctrl &amp;&amp; !document.keysPressed.shift)) {
+                    this.UnselectAllRows();
+                }
+                if(document.keysPressed.shift &amp;&amp; this.selected.length > 0) {
+                    const indexes = this.selected.map(v => v.childIndex);
+                    const minIndex = Math.min(...indexes);
+                    const maxIndex = row.childIndex;
+                    this.selected.forEach(v => (v.selected = false));
+                    for(let i = Math.min(minIndex, maxIndex); i &lt;= Math.max(minIndex, maxIndex); i++) {
+                        (this.activeGroup ?? this.rows).Children(i).selected = true;
+                    }
+                } else {
+                    row.activated = !row.activated;
+                    row.selected = !row.selected;
+                }
+                break;
+        }
+
+        cell.EditValue &amp;&amp; cell.EditValue();
+
+        args.item = this.selected;
+        this.Dispatch('SelectionChanged', args);
+    }
+
+    /**
+     * Пересчитывает высоту строк
+     */
+    RecalculateCellPositions() {
+        if(!this.header) {
+            return;
+        }
+
+        let tempWidth = 0;
+        let tempWidthPrevStickyCell = 0;
+        let col = null;
+        let colcount = 0;
+        Object.forEach(this.header.FindAllColumns(), (nameColumn, column) => {
+            column._widthPrevStickyCell = tempWidthPrevStickyCell;
+            if (column.sticky) {
+                col = column;
+                tempWidthPrevStickyCell += parseFloat(column._element.css('width'));
+                column.left = tempWidth;
+                column.tag.stickyLeft = tempWidth;
+                tempWidth += parseFloat(column._element.css('width'));
+            }
+        });
+
+        col &amp;&amp; col.AddClass('-last-sticky')
+
+        let tempHeight = this.header.height;
+        Object.forEach(this.groups, (name, group) => {
+            group.ForEach((nameRow, row) => {
+                row._heightPrevStickyRow = tempHeight;
+                if (row.sticky) {
+                    row.top = tempHeight;
+                    tempHeight += row.height;
+                }
+                row.ForEach((n, cell) => {
+                    if(n !== 'checkbox-column' &amp;&amp; n !== 'contextmenu-column') {
+                        if(cell.parentColumn?.sticky) {
+                            cell.left = cell.parentColumn.tag.stickyLeft;
+                        }
+                    }
+                });
+            });
+        });
+
+    }
+
+    /**
+     * Скроллирует список
+     * @param {Element} element элемент
+     * @param {Element} container котейнер
+     * @param {number} correctionCoefficient коэфициент корректировки
+     * @param {bool} direction направление
+     */
+    __customScroll(element, container, correctionCoefficient, direction) {
+
+        if (!!!correctionCoefficient) {
+            correctionCoefficient = 0;
+        }
+
+        let containerBoundingClientRect = container.getBoundingClientRect();
+        let cTop = containerBoundingClientRect.top;
+        let cBottom = containerBoundingClientRect.bottom;
+        let cLeft = containerBoundingClientRect.left;
+        let cRight = containerBoundingClientRect.right;
+
+        let elementBoundingClientRect = element.getBoundingClientRect();
+        let eTop = elementBoundingClientRect.top;
+        let eBottom = elementBoundingClientRect.bottom;
+        let eLeft = elementBoundingClientRect.left;
+        let eRight = elementBoundingClientRect.right;
+
+        let bottomCorrection = 0;
+        if (this.footer.shown) {
+            bottomCorrection = this.footer._element.clientHeight;
+        }
+
+        if (direction === 'all' || direction === 'Y') {
+            if (eBottom > cBottom - bottomCorrection) {
+                container.scrollTop += (eBottom - container.clientHeight + bottomCorrection);
+            } else if (eTop &lt; (cTop + correctionCoefficient)) {
+                container.scrollTop -= (cTop - eTop + correctionCoefficient);
+            }
+        }
+
+        if (direction === 'all' || direction === 'X') {
+            if (eLeft &lt; (cLeft + correctionCoefficient)) {
+                container.scrollLeft -= (cLeft - eLeft + correctionCoefficient);
+            } else if (eRight > cRight) {
+                container.scrollLeft += (eRight - cRight);
+            }
+        }
+    }
+
+    /**
+     * Создает кнопку контекстное меню
+     */
+    _createContextMenuButton() {
+        // Do nothing
+    }
+
+    /**
+     * Удаляет кнопку контекстного меню
+     */
+    _removeContextMenuButton() {
+        // Do nothing
+    }
+
+    /**
+     * Удаляет строки из грида, все
+     * @param {bool} removeGroups удалить пустые группы тоже
+     */
+    ClearAllRows(removeGroups = true) {
+        Object.forEach(this.groups, (name, group) => {
+            group.Clear();
+            if (removeGroups) {
+                group.Hide();
+            }
+        });
+        this._gridContent.shown = false;
+        this._norows.shown = true;
+        this.UnselectAllRows();
+        this.UncheckAllRows();
+
+    }
+
+    /**
+     * Удаляет строки из грида, все
+     * @param {bool} removeGroups удалить пустые группы тоже
+     */
+    ClearAll() {
+        this.ClearAllRows(true);
+        Object.forEach(this.header.FindAllColumns(), (name, column) => {
+            column.Dispose();
+        });
+        this._gridContent.shown = false;
+        this._norows.shown = true;
+    }
+
+    ForEveryRow(callback) {
+        let cancel = false;
+        Object.forEach(this.groups, (name, group, igroup) => {
+            group.ForEach((rname, row, irow) => {
+                if (row instanceof Colibri.UI.Grid.Row) {
+                    if (callback(rname, row, irow) === false) {
+                        cancel = true;
+                        return false;
+                    }
+                }
+                return true;
+            });
+            if (cancel) {
+                return false;
+            }
+            return true;
+        });
+    }
+
+    DeleteAllExcept(found) {
+
+        let collected = [];
+        this.ForEveryRow((name, row) => {
+            if (found.indexOf(name) === -1) {
+                collected.push(row);
+            }
+        });
+
+        for (const row of collected) {
+            row.Dispose();
+        }
+
+    }
+
+
+    __headerCheckboxChanged(event, args) {
+
+        if(!args.value) {
+            this.UncheckAllRows();
+        } else {
+            for(const group of Object.values(this.groups)) {
+                group.ForEveryRow((name, row) => {
+                    row.checked = row.shown &amp;&amp; args.value;
+                });
+                group.checkbox.checked = args.value;
+                group.checkbox.thirdState = group.rowsCount > group.checked.length;
+            }
+            this.header.checkbox.thirdState = this.rowsCount > this.checked.length;
+        }
+
+        this.Dispatch('RowSelected');
+        this.Dispatch('CheckChanged');
+    }
+
+    _setSortAndOrder(column) {
+        if (!column.sortable) {
+            return;
+        }
+
+        const check = [this._sortColumn?.name, this._sortOrder];
+        if (this._sortColumn &amp;&amp; this._sortColumn === column) {
+            if (this._sortOrder === null) {
+                this._sortOrder = Colibri.UI.Grid.SortAsc;
+            }
+            else if (this._sortOrder === Colibri.UI.Grid.SortAsc) {
+                this._sortOrder = Colibri.UI.Grid.SortDesc;
+            }
+            else if (this._sortOrder === Colibri.UI.Grid.SortDesc) {
+                this._sortOrder = null;
+            }
+        }
+        else if (!this._sortColumn || this._sortColumn !== column) {
+            // убираем со старого
+            this._sortColumn &amp;&amp; (this._sortColumn.sortState = null);
+
+            this._sortColumn = column;
+            this._sortOrder = Colibri.UI.Grid.SortAsc;
+        }
+
+        this._sortColumn.sortState = this._sortOrder;
+
+        if (JSON.stringify(check) !== JSON.stringify([this._sortColumn?.name, this._sortOrder])) {
+            this.Dispatch('SortChanged', { sortColumn: this._sortColumn, order: this._sortOrder });
+        }
+
+    }
+
+    Sort(columnName, order) {
+        this._sortColumn = this.header.FindColumn(columnName);
+        this._sortOrder = order;
+        this.Dispatch('SortChanged', { sortColumn: this._sortColumn, order: this._sortOrder });
+    }
+
+    __thisSelectionChanged(event, args) {
+        if (args.item) {
+            this.ForEveryRow((name, row) => {
+                if (row.ContainsClass('-editing') &amp;&amp; row != args.item) {
+                    row.EndEdit();
+                }
+            })
+        }
+    }
+
+    __rowsRowCheckChanged(event, args) {
+        this._massActionsMenuObject &amp;&amp; (this._massActionsMenuObject.selectedItems = this.checked);
+        this.Dispatch('CheckChanged', args);
+    }
+
+    __columnColumnMoved(event, args) {
+        this.ForEveryRow((name, row) => {
+            const cell = row.Cell(args.column.name);
+            if(cell) {
+                const fromIndex = cell.childIndex;
+                const toIndex = args.column.childIndex;
+                row.MoveChild(cell, fromIndex, toIndex, false);
+            } 
+        });
+        this._completeRender();
+        this.RecalculateCellPositions();
+    }
+
+    __columnColumnAdded(event, args) {
+        const column = args.column;
+        this.ForEveryRow((name, row) => {
+            row.Add(row.value[column.name] ?? null, column);
+        });
+        this._completeRender();
+        this.RecalculateCellPositions();
+    }
+
+    __headerColumnDisposed(event, args) {
+        const column = args.column;
+        this.ForEveryRow((name, row) => {
+            row.Cell(column.name)?.Dispose();
+        });
+        Object.forEach(this.groups, (name, rows) => {
+            rows.columns = this.header.columnsCount;
+        });
+        this._completeRender(column.name);
+        this.RecalculateCellPositions();
+    }
+
+    _completeRender(disposedName = null) {
+        return;
+        if(this.header) {
+            let cols = [];
+            if(this.hasContextMenu) {
+                cols.push('40px');
+            } 
+
+            const columns = this.header.FindColumnsWithWidth();
+            for(const column of columns) {
+                if(disposedName &amp;&amp; column.name === disposedName) {
+                    continue;
+                }
+                let width = column.width || 'auto';
+                if(width.isNumeric()) {
+                    width = width + 'px';
+                }
+                cols.push(width);
+            }
+
+            // cols.push('repeat(' + this.header.columnsCount + ', auto)');
+            if(this.showCheckboxes) {
+                cols.push('20px');
+            }
+            this._gridContent.container.css('grid-template-columns', cols.join(' '));
+
+            for(const group of Object.values(this.groups)) {
+                group.titleCell.colspan = cols.length;
+            }
+
+        }
+
+        
+
+    }
+
+    __thisColumnPropertyChanged(event, args) {
+        if(args.property === 'sticky') {
+            this.RecalculateCellPositions();
+        } else if(['shown', 'editor', 'viewer', 'valign', 'halign', 'width'].indexOf(args.property) !== -1) {
+            this.ForEveryRow((n, row) => {
+                if(row.Cell(args.column.name)) {
+                    row.Cell(args.column.name)[args.property] = args.column[args.property];
+                }
+            });
+            this.RecalculateCellVisibility(args.column);
+            if(args.property === 'width') {
+                this._completeRender();
+            }
+        }
+    }
+
+    __headerColumnClicked(event, args) {
+        this._setSortAndOrder(args.column);
+    }
+
+    /**
+     * Есть ли меню массовых операций
+     * @type {boolean}
+     */
+    get hasMassActionsMenu() {
+        return this._hasMassActionsMenu;
+    }
+    set hasMassActionsMenu(value) {
+        value = this._convertProperty('Boolean', value);
+        this._hasMassActionsMenu = value;
+        if (this._hasMassActionsMenu) { 
+            this.showCheckboxes = true; 
+        }
+    }
+
+    /**
+     * Меню массовых операций
+     * @type {Object}
+     */
+    get massActionsMenu() {
+        return this._massActionsMenu;
+    }
+    set massActionsMenu(value) {
+        value = this._convertProperty('Array', value);
+        this._massActionsMenu = value;
+        if (!this._massActionsMenu) {
+            this._massActionsMenuObject?.Dispose();
+            this._massActionsMenuObject = null;
+        }
+    }
+
+    /**
+     * Класс меню массовых операций (наследник Colibri.UI.MassActionsMenu)
+     * @type {Colibri.UI.MassActionsMenu}
+     */
+    get massActionsMenuClass() {
+        return this._massActionsMenuClass;
+    }
+    set massActionsMenuClass(value) {
+        value = this._convertProperty('Colibri.UI.MassActionsMenu', value);
+        this._massActionsMenuClass = value;
+    }
+
+
+    /**
+     * Показать меню массовых операций
+     * @param container
+     */
+    ShowMassActionsMenu(container) {
+        if (this._massActionsMenuClass) {
+            if (!this._massActionsMenuObject) {
+                const cl = this._massActionsMenuClass;
+                this._massActionsMenuObject = new cl(this.name + '-mass-actions-menu', container || document.body);
+                this._massActionsMenuObject.parent = this;
+                this._massActionsMenuObject.AddHandler('ActionClicked', this.__massActionMenuObjectActionClicked, false, this);
+            }
+
+            this._massActionsMenuObject.actions = this._massActionsMenu;
+            this._massActionsMenuObject.selectedItems = this.checked;
+            this._massActionsMenuObject.shown = true;
+            this._massActionsMenuObject.styles = { 'max-width': container.container.bounds().outerWidth + 'px' };
+
+        }
+    }
+
+    __massActionMenuObjectActionClicked(event, args) {
+        this._massActionsMenuObject.parent.Dispatch('MassActionsMenuActionClicked', Object.assign({ items: this.checked }, args));
+    }
+
+    /**
+     * Has context menu
+     * @type {Boolean}
+     */
+    get hasContextMenu() {
+        return this._hasContextMenu;
+    }
+    /**
+     * Has context menu
+     * @type {Boolean}
+     */
+    set hasContextMenu(value) {
+        this._hasContextMenu = value;
+        this._showHasContextMenu();
+    }
+    _showHasContextMenu() {
+        this.header.hasContextMenu = this._hasContextMenu;
+        for(const group of Object.values(this.groups)) {
+            group.hasContextMenu = this._hasContextMenu;
+        }
+    }
+
+    RecalculateCellVisibility(column) {
+        this.ForEveryRow((name, row) => {
+            row.ForEach((name, cell) => {
+                if (cell.parentColumn) {
+                    cell.shown = cell.parentColumn.shown;
+                }
+            });
+            row.SetRowTemplateSpan();
+        });
+    }
+
+    get draggable() {
+        return this._draggable;
+    }
+
+    set draggable(value) {
+        this._draggable = value;
+    }
+
+    get dropable() {
+        return this._dropable;
+    }
+
+    set dropable(value) {
+        this._dropable = value;
+    }
+
+    set enabled(value) {
+        this._enabled = value === 'true' || value === true;
+        this._setEnabled();
+    }
+
+    get enabled() {
+        return this._enabled;
+    }
+
+    _setEnabled() {
+        // выключаем все группы, те выключают строки, строки выключают чекбоксы
+        this.header.checkbox.enabled = this._enabled;
+        Object.forEach(this.groups, (name, group) => {
+            group.checkbox.enabled = this._enabled;
+        });
+        this.ForEveryRow((rname, row) => row.checkboxEnabled = this._enabled);
+    }
+
+    set value(value) {
+
+        if (!value) {
+            value = [];
+        }
+
+        if (Object.isObject(value)) {
+            value = Object.values(value);
+        }
+
+        this.ClearAllRows();
+        value.forEach((d) => {
+            this.rows.Add('data' + (d.id ?? Date.Mc()), d);
+        });
+
+        this._norows.shown = value.length == 0;
+        this._gridContent.shown = value.length > 0;
+
+    }
+
+    get value() {
+        const ret = [];
+        this.ForEveryRow((name, row) => {
+            ret.push(row.value);
+        });
+        return ret;
+    }
+
+    /**
+     * Row template component
+     * @type {string}
+     */
+    get rowTemplateComponent() {
+        return this._rowTemplateComponent;
+    }
+    /**
+     * Row template component
+     * @type {string}
+     */
+    set rowTemplateComponent(value) {
+        this._rowTemplateComponent = value;
+    }
+
+    /**
+     * Row template attributes
+     * @type {Object}
+     */
+    get rowTemplateAttrs() {
+        return this._rowTemplateAttrs;
+    }
+    /**
+     * Row template attributes
+     * @type {Object}
+     */
+    set rowTemplateAttrs(value) {
+        this._rowTemplateAttrs = value;
+    }
+
+    /**
+     * Column sort icons
+     * @type {Object|String}
+     */
+    get columnSortIcons() {
+        return this._columnSortIcons;
+    }
+    /**
+     * Column sort icons
+     * @type {Object|String}
+     */
+    set columnSortIcons(value) {
+        this._columnSortIcons = value;
+        const columns = this.header.FindAllColumns();
+        Object.forEach(columns, (name, column) => {
+            column.sortIcons = this._columnSortIcons;
+        });
+    }
+
+    /**
+     * 
+     * @type {persentage,factual}
+     */
+    get resizeMode() {
+        return this._resizeMode;
+    }
+    /**
+     * 
+     * @type {persentage,factual}
+     */
+    set resizeMode(value) {
+        this._resizeMode = value;
+    }
+
+    Focus(element = 'firstVisibleChild') {
+        const editors = this.CollectEditors();
+        if(element === 'firstVisibleChild') {
+            const first = editors.find(e => e.shown);
+            if(first) {
+                first.Focus();
+            }
+        } else if(editor === 'lastVisibleChild') {
+            const last = editors.reverse().find(e => e.shown);
+            if(last) {
+                last.Focus();
+            }
+        } else if(element == 'firstChild') {
+            if(editors.length) {
+                editors[0].Focus();
+            }
+        } else if(element == 'lastChild') {
+            if(editors.length) {
+                editors[editors.length - 1].Focus();
+            }
+        } else {
+            editors[element]?.Focus();
+        }
+    }
+
+    CollectEditors() {
+        let editors = [];
+        this.ForEveryRow((name, row) => {
+            editors = editors.concat(row.CollectEditors());
+        });
+        return editors;
+    }
+
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="App.Components.html">Components</a></li><li><a href="App.Modules.html">Modules</a></li><li><a href="Colibri.html">Colibri</a></li><li><a href="Colibri.UI.Chart.html">Chart</a></li><li><a href="Colibri.UI.Chooser.html">Chooser</a></li><li><a href="Colibri.UI.Forms.ArrayGrid.html">ArrayGrid</a></li><li><a href="Colibri.UI.Grid.html">Grid</a></li><li><a href="Colibri.UI.Input.html">Input</a></li><li><a href="Colibri.UI.List.html">List</a></li><li><a href="Colibri.UI.Select.html">Select</a></li><li><a href="Colibri.UI.Select.DefaultDropdown.html">DefaultDropdown</a></li><li><a href="Colibri.UI.Tree.html">Tree</a></li><li><a href="Colibri.UI.TreeNode.html">TreeNode</a></li><li><a href="Colibri.UI.TreeNodes.html">TreeNodes</a></li><li><a href="Colibri.UI.VirtualGrid.html">VirtualGrid</a></li></ul><h3>Classes</h3><ul><li><a href="AuditUIKit.UI.Informers.Colibri.UI.Informers.Download.html">Colibri.UI.Informers.Download</a></li><li><a href="Colibri.App.html">App</a></li><li><a href="Colibri.Common.AbstractMessageStore.html">AbstractMessageStore</a></li><li><a href="Colibri.Common.Audio.html">Audio</a></li><li><a href="Colibri.Common.Base64.html">Base64</a></li><li><a href="Colibri.Common.Blob.html">Blob</a></li><li><a href="Colibri.Common.BrowserStorage.html">BrowserStorage</a></li><li><a href="Colibri.Common.CometEvent.html">CometEvent</a></li><li><a href="Colibri.Common.CometMessage.html">CometMessage</a></li><li><a href="Colibri.Common.Cookie.html">Cookie</a></li><li><a href="Colibri.Common.Font.html">Font</a></li><li><a href="Colibri.Common.Graphics.html">Graphics</a></li><li><a href="Colibri.Common.HashActions.html">HashActions</a></li><li><a href="Colibri.Common.MimeType.html">MimeType</a></li><li><a href="Colibri.Common.Scrolling.html">Scrolling</a></li><li><a href="Colibri.Common.SessionStorage.html">SessionStorage</a></li><li><a href="Colibri.Common.Validation.html">Validation</a></li><li><a href="Colibri.Common.Video.html">Video</a></li><li><a href="Colibri.Devices.Auth.html">Auth</a></li><li><a href="Colibri.Devices.Camera.html">Camera</a></li><li><a href="Colibri.Devices.Camera_GetPicture.html">GetPicture</a></li><li><a href="Colibri.Devices.Capture.html">Capture</a></li><li><a href="Colibri.Devices.Device.html">Device</a></li><li><a href="Colibri.Devices.Dialogs.html">Dialogs</a></li><li><a href="Colibri.Devices.FileSystem.html">FileSystem</a></li><li><a href="Colibri.Devices.GeoLocation.html">GeoLocation</a></li><li><a href="Colibri.Devices.LocalNotifications.html">LocalNotifications</a></li><li><a href="Colibri.Devices.LocalNotificationsEmulator.html">LocalNotificationsEmulator</a></li><li><a href="Colibri.Devices.Media.html">Media</a></li><li><a href="Colibri.Devices.Notification.html">Notification</a></li><li><a href="Colibri.Devices.Sim.html">Sim</a></li><li><a href="Colibri.Devices.Sms.html">Sms</a></li><li><a href="Colibri.Devices.SqLite.html">SqLite</a></li><li><a href="Colibri.Devices.Vibrate.html">Vibrate</a></li><li><a href="Colibri.Events.Dispatcher.html">Dispatcher</a></li><li><a href="Colibri.Events.Event.html">Event</a></li><li><a href="Colibri.IO.Crypt.html">Crypt</a></li><li><a href="Colibri.IO.Request.html">Request</a></li><li><a href="Colibri.IO.RpcRequest.html">RpcRequest</a></li><li><a href="Colibri.IO-Colibri.IO.WebSocketStream.html">WebSocketStream</a></li><li><a href="Colibri.Modules.Colibri.Common.Wasm.html">Colibri.Common.Wasm</a></li><li><a href="Colibri.Modules.Module.html">Module</a></li><li><a href="Colibri.Sip.JsSip.html">JsSip</a></li><li><a href="Colibri.Storages.Models.Model.html">Model</a></li><li><a href="Colibri.Storages.Models.Table.html">Table</a></li><li><a href="Colibri.Storages.Store.html">Store</a></li><li><a href="Colibri.UI.AlertDialog.html">AlertDialog</a></li><li><a href="Colibri.UI.ArrayViewer.html">ArrayViewer</a></li><li><a href="Colibri.UI.AsLinkButton.html">AsLinkButton</a></li><li><a href="Colibri.UI.Audio.html">Audio</a></li><li><a href="Colibri.UI.Badge.html">Badge</a></li><li><a href="Colibri.UI.Blockquote.html">Blockquote</a></li><li><a href="Colibri.UI.BoolViewer.html">BoolViewer</a></li><li><a href="Colibri.UI.BorderViewer.html">BorderViewer</a></li><li><a href="Colibri.UI.Button.html">Button</a></li><li><a href="Colibri.UI.ButtonGroup.html">ButtonGroup</a></li><li><a href="Colibri.UI.Chart.Barchart.html">Barchart</a></li><li><a href="Colibri.UI.Checkbox.html">Checkbox</a></li><li><a href="Colibri.UI.CheckboxAsTextViewer.html">CheckboxAsTextViewer</a></li><li><a href="Colibri.UI.CheckboxEditor.html">CheckboxEditor</a></li><li><a href="Colibri.UI.CheckboxListEditor.html">CheckboxListEditor</a></li><li><a href="Colibri.UI.CheckboxViewer.html">CheckboxViewer</a></li><li><a href="Colibri.UI.Chooser.ChooseWindow.html">ChooseWindow</a></li><li><a href="Colibri.UI.Color.html">Color</a></li><li><a href="Colibri.UI.Color.Alpha.html">Alpha</a></li><li><a href="Colibri.UI.Color.Block.html">Block</a></li><li><a href="Colibri.UI.Color.Line.html">Line</a></li><li><a href="Colibri.UI.ColorViewer.html">ColorViewer</a></li><li><a href="Colibri.UI.Component.html">Component</a></li><li><a href="Colibri.UI.ConfirmDialog.html">ConfirmDialog</a></li><li><a href="Colibri.UI.ContextMenu.html">ContextMenu</a></li><li><a href="Colibri.UI.Counter.html">Counter</a></li><li><a href="Colibri.UI.DateDiffViewer.html">DateDiffViewer</a></li><li><a href="Colibri.UI.DatePicker.html">DatePicker</a></li><li><a href="Colibri.UI.DateRangeViewer.html">DateRangeViewer</a></li><li><a href="Colibri.UI.DateSelector.html">DateSelector</a></li><li><a href="Colibri.UI.DateSelectorPopup.html">DateSelectorPopup</a></li><li><a href="Colibri.UI.DateTimeSelector.html">DateTimeSelector</a></li><li><a href="Colibri.UI.DateTimeSelectorPopup.html">DateTimeSelectorPopup</a></li><li><a href="Colibri.UI.DateTimeViewer.html">DateTimeViewer</a></li><li><a href="Colibri.UI.DateViewer.html">DateViewer</a></li><li><a href="Colibri.UI.DeferredFormValidator.html">DeferredFormValidator</a></li><li><a href="Colibri.UI.DocumentViewer.html">DocumentViewer</a></li><li><a href="Colibri.UI.Drag.html">Drag</a></li><li><a href="Colibri.UI.DragManager.html">DragManager</a></li><li><a href="Colibri.UI.DropDown.html">DropDown</a></li><li><a href="Colibri.UI.Editor.html">Editor</a></li><li><a href="Colibri.UI.EmailEditor.html">EmailEditor</a></li><li><a href="Colibri.UI.ErrorButton.html">ErrorButton</a></li><li><a href="Colibri.UI.ExtendedButton.html">ExtendedButton</a></li><li><a href="Colibri.UI.FieldValidator.html">FieldValidator</a></li><li><a href="Colibri.UI.FieldsViewer.html">FieldsViewer</a></li><li><a href="Colibri.UI.FileDropManager.html">FileDropManager</a></li><li><a href="Colibri.UI.FileSizeViewer.html">FileSizeViewer</a></li><li><a href="Colibri.UI.FileViewer.html">FileViewer</a></li><li><a href="Colibri.UI.FilesDragAndDrop.html">FilesDragAndDrop</a></li><li><a href="Colibri.UI.FilesEditor.html">FilesEditor</a></li><li><a href="Colibri.UI.FilesViewer.html">FilesViewer</a></li><li><a href="Colibri.UI.FlexBox.html">FlexBox</a></li><li><a href="Colibri.UI.FontFamilySelector.html">FontFamilySelector</a></li><li><a href="Colibri.UI.FontFamilyViewer.html">FontFamilyViewer</a></li><li><a href="Colibri.UI.FormValidator.html">FormValidator</a></li><li><a href="Colibri.UI.FormValidator_Validate.html">Validate</a></li><li><a href="Colibri.UI.Forms.Array.html">Array</a></li><li><a href="Colibri.UI.Forms.ArrayGrid_Fields.html">Fields</a></li><li><a href="Colibri.UI.Forms.ArrayGrid.ObjectWindow.html">ObjectWindow</a></li><li><a href="Colibri.UI.Forms.Bool.html">Bool</a></li><li><a href="Colibri.UI.Forms.Checkbox.html">Checkbox</a></li><li><a href="Colibri.UI.Forms.CheckboxList.html">CheckboxList</a></li><li><a href="Colibri.UI.Forms.Choose.html">Choose</a></li><li><a href="Colibri.UI.Forms.Color.html">Color</a></li><li><a href="Colibri.UI.Forms.Date.html">Date</a></li><li><a href="Colibri.UI.Forms.DateRange.html">DateRange</a></li><li><a href="Colibri.UI.Forms.DateTime.html">DateTime</a></li><li><a href="Colibri.UI.Forms.DateTimeRange.html">DateTimeRange</a></li><li><a href="Colibri.UI.Forms.DayOfMonth.html">DayOfMonth</a></li><li><a href="Colibri.UI.Forms.DocumentGenerator.html">DocumentGenerator</a></li><li><a href="Colibri.UI.Forms.Email.html">Email</a></li><li><a href="Colibri.UI.Forms.Field.html">Field</a></li><li><a href="Colibri.UI.Forms.File.html">File</a></li><li><a href="Colibri.UI.Forms.FileLabel.html">FileLabel</a></li><li><a href="Colibri.UI.Forms.Files.html">Files</a></li><li><a href="Colibri.UI.Forms.FontFamily.html">FontFamily</a></li><li><a href="Colibri.UI.Forms.Form.html">Form</a></li><li><a href="Colibri.UI.Forms.HiddenField.html">HiddenField</a></li><li><a href="Colibri.UI.Forms.KeyValueObject.html">KeyValueObject</a></li><li><a href="Colibri.UI.Forms.Label.html">Label</a></li><li><a href="Colibri.UI.Forms.Link.html">Link</a></li><li><a href="Colibri.UI.Forms.List.html">List</a></li><li><a href="Colibri.UI.Forms.MonthYear.html">MonthYear</a></li><li><a href="Colibri.UI.Forms.Number.html">Number</a></li><li><a href="Colibri.UI.Forms.NumberRange.html">NumberRange</a></li><li><a href="Colibri.UI.Forms.Object.html">Object</a></li><li><a href="Colibri.UI.Forms.Passport.html">Passport</a></li><li><a href="Colibri.UI.Forms.Password.html">Password</a></li><li><a href="Colibri.UI.Forms.Period.html">Period</a></li><li><a href="Colibri.UI.Forms.Radio.html">Radio</a></li><li><a href="Colibri.UI.Forms.Select.html">Select</a></li><li><a href="Colibri.UI.Forms.SimpleArray.html">SimpleArray</a></li><li><a href="Colibri.UI.Forms.Tabs.html">Tabs</a></li><li><a href="Colibri.UI.Forms.Text.html">Text</a></li><li><a href="Colibri.UI.Forms.TextArea.html">TextArea</a></li><li><a href="Colibri.UI.Forms.Toggle.html">Toggle</a></li><li><a href="Colibri.UI.Forms.Token.html">Token</a></li><li><a href="Colibri.UI.Forms.Year.html">Year</a></li><li><a href="Colibri.UI.Frame.html">Frame</a></li><li><a href="Colibri.UI.GoogleChart.html">GoogleChart</a></li><li><a href="Colibri.UI.GrayButton.html">GrayButton</a></li><li><a href="Colibri.UI.Grid.Cell.html">Cell</a></li><li><a href="Colibri.UI.Grid.Column.html">Column</a></li><li><a href="Colibri.UI.Grid.Columns.html">Columns</a></li><li><a href="Colibri.UI.Grid.Header.html">Header</a></li><li><a href="Colibri.UI.Grid.Row.html">Row</a></li><li><a href="Colibri.UI.Grid.Rows.html">Rows</a></li><li><a href="Colibri.UI.GridFileViewer.html">GridFileViewer</a></li><li><a href="Colibri.UI.H1.html">H1</a></li><li><a href="Colibri.UI.H2.html">H2</a></li><li><a href="Colibri.UI.H3.html">H3</a></li><li><a href="Colibri.UI.H4.html">H4</a></li><li><a href="Colibri.UI.Heading.html">Heading</a></li><li><a href="Colibri.UI.Hr.html">Hr</a></li><li><a href="Colibri.UI.HtmlDataViewer.html">HtmlDataViewer</a></li><li><a href="Colibri.UI.IFrame.html">IFrame</a></li><li><a href="Colibri.UI.Icon.html">Icon</a></li><li><a href="Colibri.UI.IconViewer.html">IconViewer</a></li><li><a href="Colibri.UI.Image.html">Image</a></li><li><a href="Colibri.UI.ImageViewWindow.html">ImageViewWindow</a></li><li><a href="Colibri.UI.ImageViewer.html">ImageViewer</a></li><li><a href="Colibri.UI.ImagesViewer.html">ImagesViewer</a></li><li><a href="Colibri.UI.Img.html">Img</a></li><li><a href="Colibri.UI.Informers.DownloadItem.html">DownloadItem</a></li><li><a href="Colibri.UI.Input.File.html">File</a></li><li><a href="Colibri.UI.JsonViewer.html">JsonViewer</a></li><li><a href="Colibri.UI.Link.html">Link</a></li><li><a href="Colibri.UI.LinkEditor.html">LinkEditor</a></li><li><a href="Colibri.UI.LinkViewer.html">LinkViewer</a></li><li><a href="Colibri.UI.List.Group.html">Group</a></li><li><a href="Colibri.UI.List.Item.html">Item</a></li><li><a href="Colibri.UI.List.JsonRenderer.html">JsonRenderer</a></li><li><a href="Colibri.UI.List.SearchBox.html">SearchBox</a></li><li><a href="Colibri.UI.ListItem.html">ListItem</a></li><li><a href="Colibri.UI.Loading.html">Loading</a></li><li><a href="Colibri.UI.LoadingBallun.html">LoadingBallun</a></li><li><a href="Colibri.UI.LoadingContainer.html">LoadingContainer</a></li><li><a href="Colibri.UI.Logs.JsonLog.html">JsonLog</a></li><li><a href="Colibri.UI.Maps.Controls.Button.html">Button</a></li><li><a href="Colibri.UI.Maps.Controls.ButtonGroup.html">ButtonGroup</a></li><li><a href="Colibri.UI.Maps.Controls.FileButton.html">FileButton</a></li><li><a href="Colibri.UI.Maps.Controls.FilterButton.html">FilterButton</a></li><li><a href="Colibri.UI.Maps.Controls.LayersButton.html">LayersButton</a></li><li><a href="Colibri.UI.Maps.Controls.RotateButton.html">RotateButton</a></li><li><a href="Colibri.UI.Maps.Controls.StatesButton.html">StatesButton</a></li><li><a href="Colibri.UI.Maps.Controls.ToggleButton.html">ToggleButton</a></li><li><a href="Colibri.UI.Maps.Controls.ToolBox.html">ToolBox</a></li><li><a href="Colibri.UI.Maps.LeafletJs.html">LeafletJs</a></li><li><a href="Colibri.UI.Maps.MapLibre.html">MapLibre</a></li><li><a href="Colibri.UI.MassActionsMenu.html">MassActionsMenu</a></li><li><a href="Colibri.UI.MenuList.html">MenuList</a></li><li><a href="Colibri.UI.ModelViewer.html">ModelViewer</a></li><li><a href="Colibri.UI.ModelessWindow.html">ModelessWindow</a></li><li><a href="Colibri.UI.MonthPicker.html">MonthPicker</a></li><li><a href="Colibri.UI.MonthSelector.html">MonthSelector</a></li><li><a href="Colibri.UI.MonthYearViewer.html">MonthYearViewer</a></li><li><a href="Colibri.UI.MoveManager.html">MoveManager</a></li><li><a href="Colibri.UI.Note.html">Note</a></li><li><a href="Colibri.UI.Notice.html">Notice</a></li><li><a href="Colibri.UI.Notices.html">Notices</a></li><li><a href="Colibri.UI.NumberEditor.html">NumberEditor</a></li><li><a href="Colibri.UI.NumberViewer.html">NumberViewer</a></li><li><a href="Colibri.UI.ObjectViewer.html">ObjectViewer</a></li><li><a href="Colibri.UI.OrderedList.html">OrderedList</a></li><li><a href="Colibri.UI.OutlineBlueButton.html">OutlineBlueButton</a></li><li><a href="Colibri.UI.Pager.html">Pager</a></li><li><a href="Colibri.UI.Pane.html">Pane</a></li><li><a href="Colibri.UI.PaneGrid.html">PaneGrid</a></li><li><a href="Colibri.UI.PaneSwitcher.html">PaneSwitcher</a></li><li><a href="Colibri.UI.PeriodViewer.html">PeriodViewer</a></li><li><a href="Colibri.UI.PlayPauseButton.html">PlayPauseButton</a></li><li><a href="Colibri.UI.PointerControl.html">PointerControl</a></li><li><a href="Colibri.UI.Popup.html">Popup</a></li><li><a href="Colibri.UI.PopupList.html">PopupList</a></li><li><a href="Colibri.UI.ProgressBar.html">ProgressBar</a></li><li><a href="Colibri.UI.ProgressViewer.html">ProgressViewer</a></li><li><a href="Colibri.UI.PromptDialog.html">PromptDialog</a></li><li><a href="Colibri.UI.Radio.html">Radio</a></li><li><a href="Colibri.UI.RadioViewer.html">RadioViewer</a></li><li><a href="Colibri.UI.RangePicker.html">RangePicker</a></li><li><a href="Colibri.UI.ReadUnreadBadge.html">ReadUnreadBadge</a></li><li><a href="Colibri.UI.RemoteFileEditor.html">RemoteFileEditor</a></li><li><a href="Colibri.UI.Renderer.html">Renderer</a></li><li><a href="Colibri.UI.Rgb.html">Rgb</a></li><li><a href="Colibri.UI.Router.html">Router</a></li><li><a href="Colibri.UI.Ruler.html">Ruler</a></li><li><a href="Colibri.UI.SearchInput.html">SearchInput</a></li><li><a href="Colibri.UI.Select.DefaultDropdown.Options.html">Options</a></li><li><a href="Colibri.UI.Select.Dropdown.html">Dropdown</a></li><li><a href="Colibri.UI.SelectEditor.html">SelectEditor</a></li><li><a href="Colibri.UI.SelectViewer.html">SelectViewer</a></li><li><a href="Colibri.UI.Selector.html">Selector</a></li><li><a href="Colibri.UI.Shader.html">Shader</a></li><li><a href="Colibri.UI.ShadowViewer.html">ShadowViewer</a></li><li><a href="Colibri.UI.Shortcuts.html">Shortcuts</a></li><li><a href="Colibri.UI.SimpleButton.html">SimpleButton</a></li><li><a href="Colibri.UI.SimpleFormValidator.html">SimpleFormValidator</a></li><li><a href="Colibri.UI.SimplePieChart.html">SimplePieChart</a></li><li><a href="Colibri.UI.SingleTimeline.html">SingleTimeline</a></li><li><a href="Colibri.UI.SlideDown.html">SlideDown</a></li><li><a href="Colibri.UI.Spectrum.Graph.html">Graph</a></li><li><a href="Colibri.UI.Spectrum.Selections.html">Selections</a></li><li><a href="Colibri.UI.Split.html">Split</a></li><li><a href="Colibri.UI.Strong.html">Strong</a></li><li><a href="Colibri.UI.SuccessButton.html">SuccessButton</a></li><li><a href="Colibri.UI.Switcher.html">Switcher</a></li><li><a href="Colibri.UI.Table.html">Table</a></li><li><a href="Colibri.UI.TableCell.html">TableCell</a></li><li><a href="Colibri.UI.TableHeaderCell.html">TableHeaderCell</a></li><li><a href="Colibri.UI.TableRow.html">TableRow</a></li><li><a href="Colibri.UI.Tabs.html">Tabs</a></li><li><a href="Colibri.UI.Templates.html">Templates</a></li><li><a href="Colibri.UI.TextArea.html">TextArea</a></li><li><a href="Colibri.UI.TextAreaEditor.html">TextAreaEditor</a></li><li><a href="Colibri.UI.TextAreaViewer.html">TextAreaViewer</a></li><li><a href="Colibri.UI.TextEditor.html">TextEditor</a></li><li><a href="Colibri.UI.TextSpan.html">TextSpan</a></li><li><a href="Colibri.UI.TextViewer.html">TextViewer</a></li><li><a href="Colibri.UI.Timeline.html">Timeline</a></li><li><a href="Colibri.UI.ToggleBox.html">ToggleBox</a></li><li><a href="Colibri.UI.ToggleBoxEditor.html">ToggleBoxEditor</a></li><li><a href="Colibri.UI.ToggleButton.html">ToggleButton</a></li><li><a href="Colibri.UI.ToggleboxViewer.html">ToggleboxViewer</a></li><li><a href="Colibri.UI.ToolTip.html">ToolTip</a></li><li><a href="Colibri.UI.Toolbar.html">Toolbar</a></li><li><a href="Colibri.UI.Tree.JsonRenderer.html">JsonRenderer</a></li><li><a href="Colibri.UI.Tree.SearchBox.html">SearchBox</a></li><li><a href="Colibri.UI.UnorderedList.html">UnorderedList</a></li><li><a href="Colibri.UI.UploadButton.html">UploadButton</a></li><li><a href="Colibri.UI.Utilities.Mask.html">Mask</a></li><li><a href="Colibri.UI.Utilities.Validator.html">Validator</a></li><li><a href="Colibri.UI.Video.html">Video</a></li><li><a href="Colibri.UI.Viewer.html">Viewer</a></li><li><a href="Colibri.UI.WaterfallBuffer.html">WaterfallBuffer</a></li><li><a href="Colibri.UI.WebRTCVideo.html">WebRTCVideo</a></li><li><a href="Colibri.UI.Widget.html">Widget</a></li><li><a href="Colibri.UI.Window.html">Window</a></li><li><a href="Colibri.UI.YearMonthSelector.html">YearMonthSelector</a></li><li><a href="Colibri.UI.YearPicker.html">YearPicker</a></li><li><a href="Colibri.UI.YearQuarterSelector.html">YearQuarterSelector</a></li><li><a href="Colibri.UI.YearSelector.html">YearSelector</a></li><li><a href="Colibri.UI.YearViewer.html">YearViewer</a></li><li><a href="Colibri.Web.Comet.html">Comet</a></li><li><a href="Colibri.Web.IndexDB.html">IndexDB</a></li><li><a href="Colibri.Web.Request.html">Request</a></li><li><a href="Colibri.Web.Router.html">Router</a></li><li><a href="Destructable.html">Destructable</a></li><li><a href="DestructableRegistry.html">DestructableRegistry</a></li><li><a href="MediaMTXWebRTCReader.html">MediaMTXWebRTCReader</a></li></ul><h3>Global</h3><ul><li><a href="global.html#App">App</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sun Jul 26 2026 13:08:05 GMT+0400 (Armenia Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

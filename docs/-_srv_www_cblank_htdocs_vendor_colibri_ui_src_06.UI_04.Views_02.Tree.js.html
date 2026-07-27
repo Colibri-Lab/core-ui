@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: /srv/www/cblank/htdocs/vendor/colibri/ui/src/06.UI/04.Views/02.Tree.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: /srv/www/cblank/htdocs/vendor/colibri/ui/src/06.UI/04.Views/02.Tree.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @class
+ * @namespace
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
+Colibri.UI.Tree = class extends Colibri.UI.Component {
+
+    /** @type {Colibri.UI.TreeNode|null} */
+    _selected = null;
+
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     */
+    constructor(name, container) {
+        super(name, container, Element.create('div'));
+
+        this._allNodes = new Set();
+
+        this._nodes = new Colibri.UI.TreeNodes('nodes', this, this);
+        this.AddClass('app-ui-tree-component');
+
+        // this.AddHandler('ScrollStarted', this.__thisScrollStarted);
+        // this.AddHandler('ScrollEnded', this.__thisScrollEnded);
+
+        this._handleEvents();
+    }
+
+    __thisScrollStarted(event, args) {
+        if(this.hasSearchBox) {
+            this._searchBox.shown = false;
+        }
+    }
+
+    __thisScrollEnded(event, args) {
+        if(this.hasSearchBox) {
+            this._searchBox.top = this.scrollTop;
+            this._searchBox.shown = true;
+        }
+    }
+
+    /** @protected */
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('NodeExpanding', false, 'When node is expanding');
+        this.RegisterEvent('NodeExpanded', false, 'When node is expanded');
+        this.RegisterEvent('NodeCollapsing', false, 'When node is collapsing');
+        this.RegisterEvent('NodeCollapsed', false, 'When node is collapsed');
+        this.RegisterEvent('SelectionChanged', false, 'When selection is changed');
+        this.RegisterEvent('NodeEditCompleted', false, 'When node editing is complete');
+        this.RegisterEvent('NodeClicked', false, 'When node is clicked');
+        this.RegisterEvent('NodeDoubleClicked', false, 'When node is double clicked');
+        this.RegisterEvent('CheckChanged', false, 'When node checkbox is changed');
+        this.RegisterEvent('Searched', false, 'When is searched');
+    }
+
+    /** @protected */
+    _handleEvents() {
+        this.AddHandler('Clicked', (sender, args) => {
+            this.ClearSelection();
+            this.Dispatch('SelectionChanged', {node: null});
+        });
+    }
+
+    /** 
+     * Tree nodes object
+     * @type {Colibri.UI.TreeNodes} 
+     */
+    get nodes() {
+        return this._nodes;
+    }
+
+    /**
+     * Searches for nodes
+     * @param {string} term term to search in nodes
+     * @param {boolean} asAjar return nodes ajar
+     */
+    Search(term, asAjar = false, filterCallback = null) {
+
+        if(this.searchBoxUseEvent) {
+            this.Dispatch('Searched', {term: term, asAjar: asAjar});
+        } else {
+            if(!term) {
+                this.allNodes.forEach((node) => {
+                    node.found = null;
+                    node.Show();
+                });    
+            }
+            else {
+                this.allNodes.forEach((node) => {
+                    node.found = null;
+                });    
+                if(!filterCallback) {
+                    filterCallback = (node, term) => node.text.toLowerCase().indexOf(term.toLowerCase()) !== -1;
+                }
+                this.allNodes.forEach((node) => {
+                    if(!filterCallback(node, term)) {
+                        node.Hide();
+                    } else {
+                        let p = node.parentNode;
+                        while(p) {
+                            p.Show();
+                            p = p.parentNode;
+                        }
+                        node.found = term;
+                        node.Show();
+                    }
+                }); 
+            }
+            if(asAjar) {
+                this.allNodes.forEach((node) => {
+                    if(node.found) {
+                        node.ShowAll();
+                    }
+                });    
+                this.ExpandAll();
+            }
+        }
+
+        
+    }
+
+    /**
+     * Expand all nodes
+     */
+    ExpandAll() {
+        this.nodes.ForEach((nodeName, node) => {
+            node.ExpandAll();
+        })
+    }
+
+    /**
+     * Collapse all nodes
+     */
+    CollapseAll() {
+        this.nodes.ForEach((nodeName, node) => {
+            node.CollapseAll();
+        })
+    }
+
+    /**
+     * Select node
+     */
+    Select(node) {
+        const isChanged = node !== this._selected;
+        this.ClearSelection();
+        this._selected = node;
+        if(node !== null) {
+            node.selected = true;
+        }
+        if(isChanged) {
+            this.Dispatch('SelectionChanged', {node: node});
+        }
+    }
+
+    /**
+     * Clear selection on all nodes
+     */
+    ClearSelection() {
+        this._element.querySelectorAll('.selected').forEach(selected => selected.classList.remove('selected'));
+        this._selected = null;
+    }
+
+    /** 
+     * Selected node
+     * @type {Colibri.UI.TreeNode} 
+     */
+    get selected() {
+        return this._selected;
+    }
+
+    /** 
+     * Selected node
+     * @type {Colibri.UI.TreeNode} 
+     */
+    set selected(node) {
+        if(typeof node === 'string') {
+            node = this.FindByPath(node);
+        }
+        this.Select(node);
+    }
+
+    /**
+     * Array of checks
+     * @type {Array}
+     */
+    get checked() {
+        return Array.from(this.allNodes).filter(v => v.checked == true);
+    }
+    /**
+     * Array of checks
+     * @type {Array}
+     */
+    set checked(value) {
+        for(let v of value) {
+            if(typeof v === 'string') {
+                v = this.FindByPath(v);
+            }
+            v.checked = true;
+        }
+        
+    }
+
+    /**
+     * All nodes set
+     * @type {Set}
+     */
+    get allNodes() {
+        return this._allNodes;
+    }
+
+    /**
+     * Returns node by name or null
+     * @param {string} name name of node
+     * @returns {Colibri.UI.TreeNode|null}
+     */
+    FindNode(name) {
+        for(const node of this._allNodes) {
+            if(node.name == name) {
+                return node;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns node by path or null
+     * @param {string} nodePath nodePath of node
+     * @returns {Colibri.UI.TreeNode|null}
+     */
+    FindByPath(nodePath) {
+        nodePath = nodePath.split('/');
+        let parent = this;
+        for(const n of nodePath) {
+            parent = parent.nodes.Children(n);
+            if(!parent) {
+                break;
+            }
+        }
+        return parent;
+    }
+
+    /**
+     * Is tree has context menu
+     * @type {boolean}
+     */
+    get hasTreeContextMenu() {
+        return this._hasTreeContextMenu;
+    }
+
+    /**
+     * Is tree has context menu
+     * @type {boolean}
+     */
+    set hasTreeContextMenu(value) {
+        this._hasTreeContextMenu = value === true || value === 'true';
+        this._createContextMenuButton();
+    }
+
+    /** @private */
+    _createContextMenuButton() {
+        if(!this._hasTreeContextMenu || !this._hasContextMenu || this.Children(this._name + '-contextmenu-icon-parent')) {
+            return;
+        }
+
+        this.AddClass('app-component-hascontextmenu');
+
+        const contextMenuParent = new Colibri.UI.Pane(this._name + '-contextmenu-icon-parent', this);
+        contextMenuParent.parent = this;
+        contextMenuParent.AddClass('app-contextmenu-icon-component');
+        contextMenuParent.shown = true;
+        this.Children(this._name + '-contextmenu-icon-parent', contextMenuParent);
+
+        const contextMenuIcon = new Colibri.UI.Icon(this._name + '-contextmenu-icon', contextMenuParent);
+        contextMenuIcon.shown = true;
+        contextMenuIcon.value = Colibri.UI.ContextMenuIcon;
+        contextMenuIcon.AddHandler('Clicked', this.__thisContextMenuItemClicked, false, this);    
+
+        this.AddHandler('Scrolled', this.__thisScrolled); 
+        this.Dispatch('Scrolled');
+
+    }
+
+    __thisContextMenuItemClicked(event, args) {
+        this.Dispatch('ContextMenuIconClicked', args);
+    }
+
+    __thisScrolled(event, args) {
+        this.Children(this._name + '-contextmenu-icon-parent')?.container?.css('bottom', (-1 * this.scrollTop + 10) + 'px');
+    }
+
+    /** @private */
+    _removeContextMenuButton() {
+        if(this._hasTreeContextMenu &amp;&amp; this._hasContextMenu &amp;&amp; this.Children(this._name + '-contextmenu-icon-parent')) {
+            this.Children(this._name + '-contextmenu-icon-parent').Dispose();
+            this.RemoveClass('app-component-hascontextmenu');
+        }
+    }
+
+    /**
+     * Is tree is dropable
+     * @type {boolean}
+     */
+    get dropable() {
+        return this._dropable;
+    }
+
+    /**
+     * Is tree is dropable
+     * @type {boolean}
+     */
+    set dropable(value) {
+        this._dropable = value;
+    }
+
+    /**
+     * Is tree is draggable
+     * @type {boolean}
+     */    
+    get draggable() {
+        return this._draggable;
+    }
+
+    /**
+     * Is tree is draggable
+     * @type {boolean}
+     */    
+    set draggable(value) {
+        this._draggable = value;
+    }
+
+    /**
+     * Is tree is sortable
+     * @type {boolean}
+     */    
+    get sorting() {
+        return this._sorting;
+    }
+
+    /**
+     * Is tree is sortable
+     * @type {boolean}
+     */    
+    set sorting(value) {
+        this._sorting = value;
+        this._setSorting();
+    }
+
+    /** @private */
+    _setSorting() {
+        if(this._sorting) {
+            this.AddClass('-sortable');
+        }
+        else {
+            this.RemoveClass('-sortable');
+        }
+    }
+    
+    /**
+     * Expand node on click
+     * @type {Boolean}
+     */
+    get expandOnClick() {
+        return this._expandOnClick;
+    }
+    /**
+     * Expand node on click
+     * @type {Boolean}
+     */
+    set expandOnClick(value) {
+        this._expandOnClick = value === true || value === 'true';
+    }
+
+    /**
+     * Value Array
+     * @type {Array}
+     */
+    set value(value) {
+        this.nodes.value = value;
+    }
+
+    /**
+     * Value Array
+     * @type {Array}
+     */
+    get value() {
+        return this.nodes.value;
+    }
+
+    /**
+     * Multiple selection
+     * @type {Boolean}
+     */
+    get multiple() {
+        return this._multiple;
+    }
+    /**
+     * Multiple selection
+     * @type {Boolean}
+     */
+    set multiple(value) {
+        value = this._convertProperty('Boolean', value);
+        this._multiple = value;
+        this._showMultiple();
+    }
+
+    /** @private */
+    _showMultiple() {
+        Array.from(this.allNodes).map(node => node.multiple = this._multiple);
+    }
+
+    /**
+     * Remove hidden nodes
+     * @type {Boolean}
+     */
+    get removeHiddenNodes() {
+        return this._removeHiddenNodes;
+    }
+    /**
+     * Remove hidden nodes
+     * @type {Boolean}
+     */
+    set removeHiddenNodes(value) {
+        this._removeHiddenNodes = value;
+    }
+
+    /**
+     * sets thrid or full state of parent checks  
+     * @param {Colibri.UI.TreeNode} node node to check
+     */
+    PerformCheckState(node) {
+        
+        this._allNodes.forEach((n, index) => {
+
+            if(n.nodes.children > 0) {
+                if(n.nodes.allNodesChecked) {
+                    if(n.checkBox) {
+                        n.checkBox.checked = true;
+                        n.checkBox.thirdState = false;
+                    }
+                } else if(n.nodes.allNodesUnChecked)  {
+                    if(n.checkBox) {
+                        n.checkBox.checked = false;
+                        n.checkBox.thirdState = false;
+                    }
+                } else {
+                    if(n.checkBox) {
+                        n.checkBox.checked = true;
+                        n.checkBox.thirdState = true;
+                    }
+                }
+            } 
+        });
+
+    }
+
+    /**
+     * Has searchbox in top of list
+     * @type {Boolean}
+     */
+    get hasSearchBox() {
+        return this._searchBox !== null;
+    }
+    /**
+     * Has searchbox in top of list
+     * @type {Boolean}
+     */
+    set hasSearchBox(value) {
+        if(value) {
+            this.handleScrollProperties = true;
+            this.AddClass('app-component-has-search');
+            this._searchBox = new Colibri.UI.Tree.SearchBox(this.name + '-searchbox', this);
+            this._searchBox.shown = true;
+            this._searchBox.AddHandler('Changed', this.__searchBoxChanged, false, this);
+            this._searchBox.MoveTop();
+        } else if(this._searchBox) {
+            this.handleScrollProperties = false;
+            this.RemoveClass('app-component-has-search');
+            this._searchBox.Dispose();
+            this._searchBox = null;
+        }
+    }
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
+    __searchBoxChanged(event, args) {
+        this.Search(this._searchBox.value, true, this._searchFilterCallback);
+    }
+
+    /**
+     * Has search icon in search box
+     * @type {Boolean}
+     */
+    get searchBoxSearchIcon() {
+        if(!this._searchBox) {
+            return false;
+        }
+        return this._searchBox.hasIcon;
+    }
+    /**
+     * Has search icon in search box
+     * @type {Boolean}
+     */
+    set searchBoxSearchIcon(value) {
+        if(!this._searchBox) {
+            return;
+        }
+        this._searchBox.hasIcon = value;
+    }
+    
+    /**
+     * Searchbox placeholder
+     * @type {String}
+     */
+    get searchBoxPlaceholder() {
+        if(!this._searchBox) {
+            return; 
+        }
+        return this._searchBox.placeholder;
+    }
+    /**
+     * Searchbox placeholder
+     * @type {String}
+     */
+    set searchBoxPlaceholder(value) {
+        if(!this._searchBox) {
+            return;
+        }
+        this._searchBox.placeholder = value;
+    }
+
+    /**
+     * Filter callback
+     * @type {Function}
+     */
+    get searchFilterCallback() {
+        return this._searchFilterCallback;
+    }
+    /**
+     * Filter callback
+     * @type {Function}
+     */
+    set searchFilterCallback(value) {
+        this._searchFilterCallback = value;
+    }
+
+    /**
+     * Use external event on search
+     * @type {Boolean}
+     */
+    get searchBoxUseEvent() {
+        return this._searchBoxUseEvent;
+    }
+    /**
+     * Use external event on search
+     * @type {Boolean}
+     */
+    set searchBoxUseEvent(value) {
+        this._searchBoxUseEvent = value;
+    }
+
+    get searchBoxText() {
+        return this._searchBox.value;
+    }
+
+    set searchBoxText(value) {
+        this._searchBox.value = value;
+    }
+
+    /**
+     * Sets the focus on searchbox
+     */
+    FocusOnSearchBox() {
+        if(!this._searchBox) {
+            return;
+        }
+        this._searchBox.Focus();
+    }
+
+}
+
+
+/**
+ * @class
+ * @extends Colibri.UI.Pane
+ * @memberof Colibri.UI.Tree
+ */
+Colibri.UI.Tree.SearchBox = class extends Colibri.UI.Pane {
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     */
+    constructor(name, container) {
+        super(name, container);
+        this.AddClass('app-component-tree-searchbox');
+
+        this._input = new Colibri.UI.Input(this.name + '-input', this);
+        this._input.shown = true;
+        this._input.AddHandler(['Filled', 'Cleared'], this.__inputChangedOrFilled, false, this);
+        this._input.AddHandler('KeyDown', this.__inputKeyDown, false, this);
+
+    }
+
+    __inputKeyDown(event, args) {
+        args.domEvent.stopPropagation();
+    }
+
+    __inputChangedOrFilled(event, args) {
+        this.Dispatch('Changed', args);
+    }
+
+    /** @protected */
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('Changed', false, 'When search term is changed');
+    }
+
+    /**
+     * Searchbox has icon
+     * @type {boolean}
+     */
+    get hasIcon() {
+        return this._input.hasIcon;
+    }
+    /**
+     * Searchbox has icon
+     * @type {boolean}
+     */
+    set hasIcon(value) {
+        this._input.hasIcon = value;
+    }
+
+    /**
+     * Searchbox placeholder
+     * @type {string}
+     */
+    get placeholder() {
+        return this._input.placeholder;
+    }
+    /**
+     * Searchbox placeholder
+     * @type {string}
+     */
+    set placeholder(value) {
+        this._input.placeholder = value;
+    }
+
+    /**
+     * Set the focus on searchbox
+     */
+    Focus() {
+        this._input.Focus();
+    }
+
+    /**
+     * Value of searchbox
+     * @type {String}
+     */
+    get value() {
+        return this._input.value;
+    }
+    /**
+     * Value of searchbox
+     * @type {String}
+     */
+    set value(value) {
+        this._input.value = value;
+    }
+
+}
+
+/**
+ * @class
+ * @namespace
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
+Colibri.UI.TreeNode = class extends Colibri.UI.Component {
+
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     */
+    constructor(name, container) {
+        super(name, container, Element.fromHtml('&lt;div>&lt;div>&lt;dd drop="before">&lt;/dd>&lt;em class="expander">&lt;/em>&lt;em class="check">&lt;/em>&lt;em class="icon none">&lt;/em>&lt;span>&lt;/span>&lt;input type="text" />&lt;dd drop="after">&lt;/dd>&lt;span class="node-tip">&lt;/span>&lt;/div>&lt;/div>')[0]);
+        this._nodes = new Colibri.UI.TreeNodes('nodes', this, container.tree);
+
+        this._div = this._element.querySelector(':scope > div');
+        this._input = this._element.querySelector('input');
+        this._text = this._element.querySelector('div span');
+        this._tipSpan = this._element.querySelector(':scope > div > .node-tip');
+        this._check = this._element.querySelector(':scope > div > .check');
+
+        this._handleEvents();
+
+        this.AddClass('node');
+        this.Show();
+
+        this.hasContextMenu = container.tree.hasContextMenu;
+        this.dropable = this.tree.dropable;
+        this.draggable = this.tree.draggable;
+        this.isLeaf = true;
+
+    }
+
+    /** @protected */
+    _createContextMenuButton() {
+        if(!this._hasContextMenu || this.Children(this._name + '-contextmenu-icon-parent')) {
+            return;
+        }
+
+
+        const container = this.container.querySelector('div');
+        container.classList.add('app-component-hascontextmenu');
+
+        const contextMenuParent = new Colibri.UI.Pane(this._name + '-contextmenu-icon-parent', container);
+        contextMenuParent.parent = this;
+        contextMenuParent.AddClass('app-contextmenu-icon-component');
+        contextMenuParent.shown = true;
+        this.Children(this._name + '-contextmenu-icon-parent', contextMenuParent);
+
+        if(this._nodes.tree._recreateNodeIcon) {
+            this._nodes.tree._recreateNodeIcon(this);
+        }
+        else {
+            const contextMenuIcon = new Colibri.UI.Icon(this._name + '-contextmenu-icon', contextMenuParent);
+            contextMenuIcon.shown = true;
+            contextMenuIcon.value = Colibri.UI.ContextMenuIcon;
+            contextMenuIcon.AddHandler('Clicked', this.__contextMenuIconClicked, false, this);
+        }
+        
+    }
+
+    /** @protected */
+    _removeContextMenuButton() {
+        if(this._hasContextMenu &amp;&amp; this.Children(this._name + '-contextmenu-icon-parent')) {
+            this.Children(this._name + '-contextmenu-icon-parent').Dispose();
+            this.container.querySelector('div').classList.remove('app-component-hascontextmenu');
+        }
+    }
+
+    /** @protected */
+    _registerEvents() {
+        super._registerEvents();
+        this.RegisterEvent('Expanding', false, 'When node is expanding');
+        this.RegisterEvent('Expanded', false, 'When node is expanded');
+        this.RegisterEvent('Collapsing', false, 'When node is collapsing');
+        this.RegisterEvent('Collapsed', false, 'When node is collapsed');
+        this.RegisterEvent('CheckChanged', false, 'When multiple check changed');
+    }
+
+    __thisClicked(sender, args) {
+        if(this._element.querySelector('div>em.expander') === args.domEvent.target) {
+            this.expanded = !this.expanded;
+        } else {
+            const isIconClicked = args.domEvent.target.closest('em.icon') != null
+            if(this._nodes.tree.Dispatch('NodeClicked', Object.assign({item: this, clickedOnIcon: isIconClicked}, args)) !== false) {
+                this._nodes.tree.Select(this);
+            }
+            if(this.tree.expandOnClick) {
+                this.expanded = true;
+            }
+        }
+        args.domEvent.stopPropagation();
+        return false;
+    }
+
+    __thisDoubleClicked(sender, args) {
+        const isIconClicked = args.domEvent.target.closest('em.icon') != null;
+        if(this._element.querySelector('div>em.expander') !== args.domEvent.target) {
+            this._nodes.tree.Dispatch('NodeDoubleClicked', Object.assign({item: this, clickedOnIcon: isIconClicked}, args));
+        }
+        args.domEvent.stopPropagation();
+        return false;
+    }
+
+    __thisContextMenuItemClicked(event, args) {
+        this._nodes.tree.Dispatch('ContextMenuItemClicked', Object.assign({item: this}, args));
+    }
+
+    __contextMenuIconClicked(event, args) {
+        this.parent.tree.Dispatch('ContextMenuIconClicked', Object.assign({item: this}, args));
+    }
+
+    __thisDoubleClicked2(event, args) {
+    
+        if(this._editable) {
+            this.__nodeEditableStart(event, args);
+        }
+        else {
+            this._nodes.tree.Dispatch('DoubleClicked', Object.assign({item: this}, args));
+        }
+        
+        args.domEvent.stopPropagation();
+        args.domEvent.preventDefault();
+        return false;
+    }
+
+    /** @protected */
+    _handleEvents() {
+        this.AddHandler('Clicked', this.__thisClicked);
+        this.AddHandler('DoubleClicked', this.__thisDoubleClicked);
+
+        this.AddHandler('ContextMenuItemClicked', this.__thisContextMenuItemClicked);
+        this.AddHandler('DoubleClicked', this.__thisDoubleClicked2);
+
+    }
+
+    /** @protected */
+    _bindHtmlEvents() {
+        super._bindHtmlEvents();
+    }
+
+    /**
+     * Ensures node is visible
+     */
+    EnsureVisible() {
+        let parent = this.parentNode;
+        while(parent) {
+            this.parentNode.Expand();
+            parent = parent.parentNode;
+        }
+        super.EnsureVisible();
+    }
+
+    /**
+     * Disposes the node and its children
+     */
+    Dispose() {
+        
+        try {
+            this.tree.allNodes.delete(this);
+        }
+        catch(e) {}
+        
+        const node = this.parentNode;
+        this._nodes.Dispose();
+        super.Dispose();
+
+        try {
+            if(node instanceof Colibri.UI.TreeNode) {
+                node.isLeaf = this.parent.children == 0;
+            }    
+        }
+        catch(e) {}
+
+    }
+
+    /**
+     * Tooltip text
+     * @type {string}
+     */
+    get toolTip() {
+        return this._tipSpan.html();
+    }
+    /**
+     * Tooltip text
+     * @type {string}
+     */
+    set toolTip(value) {
+        this._tipSpan.html(value);
+    }
+
+    /**
+     * Node is expanded
+     * @type {boolean}
+     */
+    get expanded() {
+        return this._element.classList.contains('expanded');
+    }
+
+    /**
+     * Node is expanded
+     * @type {boolean}
+     */
+    set expanded(value) {
+        if(value) {
+            this.Dispatch('Expanding', {node: this._element});
+            this._element.classList.add('expanded');
+            if(this.tree.removeHiddenNodes) {
+                this.nodes.Retreive();
+            } 
+            this.Dispatch('Expanded', {node: this._element});
+        }
+        else {
+            this.Dispatch('Collapsing', {node: this._element});
+            this._element.classList.remove('expanded');
+            if(this.tree.removeHiddenNodes) {
+                this.nodes.KeepInMind();
+            }
+            this.Dispatch('Collapsed', {node: this._element});
+        }
+    }
+
+    /**
+     * Node is expanded
+     * @type {Colibri.UI.TreeNodes}
+     */
+    get nodes() {
+        return this._nodes;
+    }
+
+    /**
+     * Node text
+     * @type {string}
+     */
+    get text() {
+        return this._text.html();
+    }
+
+    /**
+     * Node text
+     * @type {string}
+     */
+    set text(value) {
+        this._text.html(value);
+    }
+
+    /**
+     * Node is leaf
+     * @type {boolean}
+     */
+    get isLeaf() {
+        return this._element.classList.contains('is-leaf');
+    }
+
+    /**
+     * Node is leaf
+     * @type {boolean}
+     */
+    set isLeaf(value) {
+        if (value) {
+            if(this._multiple &amp;&amp; this._checkBox) {
+                this._checkBox.hasThirdState = false;
+            }
+            this._element.classList.add('is-leaf');
+        } else {
+            if(this._multiple &amp;&amp; this._checkBox) {
+                this._checkBox.hasThirdState = true;
+            }
+            this._element.classList.remove('is-leaf');
+        }
+    }
+
+    /**
+     * Node icon
+     * @type {string}
+     */
+    get icon() {
+        return this._element.querySelector('div em.icon').html();
+    }
+
+    /**
+     * Node icon
+     * @type {string}
+     */
+    set icon(value) {
+        this._element.querySelector('div em.icon').html(value);
+    }
+
+    get iconElement() {
+        return this._element.querySelector('div em.icon');
+    }
+
+    /**
+     * Node is selected
+     * @type {boolean}
+     */
+    get selected() {
+        this._element.querySelector('div').classList.add('selected');
+    }
+
+    /**
+     * Node is selected
+     * @type {boolean}
+     */
+    set selected(value) {
+        if(value) {
+            this._element.querySelector('div').classList.add('selected');
+        }
+        else {
+            this._element.querySelector('div').classList.remove('selected');
+        }
+    }
+
+    /**
+     * Node path
+     * @type {string}
+     * @readonly
+     */
+    get path() {
+        return super.path.replaceAll('nodes/', '');
+    }
+
+    /**
+     * Parent node
+     * @type {Colibri.UI.TreeNode}
+     */
+    get parentNode() {
+        return this?.parent?.parent ?? null;
+    }
+
+    /**
+     * Parent node
+     * @type {Colibri.UI.TreeNode}
+     */
+    set parentNode(value) {
+        const node = this.parentNode;
+        
+        this.parent.Children(this.name, null);
+        this.Disconnect();
+        value.nodes.Children(this.name, this);
+        this.ConnectTo(value.nodes.container);
+
+        value.isLeaf = false;
+        node.isLeaf = node.nodes.children == 0;
+    }
+
+    /**
+     * Searches for node with search method
+     * @param {Function} method method to compare node
+     * @returns {Colibri.UI.TreeNode}
+     */
+    FindParent(method) {
+        let p = this;
+        while(p instanceof Colibri.UI.TreeNode) {
+            if(method(p)) {
+                return p;
+            }
+            p = p.parentNode;
+        }
+        return null;
+    }
+
+    isParentOf(node) {
+        const found = node.FindParent((p) => p === this);
+        return found !== null;
+    }
+
+    /**
+     * Move to new parent node
+     * @param {Colibri.UI.TreeNode} parent new parent node
+     */
+    MoveTo(parent) {
+        this.parentNode = parent;
+    }
+
+    /**
+     * Expand node
+     */
+    Expand() {
+        this.expanded = true;
+    }
+
+    /**
+     * Collapse node
+     */
+    Collapse() {
+        this.expanded = false;
+    }
+
+    /**
+     * Expand all child nodes
+     */
+    ExpandAll() {
+        this.Expand();
+        this.nodes.Expand();
+    }
+
+    /**
+     * Collapse all child nodes
+     */
+    CollapseAll() {
+        this.Collapse();
+        this.nodes.Collapse();
+    }
+
+    /**
+     * Run editor of node
+     */
+    Edit() {
+        this.tree.selected = this;
+        this.__nodeEditableStart(null, null);
+    }
+
+    /**
+     * Shows all child nodes and itself
+     */
+    ShowAll() {
+        this.Show();
+        const childs = this.nodes.Children();
+        for(const child of childs) {
+            if(child instanceof Colibri.UI.TreeNode) {
+                child.ShowAll();
+            }
+        }        
+    }
+
+    /**
+     * Hides all child nodes and itself
+     */
+    HideAll() {
+        this.Hide();
+        const childs = this.nodes.Children();
+        for(const child of childs) {
+            if(child instanceof Colibri.UI.TreeNode) {
+                child.HideAll();
+            }
+        }        
+    }
+
+    /**
+     * Tree component
+     * @type {Colibri.UI.Tree}
+     * @readonly
+     */
+    get tree() {
+        return this?.parent?.tree;
+    }
+
+    /**
+     * Is node editable
+     * @type {boolean}
+     */
+    get editable() {
+        return this._editable;
+    }
+
+    /**
+     * Is node editable
+     * @type {boolean}
+     */
+    set editable(value) {
+        this._editable = value;
+    }
+
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
+    __nodeEditableStart(event, args) {
+        if(!this._editable) {
+            return true;
+        }
+
+        this.AddClass('editing');
+        this._input.value = this.text;
+        this._input.focus();
+        this._input.select();
+        const keydownHandler = (e) => {
+            if(e.code == 'Enter' || e.code == 'NumpadEnter') {
+                if(this.tree.Dispatch('NodeEditCompleted', {value: this._input.value, node: this, mode: 'save'})) {
+                    this.text = this._input.value;
+                }
+                this.RemoveClass('editing');
+                this._input.removeEventListener('keydown', keydownHandler);
+                this._input.removeEventListener('blur', blurHandler);
+            }
+            else if(e.code == 'Escape') {
+                this.tree.Dispatch('NodeEditCompleted', {value: this.text, node: this, mode: 'cancel'});
+                this.RemoveClass('editing');
+                this._input.removeEventListener('keydown', keydownHandler);
+                this._input.removeEventListener('blur', blurHandler);
+            }
+        }
+        const blurHandler = (e) => {
+            this.tree?.Dispatch('NodeEditCompleted', {value: this.text, node: this, mode: 'cancel'});
+            this.RemoveClass('editing');
+            this._input.removeEventListener('keydown', keydownHandler);
+            this._input.removeEventListener('blur', blurHandler);
+        }
+        this._input.addEventListener('keydown', keydownHandler);
+        this._input.addEventListener('blur', blurHandler);
+    }
+
+    /**
+     * Multiple
+     * @type {Boolean}
+     */
+    get multiple() {
+        return this._multiple;
+    }
+    /**
+     * Multiple
+     * @type {Boolean}
+     */
+    set multiple(value) {
+        value = this._convertProperty('Boolean', value);
+        this._multiple = value;
+        if(this._multiple) {
+            this._check.showElement();   
+            if(!this._checkBox) {
+                this._checkBox = new Colibri.UI.Checkbox('checkbox', this._check);
+                this._checkBox.parent = this;
+                this._checkBox.shown = true;
+                this._checkBox.AddHandler('Changed', this.__checkChanged, false, this);
+            }
+        } else {
+            this._check.hideElement();
+            if(this._checkBox) {
+                this._checkBox.Dispose();
+                this._checkBox = null;
+            }
+        }
+    }
+
+    /**
+     * Has checkbox
+     * @type {Boolean}
+     */
+    get hasCheckbox() {
+        return this._hasCheckbox;
+    }
+    /**
+     * Has checkbox
+     * @type {Boolean}
+     */
+    set hasCheckbox(value) {
+        this._hasCheckbox = value;
+        this._showHasCheckbox();
+    }
+    _showHasCheckbox() {
+        if(this._hasCheckbox) {
+            this._check.showElement();   
+            if(!this._checkBox) {
+                this._checkBox = new Colibri.UI.Checkbox('checkbox', this._check);
+                this._checkBox.parent = this;
+                this._checkBox.shown = true;
+                this._checkBox.AddHandler('Changed', this.__checkChanged, false, this);
+            }
+        } else {
+            this._check.hideElement();
+            if(this._checkBox) {
+                this._checkBox.Dispose();
+                this._checkBox = null;
+            }
+        }
+    }
+
+    /**
+     * Checked
+     * @type {Boolean}
+     */
+    get checked() {
+        return this._checkBox ? this._checkBox.checked : false;
+    }
+    /**
+     * Checked
+     * @type {Boolean}
+     */
+    set checked(value) {
+        value = this._convertProperty('Boolean', value);
+        if(this._checkBox) {
+            this._checkBox.checked = value;
+            if(!this.isLeaf) {
+                this.nodes.ForEach((name, node) => {
+                    node.checkBox.checked = this._checkBox.checked;
+                });
+            }
+            this.tree.PerformCheckState(this);
+        }
+    }
+
+    /**
+     * Checkbox of node
+     * @type {Colibri.UI.Checkbox}
+     * @readonly
+     */
+    get checkBox() {
+        return this._checkBox;
+    }
+
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
+    __checkChanged(event, args) {
+        if(!this.isLeaf) {
+            this.nodes.ForEach((name, node) => {
+                node.checkBox.checked = this._checkBox.checked;
+            });
+        }
+        this.tree.PerformCheckState(this);
+        this.tree.Dispatch('CheckChanged', args);
+    }
+
+    
+    /**
+     * Founded string in search operation
+     * @type {String}
+     */
+    get found() {
+        return this._found;
+    }
+    /**
+     * Founded string in search operation
+     * @type {String}
+     */
+    set found(value) {
+        this._found = value;
+        this._showFound();
+    }
+    _showFound() {
+        if(!this._found) {
+            this.text = this.text.replaceAll('&lt;mark>', '').replaceAll('&lt;/mark>', '');
+        } else {
+            this.text = this.text.highliteTextInHtml(this._found);
+        }
+    }
+
+
+}
+
+/**
+ * @class
+ * @namespace
+ * @extends Colibri.UI.Component
+ * @memberof Colibri.UI
+ */
+Colibri.UI.TreeNodes = class extends Colibri.UI.Component {
+
+    /** @type {Colibri.UI.Tree} */
+    _tree = null;
+
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {HTMLElement|Colibri.UI.Component} container container of component 
+     */
+    constructor(name, container, tree) {
+        super(name, container, Element.create('div'));
+        this._tree = tree;
+
+        this.AddClass('nodes');
+        this.Show();
+        
+
+    }
+
+    __nodeExpanded(event, args) { 
+        return this._tree.Dispatch('NodeExpanded', {node: event.sender}); 
+    }
+
+    __nodeCollapsed(event, args) { 
+        return this._tree.Dispatch('NodeCollapsed', {node: event.sender}); 
+    }
+    __nodeExpanding(event, args) { 
+        return this._tree.Dispatch('NodeExpanding', {node: event.sender}); 
+    }
+
+    __nodeCollapsing(event, args) { 
+        return this._tree.Dispatch('NodeCollapsing', {node: event.sender}); 
+    }
+
+    /**
+     * Adds a new node to nodes collection 
+     * @param {string} name name of new node
+     * @param {number} index index of new node
+     * @returns {Colibri.UI.TreeNode}
+     */
+    Add(name, index) {
+        let node = null;
+        if(name instanceof Colibri.UI.TreeNode) {
+            node = name;
+        }
+        else {
+            node = new Colibri.UI.TreeNode(name || 'node', this);
+            node.AddHandler('Expanding', this.__nodeExpanding, false, this);
+            node.AddHandler('Expanded', this.__nodeExpanded, false, this);
+            node.AddHandler('Collapsing', this.__nodeCollapsing, false, this);    
+            node.AddHandler('Collapsed', this.__nodeCollapsed, false, this);    
+        }
+
+        if(this.parent instanceof Colibri.UI.TreeNode) {
+            this.parent.isLeaf = false;
+        }
+        this._tree.allNodes.add(node);
+        if(index != node.childIndex) {
+            this.Children(name, node, index);
+        }
+
+        if(this._tree.multiple) {
+            node.multiple = this._tree.multiple;
+        }
+
+        return node;
+    }
+
+    /**
+     * Move node before relation node
+     * @param {Colibri.UI.TreeNode} node node to move
+     * @param {Colibri.UI.TreeNode} relation node for moving relation
+     */
+    Move(node, relation) {
+
+        let index = relation;
+        if(relation instanceof Colibri.UI.TreeNode) {
+            this.ForEach((name, n, i) => {
+                if(relation.name == name) {
+                    index = i;
+                    return false;
+                }
+                return true;
+            });
+        }
+
+        this.Children(node.name, node, index);
+
+
+    }
+
+    /**
+     * Dispose nodes collection
+     */
+    Dispose() {
+        if(this.parent instanceof Colibri.UI.TreeNode) {
+            this.parent.isLeaf = true;
+        }
+        this.ForEach((nodeName, node) => {
+            node.Dispose();
+        });
+        super.Dispose();
+    }
+
+    /**
+     * Tree related to nodes collection
+     * @type {Colibri.UI.Tree}
+     * @readonly
+     */
+    get tree() {
+        return this._tree;
+    }
+
+    /**
+     * Expand nodes
+     */
+    Expand() {
+        this.ForEach((nodeName, node) => {
+            node.ExpandAll();
+        })
+    }
+
+    /**
+     * Collapse nodes
+     */
+    Collapse() {
+        this.ForEach((nodeName, node) => {
+            node.Collapse();
+        })
+    }
+
+    /**
+     * Has visible nodes
+     * @type {Boolean}
+     * @readonly
+     */
+    get hasVisibleNodes() {
+        return this.visibleNodesCount > 0
+    } 
+
+    /**
+     * Visible nodes count
+     * @type {Number}
+     * @readonly
+     */
+    get visibleNodesCount() {
+        let visibleNodes = 0;
+        this.ForEach((name, node) => {
+            if(node.shown) {
+                visibleNodes++;
+            }
+        });
+        return visibleNodes;
+    }
+
+    /**
+     * Value Array
+     * @type {Array}
+     */
+    set value(value) {
+     
+        if(!Array.isArray(value)) {
+            value = Object.values(value);
+        }
+
+        this.Clear();
+
+        for(const vnode of value) {
+            const node = this.Add('node' + vnode.id);
+            node.text = this.tree.__renderText ? this.tree.__renderText(vnode) : vnode?.name ?? vnode?.title ?? 'Node ' + vnode.id;
+            node.tag = vnode;
+            if(vnode.children) {
+                node.nodes.value = vnode.children;
+            }
+        }
+        
+    }
+
+    /**
+     * Is all nodes checked
+     * @readonly
+     */
+    get allNodesChecked() {
+
+        let checked = 0;
+        this.ForEach((name, node) => {
+            if(node.checked) {
+                checked++;
+            }
+        });
+
+        return checked === this.children;
+
+    }
+
+    /**
+     * Is all nodes unchecked
+     * @readonly
+     */
+    get allNodesUnChecked() {
+
+        let checked = 0;
+        this.ForEach((name, node) => {
+            if(node.checked) {
+                checked++;
+            }
+        });
+
+        return checked === 0;
+
+    }
+
+
+}
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="App.Components.html">Components</a></li><li><a href="App.Modules.html">Modules</a></li><li><a href="Colibri.html">Colibri</a></li><li><a href="Colibri.UI.Chart.html">Chart</a></li><li><a href="Colibri.UI.Chooser.html">Chooser</a></li><li><a href="Colibri.UI.Forms.ArrayGrid.html">ArrayGrid</a></li><li><a href="Colibri.UI.Grid.html">Grid</a></li><li><a href="Colibri.UI.Input.html">Input</a></li><li><a href="Colibri.UI.List.html">List</a></li><li><a href="Colibri.UI.Select.html">Select</a></li><li><a href="Colibri.UI.Select.DefaultDropdown.html">DefaultDropdown</a></li><li><a href="Colibri.UI.Tree.html">Tree</a></li><li><a href="Colibri.UI.TreeNode.html">TreeNode</a></li><li><a href="Colibri.UI.TreeNodes.html">TreeNodes</a></li><li><a href="Colibri.UI.VirtualGrid.html">VirtualGrid</a></li></ul><h3>Classes</h3><ul><li><a href="AuditUIKit.UI.Informers.Colibri.UI.Informers.Download.html">Colibri.UI.Informers.Download</a></li><li><a href="Colibri.App.html">App</a></li><li><a href="Colibri.Common.AbstractMessageStore.html">AbstractMessageStore</a></li><li><a href="Colibri.Common.Audio.html">Audio</a></li><li><a href="Colibri.Common.Base64.html">Base64</a></li><li><a href="Colibri.Common.Blob.html">Blob</a></li><li><a href="Colibri.Common.BrowserStorage.html">BrowserStorage</a></li><li><a href="Colibri.Common.CometEvent.html">CometEvent</a></li><li><a href="Colibri.Common.CometMessage.html">CometMessage</a></li><li><a href="Colibri.Common.Cookie.html">Cookie</a></li><li><a href="Colibri.Common.Font.html">Font</a></li><li><a href="Colibri.Common.Graphics.html">Graphics</a></li><li><a href="Colibri.Common.HashActions.html">HashActions</a></li><li><a href="Colibri.Common.MimeType.html">MimeType</a></li><li><a href="Colibri.Common.Scrolling.html">Scrolling</a></li><li><a href="Colibri.Common.SessionStorage.html">SessionStorage</a></li><li><a href="Colibri.Common.Validation.html">Validation</a></li><li><a href="Colibri.Common.Video.html">Video</a></li><li><a href="Colibri.Devices.Auth.html">Auth</a></li><li><a href="Colibri.Devices.Camera.html">Camera</a></li><li><a href="Colibri.Devices.Camera_GetPicture.html">GetPicture</a></li><li><a href="Colibri.Devices.Capture.html">Capture</a></li><li><a href="Colibri.Devices.Device.html">Device</a></li><li><a href="Colibri.Devices.Dialogs.html">Dialogs</a></li><li><a href="Colibri.Devices.FileSystem.html">FileSystem</a></li><li><a href="Colibri.Devices.GeoLocation.html">GeoLocation</a></li><li><a href="Colibri.Devices.LocalNotifications.html">LocalNotifications</a></li><li><a href="Colibri.Devices.LocalNotificationsEmulator.html">LocalNotificationsEmulator</a></li><li><a href="Colibri.Devices.Media.html">Media</a></li><li><a href="Colibri.Devices.Notification.html">Notification</a></li><li><a href="Colibri.Devices.Sim.html">Sim</a></li><li><a href="Colibri.Devices.Sms.html">Sms</a></li><li><a href="Colibri.Devices.SqLite.html">SqLite</a></li><li><a href="Colibri.Devices.Vibrate.html">Vibrate</a></li><li><a href="Colibri.Events.Dispatcher.html">Dispatcher</a></li><li><a href="Colibri.Events.Event.html">Event</a></li><li><a href="Colibri.IO.Crypt.html">Crypt</a></li><li><a href="Colibri.IO.Request.html">Request</a></li><li><a href="Colibri.IO.RpcRequest.html">RpcRequest</a></li><li><a href="Colibri.IO-Colibri.IO.WebSocketStream.html">WebSocketStream</a></li><li><a href="Colibri.Modules.Colibri.Common.Wasm.html">Colibri.Common.Wasm</a></li><li><a href="Colibri.Modules.Module.html">Module</a></li><li><a href="Colibri.Sip.JsSip.html">JsSip</a></li><li><a href="Colibri.Storages.Models.Model.html">Model</a></li><li><a href="Colibri.Storages.Models.Table.html">Table</a></li><li><a href="Colibri.Storages.Store.html">Store</a></li><li><a href="Colibri.UI.AlertDialog.html">AlertDialog</a></li><li><a href="Colibri.UI.ArrayViewer.html">ArrayViewer</a></li><li><a href="Colibri.UI.AsLinkButton.html">AsLinkButton</a></li><li><a href="Colibri.UI.Audio.html">Audio</a></li><li><a href="Colibri.UI.Badge.html">Badge</a></li><li><a href="Colibri.UI.Blockquote.html">Blockquote</a></li><li><a href="Colibri.UI.BoolViewer.html">BoolViewer</a></li><li><a href="Colibri.UI.BorderViewer.html">BorderViewer</a></li><li><a href="Colibri.UI.Button.html">Button</a></li><li><a href="Colibri.UI.ButtonGroup.html">ButtonGroup</a></li><li><a href="Colibri.UI.Chart.Barchart.html">Barchart</a></li><li><a href="Colibri.UI.Checkbox.html">Checkbox</a></li><li><a href="Colibri.UI.CheckboxAsTextViewer.html">CheckboxAsTextViewer</a></li><li><a href="Colibri.UI.CheckboxEditor.html">CheckboxEditor</a></li><li><a href="Colibri.UI.CheckboxListEditor.html">CheckboxListEditor</a></li><li><a href="Colibri.UI.CheckboxViewer.html">CheckboxViewer</a></li><li><a href="Colibri.UI.Chooser.ChooseWindow.html">ChooseWindow</a></li><li><a href="Colibri.UI.Color.html">Color</a></li><li><a href="Colibri.UI.Color.Alpha.html">Alpha</a></li><li><a href="Colibri.UI.Color.Block.html">Block</a></li><li><a href="Colibri.UI.Color.Line.html">Line</a></li><li><a href="Colibri.UI.ColorViewer.html">ColorViewer</a></li><li><a href="Colibri.UI.Component.html">Component</a></li><li><a href="Colibri.UI.ConfirmDialog.html">ConfirmDialog</a></li><li><a href="Colibri.UI.ContextMenu.html">ContextMenu</a></li><li><a href="Colibri.UI.Counter.html">Counter</a></li><li><a href="Colibri.UI.DateDiffViewer.html">DateDiffViewer</a></li><li><a href="Colibri.UI.DatePicker.html">DatePicker</a></li><li><a href="Colibri.UI.DateRangeViewer.html">DateRangeViewer</a></li><li><a href="Colibri.UI.DateSelector.html">DateSelector</a></li><li><a href="Colibri.UI.DateSelectorPopup.html">DateSelectorPopup</a></li><li><a href="Colibri.UI.DateTimeSelector.html">DateTimeSelector</a></li><li><a href="Colibri.UI.DateTimeSelectorPopup.html">DateTimeSelectorPopup</a></li><li><a href="Colibri.UI.DateTimeViewer.html">DateTimeViewer</a></li><li><a href="Colibri.UI.DateViewer.html">DateViewer</a></li><li><a href="Colibri.UI.DeferredFormValidator.html">DeferredFormValidator</a></li><li><a href="Colibri.UI.DocumentViewer.html">DocumentViewer</a></li><li><a href="Colibri.UI.Drag.html">Drag</a></li><li><a href="Colibri.UI.DragManager.html">DragManager</a></li><li><a href="Colibri.UI.DropDown.html">DropDown</a></li><li><a href="Colibri.UI.Editor.html">Editor</a></li><li><a href="Colibri.UI.EmailEditor.html">EmailEditor</a></li><li><a href="Colibri.UI.ErrorButton.html">ErrorButton</a></li><li><a href="Colibri.UI.ExtendedButton.html">ExtendedButton</a></li><li><a href="Colibri.UI.FieldValidator.html">FieldValidator</a></li><li><a href="Colibri.UI.FieldsViewer.html">FieldsViewer</a></li><li><a href="Colibri.UI.FileDropManager.html">FileDropManager</a></li><li><a href="Colibri.UI.FileSizeViewer.html">FileSizeViewer</a></li><li><a href="Colibri.UI.FileViewer.html">FileViewer</a></li><li><a href="Colibri.UI.FilesDragAndDrop.html">FilesDragAndDrop</a></li><li><a href="Colibri.UI.FilesEditor.html">FilesEditor</a></li><li><a href="Colibri.UI.FilesViewer.html">FilesViewer</a></li><li><a href="Colibri.UI.FlexBox.html">FlexBox</a></li><li><a href="Colibri.UI.FontFamilySelector.html">FontFamilySelector</a></li><li><a href="Colibri.UI.FontFamilyViewer.html">FontFamilyViewer</a></li><li><a href="Colibri.UI.FormValidator.html">FormValidator</a></li><li><a href="Colibri.UI.FormValidator_Validate.html">Validate</a></li><li><a href="Colibri.UI.Forms.Array.html">Array</a></li><li><a href="Colibri.UI.Forms.ArrayGrid_Fields.html">Fields</a></li><li><a href="Colibri.UI.Forms.ArrayGrid.ObjectWindow.html">ObjectWindow</a></li><li><a href="Colibri.UI.Forms.Bool.html">Bool</a></li><li><a href="Colibri.UI.Forms.Checkbox.html">Checkbox</a></li><li><a href="Colibri.UI.Forms.CheckboxList.html">CheckboxList</a></li><li><a href="Colibri.UI.Forms.Choose.html">Choose</a></li><li><a href="Colibri.UI.Forms.Color.html">Color</a></li><li><a href="Colibri.UI.Forms.Date.html">Date</a></li><li><a href="Colibri.UI.Forms.DateRange.html">DateRange</a></li><li><a href="Colibri.UI.Forms.DateTime.html">DateTime</a></li><li><a href="Colibri.UI.Forms.DateTimeRange.html">DateTimeRange</a></li><li><a href="Colibri.UI.Forms.DayOfMonth.html">DayOfMonth</a></li><li><a href="Colibri.UI.Forms.DocumentGenerator.html">DocumentGenerator</a></li><li><a href="Colibri.UI.Forms.Email.html">Email</a></li><li><a href="Colibri.UI.Forms.Field.html">Field</a></li><li><a href="Colibri.UI.Forms.File.html">File</a></li><li><a href="Colibri.UI.Forms.FileLabel.html">FileLabel</a></li><li><a href="Colibri.UI.Forms.Files.html">Files</a></li><li><a href="Colibri.UI.Forms.FontFamily.html">FontFamily</a></li><li><a href="Colibri.UI.Forms.Form.html">Form</a></li><li><a href="Colibri.UI.Forms.HiddenField.html">HiddenField</a></li><li><a href="Colibri.UI.Forms.KeyValueObject.html">KeyValueObject</a></li><li><a href="Colibri.UI.Forms.Label.html">Label</a></li><li><a href="Colibri.UI.Forms.Link.html">Link</a></li><li><a href="Colibri.UI.Forms.List.html">List</a></li><li><a href="Colibri.UI.Forms.MonthYear.html">MonthYear</a></li><li><a href="Colibri.UI.Forms.Number.html">Number</a></li><li><a href="Colibri.UI.Forms.NumberRange.html">NumberRange</a></li><li><a href="Colibri.UI.Forms.Object.html">Object</a></li><li><a href="Colibri.UI.Forms.Passport.html">Passport</a></li><li><a href="Colibri.UI.Forms.Password.html">Password</a></li><li><a href="Colibri.UI.Forms.Period.html">Period</a></li><li><a href="Colibri.UI.Forms.Radio.html">Radio</a></li><li><a href="Colibri.UI.Forms.Select.html">Select</a></li><li><a href="Colibri.UI.Forms.SimpleArray.html">SimpleArray</a></li><li><a href="Colibri.UI.Forms.Tabs.html">Tabs</a></li><li><a href="Colibri.UI.Forms.Text.html">Text</a></li><li><a href="Colibri.UI.Forms.TextArea.html">TextArea</a></li><li><a href="Colibri.UI.Forms.Toggle.html">Toggle</a></li><li><a href="Colibri.UI.Forms.Token.html">Token</a></li><li><a href="Colibri.UI.Forms.Year.html">Year</a></li><li><a href="Colibri.UI.Frame.html">Frame</a></li><li><a href="Colibri.UI.GoogleChart.html">GoogleChart</a></li><li><a href="Colibri.UI.GrayButton.html">GrayButton</a></li><li><a href="Colibri.UI.Grid.Cell.html">Cell</a></li><li><a href="Colibri.UI.Grid.Column.html">Column</a></li><li><a href="Colibri.UI.Grid.Columns.html">Columns</a></li><li><a href="Colibri.UI.Grid.Header.html">Header</a></li><li><a href="Colibri.UI.Grid.Row.html">Row</a></li><li><a href="Colibri.UI.Grid.Rows.html">Rows</a></li><li><a href="Colibri.UI.GridFileViewer.html">GridFileViewer</a></li><li><a href="Colibri.UI.H1.html">H1</a></li><li><a href="Colibri.UI.H2.html">H2</a></li><li><a href="Colibri.UI.H3.html">H3</a></li><li><a href="Colibri.UI.H4.html">H4</a></li><li><a href="Colibri.UI.Heading.html">Heading</a></li><li><a href="Colibri.UI.Hr.html">Hr</a></li><li><a href="Colibri.UI.HtmlDataViewer.html">HtmlDataViewer</a></li><li><a href="Colibri.UI.IFrame.html">IFrame</a></li><li><a href="Colibri.UI.Icon.html">Icon</a></li><li><a href="Colibri.UI.IconViewer.html">IconViewer</a></li><li><a href="Colibri.UI.Image.html">Image</a></li><li><a href="Colibri.UI.ImageViewWindow.html">ImageViewWindow</a></li><li><a href="Colibri.UI.ImageViewer.html">ImageViewer</a></li><li><a href="Colibri.UI.ImagesViewer.html">ImagesViewer</a></li><li><a href="Colibri.UI.Img.html">Img</a></li><li><a href="Colibri.UI.Informers.DownloadItem.html">DownloadItem</a></li><li><a href="Colibri.UI.Input.File.html">File</a></li><li><a href="Colibri.UI.JsonViewer.html">JsonViewer</a></li><li><a href="Colibri.UI.Link.html">Link</a></li><li><a href="Colibri.UI.LinkEditor.html">LinkEditor</a></li><li><a href="Colibri.UI.LinkViewer.html">LinkViewer</a></li><li><a href="Colibri.UI.List.Group.html">Group</a></li><li><a href="Colibri.UI.List.Item.html">Item</a></li><li><a href="Colibri.UI.List.JsonRenderer.html">JsonRenderer</a></li><li><a href="Colibri.UI.List.SearchBox.html">SearchBox</a></li><li><a href="Colibri.UI.ListItem.html">ListItem</a></li><li><a href="Colibri.UI.Loading.html">Loading</a></li><li><a href="Colibri.UI.LoadingBallun.html">LoadingBallun</a></li><li><a href="Colibri.UI.LoadingContainer.html">LoadingContainer</a></li><li><a href="Colibri.UI.Logs.JsonLog.html">JsonLog</a></li><li><a href="Colibri.UI.Maps.Controls.Button.html">Button</a></li><li><a href="Colibri.UI.Maps.Controls.ButtonGroup.html">ButtonGroup</a></li><li><a href="Colibri.UI.Maps.Controls.FileButton.html">FileButton</a></li><li><a href="Colibri.UI.Maps.Controls.FilterButton.html">FilterButton</a></li><li><a href="Colibri.UI.Maps.Controls.LayersButton.html">LayersButton</a></li><li><a href="Colibri.UI.Maps.Controls.RotateButton.html">RotateButton</a></li><li><a href="Colibri.UI.Maps.Controls.StatesButton.html">StatesButton</a></li><li><a href="Colibri.UI.Maps.Controls.ToggleButton.html">ToggleButton</a></li><li><a href="Colibri.UI.Maps.Controls.ToolBox.html">ToolBox</a></li><li><a href="Colibri.UI.Maps.LeafletJs.html">LeafletJs</a></li><li><a href="Colibri.UI.Maps.MapLibre.html">MapLibre</a></li><li><a href="Colibri.UI.MassActionsMenu.html">MassActionsMenu</a></li><li><a href="Colibri.UI.MenuList.html">MenuList</a></li><li><a href="Colibri.UI.ModelViewer.html">ModelViewer</a></li><li><a href="Colibri.UI.ModelessWindow.html">ModelessWindow</a></li><li><a href="Colibri.UI.MonthPicker.html">MonthPicker</a></li><li><a href="Colibri.UI.MonthSelector.html">MonthSelector</a></li><li><a href="Colibri.UI.MonthYearViewer.html">MonthYearViewer</a></li><li><a href="Colibri.UI.MoveManager.html">MoveManager</a></li><li><a href="Colibri.UI.Note.html">Note</a></li><li><a href="Colibri.UI.Notice.html">Notice</a></li><li><a href="Colibri.UI.Notices.html">Notices</a></li><li><a href="Colibri.UI.NumberEditor.html">NumberEditor</a></li><li><a href="Colibri.UI.NumberViewer.html">NumberViewer</a></li><li><a href="Colibri.UI.ObjectViewer.html">ObjectViewer</a></li><li><a href="Colibri.UI.OrderedList.html">OrderedList</a></li><li><a href="Colibri.UI.OutlineBlueButton.html">OutlineBlueButton</a></li><li><a href="Colibri.UI.Pager.html">Pager</a></li><li><a href="Colibri.UI.Pane.html">Pane</a></li><li><a href="Colibri.UI.PaneGrid.html">PaneGrid</a></li><li><a href="Colibri.UI.PaneSwitcher.html">PaneSwitcher</a></li><li><a href="Colibri.UI.PeriodViewer.html">PeriodViewer</a></li><li><a href="Colibri.UI.PlayPauseButton.html">PlayPauseButton</a></li><li><a href="Colibri.UI.PointerControl.html">PointerControl</a></li><li><a href="Colibri.UI.Popup.html">Popup</a></li><li><a href="Colibri.UI.PopupList.html">PopupList</a></li><li><a href="Colibri.UI.ProgressBar.html">ProgressBar</a></li><li><a href="Colibri.UI.ProgressViewer.html">ProgressViewer</a></li><li><a href="Colibri.UI.PromptDialog.html">PromptDialog</a></li><li><a href="Colibri.UI.Radio.html">Radio</a></li><li><a href="Colibri.UI.RadioViewer.html">RadioViewer</a></li><li><a href="Colibri.UI.RangePicker.html">RangePicker</a></li><li><a href="Colibri.UI.ReadUnreadBadge.html">ReadUnreadBadge</a></li><li><a href="Colibri.UI.RemoteFileEditor.html">RemoteFileEditor</a></li><li><a href="Colibri.UI.Renderer.html">Renderer</a></li><li><a href="Colibri.UI.Rgb.html">Rgb</a></li><li><a href="Colibri.UI.Router.html">Router</a></li><li><a href="Colibri.UI.Ruler.html">Ruler</a></li><li><a href="Colibri.UI.SearchInput.html">SearchInput</a></li><li><a href="Colibri.UI.Select.DefaultDropdown.Options.html">Options</a></li><li><a href="Colibri.UI.Select.Dropdown.html">Dropdown</a></li><li><a href="Colibri.UI.SelectEditor.html">SelectEditor</a></li><li><a href="Colibri.UI.SelectViewer.html">SelectViewer</a></li><li><a href="Colibri.UI.Selector.html">Selector</a></li><li><a href="Colibri.UI.Shader.html">Shader</a></li><li><a href="Colibri.UI.ShadowViewer.html">ShadowViewer</a></li><li><a href="Colibri.UI.Shortcuts.html">Shortcuts</a></li><li><a href="Colibri.UI.SimpleButton.html">SimpleButton</a></li><li><a href="Colibri.UI.SimpleFormValidator.html">SimpleFormValidator</a></li><li><a href="Colibri.UI.SimplePieChart.html">SimplePieChart</a></li><li><a href="Colibri.UI.SingleTimeline.html">SingleTimeline</a></li><li><a href="Colibri.UI.SlideDown.html">SlideDown</a></li><li><a href="Colibri.UI.Spectrum.Graph.html">Graph</a></li><li><a href="Colibri.UI.Spectrum.Selections.html">Selections</a></li><li><a href="Colibri.UI.Split.html">Split</a></li><li><a href="Colibri.UI.Strong.html">Strong</a></li><li><a href="Colibri.UI.SuccessButton.html">SuccessButton</a></li><li><a href="Colibri.UI.Switcher.html">Switcher</a></li><li><a href="Colibri.UI.Table.html">Table</a></li><li><a href="Colibri.UI.TableCell.html">TableCell</a></li><li><a href="Colibri.UI.TableHeaderCell.html">TableHeaderCell</a></li><li><a href="Colibri.UI.TableRow.html">TableRow</a></li><li><a href="Colibri.UI.Tabs.html">Tabs</a></li><li><a href="Colibri.UI.Templates.html">Templates</a></li><li><a href="Colibri.UI.TextArea.html">TextArea</a></li><li><a href="Colibri.UI.TextAreaEditor.html">TextAreaEditor</a></li><li><a href="Colibri.UI.TextAreaViewer.html">TextAreaViewer</a></li><li><a href="Colibri.UI.TextEditor.html">TextEditor</a></li><li><a href="Colibri.UI.TextSpan.html">TextSpan</a></li><li><a href="Colibri.UI.TextViewer.html">TextViewer</a></li><li><a href="Colibri.UI.Timeline.html">Timeline</a></li><li><a href="Colibri.UI.ToggleBox.html">ToggleBox</a></li><li><a href="Colibri.UI.ToggleBoxEditor.html">ToggleBoxEditor</a></li><li><a href="Colibri.UI.ToggleButton.html">ToggleButton</a></li><li><a href="Colibri.UI.ToggleboxViewer.html">ToggleboxViewer</a></li><li><a href="Colibri.UI.ToolTip.html">ToolTip</a></li><li><a href="Colibri.UI.Toolbar.html">Toolbar</a></li><li><a href="Colibri.UI.Tree.JsonRenderer.html">JsonRenderer</a></li><li><a href="Colibri.UI.Tree.SearchBox.html">SearchBox</a></li><li><a href="Colibri.UI.UnorderedList.html">UnorderedList</a></li><li><a href="Colibri.UI.UploadButton.html">UploadButton</a></li><li><a href="Colibri.UI.Utilities.Mask.html">Mask</a></li><li><a href="Colibri.UI.Utilities.Validator.html">Validator</a></li><li><a href="Colibri.UI.Video.html">Video</a></li><li><a href="Colibri.UI.Viewer.html">Viewer</a></li><li><a href="Colibri.UI.WaterfallBuffer.html">WaterfallBuffer</a></li><li><a href="Colibri.UI.WebRTCVideo.html">WebRTCVideo</a></li><li><a href="Colibri.UI.Widget.html">Widget</a></li><li><a href="Colibri.UI.Window.html">Window</a></li><li><a href="Colibri.UI.YearMonthSelector.html">YearMonthSelector</a></li><li><a href="Colibri.UI.YearPicker.html">YearPicker</a></li><li><a href="Colibri.UI.YearQuarterSelector.html">YearQuarterSelector</a></li><li><a href="Colibri.UI.YearSelector.html">YearSelector</a></li><li><a href="Colibri.UI.YearViewer.html">YearViewer</a></li><li><a href="Colibri.Web.Comet.html">Comet</a></li><li><a href="Colibri.Web.IndexDB.html">IndexDB</a></li><li><a href="Colibri.Web.Request.html">Request</a></li><li><a href="Colibri.Web.Router.html">Router</a></li><li><a href="Destructable.html">Destructable</a></li><li><a href="DestructableRegistry.html">DestructableRegistry</a></li><li><a href="MediaMTXWebRTCReader.html">MediaMTXWebRTCReader</a></li></ul><h3>Global</h3><ul><li><a href="global.html#App">App</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sun Jul 26 2026 13:08:05 GMT+0400 (Armenia Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: /srv/www/cblank/htdocs/vendor/colibri/ui/src/06.UI/08.Viewers/08.FieldsViewer.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: /srv/www/cblank/htdocs/vendor/colibri/ui/src/06.UI/08.Viewers/08.FieldsViewer.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @class
+ * @memberof Colibri.UI
+ * @extends Colibri.UI.Viewer
+ */
+Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
+
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container element and component
+     * @param {Element|string} element element to generate childs
+     * @param {Colibri.UI.Component|null} root root component 
+     */
+    constructor(name, container, element = null, root = null) {
+        super(name, container, element || Element.create('span'), root);
+        this.AddClass('app-fields-viewer-component');
+
+        this._fields = {};
+        this._value = {};
+        this._download = null;
+        this._downloadlink = null;
+        this._showUnsetFields = true;
+        this._hideFields = [];
+
+        this._viewers = [];
+
+        this.RegisterEvent('FieldsToggled', false, 'Когда скрытое открыто или закрыто');
+        this.RegisterEvent('EditorChanged', false, 'Когда редактор изменился');
+        this.RegisterEvent('ViewerClicked', false, 'Когда вьюер нажат');
+    }
+
+    /**
+     * Download url string
+     * @type {string}
+     */
+    get download() {
+        return this._download;
+    }
+    /**
+     * Download url string
+     * @type {string}
+     */
+    set download(value) {
+        this._download = value;
+    }
+
+    /**
+     * Download url string
+     * @type {string}
+     */
+    get downloadlink() {
+        return this._downloadlink;
+    }
+    /**
+     * Download url string
+     * @type {string}
+     */
+    set downloadlink(value) {
+        this._downloadlink = value;
+    }
+
+    /**
+     * Fields object
+     * @type {object}
+     */
+    set fields(value) {
+        this._fields = value;
+    }
+
+    /**
+     * Fields object
+     * @type {object}
+     */
+    get fields() {
+        return this._fields;
+    }
+
+    /**
+     * Value object
+     * @type {object}
+     */
+    get value() {
+        return this._value;
+    }
+
+    /**
+     * Value object
+     * @type {object}
+     */
+    set value(value) {
+        value = this._convertValue(value);
+        this._value = value;
+        this._updateFields();
+    }
+
+    /**
+     * Root component
+     * @type {Colibri.UI.Component}
+     */
+    get root() {
+        return this._root;
+    }
+
+    /**
+     * Root component
+     * @type {Colibri.UI.Component}
+     */
+    set root(value) {
+        this._root = value;
+    }
+
+    /**
+     * State
+     * @type {boolean}
+     * @readonly
+     */
+    get state() {
+        return this._hidden.shown;
+    }
+
+    Fields(name) {
+        return Array.findObject(this._viewers, 'name', name + '-viewer');
+    }
+
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
+    __toggleHidden(event, args) {
+        this._hidden.shown = !this._hidden.shown;
+        this._hiddenLink1.shown = !this._hiddenLink1.shown;
+        this._hiddenLink2.shown = !this._hiddenLink2.shown;
+        this.Dispatch('FieldsToggled', { state: this._hidden.shown });
+    }
+
+    __editorChanged(event, args) {
+        this.Dispatch('EditorChanged', {
+            domEvent: args.domEvent,
+            editor: event.sender,
+            field: event.sender.field,
+            name: event.sender.name.replaceAll('-viewer', '')
+        })
+    }
+
+    __viewerClicked(event, args) {
+        return this.Dispatch('ViewerClicked', {
+            domEvent: args.domEvent,
+            viewer: event.sender,
+            field: event.sender.field,
+            name: event.sender.name.replaceAll('-viewer', '')
+        });
+    }
+
+    /**
+     * Generate fields
+     * @param {object} fields fields object
+     * @param {object} value value object
+     * @param {Element} contentElement content element
+     * @param {boolean} showTitles show titles
+     */
+    _createFields(fields = null, value = null, contentElement = null, showTitles = true) {
+        if (fields === null) {
+            this._viewers = [];
+        }
+        const root = this.root || this;
+        contentElement = contentElement || this;
+        fields = fields || this._fields;
+        value = value || this._value;
+
+        contentElement.Clear();
+
+        this._shown = new Colibri.UI.Pane(this.name + '_shown', contentElement);
+        this._shown.shown = true;
+
+        let isHidden = false;
+        Object.forEach(fields, (name, field) => {
+            if (field?.params?.fieldsviewer &amp;&amp; field?.params?.fieldsviewer.hidden === true) {
+                isHidden = true;
+            }
+        });
+
+        if (isHidden) {
+            this._hidden = new Colibri.UI.Pane(this.name + '_hidden', contentElement);
+            this._hiddenLink1 = new Colibri.UI.Link(this.name + '_link1', contentElement);
+            this._hiddenLink2 = new Colibri.UI.Link(this.name + '_link2', contentElement);
+            this._hidden.shown = false;
+            this._hiddenLink1.shown = true;
+            this._hiddenLink2.shown = false;
+            this._hiddenLink1.value = Colibri.UI.SortDescIcon + '&amp;nbsp;#{ui-viewers-fields-expand}';
+            this._hiddenLink2.value = Colibri.UI.SortAscIcon + '&amp;nbsp;#{ui-viewers-fields-collapse}';
+
+            this._hiddenLink1.AddHandler('Clicked', this.__toggleHidden, false, this);
+            this._hiddenLink2.AddHandler('Clicked', this.__toggleHidden, false, this);
+
+        }
+
+        Object.forEach(fields, (name, field) => {
+
+            if (!field) {
+                return true;
+            }
+
+            if (field.component == 'Hidden') {
+                return true;
+            }
+
+            if (!this._showUnsetFields &amp;&amp; !field.params?.editor &amp;&amp; (value[name] === undefined || value[name] === null || value[name] === '' || (Array.isArray(value[name]) &amp;&amp; value[name].length === 0))) {
+                return true;
+            }
+
+            if (this._hideFields.indexOf(name) !== -1) {
+                return true;
+            }
+
+            const pane = new Colibri.UI.Pane(name + 'pane', isHidden &amp;&amp; (field?.params?.fieldsviewer &amp;&amp; field?.params?.fieldsviewer.hidden) ? this._hidden : this._shown);
+            const shortComponentName = field.component.substr(field.component.lastIndexOf('.') + 1).toLowerCase();
+
+            pane.AddClass(`app-field-pane app-${shortComponentName}-pane`);
+            if (field?.params?.className) {
+                let className = field.params?.className;
+                if (typeof className === 'function') {
+                    className = className(pane, value[name]);
+                }
+                pane.AddClass(className);
+            }
+            if (field.params?.editor) {
+                pane.AddClass('app-field-pane-editor');
+            }
+
+            pane.shown = field.hidden === undefined || field.hidden === true;
+
+            field.name = name;
+            field.params = Object.assign(field.params ?? {}, { data: this.tag.data });
+
+            if (field.params &amp;&amp; field.params.condition) {
+                const condition = field.params.condition;
+                if (condition.field) {
+                    const fieldValue = value[condition.field];
+                    if (fieldValue &amp;&amp; fieldValue.value !== condition.value) {
+                        pane.shown = false;
+                    }
+                    else {
+                        pane.shown = true;
+                    }
+                }
+                else {
+                    pane.shown = true;
+                }
+            }
+
+            if (field.desc !== false) {
+                const title = new Colibri.UI.TextSpan(name + '-title', pane);
+                title.AddClass('app-field-title');
+                try {
+                    if (typeof field.desc === 'function') {
+                        const tvalue = field.desc;
+                        tvalue(field, this).then((value) => {
+                            title.value = value;
+                        });
+                    } else {
+                        title.value = Lang !== undefined ? Lang.Translate(field.desc) : field.desc;
+                    }
+                } catch (e) {
+                    title.value = field.desc;
+                }
+                title.shown = showTitles;
+                if (field?.params?.fieldsviewer?.info) {
+                    const icon = new Colibri.UI.Icon(name + '-icon', title);
+                    icon.shown = true;
+                    icon.iconSVG = field?.params?.fieldsviewer?.info?.icon;
+                    icon.toolTip = field?.params?.fieldsviewer?.info.text[Lang.Current] ?? field?.params?.fieldsviewer?.info.text;
+                }
+            }
+
+            if (this._showUnsetFields || value[name] !== undefined) {
+
+                const fieldContainer = new Colibri.UI.Pane(name + '-fields-pane', pane);
+                fieldContainer.AddClass('app-field-container');
+                fieldContainer.AddClass('app-field-' + shortComponentName);
+                fieldContainer.shown = field.hidden === undefined || field.hidden === true;
+
+                if (field.component == 'Colibri.UI.Forms.Array' &amp;&amp; !field?.viewer &amp;&amp; !field?.params?.viewer &amp;&amp; !field?.params?.editor) {
+                    if (Object.isObject(value[name])) {
+                        value[name] = Object.values(value[name]);
+                    }
+                    (value[name] ?? []).forEach((v) => {
+                        this._createFields(field.fields, v, fieldContainer, false);
+                    });
+                }
+                else if (field.component == 'Colibri.UI.Forms.Object' &amp;&amp; !field?.viewer &amp;&amp; !field?.params?.viewer &amp;&amp; !field?.params?.editor &amp;&amp; !field.params &amp;&amp; !field.params.single) {
+                    this._createFields(field.fields, value[name], fieldContainer, false);
+                }
+                else {
+                    const componentName = field.component.replaceAll('Colibri.UI.Forms.', '');
+                    const viewerComponentName = field?.viewer || field.params?.viewer || (field.params?.editor ? 'Colibri.UI.' + componentName + 'Editor' : 'Colibri.UI.' + componentName + 'Viewer');
+                    let viewer = null;
+                    let viewerAttrs = field.params?.viewerAttrs ?? {};
+                    try {
+                        viewer = eval('new ' + viewerComponentName + '(name + \'-viewer\', fieldContainer, null, root)');
+                    }
+                    catch (e) {
+                        viewer = new Colibri.UI.TextViewer(name + '-viewer', fieldContainer, null, root);
+                    }
+                    viewer.field = field;
+                    viewer.shown = true;
+                    viewer.enabled = field.params?.enabled ?? true;
+                    viewer.download = this._download;
+                    viewer.downloadlink = this._downloadlink;
+                    if (field.fields) {
+                        viewer.fields = field.fields;
+                    }
+                    Object.forEach(viewerAttrs, (attr, value) => {
+                        viewer[attr] = value;
+                    });
+                    if (field.attrs) {
+                        viewer.width = field.attrs?.width ?? null;
+                        viewer.height = field.attrs?.height ?? null;
+                    }
+                    if (field?.params?.className) {
+                        let className = field.params?.className;
+                        if (typeof className === 'function') {
+                            className = className(viewer, value[name]);
+                        }
+                        viewer.AddClass(className);
+                    }
+                    viewer.value = this._generateValue(field, value, name, viewer);
+
+                    if (field.params?.editor) {
+                        viewer.AddHandler('Changed', this.__editorChanged, false, this);
+                    } else {
+                        viewer.AddHandler('Clicked', this.__viewerClicked, false, this);
+                    }
+
+                    this._viewers.push(viewer);
+
+                }
+
+
+            }
+
+            if (field.params.generatestyles) {
+                let f = field.params.generatestyles;
+                if (typeof (f) !== 'function') {
+                    pane.styles = f;
+                } else {
+                    pane.styles = f(field, pane);
+                }
+            }
+
+
+            let hidden = field?.params?.hidden ?? false;
+            if (typeof hidden === 'function') {
+                let v = value[name] ?? field.default ?? '';
+                try {
+                    v = value[name][Lang.Current] ?? value[name] ?? field.default ?? '';
+                } catch (e) { }
+                hidden = hidden(v, field);
+            }
+            if (hidden) {
+                pane.shown = false;
+            }
+
+
+        });
+
+
+    }
+
+    /**
+     * Update fields
+     * @param {object} fields fields object
+     * @param {object} value value object
+     * @param {Element} contentElement content element
+     * @param {boolean} showTitles show titles
+     */
+    _updateFields(fields = null, value = null, contentElement = null, showTitles = true) {
+        const root = this.root || this;
+        contentElement = contentElement || this;
+        fields = fields || this._fields;
+        value = value || this._value;
+
+        if ((!this._showUnsetFields &amp;&amp; Object.countKeys(value) === 0) || Object.countKeys(fields) === 0) {
+            return;
+        }
+
+        if (contentElement.children &lt; 4) {
+            this._createFields(fields, value, contentElement, showTitles);
+        }
+        else {
+            Object.forEach(fields, (name, field) => {
+                const component = this.FindByName(name + '-viewer');
+                if (component) {
+                    component.value = this._generateValue(field, value, name, component);
+                }
+            });
+        }
+
+    }
+
+    _generateValue(field, value, name, component) {
+        let vv = null;
+        try {
+            vv = Lang.Translate(value[name] ?? field.default ?? '' ?? null);
+        } catch (e) {
+            vv = value ? (value[name] ?? field.default ?? '' ?? null) : '';
+        }
+        if (field.params &amp;&amp; field.params.valuegenerator) {
+            const f = typeof field?.params?.valuegenerator === 'string' ? eval(field?.params?.valuegenerator) : field?.params?.valuegenerator;
+            const isOldVersion = typeof field?.params?.valuegenerator === 'string' &amp;&amp; field?.params?.valuegenerator.indexOf('(parentValue, formValue') !== -1;
+            const v = isOldVersion ?
+                f(vv, value, component, this) :
+                f(vv, value, component, this, component);
+            if (v !== undefined) {
+                console.log('generated', v);
+                return v;
+            }
+        } else {
+            return vv;
+        }
+    }
+
+    /**
+     * Show fields that does not have values
+     * @type {boolean}
+     */
+    get showUnsetFields() {
+        return this._showUnsetFields;
+    }
+    /**
+     * Show fields that does not have values
+     * @type {boolean}
+     */
+    set showUnsetFields(value) {
+        this._showUnsetFields = value === 'true' || value === true;
+        this._showShowUnsetFields();
+    }
+    /** @private */
+    _showShowUnsetFields() {
+        this._createFields();
+    }
+
+    /**
+     * Hide fields
+     * @type {string|Array}
+     */
+    get hideFields() {
+        return this._hideFields;
+    }
+    /**
+     * Hide fields
+     * @type {string|Array}
+     */
+    set hideFields(value) {
+        this._hideFields = typeof value === 'string' ? value.split(',') : value;
+        this._showHideFields();
+    }
+    /** @private */
+    _showHideFields() {
+        this._createFields();
+    }
+
+}
+Colibri.UI.Viewer.Register('Colibri.UI.FieldsViewer', '#{ui-viewers-fields}');</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="App.Components.html">Components</a></li><li><a href="App.Modules.html">Modules</a></li><li><a href="Colibri.html">Colibri</a></li><li><a href="Colibri.UI.Chart.html">Chart</a></li><li><a href="Colibri.UI.Chooser.html">Chooser</a></li><li><a href="Colibri.UI.Forms.ArrayGrid.html">ArrayGrid</a></li><li><a href="Colibri.UI.Grid.html">Grid</a></li><li><a href="Colibri.UI.Input.html">Input</a></li><li><a href="Colibri.UI.List.html">List</a></li><li><a href="Colibri.UI.Select.html">Select</a></li><li><a href="Colibri.UI.Select.DefaultDropdown.html">DefaultDropdown</a></li><li><a href="Colibri.UI.Tree.html">Tree</a></li><li><a href="Colibri.UI.TreeNode.html">TreeNode</a></li><li><a href="Colibri.UI.TreeNodes.html">TreeNodes</a></li><li><a href="Colibri.UI.VirtualGrid.html">VirtualGrid</a></li></ul><h3>Classes</h3><ul><li><a href="AuditUIKit.UI.Informers.Colibri.UI.Informers.Download.html">Colibri.UI.Informers.Download</a></li><li><a href="Colibri.App.html">App</a></li><li><a href="Colibri.Common.AbstractMessageStore.html">AbstractMessageStore</a></li><li><a href="Colibri.Common.Audio.html">Audio</a></li><li><a href="Colibri.Common.Base64.html">Base64</a></li><li><a href="Colibri.Common.Blob.html">Blob</a></li><li><a href="Colibri.Common.BrowserStorage.html">BrowserStorage</a></li><li><a href="Colibri.Common.CometEvent.html">CometEvent</a></li><li><a href="Colibri.Common.CometMessage.html">CometMessage</a></li><li><a href="Colibri.Common.Cookie.html">Cookie</a></li><li><a href="Colibri.Common.Font.html">Font</a></li><li><a href="Colibri.Common.Graphics.html">Graphics</a></li><li><a href="Colibri.Common.HashActions.html">HashActions</a></li><li><a href="Colibri.Common.MimeType.html">MimeType</a></li><li><a href="Colibri.Common.Scrolling.html">Scrolling</a></li><li><a href="Colibri.Common.SessionStorage.html">SessionStorage</a></li><li><a href="Colibri.Common.Validation.html">Validation</a></li><li><a href="Colibri.Common.Video.html">Video</a></li><li><a href="Colibri.Devices.Auth.html">Auth</a></li><li><a href="Colibri.Devices.Camera.html">Camera</a></li><li><a href="Colibri.Devices.Camera_GetPicture.html">GetPicture</a></li><li><a href="Colibri.Devices.Capture.html">Capture</a></li><li><a href="Colibri.Devices.Device.html">Device</a></li><li><a href="Colibri.Devices.Dialogs.html">Dialogs</a></li><li><a href="Colibri.Devices.FileSystem.html">FileSystem</a></li><li><a href="Colibri.Devices.GeoLocation.html">GeoLocation</a></li><li><a href="Colibri.Devices.LocalNotifications.html">LocalNotifications</a></li><li><a href="Colibri.Devices.LocalNotificationsEmulator.html">LocalNotificationsEmulator</a></li><li><a href="Colibri.Devices.Media.html">Media</a></li><li><a href="Colibri.Devices.Notification.html">Notification</a></li><li><a href="Colibri.Devices.Sim.html">Sim</a></li><li><a href="Colibri.Devices.Sms.html">Sms</a></li><li><a href="Colibri.Devices.SqLite.html">SqLite</a></li><li><a href="Colibri.Devices.Vibrate.html">Vibrate</a></li><li><a href="Colibri.Events.Dispatcher.html">Dispatcher</a></li><li><a href="Colibri.Events.Event.html">Event</a></li><li><a href="Colibri.IO.Crypt.html">Crypt</a></li><li><a href="Colibri.IO.Request.html">Request</a></li><li><a href="Colibri.IO.RpcRequest.html">RpcRequest</a></li><li><a href="Colibri.IO-Colibri.IO.WebSocketStream.html">WebSocketStream</a></li><li><a href="Colibri.Modules.Colibri.Common.Wasm.html">Colibri.Common.Wasm</a></li><li><a href="Colibri.Modules.Module.html">Module</a></li><li><a href="Colibri.Sip.JsSip.html">JsSip</a></li><li><a href="Colibri.Storages.Models.Model.html">Model</a></li><li><a href="Colibri.Storages.Models.Table.html">Table</a></li><li><a href="Colibri.Storages.Store.html">Store</a></li><li><a href="Colibri.UI.AlertDialog.html">AlertDialog</a></li><li><a href="Colibri.UI.ArrayViewer.html">ArrayViewer</a></li><li><a href="Colibri.UI.AsLinkButton.html">AsLinkButton</a></li><li><a href="Colibri.UI.Audio.html">Audio</a></li><li><a href="Colibri.UI.Badge.html">Badge</a></li><li><a href="Colibri.UI.Blockquote.html">Blockquote</a></li><li><a href="Colibri.UI.BoolViewer.html">BoolViewer</a></li><li><a href="Colibri.UI.BorderViewer.html">BorderViewer</a></li><li><a href="Colibri.UI.Button.html">Button</a></li><li><a href="Colibri.UI.ButtonGroup.html">ButtonGroup</a></li><li><a href="Colibri.UI.Chart.Barchart.html">Barchart</a></li><li><a href="Colibri.UI.Checkbox.html">Checkbox</a></li><li><a href="Colibri.UI.CheckboxAsTextViewer.html">CheckboxAsTextViewer</a></li><li><a href="Colibri.UI.CheckboxEditor.html">CheckboxEditor</a></li><li><a href="Colibri.UI.CheckboxListEditor.html">CheckboxListEditor</a></li><li><a href="Colibri.UI.CheckboxViewer.html">CheckboxViewer</a></li><li><a href="Colibri.UI.Chooser.ChooseWindow.html">ChooseWindow</a></li><li><a href="Colibri.UI.Color.html">Color</a></li><li><a href="Colibri.UI.Color.Alpha.html">Alpha</a></li><li><a href="Colibri.UI.Color.Block.html">Block</a></li><li><a href="Colibri.UI.Color.Line.html">Line</a></li><li><a href="Colibri.UI.ColorViewer.html">ColorViewer</a></li><li><a href="Colibri.UI.Component.html">Component</a></li><li><a href="Colibri.UI.ConfirmDialog.html">ConfirmDialog</a></li><li><a href="Colibri.UI.ContextMenu.html">ContextMenu</a></li><li><a href="Colibri.UI.Counter.html">Counter</a></li><li><a href="Colibri.UI.DateDiffViewer.html">DateDiffViewer</a></li><li><a href="Colibri.UI.DatePicker.html">DatePicker</a></li><li><a href="Colibri.UI.DateRangeViewer.html">DateRangeViewer</a></li><li><a href="Colibri.UI.DateSelector.html">DateSelector</a></li><li><a href="Colibri.UI.DateSelectorPopup.html">DateSelectorPopup</a></li><li><a href="Colibri.UI.DateTimeSelector.html">DateTimeSelector</a></li><li><a href="Colibri.UI.DateTimeSelectorPopup.html">DateTimeSelectorPopup</a></li><li><a href="Colibri.UI.DateTimeViewer.html">DateTimeViewer</a></li><li><a href="Colibri.UI.DateViewer.html">DateViewer</a></li><li><a href="Colibri.UI.DeferredFormValidator.html">DeferredFormValidator</a></li><li><a href="Colibri.UI.DocumentViewer.html">DocumentViewer</a></li><li><a href="Colibri.UI.Drag.html">Drag</a></li><li><a href="Colibri.UI.DragManager.html">DragManager</a></li><li><a href="Colibri.UI.DropDown.html">DropDown</a></li><li><a href="Colibri.UI.Editor.html">Editor</a></li><li><a href="Colibri.UI.EmailEditor.html">EmailEditor</a></li><li><a href="Colibri.UI.ErrorButton.html">ErrorButton</a></li><li><a href="Colibri.UI.ExtendedButton.html">ExtendedButton</a></li><li><a href="Colibri.UI.FieldValidator.html">FieldValidator</a></li><li><a href="Colibri.UI.FieldsViewer.html">FieldsViewer</a></li><li><a href="Colibri.UI.FileDropManager.html">FileDropManager</a></li><li><a href="Colibri.UI.FileSizeViewer.html">FileSizeViewer</a></li><li><a href="Colibri.UI.FileViewer.html">FileViewer</a></li><li><a href="Colibri.UI.FilesDragAndDrop.html">FilesDragAndDrop</a></li><li><a href="Colibri.UI.FilesEditor.html">FilesEditor</a></li><li><a href="Colibri.UI.FilesViewer.html">FilesViewer</a></li><li><a href="Colibri.UI.FlexBox.html">FlexBox</a></li><li><a href="Colibri.UI.FontFamilySelector.html">FontFamilySelector</a></li><li><a href="Colibri.UI.FontFamilyViewer.html">FontFamilyViewer</a></li><li><a href="Colibri.UI.FormValidator.html">FormValidator</a></li><li><a href="Colibri.UI.FormValidator_Validate.html">Validate</a></li><li><a href="Colibri.UI.Forms.Array.html">Array</a></li><li><a href="Colibri.UI.Forms.ArrayGrid_Fields.html">Fields</a></li><li><a href="Colibri.UI.Forms.ArrayGrid.ObjectWindow.html">ObjectWindow</a></li><li><a href="Colibri.UI.Forms.Bool.html">Bool</a></li><li><a href="Colibri.UI.Forms.Checkbox.html">Checkbox</a></li><li><a href="Colibri.UI.Forms.CheckboxList.html">CheckboxList</a></li><li><a href="Colibri.UI.Forms.Choose.html">Choose</a></li><li><a href="Colibri.UI.Forms.Color.html">Color</a></li><li><a href="Colibri.UI.Forms.Date.html">Date</a></li><li><a href="Colibri.UI.Forms.DateRange.html">DateRange</a></li><li><a href="Colibri.UI.Forms.DateTime.html">DateTime</a></li><li><a href="Colibri.UI.Forms.DateTimeRange.html">DateTimeRange</a></li><li><a href="Colibri.UI.Forms.DayOfMonth.html">DayOfMonth</a></li><li><a href="Colibri.UI.Forms.DocumentGenerator.html">DocumentGenerator</a></li><li><a href="Colibri.UI.Forms.Email.html">Email</a></li><li><a href="Colibri.UI.Forms.Field.html">Field</a></li><li><a href="Colibri.UI.Forms.File.html">File</a></li><li><a href="Colibri.UI.Forms.FileLabel.html">FileLabel</a></li><li><a href="Colibri.UI.Forms.Files.html">Files</a></li><li><a href="Colibri.UI.Forms.FontFamily.html">FontFamily</a></li><li><a href="Colibri.UI.Forms.Form.html">Form</a></li><li><a href="Colibri.UI.Forms.HiddenField.html">HiddenField</a></li><li><a href="Colibri.UI.Forms.KeyValueObject.html">KeyValueObject</a></li><li><a href="Colibri.UI.Forms.Label.html">Label</a></li><li><a href="Colibri.UI.Forms.Link.html">Link</a></li><li><a href="Colibri.UI.Forms.List.html">List</a></li><li><a href="Colibri.UI.Forms.MonthYear.html">MonthYear</a></li><li><a href="Colibri.UI.Forms.Number.html">Number</a></li><li><a href="Colibri.UI.Forms.NumberRange.html">NumberRange</a></li><li><a href="Colibri.UI.Forms.Object.html">Object</a></li><li><a href="Colibri.UI.Forms.Passport.html">Passport</a></li><li><a href="Colibri.UI.Forms.Password.html">Password</a></li><li><a href="Colibri.UI.Forms.Period.html">Period</a></li><li><a href="Colibri.UI.Forms.Radio.html">Radio</a></li><li><a href="Colibri.UI.Forms.Select.html">Select</a></li><li><a href="Colibri.UI.Forms.SimpleArray.html">SimpleArray</a></li><li><a href="Colibri.UI.Forms.Tabs.html">Tabs</a></li><li><a href="Colibri.UI.Forms.Text.html">Text</a></li><li><a href="Colibri.UI.Forms.TextArea.html">TextArea</a></li><li><a href="Colibri.UI.Forms.Toggle.html">Toggle</a></li><li><a href="Colibri.UI.Forms.Token.html">Token</a></li><li><a href="Colibri.UI.Forms.Year.html">Year</a></li><li><a href="Colibri.UI.Frame.html">Frame</a></li><li><a href="Colibri.UI.GoogleChart.html">GoogleChart</a></li><li><a href="Colibri.UI.GrayButton.html">GrayButton</a></li><li><a href="Colibri.UI.Grid.Cell.html">Cell</a></li><li><a href="Colibri.UI.Grid.Column.html">Column</a></li><li><a href="Colibri.UI.Grid.Columns.html">Columns</a></li><li><a href="Colibri.UI.Grid.Header.html">Header</a></li><li><a href="Colibri.UI.Grid.Row.html">Row</a></li><li><a href="Colibri.UI.Grid.Rows.html">Rows</a></li><li><a href="Colibri.UI.GridFileViewer.html">GridFileViewer</a></li><li><a href="Colibri.UI.H1.html">H1</a></li><li><a href="Colibri.UI.H2.html">H2</a></li><li><a href="Colibri.UI.H3.html">H3</a></li><li><a href="Colibri.UI.H4.html">H4</a></li><li><a href="Colibri.UI.Heading.html">Heading</a></li><li><a href="Colibri.UI.Hr.html">Hr</a></li><li><a href="Colibri.UI.HtmlDataViewer.html">HtmlDataViewer</a></li><li><a href="Colibri.UI.IFrame.html">IFrame</a></li><li><a href="Colibri.UI.Icon.html">Icon</a></li><li><a href="Colibri.UI.IconViewer.html">IconViewer</a></li><li><a href="Colibri.UI.Image.html">Image</a></li><li><a href="Colibri.UI.ImageViewWindow.html">ImageViewWindow</a></li><li><a href="Colibri.UI.ImageViewer.html">ImageViewer</a></li><li><a href="Colibri.UI.ImagesViewer.html">ImagesViewer</a></li><li><a href="Colibri.UI.Img.html">Img</a></li><li><a href="Colibri.UI.Informers.DownloadItem.html">DownloadItem</a></li><li><a href="Colibri.UI.Input.File.html">File</a></li><li><a href="Colibri.UI.JsonViewer.html">JsonViewer</a></li><li><a href="Colibri.UI.Link.html">Link</a></li><li><a href="Colibri.UI.LinkEditor.html">LinkEditor</a></li><li><a href="Colibri.UI.LinkViewer.html">LinkViewer</a></li><li><a href="Colibri.UI.List.Group.html">Group</a></li><li><a href="Colibri.UI.List.Item.html">Item</a></li><li><a href="Colibri.UI.List.JsonRenderer.html">JsonRenderer</a></li><li><a href="Colibri.UI.List.SearchBox.html">SearchBox</a></li><li><a href="Colibri.UI.ListItem.html">ListItem</a></li><li><a href="Colibri.UI.Loading.html">Loading</a></li><li><a href="Colibri.UI.LoadingBallun.html">LoadingBallun</a></li><li><a href="Colibri.UI.LoadingContainer.html">LoadingContainer</a></li><li><a href="Colibri.UI.Logs.JsonLog.html">JsonLog</a></li><li><a href="Colibri.UI.Maps.Controls.Button.html">Button</a></li><li><a href="Colibri.UI.Maps.Controls.ButtonGroup.html">ButtonGroup</a></li><li><a href="Colibri.UI.Maps.Controls.FileButton.html">FileButton</a></li><li><a href="Colibri.UI.Maps.Controls.FilterButton.html">FilterButton</a></li><li><a href="Colibri.UI.Maps.Controls.LayersButton.html">LayersButton</a></li><li><a href="Colibri.UI.Maps.Controls.RotateButton.html">RotateButton</a></li><li><a href="Colibri.UI.Maps.Controls.StatesButton.html">StatesButton</a></li><li><a href="Colibri.UI.Maps.Controls.ToggleButton.html">ToggleButton</a></li><li><a href="Colibri.UI.Maps.Controls.ToolBox.html">ToolBox</a></li><li><a href="Colibri.UI.Maps.LeafletJs.html">LeafletJs</a></li><li><a href="Colibri.UI.Maps.MapLibre.html">MapLibre</a></li><li><a href="Colibri.UI.MassActionsMenu.html">MassActionsMenu</a></li><li><a href="Colibri.UI.MenuList.html">MenuList</a></li><li><a href="Colibri.UI.ModelViewer.html">ModelViewer</a></li><li><a href="Colibri.UI.ModelessWindow.html">ModelessWindow</a></li><li><a href="Colibri.UI.MonthPicker.html">MonthPicker</a></li><li><a href="Colibri.UI.MonthSelector.html">MonthSelector</a></li><li><a href="Colibri.UI.MonthYearViewer.html">MonthYearViewer</a></li><li><a href="Colibri.UI.MoveManager.html">MoveManager</a></li><li><a href="Colibri.UI.Note.html">Note</a></li><li><a href="Colibri.UI.Notice.html">Notice</a></li><li><a href="Colibri.UI.Notices.html">Notices</a></li><li><a href="Colibri.UI.NumberEditor.html">NumberEditor</a></li><li><a href="Colibri.UI.NumberViewer.html">NumberViewer</a></li><li><a href="Colibri.UI.ObjectViewer.html">ObjectViewer</a></li><li><a href="Colibri.UI.OrderedList.html">OrderedList</a></li><li><a href="Colibri.UI.OutlineBlueButton.html">OutlineBlueButton</a></li><li><a href="Colibri.UI.Pager.html">Pager</a></li><li><a href="Colibri.UI.Pane.html">Pane</a></li><li><a href="Colibri.UI.PaneGrid.html">PaneGrid</a></li><li><a href="Colibri.UI.PaneSwitcher.html">PaneSwitcher</a></li><li><a href="Colibri.UI.PeriodViewer.html">PeriodViewer</a></li><li><a href="Colibri.UI.PlayPauseButton.html">PlayPauseButton</a></li><li><a href="Colibri.UI.PointerControl.html">PointerControl</a></li><li><a href="Colibri.UI.Popup.html">Popup</a></li><li><a href="Colibri.UI.PopupList.html">PopupList</a></li><li><a href="Colibri.UI.ProgressBar.html">ProgressBar</a></li><li><a href="Colibri.UI.ProgressViewer.html">ProgressViewer</a></li><li><a href="Colibri.UI.PromptDialog.html">PromptDialog</a></li><li><a href="Colibri.UI.Radio.html">Radio</a></li><li><a href="Colibri.UI.RadioViewer.html">RadioViewer</a></li><li><a href="Colibri.UI.RangePicker.html">RangePicker</a></li><li><a href="Colibri.UI.ReadUnreadBadge.html">ReadUnreadBadge</a></li><li><a href="Colibri.UI.RemoteFileEditor.html">RemoteFileEditor</a></li><li><a href="Colibri.UI.Renderer.html">Renderer</a></li><li><a href="Colibri.UI.Rgb.html">Rgb</a></li><li><a href="Colibri.UI.Router.html">Router</a></li><li><a href="Colibri.UI.Ruler.html">Ruler</a></li><li><a href="Colibri.UI.SearchInput.html">SearchInput</a></li><li><a href="Colibri.UI.Select.DefaultDropdown.Options.html">Options</a></li><li><a href="Colibri.UI.Select.Dropdown.html">Dropdown</a></li><li><a href="Colibri.UI.SelectEditor.html">SelectEditor</a></li><li><a href="Colibri.UI.SelectViewer.html">SelectViewer</a></li><li><a href="Colibri.UI.Selector.html">Selector</a></li><li><a href="Colibri.UI.Shader.html">Shader</a></li><li><a href="Colibri.UI.ShadowViewer.html">ShadowViewer</a></li><li><a href="Colibri.UI.Shortcuts.html">Shortcuts</a></li><li><a href="Colibri.UI.SimpleButton.html">SimpleButton</a></li><li><a href="Colibri.UI.SimpleFormValidator.html">SimpleFormValidator</a></li><li><a href="Colibri.UI.SimplePieChart.html">SimplePieChart</a></li><li><a href="Colibri.UI.SingleTimeline.html">SingleTimeline</a></li><li><a href="Colibri.UI.SlideDown.html">SlideDown</a></li><li><a href="Colibri.UI.Spectrum.Graph.html">Graph</a></li><li><a href="Colibri.UI.Spectrum.Selections.html">Selections</a></li><li><a href="Colibri.UI.Split.html">Split</a></li><li><a href="Colibri.UI.Strong.html">Strong</a></li><li><a href="Colibri.UI.SuccessButton.html">SuccessButton</a></li><li><a href="Colibri.UI.Switcher.html">Switcher</a></li><li><a href="Colibri.UI.Table.html">Table</a></li><li><a href="Colibri.UI.TableCell.html">TableCell</a></li><li><a href="Colibri.UI.TableHeaderCell.html">TableHeaderCell</a></li><li><a href="Colibri.UI.TableRow.html">TableRow</a></li><li><a href="Colibri.UI.Tabs.html">Tabs</a></li><li><a href="Colibri.UI.Templates.html">Templates</a></li><li><a href="Colibri.UI.TextArea.html">TextArea</a></li><li><a href="Colibri.UI.TextAreaEditor.html">TextAreaEditor</a></li><li><a href="Colibri.UI.TextAreaViewer.html">TextAreaViewer</a></li><li><a href="Colibri.UI.TextEditor.html">TextEditor</a></li><li><a href="Colibri.UI.TextSpan.html">TextSpan</a></li><li><a href="Colibri.UI.TextViewer.html">TextViewer</a></li><li><a href="Colibri.UI.Timeline.html">Timeline</a></li><li><a href="Colibri.UI.ToggleBox.html">ToggleBox</a></li><li><a href="Colibri.UI.ToggleBoxEditor.html">ToggleBoxEditor</a></li><li><a href="Colibri.UI.ToggleButton.html">ToggleButton</a></li><li><a href="Colibri.UI.ToggleboxViewer.html">ToggleboxViewer</a></li><li><a href="Colibri.UI.ToolTip.html">ToolTip</a></li><li><a href="Colibri.UI.Toolbar.html">Toolbar</a></li><li><a href="Colibri.UI.Tree.JsonRenderer.html">JsonRenderer</a></li><li><a href="Colibri.UI.Tree.SearchBox.html">SearchBox</a></li><li><a href="Colibri.UI.UnorderedList.html">UnorderedList</a></li><li><a href="Colibri.UI.UploadButton.html">UploadButton</a></li><li><a href="Colibri.UI.Utilities.Mask.html">Mask</a></li><li><a href="Colibri.UI.Utilities.Validator.html">Validator</a></li><li><a href="Colibri.UI.Video.html">Video</a></li><li><a href="Colibri.UI.Viewer.html">Viewer</a></li><li><a href="Colibri.UI.WaterfallBuffer.html">WaterfallBuffer</a></li><li><a href="Colibri.UI.WebRTCVideo.html">WebRTCVideo</a></li><li><a href="Colibri.UI.Widget.html">Widget</a></li><li><a href="Colibri.UI.Window.html">Window</a></li><li><a href="Colibri.UI.YearMonthSelector.html">YearMonthSelector</a></li><li><a href="Colibri.UI.YearPicker.html">YearPicker</a></li><li><a href="Colibri.UI.YearQuarterSelector.html">YearQuarterSelector</a></li><li><a href="Colibri.UI.YearSelector.html">YearSelector</a></li><li><a href="Colibri.UI.YearViewer.html">YearViewer</a></li><li><a href="Colibri.Web.Comet.html">Comet</a></li><li><a href="Colibri.Web.IndexDB.html">IndexDB</a></li><li><a href="Colibri.Web.Request.html">Request</a></li><li><a href="Colibri.Web.Router.html">Router</a></li><li><a href="Destructable.html">Destructable</a></li><li><a href="DestructableRegistry.html">DestructableRegistry</a></li><li><a href="MediaMTXWebRTCReader.html">MediaMTXWebRTCReader</a></li></ul><h3>Global</h3><ul><li><a href="global.html#App">App</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sun Jul 26 2026 13:08:05 GMT+0400 (Armenia Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
