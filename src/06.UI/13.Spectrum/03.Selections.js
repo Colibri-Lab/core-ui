@@ -19,6 +19,13 @@ Colibri.UI.Spectrum.Selections = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * Add selection
+     * @param {Object} selectionPointOrRect selection point or rectangle
+     * @param {string} mode selection mode ('select-column', 'select-row', 'select-rectangle')
+     * @param {boolean} isCentered whether the selection is centered
+     * @returns {string} name of the created selection
+     */
     Add(selectionPointOrRect, mode, isCentered) {
         const selectionName = 'selection-' + Date.Mc();
         const selectionElement = new Colibri.UI.Pane(selectionName, this);
@@ -76,6 +83,11 @@ Colibri.UI.Spectrum.Selections = class extends Colibri.UI.Pane {
         return selectionName;
     }
 
+    /**
+     * Update selection
+     * @param {string} selectionName name of selection
+     * @param {Object} selectionPointOrRect selection point or rectangle
+     */
     Update(selectionName, selectionPointOrRect) {
         const selectionElement = this.Children(selectionName);
         if (selectionElement) {
@@ -109,6 +121,10 @@ Colibri.UI.Spectrum.Selections = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * Remove selection
+     * @param {string} selectionName name of selection
+     */
     Remove(selectionName) {
         const selectionElement = this.Children(selectionName);
         console.log(selectionName, selectionElement);

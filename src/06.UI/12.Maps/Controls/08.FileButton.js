@@ -110,6 +110,7 @@ Colibri.UI.Maps.Controls.FileButton = class extends Colibri.UI.Maps.Controls.But
         this.ClickOnButton();
     }
 
+    /** @private */
     _loadOnDevice() {
         return new Promise((resolve, reject) => {
             const errorHandler = (error) => {

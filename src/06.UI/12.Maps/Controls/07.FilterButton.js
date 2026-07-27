@@ -33,6 +33,12 @@ Colibri.UI.Maps.Controls.FilterButton = class extends Colibri.UI.FlexBox {
         this.RegisterEvent('RemoveClicked', false, 'When remove button is clicked');
     }
 
+    /**
+     * Remove button clicked event handler
+     * @param {object} event event object
+     * @param {object} args log message arguments
+     * @returns {void}
+     */
     __removeClicked(event, args) {
         this.Dispatch('RemoveClicked', args);
         args.domEvent.stopPropagation();

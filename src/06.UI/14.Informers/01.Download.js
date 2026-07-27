@@ -34,6 +34,10 @@ Colibri.UI.Informers.Download = class extends Colibri.UI.FlexBox {
         this.RegisterEvent('CloseClicked', false, 'When close button is clicked');
     }
 
+    /**
+     * Dispose item
+     * @param {object} args log message arguments
+     */
     DisposeItem(args) {
         this.Dispatch('Clicked', args);
         args.item.Dispose();
@@ -42,6 +46,11 @@ Colibri.UI.Informers.Download = class extends Colibri.UI.FlexBox {
         }
     }
 
+    /**
+     * List item clicked
+     * @param {object} event event object
+     * @param {object} args log message arguments
+     */
     __listItemClicked(event, args) {
         if(args.item.value.percent === 100) {
             this.DisposeItem(args);
@@ -59,6 +68,10 @@ Colibri.UI.Informers.Download = class extends Colibri.UI.FlexBox {
         }
     }
 
+    /**
+     * Add informer
+     * @param {object} informer informer object
+     */
     Add(informer) {
         this._listGroup.AddItem(informer);
         this.Show();

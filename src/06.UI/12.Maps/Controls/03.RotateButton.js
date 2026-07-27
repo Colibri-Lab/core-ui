@@ -22,6 +22,12 @@ Colibri.UI.Maps.Controls.RotateButton = class extends Colibri.UI.Maps.Controls.B
         this.AddHandler('DoubleClicked', this.__thisDoubleClicked);
     }
 
+    /**
+     * Double click event handler
+     * @param {object} event event object
+     * @param {object} args log message arguments
+     * @returns {void}
+     */
     __thisDoubleClicked(event, args) {
         this._rotationAngle = 0;
         this._icon.rotation = 0;
@@ -38,6 +44,12 @@ Colibri.UI.Maps.Controls.RotateButton = class extends Colibri.UI.Maps.Controls.B
         this.RegisterEvent('Rotated', false, 'When the map must be rotated');
     }
 
+    /**
+     * Mouse down event handler
+     * @param {object} event event object
+     * @param {object} args log message arguments
+     * @returns {void}
+     */
     __thisMouseDown(event, args) {
         this._rotating = true;
         this.AddClass('-rotating');
@@ -111,6 +123,10 @@ Colibri.UI.Maps.Controls.RotateButton = class extends Colibri.UI.Maps.Controls.B
 
     }
 
+    /**
+     * Is rotating
+     * @returns {Boolean} whether the button is currently rotating
+     */
     get rotating() {
         return this._rotating;
     }

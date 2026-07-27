@@ -33,6 +33,12 @@ Colibri.UI.Maps.Controls.LayersButton = class extends Colibri.UI.FlexBox {
         this.RegisterEvent('Changed', false, 'When current layer is changed');
     }
 
+    /**
+     * Click event handler
+     * @param {object} event event object
+     * @param {object} args log message arguments
+     * @returns {void}
+     */
     __thisClicked(event, args) {
         // const component = this.Children('firstChild')
         // component.MoveEnd();
@@ -48,12 +54,22 @@ Colibri.UI.Maps.Controls.LayersButton = class extends Colibri.UI.FlexBox {
 
     }
 
+    /**
+     * Context menu item clicked event handler
+     * @param {object} event event object
+     * @param {object} args log message arguments
+     * @returns {void}
+     */
     __thisContextMenuItemClicked(event, args) {
         if(args.menuData?.name ?? null) {
             this.Dispatch('Changed', {current: args.menuData?.name ?? null});
         }
     }
 
+    /**
+     * Add layer tile
+     * @param {object} tile tile object
+     */
     AddLayer(tile) {
         this._tiles.push(tile);
     }

@@ -1,5 +1,17 @@
+/**
+ * Waterfall spectrum component
+ * @class
+ * @extends Colibri.UI.FlexBox
+ * @memberof Colibri.UI.Spectrum
+ */
 Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.component} container container of component
+     * @param {Element} element element of component
+     */
     constructor(name, container, element) {
         super(name, container, Colibri.UI.Templates['Colibri.UI.Spectrum.Waterfall']);
 
@@ -24,13 +36,21 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
 
     }
     
+    /**
+     * Resize the canvas and the WASM module
+     * @param {Number} width width of canvas
+     * @param {Number} height height of canvas
+     */
     Resize(width, height) {
         this._points = width;
         this._limit = height;
         this._wasm.Resize(this._points, this._limit);
     }
 
-
+    /**
+     * WASM module loaded
+     * @private
+     */
     __wasmLoaded() {
 
         // const dpr = window.devicePixelRatio || 1;
@@ -59,6 +79,10 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this.drawTo(this._ctx);
     }
 
+    /**
+     * Draw multiple lines
+     * @param {Array<{time: BigInt, delta: Number, chunk: Float32Array}>} array array of float arrays
+     */
     DrawMultiple(array) {
         if (!this._wasm.loaded) {
             console.warn("WASM module not loaded yet");
@@ -70,6 +94,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         }
     }
 
+    /** Clear the canvas and the WASM module */
     Clear() {
         if (!this._wasm.loaded) {
             console.warn("WASM module not loaded yet");
@@ -79,7 +104,10 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this._wasm.clear();
     }
 
-    /** Нарисовать весь буфер в 2d-контекст канваса. */
+    /** 
+     * Draw the entire buffer to the 2D context of the canvas. 
+     * @param {CanvasRenderingContext2D} ctx 2D context of the canvas
+     */
     drawTo(ctx) {
         const imageData = this._wasm.getImageData();
         createImageBitmap(imageData).then((bitmap) => {
@@ -122,6 +150,11 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this.Resize(this._points, this._limit);
     }
 
+    /**
+     * Resize the canvas and the WASM module
+     * @param {Number} points points in every row
+     * @param {Number} limit rows limit in history
+     */
     ResizeArea(points, limit) {
         points = this._convertProperty('Number', points);
         limit = this._convertProperty('Number', limit);
@@ -130,7 +163,13 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         this.Resize(this._points, this._limit);
     }
 
-    
+    /**
+     * Generate X axis values
+     * @param {Number} points points in every row
+     * @param {Number} start_x start value of X axis
+     * @param {Number} delta_x delta value of X axis
+     * @param {Function} valueDataType data type of X axis values
+     */
     GenerateValues(points, start_x, delta_x, valueDataType = Float64Array) {
         this._start_x = start_x;
         this._delta_x = delta_x;
@@ -142,6 +181,11 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
 
     }
 
+    /**
+     * Reorganize the X axis values and the WASM module
+     * @param {Number} minValue minimum value of X axis
+     * @param {Number} maxValue maximum value of X axis
+     */
     Reorganize(minValue, maxValue) {
 
         if(!this._floatArray) {

@@ -26,6 +26,11 @@ Colibri.UI.Informers.DownloadItem = class extends Colibri.UI.FlexBox {
         
     }
 
+    /**
+     * Link clicked
+     * @param {object} event event object
+     * @param {object} args log message arguments
+     */
     __linkClicked(event, args) {
         DownloadUrl(this._value.download);
     }

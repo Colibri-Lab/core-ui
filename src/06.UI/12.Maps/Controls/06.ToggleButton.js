@@ -22,6 +22,12 @@ Colibri.UI.Maps.Controls.ToggleButton = class extends Colibri.UI.Maps.Controls.B
 
     }
 
+    /**
+     * Click event handler
+     * @param {object} event event object
+     * @param {object} args log message arguments
+     * @returns {void}
+     */
     __thisClicked(event, args) {
         if(!this.enabled) {
             return;

@@ -50,11 +50,19 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         this.RegisterEvent('GrabEnd', false, 'When graph is grabbed');
     }
 
+    /**
+     * Data type of float array
+     * @type {Float32Array, Float64Array}
+     */
     set dataType(value) {
         value = this._convertProperty('Function', value);
         this._dataType = value;
     }
 
+    /**
+     * Data type of float array
+     * @type {Float32Array, Float64Array}
+     */
     get dataType() {
         return this._dataType;
     }
@@ -87,6 +95,11 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         }
     }
 
+    /**
+     * Pointer control start
+     * @param {object} event event object
+     * @param {object} args log message arguments
+     */
     __thisPointerControlStart(event, args) {
         if (this.selectionMode != 'none') {
             this._selection = this.Selections.Add(args.point, this._selectionMode, document.keysPressed.ctrl);
@@ -96,6 +109,11 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         }
     }
 
+    /**
+     * Pointer control end
+     * @param {object} event event object
+     * @param {object} args log message arguments
+     */
     __thisPointerControlEnd(event, args) {
         if (this.selectionMode != 'none') {
             if (args.rect.width === 0 || args.rect.height === 0) {
@@ -110,6 +128,11 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         }
     }
 
+    /**
+     * Pointer control move
+     * @param {object} event event object
+     * @param {object} args log message arguments
+     */
     __thisPointerControlMove(event, args) {
         if (this._selectionMode !== 'none') {
             this.Selections.Update(this._selection, args.rect);
@@ -119,7 +142,10 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         }
     }
 
-
+    /**
+     * Selections component
+     * @type {Colibri.UI.Spectrum.Selections}
+     */
     ResizeCanvas() {
         const dpr = window.devicePixelRatio || 1;
         const rect = this._canvas.getBoundingClientRect();
@@ -128,6 +154,10 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         this._ctx.scale(dpr, dpr);
     }
 
+    /**
+     * Create color palette
+     * @returns {Array<String>} array of colors
+     */
     _createPalette() {
 
         if (this._colorPalatte) {
@@ -362,6 +392,10 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         this._start = value;
     }
 
+    /**
+     * Start percent (in array, must be less or equal than dataarray length)
+     * @type {Number}
+     */
     get startPerc() {
         return this._start * 100 / this._floatArray.length;
     }
@@ -382,10 +416,18 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         this._end = value;
     }
 
+    /**
+     * End percent (in array, must be less or equal than dataarray length)
+     * @type {Number}
+     */
     get endPerc() {
         return this._end * 100 / this._floatArray.length;
     }
 
+    /**
+     * Length of the data array
+     * @type {Number}
+     */
     get length() {
         return this._floatArray.length;
     }
@@ -407,6 +449,11 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         this.AddHandler('MouseMove', this.__thisMouseMove);
     }
 
+    /**
+     * Mouse move handler
+     * @param {object} event event object
+     * @param {object} args log message arguments
+     */
     __thisMouseMove(event, args) {
         const bounds = this._element.bounds();
         const point = { left: args.domEvent.screenX - bounds.left, top: args.domEvent.screenY - bounds.top };
@@ -431,6 +478,13 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         this._showMaximums = value;
     }
 
+    /**
+     * Get color from palette
+     * @param {Array<String>} palette array of colors
+     * @param {Number} index index of color
+     * @param {Number} alpha alpha value
+     * @returns {String} color
+     */
     _getColor(palette, index, alpha = 1) {
         let color = null;
         if (index >= palette.length) {
@@ -494,6 +548,11 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         this._yLabels = value;
     }
 
+    /**
+     * Crop float array
+     * @param {Float32Array|Float64Array} floatArray float array
+     * @returns {Float32Array|Float64Array} cropped float array
+     */
     _crop(floatArray) {
         const start = this._start || 0;
         const end = this._end != null ? this._end : floatArray.length;
@@ -678,6 +737,13 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         this._graphType = value;
     }
 
+    /**
+     * Draw graphic
+     * @param {CanvasRenderingContext2D} ctx canvas context
+     * @param {Float32Array|Float64Array} floatArray float array
+     * @param {Number} min minimum value
+     * @param {Number} max maximum value
+     */
     _drawGraphic(ctx, floatArray, min, max) {
         if (this._graphType === 'graph') {
             this._drawGraph(ctx, floatArray, min, max);
@@ -686,6 +752,9 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         }
     }
 
+    /**
+     * Draw the row to the canvas
+     */
     Draw(floatArray, name = null) {
         try {
 
@@ -774,6 +843,13 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         }
     }
 
+    /**
+     * Draw line graph
+     * @param {CanvasRenderingContext2D} ctx canvas context
+     * @param {Float32Array|Float64Array} floatArray float array
+     * @param {Number} min minimum value
+     * @param {Number} max maximum value
+     */
     _drawLine(ctx, floatArray, min, max) {
         const bounds = this._canvas.bounds();
         const palette = this._createPalette();
@@ -809,7 +885,13 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
     }
 
 
-
+    /**
+     * Draw graph
+     * @param {CanvasRenderingContext2D} ctx canvas context
+     * @param {Float32Array|Float64Array} floatArray float array
+     * @param {Number} min minimum value
+     * @param {Number} max maximum value
+     */
     _drawGraph(ctx, floatArray, min, max) {
         const bounds = this._canvas.bounds();
         const palette = this._createPalette();
@@ -848,6 +930,14 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         ctx.stroke();
     }
 
+    /**
+     * Draw grid lines
+     * @param {CanvasRenderingContext2D} ctx canvas context
+     * @param {Object} bounds bounds of canvas
+     * @param {Number} min minimum value
+     * @param {Number} max maximum value
+     * @param {Number} length length of float array
+     */
     _drawGridLines(ctx, bounds, min, max, length) {
 
         if (this._hgridLinesColor && this._hgridLinesStep) {
@@ -909,6 +999,13 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
 
     }
 
+    /**
+     * Draw zero line
+     * @param {CanvasRenderingContext2D} ctx canvas context
+     * @param {Object} bounds bounds of canvas
+     * @param {Number} min minimum value
+     * @param {Number} max maximum value
+     */
     _drawZeroLine(ctx, bounds, min, max) {
         if (min < (this._zeroLineValue ?? 0) && max > (this._zeroLineValue ?? 0)) {
             const zeroY = bounds.outerHeight - (((this._zeroLineValue ?? 0) - min) / (max - min)) * bounds.outerHeight;
@@ -921,6 +1018,16 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         }
     }
 
+    /**
+     * Draw maximum line
+     * @param {CanvasRenderingContext2D} ctx canvas context
+     * @param {Object} bounds bounds of canvas
+     * @param {Float32Array|Float64Array} floatArray float array
+     * @param {Number} len length of float array
+     * @param {Number} step step size
+     * @param {Number} min minimum value
+     * @param {Number} max maximum value
+     */
     _drawMaxLine(ctx, bounds, floatArray, len, step, min, max) {
         if (this._showMaximums) {
             const palette = this._createPalette();
@@ -940,6 +1047,13 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         }
     }
 
+    /**
+     * Draw axises
+     * @param {CanvasRenderingContext2D} ctx canvas context
+     * @param {Object} bounds bounds of canvas
+     * @param {Number} min minimum value
+     * @param {Number} max maximum value
+     */
     _drawAxises(ctx, bounds, min, max) {
         if (this._xLabels) {
             ctx.fillStyle = this._labelColor || '#888';
@@ -971,6 +1085,9 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         }
     }
 
+    /**
+     * Clear the canvas
+     */
     Clear() {
         const bounds = this._canvas.bounds();
         this._ctx = this._canvas.getContext('2d', { willReadFrequently: true });
@@ -978,10 +1095,18 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         this.ResetMaximums();
     }
 
+    /**
+     * Reset maximum values
+     */
     ResetMaximums() {
         this._maxValues = null;
     }
 
+    /**
+     * Rearrange the graph with new min and max values
+     * @param {Number} min minimum value
+     * @param {Number} max maximum value
+     */
     Rearrange(min, max) {
         this.min = min;
         this.max = max;
@@ -990,6 +1115,11 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         }
     }
 
+    /**
+     * Resize the graph with new start and end indices
+     * @param {Number} start start index
+     * @param {Number} end end index
+     */
     Resize(start, end) {
         this._start = start;
         this._end = end;
@@ -1040,6 +1170,13 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
         this._xAxisValues = value;
     }
 
+    /**
+     * Generate values for X axis
+     * @param {Number} points number of points
+     * @param {Number} start_x starting value
+     * @param {Number} delta_x step size
+     * @param {Function} valueDataType data type for values (default: Float64Array)
+     */
     GenerateValues(points, start_x, delta_x, valueDataType = Float64Array) {
         this._start_x = start_x;
         this._delta_x = delta_x;
@@ -1051,6 +1188,11 @@ Colibri.UI.Spectrum.Graph = class extends Colibri.UI.FlexBox {
 
     }
 
+    /**
+     * Reorganize the graph with new min and max values
+     * @param {Number} minValue minimum value
+     * @param {Number} maxValue maximum value
+     */
     Reorganize(minValue, maxValue) {
 
         if(!this._floatArray) {

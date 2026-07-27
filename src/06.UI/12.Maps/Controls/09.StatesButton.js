@@ -35,6 +35,12 @@ Colibri.UI.Maps.Controls.StatesButton = class extends Colibri.UI.FlexBox {
         this.RegisterEvent('Changed', false, 'When current layer is changed');
     }
 
+    /**
+     * Click event handler
+     * @param {object} event event object
+     * @param {object} args log message arguments
+     * @returns {void}
+     */
     __thisClicked(event, args) {
         const contextmenu = [];
         for(const value of this._values) {
@@ -45,6 +51,12 @@ Colibri.UI.Maps.Controls.StatesButton = class extends Colibri.UI.FlexBox {
 
     }
 
+    /**
+     * Context menu item clicked event handler
+     * @param {object} event event object
+     * @param {object} args log message arguments
+     * @returns {void}
+     */
     __thisContextMenuItemClicked(event, args) {
         if(args.menuData?.name ?? null) {
             this.value = args.menuData?.value ?? null;

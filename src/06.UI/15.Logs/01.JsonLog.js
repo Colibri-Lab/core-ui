@@ -24,6 +24,10 @@ Colibri.UI.Logs.JsonLog = class extends Colibri.UI.List {
 
     }
 
+    /**
+     * Add log message
+     * @param {object} args log message arguments
+     */
     Log(args) {
         this._listGroup.AddItem({ ...args, id: Date.Mc() });
         this.ShowLastMessage();
