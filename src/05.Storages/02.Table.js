@@ -5,6 +5,12 @@
  */
 Colibri.Storages.Models.Table = class extends Colibri.Events.Dispatcher {
  
+    /**
+     * Constructs an instance of the Colibri.Storages.Models.Table class.
+     * @param {string} controller - The controller name for handling data operations.
+     * @param {Object} params - Parameters for data operations.
+     * @constructor
+     */
     constructor(controller, params) {
         super();
 
@@ -18,6 +24,10 @@ Colibri.Storages.Models.Table = class extends Colibri.Events.Dispatcher {
         this.Load();
     }
     
+    /**
+     * Sets up the controller data for loading, saving, and deleting rows based on the provided controller name.
+     * @private
+     */
     _setControllerData() {
 
         // значит это Module:Controller
@@ -36,6 +46,7 @@ Colibri.Storages.Models.Table = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('DataChanged', false, 'Когда данные изменились');
     }
 
+    /** @private */
     _convertData(data) {
         this._data = [];
         for(const d of data) {
@@ -54,12 +65,16 @@ Colibri.Storages.Models.Table = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /** @private */
     bind() {
         if(App.Comet) {
             App.Comet.Addhandler('EventReceived', (event, args) => this.__cometEventReveived(event, args));
         }
     }
 
+    /**
+     * Loads the data for the table by invoking the loader function and dispatching the 'DataChanged' event.
+     */
     Load() {
         this._loader().then(data => {
             this._loaded = true;
@@ -68,12 +83,20 @@ Colibri.Storages.Models.Table = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Iterates over each row in the table and applies the provided rowHandler function.
+     * @param {function} rowHandler - A callback function to handle each row.
+     */
     ForEach(rowHandler) {
         for(const row of this._data) {
             rowHandler(row);
         }
     }
 
+    /**
+     * Saves the specified row by invoking the saver function and updating the row's data.
+     * @param {Colibri.Storages.Models.Model} row - The row to be saved.
+     */
     SaveRow(row) {
         this._saver().then((data) => {
             row.data = data;
@@ -81,6 +104,10 @@ Colibri.Storages.Models.Table = class extends Colibri.Events.Dispatcher {
         }).catch(error => reject(error));
     }
 
+    /**
+     * Deletes the specified row by invoking the deleter function and updating the row's data.
+     * @param {Colibri.Storages.Models.Model} row - The row to be deleted.
+     */
     DeleteRow(row) {
         this._deleter().then((data) => {
             row.data = data;

@@ -39,19 +39,35 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Handles the 'DatabaseOpened' event of the application database.
+     * @param {Object} event - The event object.
+     * @param {Object} args - The event arguments.
+     */
     __appDatabaseOpened(event, args) {
         this.RetreiveFromPermanentStore();
     }
 
+    /**
+     * Handles the 'DatabaseDoesNotExists' event of the application database.
+     * @param {Object} event - The event object.
+     * @param {Object} args - The event arguments.
+     */
     __appDbDatabaseDoesNotExists(event, args) {
         App.Db.CreateStore(this._name, '__domain');
     }
 
+    /**
+     * Destroys the store instance and releases resources.
+     */
     destructor() {
         super.destructor();
         this.Dispose();
     }
 
+    /**
+     * Disposes of the store instance by clearing references to owner, parent, data, path handlers, and path loaders.
+     */
     Dispose() {
 
         this._owner = null;
@@ -329,6 +345,9 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         return this;
     }
 
+    /**
+     * Removes all path handlers associated with the specified component.
+     */
     EraseComponentFormHandlers(component) {
         for (const key of Object.keys(this._pathHandlers)) {
             const handlers = this._pathHandlers[key];
@@ -374,6 +393,9 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
         return this;
     }
 
+    /**
+     * Dispatches events for all registered paths in the store.
+     */
     DispatchAll() {
         const keys = Object.keys(this._data);
         for (const key of keys) {
@@ -583,6 +605,11 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Raises an event indicating that the store data has been updated at the specified path.
+     * @param {string} path - The path where the data was updated.
+     * @param {any} d - The updated data.
+     */
     _raiseUpdatedEvent(path, d) {
         this.DispatchPath(path);
         this.Dispatch('StoreUpdated', { path: path, data: d });

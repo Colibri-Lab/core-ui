@@ -5,6 +5,12 @@
  */
 Colibri.Storages.Models.Model = class extends Colibri.Events.Dispatcher {
     
+    /**
+     * Constructs an instance of the Colibri.Storages.Models.Model class.
+     * @param {object} row - The data row associated with this model.
+     * @param {Colibri.Storages.Models.Table} table - The table to which this model belongs.
+     * @constructor
+     */
     constructor(row, table) {
         super();
         this._row = row;
@@ -12,7 +18,7 @@ Colibri.Storages.Models.Model = class extends Colibri.Events.Dispatcher {
     }
 
     /**
-     * Таблица
+     * Gets the table to which this model belongs.
      * @type {Colibri.Storages.Models.Table}
      */
     get table() {
@@ -20,14 +26,14 @@ Colibri.Storages.Models.Model = class extends Colibri.Events.Dispatcher {
     }
     
     /**
-     * Данные
+     * Gets the data row associated with this model.
      * @type {object}
      */
     get data() {
         return this._row;
     }
     /**
-     * Данные
+     * Sets the data row associated with this model.
      * @type {object}
      */
     set data(value) {
@@ -35,16 +41,16 @@ Colibri.Storages.Models.Model = class extends Colibri.Events.Dispatcher {
     }
 
     /**
-     * Сохранить строку
-     * @returns Promise
+     * Saves the current model by invoking the SaveRow method of the associated table.
+     * @returns {Promise}
      */
     Save() {
         return this._table.SaveRow(this);
     }
 
     /**
-     * Удалить строку
-     * @returns Promise
+     * Deletes the current model by invoking the DeleteRow method of the associated table.
+     * @returns {Promise}
      */
     Delete() {
         return this._table.DeleteRow(this);

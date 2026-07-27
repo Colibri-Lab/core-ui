@@ -1,3 +1,9 @@
+/**
+ * Colibri SQL storage implementation using SQLite plugin for Cordova and Electron.
+ * @class 
+ * @extends Colibri.Events.Dispatcher
+ * @memberof Colibri.Storages
+ */
 Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
 
     _db = null;
@@ -5,10 +11,20 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
 
     static loaded = true;
 
+    /**
+     * Loads the SQLite storage implementation.
+     * @returns {Promise} A promise that resolves when the storage is loaded.
+     * @static
+     */
     static Load() {
         return Promise.resolve();
     }
 
+    /**
+     * Constructs an instance of the Colibri.Storages.Sqlite class.
+     * @param {string} [name='local.db'] - The name of the SQLite database file.
+     * @constructor
+     */
     constructor(name = 'local.db') {
         super();
         this.RegisterEvent('Loaded', false, 'When SQL is loaded');
@@ -34,8 +50,11 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
         }
     }
 
-
-
+    /**
+     * Creates an empty database with the specified structure.
+     * @param {Array} structure - An array of table structures to create.
+     * @returns {Promise} A promise that resolves when the database is created.
+     */
     CreateEmptyDatabase(structure) {
         structure = this._convertStructure(structure);
         return new Promise((resolve, reject) => {
@@ -65,10 +84,21 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Checks if the database has been created and is available for use.
+     * @type {boolean}
+     * @readonly
+     * @returns {boolean} True if the database is created, false otherwise.
+     */
     get dbCreated() {
         return !!this._db;
     }
 
+    /**
+     * Opens the SQLite database from a base64 string or Blob object.
+     * @param {string|Blob} base64OrBlob - The base64 string or Blob representing the database.
+     * @returns {Promise} A promise that resolves when the database is opened.
+     */
     Open(base64OrBlob) {
         return new Promise((resolve, reject) => {
             this.Close();
@@ -102,6 +132,9 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Closes the SQLite database connection if it is open.
+     */
     Close() {
         if (this._db) {
             try { this._db.close(); } catch (e) { }
@@ -109,6 +142,12 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Creates a SQL table based on the provided storage structure.
+     * @param {Object} storage - The storage structure defining the table.
+     * @returns {string} The SQL statement to create the table.
+     * @private
+     */
     _createTable(storage) {
         if (Object.isObject(storage)) {
             const create = [
@@ -136,6 +175,12 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Converts an array of storage structures into SQL table creation statements.
+     * @param {Array} storages - An array of storage structures.
+     * @returns {Array} An array of SQL statements for creating tables.
+     * @private
+     */
     _convertStructure(storages) {
         const result = [];
         for (const storage of storages) {
@@ -145,6 +190,12 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
         return result;
     }
 
+    /**
+     * Inserts multiple rows into a specified table in the SQLite database.
+     * @param {string} table - The name of the table to insert rows into.
+     * @param {Array} data - An array of objects representing the rows to insert.
+     * @returns {Promise} A promise that resolves when the rows are inserted.
+     */
     Insert(table, data) {
         if (!data.length) return Promise.resolve();
 
@@ -170,6 +221,13 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Updates rows in a specified table based on a condition.
+     * @param {string} table - The name of the table to update.
+     * @param {Object} data - An object representing the fields and values to update.
+     * @param {string} condition - The SQL condition to determine which rows to update.
+     * @returns {Promise} A promise that resolves when the rows are updated.
+     */
     Update(table, data, condition) {
         const fields = Object.keys(data);
         const setClause = fields.map(f => f + '=?').join(', ');
@@ -181,6 +239,12 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Deletes rows from a specified table based on a condition.
+     * @param {string} table - The name of the table to delete rows from.
+     * @param {string} [condition=''] - The SQL condition to determine which rows to delete.
+     * @returns {Promise} A promise that resolves when the rows are deleted.
+     */
     Delete(table, condition = '') {
         const sql = `DELETE FROM "${table}"${condition ? ' WHERE ' + condition : ''}`;
         return new Promise((resolve, reject) => {
@@ -188,6 +252,12 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Executes a SQL query with optional parameters and returns the result as an array of objects.
+     * @param {string} query - The SQL query to execute.
+     * @param {Object} [params={}] - An object containing parameter bindings for the query.
+     * @returns {Promise<Array>} A promise that resolves with an array of result objects.
+     */
     Query(query, params = {}) {
         const d = this._prepareQuery(query, params);
         return new Promise((resolve, reject) => {
@@ -204,16 +274,38 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Load all rows from a specified table in the SQLite database.
+     * @param {string} table - The name of the table to load rows from.
+     * @returns {Promise<Array>} A promise that resolves with an array of all rows in the table.
+     */
     LoadAll(table) {
         return this.Query(`SELECT * FROM "${table}"`);
     }
 
+    /**
+     * Loads rows from a specified table based on provided filters and optional order.
+     * @param {string} table - The name of the table to load rows from.
+     * @param {Object} filters - An object containing filter parameters for the query.
+     * @param {string} [order=''] - An optional SQL ORDER BY clause to sort the results.
+     * @returns {Promise<Array>} A promise that resolves with an array of filtered rows.
+     */
     LoadBy(table, filters, order = '') {
         const d = this._convertFilters(filters);
         const query = `SELECT * FROM "${table}" ${d.filter ? 'WHERE ' + d.filter : ''}${order ? ' ORDER BY ' + order : ''}`;
         return this.Query(query, d.params);
     }
 
+    /**
+     * Performs a histogram aggregation on a specified field in a table, based on provided filters, step size, and range.
+     * @param {string} table - The name of the table to perform the histogram on.
+     * @param {Object} filters - An object containing filter parameters for the query.
+     * @param {string} field - The field to aggregate for the histogram.
+     * @param {number} step - The step size for the histogram bins.
+     * @param {number|Date} max - The maximum value for the histogram range.
+     * @param {number|Date} min - The minimum value for the histogram range.
+     * @returns {Promise<Array>} A promise that resolves with an array of histogram bin objects, each containing start, end, and count properties.
+     */
     HistogramByField(table, filters, field, step, max, min) {
         filters = Object.cloneRecursive(filters);
         delete filters[field];
@@ -253,6 +345,10 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
         return Promise.all(promises);
     }
 
+    /**
+     * Exports the current state of the database as a Blob object.
+     * @returns {Promise<Blob>} A promise that resolves with a Blob representing the exported database.
+     */
     Export() {
         return new Promise((resolve, reject) => {
             if (!this._db || !this._db.export) {
@@ -266,6 +362,12 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Convert the result set from the database into an array of objects.
+     * @param {Array} result - The result set from the database.
+     * @returns {Array} An array of objects representing the result set.    
+     * @private
+     */
     _blobToBase64(blob) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -275,6 +377,13 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Converts a base64 string to a Blob object.
+     * @param {string} base64 - The base64 string to convert.
+     * @param {string} [mime=''] - The MIME type of the Blob.
+     * @returns {Blob} A Blob object representing the base64 data.
+     * @private
+     */
     _base64ToBlob(base64, mime = '') {
         const byteString = atob(base64.split(',')[1] || base64);
         const ab = new ArrayBuffer(byteString.length);
@@ -285,10 +394,22 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
         return new Blob([ab], { type: mime });
     }
 
+    /**
+     * Converts filter parameters into SQL WHERE clause and parameter bindings.
+     * @param {Object} filters - The filter parameters.
+     * @returns {Object} An object containing the SQL WHERE clause and parameter bindings.
+     * @private
+     */
     _convertToObjects(result) {
         return result || [];
     }
 
+    /**
+     * Converts filter parameters into SQL WHERE clause and parameter bindings.
+     * @param {Object} filters - The filter parameters.
+     * @returns {Object} An object containing the SQL WHERE clause and parameter bindings.
+     * @private
+     */
     _convertFilters(filters) {
         let filter = [];
         const params = {};
@@ -312,6 +433,13 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
         return { filter: filter.join(' AND '), params };
     }
 
+    /**
+     * Prepares an SQL query by replacing parameter placeholders with actual values.
+     * @param {String} template - The SQL query template.
+     * @param {Object} params - The parameter bindings.
+     * @returns {Object} An object containing the final query and values array.
+     * @private
+     */
     _prepareQuery(template, params) {
         const values = [];
         const query = template.replace(/\[\[(\w+):(string|integer|double|bool)\]\]/g, (_, name, type) => {
@@ -329,6 +457,12 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
         return { query, values };
     }
 
+    /**
+     * Converts a base64 string to a Uint8Array.
+     * @param {String} base64 - The base64 string to convert.
+     * @returns {Uint8Array} The resulting Uint8Array.
+     * @private 
+     */    
     _base64ToUint8Array(base64) {
         const binaryString = atob(base64);
         const len = binaryString.length;

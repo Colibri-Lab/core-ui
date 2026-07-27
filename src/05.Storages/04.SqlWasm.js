@@ -1,10 +1,24 @@
+/**
+ * SQL storage using sql.js (WebAssembly)
+ * @class 
+ * @extends Colibri.Events.Dispatcher
+ * @memberof Colibri.Storages
+ */
 Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
 
     _db = null;
     _sql = null;
 
+    /**
+     * Indicates whether the SQL WASM module has been loaded.
+     * @type {boolean}
+     */
     static loaded = false;
 
+    /**
+     * Loads the SQL WASM module and initializes it.
+     * @returns {Promise} A promise that resolves with the SQL module.
+     */
     static Load() {
         return new Promise((resolve, reject) => {
             if (Colibri.Storages.SqlWasm.loaded) {
@@ -35,7 +49,10 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         });
     }
 
-
+    /**
+     * Constructs an instance of the Colibri.Storages.SqlWasm class.
+     * @constructor
+     */
     constructor() {
         super();
         this.RegisterEvent('Loaded', false, 'When SQL is loaded');
@@ -54,6 +71,11 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Creates an empty database with the specified structure.
+     * @param {Array} structure - The structure of the database tables.
+     * @returns {Promise} A promise that resolves when the database is created.
+     */
     CreateEmptyDatabase(structure) {
 
         structure = this._convertStructure(structure);
@@ -68,14 +90,29 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         return Promise.resolve();
     }
 
+    /**
+     * Gets a value indicating whether the database has been created.
+     * @type {boolean}
+     */
     get dbCreated() {
         return !!this._db;
     }
 
+    /**
+     * Creates a table in the database based on the provided storage structure.
+     * @param {Object} storage - The storage structure defining the table.
+     * @returns {Promise} A promise that resolves when the table is created.
+     */
     Create(storage) {
         return this._db.run(this._createTable(storage));
     }
 
+    /**
+     * Creates a create table sql
+     * @param {Object} storage
+     * @returns {String}
+     * @private
+     */
     _createTable(storage) {
         if (Object.isObject(storage)) {
 
@@ -111,6 +148,12 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Converts an array of storage structures into SQL create table statements.
+     * @param {Array} storages - The array of storage structures.
+     * @returns {Array} An array of SQL create table statements.
+     * @private
+     */
     _convertStructure(storages) {
         const result = [];
         for (const storage of storages) {
@@ -120,6 +163,11 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         return result;
     }
 
+    /**
+     * Opens a database from the provided bytes.
+     * @param {Uint8Array} bytes - The bytes representing the database.
+     * @returns {Promise} A promise that resolves when the database is opened.
+     */
     OpenBytes(bytes) {
         return new Promise((resolve, reject) => {
             this.Close();
@@ -128,7 +176,11 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         });
     }
 
-
+    /**
+     * Opens a database from the provided base64 string or Blob.
+     * @param {string|Blob} base64 - The base64 string or Blob representing the database.
+     * @returns {Promise} A promise that resolves when the database is opened.
+     */
     Open(base64) {
         return new Promise((resolve, reject) => {
             this.Close();
@@ -146,10 +198,19 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Closes the database connection.
+     */
     Close() {
         this._db.close();
     }
 
+    /**
+     * Inserts a data to table  
+     * @param {String} table
+     * @param {Array} data
+     * @returns {Promise}
+     */
     Insert(table, data) {
         if (data.length == 0) {
             return;
@@ -187,6 +248,12 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         this.Dispatch('Changed');
     }
 
+    /**
+     * Updates a data in table
+     * @param {String} table
+     * @param {Object} data
+     * @param {String} condition
+     */
     Update(table, data, condition) {
         const fields = Object.keys(data);
         const d = fields.map(f => f + '=?');
@@ -199,6 +266,11 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         this.Dispatch('Changed');
     }
 
+    /**
+     * Deletes data from a table based on the specified condition.
+     * @param {String} table - The name of the table from which to delete data.
+     * @param {String} [condition=''] - The condition for deleting data (optional).
+     */
     Delete(table, condition = '') {
         try {
             this._db.run('DELETE FROM "' + table + '"' + (condition ? ' WHERE ' + condition : ''), []);
@@ -209,6 +281,11 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         this.Dispatch('Changed');
     }
 
+    /**
+     * Checks if a table exists in the database.
+     * @param {String} table - The name of the table to check.
+     * @returns {boolean} - Returns true if the table exists, false otherwise.
+     */
     TableExists(table) {
         try {
             this._db.run('SELECT * FROM "' + table + '" LIMIT 1', []);
@@ -242,17 +319,39 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Load all data from table
+     * @param {String} table
+     * @returns {Array}
+     */
     LoadAll(table) {
         const query = 'SELECT * FROM "' + table + '"';
         return this.Query(query, []);
     }
 
+    /**
+     * Load data from table by filters
+     * @param {String} table
+     * @param {Object} filters
+     * @param {String} order
+     * @returns {Array}
+     */
     LoadBy(table, filters, order = '') {
         const d = this._convertFilters(filters);
         const query = 'SELECT * FROM "' + table + '" ' + (d.filter ? 'WHERE ' + d.filter : '') + (order ? ' ORDER BY ' + order : '');
         return this.Query(query, d.params);
     }
 
+    /**
+     * Creates a histogram of data in a table based on the specified field and filters.
+     * @param {String} table - The name of the table.
+     * @param {Object} filters - The filters to apply to the data.
+     * @param {String} field - The field for which to create the histogram.
+     * @param {Number} step - The step size for the histogram bins.
+     * @param {Number|Date} max - The maximum value for the histogram range.
+     * @param {Number|Date} min - The minimum value for the histogram range.
+     * @returns {Array} An array of histogram bins with start, end, and count properties.
+     */
     HistogramByField(table, filters, field, step, max, min) {
         filters = Object.cloneRecursive(filters);
         delete filters[field];
@@ -293,15 +392,28 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         return ret;
     }
 
+    /**
+     * Exports the current state of the database as a binary array.
+     * @returns {Uint8Array} A binary array representing the exported database.
+     */
     ExportBytes() {
         return this._db.export();
     }
 
+    /**
+     * Exports the current state of the database as a Blob object.
+     * @returns {Blob} A Blob object representing the exported database.
+     */
     Export() {
         const binaryArray = this.ExportBytes();
         return new Blob([binaryArray], { type: 'application/octet-stream' });
     }
 
+    /**
+     * Converts a result set from the database into an array of objects.
+     * @param {Array} result - The result set from the database.
+     * @returns {Array} An array of objects representing the result set.
+     */
     _convertToObjects(result) {
         if (result.length === 0) {
             return [];
@@ -321,6 +433,12 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Converts filter parameters into SQL WHERE clause and parameter bindings.
+     * @param {Object} filters - The filter parameters.
+     * @returns {Object} An object containing the SQL WHERE clause and parameter bindings.
+     * @private
+     */
     _convertFilters(filters) {
         let filter = [];
         const params = {};
@@ -365,6 +483,13 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         return { filter: filter.join(' AND '), params };
     }
 
+    /**
+     * Prepares an SQL query by replacing parameter placeholders with actual values.
+     * @param {String} template - The SQL query template.
+     * @param {Object} params - The parameter bindings.
+     * @returns {Object} An object containing the final query and values array.
+     * @private
+     */
     _prepareQuery(template, params) {
         const values = [];
         const query = template.replace(/\[\[(\w+):(string|integer|double|bool)\]\]/g, (_, name, type) => {
@@ -390,6 +515,12 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
         return { query, values };
     }
 
+    /**
+     * Converts a base64 string to a Uint8Array.
+     * @param {String} base64 - The base64 string to convert.
+     * @returns {Uint8Array} The resulting Uint8Array.
+     * @private
+     */
     _base64ToUint8Array(base64) {
         const binaryString = atob(base64);
         const len = binaryString.length;
