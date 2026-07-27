@@ -1,7 +1,26 @@
+/**
+ * Colibri.IO.JsZip is a utility class that provides functionality for loading the JSZip library and creating instances of JSZip for working with ZIP files in JavaScript.
+ * @class
+ * @memberof Colibri.IO
+ */
 Colibri.IO.JsZip = class {
 
+    /**
+     * Indicates whether the JSZip library has been loaded.
+     * @type {boolean}
+     * @static
+     * @readonly
+     */
     static loaded = false;
 
+    /**
+     * Loads the JSZip library and returns a Promise that resolves to a new instance of JSZip.
+     * @returns {Promise<JSZip>} A Promise that resolves to a new instance of JSZip.
+     * @static
+     * @description This method checks if the JSZip library is already loaded. If it is, it resolves the Promise with a new instance of JSZip.
+     * If not, it attempts to load the library from a local path or a CDN. Once loaded, it sets the `loaded` property to true and resolves the Promise with a new instance of JSZip.
+     * If loading fails, it rejects the Promise with an error.
+     */
     static Load() {
         return new Promise((resolve, reject) => {
             if(Colibri.IO.JsZip.loaded) {

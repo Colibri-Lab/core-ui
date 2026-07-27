@@ -13,6 +13,10 @@ Colibri.Common.HashActions = class extends Colibri.Events.Dispatcher {
         this.init();
     }
     
+    /**
+     * Initializes the hash action handlers and sets up the click event listener.
+     * @private
+     */
     init() {
         
         this.RegisterEvent('ActionRaised', false, 'When action is raised');
@@ -54,6 +58,10 @@ Colibri.Common.HashActions = class extends Colibri.Events.Dispatcher {
         
     }
 
+    /**
+     * Disposes of the hash action handlers and removes the click event listener from elements with data-action attributes.
+     * @returns {void}
+     */
     Dispose() {
         document.querySelectorAll('[data-action]').forEach((element) => { 
             element.removeEventListener('mousedown', this.__clickEvent);

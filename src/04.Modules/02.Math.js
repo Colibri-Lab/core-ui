@@ -1,5 +1,14 @@
+/**
+ * Represents the Colibri.Modules.Math class, which provides mathematical operations using WebAssembly (WASM).
+ * @class 
+ * @memberof Colibri.Modules
+ */
 Colibri.Modules.Math = class {
 
+    /**
+     * Constructs an instance of the Colibri.Modules.Math class.
+     * @constructor
+     */
     constructor() {
         this._wasmLoaded = false;
         this._wasm = new Colibri.Common.Wasm('/res/math.wasm');
@@ -8,10 +17,21 @@ Colibri.Modules.Math = class {
         });
     }
 
+    /**
+     * Gets the loaded state of the WASM module.
+     * @type {boolean}
+     */
     get loaded() {
         return this._wasmLoaded;
     }
 
+    /**
+     * Converts an array of voltage values to decibels (dB) using the WASM module.
+     * @param {Float32Array|Float64Array} arr - The input array of voltage values.
+     * @returns {Float32Array|Float64Array} - The output array of decibel values.
+     * @throws {Error} If the WASM module is not loaded or if the input array type is unsupported.
+     * @public
+     */
     voltsToDb(arr) {
         if (!this._wasmLoaded) {
             throw new Error("WASM module not loaded");
@@ -30,6 +50,13 @@ Colibri.Modules.Math = class {
         throw new Error("Unsupported array type. Only Float32Array and Float64Array are supported.");
     }
 
+    /**
+     * Converts an array of arrays of voltage values to decibels (dB) using the WASM module.
+     * @param {Array<Float32Array>|Array<Float64Array>} arr - The input array of arrays of voltage values.
+     * @returns {Array<Float32Array>|Array<Float64Array>} - The output array of arrays of decibel values.
+     * @throws {Error} If the WASM module is not loaded or if the input array type is unsupported.
+     * @public
+     */
     voltsToDbBatch(arr) {
         if (!this._wasmLoaded) {
             throw new Error("WASM module not loaded");

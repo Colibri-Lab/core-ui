@@ -1,13 +1,13 @@
 ui-messages-cannotgetsettings:
   ru: Невозможно получить настройки!
-  en: Can not download settings
-  hy: Հնարավոր չէ ներբեռնել կարգավորումները
-  it: Impossibile scaricare le impostazioni
-  es: No se pueden descargar las configuraciones
-  kk: Параметрлерді жүктеу мүмкін емес
-  uz: Sozlamalarni yuklab bo'lmadi
-  cz: Nelze stáhnout nastavení
-  de: Einstellungen können nicht heruntergeladen werden
-  tr: Ayarlar indirilemiyor
-  zh: 无法下载设置
-  fa: امکان دانلود تنظیمات وجود ندارد
+  en: Settings cannot be accessed!
+  hy: Չի հաջողվում ազդեցությունն ունենալ։
+  it: Impossibile accedere alle impostazioni!
+  es: ¡No se puede acceder a la configuración!
+  kk: Белдіруге қол жеткізу мүмкін емес!
+  uz: Настройкига эътиборимни оқып алмадым!
+  cz: Nelze získat nastavení!
+  de: Die Einstellungen können nicht aufgerufen werden!
+  tr: Ayarlar erişilemiyor!
+  zh: 无法访问设置！
+  fa: عدم امکان دسترسی به تنظیمات

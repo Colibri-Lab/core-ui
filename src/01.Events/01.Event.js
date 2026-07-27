@@ -26,6 +26,9 @@ Colibri.Events.Event = class extends Destructable {
 
     }
 
+    /**
+     * Destructs the event instance and releases any resources associated with it.
+     */
     destructor() {
 
     }

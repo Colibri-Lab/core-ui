@@ -7,11 +7,11 @@
 Colibri.Events.Dispatcher = class extends Destructable {
 
     /** 
-     * @type {Object.<string, Colibri.Events.Event>} - список зарегистрированых событий 
+     * @type {Object.<string, Colibri.Events.Event>} - events list provided by the dispatcher
      **/
     __events = {};
     /** 
-     * @type {Object.<string, Array<Object.<handler: Function, respondent: Object>>>} - список обработчиков 
+     * @type {Object.<string, Array<Object.<handler: Function, respondent: Object>>>} - list of handlers
      **/
     __handlers = {};
 
@@ -22,6 +22,10 @@ Colibri.Events.Dispatcher = class extends Destructable {
         super();
     }
 
+    /**
+     * Destructs the dispatcher instance and releases any resources associated with it.
+     * @returns {void}
+     */
     destructor() {
         super.destructor();
         this.Dispose();
@@ -41,10 +45,9 @@ Colibri.Events.Dispatcher = class extends Destructable {
     }
 
     /**
-     * Registers an event.
+     * Unregisters an event.
      * @param {string} eventName - The name of the event.
-     * @param {boolean} bubbles - Indicates whether the event bubbles up the component tree.
-     * @param {string} description - Description of the event.
+     * @param {Colibri.Events.Source} [source=null] - The source from which to unregister the event.
      */
     UnregisterEvent(eventName, source = null) {
         if (source) {
@@ -195,19 +198,6 @@ Colibri.Events.Dispatcher = class extends Destructable {
                 return false;
             }
 
-            // ! старое    
-            // for (var j = 0; j < eventHandlers.length; j++) {
-            //     const handlerObject = eventHandlers[j];
-            //     if (handlerObject && handlerObject.handler.isAsync()) {
-            //         if (await (handlerObject.handler).apply(handlerObject.respondent, [event, args]) === false) {
-            //             return false;
-            //         }
-            //     } else if(handlerObject && !handlerObject.handler.isAsync()) {
-            //         if (handlerObject.handler.apply(handlerObject.respondent, [event, args]) === false) {
-            //             return false;
-            //         }
-            //     }
-            // }
         }
 
         if (event.bubbles && this.parent && this.parent.Dispatch(event, args) === false) {

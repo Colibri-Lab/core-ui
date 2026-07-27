@@ -20,7 +20,7 @@ Colibri.Common = class {
         return new Promise((resolve, reject) => setTimeout(() => resolve(args), timeout));
     }
 
-    /** @type {Object.<string, number>} */
+    /** @type {Object.<string, number>} - A collection of timers identified by their names. */
     static _timers = {};
 
     /**
@@ -51,6 +51,11 @@ Colibri.Common = class {
         }
     }
 
+    /**
+     * Checks if a timer with the specified name exists.
+     * @param {string} name - The name of the timer to check.
+     * @returns {boolean} - True if the timer exists, false otherwise.
+     */
     static TimerExists(name) {
         return !!Colibri.Common._timers?.[name];
     }

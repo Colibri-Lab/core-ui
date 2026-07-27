@@ -25,7 +25,11 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
         
     }
 
-    
+    /**
+     * Destructor for the Colibri.Modules.Module class.
+     * This method is automatically called when the module is destroyed.
+     * @public
+     */
     destructor() {
         this._stopDeferedTimer();
     }

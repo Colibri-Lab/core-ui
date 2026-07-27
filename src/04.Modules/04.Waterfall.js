@@ -1,9 +1,17 @@
 
-
+/**
+ * Represents Colibri.Modules.Waterfall class, which provides waterfall visualization using WebAssembly (WASM).
+ * @class 
+ * @memberof Colibri.Modules
+ */
 Colibri.Modules.Waterfall = class extends Colibri.Common.Wasm {
 
-    _wasm = null;
-
+    /**
+     * Constructs an instance of the Colibri.Modules.Waterfall class.
+     * @param {number} [initialMemorySize=0] - The initial memory size for the WASM module.
+     * @param {Object} [config={}] - Configuration options for the WASM module.
+     * @constructor
+     */
     constructor(initialMemorySize = 0, config = {}) {
         super('/res/waterfall.wasm');
         this._wasmLoaded = false;
@@ -11,10 +19,20 @@ Colibri.Modules.Waterfall = class extends Colibri.Common.Wasm {
         this.AddHandler('Loaded', this.__wasmLoaded, false, this);
     }
 
+    /**
+     * Handles the 'Loaded' event of the WASM module.
+     * @param {Event} event - The event object.
+     * @param {Object} args - Additional arguments for the event.
+     * @private
+     */
     __wasmLoaded(event, args) {
         this._syncGeometry();
     }
 
+    /**
+     * Synchronizes the geometry of the waterfall visualization by updating width, height, chunk pointer, and image pointer.
+     * @private
+     */
     _syncGeometry() {
         this.width = this.getWidth();
         this.height = this.getHeight();
@@ -22,6 +40,11 @@ Colibri.Modules.Waterfall = class extends Colibri.Common.Wasm {
         this.imagePtr = this.getImagePtr();
     }
 
+    /**
+     * Normalizes the given chunk of data to a range between 0 and 1.
+     * @param {Float32Array} chunk - The chunk of data to normalize.
+     * @returns {Float32Array} - The normalized chunk of data.
+     */
     normalizeChunk(chunk) {
         if (!chunk || !chunk.length) {
             return new Float32Array(0);
@@ -49,6 +72,11 @@ Colibri.Modules.Waterfall = class extends Colibri.Common.Wasm {
         return normalized;
     }
 
+    /**
+     * Resizes the waterfall visualization to the specified width and height.
+     * @param {number} width - The new width of the visualization.
+     * @param {number} height - The new height of the visualization.
+     */
     Resize(width, height) {
         if (!this.loaded) {
             console.warn("WASM module not loaded yet");
@@ -58,6 +86,12 @@ Colibri.Modules.Waterfall = class extends Colibri.Common.Wasm {
         this._syncGeometry();
     }
 
+    /**
+     * Adds a new row of data to the waterfall visualization.
+     * @param {BigInt} time - The timestamp for the new row.
+     * @param {number} delta - The delta value for the new row.
+     * @param {Float32Array} chunk - The chunk of data to add as a new row.
+     */
     Add(time, delta, chunk) {
         if (!this.loaded) {
             console.warn("WASM module not loaded yet");
@@ -75,9 +109,8 @@ Colibri.Modules.Waterfall = class extends Colibri.Common.Wasm {
     }
 
     /**
-     * Весь буфер как ImageData (WIDTH x HEIGHT).
-     * memory.buffer запрашивается заново при каждом вызове, т.к. память wasm
-     * может расти (грерастание отсоединяет старый ArrayBuffer).
+     * Retrieves the image data of the waterfall visualization as an ImageData object.
+     * @returns {ImageData} - The ImageData object representing the waterfall visualization.
      */
     getImageData() {
         const bytes = new Uint8ClampedArray(
@@ -99,9 +132,10 @@ Colibri.Modules.Waterfall = class extends Colibri.Common.Wasm {
     }
 
     /**
-     * Часть буфера — rowCount строк, начиная с rowStart (0 — самая старая строка,
-     * HEIGHT-1 — самая новая). Полезно, если нужно перерисовать не весь canvas,
-     * а только видимую/изменившуюся область.
+     * Retrieves the image data of a specific region of the waterfall visualization as an ImageData object.
+     * @param {number} rowStart - The starting row index of the region.
+     * @param {number} rowCount - The number of rows to include in the region.
+     * @returns {ImageData} - The ImageData object representing the specified region of the waterfall visualization.
      */
     getRegionImageData(rowStart, rowCount) {
         const offset = this.imagePtr + rowStart * this.width * 4;

@@ -335,7 +335,6 @@ Colibri.Common.MimeType = class {
      * @returns {string} The CodeMirror mode.
      */
     static icon(ext) { return 'icon-file-' + ext; }
-
     /**
      * Get the CodeMirror mode associated with a given file extension.
      * @param {string} ext - The file extension.
@@ -397,6 +396,11 @@ Colibri.Common.MimeType = class {
 
 }
 
+/**
+ * Reloads the external MIME types from a remote source and updates the `externalTypes` property of the `Colibri.Common.MimeType` class.
+ * @returns {Promise<void>} A promise that resolves when the external MIME types have been successfully reloaded.
+ * @throws {Error} If there is an error while fetching the external MIME types.
+ */
 Colibri.Common.MimeType.Reload = () => {
     return new Promise((resolve, reject) => {
         Colibri.IO.Request.Get((!App.Device.isElectron ? '/' : '') + 'res/mime.json', {}, {}, false).then((response) => {

@@ -1,5 +1,16 @@
+/**
+ * Represents a source of events (websocket event dispatcher source).
+ * @class
+ * @extends Destructable
+ * @memberof Colibri.Events
+ */
 Colibri.Events.Source = class extends Destructable {
 
+    /**
+     * Creates a new instance of Colibri.Events.Source.
+     * @param {string} ipOrHost Ip addres or host of source
+     * @param {string|number} port Port of source
+     */
     constructor(ipOrHost, port) {
         super();
 
@@ -8,10 +19,19 @@ Colibri.Events.Source = class extends Destructable {
         this.Connect(ipOrHost, port);
     }
 
+    /**
+     * Gets the IP address and port of the source.
+     * @type {string}
+     */
     get ipAndPort() {
         return `${this._ipOrHost}:${this._port}`;
     }
 
+    /**
+     * Registers a respondent for a specific event name.
+     * @param {Object} repsondent The respondent object that will handle the event.
+     * @param {string} eventName The name of the event to register for.
+     */
     register(repsondent, eventName) {
         if(!this._handlers[eventName]) {
             this._handlers[eventName] = [];
@@ -19,6 +39,11 @@ Colibri.Events.Source = class extends Destructable {
         this._handlers[eventName].push(repsondent);
     }
 
+    /**
+     * Unregisters a respondent for a specific event name.
+     * @param {Object} repsondent The respondent object to unregister.
+     * @param {string} eventName The name of the event to unregister from.
+     */
     unregister(repsondent, eventName) {
         if(!this._handlers[eventName]) {
             this._handlers[eventName] = [];
@@ -29,6 +54,9 @@ Colibri.Events.Source = class extends Destructable {
         }
     }
 
+    /**
+     * Disconnects the source from the WebSocket server and releases any associated resources.
+     */
     Disconnect() {
         if(this._socket) {
             this._socket.close();
@@ -38,6 +66,12 @@ Colibri.Events.Source = class extends Destructable {
         this._port = null;
     }
 
+    /**
+     * Connects to the WebSocket server at the specified IP address or host and port.
+     * @param {string} ipOrHost The IP address or host of the WebSocket server.
+     * @param {string|number} port The port of the WebSocket server.
+     * @returns {void}
+     */
     Connect(ipOrHost, port) {
 
         if(!ipOrHost || !port) {
@@ -66,6 +100,10 @@ Colibri.Events.Source = class extends Destructable {
         this._socket.onerror = (error) => console.error('WebSocket error:', error);
     }
 
+    /**
+     * Indicates whether the WebSocket connection is ready (open).
+     * @type {boolean}
+     */
     get isReady() {
         return this._socket.readyState === 1;
     }

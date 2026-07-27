@@ -19,6 +19,10 @@ Colibri.Common.Scrolling = class {
     
     }
 
+    /**
+     * Disposes of the scrolling utility and removes event listeners from the element.
+     * @returns {void}
+     */
     Dispose() {
         this.Disable();
         super.Dispose();

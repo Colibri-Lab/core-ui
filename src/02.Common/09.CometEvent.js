@@ -64,10 +64,15 @@ Colibri.Common.CometEvent = class {
 
     wakeup = false;
 
+    /** @constructor */
     constructor() {
         // do nothing
     }
 
+    /**
+     * Creates a clone of the current CometEvent instance.
+     * @returns {Colibri.Common.CometEvent} A new instance of Colibri.Common.CometEvent with the same properties as the current instance.
+     */
     clone() {
         const msg = new Colibri.Common.CometEvent();
         msg.action = this.action;
@@ -84,6 +89,11 @@ Colibri.Common.CometEvent = class {
         return msg;
     }
 
+    /**
+     * Creates a new instance of Colibri.Common.CometEvent from a received event object.
+     * @param {Object} eventReceived - The received event object.
+     * @returns {Colibri.Common.CometEvent
+     */
     static FromReceivedObject(eventReceived) {
         const msg = new Colibri.Common.CometEvent();
         msg.action = eventReceived.action;
@@ -97,6 +107,18 @@ Colibri.Common.CometEvent = class {
         return msg;
     }
 
+    /**
+     * Creates a new instance of Colibri.Common.CometEvent for sending a message.
+     * @param {string} action - The action of the message.
+     * @param {string} domain - The domain of the message.
+     * @param {string} from - The sender of the message.
+     * @param {string} recipient - The recipient of the message.
+     * @param {Object} message - The content of the message.
+     * @param {string} [delivery='untrusted'] - The delivery type of the message.
+     * @param {boolean} [activate=false] - Whether to activate the message.
+     * @param {boolean} [wakeup=false] - Whether to wake up the recipients.
+     * @returns {Colibri.Common.CometEvent} A new instance of Colibri.Common.CometEvent for sending a message.
+     */
     static CreateForSend(action, domain, from, recipient, message, delivery = 'untrusted', activate = false, wakeup = false) {
         const msg = new Colibri.Common.CometMessage();
         msg.action = action;
@@ -110,6 +132,17 @@ Colibri.Common.CometEvent = class {
         return msg;
     }
 
+    /**
+     * Creates a new instance of Colibri.Common.CometEvent for sending a broadcast message.
+     * @param {string} action - The action of the message.
+     * @param {string} domain - The domain of the message.
+     * @param {string} from - The sender of the message.
+     * @param {Object} message - The content of the message.
+     * @param {string} [delivery='untrusted'] - The delivery type of the message.
+     * @param {boolean} [activate=false] - Whether to activate the message.
+     * @param {boolean} [wakeup=false] - Whether to wake up the recipients.
+     * @returns {Colibri.Common.CometEvent} A new instance of Colibri.Common.CometEvent for sending a broadcast message.
+     */
     static CreateForSendBroadcast(action, domain, from, message, delivery = 'untrusted', activate = false, wakeup = false) {
         const msg = new Colibri.Common.CometMessage();
         msg.action = action;
@@ -124,14 +157,32 @@ Colibri.Common.CometEvent = class {
         return msg;
     }
 
+    /**
+     * Checks if the message is intended for sending (i.e., has a recipient).
+     * @type {boolean} True if the message has a recipient, otherwise false.
+     * @readonly
+     */
     get isForSent() {
         return !!this.recipient;
     }
 
+    /**
+     * Checks if the message is a broadcast message (i.e., has a recipient of '*').
+     * @type {boolean} True if the message is a broadcast message, otherwise false.
+     * @readonly
+     */
     get isBradcast() {
         return this.recipient === '*' || this.message.boradcast;
     }
 
+    /**
+     * Converts the message instance to a JSON string representation.
+     * @returns {string} A JSON string representation of the message instance.
+     * @throws {TypeError} If the message instance cannot be converted to JSON.
+     * @example
+     * const message = new Colibri.Common.CometMessage();
+     * const jsonString = message.toJson();
+     */
     toJson() {
         if(this.isForSent) {
             return JSON.stringify({

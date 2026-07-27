@@ -1,3 +1,8 @@
+/**
+ * Number to text conversion class for Russian language.
+ * @class
+ * @memberof Colibri.Common
+ */
 Colibri.Common.NumToText = class {
     /**
      * Convert number to Russian words

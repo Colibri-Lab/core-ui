@@ -44,6 +44,7 @@ Colibri.IO.Request = class extends Destructable {
 
     /**
      * Constructor for the Colibri.IO.Request class.
+     * @constructor
      * @param {string} [base] - The base URL for the request.
      */
     constructor(base) { 

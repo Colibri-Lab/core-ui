@@ -160,6 +160,21 @@ Colibri.Common.Graphics = class {
         });
     }
 
+    /**
+     * Creates a preview image from a file, resizing it to the specified dimensions.
+     * @param {File} file - The file to create a preview from.
+     * @param {string} name - The name of the preview file.
+     * @param {number} previewWidth - The desired width of the preview image.
+     * @param {number} previewHeight - The desired height of the preview image.
+     * @returns {Promise<File>} - A promise that resolves to the preview file.
+     * @memberof Colibri.Common.Graphics
+     * @static
+     * @example
+     * Colibri.Common.Graphics.CreatePreview(file, 'preview.png', 100, 100)
+     *   .then(previewFile => {
+     *     Use the preview file
+     *   })
+     */
     static CreatePreview(file, name, previewWidth, previewHeight) {
         return new Promise((resolve, reject) => {
             Colibri.Common.Graphics.ImageFromFile(file).then((image) => {
@@ -174,6 +189,21 @@ Colibri.Common.Graphics = class {
         });
     }
 
+    /**
+     * Creates a preview image from a file, resizing and cropping it to the specified dimensions.
+     * @param {File} file - The file to create a preview from.
+     * @param {string} name - The name of the preview file.
+     * @param {number} previewWidth - The desired width of the preview image.
+     * @param {number} previewHeight - The desired height of the preview image.
+     * @returns {Promise<File>} - A promise that resolves to the preview file.
+     * @memberof Colibri.Common.Graphics
+     * @static
+     * @example
+     * Colibri.Common.Graphics.CreatePreviewCrop(file, 'preview.png', 100, 100)
+     *   .then(previewFile => {
+     *     Use the preview file
+     *   })
+     */
     static CreatePreviewCrop(file, name, previewWidth, previewHeight) {
         return new Promise((resolve, reject) => {
             Colibri.Common.Graphics.ImageFromFile(file).then((image) => {

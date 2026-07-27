@@ -7,6 +7,10 @@
  */
 Colibri.Common.Wasm = class extends Colibri.Events.Dispatcher {
 
+    /**
+     * Creates a new instance of Colibri.Common.Wasm.
+     * @constructor
+     */
     constructor(uri) {
         super();
         this._uri = uri;
@@ -23,6 +27,19 @@ Colibri.Common.Wasm = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Loads the WebAssembly module from the specified URI and initializes it with the provided memory size and configuration.
+     * @param {number} [memoryByteSize=0] - The initial memory size in bytes for the WebAssembly module. If set to 0, no memory will be allocated.
+     * @param {Object} [config={}] - An optional configuration object to be passed to the WebAssembly module.
+     * @returns {Promise<Colibri.Common.Wasm>} A promise that resolves to the current instance of Colibri.Common.Wasm after the module is loaded and initialized.
+     * @throws {Error} If there is an error loading the WebAssembly module or if the response status is not 200.
+     * @description
+     * This method fetches the WebAssembly module from the specified URI, instantiates it with the provided memory size and configuration,
+     * and sets up the necessary imports for the module. It also provides access to the exported functions and objects of the WebAssembly module.
+     * The method returns a promise that resolves to the current instance of Colibri.Common.Wasm after the module is successfully loaded and initialized.
+     * If the loading fails or the response status is not 200, an error will be thrown.
+     * The method also dispatches a 'Loaded' event when the module is successfully loaded.
+     */
     async Load(memoryByteSize = 0, config = {}) {
 
         await Colibri.Common.Wait(() => this._loaderLoaded);
@@ -86,18 +103,38 @@ Colibri.Common.Wasm = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Gets the WebAssembly memory associated with the module.
+     * @type {WebAssembly.Memory}
+     * @readonly
+     */
     get memory() {
         return this._memory;
     }
 
+    /**
+     * Gets the WebAssembly instance associated with the module.
+     * @type {WebAssembly.Instance}
+     * @readonly
+     */
     get config() {
         return this._config;
     }
 
+    /**
+     * Gets the WebAssembly instance associated with the module.
+     * @type {WebAssembly.Instance}
+     * @readonly
+     */
     get loaded() {
         return this._loaded;
     }
 
+    /**
+     * Gets the WebAssembly instance associated with the module.
+     * @type {WebAssembly.Instance}
+     * @readonly
+     */
     get loaderLoaded() {
         return this._loaderLoaded;
     }
