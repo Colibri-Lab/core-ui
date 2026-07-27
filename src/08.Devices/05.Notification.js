@@ -184,6 +184,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
 
     /**
      * Creates an instance of LocalNotifications.
+     * @constructor
      * @param {*} device - The device object.
      */
     constructor(device) {
@@ -257,6 +258,14 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
         this._plugin.removeActions(groupName);
     }
 
+    /**
+     * Schedules a notification with given parameters.
+     * @param {*} params - Parameters for scheduling the notification.
+     * @param {function} successCallback - Success callback function.
+     * @param {function} errorCallback - Error callback function.
+     * @returns {Promise} - Promise resolving when the notification is scheduled.
+     * @private
+     */
     _scheduleNotification(params, successCallback = null, errorCallback = null) {
         return new Promise((resolve, reject) => {
             this.RequestPermission().then(() => {

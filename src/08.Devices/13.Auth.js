@@ -7,11 +7,18 @@
  */
 Colibri.Devices.Auth = class extends Destructable {
 
+    /**
+     * @constructor
+     */
     constructor(device) {
         super();
         this._device = device;
     }
 
+    /**
+     * Checks if biometric authentication is available on the device.
+     * @returns {Promise} - Resolves if available, rejects otherwise.
+     */
     IsAvailable() {
         if(App.Device.isWeb || App.Device.isElectron) {
             if(!!window.PublicKeyCredential && location.protocol === 'https:') {
@@ -39,6 +46,13 @@ Colibri.Devices.Auth = class extends Destructable {
         }
     }
 
+    /**
+     * Creates a new biometric credential for the user.
+     * @param {string} userToken - The user's unique token.
+     * @param {string} userName - The user's name.
+     * @param {string} userEmail - The user's email address.
+     * @returns {Promise} - Resolves with credential information if successful, rejects otherwise.
+     */
     Create(userToken, userName, userEmail) {
         // if(App.Device.isElectron) {
         //     return Promise.reject('Windows does not support biometric authentication yet.');
@@ -105,6 +119,11 @@ Colibri.Devices.Auth = class extends Destructable {
         }
     }
 
+    /**
+     * Authenticates the user using biometric authentication.
+     * @param {string} userToken - The user's unique token (optional).
+     * @returns {Promise} - Resolves with credential information if successful, rejects otherwise.
+     */
     Authenticate(userToken) {
         // if(App.Device.isElectron) {
         //     return Promise.reject('Windows does not support biometric authentication yet.');

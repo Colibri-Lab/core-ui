@@ -37,6 +37,11 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
   
     } 
 
+    /**
+     * Cleans up resources used by the Colibri.App instance.
+     * @public
+     * @method
+     */
     destructor() {
         this._actions = null;
         this._alertDialog = null;
@@ -610,6 +615,9 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         return this._isActive;
     }
 
+    /**
+     * Resets focus from input elements when the document is touched.
+     */
     ResetFocusWhenTouchedApp() {
         document.addEventListener('touchstart', (event) => {
             const focused = document.activeElement;
@@ -619,6 +627,10 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Sets the application settings.
+     * @param {object} settings - The application settings to set.
+     */
     SetSettings(settings) {
         this._applicationSettings = settings;
     }

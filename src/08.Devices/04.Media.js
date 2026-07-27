@@ -4,7 +4,6 @@
  * @extends Colibri.Events.Dispatcher
  * @memberof Colibri.Devices
  */
-
 Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
 
     /**
@@ -83,6 +82,14 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Converts a base64 string to a Blob object.
+     * @param {string} b64Data - The base64 string.
+     * @param {string} contentType - The content type of the Blob.
+     * @param {number} sliceSize - The size of each slice.
+     * @returns {Blob} - The resulting Blob object.
+     * @private
+     */
     _b64toBlob(b64Data, contentType, sliceSize) {
         contentType = contentType || '';
         sliceSize = sliceSize || 512;
@@ -107,6 +114,15 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
       return blob;
     }
 
+    /**
+     * Saves a base64 string as an audio file.
+     * @param {string} folderpath - The folder path where the file will be saved.
+     * @param {string} filename - The name of the file to be saved.
+     * @param {string} content - The base64 content of the audio file.
+     * @param {string} contentType - The content type of the audio file.
+     * @returns {Promise} - A promise that resolves when the file is saved.
+     * @private
+     */
     _saveBase64AsAudioFile(folderpath, filename, content, contentType) {
         return new Promise((resolve, reject) => {
             // Convert the base64 string in a Blob
@@ -127,6 +143,11 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
         
     }
 
+    /**
+     * Saves the base64 string as an audio file if needed.
+     * @returns {Promise} - A promise that resolves when the file is saved or if no saving is needed.
+     * @private
+     */
     _saveBase64IfNeeded() {
         return new Promise((resolve, reject) => {
             if(this._isBase64Encoded) {
@@ -296,8 +317,21 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
 
 }
 
+/**
+ * Represents a media recording utility for handling audio recording.
+ * @class
+ * @extends Colibri.Events.Dispatcher
+ * @memberof Colibri.Devices
+ */
 Colibri.Devices.Media.Recording = class extends Colibri.Events.Dispatcher {
 
+    /** 
+     * Creates an instance of Media.Recording.
+     * @constructor
+     * @param {string} file - The file path for the recording.
+     * @param {function} recordingCompleted - Callback function when recording is completed.
+     * @param {function} recordingError - Callback function when an error occurs during recording.  
+     */
     constructor(file, recordingCompleted, recordingError) {
         super();
         this._mediaRec = new Media(file,
@@ -318,10 +352,16 @@ Colibri.Devices.Media.Recording = class extends Colibri.Events.Dispatcher {
         );
     }
 
+    /**
+     * Start recording the media.
+     */
     Start() {
         this._mediaRec.startRecord();
     }
 
+    /**
+     * Stop recording the media.
+     */
     Stop() {
         this._mediaRec.stopRecord();
     }

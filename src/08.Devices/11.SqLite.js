@@ -33,10 +33,20 @@ Colibri.Devices.SqLite = class extends Destructable {
 
     }
 
+    /**
+     * Checks if the SQLite plugin is available.
+     * @returns {boolean} - True if the plugin is available, false otherwise.
+     */
     get isAvailable() {
         return !!this._plugin;
     }
 
+    /**
+     * Opens a SQLite database with the given name and location.
+     * @param {string} name - The name of the database.
+     * @param {string} [location='default'] - The location of the database.
+     * @returns {Promise} - Promise resolving to the opened database object.
+     */
     Open(name, location = 'default') {
         return this._plugin.openDatabase({
             name,
@@ -44,6 +54,13 @@ Colibri.Devices.SqLite = class extends Destructable {
         });
     }
 
+    /**
+     * Executes a SQL query on the given database with optional parameters.
+     * @param {object} db - The database object.
+     * @param {string} query - The SQL query to execute.
+     * @param {Array} [params=[]] - Optional parameters for the query.
+     * @returns {Promise} - Promise resolving to the query results.
+     */
     Query(db, query, params = []) {
         return new Promise((resolve, reject) => {
             db.transaction(function(tx) {
@@ -64,6 +81,14 @@ Colibri.Devices.SqLite = class extends Destructable {
         });
     }
 
+    /**
+     * Creates a table in the given database with specified fields and optional rows.
+     * @param {object} db - The database object.
+     * @param {string} name - The name of the table to create.
+     * @param {Array} fields - An array of field definitions for the table.
+     * @param {Array} [rows=[]] - Optional array of rows to insert into the table after creation.
+     * @returns {Promise} - Promise resolving when the table is created and rows are inserted.
+     */
     CreateTable(db, name, fields, rows = []) {
         return new Promise((resolve, reject) => {
             db.transaction(function(tx) {
@@ -97,6 +122,13 @@ Colibri.Devices.SqLite = class extends Destructable {
         });
     }
 
+    /**
+     * Inserts rows into a table in the given database.
+     * @param {object} db - The database object.
+     * @param {string} name - The name of the table to insert rows into.
+     * @param {Array} rows - An array of row objects to insert into the table.
+     * @returns {Promise} - Promise resolving when the rows are inserted.
+     */
     Insert(db, name, rows = []) {
         return new Promise((resolve, reject) => {
             db.transaction(function(tx) {
@@ -124,6 +156,13 @@ Colibri.Devices.SqLite = class extends Destructable {
         });
     }
 
+    /**
+     * Updates rows in a table in the given database based on their IDs.
+     * @param {object} db - The database object.
+     * @param {string} name - The name of the table to update rows in.
+     * @param {Array} rows - An array of row objects to update in the table. Each row must have an 'id' property.
+     * @returns {Promise} - Promise resolving when the rows are updated.
+     */
     Update(db, name, rows) {
         return new Promise((resolve, reject) => {
             db.transaction(function(tx) {
@@ -149,6 +188,14 @@ Colibri.Devices.SqLite = class extends Destructable {
         });
     }
 
+    /**
+     * Updates rows in a table in the given database based on a specified condition.
+     * @param {object} db - The database object.
+     * @param {string} table - The name of the table to update rows in.
+     * @param {object} data - An object containing the fields and values to update.
+     * @param {string} condition - A SQL condition string to specify which rows to update.
+     * @returns {Promise} - Promise resolving when the rows are updated.
+     */
     UpdateByCondition(db, table, data, condition) {
         return new Promise((resolve, reject) => {
             db.transaction(function(tx) {
@@ -164,6 +211,14 @@ Colibri.Devices.SqLite = class extends Destructable {
         });
     }
 
+    /**
+     * Selects from table in the given database based on a specified condition.
+     * @param {object} db - The database object.
+     * @param {string} table - The name of the table to select from.
+     * @param {string} fields - A comma-separated string of fields to select.
+     * @param {string} condition - A SQL condition string to specify which rows to select.
+     * @returns {Promise} - Promise resolving to the selected rows.
+     */
     Select(db, name, fields = '*', where = '', orderby = '', limit = '') {  
         return new Promise((resolve, reject) => {
             db.transaction(function(tx) {
@@ -181,6 +236,13 @@ Colibri.Devices.SqLite = class extends Destructable {
         });
     }
 
+    /**
+     * Deletes rows from a table in the given database based on a specified condition.
+     * @param {object} db - The database object.
+     * @param {string} name - The name of the table to delete rows from.
+     * @param {string} where - A SQL condition string to specify which rows to delete.
+     * @returns {Promise} - Promise resolving when the rows are deleted.
+     */
     Delete(db, name, where) {
         return new Promise((resolve, reject) => {
             db.transaction(function(tx) {
@@ -194,6 +256,11 @@ Colibri.Devices.SqLite = class extends Destructable {
         });
     }
 
+    /**
+     * Closes the given database.
+     * @param {object} db - The database object to close.
+     * @returns {Promise} - Promise resolving when the database is closed.
+     */
     Close(db) {
         return new Promise((resolve, reject) => {
             db.close(function() {

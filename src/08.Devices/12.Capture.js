@@ -1,11 +1,11 @@
 
-    /**
-     * Represents a utility for accessing sim information.
-     * @class
-     * @extends Destructable
-     * @memberof Colibri.Devices
-     */
-    Colibri.Devices.Capture = class extends Destructable {
+/**
+ * Represents a utility for accessing sim information.
+ * @class
+ * @extends Destructable
+ * @memberof Colibri.Devices
+ */
+Colibri.Devices.Capture = class extends Destructable {
 
     /**
      * Instance variable representing the device.
@@ -25,8 +25,11 @@
     }
 
     /**
-     * Vibrates
-     * @param {Array<Number>|Nunber} time 
+     * Captures audio from the device's microphone.
+     * @param {number} limit - The maximum number of audio files to capture (default is 10).
+     * @returns {Promise<Blob>} - A promise that resolves with the captured audio as a Blob.
+     * @throws {Error} - Throws an error if the capture fails.
+     * @param {Array<Number>|Number} time - The time parameter for the audio capture (optional).
      */
     Audio(limit = 10) {
         return new Promise((resolve, reject) => {
