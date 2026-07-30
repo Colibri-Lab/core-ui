@@ -32,7 +32,11 @@ Colibri.UI.Informers.DownloadItem = class extends Colibri.UI.FlexBox {
      * @param {object} args log message arguments
      */
     __linkClicked(event, args) {
-        DownloadUrl(this._value.download);
+        if(this._value.download.indexOf('#action=') === -1) {
+            DownloadUrl(this._value.download);
+        } else {
+            location = this._value.download;
+        }
     }
 
     /**

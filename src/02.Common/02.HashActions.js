@@ -18,6 +18,8 @@ Colibri.Common.HashActions = class extends Colibri.Events.Dispatcher {
      * @private
      */
     init() {
+
+        window.addEventListener('hashchange', (e) => this._handleAction(location.hash.substring(1), e));
         
         this.RegisterEvent('ActionRaised', false, 'When action is raised');
 
