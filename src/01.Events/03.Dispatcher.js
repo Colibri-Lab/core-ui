@@ -137,8 +137,9 @@ Colibri.Events.Dispatcher = class extends Destructable {
     HandlerExists(eventName, handler) {
         const handlerObject = { handler: handler, respondent: this },
             handlerStr = handlerObject.handler.toString();
-        for (let i = 0; i < this.__handlers[eventName].length; i++) {
-            const h = this.__handlers[eventName][i];
+        const handlers = this.__handlers[eventName] ?? [];
+        for (let i = 0; i < handlers.length; i++) {
+            const h = handlers[i];
             if (h.handler.toString() === handlerStr && h.respondent === handlerObject.respondent) {
                 return true;
             }
