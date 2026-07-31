@@ -3,6 +3,8 @@ RegExp.SpecialChars = /(?![a-zA-Z0-9!"#\$%&'\(\)\*\+,-\.\/:;<=>\?@\[\\^\]_`{\|}~
 
 /**
  * Prevents the default behavior of an event and stops its propagation.
+ * @global
+ * @public
  * @param {Event} e - The event object.
  * @returns {boolean} Returns false to indicate that the default action should be prevented.
  */
@@ -15,6 +17,8 @@ const nullhandler = (e) => {
 /**
  * Parses a JSON string into a JavaScript object.
  * If the input string is null or undefined, it defaults to an empty object ({}).
+ * @public
+ * @global
  * @param {string} v - The JSON string to parse.
  * @returns {Object} Returns the parsed JavaScript object.
  */
@@ -25,6 +29,8 @@ const json_object = function (v) {
 /**
  * Parses a JSON string into a JavaScript array.
  * If the input string is null or undefined, it defaults to an empty array ([]).
+ * @global
+ * @public
  * @param {string} v - The JSON string to parse.
  * @returns {Array} Returns the parsed JavaScript array.
  */
@@ -32,6 +38,13 @@ const json_array = function (v) {
     return JSON.parse(v || '[]');
 };
 
+/**
+ * Stable stringify for objects.
+ * @global
+ * @public
+ * @param {*} obj - The object to stringify.
+ * @returns {string} Returns the stable stringified representation of the object.
+ */
 function stableStringify(obj) {
     if (obj === null || typeof obj !== "object") {
         return JSON.stringify(obj);
@@ -53,6 +66,8 @@ function stableStringify(obj) {
  * If the default value is a string and contains 'json_object' or 'json_array',
  * it evaluates the string as JavaScript code.
  * Otherwise, it returns the default value as is.
+ * @global
+ * @public
  * @param {string} defaultAsString - The default value string to evaluate.
  * @returns {any} Returns the evaluated default value.
  */
@@ -65,6 +80,8 @@ const eval_default_values = function (defaultAsString) {
 
 /**
  * Checks whether a value is iterable.
+ * @global
+ * @public
  * @param {any} value - The value to check.
  * @returns {boolean} Returns true if the value is iterable, false otherwise.
  */
@@ -74,6 +91,8 @@ const isIterable = (value) => {
 
 /**
  * Extends the prototype of Intl.NumberFormat to provide a method for unformatting a formatted number string.
+ * @global
+ * @public
  * @param {string} stringNumber - The formatted number string to unformat.
  * @returns {number} Returns the unformatted number.
  */
@@ -87,6 +106,12 @@ Intl.NumberFormat.prototype.unformat = function (stringNumber) {
     );
 }
 
+/**
+ * Extrapolates the Float32Array to the specified maximum length.
+ * @public
+ * @prototypeof Float32Array
+ * @method
+ */
 Float32Array.prototype.extrapolate = function (max) {
     const output = new Float32Array(max);
     const ratio = (this.length - 1) / (max - 1);
@@ -104,6 +129,12 @@ Float32Array.prototype.extrapolate = function (max) {
     return output;
 }
 
+/**
+ * Appends elements to the Float32Array to reach the specified maximum length.
+ * @prototypeof Float32Array
+ * @public
+ * @method
+ */
 Float32Array.prototype.appendTo = Float32Array.prototype.expandTo = function (max, valueCallback = null) {
     const output = new Float32Array(max);
     const len = this.length;
@@ -114,6 +145,12 @@ Float32Array.prototype.appendTo = Float32Array.prototype.expandTo = function (ma
     return output;
 }
 
+/**
+ * Prepends elements to the Float32Array to reach the specified maximum length.
+ * @prototypeof Float32Array
+ * @public
+ * @method
+ */
 Float32Array.prototype.prependTo = function (max, valueCallback = null) {
     const output = new Float32Array(max);
     let prependCount = max - this.length;
@@ -125,6 +162,12 @@ Float32Array.prototype.prependTo = function (max, valueCallback = null) {
     return output;
 }
 
+/**
+ * Searches the value in the Float32Array and returns the index of the closest value.
+ * @prototypeof Float32Array
+ * @public
+ * @method
+ */
 Float32Array.prototype.crop = function (startIndex, endIndex) {
     // if(startIndex < 0 || endIndex > this.length || startIndex >= endIndex) {
     //     throw new Error('Invalid startIndex or endIndex for cropping Float32Array.');
@@ -132,6 +175,12 @@ Float32Array.prototype.crop = function (startIndex, endIndex) {
     return this.subarray(startIndex, endIndex);
 }
 
+/**
+ * Searches the value in the Float32Array and returns the index of the closest value.
+ * @prototypeof Float32Array
+ * @public
+ * @method
+ */
 Float32Array.prototype.findByValue = function (value) {
     if (value < this[0] || value > this[this.length - 1]) {
         return -1;
@@ -148,13 +197,32 @@ Float32Array.prototype.findByValue = function (value) {
     return closestIndex;
 }
 
+/**
+ * Returns the maximum value in the array.
+ * @prototypeof Float32Array
+ * @public
+ * @method
+ */
 Float32Array.prototype.max = function () {
     return Math.max(...this);
 }
+
+/**
+ * Returns the minimum value in the array.
+ * @prototypeof Float32Array
+ * @public
+ * @method
+ */
 Float32Array.prototype.min = function () {
     return Math.min(...this);
 }
 
+/**
+ * Appends elements to the Float64Array to reach the specified maximum length.
+ * @prototypeof Float64Array
+ * @public
+ * @method
+ */
 Float64Array.prototype.appendTo = Float64Array.prototype.expandTo = function (max, valueCallback = null) {
     const output = new Float64Array(max);
     const len = this.length;
@@ -165,6 +233,12 @@ Float64Array.prototype.appendTo = Float64Array.prototype.expandTo = function (ma
     return output;
 }
 
+/**
+ * Prepends elements to the Float64Array to reach the specified maximum length.
+ * @prototypeof Float64Array
+ * @public
+ * @method
+ */
 Float64Array.prototype.prependTo = function (max, valueCallback = null) {
     const output = new Float64Array(max);
     let prependCount = max - this.length;
@@ -176,6 +250,12 @@ Float64Array.prototype.prependTo = function (max, valueCallback = null) {
     return output;
 }
 
+/**
+ * Searches the value in the Float64Array and returns the index of the closest value.
+ * @prototypeof Float64Array
+ * @public
+ * @method
+ */
 Float64Array.prototype.findByValue = function (value) {
     if (value < this[0] || value > this[this.length - 1]) {
         return -1;
@@ -192,17 +272,40 @@ Float64Array.prototype.findByValue = function (value) {
     return closestIndex;
 }
 
+/**
+ * Returns the maximum value in the array.
+ * @prototypeof Float64Array
+ * @public
+ * @method
+ */
 Float64Array.prototype.max = function () {
     return Math.max(...this);
 }
+
+/**
+ * Returns the minimum value in the array.
+ * @prototypeof Float64Array
+ * @public
+ * @method
+ */
 Float64Array.prototype.min = function () {
     return Math.min(...this);
 }
 
+/**
+ * @prototypeof Array
+ * @public
+ * @method
+ * @static
+ */
 Array.coalesce = (v) => Array.isArray(v) ? v : [v];
 
 /**
  * Returns a new array containing only unique elements from the original array.
+ * @prototypeof Array
+ * @method
+ * @public
+ * @static
  * @param {Array} a - The original array.
  * @returns {Array} Returns a new array with unique elements.
  */
@@ -210,6 +313,10 @@ Array.unique = function (a) { return a.filter((v, i, ab) => { return a.indexOf(v
 
 /**
  * Merges another array into the current array.
+ * @prototypeof Array
+ * @method
+ * @static
+ * @public
  * @param {Array} a - The current array.
  * @param {Array} ar - The array to merge into the current array.
  * @returns {Array} Returns the merged array.
@@ -221,6 +328,10 @@ Array.merge = function (a, ar) {
 
 /**
  * Returns a new array containing elements that meet a specified condition.
+ * @prototypeof Array
+ * @method
+ * @static
+ * @public
  * @param {Array} a - The array to filter.
  * @param {(Function|string)} e - The condition function or string to evaluate elements against.
  * @returns {Array} Returns a new array containing filtered elements.
@@ -243,6 +354,10 @@ Array.part = function (a, e) {
 
 /**
  * Finds the first element in an array that matches a specified key-value pair.
+ * @prototypeof Array
+ * @method
+ * @public
+ * @static
  * @param {Array} a - The array to search.
  * @param {string} k - The key to search for.
  * @param {any} v - The value to search for.
@@ -261,6 +376,10 @@ Array.find = function (a, k, v) {
 
 /**
  * Finds the index of the first element in an array that satisfies a provided function.
+ * @prototypeof Array
+ * @method
+ * @public
+ * @static
  * @param {Array} a - The array to search.
  * @param {Function} predicate - The function used to test each element of the array.
  * @returns {number} Returns the index of the found element or -1 if not found.
@@ -288,6 +407,10 @@ Array.findIndex = function (a, predicate) {
 
 /**
  * Generates an array of values by invoking a callback function for each index from start to end.
+ * @prototypeof Array
+ * @method
+ * @public
+ * @static
  * @param {number} start - The start index.
  * @param {number} end - The end index.
  * @param {Function} callback - The callback function to invoke for each index.
@@ -303,6 +426,10 @@ Array.enumerate = function (start, end, callback) {
 
 /**
  * Generates an array of values by invoking a callback function for each index in reverse order from end to start.
+ * @prototypeof Array
+ * @method
+ * @public
+ * @static
  * @param {number} start - The start index.
  * @param {number} end - The end index.
  * @param {Function} callback - The callback function to invoke for each index.
@@ -318,6 +445,10 @@ Array.enumerateRev = function (start, end, callback) {
 
 /**
  * Converts an array to an object.
+ * @prototypeof Array
+ * @method
+ * @public
+ * @static
  * @param {Array} a - The array to convert.
  * @returns {Object} Returns the converted object.
  */
@@ -335,6 +466,10 @@ Array.toObject = function (a) {
 
 /**
  * Finds the first object in an array that matches a specified field-value pair.
+ * @prototypeof Array
+ * @method
+ * @public
+ * @static
  * @param {Array} arr - The array to search.
  * @param {(string|Function)} field - The field name or function used to extract field values.
  * @param {any} value - The value to search for.
@@ -368,6 +503,10 @@ Array.findObject = function (arr, field, value = null) {
 
 /**
  * Replaces or removes an object from an array based on a specified field-value pair.
+ * @prototypeof Array
+ * @method
+ * @public
+ * @static
  * @param {Array} arr - The array to modify.
  * @param {string} field - The field name to search for.
  * @param {any} value - The value to search for.
@@ -395,16 +534,36 @@ Array.replaceObject = function (arr, field, value, replace = null, insertIfNotEx
 
 /**
  * Calculates the average of all elements in the array.
+ * @prototypeof Array
+ * @method
+ * @public
  * @returns {number} Returns the average value.
  */
 Array.prototype.avg = function () {
     return this.reduce((a, b) => a + b, 0) / this.length;
 }
 
+/**
+ * Joins the elements of the array into a string, limiting the number of items included and appending a message for any additional items.
+ * @prototypeof Array
+ * @method
+ * @public
+ * @param {string} splitter - The string to use as a separator between elements.
+ * @param {number} maxItems - The maximum number of items to include in the joined string.
+ * @param {string} text - The text to append if there are more items than maxItems (default: ' and %s more').
+ * @returns {string} Returns the joined string.
+ */
 Array.prototype.joinMax = function (splitter, maxItems, text = ' and %s more') {
     return this.slice(0, maxItems).join(splitter) + (this.length > maxItems ? text.replaceAll('%s', this.length - maxItems) : '');
 }
 
+/**
+ * Shuffles the elements of the array in place using the Fisher-Yates algorithm.
+ * @prototypeof Array
+ * @method
+ * @public
+ * @returns {Array} Returns the shuffled array.
+ */
 Array.prototype.shuffle = function () {
     for (let i = this.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -417,6 +576,9 @@ Array.prototype.shuffle = function () {
  * Returns a new array containing the first 'l' elements of the original array.
  * @param {number} l - The number of elements to include in the new array.
  * @returns {Array} Returns a new array containing the first 'l' elements.
+ * @prototypeof Array
+ * @method
+ * @public
  */
 Array.prototype.part = function (l, start = 0) {
     let ret = [];
@@ -426,6 +588,15 @@ Array.prototype.part = function (l, start = 0) {
     return ret;
 }
 
+/**
+ * Returns a new array containing a specific page of elements from the original array, based on the specified page number and page size.
+ * @param {number} page - The page number (1-based index).
+ * @param {number} pagesize - The number of elements per page.
+ * @returns {Array} Returns a new array containing the elements for the specified page.
+ * @prototypeof Array
+ * @method
+ * @public
+ */
 Array.prototype.page = function (page, pagesize) {
     let ret = [];
     const start = (page - 1) * pagesize;
@@ -438,6 +609,13 @@ Array.prototype.page = function (page, pagesize) {
     return ret;
 }
 
+/**
+ * Converts the elements of the array into an object, using each element as a key and setting the corresponding value to null.
+ * @returns {Object} Returns the resulting object with keys from the array elements and values set to null.
+ * @prototypeof Array
+ * @method
+ * @public
+ */
 Array.prototype.toObjectFromKeys = function () {
     const ret = {};
     for (const k of this) {
@@ -446,6 +624,15 @@ Array.prototype.toObjectFromKeys = function () {
     return ret;
 }
 
+/**
+ * Returns the index of the first element that satisfies the specified condition.
+ * @param {*} value - The value to compare against.
+ * @param {string} condition - The condition to use for comparison (default: '==').
+ * @returns {number} Returns the index of the first matching element, or -1 if no match is found.
+ * @prototypeof Array
+ * @method
+ * @public
+ */
 Array.prototype.indexOfCondition = function (value, condition = '==') {
     for (let i = 0; i < this.length; i++) {
         if (condition === '==' && this[i] == value) {
@@ -480,6 +667,9 @@ Array.prototype.indexOfCondition = function (value, condition = '==') {
  * Returns the last 'n' elements of the array and removes them from the original array.
  * @param {number} n - The number of elements to return.
  * @returns {Array} Returns the last 'n' elements.
+ * @prototypeof Array
+ * @method
+ * @public
  */
 Array.prototype.last = function (n) {
     return this.splice(this.length - n, this.length);
@@ -489,6 +679,9 @@ Array.prototype.last = function (n) {
  * Compares the current array with another array to check for equality.
  * @param {Array} array - The array to compare with.
  * @returns {boolean} Returns true if the arrays are equal, false otherwise.
+ * @prototypeof Array
+ * @method
+ * @public
  */
 Array.prototype.equals = function (array) {
     // if the other array is a falsy value, return
@@ -524,6 +717,9 @@ Array.prototype.equals = function (array) {
  * @param {Array} fields - An array of objects specifying fields and sort order.
  * @param {Function|null} handler - Optional handler function for custom sorting logic.
  * @returns {Array} Returns the sorted array.
+ * @prototypeof Array
+ * @method
+ * @public
  */
 Array.prototype.multiSort = function (fields, handler = null) {
     this.sort((a, b) => {
@@ -551,6 +747,9 @@ Array.prototype.multiSort = function (fields, handler = null) {
 /**
  * Flattens a nested array structure into a single array.
  * @returns {Array} Returns the flattened array.
+ * @prototypeof Array
+ * @method
+ * @public
  */
 Array.prototype.concatAll = function () {
     let ret = [];
@@ -563,6 +762,9 @@ Array.prototype.concatAll = function () {
 /**
  * Calculates the standard deviation of the array.
  * @returns {number} Returns the standard deviation.
+ * @prototypeof Array
+ * @method
+ * @public
  */
 Array.prototype.stanDeviate = function () {
     if (this.length === 0) {
@@ -578,6 +780,9 @@ Array.prototype.stanDeviate = function () {
  * Returns an array containing elements that are present in both arrays.
  * @param {Array} arr - The array to intersect with.
  * @returns {Array} Returns the intersected array.
+ * @prototypeof Array
+ * @method
+ * @public
  */
 Array.prototype.intersect = function (arr) {
     return this.filter(value => arr.includes(value));
@@ -586,6 +791,9 @@ Array.prototype.intersect = function (arr) {
  * Returns an array containing elements that are not present in second arrays.
  * @param {Array} arr - The array to intersect with.
  * @returns {Array} Returns the intersected array.
+ * @prototypeof Array
+ * @method
+ * @public
  */
 Array.prototype.diference = function (arr) {
     return this.filter(value => !arr.includes(value)).concat(arr.filter(value => !this.includes(value)));
@@ -594,6 +802,9 @@ Array.prototype.diference = function (arr) {
 /**
  * Converts the array elements into an object with each element as a key, and the value set to true.
  * @returns {Object} Returns the object with array elements as keys.
+ * @prototypeof Array
+ * @method
+ * @public
  */
 Array.prototype.toObjectAsTrue = function () {
     let ret = {};
@@ -607,6 +818,9 @@ Array.prototype.toObjectAsTrue = function () {
  * Calculates the sum of all elements in the array.
  * @param {(string|Function)} field - Optional field to specify which values to sum.
  * @returns {number} Returns the sum of values.
+ * @prototypeof Array
+ * @method
+ * @public
  */
 Array.prototype.sum = function (field = null, maxRows = null) {
     let arr = [].concat(this);
@@ -624,6 +838,9 @@ Array.prototype.sum = function (field = null, maxRows = null) {
  * Calculates the average of all elements in the array.
  * @param {(string|Function)} field - Optional field to specify which values to average.
  * @returns {number} Returns the average value.
+ * @prototypeof Array
+ * @method
+ * @public
  */
 Array.prototype.avg = function (field = null) {
     if (!field) {
@@ -635,8 +852,11 @@ Array.prototype.avg = function (field = null) {
 
 /**
  * Calculates the max of all elements in the array.
- * @param {(string|Function)} field - Optional field to specify which values to average.
- * @returns {number} Returns the average value.
+ * @param {(string|Function)} field - Optional field to specify which values to find the maximum of.
+ * @returns {number} Returns the maximum value.
+ * @prototypeof Array
+ * @method
+ * @public
  */
 Array.prototype.max = function (field = null) {
     let max = -9999999999;
@@ -651,8 +871,11 @@ Array.prototype.max = function (field = null) {
 
 /**
  * Calculates the min of all elements in the array.
- * @param {(string|Function)} field - Optional field to specify which values to average.
- * @returns {number} Returns the average value.
+ * @param {(string|Function)} field - Optional field to specify which values to find the minimum of.
+ * @returns {number} Returns the minimum value.
+ * @prototypeof Array
+ * @method
+ * @public
  */
 Array.prototype.min = function (field = null) {
     let min = 9999999999;
@@ -671,6 +894,9 @@ Array.prototype.min = function (field = null) {
  * @param {string} fieldKey - The field to use as keys in the resulting object.
  * @param {string} fieldValue - The field to use as values in the resulting object.
  * @returns {Object} Returns the resulting object.
+ * @prototypeof Array
+ * @method
+ * @public
  */
 Array.toObjectWithKeys = function (array, fieldKey, fieldValue) {
     let ret = {};
@@ -680,6 +906,17 @@ Array.toObjectWithKeys = function (array, fieldKey, fieldValue) {
     return ret;
 };
 
+/**
+ * Converts an object into an array of objects with specified keys and values.
+ * @param {Object} object - The object to convert.
+ * @param {string} fieldKey - The field to use as keys in the resulting array of objects.
+ * @param {string} fieldValue - The field to use as values in the resulting array of objects.
+ * @returns {Array} Returns the resulting array of objects.
+ * @prototypeof Array
+ * @static
+ * @method
+ * @public
+ */
 Array.fromObjectWithKeys = function (object, fieldKey, fieldValue) {
     let ret = [];
     Object.forEach(object, (key, value) => {
@@ -691,6 +928,16 @@ Array.fromObjectWithKeys = function (object, fieldKey, fieldValue) {
     return ret;
 };
 
+/**
+ * Calculates the count of occurrences of each unique value in an array based on a specified field or function.
+ * @param {Array} array - The array to analyze.
+ * @param {(string|Function)} fieldKey - The field name or function used to extract values for counting.
+ * @returns {Object} Returns an object with unique values as keys and their counts as values.
+ * @prototypeof Array
+ * @static
+ * @method
+ * @public
+ */
 Array.calculateCountByKey = function (array, fieldKey) {
     let ret = {};
     array.forEach((item) => {
@@ -712,16 +959,24 @@ Array.calculateCountByKey = function (array, fieldKey) {
  * Calculates the sum of all elements in the given array.
  * @param {Array} ar - The array to calculate the sum.
  * @returns {number} Returns the sum of values.
+ * @prototypeof Array
+ * @static
+ * @method
+ * @public
  */
 Array.sum = function (ar) {
     return ar.reduce((partialSum, a) => partialSum + a, 0);
-}
+};
 
 /**
  * Organizes objects by specifying keys array.
  * @param {Array} objects - The array of objects to organize.
  * @param {Array} keysArray - The array of keys to organize the objects.
  * @returns {Array} Returns the organized array of objects.
+ * @prototypeof Array
+ * @static
+ * @method
+ * @public
  */
 Array.organizeObjectKeys = function (objects, keysArray) {
     let ret = [];
@@ -729,13 +984,17 @@ Array.organizeObjectKeys = function (objects, keysArray) {
         ret.push(Object.organizeKeys(obj, keysArray));
     }
     return ret;
-}
+};
 
 /**
  * Creates a new object containing specified keys and their corresponding values from the original object.
  * @param {Object} obj - The original object.
  * @param {Array} keysArray - An array of keys to include in the new object.
  * @returns {Object} Returns a new object with the specified keys.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.organizeKeys = function (obj, keysArray) {
     let ret = {};
@@ -743,12 +1002,16 @@ Object.organizeKeys = function (obj, keysArray) {
         ret[key] = obj[key];
     }
     return ret;
-}
+};
 
 /**
  * Creates an array of keys from an object where the corresponding values are truthy.
  * @param {Object} object - The object to extract keys from.
  * @returns {Array} Returns an array of keys with truthy values.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.fromObjectAsTrue = function (object) {
     let ret = [];
@@ -758,34 +1021,83 @@ Object.fromObjectAsTrue = function (object) {
         }
     });
     return ret;
-}
+};
 
 /**
  * Checks if a value is an object (excluding arrays).
  * @param {*} o - The value to check.
  * @returns {boolean} Returns true if the value is an object (excluding arrays), false otherwise.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.isObject = function (o) {
     return o instanceof Object && !Array.isArray(o);
-}
+};
 
+/**
+ * Checks if a value is a plain object (not an instance of a class).
+ * @param {*} obj - The value to check.
+ * @returns {boolean} Returns true if the value is a plain object, false otherwise.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
+ */
 Object.isPlainObject = function (obj) {
     if (obj === null || typeof obj !== 'object') return false;
     return Object.getPrototypeOf(obj) === Object.prototype || Object.getPrototypeOf(obj) === null;
 };
 
+/**
+ * Checks if a value is a File.
+ * @param {*} o - The value to check.
+ * @returns {boolean} Returns true if the value is a file, false otherwise.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
+ */
 Object.isFile = function (o) {
     return o instanceof File && !Array.isArray(o);
 }
 
+/**
+ * Checks if a value is a Blob.
+ * @param {*} o - The value to check.
+ * @returns {boolean} Returns true if the value is a Blob, false otherwise.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
+ */
 Object.isBlob = function (o) {
     return o instanceof Blob && !Array.isArray(o);
 }
 
+/**
+ * Checks if a value is a Date.
+ * @param {*} o - The value to check.
+ * @returns {boolean} Returns true if the value is a Date, false otherwise.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
+ */
 Object.isDate = function (o) {
     return o instanceof Date && !Array.isArray(o);
 }
 
+/**
+ * Checks if an object is empty (has no properties or all properties are empty).
+ * @param {Object} o - The object to check.
+ * @returns {boolean} Returns true if the object is empty, false otherwise.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
+ */
 Object.isEmpty = function (o) {
     return Object.values(o).filter(v => v !== '' && v !== null).length === 0;
 };
@@ -794,11 +1106,25 @@ Object.isEmpty = function (o) {
  * Converts an object to an extended object (not implemented).
  * @param {Object} object - The object to convert.
  * @returns {Object} Returns the extended object.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.convertToExtended = function (object) {
     return object;
-}
+};
 
+/**
+ * Sorts the properties of an object based on a provided sorting function.
+ * @param {Object} object - The object to sort.
+ * @param {Function} fn - The sorting function that determines the order of properties.
+ * @returns {Object} Returns the sorted object.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
+ */
 Object.sort = function (object, fn) {
     const indexes = [];
     const keys = Object.keys(object);
@@ -821,6 +1147,10 @@ Object.sort = function (object, fn) {
  * Recursively sorts the properties of an object alphabetically.
  * @param {Object} object - The object to sort.
  * @returns {Object} Returns the sorted object.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.sortPropertiesRecursive = function (object) {
     if (!(object instanceof Object)) {
@@ -854,6 +1184,10 @@ Object.sortPropertiesRecursive = function (object) {
  * @param {string} keyField - The field to use as the key.
  * @param {string|null} valueField - The field to use as the value (optional).  
  * @returns {Object} Returns the resulting object.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.createFromArray = function (array, keyField, valueField = null) {
     const ret = {};
@@ -867,6 +1201,10 @@ Object.createFromArray = function (array, keyField, valueField = null) {
  * Iterates over the properties of an object, invoking a callback function for each property.
  * @param {Object} o - The object to iterate over.
  * @param {Function} callback - The callback function to invoke for each property.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.defineProperty(Array.prototype, "equals", { enumerable: false });
 
@@ -874,6 +1212,10 @@ Object.defineProperty(Array.prototype, "equals", { enumerable: false });
  * Iterates over the properties of an object in reverse order, invoking a callback function for each property.
  * @param {Object} o - The object to iterate over.
  * @param {Function} callback - The callback function to invoke for each property.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.forEach = function (o, callback) {
     if (!o) {
@@ -895,6 +1237,10 @@ Object.forEach = function (o, callback) {
  * @param {Object} o - The object to search.
  * @param {string} name - The name of the property.
  * @returns {number} Returns the index of the property.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.forReverseEach = function (o, callback) {
     if (!o) {
@@ -916,6 +1262,10 @@ Object.forReverseEach = function (o, callback) {
  * Counts the number of keys in an object.
  * @param {Object} o - The object to count keys from.
  * @returns {number} Returns the number of keys in the object.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.indexOf = function (o, name) {
     const keys = Object.keys(o);
@@ -926,6 +1276,10 @@ Object.indexOf = function (o, name) {
  * Counts the number of keys in an object.
  * @param {Object} o - The object to count keys from.
  * @returns {number} Returns the number of keys in the object.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.countKeys = function (o) { return o && o instanceof Object && !Array.isArray(o) ? Object.keys(o).length : 0; };
 
@@ -934,6 +1288,10 @@ Object.countKeys = function (o) { return o && o instanceof Object && !Array.isAr
  * @param {Object} o - The object to convert.
  * @param {Array} splittersArray - An array containing the separator strings.
  * @returns {string} Returns the query string.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.toQueryString = function (o, splittersArray, encode = true, removeEmpty = false) {
     let ret = [];
@@ -954,6 +1312,10 @@ Object.toQueryString = function (o, splittersArray, encode = true, removeEmpty =
  * Converts an object to a CSS styles string.
  * @param {Object} o - The object to convert.
  * @returns {string} Returns the CSS styles string.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.toStyles = function (o) {
     let splittersArray = [';', ':'];
@@ -970,6 +1332,10 @@ Object.toStyles = function (o) {
  * Find last key of object
  * @param {Object} o object to find last key
  * @returns {string}
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.lastKey = function (o) {
     const keys = Object.keys(o);
@@ -980,6 +1346,10 @@ Object.lastKey = function (o) {
  * Find last value of object
  * @param {Object} o object to find last value
  * @returns {*}
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.lastValue = function (o) {
     return o[Object.lastKey(o)];
@@ -990,6 +1360,10 @@ Object.lastValue = function (o) {
  * @param {Object} o object fo enumerate
  * @param {string} field field within value of object properties
  * @returns {Number}
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.sumInternal = function (o, field) {
     let s = 0;
@@ -1006,6 +1380,10 @@ Object.sumInternal = function (o, field) {
  * @param {*} value - The value to insert.
  * @param {number} index - The index at which to insert the key-value pair.
  * @returns {Object} Returns the modified object.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.insertAt = function (object, key, value, index) {
 
@@ -1038,6 +1416,10 @@ Object.insertAt = function (object, key, value, index) {
  * @param {Object} object - The object to convert.
  * @param {string} [prefix=''] - Optional prefix to prepend to flattened keys.
  * @returns {Object} Returns the plain object with flattened keys.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.toPlain = function (object, prefix) {
     let ret = {};
@@ -1058,6 +1440,10 @@ Object.toPlain = function (object, prefix) {
  * @param {Function|null} [callback=null] - Optional callback function to apply to the cloned object.
  * @param {Array} [excludeKeys=[]] - Optional array of keys to exclude from the cloned object.
  * @returns {Object} Returns the cloned object.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.cloneRecursive = function (object, callback = null, excludeKeys = []) {
     if (typeof object == 'string') {
@@ -1114,6 +1500,11 @@ Object.cloneRecursive = function (object, callback = null, excludeKeys = []) {
  * @param {Object} object1 - The first object to compare.
  * @param {Object} object2 - The second object to compare.
  * @returns {boolean} Returns true if the objects are shallowly equal, false otherwise.
+ * @prototypeof Object
+ * @static
+ * 
+ * @method
+ * @public
  */
 Object.shallowEqual = function (a, b) {
     if (a === b) return true;
@@ -1155,6 +1546,16 @@ Object.shallowEqual = function (a, b) {
     return true;
 };
 
+/**
+ * Checks if two arrays are shallowly equal.
+ * @param {Array} array1 - The first array to compare.
+ * @param {Array} array2 - The second array to compare.
+ * @returns {boolean} Returns true if the arrays are shallowly equal, false otherwise.
+ * @prototypeof Array
+ * @static
+ * @method
+ * @public
+ */
 Array.shallowEqual = function (a, b) {
     if (a === b) return true;
     if (!Array.isArray(a) || !Array.isArray(b)) return false;
@@ -1179,6 +1580,16 @@ Array.shallowEqual = function (a, b) {
     return true;
 }
 
+/**
+ * Checks if two arrays of objects are shallowly equal by comparing their stringified representations.
+ * @param {Array} array1 - The first array of objects to compare.
+ * @param {Array} array2 - The second array of objects to compare.
+ * @returns {boolean} Returns true if the arrays of objects are shallowly equal, false otherwise.
+ * @prototypeof Array
+ * @static
+ * @method
+ * @public
+ */
 Array.shallowEqualObjects = function (a, b) {
     return a?.length === b?.length &&
         a.every((v, i) => JSON.stringify(v) === JSON.stringify(b[i]));
@@ -1190,6 +1601,11 @@ Array.shallowEqualObjects = function (a, b) {
  * @param {string|Array} path - The path to the property, either as a dot-separated string or as an array of keys.
  * @param {*} value - The value to set.
  * @returns {boolean} Returns true if the value was successfully set, false otherwise.
+ * @prototypeof Object
+ * @static
+ * 
+ * @method
+ * @public
  */
 Object.setValue = function (obj, path, value) {
     let properties = Array.isArray(path) ? path : path.split(".");
@@ -1209,6 +1625,10 @@ Object.setValue = function (obj, path, value) {
  * @param {string|Array} path - The path to the property, either as a dot-separated string or as an array of keys.
  * @param {*} [_default=undefined] - Optional default value if the property is not found.
  * @returns {*} Returns the value of the property, or the default value if not found.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.getValue = function (obj, path, _default = undefined) {
     let properties = Array.isArray(path) ? path : path.split(".");
@@ -1225,6 +1645,10 @@ Object.getValue = function (obj, path, _default = undefined) {
  * @param {Object} obj - The object to map over.
  * @param {Function} func - The mapping function to apply to each key-value pair.
  * @returns {Object} Returns a new object with the mapped key-value pairs.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.map = function (obj, func, usenewValAsKeyValuObject = false) {
     let newObject = {};
@@ -1243,9 +1667,13 @@ Object.map = function (obj, func, usenewValAsKeyValuObject = false) {
 
 /**
  * Filters over the properties of an object, applying a function to each key-value pair.
- * @param {Object} obj - The object to map over.
- * @param {Function} func - The mapping function to apply to each key-value pair.
- * @returns {Object} Returns a new object with the mapped key-value pairs.
+ * @param {Object} obj - The object to filter over.
+ * @param {Function} func - The filtering function to apply to each key-value pair.
+ * @returns {Object} Returns a new object with the filtered key-value pairs.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.filter = function (obj, func) {
     let newObject = {};
@@ -1257,6 +1685,16 @@ Object.filter = function (obj, func) {
     return newObject;
 };
 
+/**
+ * Creates a new object containing only the specified keys from the original object.
+ * @param {Object} obj - The original object.
+ * @param {Array} keys - An array of keys to include in the new object.
+ * @returns {Object} Returns a new object with the specified keys.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
+ */
 Object.pluck = function (obj, keys) {
     const nobj = {};
     for (const key of keys) {
@@ -1265,11 +1703,30 @@ Object.pluck = function (obj, keys) {
     return nobj;
 }
 
+/**
+ * Checks if a function is a class constructor.
+ * @param {Function} fn - The function to check.
+ * @returns {boolean} Returns true if the function is a class constructor, false otherwise.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
+ */
 Object.isClass = function (fn) {
     return typeof fn === 'function' &&
         /^class\s/.test(Function.prototype.toString.call(fn));
 }
 
+/**
+ * Recursively assigns properties from the source object to the target object.
+ * @param {Object} source - The source object to copy properties from.
+ * @param {Object} target - The target object to copy properties to.
+ * @returns {Object} Returns the modified target object.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
+ */
 Object.assignRecursive = function (source, target) {
     if (source instanceof Object && target instanceof Object) {
         for (const key in source) {
@@ -1283,6 +1740,16 @@ Object.assignRecursive = function (source, target) {
     return target;
 }
 
+/**
+ * Extracts the values of a specified key from an array of objects.
+ * @param {Array} arrayOfObjects - The array of objects to extract values from.
+ * @param {string} key - The key whose values should be extracted.
+ * @returns {Array} Returns an array of values corresponding to the specified key.
+ * @prototypeof Array
+ * @static
+ * @method
+ * @public
+ */
 Array.pluck = function (arrayOfObjects, key) {
     let ret = [];
     for (const obj of arrayOfObjects) {
@@ -1292,12 +1759,16 @@ Array.pluck = function (arrayOfObjects, key) {
 }
 
 /**
- * 
+ * Converts an array of text objects into a formatted HTML string.
  * @param {object} textAsObject object to render
  * @param {boolean} showLineBrakes show line breaks
  * @param {string} itemsTag item tag
  * @param {boolean} isPrintVersion is printable version
- * @returns 
+ * @returns {string} Returns a formatted HTML string.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
  */
 Object.PerformFormatConversion = function (textAsObject, showLineBrakes = false, itemsTag = 'p', isPrintVersion = false) {
     if (typeof textAsObject === 'string') {
@@ -1355,6 +1826,16 @@ Object.PerformFormatConversion = function (textAsObject, showLineBrakes = false,
     return '<div>' + ret.join('') + '</div>';
 }
 
+/**
+ * Checks if a class has all specified keys in its prototype.
+ * @param {string} clsString - The string representation of the class.
+ * @param {Array} keys - An array of keys to check for in the class prototype.
+ * @returns {boolean} Returns true if all specified keys exist in the class prototype, false otherwise.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
+ */
 Object.hasAllOfKeys = function (clsString, keys) {
     let allExists = true;
     const clsObject = eval(clsString);
@@ -1367,10 +1848,30 @@ Object.hasAllOfKeys = function (clsString, keys) {
     return allExists;
 }
 
+/**
+ * Checks if a class has a static method with the specified name.
+ * @param {Function} cls - The class to check.
+ * @param {string} methodName - The name of the static method to check for.
+ * @returns {boolean} Returns true if the class has the specified static method, false otherwise.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
+ */
 Object.hasStaticMethod = function (cls, methodName) {
     return cls && typeof cls[methodName] === 'function';
 }
 
+/**
+ * Recursively checks if a class or any of its nested classes have a static method with the specified name.
+ * @param {Function} cls - The class to check.
+ * @param {string} methodName - The name of the static method to check for.
+ * @returns {boolean} Returns true if the class or any nested classes have the specified static method, false otherwise.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
+ */
 Object.hasStaticMethodRecursive = function (cls, methodName) {
     if (!cls) {
         return false;
@@ -1391,6 +1892,16 @@ Object.hasStaticMethodRecursive = function (cls, methodName) {
     return false;
 }
 
+/**
+ * Recursively lists all child classes of a given class that satisfy a specified condition.
+ * @param {string} clsString - The string representation of the class.
+ * @param {Function} checkFunction - A function that checks if a class satisfies a condition.
+ * @returns {Array} Returns an array of strings representing the child classes that satisfy the condition.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @public
+ */
 Object.listChildsWith = function (clsString, checkFunction) {
     let cls = null;
     try {
@@ -1421,6 +1932,9 @@ Object.listChildsWith = function (clsString, checkFunction) {
  * Returns an array of all captured groups in a string that match the regular expression.
  * @param {string} str - The string to search for matches.
  * @returns {Array} Returns an array containing all captured groups.
+ * @prototypeof RegExp
+ * @method
+ * @public
  */
 RegExp.prototype.all = function (str) {
     let ret = [];
@@ -1440,6 +1954,10 @@ RegExp.prototype.all = function (str) {
  * Escapes special characters in a string to create a valid regular expression pattern.
  * @param {string} string - The string to escape.
  * @returns {string} Returns the escaped string.
+ * @prototypeof RegExp
+ * @static
+ * @method
+ * @public
  */
 RegExp.quote = function (string) {
     if (typeof string === 'string') {
@@ -1448,6 +1966,13 @@ RegExp.quote = function (string) {
     return string;
 }
 
+/**
+ * Compresses a string using the LZW algorithm.
+ * @returns {Array} Returns an array of compressed codes.
+ * @prototypeof String
+ * @method
+ * @public
+ */
 String.prototype.lzwCompress = function () {
     const dict = new Map();
     const data = (this + "").split("");
@@ -1476,6 +2001,13 @@ String.prototype.lzwCompress = function () {
     return out;
 }
 
+/**
+ * Decompresses a string using the LZW algorithm.
+ * @returns {string} Returns the decompressed string.
+ * @prototypeof String
+ * @method
+ * @public
+ */
 String.prototype.lzwDecompress = function () {
     const dict = new Map();
     let dictSize = 256;
@@ -1508,6 +2040,14 @@ String.prototype.lzwDecompress = function () {
     return result;
 }
 
+/**
+ * Compresses a string using Gzip compression.
+ * @returns {Promise<string>} Returns a promise that resolves to the compressed string in base64 format.
+ * @prototypeof String
+ * @async 
+ * @method
+ * @public
+ */
 String.prototype.compressGzip = async function () {
     try {
         const cs = new CompressionStream('gzip');
@@ -1521,6 +2061,14 @@ String.prototype.compressGzip = async function () {
     }
 }
 
+/**
+ * Decompresses a Gzip-compressed string.
+ * @returns {Promise<string>} Returns a promise that resolves to the decompressed string.
+ * @prototypeof String
+ * @method
+ * @public
+ * @async
+ */
 String.prototype.decompressGzip = async function () {
     try {
         const bytes = Uint8Array.from(atob(this + ''), c => c.charCodeAt(0));
@@ -1538,6 +2086,9 @@ String.prototype.decompressGzip = async function () {
 /**
  * Removes formatting characters and converts the string to a number using the current locale settings.
  * @returns {number|string} Returns the unformatted number if successful, otherwise an empty string.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.unformatCurrent = function () {
     return (this + '') === '' ? '' : new Intl.NumberFormat(App.NumberFormat).unformat(this);
@@ -1545,6 +2096,9 @@ String.prototype.unformatCurrent = function () {
 /**
  * Formats the string as a number using the current locale settings.
  * @returns {string} Returns the formatted string representation of the number if successful, otherwise an empty string.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.formatCurrent = function () {
     return (this + '') === '' || isNaN(this) ? '' : new Intl.NumberFormat(App.NumberFormat).format(this);
@@ -1552,8 +2106,20 @@ String.prototype.formatCurrent = function () {
 /**
  * Removes HTML tags and entities from the string.
  * @returns {string} Returns the string with HTML tags removed.
+ * @prototypeof String
+ * @method
+ * @public
  */
-String.prototype.stripHtml = function () { return this.replace(/<[^>]+>/gim, "").replace(/<\/[^>]+>/gim, "").replace(/&nbsp;/gim, ""); }
+String.prototype.stripHtml = function () { return this.replace(/<[^>]+>/gim, "").replace(/<\/[^>]+>/gim, "").replace(/&nbsp;/gim, ""); };
+
+/**
+ * Highlights occurrences of a search string within the HTML content of the string.
+ * @param {string} search - The search string to highlight.
+ * @returns {string} Returns the HTML content with highlighted occurrences of the search string.
+ * @prototypeof String
+ * @method
+ * @public
+ */
 String.prototype.highliteTextInHtml = function (search) {
     const html = this + '';
 
@@ -1602,22 +2168,39 @@ String.prototype.highliteTextInHtml = function (search) {
  * Removes leading whitespace or specified characters from the string.
  * @param {string} [c] - Optional characters to trim from the beginning of the string.
  * @returns {string} Returns the string with leading whitespace or specified characters removed.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.ltrim = function (c) { return this.replace(new RegExp('^' + (c != undefined ? c : '\\s') + '+'), ""); }
 /**
  * Removes trailing whitespace or specified characters from the string.
  * @param {string} [c] - Optional characters to trim from the end of the string.
  * @returns {string} Returns the string with trailing whitespace or specified characters removed.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.rtrim = function (c) { return this.replace(new RegExp((c != undefined ? c : '\\s') + '+$'), ""); }
 /**
  * Removes leading and trailing whitespace or specified characters from the string.
  * @param {string} [c] - Optional characters to trim from the beginning and end of the string.
  * @returns {string} Returns the string with leading and trailing whitespace or specified characters removed.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.trimString = function (c) {
     return this.replace(new RegExp('^' + (c != undefined ? RegExp.quote(c) : '\\s') + '*(.*?)' + (c != undefined ? RegExp.quote(c) : '\\s') + '*$'), '$1');
 }
+/**
+ * Checks if the string contains all specified symbols.
+ * @param {Array} arr - An array of symbols to check for in the string.
+ * @returns {boolean} Returns true if the string contains all specified symbols, otherwise false.
+ * @prototypeof String
+ * @method
+ * @public
+ */
 String.prototype.containsSymbols = function (arr) {
     for (const s of arr) {
         if (this.indexOf(s) === -1) {
@@ -1630,11 +2213,17 @@ String.prototype.containsSymbols = function (arr) {
  * Splits the string into an array of substrings using the specified separator.
  * @param {string} separator - The string or regular expression used to separate the string.
  * @returns {Array} Returns an array of substrings.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.trim = function (c) { return this.trimString(c); }
 /**
  * Attempts to convert the string to an integer.
  * @returns {number} Returns the integer value if successful, otherwise NaN.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.splitA = function (separator) {
     var retArr = new Array();
@@ -1657,6 +2246,9 @@ String.prototype.splitA = function (separator) {
 /**
  * Attempts to convert the string to a floating-point number.
  * @returns {number} Returns the floating-point value if successful, otherwise NaN.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.toInt = function () {
     return this / 1;
@@ -1664,6 +2256,9 @@ String.prototype.toInt = function () {
 /**
  * Attempts to convert the string to a floating-point number.
  * @returns {number} Returns the floating-point value if successful, otherwise NaN.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.toFloat = function () {
     return this / 1.0;
@@ -1671,17 +2266,26 @@ String.prototype.toFloat = function () {
 /**
  * Checks if the string represents a finite number.
  * @returns {boolean} Returns true if the string represents a finite number, otherwise false.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.isFinite = function () { return isFinite(this); }
 /**
  * Checks if the string represents a numeric value.
  * @returns {boolean} Returns true if the string represents a numeric value, otherwise false.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.isNumeric = function () { return this ? this.isFinite(this * 1.0) : false; }
 
 /**
  * Checks if the string represents a valid email address.
  * @returns {boolean} Returns true if the string represents a valid email address, otherwise false.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.isEmail = function () {
     if (this.indexOf(" ") != -1) {
@@ -1705,6 +2309,13 @@ String.prototype.isEmail = function () {
     return true;
 };
 
+/**
+ * Checks if the string represents a valid email address with additional validation for the main domain and TLD.
+ * @returns {boolean} Returns true if the string represents a valid email address, otherwise false.
+ * @prototypeof String
+ * @method
+ * @public
+ */
 String.prototype.isEmail2 = function () {
     const email = (this + '');
     if (typeof email !== 'string') return false;
@@ -1735,6 +2346,9 @@ String.prototype.isEmail2 = function () {
  * Repeats the string a specified number of times.
  * @param {number} n - The number of times to repeat the string.
  * @returns {string} Returns the repeated string.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.repeat = function (n) {
     var a = [];
@@ -1749,6 +2363,9 @@ String.prototype.repeat = function (n) {
  * @param {string} c - The character used for padding.
  * @param {number} l - The desired length of the expanded string.
  * @returns {string} Returns the expanded string.
+ * @prototypeof String  
+ * @method
+ * @public
  */
 String.prototype.expand = function (c, l) {
     if (this.length >= l) {
@@ -1760,6 +2377,9 @@ String.prototype.expand = function (c, l) {
 /**
  * Converts the string to a Date object.
  * @returns {Date} Returns the Date object representing the date and time parsed from the string.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.toDate = function () {
 
@@ -1797,6 +2417,9 @@ String.prototype.toDate = function () {
 /**
  * Converts the string from DDMMYYYY format to a Date object.
  * @returns {Date} Returns the Date object representing the date parsed from the string in DDMMYYYY format.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.fromDDMMYYYY = function () {
     let splitter = '-';
@@ -1808,6 +2431,9 @@ String.prototype.fromDDMMYYYY = function () {
 /**
  * Converts the string from European date format to a Date object.
  * @returns {Date} Returns the Date object representing the date and time parsed from the string in European date format.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.fromEuropeanDate = function () {
     const euroDate = this;
@@ -1823,6 +2449,9 @@ String.prototype.fromEuropeanDate = function () {
 /**
  * Converts the string to a Date object with a short date format (DD/MM/YYYY).
  * @returns {Date} Returns the Date object representing the date parsed from the string.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.toShortDate = function () {
     var parts = this.split(/\/|\.|\-/);
@@ -1833,6 +2462,9 @@ String.prototype.toShortDate = function () {
  * Truncates the string to a specified number of words followed by an ellipsis.
  * @param {number} l - The maximum number of words to include.
  * @returns {string} Returns the truncated string with an ellipsis.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.words = function (l) {
     var a = this.split(/ |,|\.|-|;|:|\(|\)|\{|\}|\[|\]/);
@@ -1860,25 +2492,14 @@ String.prototype.breakAll = function (chunkSize = 100) {
         '$1\u200B'   // невидимый "zero-width space", браузеры его переносят
     );
 };
-// /**
-//  * Replaces all occurrences of a substring with another substring in the string.
-//  * @param {string} from - The substring to replace.
-//  * @param {string} to - The substring to replace with.
-//  * @returns {string} Returns the string with all occurrences of 'from' replaced by 'to'.
-//  */
-// String.prototype.replaceAll = function (from, to) {
-//     let s = this;
-//     let s1 = s.replace(from, to);
-//     while (s != s1) {
-//         s = s1;
-//         s1 = s.replace(from, to);
-//     }
-//     return s1;
-// };
+
 /**
  * Replaces placeholders in the string with values from an object using template syntax.
  * @param {Object} values - The object containing values to substitute into the template.
  * @returns {string} Returns the string with placeholders replaced by corresponding values from the object.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.template = function (values) {
     return this.replace(/{(.+?)(?:\|(.*?))?}/g, (keyExpr, key, defaultVal) => {
@@ -1890,6 +2511,9 @@ String.prototype.template = function (values) {
  * @param {string[]} from - The substrings to replace.
  * @param {string[]} to - The replacement substrings.
  * @returns {string} Returns the string with specified replacements.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.replaceArray = function (from, to) {
     let ret = this;
@@ -1903,6 +2527,9 @@ String.prototype.replaceArray = function (from, to) {
  * @param {Object} obj - The object containing key-value pairs for replacement.
  * @param {string[]} [wrappers] - Optional wrappers to surround keys in the string.
  * @returns {string} Returns the string with placeholders replaced by corresponding values from the object.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.replaceObject = function (obj, wrappers) {
     let ret = this;
@@ -1914,6 +2541,9 @@ String.prototype.replaceObject = function (obj, wrappers) {
 /**
  * Converts the string representing a monetary value to an integer (removes spaces).
  * @returns {number} Returns the integer value parsed from the monetary string.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.fromMoney = function () {
     return parseInt(val.replace(/\s*/g, ''));
@@ -1921,6 +2551,9 @@ String.prototype.fromMoney = function () {
 /**
  * Converts the string representing a time in HH:MM:SS format to seconds.
  * @returns {number} Returns the time in seconds parsed from the string.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.fromTimeString = function () {
     let parts = this.split(':');
@@ -1929,6 +2562,9 @@ String.prototype.fromTimeString = function () {
 /**
  * Capitalizes the first character of the string.
  * @returns {string} Returns the string with the first character capitalized.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.capitalize = function () {
     return this.substring(0, 1).toUpperCase() + this.substring(1);
@@ -1938,6 +2574,9 @@ String.prototype.capitalize = function () {
  * This method aims to convert characters from one writing system to another.
  * Specific rules for transliteration should be implemented separately.
  * @returns {string} The transliterated string.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.Transliterate = function () {
     let val = this;
@@ -2021,6 +2660,9 @@ String.prototype.Transliterate = function () {
  * Converts Cyrillic characters to URL-friendly format.
  * @param {number} [words=3] - Number of words to include in the generated URL.
  * @returns {string} The generated URL string.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.CyrToUrl = function (words) {
     if (words == undefined) words = 3;
@@ -2046,6 +2688,9 @@ String.prototype.CyrToUrl = function (words) {
  * @param {number} length - The maximum length of the truncated string.
  * @param {boolean} [hasTitle=false] - Indicates whether to include a title attribute with the full string.
  * @returns {string} The truncated string with ellipsis.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.ellipsis = function (length, hasTitle = false) {
     var str = this;
@@ -2070,11 +2715,17 @@ String.prototype.ellipsis = function (length, hasTitle = false) {
 /**
  * Reverses the order of characters in the string.
  * @returns {string} The reversed string.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.reverse = function () { return this.split("").reverse().join(""); }
 /**
  * Converts a hexadecimal string to its equivalent ASCII string.
  * @returns {string} The ASCII string.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.hexToString = function () {
     let string = '';
@@ -2088,18 +2739,24 @@ String.prototype.hexToString = function () {
  * @param {string} splitter - The delimiter used to split the string.
  * @param {string} newPart - The new part to replace the last part with.
  * @returns {string} The modified string.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.replaceLastPart = function (splitter, newPart) {
     let parts = this.split(splitter);
     parts.splice(-1);
     return parts.join(splitter) + splitter + newPart;
-}
+};
 /**
  * Converts an object to a string representation using specified delimiters.
  * @param {object} object - The object to convert.
  * @param {string[]} delimiters - Array containing two delimiters for key-value pairs and items separation.
  * @param {Function} [callback] - Function to process each value in the object.
  * @returns {string} The string representation of the object.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.fromObject = function (object, delimiters, callback) {
     let ret = [];
@@ -2114,6 +2771,9 @@ String.fromObject = function (object, delimiters, callback) {
  * @param {Function} [callback] - Function to process each value in the resulting object.
  * @param {Function} [keyCallback] - Function to process each key in the resulting object.
  * @returns {object} The object created from the string representation.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.toObject = function (delimiters, callback, keyCallback) {
 
@@ -2140,6 +2800,9 @@ String.prototype.toObject = function (delimiters, callback, keyCallback) {
  * Replaces month names in the string with the specified months.
  * @param {string[]} months - Array containing month names.
  * @returns {string} The string with replaced month names.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.replaceDateMonthName = function (months) {
     let n = this + '';
@@ -2154,6 +2817,9 @@ String.prototype.replaceDateMonthName = function (months) {
  * @param {string} [splitter='-'] - The delimiter to split the string into words.
  * @param {boolean} [firstIsCapital=false] - Indicates whether the first letter should be capitalized.
  * @returns {string} The camelCase formatted string.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.toCamelCase = function (splitter, firstIsCapital) {
     splitter = splitter || '-';
@@ -2170,6 +2836,9 @@ String.prototype.toCamelCase = function (splitter, firstIsCapital) {
  * Converts a camelCase formatted string to its original format.
  * @param {string} [splitter='-'] - The delimiter to insert between words.
  * @returns {string} The original formatted string.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.fromCamelCase = function (splitter) {
     splitter = splitter || '-';
@@ -2178,12 +2847,23 @@ String.prototype.fromCamelCase = function (splitter) {
     return this.replaceAll(new RegExp('([A-Z])', 'g'), (v) => { return splitter + v.toLowerCase(); }).rtrim('-').ltrim('-');
 
 };
+/**
+ * Counts the occurrences of a specified character in the string.
+ * @param {string} c - The character to count.
+ * @returns {number} The number of occurrences of the specified character in the string.
+ * @prototypeof String
+ * @method
+ * @public
+ */
 String.prototype.countCharIn = function (c) {
     return (this.match(new RegExp(c, "g")) || []).length;
 };
 /**
  * Retrieves the first character of each word in the string.
  * @returns {string} The concatenated first characters of words.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.firstCharsOfWords = function () {
     let parts = this.split(' ');
@@ -2196,6 +2876,9 @@ String.prototype.firstCharsOfWords = function () {
 /**
  * Check if the string is valid json
  * @returns {Boolean}
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.isJson = function () {
     try {
@@ -2208,6 +2891,9 @@ String.prototype.isJson = function () {
 /**
  * Checks if the string represents an integer.
  * @returns {boolean} true if the string represents an integer, otherwise false.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.isInt = function () {
     return Number.isInteger(Number(this));
@@ -2215,6 +2901,9 @@ String.prototype.isInt = function () {
 /**
  * Checks if the string represents a floating-point number.
  * @returns {boolean} true if the string represents a float, otherwise false.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.isFloat = function () {
     return this.isNumeric() && !Number.isInteger(this);
@@ -2222,6 +2911,9 @@ String.prototype.isFloat = function () {
 /**
  * Checks if the string represents a valid date.
  * @returns {boolean} true if the string represents a valid date, otherwise false.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.isDate = function () {
     return (new Date(this) !== "Invalid Date") && !isNaN(new Date(this));
@@ -2230,6 +2922,9 @@ String.prototype.isDate = function () {
 /**
  * Converts a string containing a full name to abbreviated form (e.g., John D.).
  * @returns {string} The abbreviated full name.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.makeFio = function () {
     const parts = this.split(' ');
@@ -2238,6 +2933,9 @@ String.prototype.makeFio = function () {
 /**
  * Extracts the file extension from the string.
  * @returns {string} The extracted file extension.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.extractExt = function () {
     const parts = this.split('.');
@@ -2246,6 +2944,9 @@ String.prototype.extractExt = function () {
 /**
  * Extracts information about the file path.
  * @returns {object} An object containing information about the file path (basename, extension, filename, dirname).
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.pathinfo = function () {
     try {
@@ -2268,6 +2969,9 @@ String.prototype.pathinfo = function () {
 /**
  * Extracts information from a URL string including the URL and its query parameters.
  * @returns {object} An object containing the URL and its options (query parameters).
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.urlinfo = function () {
     try {
@@ -2285,6 +2989,9 @@ String.prototype.urlinfo = function () {
 /**
  * Removes XML entities from the string.
  * @returns {string} The string with XML entities replaced.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.removeXmlEntities = function () {
     let s = this + '';
@@ -2306,6 +3013,9 @@ String.prototype.removeXmlEntities = function () {
  * Sets the base URL for relative URLs in the string.
  * @param {string} baseUrl - The base URL to prepend to relative URLs.
  * @returns {string} The modified string with the base URL set.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.setBaseUrl = function (baseUrl) {
     return this.replaceAll('src="/', 'src="' + baseUrl + '/');
@@ -2313,6 +3023,10 @@ String.prototype.setBaseUrl = function (baseUrl) {
 /**
  * Copies the string to the clipboard.
  * @returns {Promise} A promise that resolves when the string is successfully copied to the clipboard.
+ * @prototypeof String
+ * @method
+ * @public
+ * @public
  */
 String.prototype.copyToClipboard = function () {
     const text = this + '';
@@ -2356,6 +3070,10 @@ String.prototype.copyToClipboard = function () {
  * Calculates the MD5 hash of the string.
  * @param {string} [e=''] - The string to calculate the MD5 hash for.
  * @returns {string} The MD5 hash of the string.
+ * @prototypeof String
+ * @method
+ * @public
+ * @static
  */
 String.MD5 = function (e) {
     if (!e) {
@@ -2430,6 +3148,10 @@ String.MD5 = function (e) {
 /**
  * Generates a GUID (Globally Unique Identifier).
  * @returns {string} The generated GUID.
+ * @prototypeof String
+ * @method
+ * @public
+ * @static
  */
 String.GUID = function () {
     return (Number.Rnd4() + Number.Rnd4() + Number.Rnd4() + Number.Rnd4() + Number.Rnd4() + Number.Rnd4() + Number.Rnd4() + Number.Rnd4());
@@ -2437,6 +3159,9 @@ String.GUID = function () {
 /**
  * Checks if the string is a valid GUID.
  * @returns {boolean} True if the string is a valid GUID, false otherwise.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.isGUID = function () {
     return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(this);
@@ -2445,6 +3170,10 @@ String.prototype.isGUID = function () {
  * Generates a random password of the specified length.
  * @param {number} l - The length of the password to generate.
  * @returns {string} The generated password.
+ * @prototypeof String
+ * @method
+ * @public
+ * @static
  */
 String.Password = function (l) {
     const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -2468,6 +3197,10 @@ String.Password = function (l) {
  * Escapes special characters in a regular expression pattern.
  * @param {string} string - The regular expression pattern to escape.
  * @returns {string} The escaped regular expression pattern.
+ * @prototypeof String
+ * @method
+ * @public
+ * @static
  */
 String.EscapeRegExp = function (string) {
     return string ? string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') : string;
@@ -2479,6 +3212,10 @@ String.EscapeRegExp = function (string) {
  * @param {string} template - The template string containing plural forms separated by '|'. Use '{n}' as a placeholder for the count.
  * @param {number} count - The count used to determine which plural form to use.
  * @returns {string} The pluralized string.
+ * @prototypeof String
+ * @method
+ * @public
+ * @static
  */
 String.Pluralize = function (template, count) {
     let cases = [2, 0, 1, 1, 1, 2],
@@ -2490,6 +3227,9 @@ String.Pluralize = function (template, count) {
 /**
  * Calculates the SHA-256 hash of the string.
  * @returns {Promise<string>} A promise that resolves with the SHA-256 hash of the string.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.sha256 = function () {
     const msgBuffer = new TextEncoder().encode(this);
@@ -2506,6 +3246,9 @@ String.prototype.sha256 = function () {
  * Encrypts the string using the RC4 algorithm with the provided key.
  * @param {string} key - The key used for encryption.
  * @returns {string} The encrypted string.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.rc4 = function (key) {
     let str = this;
@@ -2534,6 +3277,9 @@ String.prototype.rc4 = function (key) {
 /**
  * Converts the hexadecimal string to a binary string.
  * @returns {string} The binary string.
+ * @prototypeof String
+ * @method
+ * @public
  */
 String.prototype.hex2bin = function () {
     var bytes = [];
@@ -2544,6 +3290,9 @@ String.prototype.hex2bin = function () {
 /**
  * Converts the binary string to a hexadecimal string.
  * @returns {string} The hexadecimal string.
+ * @prototypeof String  
+ * @method
+ * @public
  */
 String.prototype.bin2hex = function () {
     var i = 0, l = this.length, chr, hex = '';
@@ -2554,6 +3303,13 @@ String.prototype.bin2hex = function () {
     return hex;
 };
 
+/**
+ * Converts a Markdown-formatted string to HTML.
+ * @returns {string} The HTML representation of the Markdown string.
+ * @prototypeof String
+ * @method
+ * @public
+ */
 String.prototype.markdownToHtml = function () {
     let html = this;
 
@@ -2613,7 +3369,15 @@ String.prototype.markdownToHtml = function () {
     return html.trim();
 };
 
-
+/**
+ * Checks if the number is approximately equal to another number within a specified tolerance.
+ * @param {number} tolerance - The maximum allowed difference between the two numbers.
+ * @param {number} check - The number to compare against.
+ * @returns {boolean} True if the numbers are approximately equal, false otherwise.
+ * @prototypeof Number
+ * @method
+ * @public
+ */
 Number.prototype.approximateCheck = function (tolerance, check) {
     return Math.abs(this - check) <= tolerance;
 }
@@ -2622,11 +3386,17 @@ Number.prototype.approximateCheck = function (tolerance, check) {
 /**
  * Formats the number according to the current locale.
  * @returns {string} The formatted number string.
+ * @prototypeof Number
+ * @method
+ * @public
  */
 Number.prototype.formatCurrent = function () { return isNaN(this) ? '' : new Intl.NumberFormat(App.NumberFormat).format(this); }
 /**
  * Converts the Unix timestamp to a JavaScript Date object.
  * @returns {Date} The Date object corresponding to the Unix timestamp.
+ * @prototypeof Number
+ * @method
+ * @public
  */
 Number.prototype.toDateFromUnixTime = function () { let d = new Date(); d.setTime(this * 1000); return d; };
 /**
@@ -2634,6 +3404,8 @@ Number.prototype.toDateFromUnixTime = function () { let d = new Date(); d.setTim
  * @param {string[]} labels - Array of labels for different sequences.
  * @param {boolean} [viewnumber=true] - Whether to include the number in the output.
  * @returns {string} The formatted sequence.
+ * @prototypeof Number
+ * @method
  */
 Number.prototype.formatSequence = function (labels, viewnumber) {
     let s = this + " ";
@@ -2665,6 +3437,9 @@ Number.prototype.formatSequence = function (labels, viewnumber) {
 /**
  * Returns the number of decimal places.
  * @returns {number} The number of decimal places.
+ * @prototypeof Number
+ * @method
+ * @public
  */
 Number.prototype.decPlaces = function () {
     var n = this + '';
@@ -2675,6 +3450,14 @@ Number.prototype.decPlaces = function () {
     return n[1].length;
 };
 
+/**
+ * Returns the decimal part of the number as an integer.
+ * @param {number} [places=2] - The number of decimal places to consider.
+ * @returns {number} The decimal part of the number as an integer.
+ * @prototypeof Number
+ * @method
+ * @public
+ */
 Number.prototype.decimals = function (places = 2) {
     // Handle negative numbers by working with absolute value
     const absNum = Math.abs(this + 0);
@@ -2692,6 +3475,9 @@ Number.prototype.decimals = function (places = 2) {
  * @param {string} [space=' '] - The character used to separate thousands.
  * @param {boolean} [useNulls=true] - Whether to remove '.00' from the result.
  * @returns {string} The formatted money string.
+ * @prototypeof Number
+ * @method
+ * @public
  */
 Number.prototype.toMoney = function (digits, force = true, space = ' ', useNulls = true, dotSign = ',') {
     var result = '';
@@ -2731,6 +3517,9 @@ Number.prototype.toMoney = function (digits, force = true, space = ' ', useNulls
  * @param {string} [unit=null] - The unit to append to the formatted number.
  * @param {string} [currencyCode=null] - The currency code for 'money' type formatting.
  * @returns {string} The formatted number string.
+ * @prototypeof Number
+ * @method
+ * @public
  */
 Number.prototype.intlFormat = function (type, decimal = 2, unit = null, currencyCode = null) {
     let v = this;
@@ -2756,6 +3545,15 @@ Number.prototype.intlFormat = function (type, decimal = 2, unit = null, currency
     }
     return v;
 };
+
+/**
+ * Formats the number according to the provided units.
+ * @param {Object} units - An object mapping unit multipliers to their corresponding labels.
+ * @returns {string} The formatted number with the appropriate unit label.
+ * @prototypeof Number
+ * @method
+ * @public
+ */
 Number.prototype.formatUnits = function (units) {
     // find the closest smaller or equal unit multiplier
     const keys = Object.keys(units)
@@ -2776,6 +3574,9 @@ Number.prototype.formatUnits = function (units) {
  * @param {string} [daySplitter] - The character used to separate days from hours.
  * @param {boolean} [trim00=true] - Whether to trim leading '00' and ':' characters.
  * @returns {string} The formatted time string.
+ * @prototypeof Number
+ * @method
+ * @public
  */
 Number.prototype.toTimeString = function (daySplitter, trim00 = true, hasSeconds = true) {
     let days = 0;
@@ -2842,6 +3643,9 @@ Number.prototype.toTimeString = function (daySplitter, trim00 = true, hasSeconds
  * @param {boolean|Number} [approximate=false] - Whether to round the number to the nearest integer.
  * @param {boolean} [shownumber=true] - Whether to include the number in the output.
  * @returns {string} The formatted size string.
+ * @prototypeof Number
+ * @method
+ * @public
  */
 Number.prototype.toSizeString = function (postfixes = ['bytes', 'Kb', 'Mb', 'Gb', 'Tb'], range = 1024, remove0s = false, approximate = false, shownumber = true) {
     let number = this;
@@ -2869,21 +3673,33 @@ Number.prototype.toSizeString = function (postfixes = ['bytes', 'Kb', 'Mb', 'Gb'
  * Calculates the percentage of the current number relative to a maximum value.
  * @param {number} max - The maximum value.
  * @returns {number} The percentage.
+ * @prototypeof Number
+ * @method
+ * @public
  */
 Number.prototype.percentOf = function (max) { return (this * 100) / max; };
 /**
  * Checks if the number is an integer.
  * @returns {boolean} True if the number is an integer, false otherwise.
+ * @prototypeof Number
+ * @method
+ * @public
  */
 Number.prototype.isInt = function () { return Number.isInteger(this); };
 /**
  * Checks if the number is a float.
  * @returns {boolean} True if the number is a float, false otherwise.
+ * @prototypeof Number
+ * @method
+ * @public
  */
 Number.prototype.isFloat = function () { return Number.isFloat(this); };
 /**
  * Checks if the number is numeric.
  * @returns {boolean} Always returns true.
+ * @prototypeof Number
+ * @method
+ * @public
  */
 Number.prototype.isNumeric = function () { return true; };
 /**
@@ -2891,22 +3707,34 @@ Number.prototype.isNumeric = function () { return true; };
  * @param {number} min - The minimum value.
  * @param {number} max - The maximum value.
  * @returns {number} The random number.
+ * @prototypeof Number
+ * @method
+ * @public
  */
 Number.random = function (min, max) { return Math.floor(min + Math.random() * (max + 1)); };
 /**
  * Generates a random hexadecimal string of length 4.
  * @returns {string} The random hexadecimal string.
+ * @prototypeof Number
+ * @method
+ * @public
  */
 Number.Rnd4 = function () { return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1); };
 /**
  * Generates a unique number based on the current timestamp, performance data, and randomness.
  * @returns {number} The unique number.
+ * @prototypeof Number
+ * @method
+ * @public
  */
 Number.unique = function () { return (window.performance.getEntries()[0].duration + window.performance.now() + Math.random()) * 1e13; };
 
 /**
  * Formats the date as a string in the 'YYYY-MM-DD HH:mm:ss' format.
  * @returns {string} The formatted date string.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.toDbDate = function () {
     if (this.toString() === 'Invalid Date') {
@@ -2915,6 +3743,13 @@ Date.prototype.toDbDate = function () {
     return this.toISOString();
     // return this.getFullYear() + '-' + ((this.getMonth() + 1) + '').expand('0', 2) + '-' + (this.getDate() + '').expand('0', 2) + ' ' + (this.getHours() + '').expand('0', 2) + ':' + (this.getMinutes() + '').expand('0', 2) + ':' + (this.getSeconds() + '').expand('0', 2); 
 };
+/**
+ * Formats the date as a string in the 'YYYY-MM-DD HH:mm:ss' format, adjusted to local time.
+ * @returns {string} The formatted local date string.
+ * @prototypeof Date
+ * @method
+ * @public
+ */
 Date.prototype.toLocalDateTimeString = function () {
     if (this.toString() === 'Invalid Date') {
         return null;
@@ -2924,27 +3759,56 @@ Date.prototype.toLocalDateTimeString = function () {
 /**
  * Converts the date to Unix timestamp (seconds since January 1, 1970).
  * @returns {number} The Unix timestamp.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.toUnixTime = function () { return this.getTime() / 1000; };
 /**
  * Formats the date as a short date string in the 'YYYY-MM-DD' format.
  * @returns {string} The formatted short date string.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.toShortDateString = function () { return this.getFullYear() + '-' + ((this.getMonth() + 1) + '').expand('0', 2) + '-' + (this.getDate() + '').expand('0', 2); };
+
+/**
+ * Formats the date as a period string in the 'YYYY-MM' format.
+ * @returns {string} The formatted period string.
+ * @prototypeof Date
+ * @method
+ * @public
+ */
 Date.prototype.toDatePeriodString = function () { return this.getFullYear() + '-' + ((this.getMonth() + 1) + '').expand('0', 2); };
 /**
  * Formats the time part of the date as a string in the 'HH:mm:ss' format.
  * @param {boolean} [hasSeconds=true] - Whether to include seconds in the output.
  * @returns {string} The formatted time string.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.toTimeString = function (hasSeconds = true) { if (this == 'Invalid Date') { return '00:00:00'; }; return (this.getHours() + '').expand('0', 2) + ':' + (this.getMinutes() + '').expand('0', 2) + (hasSeconds ? ':' + (this.getSeconds() + '').expand('0', 2) : ''); };
 /**
  * Checks if the given year is a leap year.
  * @param {number} year - The year to check.
  * @returns {boolean} True if the year is a leap year, false otherwise.
+ * @prototypeof Date    
+ * @method
+ * @public
+ * @static
  */
 Date.isLeapYear = function (year) { return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)); };
 
+/**
+ * Returns the timezone offset of the current date in the format '+HHMM' or '-HHMM'.
+ * @returns {string} The timezone offset string.
+ * @prototypeof Date
+ * @method
+ * @public
+ * @static
+ */
 Date.getTimezoneString = function () {
     const m = new Date().getTimezoneOffset(); // minutes, positive for GMT-
     const sign = m > 0 ? "-" : "+";
@@ -2960,9 +3824,21 @@ Date.getTimezoneString = function () {
  * @param {number} year - The year.
  * @param {number} month - The month (0-based index).
  * @returns {number} The number of days in the month.
+ * @prototypeof Date
+ * @method
+ * @public
+ * @static
  */
 Date.daysInMonth = function (year, month) { return [31, (Date.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]; };
 
+/**
+ * Returns an array of period strings (in 'YYYY-MM' format) between the current date and the specified start date.
+ * @param {Date} dateFrom - The start date.
+ * @returns {string[]} An array of period strings.
+ * @prototypeof Date
+ * @method
+ * @public
+ */
 Date.prototype.getPeriods = function (dateFrom) {
     let periods = [];
     while (dateFrom < this) {
@@ -2975,45 +3851,69 @@ Date.prototype.getPeriods = function (dateFrom) {
 /**
  * Returns the number of days in the month of the current date.
  * @returns {number} The number of days in the month.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.daysInMonth = function () { return Date.daysInMonth(this.getFullYear(), this.getMonth()); };
 /**
  * Represents the timezone offset of the current date in hours.
+ * @prototypeof Date
+ * @property
+ * @public
  */
 Date.prototype.timezoneoffset = (new Date()).getTimezoneOffset() / 60;
 /**
  * Converts the current date to the local time based on the timezone offset.
  * @returns {Date} The date converted to local time.
+ * @method
+ * @public
+ * @prototypeof Date
  */
 Date.prototype.toLocalTime = function () { this.setTime(this.getTime() - this.timezoneoffset * 60 * 60 * 1000); return this; };
 /**
  * Adds the specified number of minutes to the current date.
  * @param {number} min - The number of minutes to add.
  * @returns {Date} The updated date.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.addMinute = function (min) { this.setTime(this.getTime() + min * 60 * 1000); return this; };
 /**
  * Adds the specified number of seconds to the current date.
  * @param {number} sec - The number of seconds to add.
  * @returns {Date} The updated date.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.addSeconds = function (sec) { this.setTime(this.getTime() + sec * 1000); return this; };
 /**
  * Adds the specified number of hours to the current date.
  * @param {number} hours - The number of hours to add.
  * @returns {Date} The updated date.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.addHours = function (hours) { this.setTime(this.getTime() + hours * 60 * 60 * 1000); return this; };
 /**
  * Adds the specified number of days to the current date.
  * @param {number} days - The number of days to add.
  * @returns {Date} The updated date.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.addDays = function (days) { this.setTime(this.getTime() + days * 24 * 60 * 60 * 1000); return this; };
 /**
  * Adds the specified number of years to the current date.
  * @param {number} years - The number of years to add.
  * @returns {Date} The updated date.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.addYears = function (years) { this.setFullYear(this.getFullYear() + years); return this; };
 /**
@@ -3021,18 +3921,27 @@ Date.prototype.addYears = function (years) { this.setFullYear(this.getFullYear()
  * @param {number} months - The number of months to add.
  * @param {boolean} [setDay=true] - Whether to adjust the day to be within the new month's range.
  * @returns {Date} The updated date.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.addMonths = function (months, setDay = true) { let n = this.getDate(); this.setMonth(this.getMonth() + months); if (setDay) { this.setDate(Math.min(n, this.daysInMonth())); } return this; };
 /**
  * Checks if the current date is a working day (not a weekend or holiday).
  * @param {string[]} holidays - An array of holiday dates in 'YYYY-MM-DD' format.
  * @returns {boolean} True if it's a working day, false otherwise.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.isWorkingDay = function (holidays) { return !([0, 6].indexOf(this.getDay()) !== -1 || holidays.indexOf(this.toShortDateString()) !== -1); };
 /**
  * Checks if the current date is a holiday.
  * @param {string[]} holidays - An array of holiday dates in 'YYYY-MM-DD' format.
  * @returns {boolean} True if it's a holiday, false otherwise.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.isHoliday = function (holidays) { return !(holidays.indexOf(this.toShortDateString()) !== -1); };
 /**
@@ -3041,6 +3950,9 @@ Date.prototype.isHoliday = function (holidays) { return !(holidays.indexOf(this.
  * @param {string[]} holidays - An array of holiday dates in 'YYYY-MM-DD' format.
  * @param {boolean} [holidaysOnly=false] - If true, only holidays will be considered as working days.
  * @returns {Date} The updated date.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.addWorkingDays = function (days, holidays, holidaysOnly = false) {
     let addFactor = days < 0 ? -1 : 1;
@@ -3064,6 +3976,9 @@ Date.prototype.addWorkingDays = function (days, holidays, holidaysOnly = false) 
  * @param {string[]} [holidays=[]] - An array of holiday dates in 'YYYY-MM-DD' format.
  * @param {boolean} [holidaysOnly=false] - If true, only holidays will be considered as working days.
  * @returns {Date} The next working day.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.nextWorkingDay = function (addFactor = 1, holidays = [], holidaysOnly = false) {
     while (!(holidaysOnly ? this.isHoliday(holidays) : this.isWorkingDay(holidays))) {
@@ -3074,15 +3989,28 @@ Date.prototype.nextWorkingDay = function (addFactor = 1, holidays = [], holidays
 /**
  * Creates a copy of the current date object.
  * @returns {Date} The copied date object.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.Copy = function () { let d = new Date(); d.setTime(this.getTime()); return d; };
 /**
  * Calculates the difference in seconds between the current date and the specified date.
  * @param {Date} dt - The date to compare with.
  * @returns {number} The difference in seconds.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.Diff = function (dt) { return parseInt((dt.getTime() - this.getTime()) / 1000); };
 
+/**
+ * Resets the current date to the first day of the year (January 1st) at 00:00:00.000.
+ * @returns {Date} The updated date.
+ * @prototypeof Date
+ * @method
+ * @public
+ */
 Date.prototype.ResetToFirstDayOfYear = function () {
     this.setMonth(0);
     this.setDate(1);
@@ -3092,6 +4020,14 @@ Date.prototype.ResetToFirstDayOfYear = function () {
     this.setMilliseconds(0);
     return this;
 }
+
+/**
+ * Resets the current date to the last day of the year (December 31st) at 23:59:59.999.
+ * @returns {Date} The updated date.
+ * @prototypeof Date
+ * @method
+ * @public
+ */
 Date.prototype.ResetToLastDayOfYear = function () {
     this.setMonth(11);
     this.setDate(31);
@@ -3105,6 +4041,9 @@ Date.prototype.ResetToLastDayOfYear = function () {
  * Calculates the difference in months between the current date and the specified date.
  * @param {Date} dateTo - The date to compare with.
  * @returns {number} The difference in months.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.DiffInMonths = function (dateTo) {
     let d = new Date();
@@ -3120,6 +4059,9 @@ Date.prototype.DiffInMonths = function (dateTo) {
  * Calculates the difference in days between the current date and the specified date.
  * @param {Date} dateTo - The date to compare with.
  * @returns {number} The difference in days.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.DiffInDays = function (dateTo) {
     return Math.ceil(this.Diff(dateTo) / 86400);
@@ -3128,6 +4070,9 @@ Date.prototype.DiffInDays = function (dateTo) {
  * Calculates holidays count within two dates
  * @param {Date} dateTo date to
  * @param {Array} holidays holidays with holidays mark
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.DiffInDaysHolidays = function (dateTo, holidays) {
     let holidays2 = holidays.filter(v => v.isholiday).map(v => v.date);
@@ -3146,6 +4091,9 @@ Date.prototype.DiffInDaysHolidays = function (dateTo, holidays) {
  * Calculates the difference in years between the current date and the specified date.
  * @param {Date} dateTo - The date to compare with.
  * @returns {number} The difference in years.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.DiffInYears = function (dateTo) {
     let d = new Date();
@@ -3161,6 +4109,9 @@ Date.prototype.DiffInYears = function (dateTo) {
  * Calculates the difference between two dates in years, months, and days.
  * @param {Date} dateTo - The date to compare with.
  * @returns {Object} An object containing the difference in years, months, and days.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.DiffFull = function (dateTo) {
 
@@ -3184,6 +4135,9 @@ Date.prototype.DiffFull = function (dateTo) {
  * @param {string} [splitter=' '] - The separator between tokens.
  * @param {string[][]} [tokens] - An array of tokens for years, months, and days.
  * @returns {string} The formatted difference string.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.DiffFullTokens = function (
     dateTo,
@@ -3205,6 +4159,9 @@ Date.prototype.DiffFullTokens = function (
  * @param {boolean} [returnFull=false] - Whether to return the full age string.
  * @param {string[][]} [tokens=null] - An array of tokens for years, months, weeks, days, hours, minutes, and seconds.
  * @returns {string} The age string.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.Age = function (removeNazad = false, returnFull = false, tokens = null, nazad = 'назад', day = 'день', yesterday = 'вчера', justnow = 'только что') {
     let time = Math.abs((new Date()).getTime() / 1000 - this.getTime() / 1000); // to get the time since that moment
@@ -3248,6 +4205,9 @@ Date.prototype.Age = function (removeNazad = false, returnFull = false, tokens =
  * Formats the date using the specified format string.
  * @param {string} formatString - The format string.
  * @returns {string} The formatted date string.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.format = function (formatObject, dateFormat = 'ru-RU') {
     let dateformat = dateFormat || App.DateFormat || 'ru-RU';
@@ -3263,6 +4223,9 @@ Date.prototype.format = function (formatObject, dateFormat = 'ru-RU') {
  * @param {boolean} [withTime=false] - Whether to include time.
  * @param {boolean} [withoutDay=false] - Whether to exclude day.
  * @returns {string} The formatted date string.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.intlFormat = function (withTime = false, withoutDay = false, withoutYear = false, withSeconds = false, withoutMonth = false) {
     let dateformat = App.DateFormat || 'ru-RU';
@@ -3292,6 +4255,9 @@ Date.prototype.intlFormat = function (withTime = false, withoutDay = false, with
 /**
  * Gets the day index of the year.
  * @returns {number} The day index.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.DayIndex = function () {
     var start = new Date(this.getFullYear(), 0, 0);
@@ -3304,6 +4270,9 @@ Date.prototype.DayIndex = function () {
  * @param {boolean} [showYear=true] - Whether to show the year.
  * @param {boolean} [showDay=true] - Whether to show the day.
  * @returns {string} The short Russian date string.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.toShortRUString = function (showYear, showDay) {
     const months = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
@@ -3312,6 +4281,9 @@ Date.prototype.toShortRUString = function (showYear, showDay) {
 /**
  * Creates a copy of the current date object.
  * @returns {Date} The copied date object.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.copy = function () {
     let dt = new Date();
@@ -3321,6 +4293,9 @@ Date.prototype.copy = function () {
 /**
  * Sets the date to the start of the current year.
  * @returns {Date} The updated date object.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.setAsStartOfYear = function () {
     this.setDate(1);
@@ -3330,6 +4305,9 @@ Date.prototype.setAsStartOfYear = function () {
 /**
  * Sets the date to the end of the current year.
  * @returns {Date} The updated date object.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.setAsEndOfYear = function () {
     this.setMonth(11);
@@ -3339,6 +4317,9 @@ Date.prototype.setAsEndOfYear = function () {
 /**
  * Sets the date to the start of the current year.
  * @returns {Date} The updated date object.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.setAsStartOfDay = function () {
     this.setHours(0);
@@ -3347,6 +4328,13 @@ Date.prototype.setAsStartOfDay = function () {
     this.setMilliseconds(0);
     return this;
 };
+/**
+ * Sets the date to the end of the current day.
+ * @returns {Date} The updated date object.
+ * @prototypeof Date
+ * @method
+ * @public
+ */
 Date.prototype.setAsEndOfDay = function () {
     this.setHours(23);
     this.setMinutes(59);
@@ -3357,6 +4345,9 @@ Date.prototype.setAsEndOfDay = function () {
 /**
  * Gets the quarter of the year.
  * @returns {number} The quarter number.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.getQuarter = function () {
     return Math.floor((this.getMonth() + 3) / 3);
@@ -3366,6 +4357,9 @@ Date.prototype.getQuarter = function () {
  * @param {string} [quarterName='квартал'] - The name of the quarter.
  * @param {boolean} [numberOnly=false] - Whether to return only the quarter number.
  * @returns {string} The quarter string.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.prototype.toQuarterString = function (quarterName = 'квартал', numberOnly = false) {
     let quarter = this.getQuarter();
@@ -3377,22 +4371,34 @@ Date.prototype.toQuarterString = function (quarterName = 'квартал', numbe
 /**
  * Gets the current date and time.
  * @returns {Date} The current date and time.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.Now = function () { return new Date(); };
 /**
  * Gets the current time in milliseconds.
  * @returns {number} The current time in milliseconds.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.Ms = function () { return Date.Now().getTime(); };
 /**
  * Gets a unique timestamp.
  * @returns {number} The unique timestamp.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.Mc = function () { return (window.performance.getEntries()[0].duration + window.performance.now()) * 1e13; };
 /**
  * Creates a date object from the specified timestamp.
  * @param {number} from - The timestamp.
  * @returns {Date} The date object.
+ * @prototypeof Date
+ * @method
+ * @public
  */
 Date.from = function (from) {
     let dt = new Date();
@@ -3405,6 +4411,10 @@ Date.from = function (from) {
  * @param {number} year - The year.
  * @param {number} [startOrEnd=1] - 1 for start date, 2 for end date.
  * @returns {string} The period start or end date string.
+ * @prototypeof Date
+ * @method
+ * @public
+ * @static
  */
 Date.QuarterToPeriod = function (quarter, year, startOrEnd = 1) {
 
@@ -3426,6 +4436,14 @@ Date.QuarterToPeriod = function (quarter, year, startOrEnd = 1) {
 
 }
 
+/**
+ * Guesses the value of an input element based on the provided key.
+ * @param {string} key - The key pressed (e.g., 'Backspace', 'Delete', or a character).
+ * @returns {string} The guessed value of the input element after the key press.
+ * @prototypeof HTMLInputElement
+ * @method
+ * @public
+ */
 HTMLInputElement.prototype.guessValue = function (key) {
     const value = this.value;
 
@@ -3459,6 +4477,9 @@ HTMLInputElement.prototype.guessValue = function (key) {
  * Animates scrolling to a specified scrollTop value within a specified duration.
  * @param {number} to - The target scrollTop value to scroll to.
  * @param {number} duration - The duration of the animation in milliseconds.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.animateScrollTop = function (to, duration) {
     let start = this.scrollTop,
@@ -3481,6 +4502,9 @@ Element.prototype.animateScrollTop = function (to, duration) {
  * Animates scrolling to a specified scrollTop value within a specified duration.
  * @param {number} to - The target scrollTop value to scroll to.
  * @param {number} duration - The duration of the animation in milliseconds.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.animateScrollLeft = function (to, duration) {
     let start = this.scrollLeft,
@@ -3499,6 +4523,15 @@ Element.prototype.animateScrollLeft = function (to, duration) {
     animateScroll();
 };
 
+/**
+ * Animates the height of the element to a specified value over a given duration.
+ * @param {number} height - The target height in pixels.
+ * @param {number} [duration=1000] - The duration of the animation in milliseconds.
+ * @param {Function|null} [callback=null] - An optional callback function to be called after the animation completes.
+ * @prototypeof Element
+ * @method
+ * @public
+ */
 Element.prototype.animateHeight = function (height, duration = 1000, callback = null) {
     const targetHeight = height;
     const startTime = performance.now();
@@ -3522,6 +4555,15 @@ Element.prototype.animateHeight = function (height, duration = 1000, callback = 
 
 }
 
+/**
+ * Animates the height of the element down to zero over a given duration.
+ * @param {number} height - The initial height in pixels.
+ * @param {number} [duration=1000] - The duration of the animation in milliseconds.
+ * @param {Function|null} [callback=null] - An optional callback function to be called after the animation completes.
+ * @prototypeof Element
+ * @method
+ * @public
+ */
 Element.prototype.animateHeightDown = function (height, duration = 1000, callback = null) {
     const targetHeight = 0;
     const startTime = performance.now();
@@ -3551,6 +4593,9 @@ Element.prototype.animateHeightDown = function (height, duration = 1000, callbac
  * Scrolls the container to bring the element into view if necessary.
  * @param {Element} container The parent container element.
  * @param {number} [top=null] Additional offset from the top of the container.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.ensureInViewport = function (container, top = null) {
 
@@ -3580,6 +4625,9 @@ Element.prototype.ensureInViewport = function (container, top = null) {
  * Scrolls the container to bring the element into view if necessary.
  * @param {Element} container The parent container element.
  * @param {number} [top=null] Additional offset from the top of the container.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.ensureInViewportHr = function (container, left = null) {
     //Determine container top and bottom
@@ -3605,6 +4653,9 @@ Element.prototype.ensureInViewportHr = function (container, left = null) {
  * Checks if the element is fully visible within its parent container.
  * @param {Element} container The parent container element.
  * @returns {boolean} True if the element is fully visible, false otherwise.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.inInViewport = function (container) {
 
@@ -3628,6 +4679,9 @@ Element.prototype.inInViewport = function (container) {
 /**
  * Returns the index of the element within its parent's list of children.
  * @returns {number|null} The index of the element, or null if it has no parent.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.index = function () {
     if (this.parentElement) {
@@ -3642,6 +4696,9 @@ Element.prototype.index = function () {
  * @param {string} [name] The name of the attribute.
  * @param {string} [value] The value of the attribute.
  * @returns {string|Element} The value of the attribute if only name is provided, otherwise returns the element itself.
+ * @prototypeof Element 
+ * @method
+ * @public
  */
 Element.prototype.attr = function (name, value) {
     if (name === undefined && value === undefined) {
@@ -3666,6 +4723,9 @@ Element.prototype.attr = function (name, value) {
  * @param {Object} [data=null] Dataset to be set on the element.
  * @param {string} [ns=null] Namespace for creating elements in a different XML namespace.
  * @returns {HTMLElement} The newly created element.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.create = function (name, attr, data = null, ns = null) {
     const element = ns ? document.createElementNS(ns, name) : document.createElement(name);
@@ -3679,6 +4739,9 @@ Element.create = function (name, attr, data = null, ns = null) {
  * Creates DOM elements from the provided HTML string and returns them as a document fragment.
  * @param {string} html The HTML string.
  * @returns {NodeList} The NodeList containing the created elements.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.fromHtml = function (html) {
     var template = document.createElement('template');
@@ -3690,6 +4753,9 @@ Element.fromHtml = function (html) {
 /**
  * Returns the path of the element, representing its ancestry within the DOM tree.
  * @returns {string} The path of the element.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.path = function () {
     let path = [];
@@ -3706,6 +4772,9 @@ Element.prototype.path = function () {
  * @param {string} [name] The name of the data attribute.
  * @param {*} [value] The value of the data attribute.
  * @returns {Object|string|Element} The dataset object if no arguments are provided, the value of the specified dataset property if only name is provided, otherwise returns the element itself.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.data = function (name, value) {
     if (name === undefined) {
@@ -3728,6 +4797,9 @@ Element.prototype.data = function (name, value) {
  * @param {string} [name] The name of the property.
  * @param {*} [value] The value of the property.
  * @returns {Object|string|Element} The tag object if no arguments are provided, the value of the specified property if only name is provided, otherwise returns the element itself.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.tag = function (name, value) {
     if (!this._tag) {
@@ -3749,6 +4821,9 @@ Element.prototype.tag = function (name, value) {
  * @param {HTMLElement} parent The parent element.
  * @param {number} index The index at which to insert the element.
  * @returns {HTMLElement} The inserted element.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.insertAtIndex = function (parent, index) {
     const childOnIndex = parent.children[index];
@@ -3764,6 +4839,9 @@ Element.prototype.insertAtIndex = function (parent, index) {
  * Appends the element to the end of the parent's list of child elements.
  * @param {HTMLElement} parent The parent element.
  * @returns {HTMLElement} The appended element.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.appendTo = function (parent) {
     parent.appendChild(this);
@@ -3774,6 +4852,9 @@ Element.prototype.appendTo = function (parent) {
  * Appends the specified child element(s) to the end of the current element's list of children.
  * @param {HTMLElement|NodeList} child The child element or list of child elements to append.
  * @returns {HTMLElement} The last appended child element.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.append = function (child) {
 
@@ -3798,6 +4879,9 @@ Element.prototype.append = function (child) {
  * Prepends the element to the beginning of the parent's list of child elements.
  * @param {HTMLElement} parent The parent element.
  * @returns {HTMLElement} The prepended element.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.prependTo = function (parent) {
     if (parent.childNodes.length > 0) {
@@ -3812,6 +4896,9 @@ Element.prototype.prependTo = function (parent) {
  * Prepends the specified child element(s) to the beginning of the current element's list of children.
  * @param {HTMLElement|NodeList} child The child element or list of child elements to prepend.
  * @returns {HTMLElement} The last prepended child element.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.prepend = function (child) {
     try {
@@ -3841,6 +4928,9 @@ Element.prototype.prepend = function (child) {
  * Inserts the specified element after the current element.
  * @param {HTMLElement} element The element to insert.
  * @returns {HTMLElement} The current element.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.after = function (element) {
     if (this.nextElementSibling && this.parentElement) {
@@ -3855,6 +4945,9 @@ Element.prototype.after = function (element) {
  * Inserts the specified element before the current element.
  * @param {HTMLElement} element The element to insert.
  * @returns {HTMLElement} The current element.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.before = function (element) {
     this.parentElement.insertBefore(element, this);
@@ -3865,6 +4958,9 @@ Element.prototype.before = function (element) {
  * Wraps the current element with the specified wrapper element.
  * @param {HTMLElement} element The wrapper element.
  * @returns {HTMLElement} The current element.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.wrapWith = function (element) {
     this.remove();
@@ -3876,6 +4972,9 @@ Element.prototype.wrapWith = function (element) {
  * Hides the current element by setting its display property to 'none'.
  * Stores the previous display value in the 'shown' dataset attribute.
  * @returns {HTMLElement} The current element.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.hideElement = function () {
     this.dataset.shown = this.css('display');
@@ -3886,7 +4985,11 @@ Element.prototype.hideElement = function () {
 /**
  * Shows the current element by setting its display property to its previous value stored in the 'shown' dataset attribute.
  * If the 'shown' attribute is not set or is 'none', sets the display property to 'block'.
+ * @param {HTMLElement} [element] The element to show.
  * @returns {HTMLElement} The current element.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.showElement = function (element) {
     if (this.dataset.shown && this.dataset.shown !== 'none') {
@@ -3900,6 +5003,9 @@ Element.prototype.showElement = function (element) {
 /**
  * Returns the next sibling element.
  * @returns {HTMLElement|null} The next sibling element, or null if there is none.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.next = function () {
     return this.nextElementSibling;
@@ -3908,6 +5014,9 @@ Element.prototype.next = function () {
 /**
  * Returns the previous sibling element.
  * @returns {HTMLElement|null} The previous sibling element, or null if there is none.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.prev = function () {
     return this.previousElementSibling;
@@ -3916,6 +5025,9 @@ Element.prototype.prev = function () {
 /**
  * Returns the parent element.
  * @returns {HTMLElement|null} The parent element, or null if there is none.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.parent = function () {
     return this.parentElement;
@@ -3926,6 +5038,9 @@ Element.prototype.parent = function () {
  * Finds the closest ancestor of the current element (or the element itself) that matches the specified selector.
  * @param {string} selector A CSS selector string to match the ancestor element against.
  * @returns {HTMLElement|null} The closest ancestor element that matches the selector, or null if none is found.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 (!Element.prototype.closest && (Element.prototype.closest = function (selector) {
     let elem = this;
@@ -3941,6 +5056,9 @@ Element.prototype.parent = function () {
 /**
  * Returns closest component object
  * @returns Colibri.UI.Component|null
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.closestComponent = function () {
     // return this.closest('[data-object-name]')?.getUIComponent() ?? null;
@@ -3951,6 +5069,9 @@ Element.prototype.closestComponent = function () {
  * Retrieves the computed style value of the specified CSS property for the element.
  * @param {string} name The name of the CSS property.
  * @returns {string} The computed style value of the specified CSS property.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.computedCss = function (name) {
     return getComputedStyle(this)[name];
@@ -3961,6 +5082,9 @@ Element.prototype.computedCss = function (name) {
  * @param {(string|Object)} [name] The name of the style or an object containing all styles.
  * @param {string} [value] The value of the style.
  * @returns {Element|string|Object} The element itself, computed style value, or styles object.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.css = function (name, value) {
 
@@ -3996,13 +5120,16 @@ Element.prototype.css = function (name, value) {
  * @param {boolean} [includeMargin=false] Whether to include margins in the calculation.
  * @param {Element} [parent=null] The parent element for calculating offset.
  * @returns {Object} An object containing the position and dimensions of the element.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.bounds = function (includeBorders = false, includeMargin = false, parent = null) {
 
     const rect = this.getBoundingClientRect();
     const win = this.ownerDocument.defaultView;
 
-    const offsetX = parent ? parent.scrollLet : win.scrollX;
+    const offsetX = parent ? parent.scrollLeft : win.scrollX;
     const offsetY = parent ? parent.scrollTop : win.scrollY;
 
     let position = {
@@ -4038,11 +5165,17 @@ Element.prototype.bounds = function (includeBorders = false, includeMargin = fal
 /**
  * Returns the offset of the element.
  * @returns {Object} An object containing the offset of the element.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.offset = function () { return this.bounds(); };
 /**
  * Returns the position of the element.
  * @returns {Object} An object containing the position of the element.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.position = function () {
     const bounds = this.bounds();
@@ -4057,6 +5190,9 @@ Element.prototype.position = function () {
  * Sets or retrieves the HTML content of the element.
  * @param {string} [value] The HTML content to set.
  * @returns {Element|string} The element itself or the HTML content.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.html = function (value) {
     if (value === undefined) {
@@ -4070,6 +5206,9 @@ Element.prototype.html = function (value) {
 /**
  * Retrieves the ouer HTML content of the element.
  * @returns {Element|string} The element itself or the HTML content.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.outerHtml = function () {
     return this.outerHTML;
@@ -4079,6 +5218,9 @@ Element.prototype.outerHtml = function () {
  * Sets or retrieves the text content of the element.
  * @param {string} [value] The text content to set.
  * @returns {Element|string} The element itself or the text content.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.text = function (value) {
     if (value === undefined) {
@@ -4098,6 +5240,9 @@ if (!Element.prototype.matches) {
      * @memberof Element.prototype
      * @param {string} selector The CSS selector to match against.
      * @returns {boolean} true if the element matches the selector, otherwise false.
+     * @prototypeof Element
+     * @method
+ * @public
      */
     Element.prototype.matches = Element.prototype.matchesSelector || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector || Element.prototype.mozMatchesSelector || Element.prototype.oMatchesSelector;
 };
@@ -4106,6 +5251,9 @@ if (!Element.prototype.matches) {
  * Checks if the element matches the specified selector.
  * @param {string} selector The CSS selector to match against.
  * @returns {boolean} true if the element matches the selector, otherwise false.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.is = function (selector) {
     return this.matches(selector);
@@ -4116,6 +5264,9 @@ Element.prototype.is = function (selector) {
  * @memberof Element.prototype
  * @param {string} [ns] The namespace URI of the cloned element.
  * @returns {HTMLElement} The cloned element.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.clone = function (ns) {
 
@@ -4146,6 +5297,9 @@ Element.prototype.clone = function (ns) {
  * @memberof Element.prototype
  * @param {Function} callback The callback function to execute after hiding the element.
  * @param {number} [timeout=30] The timeout duration in milliseconds before showing the element again.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.hideShowProcess = function (callback, timeout = 30) {
     this.css('visibility', 'hidden');
@@ -4167,6 +5321,9 @@ Element.prototype.hideShowProcess = function (callback, timeout = 30) {
  * @memberof Element.prototype
  * @param {string} eventName The name of the custom event.
  * @param {*} [args] Additional arguments to include in the event.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.emitCustomEvent = function (eventName, args) {
     var event = new CustomEvent(eventName, { detail: args });
@@ -4178,6 +5335,9 @@ Element.prototype.emitCustomEvent = function (eventName, args) {
  * @function emitMouseEvent
  * @memberof Element.prototype
  * @param {string} eventType The type of mouse event to emit (e.g., 'click', 'mousedown', 'mouseup').
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.emitMouseEvent = function (eventType) {
     const event = document.createEvent('MouseEvents');
@@ -4190,6 +5350,9 @@ Element.prototype.emitMouseEvent = function (eventType) {
  * @function emitHtmlEvents
  * @memberof Element.prototype
  * @param {string} eventType The type of HTML event to emit (e.g., 'change', 'submit', 'focus').
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.emitHtmlEvents = function (eventType) {
     if ("createEvent" in document) {
@@ -4201,6 +5364,14 @@ Element.prototype.emitHtmlEvents = function (eventType) {
     }
 };
 
+/**
+ * Emits a custom event from the window object.
+ * @memberof Window.prototype
+ * @param {string} eventType The type of event to emit.
+ * @prototypeof Window
+ * @method
+ * @public
+ */
 Window.prototype.emitEvent = function (eventType) {
     window.dispatchEvent(new Event(eventType));
 };
@@ -4210,6 +5381,9 @@ Window.prototype.emitEvent = function (eventType) {
  * @function isValueExceeded
  * @memberof Element.prototype
  * @returns {boolean} true if the value or content exceeds the element's width, otherwise false.
+ * @prototypeof Element
+ * @method
+ * @public
  */
 Element.prototype.isValueExceeded = function () {
     const width = this.bounds().outerWidth;
@@ -4233,7 +5407,7 @@ Element.prototype.isValueExceeded = function () {
     var result = s.bounds().outerWidth > width;
     s.remove();
     return result;
-}
+};
 
 Element.prototype.getRealWidth = function () {
     const width = this.bounds().outerWidth;
@@ -4260,8 +5434,15 @@ Element.prototype.getRealWidth = function () {
     }
     s.remove();
     return w;
-}
+};
 
+/**
+ * Selects the content of the HTMLDivElement.
+ * @memberof HTMLDivElement.prototype
+ * @prototypeof HTMLDivElement
+ * @method
+ * @public
+ */
 HTMLDivElement.prototype.select = function () {
     var sel, range;
     if (window.getSelection && document.createRange) {
@@ -4277,6 +5458,13 @@ HTMLDivElement.prototype.select = function () {
     }
 }
 
+/**
+ * Inserts text at the current cursor position within the element.
+ * @param {string} text The text to insert.
+ * @prototypeof Element
+ * @method
+ * @public
+ */
 Element.prototype.insertText = function (text) {
     if (document.queryCommandSupported('insertText')) {
         document.execCommand('insertText', false, text);
@@ -4294,6 +5482,13 @@ Element.prototype.insertText = function (text) {
     }
 }
 
+/**
+ * Inserts an element at the current cursor position within the element.
+ * @param {HTMLElement} element The element to insert.
+ * @prototypeof Element
+ * @method
+ * @public
+ */
 Element.prototype.insertElement = function (element) {
     this.preventFocusEvent = true;
 
@@ -4319,10 +5514,11 @@ Element.prototype.insertElement = function (element) {
     this.blur();
 }
 
-
-
 /**
  * Clears all tokens from the DOMTokenList.
+ * @prototypeof DOMTokenList
+ * @method
+ * @public
  */
 DOMTokenList.prototype.clear = function () {
     for (let i = 0; i < this.length; i++) {
@@ -4337,6 +5533,7 @@ DOMTokenList.prototype.clear = function () {
  * @param {string} mime The MIME type.
  * @param {boolean} isBase Indicates if the data is base64 encoded.
  * @returns {File} The created File object.
+ * @global
  */
 function Base2File(data, filename, mime, isBase) {
     var bstr = isBase ? atob(data) : data,
@@ -4353,6 +5550,7 @@ function Base2File(data, filename, mime, isBase) {
  * @param {string} filename The filename.
  * @param {string} mime The MIME type.
  * @param {boolean} [isBase=true] Indicates if the data is base64 encoded.
+ * @global
  */
 function DownloadFile(data, filename, mime, isBase = true) {
     var a = Element.create('a', { href: window.URL.createObjectURL(Base2File(data, filename, mime, isBase), { type: mime }), download: filename });
@@ -4366,6 +5564,7 @@ function DownloadFile(data, filename, mime, isBase = true) {
  * @param {string} filename The filename.
  * @param {string} mime The MIME type.
  * @param {boolean} [isBase=true] Indicates if the data is base64 encoded.
+ * @global
  */
 function PrintFile(data, filename, mime, isBase = true) {
     window.open(window.URL.createObjectURL(Base2File(data, filename, mime, isBase), { type: mime })).print();
@@ -4379,6 +5578,7 @@ function PrintFile(data, filename, mime, isBase = true) {
  * @param {string} url The URL of the file.
  * @param {string} [filename=null] The filename.
  * @param {string} [target='_self'] The target window.
+ * @global
  */
 function DownloadUrl(url, filename = null, target = '_self') {
     if (!filename) {
@@ -4394,6 +5594,7 @@ function DownloadUrl(url, filename = null, target = '_self') {
  * Downloads a file by its path.
  * @param {string} path The path of the file.
  * @param {string} filename The filename.
+ * @global
  */
 function DownloadFileByPath(path, filename) {
     if (!DownloadOnDevice(path, filename)) {
@@ -4404,6 +5605,12 @@ function DownloadFileByPath(path, filename) {
         document.body.removeChild(a);
     }
 };
+/**
+ * Downloads a Blob object as a file.
+ * @param {Blob} blob The Blob object to download.
+ * @param {string} filename The filename.
+ * @global
+ */
 function DownloadBlob(blob, filename) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -4418,6 +5625,7 @@ function DownloadBlob(blob, filename) {
  * @param {string} path The path of the file.
  * @param {string} filename The filename.
  * @returns {boolean} Indicates if the download was successful.
+ * @global
  */
 function DownloadOnDevice(path, filename) {
 
@@ -4468,6 +5676,7 @@ function DownloadOnDevice(path, filename) {
 };
 /**
  * Downloads the file.
+ * @global
  */
 File.prototype.download = function () {
     var a = Element.create('a', { href: window.URL.createObjectURL(this, { type: this.type }), download: this.name });
@@ -4509,6 +5718,10 @@ window.addEventListener('resize', (e) => {
  * Checks if the object is a Promise.
  * @param {*} p The object to check.
  * @returns {boolean} Indicates if the object is a Promise.
+ * @prototypeof Function
+ * @static
+ * @method
+ * @public
  */
 Function.isPromise = function (p) {
     return (typeof p === 'object' && typeof p.then === 'function');
@@ -4521,6 +5734,10 @@ Function.isPromise = function (p) {
  * @param {number} c The change in value.
  * @param {number} d The duration.
  * @returns {number} The eased value.
+ * @prototypeof Math
+ * @method
+ * @public
+ * @static
  */
 Math.easeInOutQuad = function (t, b, c, d) {
     t /= d / 2;
@@ -4531,12 +5748,14 @@ Math.easeInOutQuad = function (t, b, c, d) {
     return -c / 2 * (t * (t - 2) - 1) + b;
 };
 
-
-
-//
-// Helper
-//
-
+/**
+ * Replaces URLs in the string using a callback function.
+ * @param {Function} callback The callback function to process each URL.
+ * @returns {Promise<string>} A promise that resolves with the modified string.
+ * @prototypeof String
+ * @method
+ * @public
+ */
 String.prototype.replaceUrls = function (callback) {
     return new Promise((resolve, reject) => {
         const regex = /https?:\/\/[^\s\"\\<\>']+/g;
@@ -4557,7 +5776,13 @@ String.prototype.replaceUrls = function (callback) {
     });
 }
 
-// https://stackoverflow.com/a/11058858
+/**
+ * Converts the string to an ArrayBuffer.
+ * @returns {ArrayBuffer} The ArrayBuffer representation of the string.
+ * @prototypeof String
+ * @method
+ * @public
+ */
 String.prototype.toArrayBuffer = function () {
     const buf = new ArrayBuffer(this.length);
     const bufView = new Uint8Array(buf);
@@ -4567,10 +5792,24 @@ String.prototype.toArrayBuffer = function () {
     return buf;
 }
 
+/**
+ * Converts the ArrayBuffer to a string.
+ * @returns {string} The string representation of the ArrayBuffer.
+ * @prototypeof ArrayBuffer
+ * @method
+ * @public
+ */
 ArrayBuffer.prototype.toString = function () {
     return String.fromCharCode.apply(null, new Uint8Array(this));
 }
 
+/**
+ * Converts a PEM-encoded SPKI public key to DER format.
+ * @returns {ArrayBuffer} The DER representation of the SPKI public key.
+ * @prototypeof String
+ * @method
+ * @public
+ */
 String.prototype.spkiPem2spkiDer = function () {
     const pemHeader = "-----BEGIN PUBLIC KEY-----";
     const pemFooter = "-----END PUBLIC KEY-----";
@@ -4579,6 +5818,12 @@ String.prototype.spkiPem2spkiDer = function () {
     return binaryDerString.toArrayBuffer();
 }
 
+/**
+ * Checks if the string can be evaluated as a function. 
+ * @prototypeof String
+ * @method
+ * @public
+ */
 String.prototype.isFunction = function () {
     let test = null;
     try {
@@ -4589,6 +5834,12 @@ String.prototype.isFunction = function () {
     return typeof test === 'function';
 }
 
+/**
+ * Converts the string to a function if possible. 
+ * @prototypeof String
+ * @method
+ * @public
+ */
 String.prototype.convertToFunction = function () {
     let test = null;
     try {
@@ -4599,10 +5850,23 @@ String.prototype.convertToFunction = function () {
     return typeof test === 'function' ? test : null;
 }
 
+/**
+ * Checks if the function is an async function.
+ * @returns {boolean} Indicates if the function is an async function.
+ * @prototypeof Function
+ * @method
+ * @public
+ */
 Function.prototype.isAsync = function () {
     return this.constructor.name === 'AsyncFunction';
 };
 
+/**
+ * Converts a filter object to a string representation.
+ * @param {Object|Array} filter The filter object or array.
+ * @returns {string} The string representation of the filter.
+ * @global
+ */
 window.convertFilterToString = function (filter) {
 
     if (Array.isArray(filter) && filter.length > 0) {
@@ -4652,6 +5916,12 @@ window.convertFilterToString = function (filter) {
 
 }
 
+/**
+ * Converts a filter object to a string representation suitable for SQL queries.
+ * @param {Object|Array} filter The filter object or array.
+ * @returns {string} The string representation of the filter for SQL.
+ * @global
+ */
 window.convertFilterToStringForSql = function (filter) {
 
     if (Array.isArray(filter) && filter.length > 0) {
@@ -4702,6 +5972,11 @@ window.convertFilterToStringForSql = function (filter) {
 
 }
 
+/**
+ * Checks if the current device is a pure touch device (no mouse).
+ * @returns {boolean} true if the device is a pure touch device, otherwise false.
+ * @global
+ */
 window.isPureTouchDevice = function () {
     const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
@@ -4717,6 +5992,17 @@ window.__listenersMap = new WeakMap();
 window.__delayMap = new WeakMap();
 window.__elToInstance = new WeakMap();
 
+/**
+ * Overrides the addEventListener method to handle touch and mouse events based on device type.
+ * @param {string} type The type of event to listen for.
+ * @param {Function} listener The event listener function.
+ * @param {Object|boolean} [options] Options for the event listener.    
+ * @param {number|null} [delay=null] Optional delay for the event listener.
+ * @returns {void}
+ * @prototypeof EventTarget
+ * @method
+ * @public
+ */
 EventTarget.prototype.addEventListener = function (type, listener, options, delay = null) {
 
     if (window.isPureTouchDevice() && ['mouseenter', 'mouseleave', 'mouseover', 'mouseout', 'mousemove'].includes(type)) {
@@ -4740,6 +6026,16 @@ EventTarget.prototype.addEventListener = function (type, listener, options, dela
 
 };
 
+/**
+ * Overrides the removeEventListener method to handle touch and mouse events based on device type.
+ * @param {string} type The type of event to remove.
+ * @param {Function} listener The event listener function to remove.
+ * @param {Object|boolean} [options] Options for the event listener.
+ * @returns {void}
+ * @prototypeof EventTarget
+ * @method
+ * @public
+ */
 EventTarget.prototype.removeEventListener = function (type, listener, options) {
     if (__listenersMap.has(this)) {
         const arr = __listenersMap.get(this);
@@ -4760,11 +6056,25 @@ EventTarget.prototype.removeEventListener = function (type, listener, options) {
     return window.__originalRemove.call(this, type, listener, options);
 };
 
-// Вспомогательная функция: получить список событий
+/**
+ * Retrieves the event listeners for a given element.
+ * @param {Element} el The element to retrieve event listeners for.
+ * @returns {Array} An array of event listener objects for the specified element.
+ * @global
+ */
 window.getEventListenersFor = function (el) {
     return __listenersMap.get(el) || [];
 };
 
+/**
+ * Maps a UI component instance to the current element, window, or document.
+ * @param {Object} instance The UI component instance to map.
+ * @returns {void}
+ * @prototypeof Document
+ * @static
+ * @method
+ * @public
+ */
 document.mapToUIComponent = Window.prototype.mapToUIComponent = Element.prototype.mapToUIComponent = function (instance) {
     if (__elToInstance.has(this)) {
         let exists = __elToInstance.get(this);
@@ -4780,6 +6090,14 @@ document.mapToUIComponent = Window.prototype.mapToUIComponent = Element.prototyp
     }
 };
 
+/**
+ * Retrieves the UI component instance mapped to the current element, window, or document.
+ * @returns {Object|Array|null} The UI component instance(s) mapped to the element, or null if none exist.
+ * @prototypeof Document
+ * @static
+ * @method
+ * @public
+ */
 document.getUIComponent = Window.prototype.getUIComponent = Element.prototype.getUIComponent = function () {
     const exists = __elToInstance.get(this);
     if (!Array.isArray(exists)) {
@@ -4790,6 +6108,12 @@ document.getUIComponent = Window.prototype.getUIComponent = Element.prototype.ge
     return exists;
 };
 
+/**
+ * Deletes the current element, removing it from the DOM and cleaning up associated event listeners and data.
+ * @returns {void}
+ * @prototypeof Element
+ * @method
+ */
 Element.prototype.delete = function () {
 
     __elToInstance.delete(this);
@@ -4828,7 +6152,7 @@ JSON.stringify = function (value, replacer, space, escapeUnicode = false) {
 
 document.keysPressed = {
     ctrl: false,
-    alg: false,
+    alt: false,
     shift: false
 };
 

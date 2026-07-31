@@ -1,6 +1,7 @@
 /**
  * @namespace
  * @class
+ * @memberof Colibri
  */
 Colibri.UI = class {
 

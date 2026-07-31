@@ -1,7 +1,6 @@
 /**
  * Component select box
  * @class
- * @namespace
  * @extends Colibri.UI.Input
  * @memberof Colibri.UI
  */

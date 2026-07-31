@@ -1,6 +1,7 @@
 /**
  * @class
  * @extends Colibri.UI.Editor
+ * @memberof Colibri.UI
  */
 Colibri.UI.EmailEditor = class extends Colibri.UI.Editor {
     /**

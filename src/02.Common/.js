@@ -1,7 +1,7 @@
 /**
  * Represents common utility functions.
  * @namespace
- * @class
+ * @memberof Colibri
  */
 Colibri.Common = class {
 

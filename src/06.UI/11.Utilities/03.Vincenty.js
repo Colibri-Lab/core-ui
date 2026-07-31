@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @namespace
+ * @memberof Colibri.UI.Utilities
+ */
 Colibri.UI.Utilities.Vincenty = class {
 
     static a = 6378137.0;              // semi-major axis (WGS-84)

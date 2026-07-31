@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @namespace
+ * @memberof Colibri.UI.Utilities
+ */
 Colibri.UI.Utilities.Intersections = class {
 
     static MAX_DISTANCE = 20_000_000; // 20 000 км

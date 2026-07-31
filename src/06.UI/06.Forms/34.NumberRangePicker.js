@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends Colibri.UI.Forms.Field
+ * @memberof Colibri.UI.Forms
+ */
 Colibri.UI.Forms.NumberRangePicker = class extends Colibri.UI.Forms.Field {
 
     RenderFieldContainer() {

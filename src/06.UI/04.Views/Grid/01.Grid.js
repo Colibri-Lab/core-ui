@@ -1,7 +1,6 @@
 /**
  * Grid component
  * @class
- * @namespace
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
  */

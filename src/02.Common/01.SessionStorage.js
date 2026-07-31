@@ -1,9 +1,9 @@
 /**
- * Represents a browser storage utility.
+ * Represents a browser session storage utility.
  * @class
  * @memberof Colibri.Common
  */
-Colibri.Common.BrowserStorage = class {
+Colibri.Common.SessionStorage = class {
     /** @constructor */
     constructor() {}
 
@@ -13,7 +13,7 @@ Colibri.Common.BrowserStorage = class {
      * @param {*} [value=true] - The value to set. Defaults to true if not provided.
      */
     Set(name, value = true) {
-        window.localStorage.setItem(name, value);
+        window.sessionStorage.setItem(name, value);
     }
 
     /**
@@ -22,7 +22,7 @@ Colibri.Common.BrowserStorage = class {
      * @returns {*} - The value retrieved from the storage.
      */
     Get(name) {
-        return window.localStorage.getItem(name);
+        return window.sessionStorage.getItem(name);
     }
 
     /**
@@ -30,7 +30,7 @@ Colibri.Common.BrowserStorage = class {
      * @param {string} name - The name of the item to delete.
      */
     Delete(name) {
-        window.localStorage.removeItem(name);
+        window.sessionStorage.removeItem(name);
     }
 
     /**
