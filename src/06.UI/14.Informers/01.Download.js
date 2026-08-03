@@ -2,7 +2,7 @@
  * Download generating informer
  * @class
  * @extends Colibri.UI.FlexBox
- * @memberof AuditUIKit.UI.Informers
+ * @memberof Colibri.UI.Informers
  */
 Colibri.UI.Informers.Download = class extends Colibri.UI.FlexBox {
     
