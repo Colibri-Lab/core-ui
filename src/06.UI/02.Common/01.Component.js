@@ -1400,6 +1400,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * @type {Object}
      */
     set tag(value) {
+        value = this._convertProperty('Object', value);
         this._tag = value;
     }
 
@@ -2720,6 +2721,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     /**
      * Ensures that the component is visible in parent porsion
      * @param {(Colibri.UI.Component|HTMLElement)} [parent] parent component
+     * @param {number} [top] top position to scroll
+     * @param {boolean} [hr] is horizontal scroll
      * @returns {void}
      */
     EnsureVisible(parent, top = null, hr = false) {
@@ -2728,10 +2731,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
             parentEl = parent.container;
         }
         if (parentEl) {
-            if (!hr) {
-                this._element.ensureInViewport(parentEl, top);
-            } else {
-                this._element.ensureInViewportHr(parentEl, top);
+            if(!this._element.inInViewport(parentEl)) {
+                if (!hr) {
+                    this._element.ensureInViewport(parentEl, top);
+                } else {
+                    this._element.ensureInViewportHr(parentEl, top);
+                }
             }
         } else {
             this._element.scrollIntoView(false);

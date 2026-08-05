@@ -2,8 +2,8 @@
  * Represents a module class in the Colibri framework.
  * This class extends Colibri.IO.RpcRequest and provides functionality for managing modules.
  * @class 
- * @extends Colibri.IO.RpcRequest
- * @memberof Colibri.Modules
+ * @extends Colibri.Events.Dispatcher
+ * @memberof Colibri.Common
  */
 Colibri.Common.Wasm = class extends Colibri.Events.Dispatcher {
 

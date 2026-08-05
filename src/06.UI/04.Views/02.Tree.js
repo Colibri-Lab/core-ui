@@ -819,14 +819,18 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
 
     /**
      * Ensures node is visible
+     * @param {Colibri.UI.TreeNode} p node to ensure visible
+     * @param {boolean} top if true, node will be on top of tree
+     * @param {boolean} hr if true, node will be in horizontal center of tree
+     * @public
      */
-    EnsureVisible() {
+    EnsureVisible(p = null, top = null, hr = false) {
         let parent = this.parentNode;
         while(parent) {
             this.parentNode.Expand();
             parent = parent.parentNode;
         }
-        super.EnsureVisible();
+        super.EnsureVisible(p || this.tree, top, hr);
     }
 
     /**
