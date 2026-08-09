@@ -319,7 +319,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
             }
         } else if (typeof value === 'string' && ['Object', 'Function', 'Array'].indexOf(type) !== -1) {
             if (!value.isFunction()) {
-                eval('value = ' + value + ';');
+                try {
+                    eval('value = ' + value + ';');
+                } catch (e) {
+                    
+                }
             } else {
                 try {
                     value = value.convertToFunction();
