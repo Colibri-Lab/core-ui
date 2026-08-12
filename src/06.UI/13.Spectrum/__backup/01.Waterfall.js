@@ -2,6 +2,7 @@
  * @class
  * @extends Colibri.UI.FlexBox
  * @memberof Colibri.UI.Spectrum
+ * @ignore
  */
 Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
 

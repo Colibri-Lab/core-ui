@@ -112,7 +112,7 @@ const isIterable = (value) => {
 
 /**
  * Extends the prototype of Intl.NumberFormat to provide a method for unformatting a formatted number string.
- * @global
+ * @prototypeof Intl.NumberFormat
  * @param {string} stringNumber - The formatted number string to unformat.
  * @returns {number} Returns the unformatted number.
  * @example
@@ -1512,10 +1512,11 @@ Object.createFromArray = function (array, keyField, valueField = null) {
  * @method
  * @example
  * ```
- * const obj = {a: 1, b: 2};
- * Object.forEach(obj, (key, value) => {
- *     console.log(key, value);
- * });
+ * const arr1 = [1, 2, 3, 4];
+ * const arr2 = [3, 4];
+ * const arr3 = [1, 2, 3, 4];
+ * arr1.equals(arr2); // false
+ * arr1.equals(arr3); // true
  * ```
  */
 Object.defineProperty(Array.prototype, "equals", { enumerable: false });
@@ -1772,6 +1773,9 @@ Object.insertAt = function (object, key, value, index) {
  * Converts a nested object to a plain object with flattened keys.
  * @param {Object} object - The object to convert.
  * @param {string} [prefix=''] - Optional prefix to prepend to flattened keys.
+ * @param {Array|Function} [except=[]] - Optional array of keys to exclude from flattening or a function to determine exclusion.
+ * @param {boolean} [useCamelCase=true] - Optional flag to convert keys to camel case.
+ * @param {string} [splitter='-'] - Optional string to use as a separator for flattened keys.
  * @returns {Object} Returns the plain object with flattened keys.
  * @prototypeof Object
  * @static
@@ -1782,14 +1786,17 @@ Object.insertAt = function (object, key, value, index) {
  * const plainObj = Object.toPlain(nestedObj); // {a-b: 1, a-c: 2, d: 3}
  * ```
  */
-Object.toPlain = function (object, prefix) {
+Object.toPlain = function (object, prefix = '', except = [], useCamelCase = true, splitter = '-') {
+    if(Array.isArray(except)) {
+        except = (k, v) => except.includes(k); 
+    }
     let ret = {};
     Object.forEach(object, (k, v) => {
-        if (v instanceof Object) {
-            ret = Object.assign(ret, Object.toPlain(v, k + '-'));
+        if (!except(k, v) && v instanceof Object) {
+            ret = Object.assign(ret, Object.toPlain(v, prefix + k + splitter, except, useCamelCase, splitter));
         }
         else {
-            ret[((prefix || '') + k).toCamelCase('-', false)] = v;
+            ret[useCamelCase ? (prefix + k).toCamelCase(splitter, false) : (prefix + k)] = v;
         }
     });
     return ret;

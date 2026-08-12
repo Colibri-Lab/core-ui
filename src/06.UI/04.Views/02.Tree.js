@@ -827,8 +827,10 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
     EnsureVisible(p = null, top = null, hr = false) {
         let parent = this.parentNode;
         while(parent) {
-            this.parentNode.Expand();
-            parent = parent.parentNode;
+            if(this.parentNode && this.parentNode.Expand) {
+                this.parentNode.Expand();
+            }
+            parent = parent?.parentNode;
         }
         super.EnsureVisible(p || this.tree, top, hr);
     }

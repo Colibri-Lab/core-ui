@@ -1379,17 +1379,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * @type {string}
      */
     get html() {
-        return this._element.html();
+        return this._element?.html() ?? '';
     }
     /**
      * HTML content of component element
      * @type {string}
      */
     set html(value) {
-        if (!this._element) {
-            debugger;
-        }
-        this._element.html(value);
+        this._element?.html(value);
     }
 
     /**
@@ -1541,7 +1538,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * @type {String}
      */
     get value() {
-        return this._element.html();
+        return this._element?.html() ?? '';
     }
     /**
      * Component value
@@ -1550,6 +1547,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     set value(value) {
         if (!this._element) {
             debugger;
+            return;
         }
         this._element.html(value);
     }
