@@ -5,7 +5,18 @@
  */
 Colibri.UI.FormValidator = class extends Colibri.Events.Dispatcher {
 
+    /**
+     * Form component
+     * @type {Colibri.UI.Forms.Form}
+     * @private
+     */
     _form = null;
+
+    /**
+     * Field validators
+     * @type {Array<Colibri.UI.FieldValidator>}
+     * @private
+     */
     _validators = null;
 
     /**
@@ -23,11 +34,21 @@ Colibri.UI.FormValidator = class extends Colibri.Events.Dispatcher {
         this._createValidators();
     }
 
+    /**
+     * When form fields rendered
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments
+     * @ignore 
+     */
     __formFieldsRendered(event, args) {
         this._createValidators();
     }
 
-    /** @private */
+    /**
+     * Create validators for each field in the form
+     * @private
+     */
     _createValidators() {
         this._validators = [];
         this._form.ForEach((name, component) => {
@@ -37,6 +58,13 @@ Colibri.UI.FormValidator = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * When field validator validated
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments
+     * @ignore 
+     */
     __fieldsValidatorValidated(event, args) {
         this.Dispatch('Validated', args);
     }
@@ -47,7 +75,7 @@ Colibri.UI.FormValidator = class extends Colibri.Events.Dispatcher {
      * @param {boolean} breakFirst прерывается на первом не валидном поле
      * @param {string} className
      * @returns {boolean}
-     * @constructor
+     * @public
      */
     Validate(messages = true, breakFirst = true, className = 'app-validate-error') {
 
@@ -84,6 +112,7 @@ Colibri.UI.FormValidator = class extends Colibri.Events.Dispatcher {
      * @param {string} field field to invalidate
      * @param {string} message message to show
      * @param {string} className classname for error
+     * @public
      */
     Invalidate(field, message, className = 'app-validate-error') {
         const fieldObject = this._form.FindField(field);
@@ -98,7 +127,6 @@ Colibri.UI.FormValidator = class extends Colibri.Events.Dispatcher {
     /**
      * Form object
      * @type {Colibri.UI.Forms.Form}
-     * @readonly
      */
     get form() {
         return this._form;

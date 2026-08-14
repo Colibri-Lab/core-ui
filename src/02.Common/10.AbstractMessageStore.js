@@ -10,6 +10,7 @@ Colibri.Common.AbstractMessageStore = class extends Colibri.Events.Dispatcher {
      * Add the message to the storage
      * @param {Object} message - The message to add.
      * @returns {Promise} A promise that resolves when the message is added.
+     * @public
      */
     Add(message) {
         throw new Error('Not implemented');
@@ -20,6 +21,7 @@ Colibri.Common.AbstractMessageStore = class extends Colibri.Events.Dispatcher {
      * @param {Object} message - The message to update.
      * @param {number} id - The ID of the message to update.
      * @returns {Promise} A promise that resolves when the message is updated.
+     * @public
      */
     Update(message, id) {
         throw new Error('Not implemented');
@@ -29,6 +31,7 @@ Colibri.Common.AbstractMessageStore = class extends Colibri.Events.Dispatcher {
      * Store messages in the store.
      * @param {Array} messages - The messages to store.
      * @returns {Promise} A promise that resolves when the messages are stored.
+     * @public
      */
     Store(messages) {
         throw new Error('Not implemented');
@@ -43,6 +46,7 @@ Colibri.Common.AbstractMessageStore = class extends Colibri.Events.Dispatcher {
      * @param {number} options.page - The page number for pagination.
      * @param {number} options.pagesize - The number of messages per page.
      * @returns {Promise} A promise that resolves with the retrieved messages.
+     * @public
      */
     Get(options = {}) {
         throw new Error('Not implemented');
@@ -51,6 +55,7 @@ Colibri.Common.AbstractMessageStore = class extends Colibri.Events.Dispatcher {
     /**
      * Deletes messages from the store.
      * @returns {Promise} A promise that resolves when the messages are deleted.
+     * @public
      */
     Clear() {
         throw new Error('Not implemented');
@@ -61,6 +66,7 @@ Colibri.Common.AbstractMessageStore = class extends Colibri.Events.Dispatcher {
      * @param {Object} options - Options for deleting the message.
      * @param {number} options.filter - The filter to apply to the messages.
      * @returns {Promise} A promise that resolves when the message is deleted.
+     * @public
      */
     Delete(options = {}) {
         throw new Error('Not implemented');

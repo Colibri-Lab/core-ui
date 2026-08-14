@@ -8,6 +8,7 @@ Colibri.Common.Scrolling = class {
     /**
      * Creates an instance of Colibri.Common.Scrolling.
      * @param {HTMLElement} element - The HTML element to apply scrolling behavior.
+     * @constructor
      */
     constructor(element) {
         
@@ -22,6 +23,7 @@ Colibri.Common.Scrolling = class {
     /**
      * Disposes of the scrolling utility and removes event listeners from the element.
      * @returns {void}
+     * @public
      */
     Dispose() {
         this.Disable();
@@ -33,8 +35,9 @@ Colibri.Common.Scrolling = class {
      * @param {HTMLElement} element - The HTML element to apply scrolling behavior.
      * @returns {Colibri.Common.Scrolling} A new instance of Colibri.Common.Scrolling.
      * @static
+     * @public
      */
-    Create(element) {
+    static Create(element) {
         return new Colibri.Common.Scrolling(element);
     }
 
@@ -64,6 +67,7 @@ Colibri.Common.Scrolling = class {
     
     /**
      * Disables scrolling behavior on the element.
+     * @public
      */
     Disable() {
         this._element.addEventListener('DOMMouseScroll', this.__preventDefault, false); // older FF
@@ -74,6 +78,7 @@ Colibri.Common.Scrolling = class {
 
     /**
      * Enables scrolling behavior on the element.
+     * @public
      */
     Enable() {
         this._element.removeEventListener('DOMMouseScroll', this.__preventDefault, false);

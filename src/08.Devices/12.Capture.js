@@ -30,6 +30,8 @@ Colibri.Devices.Capture = class extends Destructable {
      * @returns {Promise<Blob>} - A promise that resolves with the captured audio as a Blob.
      * @throws {Error} - Throws an error if the capture fails.
      * @param {Array<Number>|Number} time - The time parameter for the audio capture (optional).
+     * @async
+     * @public
      */
     Audio(limit = 10) {
         return new Promise((resolve, reject) => {

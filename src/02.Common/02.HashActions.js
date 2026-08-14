@@ -6,7 +6,10 @@
 Colibri.Common.HashActions = class extends Colibri.Events.Dispatcher {
     
     
-    /** @constructor */
+    /**
+     * Creates a new instance of Colibri.Common.HashActions. 
+     * @constructor 
+     */
     constructor() {
         super();
         this.handlers = {};
@@ -33,6 +36,7 @@ Colibri.Common.HashActions = class extends Colibri.Events.Dispatcher {
     
     /**
      * Handles the DOM ready event.
+     * @public
      */
     HandleDomReady() {
         this.InitDOMHandlers();
@@ -41,6 +45,7 @@ Colibri.Common.HashActions = class extends Colibri.Events.Dispatcher {
     
     /**
      * Initializes DOM event handlers.
+     * @public
      */
     InitDOMHandlers() {
 
@@ -63,6 +68,7 @@ Colibri.Common.HashActions = class extends Colibri.Events.Dispatcher {
     /**
      * Disposes of the hash action handlers and removes the click event listener from elements with data-action attributes.
      * @returns {void}
+     * @public
      */
     Dispose() {
         document.querySelectorAll('[data-action]').forEach((element) => { 
@@ -75,6 +81,7 @@ Colibri.Common.HashActions = class extends Colibri.Events.Dispatcher {
      * Adds a handler for a hash action.
      * @param {string} action - The hash action.
      * @param {Function} handler - The handler function.
+     * @public
      */
     AddHandler(action, handler) {
         if(this.handlers[action] === undefined)
@@ -86,6 +93,7 @@ Colibri.Common.HashActions = class extends Colibri.Events.Dispatcher {
      * Removes a handler for a hash action.
      * @param {string} action - The hash action.
      * @param {Function} handler - The handler function.
+     * @public
      */
     RemoveHandler(action, handler) {
         if(this.handlers[action] === undefined)
@@ -101,6 +109,7 @@ Colibri.Common.HashActions = class extends Colibri.Events.Dispatcher {
      * @param {string} action - The hash action.
      * @param {Object} [args={}] - Additional arguments.
      * @returns {boolean} - Indicates if the action was raised successfully.
+     * @public
      */
     Raise(action, args = {}, domEvent = null) {
         try {

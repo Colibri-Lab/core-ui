@@ -43,6 +43,14 @@ Colibri.UI.FilesViewer = class extends Colibri.UI.Viewer {
 
     }
 
+    /**
+     * List item clicned  
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments 
+     * @private 
+     * @ignore
+     */
     __listItemClicked(event, args) {
         const value = args.item.value;
         if (value && value.file && this._download) {
@@ -51,7 +59,7 @@ Colibri.UI.FilesViewer = class extends Colibri.UI.Viewer {
     }
 
 
-    /** @private */
+    /** @ignore */
     _showValue() {
 
         const group = this._list.Children('group');

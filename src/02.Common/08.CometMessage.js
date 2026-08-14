@@ -8,36 +8,42 @@ Colibri.Common.CometMessage = class {
     /**
      * Message action
      * @type {String}
+     * @public
      */
     action = 'message';
     
     /**
      * Message domain
      * @type {String}
+     * @public
      */
     domain = 'localhost';
 
     /**
      * Message date
      * @type {String}
+     * @public
      */
     date = Date.Now();
 
     /**
      * Message ID
      * @type {Number}
+     * @public
      */
     id = Date.Mc();
 
     /**
      * From user ID
      * @type {String}
+     * @public
      */
     from = '';
 
     /**
      * Is message read
      * @type {Boolean}
+     * @public
      */
     read = false;
 
@@ -45,31 +51,50 @@ Colibri.Common.CometMessage = class {
      * Recipient of the message
      * If exists means that the message is sent to a specific user
      * @type {String}
+     * @public
      */
     recipient = null;
 
     /**
      * Message text
      * @type {Object<text>}
+     * @public
      */
     message = {};
 
     /**
      * Is message broadcast
      * @type {Boolean}
+     * @public
      */
     broadcast = false;
 
     /** 
      * Delivery type
      * @type {string} 
+     * @public
      */
     delivery = 'trusted';
 
+    /** 
+     * Activate message
+     * @type {boolean} 
+     * @public
+     */
     activate = false;
 
+    /** 
+     * Wakeup message
+     * @type {boolean} 
+     * @public
+     */
     wakeup = false;
 
+    /**
+     * Creates an instance of Colibri.Common.CometMessage.
+     * @constructor
+     * @public
+     */
     constructor() {
         // do nothing
     }
@@ -77,6 +102,7 @@ Colibri.Common.CometMessage = class {
     /**
      * Creates a clone of the current message.
      * @returns {Colibri.Common.CometMessage} A new instance of Colibri.Common.CometMessage with the same properties.
+     * @public
      */
     clone() {
         const msg = new Colibri.Common.CometMessage();
@@ -99,6 +125,8 @@ Colibri.Common.CometMessage = class {
      * Creates a new instance of Colibri.Common.CometMessage from a received message object.
      * @param {Object} messageReceived - The received message object.
      * @returns {Colibri.Common.CometMessage} A new instance of Colibri.Common.CometMessage with properties set based on the received message.
+     * @static
+     * @public
      */
     static FromReceivedObject(messageReceived) {
         const msg = new Colibri.Common.CometMessage();
@@ -124,6 +152,8 @@ Colibri.Common.CometMessage = class {
      * @param {boolean} [activate=true] - Whether to activate the message.
      * @param {boolean} [wakeup=true] - Whether to wake up the recipient.
      * @returns {Colibri.Common.CometMessage} A new instance of Colibri.Common.CometMessage for sending.
+     * @public
+     * @static
      */
     static CreateForSend(domain, from, recipient, text, addditional = {}, activate = true, wakeup = true) {
         const message = new Colibri.Common.CometMessage();
@@ -146,6 +176,8 @@ Colibri.Common.CometMessage = class {
      * @param {boolean} [activate=true] - Whether to activate the message.
      * @param {boolean} [wakeup=true] - Whether to wake up the recipient.
      * @returns {Colibri.Common.CometMessage} A new instance of Colibri.Common.CometMessage for sending files.
+     * @public
+     * @static
      */
     static CreateForFilesSend(domain, from, recipient, files, addditional = {}, activate = true, wakeup = true) {
         const message = new Colibri.Common.CometMessage();
@@ -167,6 +199,8 @@ Colibri.Common.CometMessage = class {
      * @param {boolean} [activate=true] - Whether to activate the message.
      * @param {boolean} [wakeup=true] - Whether to wake up the recipients.
      * @returns {Colibri.Common.CometMessage} A new instance of Colibri.Common.CometMessage for sending a broadcast message.
+     * @public
+     * @static
      */
     static CreateForSendBroadcast(domain, from, text, addditional = {}, activate = true, wakeup = true) {
         const message = new Colibri.Common.CometMessage();
@@ -189,6 +223,8 @@ Colibri.Common.CometMessage = class {
      * @param {boolean} [activate=true] - Whether to activate the message.
      * @param {boolean} [wakeup=true] - Whether to wake up the recipients.
      * @returns {Colibri.Common.CometMessage} A new instance of Colibri.Common.CometMessage for sending files as a broadcast message.
+     * @public
+     * @static
      */
     static CreateForFilesSendBroadcast(domain, from, files, addditional = {}, activate = true, wakeup = true) {
         const message = new Colibri.Common.CometMessage();
@@ -204,6 +240,7 @@ Colibri.Common.CometMessage = class {
 
     /**
      * Marks the message as read.
+     * @public
      */
     MarkAsRead() {
         this.read = true;
@@ -211,6 +248,7 @@ Colibri.Common.CometMessage = class {
 
     /**
      * Marks the message as unread.
+     * @public
      */
     MarkAsUnread() {
         this.read = false;
@@ -235,6 +273,12 @@ Colibri.Common.CometMessage = class {
     /**
      * Converts the message instance to a plain object representation.
      * @returns {Object} A plain object representation of the message instance.
+     * @public
+     * @example
+     * ```
+     * const message = new Colibri.Common.CometMessage();
+     * const messageObject = message.toObject();
+     * ```
      */
     toObject() {
         const ret = {
@@ -259,9 +303,12 @@ Colibri.Common.CometMessage = class {
      * Converts the message instance to a JSON string representation.
      * @returns {string} A JSON string representation of the message instance.
      * @throws {TypeError} If the message instance cannot be converted to JSON.
+     * @public
      * @example
+     * ```
      * const message = new Colibri.Common.CometMessage();
      * const jsonString = message.toJson();
+     * ```
      */
     toJson() {
         return JSON.stringify(this.toObject());

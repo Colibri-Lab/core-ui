@@ -48,11 +48,21 @@ Colibri.UI.GridFileViewer = class extends Colibri.UI.Viewer {
 
     }
 
+    /**
+     * Context menu parent clicked
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __contextMenuParentClicked(event, args) {
         return this.Dispatch('ContextMenuIconClicked', args);
     }
 
-    /** @private */
+    /**
+     * Creates a context menu button if the viewer has a context menu 
+     * @private 
+     */
     _createContextMenuButton() {
         if(!this._hasContextMenu || this.Children(this._name + '-contextmenu-icon-parent')) {
             return;
@@ -83,7 +93,10 @@ Colibri.UI.GridFileViewer = class extends Colibri.UI.Viewer {
         
     }
 
-    /** @private */
+    /**
+     * Removes a context menu button if the viewer has a context menu 
+     * @private 
+     */
     _removeContextMenuButton() {
         if(this._hasContextMenu && this.Children(this._name + '-contextmenu-icon-parent')) {
             this.Children(this._name + '-contextmenu-icon-parent').Dispose();
@@ -92,9 +105,11 @@ Colibri.UI.GridFileViewer = class extends Colibri.UI.Viewer {
     }
 
     /**
+     * When context menu item clicked
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
+     * @ignore
      */ 
     __createContextMenu(event, args) {
         let contextmenu = [];
@@ -112,9 +127,11 @@ Colibri.UI.GridFileViewer = class extends Colibri.UI.Viewer {
     }
 
     /**
+     * When context menu item clicked
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
+     * @ignore
      */ 
     __clickOnContextMenu(event, args) {
         if(!args.menuData) {

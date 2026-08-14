@@ -16,10 +16,24 @@ Colibri.UI.DeferredFormValidator = class {
         this._form.AddHandler('Changed', this.__formChanged, false, this);
     }
 
+    /**
+     * When form changed
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments
+     * @private
+     * @ignore
+     */
     __formChanged(event, args) {
         this._form.message = '';
     }
 
+    /**
+     * When form fields rendered
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments
+     * @private
+     * @ignore
+     */
     __formFieldsRendered(event, args) {
         this._init(this._form.Fields());
     }
@@ -28,6 +42,7 @@ Colibri.UI.DeferredFormValidator = class {
      * Init
      * @private
      * @param {object} fields fields object
+     * @private
      */
     _init(fields) {
         if (fields.length == 0) {
@@ -41,10 +56,24 @@ Colibri.UI.DeferredFormValidator = class {
         });
     }
 
+    /**
+     * When field changed
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments
+     * @private
+     * @ignore
+     */
     __fieldChanged(event, args) {
-        return this.__validateField(event.sender);
+        return this._validateField(event.sender);
     }
 
+    /**
+     * When field changed
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments
+     * @private
+     * @ignore
+     */
     __fieldFieldsRendered(event, args) {
         return this._init(event.sender.Fields());
     }
@@ -52,8 +81,10 @@ Colibri.UI.DeferredFormValidator = class {
     /**
      * Validate field
      * @param {object} field field object
+     * @param {boolean} showMessages show messages
+     * @private
      */
-    __validateField(field, showMessages = true) {
+    _validateField(field, showMessages = true) {
 
         field.field.params && (field.field.params.validated = 'success');
         field.message = '';
@@ -98,6 +129,7 @@ Colibri.UI.DeferredFormValidator = class {
     /**
      * Status of validation
      * @param {object} fields fields object
+     * @public
      */
     Status(fields = null) {
 
@@ -131,6 +163,7 @@ Colibri.UI.DeferredFormValidator = class {
     /**
      * Clear messages of validation
      * @param {object} fields fields object
+     * @public
      */
     Clear(fields = null) {
 
@@ -159,6 +192,12 @@ Colibri.UI.DeferredFormValidator = class {
 
     }
 
+    /**
+     * Start validation process
+     * @param {object} fields fields object
+     * @param {boolean} showMessages show messages
+     * @private
+     */
     _startValidationProcess(fields, showMessages = true) {
         if (!fields) {
             fields = this._form.Fields();
@@ -173,7 +212,7 @@ Colibri.UI.DeferredFormValidator = class {
         }
 
         for (const field of fields) {
-            this.__validateField(field, showMessages);
+            this._validateField(field, showMessages);
             const ffields = field.Fields ? Object.values(field.Fields()) : [];
             if (ffields.length > 0) {
                 this._startValidationProcess(ffields, showMessages);
@@ -184,6 +223,9 @@ Colibri.UI.DeferredFormValidator = class {
     /**
      * Validate all fields
      * @param {object|null} fields fields object
+     * @param {boolean} showMessages show messages
+     * @returns {Promise<boolean>}
+     * @public
      */
     ValidateAll(fields = null, showMessages = true) {
 
@@ -200,6 +242,12 @@ Colibri.UI.DeferredFormValidator = class {
 
     }
 
+    /**
+     * Validating fields
+     * @param {object|null} fields fields object
+     * @returns {boolean}
+     * @public
+     */
     Validating(fields = null) {
         if (!fields) {
             fields = this._form.Fields();
@@ -228,6 +276,7 @@ Colibri.UI.DeferredFormValidator = class {
     /**
      * Set field as valid
      * @param {object|string} field field object
+     * @public
      */
     SetAsValid(field) {
         const f = typeof field === 'string' ? this._form.FindField(field) : field;
@@ -243,6 +292,7 @@ Colibri.UI.DeferredFormValidator = class {
      * Invalidate field
      * @param {object|string"} field field object 
      * @param {string} message validation message 
+     * @public
      */
     Invalidate(field, message) {
         if (field == 'form' || field instanceof Colibri.UI.Forms.Form) {
@@ -267,6 +317,12 @@ Colibri.UI.DeferredFormValidator = class {
         return this._form;
     }
 
+    /**
+     * Get first invalid field
+     * @param {object|null} fields fields object
+     * @returns {object|null}
+     * @public
+     */
     GetFirstInvalid(fields = null) {
         let found = null;
         if (!fields) {

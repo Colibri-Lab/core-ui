@@ -25,6 +25,11 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      */
     _permited = false;
 
+    /**
+     * Notifications
+     * @type {Object}
+     * @private
+     */
     _notifications = {};
 
     /**
@@ -42,6 +47,10 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
         }
     }
 
+    /**
+     * Fires queued events.
+     * @public
+     */
     FireQueuedEvents() {
         this._plugin.fireQueuedEvents();
     }
@@ -49,6 +58,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
     /**
      * Checks if permission is granted.
      * @returns {Promise} - Promise resolving when permission is granted.
+     * @public
      */
     HasPermission() {
         return new Promise((resolve, reject) => {
@@ -70,6 +80,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
     /**
      * Requests permission for notifications.
      * @returns {Promise} - Promise resolving when permission is granted.
+     * @public
      */
     RequestPermission() {
         return new Promise((resolve, reject) => {
@@ -91,6 +102,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      * Adds actions to a notification group.
      * @param {string} groupName - The name of the notification group.
      * @param {*} actions - Actions to add.
+     * @public
      */
     AddActions(groupName, actions) {
         this._plugin.addActions(groupName, actions);
@@ -98,6 +110,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
     /**
      * Removes actions from a notification group.
      * @param {string} groupName - The name of the notification group.
+     * @public
      */
     RemoveActions(groupName) {
         this._plugin.removeActions(groupName);
@@ -133,6 +146,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      * @param {{launch,foreground,priority,sticky,sound}} options - Additional options for the notification.
      * @param {*} progressBar - Progress bar configuration.
      * @param {Function} callback - Callback function to execute after scheduling.
+     * @public
      */
     Schedule(title, message, actions = null, trigger = null, data = null, options = {}, progressBar = null, successCallback = null, errorCallback = null) {
         const params = Object.assign(options, {
@@ -156,6 +170,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
     /**
      * Cancels a scheduled notification with given id.
      * @param {number} id - The id of the notification to cancel.
+     * @public
      */
     Cancel(id) {
         this.RequestPermission().then(() => {
@@ -168,6 +183,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      * @param {string} event - The event to listen for.
      * @param {function(notification, eopts)} callback - The callback function.
      * @param {*} scope - The scope of the callback.
+     * @public
      */
     On(event, callback, scope) {
         this._plugin.on(event, callback, scope);
@@ -178,6 +194,7 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      * @param {string} event - The event to stop listening for.
      * @param {function} callback - The callback function.
      * @param {*} scope - The scope of the callback.
+     * @public
      */
     Off(event, callback, scope) {
         this._plugin.un(event, callback, scope);

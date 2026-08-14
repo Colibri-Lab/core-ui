@@ -13,66 +13,67 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
     static NotFound = 1;	
     /**
      * Error code for 'Security Error'.
-     * @type {number}
+     * @const {number}
      */
     static SecurityError = 2;
     /**
      * Error code for 'Abort'.
-     * @type {number}
+     * @const {number}
      */
     static Abort = 3;
     /**
      * Error code for 'Not Reachable'.
-     * @type {number}
+     * @const {number}
      */
     static NotReachable = 4;	
     /**
      * Error code for 'Encoding'.
-     * @type {number}
+     * @const {number}
      */
     static Encoding = 5;
     /**
      * Error code for 'No Modification Allowed'.
-     * @type {number}
+     * @const {number}
      */
     static NoModificationAllowed = 6;	
     /**
      * Error code for 'Invalid State'.
-     * @type {number}
+     * @const {number}
      */
     static InvalidState = 7;
     /**
      * Error code for 'Syntax Error'.
-     * @type {number}
+     * @const {number}
      */
     static SyntaxError = 8;
     /**
      * Error code for 'Invalid Modification'.
-     * @type {number}
+     * @const {number}
      */
     static InvalidModification = 9;	
     /**
      * Error code for 'Quota Exceeded'.
-     * @type {number}
+     * @const {number}
      */
     static QuotaExeeded = 10;
     /**
      * Error code for 'Type Mismatch'.
-     * @type {number}
+     * @const {number}
      */
     static TypeMismatch = 11;	
     /**
      * Error code for 'Path Exists'.
-     * @type {number}
+     * @const {number}
      */
     static PathExists = 12;
 
     /**
      * Instance variable representing the device.
-     * @type {Colibri.UI.Device}
+     * @type {Colibri.Devices.Device}
      * @private
      */
     _device = null;
+
     /**
      * Instance variable representing the plugin.
      * @type {object}
@@ -183,7 +184,8 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * Generates a Blob object.
      * @param {*} name - The name of the file.
      * @param {*} content - The content of the file.
-     * @returns {*} - Blob object.
+     * @returns {*} - Blob object.@
+     * @public
      */
     Blob(name, content) {
         if(content instanceof Blob) {
@@ -199,6 +201,7 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @param {string} contentType - The content type.
      * @param {number} sliceSize - The slice size.
      * @returns {*} - Blob object.
+     * @public
      */
     B64ToBlob(b64Data, contentType, sliceSize = 512) {
         
@@ -230,6 +233,8 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @param {*} type - The type of the file system.
      * @param {number} quota - The quota for the file system.
      * @returns {Promise} - Promise resolving to the file system root.
+     * @async
+     * @public
      */
     Get(type = LocalFileSystem.PERSISTENT, quota = 0) {
         return new Promise((resolve, reject) => {
@@ -243,6 +248,8 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * Resolves a local file system URL.
      * @param {string} path - The file system path.
      * @returns {Promise} - Promise resolving to the file system entry.
+     * @public
+     * @async
      */
     Local(path) {
         return new Promise((resolve, reject) => {
@@ -256,6 +263,8 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * Resolves a local file system URL.
      * @param {string} path - The file system path.
      * @returns {Promise} - Promise resolving to the file system entry.
+     * @public
+     * @async
      */
     LocalAsBlob(path, type = null) {
         return new Promise((resolve, reject) => {
@@ -279,6 +288,8 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @param {string} fileName - The name of the file.
      * @param {*} options - Options for file creation.
      * @returns {Promise} - Promise resolving to the file entry.
+     * @public
+     * @async
      */
     File(fsOrDir, fileName, options) {
         options = Object.assign({ create: true, exclusive: false }, options);
@@ -295,6 +306,8 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @param {string} dirName - The name of the directory.
      * @param {*} options - Options for directory creation.
      * @returns {Promise} - Promise resolving to the directory entry.
+     * @public
+     * @async
      */
     Directory(fsOrDir, dirName, options) {
         return new Promise((resolve, reject) => {
@@ -317,6 +330,8 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @param {*} content - The content to write.
      * @param {boolean} isAppend - Indicates whether to append to the file.
      * @returns {Promise} - Promise resolving to the file entry.
+     * @public
+     * @async
      */
     Write(fileEntry, content, isAppend) {
         return new Promise((resolve, reject) => {
@@ -345,6 +360,8 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * Reads content from a file.
      * @param {*} fileEntry - The file entry.
      * @returns {Promise} - Promise resolving to the file content.
+     * @public
+     * @async
      */
     Read(fileEntry) {
         return new Promise((resolve, reject) => {
@@ -372,6 +389,8 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @param {boolean} isAppend - Indicates whether to append to the file.
      * @param {*} options - Options for file request.
      * @returns {Promise} - Promise resolving to the file entry.
+     * @public
+     * @async
      */
     RequestFile(type = LocalFileSystem.PERSISTENT, quota = 0, path, fileName, content, isAppend, options = {}) {
         return new Promise((resolve, reject) => {
@@ -392,6 +411,8 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @param {string} fileName - The file name.
      * @param {*} options - Options for file request.
      * @returns {Promise} - Promise resolving to the file entry.
+     * @public
+     * @async
      */
     RequestLocalWriter(rootDir, fileName, options = {}) {
         return new Promise((resolve, reject) => {
@@ -408,6 +429,8 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @param {string} path - The directory path.
      * @param {*} options - Options for directory creation.
      * @returns {Promise} - Promise resolving to the directory entry.
+     * @public
+     * @async
      */
     CreateDirectory(rootPath, path, options = {}) {
         return new Promise((resolve, reject) => {
@@ -427,6 +450,8 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @param {boolean} isAppend - Indicates whether to append to the file.
      * @param {*} options - Options for file creation.
      * @returns {Promise} - Promise resolving to the file entry.
+     * @public
+     * @async
      */
     CreateFile(rootPath, path, fileName, content, isAppend, options = {}) {
         return new Promise((resolve, reject) => {
@@ -445,6 +470,8 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @param {string} path - The file path.
      * @param {string} fileName - The file name.
      * @returns {Promise} - Promise resolving to the file content.
+     * @public
+     * @async
      */
     ReadFile(rootPath, path, fileName) {
         return new Promise((resolve, reject) => {
@@ -462,6 +489,8 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @param {string} rootPath - The root path.
      * @param {string} path - The directory path.
      * @returns {Promise} - Promise resolving to the directory entries.
+     * @public
+     * @async
      */
     ReadDirectory(rootPath, path) {
         return new Promise((resolve, reject) => {

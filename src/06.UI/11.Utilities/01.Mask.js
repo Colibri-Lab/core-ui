@@ -5,9 +5,25 @@
  */
 Colibri.UI.Utilities.Mask = class extends Destructable {
 
+    /**
+     * Represents a digit in the mask pattern
+     * @const {string}
+     */
     static DIGIT = "9";
+    /**
+     * Represents an alpha character in the mask pattern
+     * @const {string}
+     */
     static ALPHA = "A";
+    /**
+     * Represents an alphanumeric character in the mask pattern
+     * @const {string}
+     */
     static ALPHANUM = "S";
+    /** 
+     * Represents a list of key codes that should be bypassed during masking
+     * @const {Array<number>}
+     */
     static BY_PASS_KEYS = [9, 16, 17, 18, 36, 37, 38, 39, 40, 91, 92, 93];
 
     /**
@@ -19,7 +35,12 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
         this.elements = elements;
     }
 
-    /** @private */
+    /**
+     * Check if the key code is allowed for masking
+     * @param {number} keyCode key code to check
+     * @returns {boolean} true if allowed, false otherwise 
+     * @private 
+     */
     _isAllowedKeyCode(keyCode) {
         for (var i = 0, len = Colibri.UI.Utilities.Mask.BY_PASS_KEYS.length; i < len; i++) {
             if (keyCode == Colibri.UI.Utilities.Mask.BY_PASS_KEYS[i]) {
@@ -29,7 +50,12 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
         return true;
     }
 
-    /** @private */
+    /**
+     * Merge money options with defaults
+     * @param {object} opts options to merge
+     * @returns {object} merged options 
+     * @private 
+     */
     _mergeMoneyOptions(opts) {
         opts = opts || {};
         opts = {
@@ -46,7 +72,10 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
         return opts;
     }
 
-    /** @private */
+    /** 
+     * Unbind elements from mask
+     * @private
+     */
     _unbindElementToMask() {
         for (var i = 0, len = this.elements.length; i < len; i++) {
             this.elements[i].lastOutput = "";
@@ -59,7 +88,11 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
         }
     }
 
-    /** @private */
+    /** 
+     * Bind elements to mask
+     * @param {string} maskFunction name of the mask function to use
+     * @private
+     */
     _bindElementToMask(maskFunction) {
         const onType = (e) => {
             e = e || window.event;
@@ -88,6 +121,7 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
     /**
      * Mask as money
      * @param {object} opts options
+     * @public
      */
     maskMoney(opts) {
         this.opts = this._mergeMoneyOptions(opts);
@@ -96,6 +130,7 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
 
     /**
      * Mask as number
+     * @public
      */
     maskNumber() {
         this.opts = {};
@@ -104,6 +139,7 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
 
     /**
      * Mask as alphanumeric
+     * @public
      */
     maskAlphaNum() {
         this.opts = {};
@@ -113,6 +149,7 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
     /**
      * Mask with pattern
      * @param {string} pattern mask pattern
+     * @public
      */
     maskPattern(pattern) {
         this.opts = { pattern: pattern };
@@ -121,6 +158,7 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
 
     /**
      * Unmask field
+     * @public
      */
     unMask() {
         this._unbindElementToMask();
@@ -133,6 +171,8 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
      * @param {*} index 
      * @param {*} placeholder 
      * @returns {string}
+     * @static
+     * @private
      */
     static _addPlaceholdersToOutput(output, index, placeholder) {
         for (; index < output.length; index++) {
@@ -149,6 +189,8 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
      * @param {*} value value to mask
      * @param {object} opts options
      * @returns {string}
+     * @static
+     * @public
      */
     static toMoney(value, opts) {
         opts = this._mergeMoneyOptions(opts);
@@ -213,7 +255,9 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
      * @static
      * @param {*} value value to mask 
      * @param {object} opts mask options 
-     * @returns 
+     * @returns {string}
+     * @static
+     * @public
      */
     static toPattern(value, opts) {
 
@@ -269,6 +313,8 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
      * Perform mask process to number
      * @param {*} value value to mask
      * @returns {string}
+     * @static
+     * @public
      */
     static toNumber(value) {
         return value.toString().replace(/(?!^-)[^0-9]/g, "");
@@ -278,6 +324,8 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
      * Perform mask process to alphanumeric
      * @param {*} value value to mask
      * @returns {string}
+     * @static
+     * @public
      */
     static toAlphaNumeric(value) {
         return value.toString().replace(/[^a-z0-9 ]+/i, "");
@@ -287,6 +335,8 @@ Colibri.UI.Utilities.Mask = class extends Destructable {
      * Check string to mask pattern
      * @param {*} value value to mask
      * @returns {string}
+     * @static
+     * @public
      */
     static Check(value, pattern) {
         const v = Colibri.UI.Utilities.Mask.toPattern(value, {pattern: pattern, placeholder: "_"});

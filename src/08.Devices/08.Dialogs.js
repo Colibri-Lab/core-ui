@@ -42,6 +42,8 @@ Colibri.Devices.Dialogs = class extends Destructable {
      * @param {string} title - The title of the alert dialog.
      * @param {string} buttonName - The label for the button.
      * @returns {Promise} - Promise resolving when the alert is dismissed.
+     * @async
+     * @public
      */
     Alert(message, title, buttonName) {
         return new Promise((resolve, reject) => {
@@ -62,6 +64,8 @@ Colibri.Devices.Dialogs = class extends Destructable {
      * @param {string} title - The title of the confirmation dialog.
      * @param {string[]} buttonLabels - Labels for the buttons.
      * @returns {Promise} - Promise resolving with the index of the selected button.
+     * @async
+     * @public
      */
     Confirm(message, title, buttonLabels = ['Ok', 'Cancel']) {
         return new Promise((resolve, reject) => {
@@ -83,6 +87,8 @@ Colibri.Devices.Dialogs = class extends Destructable {
      * @param {string[]} buttonLabels - Labels for the buttons.
      * @param {string} defaultText - The default text in the input field.
      * @returns {Promise} - Promise resolving with the entered text and button index.
+     * @async
+     * @public
      */
     Prompt(message, title, buttonLabels = ['Ok', 'Cancel'], defaultText = '') {
         return new Promise((resolve, reject) => {
@@ -100,6 +106,7 @@ Colibri.Devices.Dialogs = class extends Destructable {
     /**
      * Emits a beep sound.
      * @param {number} times - The number of times to beep.
+     * @public
      */
     Beep(times) {
         this._plugin && this._plugin.beep(times);
@@ -113,6 +120,7 @@ Colibri.Devices.Dialogs = class extends Destructable {
      * @param {boolean} isForeground - Whether the app is in the foreground when notification fires.
      * @param {boolean} isLaunch - Whether the app launches when notification is tapped.
      * @param {number} priority - The priority of the notification.
+     * @public
      */
     Schedule(title, message, trigger, isForeground = true, isLaunch = true, priority = 2) {
         // trigger = { in: 1, unit: 'second' }, { in: 15, unit: 'minutes' }

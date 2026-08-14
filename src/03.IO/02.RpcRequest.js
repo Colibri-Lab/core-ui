@@ -12,6 +12,8 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
      * @param {string} [type] - The type of data.
      * @param {string|null} [remoteDomain=null] - The remote domain.
      * @param {Function|null} [urlResolver=null] - The URL resolver function.
+     * @constructor
+     * @public
      */
     constructor(moduleEntry, type, remoteDomain = null, urlResolver = null) {
         super();
@@ -88,6 +90,7 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
     /**
      * Gets the requests being processed.
      * @returns {Object} The working requests.
+     * @public
      */
     Requests(name = null) {
         return name ? this._workingRequests[name] : this._workingRequests;
@@ -95,6 +98,7 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
 
     /**
      * Clears the request cache.
+     * @public
      */
     ClearCache() {
         this._requestsCache = {};
@@ -105,6 +109,7 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
      * @param {string} controller - The controller name.
      * @param {string} method - The method to execute.
      * @returns {string}
+     * @public
      */
     GetEntryPoint(controller, method, requestType = 'json') {
         let url = null;
@@ -125,6 +130,8 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
      * @param {boolean} [withCredentials=true] - Whether to include credentials.
      * @param {string} [requestKeyword=Date.Mc()] - The request keyword.
      * @returns {Promise} The result of the RPC call.
+     * @async
+     * @public
      */
     Call(controller, method, params = null, headers = {}, withCredentials = true, requestKeyword = Date.Mc()) {
         const request = new Colibri.IO.Request();

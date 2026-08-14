@@ -95,6 +95,7 @@ Colibri.Modules.Vincenty = class {
      * @public
      */
     static f = 1 / 298.257223563;
+
     /**
      * WGS-84 ellipsoid semi-minor axis.
      * @type {number}
@@ -322,6 +323,7 @@ Colibri.Modules.Vincenty = class {
      * @param {{lat:number,lng:number,azimuth:number}} p2
      * @param {Array<{lat:number,lng:number}>} [bbox]
      * @returns {{lat:number,lng:number}|null}
+     * @public
      */
     intersection(p1, p2, bbox = null, maxDistance = 20000000) {
         const hasBbox = !!bbox;

@@ -86,6 +86,8 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
      * Adds a message to the IndexedDB store if it doesn't already exist.
      * @param {Object} message - The message to add.
      * @returns {Promise} A promise that resolves with the added message or the existing message if it already exists.
+     * @public
+     * @async
      */
     Add(message) {
         return this.Get({ filter: { id: message.id } }).then(existing => {
@@ -105,6 +107,8 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
      * @param {Object} message - The message to update.
      * @param {number} id - The ID of the message to update.
      * @returns {Promise} A promise that resolves with the updated message or rejects if the message is not found.
+     * @async  
+     * @public
      */
     Update(message, id) {
         return new Promise((resolve, reject) => {
@@ -130,6 +134,8 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
      * Stores multiple messages in the IndexedDB store.
      * @param {Array} messages - The messages to store.
      * @returns {Promise} A promise that resolves with the stored messages.
+     * @async  
+     * @public
      */
     Store(messages) {
         return this._withStore('readwrite', (store) => {
@@ -141,12 +147,9 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
     /**
      * Retrieves messages from the IndexedDB store based on the provided options.
      * @param {Object} options - Options for retrieving messages.
-     * @param {Array|string} [options.order=['date']] - The fields to order the results by.
-     * @param {string} [options.direction='asc'] - The direction of sorting ('asc' or 'desc').
-     * @param {Object|Array} [options.filter={}] - The filter criteria for retrieving messages.
-     * @param {number} [options.page=1] - The page number for pagination.
-     * @param {number} [options.pagesize=100] - The number of messages per page.
      * @returns {Promise<Array>} A promise that resolves with the retrieved messages.
+     * @async  
+     * @public
      */
     Get(options = {}) {
         options.order = options.order ?? ['date'];
@@ -212,6 +215,8 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
     /**
      * Clears all messages from the IndexedDB store.
      * @returns {Promise} A promise that resolves when the store is cleared.
+     * @async  
+     * @public
      */
     Clear() {
         return this._withStore('readwrite', (store) => {
@@ -224,6 +229,8 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
      * @param {Object} options - Options for deleting messages.
      * @param {Object|Array} [options.filter={}] - The filter criteria for deleting messages.
      * @returns {Promise} A promise that resolves when the messages are deleted.
+     * @async  
+     * @public
      */
     Delete(options) {
         

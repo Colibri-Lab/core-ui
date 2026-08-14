@@ -105,12 +105,16 @@ Colibri.UI.Maps.Controls.FileButton = class extends Colibri.UI.Maps.Controls.But
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
+     * @private
      */ 
     __clicked(event, args) {
         this.ClickOnButton();
     }
 
-    /** @private */
+    /**
+     * Load file on device 
+     * @private 
+     */
     _loadOnDevice() {
         return new Promise((resolve, reject) => {
             const errorHandler = (error) => {
@@ -133,6 +137,7 @@ Colibri.UI.Maps.Controls.FileButton = class extends Colibri.UI.Maps.Controls.But
     
     /**
      * Perform click on button
+     * @public
      */
     ClickOnButton() {
         if(App.Device.isWeb || App.Device.isElectron) {
@@ -144,7 +149,10 @@ Colibri.UI.Maps.Controls.FileButton = class extends Colibri.UI.Maps.Controls.But
         }
     }
 
-    /** @private */
+    /**
+     * Check choosed files
+     * @private
+     */
     _checkChoosedFiles(files) {
         let errors = [];
         let success = [];
@@ -161,7 +169,10 @@ Colibri.UI.Maps.Controls.FileButton = class extends Colibri.UI.Maps.Controls.But
         this.Dispatch('Changed', {errors: errors, success: success});
     }
     
-    /** @private */
+    /**
+     * Set accept attribute for input 
+     * @private 
+     */
     _setAccept() {
         let ret = [];
         for(const ext of this._allowTypes) {

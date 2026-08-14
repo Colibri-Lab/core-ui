@@ -27,6 +27,7 @@ Colibri.UI.Maps.Controls.ToggleButton = class extends Colibri.UI.Maps.Controls.B
      * @param {object} event event object
      * @param {object} args log message arguments
      * @returns {void}
+     * @private
      */
     __thisClicked(event, args) {
         if(!this.enabled) {
@@ -52,6 +53,9 @@ Colibri.UI.Maps.Controls.ToggleButton = class extends Colibri.UI.Maps.Controls.B
         this._checked = value;
         this._showChecked();
     }
+    /**
+     * @ignore
+     */
     _showChecked() {
         if(this._checked) {
             this.AddClass('-checked');

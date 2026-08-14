@@ -11,6 +11,8 @@ Colibri.Events.Event = class extends Destructable {
      * @param {*} sender - The sender of the event.
      * @param {string} name - The name of the event.
      * @param {boolean} [bubbles=false] - Indicates whether the event bubbles up the component tree or not.
+     * @constructor
+     * @public
      */
     constructor(sender, name, bubbles) {
         super();
@@ -28,6 +30,8 @@ Colibri.Events.Event = class extends Destructable {
 
     /**
      * Destructs the event instance and releases any resources associated with it.
+     * @destructor
+     * @public
      */
     destructor() {
 
@@ -36,6 +40,7 @@ Colibri.Events.Event = class extends Destructable {
     /**
      * Gets the sender of the event.
      * @type {*}
+     * @public
      */
     get sender() {
         return this._sender;
@@ -43,6 +48,7 @@ Colibri.Events.Event = class extends Destructable {
     /**
      * Sets the sender of the event.
      * @type {*}
+     * @public
      */
     set sender(value) {
         this._sender = value;
@@ -51,6 +57,7 @@ Colibri.Events.Event = class extends Destructable {
     /**
      * Gets the name of the event.
      * @type {string}
+     * @public
      */
     get name() {
         return this._name;
@@ -58,6 +65,7 @@ Colibri.Events.Event = class extends Destructable {
     /**
      * Sets the name of the event.
      * @type {string}
+     * @public
      */
     set name(value) {
         this._name = value;
@@ -66,6 +74,7 @@ Colibri.Events.Event = class extends Destructable {
     /**
      * Indicates whether the event bubbles.
      * @type {boolean}
+     * @public
      */
     get bubbles() {
         return this._bubbles;
@@ -73,6 +82,7 @@ Colibri.Events.Event = class extends Destructable {
     /**
      * Sets whether the event bubbles.
      * @type {boolean}
+     * @public
      */
     set bubbles(value) {
         this._bubbles = value;

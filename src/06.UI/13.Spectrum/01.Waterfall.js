@@ -40,6 +40,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
      * Resize the canvas and the WASM module
      * @param {Number} width width of canvas
      * @param {Number} height height of canvas
+     * @public
      */
     Resize(width, height) {
         this._points = width;
@@ -67,8 +68,9 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
 
     /**
      * Draw the line
-     * @param {{time: BigInt, delta: Number, chunk: Float32Array}} data float array
-     * @returns 
+     * @param {{time: BigInt, duration: Number, chunk: Float32Array}} data float array
+     * @returns {void}
+     * @public
      */
     Draw(data) {
         if (!this._wasm.loaded) {
@@ -81,7 +83,8 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
 
     /**
      * Draw multiple lines
-     * @param {Array<{time: BigInt, delta: Number, chunk: Float32Array}>} array array of float arrays
+     * @param {Array<{time: BigInt, duration: Number, chunk: Float32Array}>} array array of float arrays
+     * @public
      */
     DrawMultiple(array) {
         if (!this._wasm.loaded) {
@@ -94,7 +97,10 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
         }
     }
 
-    /** Clear the canvas and the WASM module */
+    /**
+     * Clear the canvas and the WASM module
+     * @public
+     */
     Clear() {
         if (!this._wasm.loaded) {
             console.warn("WASM module not loaded yet");
@@ -107,6 +113,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
     /** 
      * Draw the entire buffer to the 2D context of the canvas. 
      * @param {CanvasRenderingContext2D} ctx 2D context of the canvas
+     * @protected
      */
     drawTo(ctx) {
         const imageData = this._wasm.getImageData();
@@ -154,6 +161,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
      * Resize the canvas and the WASM module
      * @param {Number} points points in every row
      * @param {Number} limit rows limit in history
+     * @public
      */
     ResizeArea(points, limit) {
         points = this._convertProperty('Number', points);
@@ -169,6 +177,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
      * @param {Number} start_x start value of X axis
      * @param {Number} delta_x delta value of X axis
      * @param {Function} valueDataType data type of X axis values
+     * @public
      */
     GenerateValues(points, start_x, delta_x, valueDataType = Float64Array) {
         this._start_x = start_x;
@@ -185,6 +194,7 @@ Colibri.UI.Spectrum.Waterfall = class extends Colibri.UI.FlexBox {
      * Reorganize the X axis values and the WASM module
      * @param {Number} minValue minimum value of X axis
      * @param {Number} maxValue maximum value of X axis
+     * @public
      */
     Reorganize(minValue, maxValue) {
 

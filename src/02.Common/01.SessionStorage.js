@@ -11,6 +11,7 @@ Colibri.Common.SessionStorage = class {
      * Sets a value in the browser storage.
      * @param {string} name - The name of the item.
      * @param {*} [value=true] - The value to set. Defaults to true if not provided.
+     * @public
      */
     Set(name, value = true) {
         window.sessionStorage.setItem(name, value);
@@ -20,6 +21,7 @@ Colibri.Common.SessionStorage = class {
      * Gets a value from the browser storage.
      * @param {string} name - The name of the item.
      * @returns {*} - The value retrieved from the storage.
+     * @public
      */
     Get(name) {
         return window.sessionStorage.getItem(name);
@@ -28,6 +30,7 @@ Colibri.Common.SessionStorage = class {
     /**
      * Deletes an item from the browser storage.
      * @param {string} name - The name of the item to delete.
+     * @public
      */
     Delete(name) {
         window.sessionStorage.removeItem(name);
@@ -37,6 +40,7 @@ Colibri.Common.SessionStorage = class {
      * Checks if an item exists in the browser storage.
      * @param {string} name - The name of the item to check.
      * @returns {boolean} - True if the item exists, false otherwise.
+     * @public
      */
     Has(name) {
         return !!this.Get(name);

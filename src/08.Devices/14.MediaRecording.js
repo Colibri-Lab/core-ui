@@ -35,6 +35,7 @@ Colibri.Devices.Media.Recording = class extends Colibri.Events.Dispatcher {
 
     /**
      * Start recording the media.
+     * @public
      */
     Start() {
         this._mediaRec.startRecord();
@@ -42,22 +43,23 @@ Colibri.Devices.Media.Recording = class extends Colibri.Events.Dispatcher {
 
     /**
      * Stop recording the media.
+     * @public
      */
     Stop() {
         this._mediaRec.stopRecord();
     }
 
+    /**
+     * Static method to start recording a media file.
+     * @param {string} mediaFile - The media file to record.
+     * @returns {*} - The media object.
+     */
+    static StartRecording(type = 'audio', success, error) {
+        const filePath = cordova.file.cacheDirectory + 'temp.' + (type === 'audio' ? 'wav' : 'mp4');
+        const rec = new Colibri.Devices.Media.Recording(filePath, success, error);
+        rec.Start();
+        return rec;
+    }
 }
 
-/**
- * Static method to start recording a media file.
- * @param {string} mediaFile - The media file to record.
- * @returns {*} - The media object.
- */
-Colibri.Devices.Media.StartRecording = function(type = 'audio', success, error) {
-    const filePath = cordova.file.cacheDirectory + 'temp.' + (type === 'audio' ? 'wav' : 'mp4');
-    const rec = new Colibri.Devices.Media.Recording(filePath, success, error);
-    rec.Start();
-    return rec;
-}
 

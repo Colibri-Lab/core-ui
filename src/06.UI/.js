@@ -7,7 +7,7 @@ Colibri.UI = class {
 
     /** 
      * Resizing indicator
-     * @type {boolean} 
+     * @type {boolean}
      * @static
      */
     static Resizing = false;
@@ -29,15 +29,9 @@ Colibri.UI = class {
     /** 
      * Private max z-index calculator 
      * @static
+     * @private
      */
     static _getZIndex(elements = null) {
-        // return (elements ?? [...document.querySelectorAll('body *')]).reduce((accumulator, current_value) => {
-        //     current_value = +getComputedStyle(current_value).zIndex;
-        //     if (current_value === current_value) {
-        //         return Math.max(accumulator, current_value) 
-        //     }
-        //     return accumulator;
-        // }, 0);
         return (elements ?? [...document.querySelectorAll('body *')])
             .map(elt => parseFloat(getComputedStyle(elt).zIndex))
             .reduce((highest, z) => z > highest ? z : highest, 1);
@@ -46,19 +40,15 @@ Colibri.UI = class {
     /** 
      * Registers mutation observer for calculating current maximum of z-index
      * @static 
+     * @public
      */
     static registerMutationObserver() {
-        // fixing start max z-index 
         Colibri.UI.maxZIndex = Colibri.UI._getZIndex();
         Colibri.Common.StartTimer('z-index-timer', 30000, () => {
             Colibri.UI.maxZIndex = Colibri.UI._getZIndex();
         });
         if(document.body) {
             new MutationObserver((mutationList, observer) => {
-                // let elements = [];
-                // for(const mut of mutationList) {
-                //     elements.push(mut.target);
-                // }
                 Colibri.UI.maxZIndex = Colibri.UI._getZIndex(); // elements
             }).observe(document.body, {
                 attributes: true, 
@@ -73,6 +63,7 @@ Colibri.UI = class {
     /**
      * Updates max z-index in static property
      * @static
+     * @public
      */
     static UpdateMaxZIndex() {
         Colibri.UI.maxZIndex = Colibri.UI._getZIndex();
@@ -85,6 +76,7 @@ Colibri.UI = class {
      * @param {Colibri.UI.Component} parent search component within given parent component
      * @returns {Colibri.UI.Component}
      * @static
+     * @public
      */
     static Find(componentPath, parent = null) {
         const path = componentPath.split('/');
@@ -103,6 +95,7 @@ Colibri.UI = class {
      * @param {Colibri.UI.Component} parent search component within given parent component
      * @returns {Colibri.UI.Component}
      * @static
+     * @public
      */
     static FindAll(componentPath, parent = null) {
         const path = componentPath.split('/');
@@ -123,6 +116,8 @@ Colibri.UI = class {
      * @param {Array<string>} js string array of js files 
      * @returns Promise
      * @static
+     * @public
+     * @async
      */
     static Require(css, js) { 
         return new Promise((resolve, reject) => {
@@ -167,6 +162,18 @@ Colibri.UI = class {
 
     }
 
+    /**
+     * Gets lookup promise for given component and value
+     * @param {Colibri.UI.Component} component 
+     * @param {string|function|object} value 
+     * @param {string} term
+     * @param {function} getDependsValueMethod 
+     * @param {string} selectedValue
+     * @returns {Promise}
+     * @async
+     * @static
+     * @public
+     */
     static GetLookupPromise(component, value, term, getDependsValueMethod, selectedValue = null) {
         let lookupPromise;
         
@@ -264,6 +271,7 @@ Colibri.UI = class {
     }
 
 }
+
 Colibri.Common.Wait(() => !!document.body).then(() => {
     Colibri.UI.registerMutationObserver();
 });

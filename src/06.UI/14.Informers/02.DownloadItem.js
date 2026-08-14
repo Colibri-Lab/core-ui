@@ -1,5 +1,15 @@
 /**
- * Download informer item
+ * Represents a download informer item with progress bar, icon (may be loading icon) and link to download a generated file
+ * @example
+ * ```
+ * const informer = new Colibri.UI.Informers.Download('downloadInformer', parent);
+ * informer.Add({
+ *     title: 'Generating file',
+ *     icon: 'Colibri.UI.SomeIcon',
+ *     percent: 0,
+ *     link: null
+ * });
+ * ```
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI.Informers
@@ -30,6 +40,7 @@ Colibri.UI.Informers.DownloadItem = class extends Colibri.UI.FlexBox {
      * Link clicked
      * @param {object} event event object
      * @param {object} args log message arguments
+     * @private
      */
     __linkClicked(event, args) {
         if(this._value.download.indexOf('#action=') === -1) {
@@ -54,6 +65,9 @@ Colibri.UI.Informers.DownloadItem = class extends Colibri.UI.FlexBox {
         this._value = value;
         this._showValue();
     }
+    /**
+     * @ignore
+     */
     _showValue() {
         
         if(this._value.icon != this._icon.iconSVG) {

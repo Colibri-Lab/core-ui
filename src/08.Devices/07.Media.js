@@ -8,30 +8,30 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
 
     /**
      * Status code for 'None'.
-     * @type {number}
+     * @const {number}
      */
     static MediaNone = 0;
     /**
      * Status code for 'Starting'.
-     * @type {number}
+     * @const {number}
      */
     static MediaStarting = 1;
     /**
      * Status code for 'Running'.
-     * @type {number}
+     * @const {number}
      */
     static MediaRunning = 2;
     /**
      * Status code for 'Paused'.
-     * @type {number}
+     * @const {number}
      */
     static MediaPaused = 3;
     /**
      * Status code for 'Stopped'.
-     * @type {number}
+     * @const {number}
      */
     static MediaStopped = 4;
-    
+
     /**
      * Instance variable representing the media object.
      * @type {object}
@@ -62,9 +62,8 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
 
     /**
      * Registers events for media.
-     * @private
+     * @protected
      */
-    /** @protected */
     _registerEvents() {
         this.RegisterEvent('Started', false, 'When media is started');
         this.RegisterEvent('Stopped', false, 'When media is stopped');
@@ -77,7 +76,7 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
      * @private
      */
     _check() {
-        if(typeof Media !== 'function'){
+        if (typeof Media !== 'function') {
             console.log('Plugin cordova.media is not installed. Please run cordova plugin add cordova-plugin-media');
         }
     }
@@ -110,8 +109,8 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
             byteArrays.push(byteArray);
         }
 
-      var blob = new Blob(byteArrays, {type: contentType});
-      return blob;
+        var blob = new Blob(byteArrays, { type: contentType });
+        return blob;
     }
 
     /**
@@ -122,39 +121,41 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
      * @param {string} contentType - The content type of the audio file.
      * @returns {Promise} - A promise that resolves when the file is saved.
      * @private
+     * @async
      */
     _saveBase64AsAudioFile(folderpath, filename, content, contentType) {
         return new Promise((resolve, reject) => {
             // Convert the base64 string in a Blob
-            var DataBlob = this._b64toBlob(content,contentType);    
-            window.resolveLocalFileSystemURL(folderpath, function(dir) {
+            var DataBlob = this._b64toBlob(content, contentType);
+            window.resolveLocalFileSystemURL(folderpath, function (dir) {
                 dir.getFile(filename, {
                     create: true
                 }, (file) => {
-                    file.createWriter(function(fileWriter) {
+                    file.createWriter(function (fileWriter) {
                         fileWriter.write(DataBlob);
                         resolve();
                     }, () => {
-                        alert('Unable to save file in path '+ folderpath);
+                        reject('Unable to save file in path ' + folderpath);
                     });
                 });
             });
         });
-        
+
     }
 
     /**
      * Saves the base64 string as an audio file if needed.
      * @returns {Promise} - A promise that resolves when the file is saved or if no saving is needed.
      * @private
+     * @async
      */
     _saveBase64IfNeeded() {
         return new Promise((resolve, reject) => {
-            if(this._isBase64Encoded) {
+            if (this._isBase64Encoded) {
                 let type = this._src.replaceAll('data:', '').split(';')[0];
                 let data = this._src.split(';')[1].replaceAll('base64,', '');
                 let src = Date.Mc() + '.' + Colibri.Common.MimeType.type2ext(type);
-                this._saveBase64AsAudioFile(cordova.file.cacheDirectory, src, data, type).then(() => {  
+                this._saveBase64AsAudioFile(cordova.file.cacheDirectory, src, data, type).then(() => {
                     this._src = cordova.file.cacheDirectory + src;
                     resolve();
                 });
@@ -173,9 +174,9 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
             this._object = new Media(this._src, () => {
                 this.Dispatch('Started', {});
             }, (status) => {
-                this.Dispatch('ErrorOccurred', {status: status});
+                this.Dispatch('ErrorOccurred', { status: status });
             }, (status) => {
-                this.Dispatch('StatusChanged', {status: status});
+                this.Dispatch('StatusChanged', { status: status });
             });
         });
     }
@@ -183,6 +184,8 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
     /**
      * Returns the current amplitude within an audio file.
      * @returns {Promise} - Promise resolving to the amplitude.
+     * @public
+     * @async
      */
     GetCurrentAmplitude() {
         return new Promise((resolve, reject) => {
@@ -191,11 +194,13 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
             }, e => reject(e));
         });
     }
-    
+
 
     /**
      * Returns the current position within an audio file.
      * @returns {Promise} - Promise resolving to the position.
+     * @public
+     * @async
      */
     GetCurrentPosition() {
         return new Promise((resolve, reject) => {
@@ -208,6 +213,7 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
     /**
      * Returns the duration of an audio file.
      * @returns {number} - The duration of the audio file.
+     * @public
      */
     GetDuration() {
         return this._object.getDuration();
@@ -215,6 +221,7 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
 
     /**
      * Start or resume playing an audio file.
+     * @public
      */
     Play() {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -224,6 +231,7 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
 
     /**
      * Pause playback of an audio file.
+     * @public
      */
     Pause() {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -233,6 +241,7 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
 
     /**
      * Pause recording of an audio file.
+     * @public
      */
     PauseRecording() {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -242,6 +251,7 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
 
     /**
      * Releases the underlying operating system's audio resources.
+     * @public
      */
     Release() {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -251,6 +261,7 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
 
     /**
      * Resume recording of an audio file.
+     * @public
      */
     ResumeRecording() {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -261,6 +272,7 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
     /**
      * Moves the position within the audio file.
      * @param {number} ms - The position in milliseconds.
+     * @public
      */
     SeekTo(ms = 10000) {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -271,6 +283,7 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
     /**
      * Set the volume for audio playback.
      * @param {string} volume - The volume level.
+     * @public
      */
     SetVolume(volume = '0.5') {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -280,6 +293,7 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
 
     /**
      * Start recording an audio file.
+     * @public
      */
     StartRecording() {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -289,6 +303,7 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
 
     /**
      * Stop recording an audio file.
+     * @public
      */
     StopRecording() {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -298,6 +313,7 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
 
     /**
      * Stop playing an audio file.
+     * @public
      */
     Stop() {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -308,6 +324,7 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
     /**
      * Set the playback rate for the audio file.
      * @param {number} rate - The playback rate.
+     * @public
      */
     SetRate(rate = 2.0) {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -315,20 +332,21 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
         });
     }
 
-}
 
-/**
- * Static method to play a media file.
- * @param {string} mediaFile - The media file to play.
- * @returns {*} - The media object.
- */
-Colibri.Devices.Media.Play = function(mediaFile, isBase64Encoded = false) {
-    try {
-        const media = new Colibri.Devices.Media(mediaFile, isBase64Encoded);
-        media.Play();
-        return media;
-    } catch (e) {
-        alert(e);
+    /**
+     * Static method to play a media file.
+     * @param {string} mediaFile - The media file to play.
+     * @returns {*} - The media object.
+     */
+    static Play(mediaFile, isBase64Encoded = false) {
+        try {
+            const media = new Colibri.Devices.Media(mediaFile, isBase64Encoded);
+            media.Play();
+            return media;
+        } catch (e) {
+            alert(e);
+        }
     }
+
 }
 

@@ -15,6 +15,8 @@ Colibri.Common.Audio = class {
      * Records audio using the user's microphone.
      * @param {MediaTrackConstraints|null} audioSettings - The audio settings for the recording.
      * @returns {Promise<Blob>} - A promise that resolves to the recorded audio blob.
+     * @async
+     * @public
      */
     RecordAudio(audioSettings = null) {
         return new Promise((resolve, reject) => {
@@ -45,6 +47,7 @@ Colibri.Common.Audio = class {
     /**
      * Stops the audio recording and releases the media resources.
      * @returns {Promise<void>} - A promise that resolves when the recording is stopped and resources are released.
+     * @public
      */
     StopRecording() {
         
@@ -73,6 +76,7 @@ Colibri.Common.Audio = class {
      * Starts an amplitude tick method that continuously measures the audio amplitude from the microphone input.
      * @param {Function} tickMethod - The method to call with the measured amplitude.
      * @returns {void}
+     * @public
      */
     AmplitudeTick(tickMethod) {
     

@@ -18,7 +18,10 @@ Colibri.UI.Viewer = class extends Colibri.UI.Component {
         this.root = root;
     }
 
-    /** @private */
+    /**
+     * Injects the params from the field to the viewer 
+     * @private 
+     */
     _injectParams() {
         if(this._field?.params && this._field?.params?.className) {
             let className = this._field?.params?.className;
@@ -112,7 +115,10 @@ Colibri.UI.Viewer = class extends Colibri.UI.Component {
         this._root = value;
     }
 
-    /** @private */
+    /** 
+     * Converts the value using the converter function if defined in the field params
+     * @private 
+     */
     _convertValue(value) {
         
         if(this.field?.params?.converter) {

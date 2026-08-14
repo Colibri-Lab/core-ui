@@ -14,6 +14,7 @@ Colibri.Common.Font = class {
 
     /**
      * Creates an instance of Colibri.Common.Font.
+     * @constructor
      */
     constructor() {
         this._load();
@@ -46,6 +47,7 @@ Colibri.Common.Font = class {
      * Creates an instance of Colibri.Common.Font.
      * @returns {Colibri.Common.Font} A new instance of Colibri.Common.Font.
      * @static
+     * @public
      */
     static Create() {
         return new Colibri.Common.Font();
@@ -53,7 +55,7 @@ Colibri.Common.Font = class {
 
     /**
      * Get an array of unique font families.
-     * @returns {Array} Array of unique font families.
+     * @type {Array} Array of unique font families.
      */
     get families() {
         let ret = [];
@@ -65,7 +67,7 @@ Colibri.Common.Font = class {
 
     /**
      * Get an array of font lookup objects containing value and title properties.
-     * @returns {Array} Array of font lookup objects.
+     * @type {Array} Array of font lookup objects.
      */
     get lookup() {
         return this.families.map(v => { return {value: v, title: v}; });
@@ -73,7 +75,7 @@ Colibri.Common.Font = class {
 
     /**
      * Get the list of loaded fonts.
-     * @returns {Array} List of loaded fonts.
+     * @type {Array} List of loaded fonts.
      */
     get list() {
         return this._list;

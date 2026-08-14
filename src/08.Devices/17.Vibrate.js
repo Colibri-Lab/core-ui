@@ -26,7 +26,8 @@ Colibri.Devices.Vibrate = class extends Destructable {
 
     /**
      * Vibrates
-     * @param {Array<Number>|Nunber} time 
+     * @param {Array<Number>|Number} time 
+     * @public
      */
     Vibrate(time) {
         navigator.vibrate(time);

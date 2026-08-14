@@ -7,6 +7,7 @@
 Colibri.Web.Request = class extends Destructable {
 
     /**
+     * Initializes a new instance of the Request class.
      * @constructor
      */
     constructor() {

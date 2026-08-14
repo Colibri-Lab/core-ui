@@ -29,7 +29,7 @@ Colibri.Devices.Sms = class extends Destructable {
 
     /**
      * Instance variable representing the SMS plugin for receiving messages.
-     * @type {null}
+     * @type {object}
      * @private
      */
     _permitedSend = false;
@@ -53,6 +53,8 @@ Colibri.Devices.Sms = class extends Destructable {
     /**
      * Checks permission to send SMS.
      * @returns {Promise} - Promise resolving when permission is checked.
+     * @async
+     * @public
      */
     CheckPermissionForSend() {
         return new Promise((resolve, reject) => {
@@ -78,6 +80,8 @@ Colibri.Devices.Sms = class extends Destructable {
     /**
      * Requests permission to send SMS.
      * @returns {Promise} - Promise resolving when permission is requested.
+     * @async
+     * @public
      */
     RequestPermissionForSend() {
         return new Promise((resolve, reject) => {
@@ -104,6 +108,8 @@ Colibri.Devices.Sms = class extends Destructable {
      * @param {string} message - The message content.
      * @param {string} intent - The intent for sending the message.
      * @returns {Promise} - Promise resolving when message is sent.
+     * @async
+     * @public
      */
     Send(number, message, intent = 'INTENT') {
         return new Promise((resolve, reject) => {
@@ -131,6 +137,7 @@ Colibri.Devices.Sms = class extends Destructable {
     /**
      * Callback function for SMS arrival.
      * @param {*} message - The incoming SMS message.
+     * @private
      */
     _smsReceiverCallback(message) {
         this._arriveCallback(message);
@@ -139,6 +146,7 @@ Colibri.Devices.Sms = class extends Destructable {
     /**
      * Registers an event listener for incoming SMS messages.
      * @param {function} listener - The listener function.
+     * @public
      */
     RegisterArriveListener(listener) {
         document.addEventListener('onSMSArrive', (e) => {
@@ -148,6 +156,8 @@ Colibri.Devices.Sms = class extends Destructable {
 
     /**
      * Starts watching for incoming SMS messages.
+     * @async
+     * @public
      * @returns {Promise} - Promise resolving when watching is started.
      */
     Watch() {
@@ -165,6 +175,8 @@ Colibri.Devices.Sms = class extends Destructable {
 
     /**
      * Stops watching for incoming SMS messages.
+     * @async
+     * @public
      * @returns {Promise} - Promise resolving when watching is stopped.
      */
     Stop() {

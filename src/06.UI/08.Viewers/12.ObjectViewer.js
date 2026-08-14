@@ -17,7 +17,7 @@ Colibri.UI.ObjectViewer = class extends Colibri.UI.Viewer {
         this.AddClass('app-object-viewer-component');
     }
 
-    /** @private */ 
+    /** @ignore */ 
     _showValue() {
         let ret = [];
         if(Object.countKeys(this._field.fields) > 0) {

@@ -30,6 +30,13 @@ Colibri.UI.LinkEditor = class extends Colibri.UI.Editor {
 
     }
 
+    /**
+     * When click on link
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments 
+     * @ignore 
+     */
     __thisClicked(event, args) {
 
         this._clickOnLink();
@@ -39,7 +46,9 @@ Colibri.UI.LinkEditor = class extends Colibri.UI.Editor {
         return false;
     }
 
-    /** @private */
+    /**
+     * @ignore 
+     */
     _showValue() {
         this._text.value = this.value;
         if (this._grid) {
@@ -57,7 +66,13 @@ Colibri.UI.LinkEditor = class extends Colibri.UI.Editor {
 
     }
 
-    /** @private */
+    /**
+     * When click on link
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments 
+     * @ignore
+     */
     _clickOnLink() {
         if (this.field && this._downloadlink) {
             window.open((window.rpchandler ? window.rpchandler : '') + this._downloadlink + '?name=' + this.field.name + '&data=' + this.field.params.data);

@@ -16,10 +16,22 @@ Colibri.UI.SimpleFormValidator = class {
         this._form.AddHandler('Changed', this.__formChanged, false, this);
     }
 
+    /**
+     * When form changed
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments
+     * @private
+     */
     __formChanged(event, args) {
         this._form.message = '';
     }
 
+    /**
+     * When form fields rendered
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments
+     * @private
+     */
     __formFieldsRendered(event, args) {
         this._init(this._form.Fields());
     }
@@ -28,6 +40,7 @@ Colibri.UI.SimpleFormValidator = class {
      * Init
      * @private
      * @param {object} fields fields object
+     * @private
      */
     _init(fields) {
         if (fields.length == 0) {
@@ -41,19 +54,36 @@ Colibri.UI.SimpleFormValidator = class {
         });
     }
 
+    /**
+     * When field changed
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments
+     * @private
+     * @ignore
+     */
     __fieldFieldsRendered(event, args) {
         return this._init(event.sender.Fields());
     }
 
+    /**
+     * When field changed
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments
+     * @private
+     * @ignore
+     */
     __fieldChanged(event, args) {
-        return this.__validateField(event.sender);
+        return this._validateField(event.sender);
     }
 
     /**
      * Validate field
      * @param {object} field field object
+     * @param {boolean} showMessages show messages
+     * @private
+     * @ignore
      */
-    __validateField(field, showMessages = true) {
+    _validateField(field, showMessages = true) {
 
         field.field.params && (field.field.params.validated = 'success');
         field.message = '';
@@ -88,6 +118,7 @@ Colibri.UI.SimpleFormValidator = class {
     /**
      * Status of validation
      * @param {object} fields fields object
+     * @public
      */
     Status(fields = null) {
 
@@ -121,6 +152,7 @@ Colibri.UI.SimpleFormValidator = class {
     /**
      * Clear messages of validation
      * @param {object} fields fields object
+     * @public
      */
     Clear(fields = null) {
 
@@ -152,6 +184,7 @@ Colibri.UI.SimpleFormValidator = class {
     /**
      * Validate all fields
      * @param {object|null} fields fields object
+     * @public
      */
     ValidateAll(fields = null, showMessages = true) {
 
@@ -170,7 +203,7 @@ Colibri.UI.SimpleFormValidator = class {
         }
 
         for (const field of fields) {
-            this.__validateField(field, showMessages);
+            this._validateField(field, showMessages);
             this.ValidateAll(field.Fields ? field.Fields() : [], showMessages);
         }
 
@@ -181,6 +214,7 @@ Colibri.UI.SimpleFormValidator = class {
     /**
      * Set field as valid
      * @param {object|string} field field object
+     * @public
      */
     SetAsValid(field) {
         const f = typeof field === 'string' ? this._form.FindField(field) : field;
@@ -194,8 +228,9 @@ Colibri.UI.SimpleFormValidator = class {
 
     /**
      * Invalidate field
-     * @param {object|string"} field field object 
+     * @param {object|string} field field object
      * @param {string} message validation message 
+     * @public
      */
     Invalidate(field, message) {
         if (field == 'form' || field instanceof Colibri.UI.Forms.Form) {
@@ -220,6 +255,12 @@ Colibri.UI.SimpleFormValidator = class {
         return this._form;
     }
 
+    /**
+     * Get first invalid field
+     * @param {object|null} fields fields object
+     * @returns {object|null}
+     * @public
+     */
     GetFirstInvalid(fields = null) {
         let found = null;
         if (!fields) {

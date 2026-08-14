@@ -18,6 +18,7 @@ Colibri.Devices.Auth = class extends Destructable {
     /**
      * Checks if biometric authentication is available on the device.
      * @returns {Promise} - Resolves if available, rejects otherwise.
+     * @public
      */
     IsAvailable() {
         if(App.Device.isWeb || App.Device.isElectron) {
@@ -52,6 +53,8 @@ Colibri.Devices.Auth = class extends Destructable {
      * @param {string} userName - The user's name.
      * @param {string} userEmail - The user's email address.
      * @returns {Promise} - Resolves with credential information if successful, rejects otherwise.
+     * @async
+     * @public
      */
     Create(userToken, userName, userEmail) {
         // if(App.Device.isElectron) {
@@ -123,6 +126,8 @@ Colibri.Devices.Auth = class extends Destructable {
      * Authenticates the user using biometric authentication.
      * @param {string} userToken - The user's unique token (optional).
      * @returns {Promise} - Resolves with credential information if successful, rejects otherwise.
+     * @async
+     * @public
      */
     Authenticate(userToken) {
         // if(App.Device.isElectron) {

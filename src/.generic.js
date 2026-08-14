@@ -11,7 +11,7 @@ RegExp.SpecialChars = /(?![a-zA-Z0-9!"#\$%&'\(\)\*\+,-\.\/:;<=>\?@\[\\^\]_`{\|}~
  * element.addEventListener('click', nullhandler);
  * ```
  */
-const nullhandler = (e) => {
+function nullhandler(e) {
     e.preventDefault();
     e.stopPropagation();
     return false;
@@ -28,7 +28,7 @@ const nullhandler = (e) => {
  * const obj = json_object('{"key": "value"}');
  * ```
  */
-const json_object = function (v) {
+function json_object(v) {
     return JSON.parse(v || '{}');
 };
 
@@ -43,7 +43,7 @@ const json_object = function (v) {
  * const arr = json_array('[1, 2, 3]');
  * ```
  */
-const json_array = function (v) {
+function json_array(v) {
     return JSON.parse(v || '[]');
 };
 
@@ -87,7 +87,7 @@ function stableStringify(obj) {
  * const arr = eval_default_values('json_array(\'[1, 2, 3]\')');
  * ```
  */
-const eval_default_values = function (defaultAsString) {
+function eval_default_values(defaultAsString) {
     if (typeof defaultAsString == 'string' && (defaultAsString.indexOf('json_object') !== -1 || defaultAsString.indexOf('json_array') !== -1)) {
         return eval(defaultAsString);
     }
@@ -106,9 +106,9 @@ const eval_default_values = function (defaultAsString) {
  * console.log(isIterable(123)); // false
  * ```
  */
-const isIterable = (value) => {
+function isIterable(value) {
     return Symbol.iterator in Object(value);
-};
+}
 
 /**
  * Extends the prototype of Intl.NumberFormat to provide a method for unformatting a formatted number string.
@@ -395,7 +395,9 @@ Float64Array.prototype.min = function () {
  * const arr2 = Array.coalesce(5); // [5]
  * ```
  */
-Array.coalesce = (v) => Array.isArray(v) ? v : [v];
+Array.coalesce = function(v) {
+    return Array.isArray(v) ? v : [v];
+}
 
 /**
  * Returns a new array containing only unique elements from the original array.
@@ -1464,7 +1466,7 @@ Object.sortPropertiesRecursive = function (object) {
     const ret = {};
     for (const key of keys) {
         let v;
-        if (object[key] instanceof Object && !Array.isArray(object[key])) {
+        if (Object.isObject(object[key])) {
             v = Object.sortPropertiesRecursive(object[key]);
         } else if (Array.isArray(object[key])) {
             let rows = [];
@@ -1773,7 +1775,7 @@ Object.insertAt = function (object, key, value, index) {
  * Converts a nested object to a plain object with flattened keys.
  * @param {Object} object - The object to convert.
  * @param {string} [prefix=''] - Optional prefix to prepend to flattened keys.
- * @param {Array|Function} [except=[]] - Optional array of keys to exclude from flattening or a function to determine exclusion.
+ * @param {Array|Function<Number>} [except=[]] - Optional array of keys to exclude from flattening or a function to determine exclusion. Except function must return 0 if need to flatten, 1 if need to just add, and -1 if need to skip 
  * @param {boolean} [useCamelCase=true] - Optional flag to convert keys to camel case.
  * @param {string} [splitter='-'] - Optional string to use as a separator for flattened keys.
  * @returns {Object} Returns the plain object with flattened keys.
@@ -1787,19 +1789,75 @@ Object.insertAt = function (object, key, value, index) {
  * ```
  */
 Object.toPlain = function (object, prefix = '', except = [], useCamelCase = true, splitter = '-') {
-    if(Array.isArray(except)) {
-        except = (k, v) => except.includes(k); 
+    if (Array.isArray(except)) {
+        except = (k, v) => except.indexOf(k) === -1 ? -1 : (Object.isObject(v) ? 0 : 1);
     }
     let ret = {};
     Object.forEach(object, (k, v) => {
-        if (!except(k, v) && v instanceof Object) {
+        const exceptResult = except(k, v);
+        if (exceptResult === 0 && v instanceof Object) {
             ret = Object.assign(ret, Object.toPlain(v, prefix + k + splitter, except, useCamelCase, splitter));
         }
-        else {
-            ret[useCamelCase ? (prefix + k).toCamelCase(splitter, false) : (prefix + k)] = v;
+        else if (exceptResult === 1) {
+            ret[(useCamelCase ? (prefix + k).toCamelCase(splitter, false) : (prefix + k)).trimString(splitter)] = v;
         }
     });
     return ret;
+};
+
+/**
+ * Reorganizes an object
+ * @param {Object} object - The object to reorganize.
+ * @param {string|Function|null} [newKeyName=null] - Optional new key name to reorganize the object (not supported yet).
+ * @returns {Object} Returns the reorganized object.
+ * @prototypeof Object
+ * @static
+ * @method
+ * @example
+ * ```
+ * const obj = {a: {id: 1, name: 'Alice'}, b: {id: 2, name: 'Bob'}};
+ * const reorganized = Object.reorganize(obj, 'id');
+ * /// reorganized: {1: {a: {id: 1, name: 'Alice'}}, 2: {b: {id: 2, name: 'Bob'}}}
+ * ```
+ */
+Object.reorganize = function (object, newKeyName = null) {
+
+    if (newKeyName === null) {
+        throw new Error('New key name is not supported yet');
+    }
+
+    object = Object.cloneRecursive(object);
+
+    let ret = {};
+
+    const reorganizeLevel = (obj) => {
+
+        for (const key in obj) {
+            const v = obj[key];
+
+            let kval = null;
+            if (newKeyName instanceof Function) {
+                kval = newKeyName(key, v);
+            } else if (typeof newKeyName === 'string') {
+                kval = v[newKeyName];
+            }
+            if (kval) {
+                if (!ret[kval]) {
+                    ret[kval] = {};
+                }
+                ret[kval][key] = v;
+            }
+            if (Object.isObject(v)) {
+                reorganizeLevel(v);
+            }
+
+        }
+
+    }
+
+    reorganizeLevel(object);
+    return ret;
+
 };
 
 /**
@@ -2433,6 +2491,29 @@ RegExp.quote = function (string) {
     }
     return string;
 }
+
+/**
+ * Encodes HTML special characters to prevent HTML injection.
+ * By default encodes: <, >, &, and "
+ * @param {string} str - The input string to encode
+ * @returns {string} - Encoded HTML string
+ * @prototypeof String
+ * @method
+ * @public
+ * @example
+ * ```
+ * const encoded = "<div>Hello & welcome!</div>".encodeHTML(); 
+ * /// "&lt;div&gt;Hello &amp; welcome!&lt;/div&gt;"
+ * ```
+ */
+String.prototype.encodeHTML = function () {
+    const str = this.toString();
+    return str
+        .replace(/&/g, '&amp;')  // Encode ampersand first
+        .replace(/</g, '&lt;')   // Encode less-than
+        .replace(/>/g, '&gt;')   // Encode greater-than
+        .replace(/"/g, '&quot;'); // Encode double quotes
+};
 
 /**
  * Compresses a string using the LZW algorithm.
@@ -6056,23 +6137,26 @@ Element.prototype.parent = function () {
 };
 
 
-/**
- * Finds the closest ancestor of the current element (or the element itself) that matches the specified selector.
- * @param {string} selector A CSS selector string to match the ancestor element against.
- * @returns {HTMLElement|null} The closest ancestor element that matches the selector, or null if none is found.
- * @prototypeof Element
- * @method
- */
-(!Element.prototype.closest && (Element.prototype.closest = function (selector) {
-    let elem = this;
+if (!Element.prototype.closest) {
+    /**
+     * Finds the closest ancestor of the current element (or the element itself) that matches the specified selector.
+     * @param {string} selector A CSS selector string to match the ancestor element against.
+     * @returns {HTMLElement|null} The closest ancestor element that matches the selector, or null if none is found.
+     * @prototypeof Element
+     * @method
+     */
+    Element.prototype.closest = function (selector) {
+        let elem = this;
 
-    while (elem !== document.body) {
-        elem = elem.parentElement;
-        if (elem.matches(selector)) return elem;
-    }
+        while (elem !== document.body) {
+            elem = elem.parentElement;
+            if (elem.matches(selector)) return elem;
+        }
 
-    return null;
-}));
+        return null;
+    };
+}
+
 
 /**
  * Returns closest component object
@@ -6255,7 +6339,13 @@ if (!Element.prototype.matches) {
      * @prototypeof Element
      * @method
      */
-    Element.prototype.matches = Element.prototype.matchesSelector || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector || Element.prototype.mozMatchesSelector || Element.prototype.oMatchesSelector;
+    Element.prototype.matches = function() {
+        return (Element.prototype.matchesSelector || 
+                Element.prototype.msMatchesSelector || 
+                Element.prototype.webkitMatchesSelector || 
+                Element.prototype.mozMatchesSelector || 
+                Element.prototype.oMatchesSelector).call(this, arguments[0]);
+    };
 };
 
 /**
@@ -6729,19 +6819,6 @@ window.addEventListener('resize', (e) => {
 
 });
 
-// document.scrollEndTimeout = -1;
-// document.addEventListener('scroll', (e) => {
-
-//     if (document.scrollEndTimeout != -1) {
-//         clearTimeout(document.scrollEndTimeout);
-//     }
-
-//     document.scrollEndTimeout = setTimeout(() => {
-//         document.dispatchEvent(new Event('scrolled'));
-//     }, 100);
-
-// });
-
 /**
  * Checks if the object is a Promise.
  * @param {*} p The object to check.
@@ -7077,7 +7154,9 @@ EventTarget.prototype.removeEventListener = function (type, listener, options) {
  * Retrieves the event listeners for a given element.
  * @param {Element} el The element to retrieve event listeners for.
  * @returns {Array} An array of event listener objects for the specified element.
- * @global
+ * @prototypeof Window
+ * @static
+ * @method
  */
 window.getEventListenersFor = function (el) {
     return __listenersMap.get(el) || [];

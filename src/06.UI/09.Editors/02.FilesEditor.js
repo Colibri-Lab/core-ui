@@ -52,6 +52,13 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
 
     }
 
+    /**
+     * When delete icon clicked
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments 
+     * @ignore
+     */
     __deleteIconClicked(event, args) {
         event.sender.parent.Dispose();
         if (this._filesGroup.children == 0) {
@@ -60,6 +67,13 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
         this.Dispatch('Changed');
     }
 
+    /**
+     * When sign is clicked
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments 
+     * @ignore
+     */
     __signClicked(event, args) {
         const component = eval(this._fieldData?.params?.sign_component);
         component.Show(itemData.file, (signedFile) => {
@@ -72,6 +86,13 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
         return false;
     }
 
+    /**
+     * When input file changed
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments 
+     * @ignore
+     */
     __inputInputFileChanged(event, args) {
 
         let validatedFiles = this._validate(this._input.Files());
@@ -90,7 +111,9 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
         this.Dispatch('Changed');
     }
 
-    /** @protected */
+    /**
+     * @protected
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'Когда файлы выбраны');
@@ -98,9 +121,9 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
 
 
     /**
-     * Валидация выбранного списка файлов
-     * @param {array} filesList
-     * @return {array} список файлов, прошедших проверку
+     * Validate files
+     * @param {Array} filesList - list of files to validate
+     * @return {Array} list of validated files
      * @private
      */
     _validate(filesList) {
@@ -178,6 +201,7 @@ Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
 
     /**
      * Validate editor
+     * @public
      */
     Validate() {
 

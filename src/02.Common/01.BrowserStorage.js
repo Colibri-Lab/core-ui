@@ -4,13 +4,18 @@
  * @memberof Colibri.Common
  */
 Colibri.Common.BrowserStorage = class {
-    /** @constructor */
+    
+    /**
+     * Constructs a new instance of Colibri.Common.BrowserStorage. 
+     * @constructor 
+     */
     constructor() {}
 
     /**
      * Sets a value in the browser storage.
      * @param {string} name - The name of the item.
      * @param {*} [value=true] - The value to set. Defaults to true if not provided.
+     * @public
      */
     Set(name, value = true) {
         window.localStorage.setItem(name, value);
@@ -20,6 +25,7 @@ Colibri.Common.BrowserStorage = class {
      * Gets a value from the browser storage.
      * @param {string} name - The name of the item.
      * @returns {*} - The value retrieved from the storage.
+     * @public
      */
     Get(name) {
         return window.localStorage.getItem(name);
@@ -28,6 +34,7 @@ Colibri.Common.BrowserStorage = class {
     /**
      * Deletes an item from the browser storage.
      * @param {string} name - The name of the item to delete.
+     * @public
      */
     Delete(name) {
         window.localStorage.removeItem(name);
@@ -37,6 +44,7 @@ Colibri.Common.BrowserStorage = class {
      * Checks if an item exists in the browser storage.
      * @param {string} name - The name of the item to check.
      * @returns {boolean} - True if the item exists, false otherwise.
+     * @public
      */
     Has(name) {
         return !!this.Get(name);

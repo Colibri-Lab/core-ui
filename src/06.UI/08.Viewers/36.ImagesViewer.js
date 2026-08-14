@@ -47,6 +47,9 @@ Colibri.UI.ImagesViewer = class extends Colibri.UI.Viewer {
         this._value = value;
         this._showValue();
     }
+    /**
+     * @ignore
+     */
     _showValue() {
         this._grid.Clear();
         for(const image of this._value) {
@@ -58,6 +61,14 @@ Colibri.UI.ImagesViewer = class extends Colibri.UI.Viewer {
 
     }
 
+    /**
+     * When image is clicked
+     * @param {Colibri.UI.Event} event event object
+     * @param {*} args event arguments
+     * @returns {boolean}
+     * @private
+     * @ignore
+     */
     __imageClicked(event, args) {
         return this.Dispatch('ImageClicked', {image: event.sender});
     }

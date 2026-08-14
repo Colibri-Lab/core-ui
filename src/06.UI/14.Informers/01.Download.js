@@ -1,5 +1,17 @@
 /**
  * Download generating informer
+ * Shows the progress of file generation and allows to close the informer
+ * If generation completed shows a link or button to download the file
+ * @example
+ * ```
+ * const informer = new Colibri.UI.Informers.Download('downloadInformer', parent);
+ * informer.Add({
+ *     title: 'Generating file',
+ *     icon: 'Colibri.UI.SomeIcon',
+ *     percent: 0,
+ *     link: null
+ * });
+ * ```
  * @class
  * @extends Colibri.UI.FlexBox
  * @memberof Colibri.UI.Informers
@@ -37,6 +49,7 @@ Colibri.UI.Informers.Download = class extends Colibri.UI.FlexBox {
     /**
      * Dispose item
      * @param {object} args log message arguments
+     * @public
      */
     DisposeItem(args) {
         this.Dispatch('Clicked', args);
@@ -50,6 +63,7 @@ Colibri.UI.Informers.Download = class extends Colibri.UI.FlexBox {
      * List item clicked
      * @param {object} event event object
      * @param {object} args log message arguments
+     * @private
      */
     __listItemClicked(event, args) {
         if(args.item.value.percent === 100) {
@@ -71,6 +85,7 @@ Colibri.UI.Informers.Download = class extends Colibri.UI.FlexBox {
     /**
      * Add informer
      * @param {object} informer informer object
+     * @public
      */
     Add(informer) {
         this._listGroup.AddItem(informer);

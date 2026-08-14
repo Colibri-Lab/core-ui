@@ -12,14 +12,11 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
     constructor(name, container) {
         super(name, container, Element.create('div'));
         this.AddClass('app-select-editor-component');
-
-
-
-
     }
 
     /**
      * Validate editor
+     * @public
      */
     Validate() {
 
@@ -129,15 +126,32 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
         this._showField();
     }
 
+    /**
+     * When input received focus
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments 
+     * @ignore 
+     */
     __inputReceiveFocus(event, args) {
         this.parent.parent.AddClass('-focused');
     }
 
+    /**
+     * When input loosed focus
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments 
+     * @ignore 
+     */
     __inputLoosedFocus(event, args) {
         this.parent.parent.RemoveClass('-focused');
     }
 
-    /** @private */
+    /**
+     * Loosed focus on input
+     * @protected
+     */
     _showField() {
         if (!this._input) {
             this._input = this._createSelector();
@@ -198,7 +212,10 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
 
     }
 
-    /** @private */
+    /**
+     * Creates a selector
+     * @protected 
+     */
     _createSelector() {
 
         return new Colibri.UI.Selector(
@@ -220,6 +237,7 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
 
     /**
      * Reload values
+     * @public
      */
     ReloadValues() {
         this.values = this.field?.values || this.field?.params?.values;
@@ -242,7 +260,11 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
         }
     }
 
-    /** @private */
+    /**
+     * Get the depend on value
+     * @param {string|null} type type of lookup
+     * @protected 
+     */
     _getDependsValue(type = null) {
         if (this.root && this.field?.lookup) {
 
@@ -268,6 +290,7 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
     /**
      * Set the lookup object
      * @param {(Object|function)} value
+     * @private
      */
     _setLookup(value) {
         this._lookup = value;
@@ -332,7 +355,9 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
         }
     }
 
-    /** @private */
+    /**
+     * @ignore 
+     */
     _setEnabled() {
         if (!this.value && this.field.default) {
             this.value = this.field.default;
@@ -359,6 +384,7 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
 
     /**
      * Focus on editor
+     * @public
      */
     Focus() {
         this._input.Focus();

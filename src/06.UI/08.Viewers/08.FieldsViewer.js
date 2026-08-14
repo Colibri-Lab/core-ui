@@ -119,11 +119,19 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         return this._hidden.shown;
     }
 
+    /**
+     * Returns the field viewer by name
+     * @param {string} name name of field
+     * @returns {Colibri.UI.Viewer|null} field viewer or null if not found
+     * @public
+     */
     Fields(name) {
         return Array.findObject(this._viewers, 'name', name + '-viewer');
     }
 
     /**
+     * Toggle clicked
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -135,6 +143,13 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         this.Dispatch('FieldsToggled', { state: this._hidden.shown });
     }
 
+    /**
+     * Editor changed
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __editorChanged(event, args) {
         this.Dispatch('EditorChanged', {
             domEvent: args.domEvent,
@@ -144,6 +159,13 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         })
     }
 
+    /**
+     * Viewer clicked
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __viewerClicked(event, args) {
         return this.Dispatch('ViewerClicked', {
             domEvent: args.domEvent,
@@ -159,6 +181,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
      * @param {object} value value object
      * @param {Element} contentElement content element
      * @param {boolean} showTitles show titles
+     * @private
      */
     _createFields(fields = null, value = null, contentElement = null, showTitles = true) {
         if (fields === null) {
@@ -374,6 +397,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
      * @param {object} value value object
      * @param {Element} contentElement content element
      * @param {boolean} showTitles show titles
+     * @private
      */
     _updateFields(fields = null, value = null, contentElement = null, showTitles = true) {
         const root = this.root || this;
@@ -399,6 +423,15 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
 
     }
 
+    /**
+     * Generate value
+     * @param {object} field - field object
+     * @param {object} value - value object
+     * @param {string} name - field name
+     * @param {Colibri.UI.Viewer} component - viewer component
+     * @returns {object} converted value object
+     * @private
+     */
     _generateValue(field, value, name, component) {
         let vv = null;
         try {
@@ -436,7 +469,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         this._showUnsetFields = value === 'true' || value === true;
         this._showShowUnsetFields();
     }
-    /** @private */
+    /** @ignore */
     _showShowUnsetFields() {
         this._createFields();
     }
@@ -456,7 +489,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
         this._hideFields = typeof value === 'string' ? value.split(',') : value;
         this._showHideFields();
     }
-    /** @private */
+    /** @ignore */
     _showHideFields() {
         this._createFields();
     }

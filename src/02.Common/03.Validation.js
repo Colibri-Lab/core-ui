@@ -10,6 +10,8 @@ Colibri.Common.Validation = class {
      * @param {string|number} bik - The БИК to validate.
      * @param {Object} error - An object to store error information.
      * @returns {boolean} - Indicates whether the БИК is valid.
+     * @static
+     * @public
      */
     static ValidateBik(bik, error) {
         var result = false;
@@ -38,6 +40,8 @@ Colibri.Common.Validation = class {
      * @param {string|number} inn - The ИНН to validate.
      * @param {Object} error - An object to store error information.
      * @returns {boolean} - Indicates whether the ИНН is valid.
+     * @static
+     * @public
      */
     static ValidateInn(inn, error) {
         error = error ?? {};
@@ -92,6 +96,8 @@ Colibri.Common.Validation = class {
      * @param {string|number} kpp - The КПП to validate.
      * @param {Object} error - An object to store error information.
      * @returns {boolean} - Indicates whether the КПП is valid.
+     * @static
+     * @public
      */
     static ValidateKpp(kpp, error) {
         var result = false;
@@ -121,6 +127,8 @@ Colibri.Common.Validation = class {
      * @param {string|number} bik - The БИК (Bank Identifier Code) associated with the КС.
      * @param {Object} error - An object to store error information.
      * @returns {boolean} - Indicates whether the КС is valid.
+     * @static
+     * @public
      */
     static ValidateKs(ks, bik, error) {
         var result = false;
@@ -162,6 +170,8 @@ Colibri.Common.Validation = class {
      * @param {string|number} ogrn - The OGRN to validate.
      * @param {Object} error - An object to store error information.
      * @returns {boolean} - Indicates whether the OGRN is valid.
+     * @static
+     * @public
      */
     static ValidateOgrn(ogrn, error) {
         var result = false;
@@ -196,6 +206,8 @@ Colibri.Common.Validation = class {
      * @param {string|number} ogrnip - The OGRNIP to validate.
      * @param {Object} error - An object to store error information.
      * @returns {boolean} - Indicates whether the OGRNIP is valid.
+     * @static
+     * @public
      */
     static ValidateOgrnip(ogrnip, error) {
         var result = false;
@@ -231,6 +243,8 @@ Colibri.Common.Validation = class {
      * @param {string|number} bik - The Russian bank identification code (BIK).
      * @param {Object} error - An object to store error information.
      * @returns {boolean} - Indicates whether the RS is valid.
+     * @static
+     * @public
      */
     static ValidateRs(rs, bik, error) {
         var result = false;
@@ -272,6 +286,8 @@ Colibri.Common.Validation = class {
      * @param {string|number} snils - The Russian individual insurance account number to validate.
      * @param {Object} error - An object to store error information.
      * @returns {boolean} - Indicates whether the SNILS is valid.
+     * @static
+     * @public
      */
     static ValidateSnils(snils, error) {
         var result = false;

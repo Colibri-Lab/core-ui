@@ -8,11 +8,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     /**
      * Creates MapLibre UI pane.
-     * 
+     *
+     * @constructor 
      * @param {String} name
-     * 
      * @param {*} container
-     * 
      * @param {*} element
      */
     constructor(name, container, element) {
@@ -53,7 +52,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     }
 
-    /** Registers component events. */
+    /** 
+     * Registers component events.
+     * @protected
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Loaded', false, 'When map is fully loaded');
@@ -69,6 +71,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * Loads MapLibre scripts/styles.
      * 
      * @returns {Promise<void>}
+     * @async
+     * @private
      */
     _loadScriptsAndStyles() {
         return new Promise((resolve, reject) => {
@@ -98,7 +102,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         })
     }
 
-    /** Initializes map instance and map-level handlers. */
+    /** 
+     * Initializes map instance and map-level handlers. 
+     * @private 
+     */
     _loadMap() {
 
         this._loadScriptsAndStyles().then(() => {
@@ -182,37 +189,58 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         });
     }
 
-    /** @type {*} Layers button group container. */
+    /**
+     * Layers button group container. 
+     * @type {*}  
+     */
     get layersButtonGroup() {
         return this.Children('layers').container;
     }
 
-    /** @type {*} Additional button group container. */
+    /** 
+     * Additional button group container.
+     * @type {*} 
+     */
     get additionalButtonGroup() {
         return this.Children('additional').container;
     }
 
-    /** @type {*} Commands button group container. */
+    /**
+     * Commands button group container. 
+     * @type {*} 
+     */
     get commandsButtonGroup() {
         return this.Children('commands').container;
     }
 
-    /** @type {*} Filters button group container. */
+    /**
+     * Filters button group container.
+     * @type {*} 
+     */
     get filtersButtonGroup() {
         return this.Children('filters').container;
     }
 
-    /** @type {*} Extensions button group container. */
+    /**
+     * Extensions button group container.
+     * @type {*} 
+     */
     get extensionsButtonGroup() {
         return this.Children('extensions').container;
     }
 
-    /** @type {*} Zoom button group container. */
+    /** 
+     * Zoom button group container.
+     * @type {*} 
+     */
     get zoomButtonGroup() {
         return this.Children('zoom').container;
     }
 
-    /** Reads map bbox/zoom/center/rotation to internal properties. */
+    /** 
+     * Reads map bbox/zoom/center/rotation to internal properties. 
+     * @private
+     */
     _getProperties() {
         const bounds = this._map.getBounds();
         const southWest = bounds.getSouthWest();
@@ -230,24 +258,27 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /**
      * Layer switch handler.
      * 
-     * @param {*} event
-     * 
-     * @param {{current: String}} args
+     * @param {Colibri.Events.Event} event
+     * @param {*} args
+     * @private
      */
     __layersSwitchChanged(event, args) {
         this.SwitchToLayer(args.current);
         this.Dispatch('Changed', {});
     }
-    /** Centers map to stored center/zoom. */
+    /** 
+     * Centers map to stored center/zoom.
+     * @private
+     */
     __zoomSetCenterClicked() {
         this._map.flyTo({ center: this._center, zoom: this._zoom });
     }
     /**
      * Rotate control moving handler.
      * 
-     * @param {*} event
-     * 
-     * @param {{angle: Number}} args
+     * @param {Colibri.Events.Event} event
+     * @param {*} args
+     * @private
      */
     __zoomRotateRotating(event, args) {
         this._map.rotateTo(args.angle);
@@ -255,22 +286,28 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /**
      * Rotate control complete handler.
      * 
-     * @param {*} event
-     * 
-     * @param {{angle: Number}} args
+     * @param {Colibri.Events.Event} event
+     * @param {*} args
+     * @private
      */
     __zoomRotateRotated(event, args) {
         this._map.rotateTo(args.angle);
         this.Dispatch('Changed', {});
     }
-    /** Zoom-in button handler. */
+    /** 
+     * Zoom-in button handler.
+     * @private
+     */
     __zoomZoomInClicked() {
         if (this.zoom >= 18) {
             return;
         }
         this._map.zoomIn();
     }
-    /** Zoom-out button handler. */
+    /** 
+     * Zoom-out button handler.
+     * @private
+     */
     __zoomZoomOutClicked() {
         if (this.zoom <= 1) {
             return;
@@ -282,8 +319,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * Moves camera immediately.
      * 
      * @param {[Number, Number]|{lng:Number,lat:Number}} center
-     * 
      * @param {Number} zoom
+     * @public
      */
     Fly(center, zoom) {
         Colibri.Common.Wait(() => this._loaded).then(() => {
@@ -291,19 +328,31 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         });
     }
 
-    /** @type {Boolean} Returns whether map resources are loaded. */
+    /**
+     * Returns whether map resources are loaded. 
+     * @type {Boolean}  
+     */
     get loaded() {
         return this._loaded;
     }
 
-    /** @type {{lat:Number,lng:Number}|Array<Number>} Map center. */
+    /** 
+     * Map center.
+     * @type {{lat:Number,lng:Number}|Array<Number>} 
+     */
     get center() { return this._center; }
+    /** 
+     * Map center.
+     * @type {{lat:Number,lng:Number}|Array<Number>} 
+     */
     set center(value) {
         value = this._convertProperty('Array', value);
         this._center = value;
         this._showCenter();
     }
-    /** Applies current center to map. */
+    /** 
+     * @ignore 
+     */
     _showCenter() {
         Colibri.Common.Wait(() => this._loaded).then(() => {
             this.SetCenter(this._center);
@@ -311,20 +360,29 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
     /**
      * Sets map center.
-     * 
      * @param {[Number, Number]|{lng:Number,lat:Number}} latLngLike
+     * @public
      */
     SetCenter(latLngLike) {
         this._map.setCenter(Array.isArray(latLngLike) ? latLngLike : [latLngLike.lng, latLngLike.lat]);
     }
 
-    /** @type {Number} Map zoom. */
+    /** 
+     * Map zoom.
+     * @type {Number}
+     */
     get zoom() { return this._zoom; }
+    /** 
+     * Map zoom.
+     * @type {Number}
+     */
     set zoom(value) {
         this._zoom = value;
         this._showZoom();
     }
-    /** Applies current zoom to map. */
+    /** 
+     * @ignore 
+     */
     _showZoom() {
         Colibri.Common.Wait(() => this._loaded).then(() => {
             this.SetZoom(this._zoom);
@@ -334,18 +392,28 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * Sets map zoom.
      * 
      * @param {Number} zoom
+     * @public
      */
     SetZoom(zoom) {
         this._map.setZoom(zoom);
     }
 
-    /** @type {Array} Bounding box. */
+    /** 
+     * Bounding box.
+     * @type {Array} 
+     */
     get bbox() { return this._bbox; }
+    /** 
+     * Bounding box.
+     * @type {Array} 
+     */
     set bbox(value) {
         this._bbox = value;
         this._showBbox();
     }
-    /** Applies current bbox to map. */
+    /** 
+     * @ignore 
+     */
     _showBbox() {
         Colibri.Common.Wait(() => this._loaded).then(() => {
             this.SetBBox(this._bbox);
@@ -355,6 +423,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * Fits map to bbox.
      * 
      * @param {Array<Array<Number>>} bbox
+     * @public
      */
     SetBBox(bbox) {
         this._map.fitBounds([
@@ -369,6 +438,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * @param {Array<{lat:Number,lng:Number}>} points
      * 
      * @returns {Array<Array<Number>>}
+     * @private
      */
     _getBBox(points) {
 
@@ -422,6 +492,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * Fits map to provided feature points.
      * 
      * @param {Array<{lat:Number,lng:Number}>} featuresPoints
+     * @public
      */
     ShowFeatures(featuresPoints) {
         const bbox = this._getBBox(featuresPoints);
@@ -443,7 +514,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._administrativeDataJson = value;
         this._showAdministrativeDataJson();
     }
-    /** Adds administrative geojson sources to map. */
+    /** 
+     * @ignore 
+     */
     _showAdministrativeDataJson() {
         Colibri.Common.Wait(() => this._loaded).then(() => {
             Object.forEach(this._administrativeDataJson, (name, arr) => {
@@ -463,6 +536,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * Moves layer behind dynamic vector layers.
      * 
      * @param {String} name
+     * @private
      */
     _moveBack(name) {
         try {
@@ -483,6 +557,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * @param {String} sourceName
      * 
      * @param {{polygons?:Object,lines?:Object,points?:Object,texts?:Object}} styles
+     * @private
      */
     _createLayers(sourceName, styles) {
         // Пример: полигоны
@@ -550,6 +625,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * Removes administrative layers by source prefix.
      * 
      * @param {String} sourceName
+     * @private
      */
     _removeLayers(sourceName) {
 
@@ -582,7 +658,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._glyphs = value;
         this._showGlyphs();
     }
-    /** Applies current glyphs URL to style. */
+    /** 
+     * @ignore
+     */
     _showGlyphs() {
         Colibri.Common.Wait(() => this._loaded && !!this._map.getStyle()).then(() => {
             const oldstyle = this._map.getStyle();
@@ -590,7 +668,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         });
     }
 
-    /** Shows all administrative layers. */
+    /** 
+     * Shows all administrative layers.
+     * @public
+     */
     ShowAdministrativeLayers() {
         this.HideAdministrativeLayers();
         Object.forEach(this._administrativeDataJson, (name, arr) => {
@@ -614,7 +695,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     }
 
-    /** Hides all administrative layers. */
+    /** 
+     * Hides all administrative layers.
+     * @public
+     */
     HideAdministrativeLayers() {
         Object.forEach(this._administrativeDataJson, (name, arr) => {
             let index = 1;
@@ -643,7 +727,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._tiles = value;
         this._showTiles();
     }
-    /** Adds all configured tile layers and selects first one. */
+    /** 
+     * @ignore 
+     */
     _showTiles() {
         Colibri.Common.Wait(() => this._loaded).then(() => {
             this._tiles.forEach(tile => {
@@ -657,6 +743,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * Adds tile source/style layer option.
      * 
      * @param {{name:String,title?:String,url:String,type?:String,size?:Number,minzoom?:Number,maxzoom?:Number,style?:Object}} tile
+     * @public
      */
     AddTiles(tile) {
 
@@ -697,6 +784,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * Switches active base layer.
      * 
      * @param {String} name
+     * @public
      */
     SwitchToLayer(name) {
         if (this._layers[name]) {
@@ -743,6 +831,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * @param {Object<String,String>} sources
      * 
      * @param {Object<String,Object>} properties
+     * @public
      */
     CreateSources(sources, properties) {
         Object.map(sources, (name, type) => {
@@ -759,7 +848,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Creates line source and layer.
      * @param {String} name 
+     * @private
      */
     _createLineSource(name) {
         if (!this.loaded) {
@@ -796,7 +887,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Creates point source and layer.
      * @param {String} name 
+     * @private
      */
     _createPointSource(name) {
         if (!this.loaded) {
@@ -831,7 +924,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Creates fill source and layer.
      * @param {String} name 
+     * @private
      */
     _createFillSource(name) {
         if (!this.loaded) {
@@ -877,10 +972,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /**
-     * 
+     * Creates object source and layer.
      * @param {String} name
-     * 
      * @param {Object} properties
+     * @private
      */
     _createObjectSource(name, properties) {
         if (!this.loaded) {
@@ -946,8 +1041,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Adds object to source.
      * @param {String} name 
-     * @param {Object} objectJson 
+     * @param {Object} objectJson
+     * @private 
      */
     _sourceAddObject(name, objectJson) {
         const source = this._createObjectSource(name);
@@ -960,14 +1057,12 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /**
-     * 
+     * Adds or updates objects in source.
      * @param {String} name
-     * 
      * @param {Array<Object>} objectsJson
-     * 
      * @param {Boolean} updateIfExists
-     * 
      * @param {Boolean} removeIfNotFoundInObjects
+     * @private
      */
     _sourceAddOrUpdateObjects(name, objectsJson, updateIfExists = true, removeIfNotFoundInObjects = false) {
         const source = this._createObjectSource(name);
@@ -997,8 +1092,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Removes object from source.
      * @param {String} name 
-     * @param {String|Number} objectId 
+     * @param {String|Number} objectId
+     * @private 
      */
     _sourceRemoveObject(name, objectId) {
         const source = this._createObjectSource(name);
@@ -1011,8 +1108,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Removes objects from source.
      * @param {String} name 
-     * @param {Array<String|Number>} objectIds 
+     * @param {Array<String|Number>} objectIds
+     * @private 
      */
     _sourceRemoveObjects(name, objectIds) {
         const source = this._createObjectSource(name);
@@ -1025,9 +1124,11 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Updates object in source.
      * @param {String} name 
      * @param {String|Number} objectId 
-     * @param {Object} objectJson 
+     * @param {Object} objectJson
+     * @private 
      */
     _sourceUpdateObject(name, objectId, objectJson) {
         const source = this._createObjectSource(name);
@@ -1042,8 +1143,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Adds line to source.
      * @param {String} name 
-     * @param {Object} objectJson 
+     * @param {Object} objectJson
+     * @private 
      */
     _sourceAddLine(name, objectJson) {
         const source = this._createLineSource(name);
@@ -1056,10 +1159,13 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Adds or updates lines in source.
      * @param {String} name 
      * @param {Array<Object>} objectsJson 
      * @param {Boolean} updateIfExists 
-     * @param {Boolean} removeIfNotFoundInObjects */
+     * @param {Boolean} removeIfNotFoundInObjects
+     * @private 
+     */
     _sourceAddOrUpdateLines(name, objectsJson, updateIfExists = true, removeIfNotFoundInObjects = false) {
         const source = this._createLineSource(name);
         if (!source) {
@@ -1085,9 +1191,12 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         source.setData(data);
     }
 
-    /** 
+    /**
+     * Removes line from source. 
      * @param {String} name 
-     * @param {String|Number} objectId */
+     * @param {String|Number} objectId 
+     * @private
+     */
     _sourceRemoveLine(name, objectId) {
         const source = this._createLineSource(name);
         if (!source) {
@@ -1099,8 +1208,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Removes lines from source.
      * @param {String} name 
-     * @param {Array<String|Number>} objectIds 
+     * @param {Array<String|Number>} objectIds
+     * @private
      */
     _sourceRemoveLines(name, objectIds) {
         const source = this._createLineSource(name);
@@ -1113,9 +1224,11 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Updates line in source.
      * @param {String} name 
      * @param {String|Number} objectId 
-     * @param {Object} objectJson 
+     * @param {Object} objectJson
+     * @private 
      */
     _sourceUpdateLine(name, objectId, objectJson) {
         const source = this._createLineSource(name);
@@ -1130,8 +1243,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Adds point to source.
      * @param {String} name 
-     * @param {Object} objectJson 
+     * @param {Object} objectJson
+     * @private 
      */
     _sourceAddPoint(name, objectJson) {
         const source = this._createPointSource(name);
@@ -1144,10 +1259,12 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Adds or updates points in source.
      * @param {String} name 
      * @param {Array<Object>} objectsJson 
      * @param {Boolean} updateIfExists 
-     * @param {Boolean} removeIfNotFoundInObjects 
+     * @param {Boolean} removeIfNotFoundInObjects
+     * @private 
      */
     _sourceAddOrUpdatePoints(name, objectsJson, updateIfExists = true, removeIfNotFoundInObjects = false) {
         const source = this._createPointSource(name);
@@ -1175,8 +1292,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Removes point from source.
      * @param {String} name 
-     * @param {String|Number} objectId 
+     * @param {String|Number} objectId
+     * @private 
      */
     _sourceRemovePoint(name, objectId) {
         const source = this._createPointSource(name);
@@ -1189,8 +1308,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Removes points from source.
      * @param {String} name 
-     * @param {Array<String|Number>} objectIds 
+     * @param {Array<String|Number>} objectIds
+     * @private 
      */
     _sourceRemovePoints(name, objectIds) {
         const source = this._createPointSource(name);
@@ -1203,9 +1324,11 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Updates point in source.
      * @param {String} name 
      * @param {String|Number} objectId 
-     * @param {Object} objectJson 
+     * @param {Object} objectJson
+     * @private 
      */
     _sourceUpdatePoint(name, objectId, objectJson) {
         const source = this._createPointSource(name);
@@ -1221,8 +1344,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
 
     /** 
+     * Adds fill to source.
      * @param {String} name 
-     * @param {Object} objectJson 
+     * @param {Object} objectJson
+     * @private 
      */
     _sourceAddFill(name, objectJson) {
         const source = this._createFillSource(name);
@@ -1235,10 +1360,12 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Adds or updates fills in source.
      * @param {String} name 
      * @param {Array<Object>} objectsJson 
      * @param {Boolean} updateIfExists 
-     * @param {Boolean} removeIfNotFoundInObjects 
+     * @param {Boolean} removeIfNotFoundInObjects
+     * @private 
      */
     _sourceAddOrUpdateFills(name, objectsJson, updateIfExists = true, removeIfNotFoundInObjects = false) {
         const source = this._createFillSource(name);
@@ -1266,8 +1393,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Removes fill from source.
      * @param {String} name 
-     * @param {String|Number} objectId 
+     * @param {String|Number} objectId
+     * @private 
      */
     _sourceRemoveFill(name, objectId) {
         const source = this._createFillSource(name);
@@ -1280,8 +1409,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Removes fills from source.
      * @param {String} name 
-     * @param {Array<String|Number>} objectIds 
+     * @param {Array<String|Number>} objectIds
+     * @private 
      */
     _sourceRemoveFills(name, objectIds) {
         const source = this._createFillSource(name);
@@ -1294,9 +1425,11 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Updates fill in source.
      * @param {String} name 
      * @param {String|Number} objectId 
-     * @param {Object} objectJson 
+     * @param {Object} objectJson
+     * @private 
      */
     _sourceUpdateFill(name, objectId, objectJson) {
         const source = this._createFillSource(name);
@@ -1312,7 +1445,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
 
     /** 
-     * @param {String} sourceName 
+     * Clears line source.
+     * @param {String} sourceName
+     * @public 
      */
     ClearLineSource(sourceName) {
         if (this._linesSources[sourceName]) {
@@ -1324,7 +1459,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
-     * @param {String} sourceName 
+     * Clears point source.
+     * @param {String} sourceName
+     * @public 
      */
     ClearPointsSource(sourceName) {
         if (this._pointsSources[sourceName]) {
@@ -1336,8 +1473,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         }
     }
 
-    /** 
+    /**
+     * Clears fill source. 
      * @param {String} sourceName 
+     * @public
      */
     ClearFillSource(sourceName) {
         if (this._fillSources[sourceName]) {
@@ -1349,7 +1488,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
-     * @param {String} sourceName 
+     * Clears object source.
+     * @param {String} sourceName
+     * @public 
      */
     ClearObjectsSource(sourceName) {
         if (this._objectsSources[sourceName]) {
@@ -1365,10 +1506,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * Returns marker coordinates by id.
      * 
      * @param {String|Number} id
-     * 
      * @param {String} name
-     * 
      * @returns {{lat:Number,lng:Number}|null}
+     * @public 
      */
     MarkerPosition(id, name) {
         const source = this._createObjectSource(name);
@@ -1386,18 +1526,13 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     /**
      * Adds or updates marker.
-     * 
      * @param {String} source
-     * 
      * @param {String|Number} name
-     * 
      * @param {{lat:Number,lng:Number}} latLngLike
-     * 
      * @param {String|null} icon
-     * 
      * @param {Number} opacity
-     * 
      * @param {Number} azimuth
+     * @public 
      */
     AddMarker(source, name, latLngLike, icon = null, opacity = 1, azimuth = 0) {
         const geoData = {
@@ -1415,16 +1550,12 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     /**
      * Adds or updates markers in batch.
-     * 
      * @param {String} source
-     * 
      * @param {Array<Object>} latLngsLike
-     * 
      * @param {String|null} icon
-     * 
      * @param {Boolean} updateIfExists
-     * 
      * @param {Boolean} removeIfNotFoundInObjects
+     * @public 
      */
     AddMarkers(source, latLngsLike, icon = null, updateIfExists = true, removeIfNotFoundInObjects = false) {
         this._sourceAddOrUpdateObjects(source, latLngsLike.map(latLngLike => {
@@ -1443,10 +1574,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     /**
      * Placeholder for popup binding.
-     * 
      * @param {String} name
-     * 
      * @param {String} popupHtml
+     * @public
      */
     AddPopup(name, popupHtml) {
         // const object = this._objects[name];
@@ -1460,8 +1590,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * Placeholder for tooltip binding.
      * 
      * @param {String} name
-     * 
      * @param {String} toolTipHtml
+     * @public
      */
     AddTooltip(name, toolTipHtml) {
         // const object = this._objects[name];
@@ -1472,7 +1602,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
-     * @param {String} name */
+     * Opens popup for object by name.
+     * @param {String} name
+     * @public
+     */
     OpenPopup(name) {
         const object = this._objects[name];
         if (!object) return;
@@ -1480,11 +1613,13 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Opens tooltip for object by name.
      * @param {String} source 
      * @param {String|Number} name 
      * @param {Array} latLngArray 
      * @param {String} color 
      * @param {Number} weight 
+     * @public
      */
     AddPolyline(source, name, latLngArray, color = 'red', weight = 1) {
         const geoData = {
@@ -1508,11 +1643,13 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Adds circle to source.
      * @param {String} source 
      * @param {String|Number} name 
      * @param {{lat:Number,lng:Number,radius?:Number,color?:String}} latLngLike 
      * @param {Number} radius 
      * @param {String} color 
+     * @public
      */
     AddCircle(source, name, latLngLike, radius, color = 'red') {
 
@@ -1539,9 +1676,11 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Updates color of circles in source based on condition.
      * @param {String} source 
      * @param {String} color 
      * @param {?Function} condition 
+     * @public
      */
     UpdateCirclesColor(source, color, condition = null) {
         const sourceObj = this._createPointSource(source);
@@ -1559,12 +1698,14 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Adds or updates circles in source.
      * @param {String} source 
      * @param {Array<Object>} latLngsLike 
      * @param {Number} radius 
      * @param {String} color 
      * @param {Boolean} updateIfExists 
      * @param {Boolean} removeIfNotFoundInObjects 
+     * @public
      */
     AddCircles(source, latLngsLike, radius, color = 'red', updateIfExists = true, removeIfNotFoundInObjects = false) {
 
@@ -1590,19 +1731,23 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Adds or updates fills in source.
      * @param {String} source 
      * @param {Array<Object>} latLngsLike 
      * @param {Boolean} updateIfExists 
      * @param {Boolean} removeIfNotFoundInObjects 
+     * @public
      */
     AddFills(source, latLngsLike, updateIfExists = true, removeIfNotFoundInObjects = false) {
         this._sourceAddOrUpdateFills(source, latLngsLike, updateIfExists, removeIfNotFoundInObjects);
     }
 
     /** 
+     * Updates color of lines in source based on condition.
      * @param {String} source 
      * @param {String} color 
      * @param {?Function} condition 
+     * @public
      */
     UpdateLinesColor(source, color, condition = null) {
         const sourceObj = this._createLineSource(source);
@@ -1620,12 +1765,14 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Adds or updates lines in source.
      * @param {String} source 
      * @param {Array<Object>} geolineObjects 
      * @param {String} color 
      * @param {Number} weight 
      * @param {Boolean} updateIfExists 
      * @param {Boolean} removeIfNotFoundInObjects 
+     * @public
      */
     AddLinesFromGeo(source, geolineObjects, color = 'red', weight = 1, updateIfExists = true, removeIfNotFoundInObjects = false) {
         this._sourceAddOrUpdateLines(source, geolineObjects.map(v => {
@@ -1647,11 +1794,13 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Adds or updates line in source.
      * @param {String} source 
      * @param {String|Number} name 
      * @param {Object} geolineObject 
      * @param {String} color 
      * @param {Number} weight 
+     * @public
      */
     AddLineFromGeo(source, name, geolineObject, color = 'red', weight = 1) {
         const geoData = {
@@ -1674,7 +1823,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
 
     /** 
+     * Returns array of icon names.
      * @returns {Array<String>} 
+     * @private
      */
     _getIcons() {
         const ret = [];
@@ -1687,17 +1838,21 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Adds icon to map.
      * @param {String} iconName 
      * @param {String} iconContent 
      * @param {Number} width 
      * @param {Number} height 
+     * @public
      */
     AddIcon(iconName, iconContent, width, height) {
         this._icons[iconName] = { content: iconContent, width, height };
     }
 
     /** 
+     * Removes icon from map.
      * @param {String} iconName 
+     * @public
      */
     RemoveIcon(iconName) {
         delete this._icons[iconName];
@@ -1707,17 +1862,21 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Adds div icon to map.
      * @param {String} iconName 
      * @param {String} className 
      * @param {Number} width 
      * @param {Number} height 
+     * @public
      */
     AddDivIcon(iconName, className, width, height) {
         this._icons[iconName] = `<div class="${className}" style="width:${width}px;height:${height}px"></div>`;
     }
 
     /** 
+     * Removes object, line and point by name.
      * @param {String} name 
+     * @public
      */
     DeleteByName(name) {
         this._sourceRemoveObject(name);
@@ -1725,9 +1884,11 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._sourceRemovePoint(name);
     }
 
-    /** 
+    /**
+     * Deletes lines from source that match a pattern. 
      * @param {String} sourceName 
      * @param {String} like 
+     * @public
      */
     DeleteLinesLike(sourceName, like) {
         let source = this._createLineSource(sourceName);
@@ -1736,8 +1897,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         source.setData(data);
     }
     /** 
+     * Deletes lines from source that do not match the provided list of IDs.
      * @param {String} sourceName 
      * @param {Array<String|Number>} except 
+     * @public
      */
     DeleteLinesAllExcept(sourceName, except) {
         let source = this._createLineSource(sourceName);
@@ -1746,8 +1909,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         source.setData(data);
     }
     /** 
+     * Deletes points from source that match a pattern.
      * @param {String} sourceName 
      * @param {String} like 
+     * @public
      */
     DeletePointsLike(sourceName, like) {
         let source = this._createPointSource(sourceName);
@@ -1756,8 +1921,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         source.setData(data);
     }
     /** 
+     * Deletes points from source that do not match the provided list of IDs.
      * @param {String} sourceName 
      * @param {Array<String|Number>} except 
+     * @public
      */
     DeletePointsAllExcept(sourceName, except) {
         let source = this._createPointSource(sourceName);
@@ -1766,8 +1933,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         source.setData(data);
     }
     /** 
+     * Deletes objects from source that match a pattern.
      * @param {String} sourceName 
      * @param {String} like 
+     * @public
      */
     DeleteObjectsLike(sourceName, like) {
         let source = this._createObjectSource(sourceName);
@@ -1776,8 +1945,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         source.setData(data);
     }
     /** 
+     * Deletes objects from source that do not match the provided list of IDs.
      * @param {String} sourceName 
      * @param {Array<String|Number>} except 
+     * @public
      */
     DeleteObjectsAllExcept(sourceName, except) {
         let source = this._createObjectSource(sourceName);
@@ -1787,9 +1958,11 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Checks if object exists in source.
      * @param {String} sourceName 
      * @param {String|Number} name 
      * @returns {Boolean} 
+     * @private
      */
     _objectExists(sourceName, name) {
         const source = this._createObjectSource(sourceName);
@@ -1798,9 +1971,11 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         return idx !== -1;
     }
     /** 
+     * Checks if line exists in source.
      * @param {String} sourceName 
      * @param {String|Number} name 
      * @returns {Boolean} 
+     * @private
      */
     _lineExists(sourceName, name) {
         const source = this._createLineSource(sourceName);
@@ -1809,9 +1984,11 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         return idx !== -1;
     }
     /** 
+     * Checks if point exists in source.
      * @param {String} sourceName 
      * @param {String|Number} name 
      * @returns {Boolean} 
+     * @private
      */
     _pointExists(sourceName, name) {
         const source = this._createPointSource(sourceName);
@@ -1821,9 +1998,11 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Returns object, line or point by name.
      * @param {String} sourceName 
      * @param {String|Number} name 
      * @returns {Object|null|undefined} 
+     * @public
      */
     Feature(sourceName, name) {
         if (this._objectsSources[sourceName]) {
@@ -1836,9 +2015,11 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Returns object by name.
      * @param {String} sourceName 
      * @param {String|Number} name 
      * @returns {Object|null} 
+     * @public
      */
     Object(sourceName, name) {
         const source = this._createObjectSource(sourceName);
@@ -1850,16 +2031,21 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         return found[0];
     }
     /** 
+     * Updates object in source.
      * @param {String} sourceName 
      * @param {String|Number} name 
-     * @param {Object} geoData */
+     * @param {Object} geoData 
+     * @public
+     */
     UpdateObject(sourceName, name, geoData) {
         this._sourceUpdateObject(sourceName, name, geoData);
     }
     /** 
+     * Returns line by name.
      * @param {String} sourceName 
      * @param {String|Number} name 
-     * @returns {Object|null} 
+     * @returns {Object|null}
+     * @public
      */
     Line(sourceName, name) {
         const source = this._createLineSource(sourceName);
@@ -1871,17 +2057,21 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         return found[0];
     }
     /** 
+     * Updates line in source.
      * @param {String} sourceName 
      * @param {String|Number} name 
-     * @param {Object} geoData 
+     * @param {Object} geoData
+     * @public
      */
     UpdateLine(sourceName, name, geoData) {
         this._sourceUpdateLine(sourceName, name, geoData);
     }
     /** 
+     * Returns point by name.
      * @param {String} sourceName 
      * @param {String|Number} name 
      * @returns {Object|null} 
+     * @public
      */
     Point(sourceName, name) {
         const source = this._createPointSource(sourceName);
@@ -1893,9 +2083,11 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         return found[0];
     }
     /** 
+     * Updates point in source.
      * @param {String} sourceName 
      * @param {String|Number} name 
      * @param {Object} geoData 
+     * @public
      */
     UpdatePoint(sourceName, name, geoData) {
         this._sourceUpdatePoint(sourceName, name, geoData);
@@ -1903,10 +2095,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
 
     /**
      * Enables browser context menu integration over map.
-     * 
      * @param {Function} contextmenuFn
-     * 
      * @param {Number} tolerance
+     * @public
      */
     EnableContextMenu(contextmenuFn, tolerance = 10) {
         this._contextMenuHandler = this._contextMenuHandler || ((e) => {
@@ -1953,7 +2144,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._map.getContainer().addEventListener('contextmenu', this._contextMenuHandler);
     }
 
-    /** Disables context menu integration. */
+    /** 
+     * Disables context menu integration
+     * @public
+     */
     DisableContextMenu() {
         this._map.getContainer().removeEventListener('contextmenu', this._contextMenuHandler);
 
@@ -1962,8 +2156,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Enables hover tooltip on map canvas.
      * @param {Function} callback 
      * @param {Number} tolerance 
+     * @public
      */
     EnableHover(callback, tolerance = 10) {
         this._infoDiv = new Colibri.UI.ToolTip('maplibre-tooltip', document.body, [Colibri.UI.ToolTip.RB, Colibri.UI.ToolTip.LT]);
@@ -2024,7 +2220,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         });
     }
 
-    /** Disables hover tooltip. */
+    /** 
+     * Disables hover tooltip.
+     * @public
+     */
     DisableHover() {
         if (this._mousemoveHoverHandler) {
             this._map.off('mousemove', this._mousemoveHoverHandler);
@@ -2038,7 +2237,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
 
-    /** Enables mouse debugger overlay and click-to-copy id. */
+    /** 
+     * Enables mouse debugger overlay and click-to-copy id.
+     * @public
+     */
     EnableDebugger() {
         this._coordsDiv = document.createElement('div');
         this._coordsDiv.style.position = 'absolute';
@@ -2085,7 +2287,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._map.on('click', this._clickHandler);
     }
 
-    /** Disables mouse debugger overlay. */
+    /** 
+     * Disables mouse debugger overlay.
+     * @public
+     */
     DisableDebugger() {
         if (this._mousemoveHandler) {
             this._map.off('mousemove', this._mousemoveHandler);
@@ -2102,7 +2307,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._map.getContainer().style.cursor = '';
     }
 
-    /** Enables drag box selection on map canvas. */
+    /** 
+     * Enables drag box selection on map canvas.
+     * @public
+     */
     EnableBoxSelection() {
 
         let start, current, box;
@@ -2201,7 +2409,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._map.getCanvas().addEventListener('touchstart', this._touchHandler);
     }
 
-    /** Disables drag box selection. */
+    /** 
+     * Disables drag box selection.
+     * @public
+     */
     DisableBoxSelection() {
         try {
             this._map.getCanvas().style.cursor = null;
@@ -2213,7 +2424,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
+     * Enables single-click selection on map canvas.
      * @param {Number} tolerance 
+     * @public
      */
     EnableSingleSelection(tolerance = 10) {
         this._map.getCanvas().style.cursor = 'default';
@@ -2238,7 +2451,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._map.on('click', this._mapClicked);
     }
 
-    /** Disables single-click selection. */
+    /** 
+     * Disables single-click selection.
+     * @public
+     */
     DisableSingleSelection() {
         try {
             this._map.off('click', this._mapClicked);
@@ -2249,7 +2465,9 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
 
     /** 
-     * @param {*} icon 
+     * Enables click-to-mark mode. When the user clicks on the map, a marker is added at that location.
+     * @param {*} icon
+     * @public
      */
     EnableClickToMark(icon) {
         this._mapClickToMarkClicked = this._mapClickToMarkClicked || (async (e) => {
@@ -2263,7 +2481,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._map.on('click', this._mapClickToMarkClicked);
     }
 
-    /** Disables click-to-mark mode. */
+    /** 
+     * Disables click-to-mark mode.
+     * @public
+     */
     DisableClickToMark() {
         try {
             // this.DeleteObjectsLike('markers', 'marker-');
@@ -2274,7 +2495,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         }
     }
 
-    /** Enables distance measurement mode. */
+    /** 
+     * Enables distance measurement mode.
+     * @public
+     */
     EnableMeasure() {
         let drawing = false;
         let lineCoordinates = [];
@@ -2388,7 +2612,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._map.getCanvas().addEventListener('touchstart', this._touchHandler2);
     }
 
-    /** Disables distance measurement mode. */
+    /** 
+     * Disables distance measurement mode.
+     * @public
+     */
     DisableMeasure() {
         try {
             this._map.getCanvas().removeEventListener('mousedown', this._mousedownHandler2);
@@ -2411,7 +2638,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         }
     }
 
-    /** Enables angle measurement mode. */
+    /** 
+     * Enables angle measurement mode.
+     * @public
+     */
     EnableAngleMeasure() {
         let drawing = false;
         let points = []; // max 3
@@ -2583,7 +2813,10 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
         this._map.getCanvas().addEventListener('touchstart', this._touchHandlerAngle);
     }
 
-    /** Disables angle measurement mode. */
+    /** 
+     * Disables angle measurement mode.
+     * @public
+     */
     DisableAngleMeasure() {
         try {
             this._map.getCanvas().removeEventListener('mousedown', this._mousedownHandlerAngle);
@@ -2618,758 +2851,6 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     set rotatable(value) {
         value = this._convertProperty('Boolean', value);
         this._zoomRotate.shown = value;
-    }
-
-}
-
-Colibri.UI.Maps.Intersections = class {
-
-    /**
-     * Helper: checks orientation of ordered triplet (p, q, r).
-     * 
-     * @param {Array<Number>} p
-     * 
-     * @param {Array<Number>} q
-     * 
-     * @param {Array<Number>} r
-     * 
-     * @returns {Number}
-     */
-    orientation(p, q, r) {
-        const val = (q[1] - p[1]) * (r[0] - q[0]) - (q[0] - p[0]) * (r[1] - q[1]);
-        if (val === 0) return 0; // colinear
-        return val > 0 ? 1 : 2; // clock or counterclock wise
-    }
-
-    /**
-     * Checks whether q lies on segment pr.
-     * 
-     * @param {Array<Number>} p
-     * 
-     * @param {Array<Number>} q
-     * 
-     * @param {Array<Number>} r
-     * 
-     * @returns {Boolean}
-     */
-    onSegment(p, q, r) {
-        return (
-            q[0] <= Math.max(p[0], r[0]) &&
-            q[0] >= Math.min(p[0], r[0]) &&
-            q[1] <= Math.max(p[1], r[1]) &&
-            q[1] >= Math.min(p[1], r[1])
-        );
-    }
-
-    /**
-     * Checks if two segments intersect.
-     * 
-     * @param {Array<Number>} p1
-     * 
-     * @param {Array<Number>} q1
-     * 
-     * @param {Array<Number>} p2
-     * 
-     * @param {Array<Number>} q2
-     * 
-     * @returns {Boolean}
-     */
-    doIntersect(p1, q1, p2, q2) {
-        const o1 = this.orientation(p1, q1, p2);
-        const o2 = this.orientation(p1, q1, q2);
-        const o3 = this.orientation(p2, q2, p1);
-        const o4 = this.orientation(p2, q2, q1);
-
-        if (o1 !== o2 && o3 !== o4) return true;
-
-        // Special cases
-        if (o1 === 0 && this.onSegment(p1, p2, q1)) return true;
-        if (o2 === 0 && this.onSegment(p1, q2, q1)) return true;
-        if (o3 === 0 && this.onSegment(p2, p1, q2)) return true;
-        if (o4 === 0 && this.onSegment(p2, q1, q2)) return true;
-
-        return false;
-    }
-
-    /**
-     * Computes segment intersection point.
-     * 
-     * @param {Array<Number>} p1
-     * 
-     * @param {Array<Number>} q1
-     * 
-     * @param {Array<Number>} p2
-     * 
-     * @param {Array<Number>} q2
-     * 
-     * @returns {Array<Number>|null}
-     */
-    getIntersection(p1, q1, p2, q2) {
-        const [x1, y1] = p1;
-        const [x2, y2] = q1;
-        const [x3, y3] = p2;
-        const [x4, y4] = q2;
-
-        const denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
-        if (denom === 0) return null; // parallel or colinear
-
-        const px =
-            ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / denom;
-        const py =
-            ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / denom;
-
-        return [px, py];
-    }
-
-    /**
-     * Finds all intersections between two polylines.
-     * 
-     * @param {Array<Array<Number>>} line1
-     * 
-     * @param {Array<Array<Number>>} line2
-     * 
-     * @returns {Array<Array<Number>>}
-     */
-    findIntersections(line1, line2) {
-        const intersections = [];
-
-        for (let i = 0; i < line1.length - 1; i++) {
-            const p1 = line1[i];
-            const q1 = line1[i + 1];
-
-            for (let j = 0; j < line2.length - 1; j++) {
-                const p2 = line2[j];
-                const q2 = line2[j + 1];
-
-                if (this.doIntersect(p1, q1, p2, q2)) {
-                    const pt = this.getIntersection(p1, q1, p2, q2);
-                    if (pt) intersections.push(pt);
-                }
-            }
-        }
-
-        return intersections;
-    }
-
-    /**
-     * Finds intersections for all line pairs.
-     * 
-     * @param {Array<{id:String|Number,coordinates:Array}>} lines
-     * 
-     * @returns {Array<{id1:*,id2:*,lat:Number,lng:Number}>}
-     */
-    static intersections(lines) {
-        const inn = new Colibri.UI.Maps.Intersections();
-        const intersections = [];
-        for (const v1 of lines) {
-            for (const v2 of lines) {
-                if (v1.id != v2.id) {
-                    const ints = inn.findIntersections(v1.coordinates[0], v2.coordinates[0])
-                    if (ints.length > 0) {
-                        intersections.push(...ints.map(pt => ({ id1: v1.id, id2: v2.id, lat: pt[0], lng: pt[1] })));
-                    }
-                }
-            }
-        }
-        return intersections;
-    }
-
-}
-
-Colibri.UI.Maps.Turf = class {
-
-    /** 
-     * @param {Array<Array<Number>>} coordinates 
-     * @param {Object} properties 
-     * @returns {Object} 
-     */
-    lineString(coordinates, properties = {}) {
-        return {
-            type: "Feature",
-            geometry: {
-                type: "LineString",
-                coordinates
-            },
-            properties
-        };
-    }
-
-    /** 
-     * @param {Array<Number>} start 
-     * @param {Array<Number>} end 
-     * @param {Object} options 
-     * @returns {Object} 
-     */
-    greatCircle(start, end, options = {}) {
-        const { npoints = 100, includeEndpoints = true } = options;
-
-        const [lon1, lat1] = start.map(Colibri.UI.Utilities.Vincenty.radians);
-        const [lon2, lat2] = end.map(Colibri.UI.Utilities.Vincenty.radians);
-
-        const d = 2 * Math.asin(Math.sqrt(
-            Math.sin((lat2 - lat1) / 2) ** 2 +
-            Math.cos(lat1) * Math.cos(lat2) * Math.sin((lon2 - lon1) / 2) ** 2
-        ));
-
-        const coords = [];
-
-        for (let i = 0; i <= npoints; i++) {
-            const f = i / npoints;
-
-            const A = Math.sin((1 - f) * d) / Math.sin(d);
-            const B = Math.sin(f * d) / Math.sin(d);
-
-            const x = A * Math.cos(lat1) * Math.cos(lon1) + B * Math.cos(lat2) * Math.cos(lon2);
-            const y = A * Math.cos(lat1) * Math.sin(lon1) + B * Math.cos(lat2) * Math.sin(lon2);
-            const z = A * Math.sin(lat1) + B * Math.sin(lat2);
-
-            const lat = Math.atan2(z, Math.sqrt(x * x + y * y));
-            const lon = Math.atan2(y, x);
-
-            if (includeEndpoints || (i > 0 && i < npoints))
-                coords.push([Colibri.UI.Utilities.Vincenty.degrees(lon), Colibri.UI.Utilities.Vincenty.degrees(lat)]);
-        }
-
-        return this.lineString(coords);
-    }
-
-    /** 
-     * @param {Array<Number>} a 
-     * @param {Array<Number>} b 
-     * @returns {Number} 
-     */
-    haversineDistance(a, b) {
-        const [lon1, lat1] = a.map(Colibri.UI.Utilities.Vincenty.radians);
-        const [lon2, lat2] = b.map(Colibri.UI.Utilities.Vincenty.radians);
-        const R = 6371; // km
-
-        const dlat = lat2 - lat1;
-        const dlon = lon2 - lon1;
-
-        const h = Math.sin(dlat / 2) ** 2 +
-            Math.cos(lat1) * Math.cos(lat2) * Math.sin(dlon / 2) ** 2;
-
-        return 2 * R * Math.asin(Math.sqrt(h));
-    }
-
-    /** 
-     * @param {Object} feature 
-     * @param {{units?:String}} options 
-     * @returns {Number} 
-     */
-    length(feature, options = {}) {
-        const unit = options.units || "kilometers";
-        const coords = feature.geometry.coordinates;
-        let total = 0;
-
-        for (let i = 0; i < coords.length - 1; i++) {
-            total += this.haversineDistance(coords[i], coords[i + 1]);
-        }
-
-        switch (unit) {
-            case "meters": return total * 1000;
-            case "miles": return total * 0.621371;
-            case "nauticalmiles": return total * 0.539957;
-            default: return total; // kilometers
-        }
-    }
-
-    /** 
-     * @param {Object} pointA 
-     * @param {Object} pointB 
-     * @param {{units?:String}} options 
-     * @returns {Number} 
-     */
-    distance(pointA, pointB, options = {}) {
-        const unit = options.units || "kilometers";
-        const d = this.haversineDistance(pointA.geometry.coordinates, pointB.geometry.coordinates);
-        switch (unit) {
-            case "meters": return d * 1000;
-            case "miles": return d * 0.621371;
-            case "nauticalmiles": return d * 0.539957;
-            default: return d; // kilometers
-        }
-    }
-
-    /** 
-     * @param {Array<Number>} coordinates 
-     * @param {Object} properties 
-     * @returns {Object} 
-     */
-    point(coordinates, properties = {}) {
-        return {
-            type: "Feature",
-            geometry: {
-                type: "Point",
-                coordinates
-            },
-            properties
-        };
-    }
-
-    /** 
-     * @param {Array<Number>} center 
-     * @param {Number} radiusKm 
-     * @param {Object} options 
-     * @returns {Object} 
-     */
-    circle(center, radiusKm, options = {}, project, unproject) {
-        const { steps = 64 } = options;
-        const R = 6371000; // радиус Земли в метрах
-
-        const centerProj = center;
-        const coords = [];
-
-        for (let i = 0; i < steps; i++) {
-            const theta = (i / steps) * 2 * Math.PI;
-            const x = centerProj[0] + radiusKm * 1000 * Math.cos(theta);
-            const y = centerProj[1] + radiusKm * 1000 * Math.sin(theta);
-            coords.push([x, y]);
-        }
-        coords.push(coords[0]); // замыкаем
-
-        return {
-            type: "Feature",
-            geometry: {
-                type: "Polygon",
-                coordinates: [coords]
-            },
-            properties: {
-                center: center,
-                radius: radiusKm
-            }
-        };
-    }
-
-    /**
-     * Returns circle intersection polygon as GeoJSON.
-     * 
-     * @param {Object} circleA
-     * 
-     * @param {Object} circleB
-     * 
-     * @returns {Object|nul
-     * l}
-     */
-    intersect(circleA, circleB) {
-        // Центры окружностей
-        const c1 = circleA.properties.center;
-        const c2 = circleB.properties.center;
-
-        // Радиусы (в км)
-        const r1 = circleA.properties.radius;
-        const r2 = circleB.properties.radius;
-
-        // Переводим координаты в метры (простая проекция)
-        const R = 6371000; // радиус Земли в м
-        function project([lon, lat]) {
-            const x = (lon * Math.PI / 180) * R * Math.cos(lat * Math.PI / 180);
-            const y = (lat * Math.PI / 180) * R;
-            return [x, y];
-        }
-        function unproject([x, y]) {
-            const lat = (y / R) * 180 / Math.PI;
-            const lon = (x / (R * Math.cos(lat * Math.PI / 180))) * 180 / Math.PI;
-            return [lon, lat];
-        }
-
-        const p1 = project(c1);
-        const p2 = project(c2);
-
-        const dx = p2[0] - p1[0];
-        const dy = p2[1] - p1[1];
-        const d = Math.sqrt(dx * dx + dy * dy);
-
-        if (d > (r1 * 1000 + r2 * 1000) || d < Math.abs(r1 * 1000 - r2 * 1000)) {
-            return null; // нет пересечения
-        }
-
-        const a = (r1 * r1 * 1e6 - r2 * r2 * 1e6 + d * d) / (2 * d);
-        const h = Math.sqrt(r1 * r1 * 1e6 - a * a);
-
-        const xm = p1[0] + (a * dx) / d;
-        const ym = p1[1] + (a * dy) / d;
-
-        const rx = -(dy * (h / d));
-        const ry = dx * (h / d);
-
-        const pi1 = [xm + rx, ym + ry];
-        const pi2 = [xm - rx, ym - ry];
-
-        // Дуги окружностей
-        function arcPoints(center, radius, from, to, steps = 64) {
-            const angle1 = Math.atan2(from[1] - center[1], from[0] - center[0]);
-            const angle2 = Math.atan2(to[1] - center[1], to[0] - center[0]);
-            let sweep = angle2 - angle1;
-            if (sweep < 0) sweep += 2 * Math.PI;
-
-            const pts = [];
-            for (let i = 0; i <= steps; i++) {
-                const theta = angle1 + sweep * i / steps;
-                pts.push([
-                    center[0] + radius * 1000 * Math.cos(theta),
-                    center[1] + radius * 1000 * Math.sin(theta)
-                ]);
-            }
-            return pts;
-        }
-
-        const arc1 = arcPoints(p1, r1, pi1, pi2);
-        const arc2 = arcPoints(p2, r2, pi2, pi1);
-
-        const polygonCoords = [...arc1, ...arc2].map(unproject);
-
-        return {
-            type: "Feature",
-            geometry: {
-                type: "Polygon",
-                coordinates: [polygonCoords]
-            },
-            properties: {}
-        };
-    }
-
-    /**
-     * Builds circle intersection polygon in planar coordinates.
-     * 
-     * @param {Array<Number>} c1
-     * 
-     * @param {Number} r1
-     * 
-     * @param {Array<Number>} c2
-     * 
-     * @param {Number} r2
-     * 
-     * @param {Number} steps
-     * 
-     * @returns {Object|null}
-     */
-    circleIntersectionPolygon(c1, r1, c2, r2, steps = 64) {
-        const dx = c2[0] - c1[0];
-        const dy = c2[1] - c1[1];
-        const d = Math.sqrt(dx * dx + dy * dy);
-
-        if (d > r1 + r2 || d < Math.abs(r1 - r2) || (d === 0 && r1 === r2)) {
-            return null; // нет пересечения
-        }
-
-        const a = (r1 * r1 - r2 * r2 + d * d) / (2 * d);
-        const h = Math.sqrt(r1 * r1 - a * a);
-
-        const xm = c1[0] + (a * dx) / d;
-        const ym = c1[1] + (a * dy) / d;
-
-        const rx = -(dy * (h / d));
-        const ry = dx * (h / d);
-
-        const p1 = [xm + rx, ym + ry];
-        const p2 = [xm - rx, ym - ry];
-
-        function arcPoints(center, radius, from, to, steps) {
-            const angle1 = Math.atan2(from[1] - center[1], from[0] - center[0]);
-            const angle2 = Math.atan2(to[1] - center[1], to[0] - center[0]);
-            let sweep = angle2 - angle1;
-            if (sweep < 0) sweep += 2 * Math.PI;
-
-            const pts = [];
-            for (let i = 0; i <= steps; i++) {
-                const theta = angle1 + (sweep * i / steps);
-                pts.push([
-                    center[0] + radius * Math.cos(theta),
-                    center[1] + radius * Math.sin(theta)
-                ]);
-            }
-            return pts;
-        }
-
-        const arc1 = arcPoints(c1, r1, p1, p2, steps);
-        const arc2 = arcPoints(c2, r2, p2, p1, steps);
-
-        const polygonCoords = [...arc1, ...arc2];
-
-        return {
-            type: "Feature",
-            geometry: {
-                type: "Polygon",
-                coordinates: [polygonCoords]
-            },
-            properties: {}
-        };
-
-    }
-
-    /** 
-     * @param {Array<Number>} c1 
-     * @param {Number} r1Km 
-     * @param {Array<Number>} c2 
-     * @param {Number} r2Km 
-     * @returns {Array<Array<Number>>} 
-     */
-    circleIntersections(c1, r1Km, c2, r2Km) {
-        const R = 6371000; // радиус Земли в метрах
-
-        // переводим координаты в метры (простая equirectangular проекция)
-        function project([lon, lat]) {
-            const x = (lon * Math.PI / 180) * R * Math.cos(lat * Math.PI / 180);
-            const y = (lat * Math.PI / 180) * R;
-            return [x, y];
-        }
-        function unproject([x, y]) {
-            const lat = (y / R) * 180 / Math.PI;
-            const lon = (x / (R * Math.cos(lat * Math.PI / 180))) * 180 / Math.PI;
-            return [lon, lat];
-        }
-
-        const p1 = project(c1);
-        const p2 = project(c2);
-
-        const dx = p2[0] - p1[0];
-        const dy = p2[1] - p1[1];
-        const d = Math.sqrt(dx * dx + dy * dy);
-
-        const r1 = r1Km * 1000;
-        const r2 = r2Km * 1000;
-
-        if (d > r1 + r2 || d < Math.abs(r1 - r2) || (d === 0 && r1 === r2)) {
-            return [];
-        }
-
-        const a = (r1 * r1 - r2 * r2 + d * d) / (2 * d);
-        const h = Math.sqrt(r1 * r1 - a * a);
-
-        const xm = p1[0] + (a * dx) / d;
-        const ym = p1[1] + (a * dy) / d;
-
-        const rx = -(dy * (h / d));
-        const ry = dx * (h / d);
-
-        const pi1 = [xm + rx, ym + ry];
-        const pi2 = [xm - rx, ym - ry];
-
-        return [unproject(pi1), unproject(pi2)];
-    }
-
-    /** 
-     * @param {Array<Number>} center 
-     * @param {Number} radiusDeg 
-     * @param {Number} steps 
-     * @returns {Object} 
-     */
-    circlePolygonDeg(center, radiusDeg, steps = 128) {
-        const [lon, lat] = center;
-        const coords = [];
-
-        for (let i = 0; i < steps; i++) {
-            const theta = (i / steps) * 2 * Math.PI;
-            const dx = radiusDeg * Math.cos(theta);
-            const dy = radiusDeg * Math.sin(theta);
-
-            coords.push([lon + dx, lat + dy]);
-        }
-
-        coords.push(coords[0]); // замыкаем полигон
-
-        return {
-            type: "Feature",
-            geometry: {
-                type: "Polygon",
-                coordinates: [coords]
-            },
-            properties: {}
-        };
-    }
-
-    /** 
-     * @param {Array<Number>} coord1 
-     * @param {Array<Number>} coord2 
-     * @returns {Number} 
-     */
-    degreeDistance(coord1, coord2) {
-        const [lon1, lat1] = coord1;
-        const [lon2, lat2] = coord2;
-
-        const dLon = lon2 - lon1;
-        const dLat = lat2 - lat1;
-
-        // Евклидово расстояние в градусах
-        return Math.sqrt(dLon * dLon + dLat * dLat);
-    }
-
-    /** 
-     * @param {Array<Number>} p1 
-     * @param {Array<Number>} p2 
-     * @param {Array<Number>} p3 
-     * @param {Array<Number>} p4 
-     * @returns {Array<Number>|null} 
-     */
-    lineIntersection(p1, p2, p3, p4) {
-        const x1 = p1[0], y1 = p1[1];
-        const x2 = p2[0], y2 = p2[1];
-        const x3 = p3[0], y3 = p3[1];
-        const x4 = p4[0], y4 = p4[1];
-
-        const denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
-        if (denom === 0) return null; // параллельные
-
-        const px = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / denom;
-        const py = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / denom;
-
-        // Проверка, что точка лежит на обоих отрезках
-        if (
-            px < Math.min(x1, x2) - 1e-9 || px > Math.max(x1, x2) + 1e-9 ||
-            px < Math.min(x3, x4) - 1e-9 || px > Math.max(x3, x4) + 1e-9 ||
-            py < Math.min(y1, y2) - 1e-9 || py > Math.max(y1, y2) + 1e-9 ||
-            py < Math.min(y3, y4) - 1e-9 || py > Math.max(y3, y4) + 1e-9
-        ) {
-            return null;
-        }
-
-        return [px, py];
-    }
-
-    /**
-     * Finds all edge intersections for two polygons.
-     * 
-     * @param {Object} poly1
-     * 
-     * @param {Object} poly2
-     * 
-     * @returns {Array<Array<Number>>}
-     */
-    polygonIntersectionsPoints(poly1, poly2) {
-        const coords1 = poly1.geometry.coordinates[0];
-        const coords2 = poly2.geometry.coordinates[0];
-        const intersections = [];
-
-        for (let i = 0; i < coords1.length - 1; i++) {
-            for (let j = 0; j < coords2.length - 1; j++) {
-                const inter = this.lineIntersection(coords1[i], coords1[i + 1], coords2[j], coords2[j + 1]);
-                if (inter) intersections.push(inter);
-            }
-        }
-
-        return intersections;
-    }
-
-    /** 
-     * @param {Object} circle1 
-     * @param {Object} circle2 
-     * @returns {Object|null} 
-     */
-    difference(circle1, circle2) {
-        const coords1 = circle1.geometry.coordinates[0];
-        const coords2 = circle2.geometry.coordinates[0];
-
-        // Находим точки пересечения рёбер
-        const intersections = this.polygonIntersectionsPoints(circle1, circle2);
-        if (intersections.length < 2) return null;
-
-        const [p1, p2] = intersections;
-
-        // Функция для обхода полигона от точки до точки
-        function findClosestIndex(coords, point) {
-            let minDist = Infinity;
-            let idx = -1;
-            for (let i = 0; i < coords.length; i++) {
-                const dx = coords[i][0] - point[0];
-                const dy = coords[i][1] - point[1];
-                const dist = dx * dx + dy * dy;
-                if (dist < minDist) {
-                    minDist = dist;
-                    idx = i;
-                }
-            }
-            return idx;
-        }
-
-        function arcBetween(coords, from, to) {
-            const idxFrom = findClosestIndex(coords, from);
-            const idxTo = findClosestIndex(coords, to);
-
-            const arc = [];
-            let i = idxFrom;
-            while (true) {
-                arc.push(coords[i]);
-                if (i === idxTo) break;
-                i = (i + 1) % coords.length;
-            }
-            return arc;
-        }
-
-
-        // дуга первого круга от p1 до p2
-        const arc1 = arcBetween(coords1, p1, p2);
-        // дуга второго круга от p2 до p1
-        const arc2 = arcBetween(coords2, p2, p1);
-
-        const diff1 = {
-            type: "Feature",
-            geometry: { type: "Polygon", coordinates: [[...arc1, ...arc2]] },
-            properties: { name: "circle1 - circle2" }
-        };
-
-        // // обратный вариант
-        // const arc3 = arcBetween(coords2, p1, p2);
-        // const arc4 = arcBetween(coords1, p2, p1);
-
-        // const diff2 = {
-        //     type: "Feature",
-        //     geometry: { type: "Polygon", coordinates: [[...arc3, ...arc4]] },
-        //     properties: { name: "circle2 - circle1" }
-        // };
-
-        return diff1;
-    }
-
-    /** 
-     * @param {Number} azimuthDeg 
-     * @returns {Array<Number>} 
-     */
-    directionVector(azimuthDeg) {
-        const az = azimuthDeg * Math.PI / 180;
-        return [Math.sin(az), Math.cos(az)];
-    }
-
-    /** 
-     * @param {Array<Number>} v1 
-     * @param {Array<Number>} v2 
-     * @returns {Number} 
-     */
-    angleBetween(v1, v2) {
-        const dot = v1[0] * v2[0] + v1[1] * v2[1];
-        const mag1 = Math.sqrt(v1[0] ** 2 + v1[1] ** 2);
-        const mag2 = Math.sqrt(v2[0] ** 2 + v2[1] ** 2);
-        return Math.acos(dot / (mag1 * mag2)) * 180 / Math.PI;
-    }
-
-    /** 
-     * @param {Number} az1 
-     * @param {Number} az2 
-     * @param {Number} toleranceDeg 
-     * @returns {Boolean} 
-     */
-    sameDirection(az1, az2, toleranceDeg = 20) {
-        let diff = Math.abs(az1 - az2);
-        if (diff > 180) diff = 360 - diff;
-        return diff <= toleranceDeg;
-    }
-
-    /** 
-     * @param {Array<Number>} pt 
-     * @param {Object} polygon 
-     * @returns {Boolean} 
-     */
-    pointInPolygon(pt, polygon) {
-        let inside = false;
-        const coords = polygon.geometry.coordinates[0];
-        for (let i = 0, j = coords.length - 1; i < coords.length; j = i++) {
-            const xi = coords[i][0], yi = coords[i][1];
-            const xj = coords[j][0], yj = coords[j][1];
-            const intersect = ((yi > pt[1]) !== (yj > pt[1])) &&
-                (pt[0] < (xj - xi) * (pt[1] - yi) / (yj - yi) + xi);
-            if (intersect) inside = !inside;
-        }
-        return inside;
     }
 
 }

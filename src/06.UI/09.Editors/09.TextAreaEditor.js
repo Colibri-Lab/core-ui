@@ -21,7 +21,13 @@ Colibri.UI.TextAreaEditor = class extends Colibri.UI.Editor {
 
     }
 
-    /** @private */
+    /**
+     * When element changed
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments 
+     * @ignore 
+     */
     __elementChanged(e) {
         if(this.value) {
             this._setFilled();
@@ -31,13 +37,17 @@ Colibri.UI.TextAreaEditor = class extends Colibri.UI.Editor {
 
     }
 
-    /** @private */
+    /**
+     * Update field data
+     * @protected 
+     */
     _updateFieldData() {
         this.placeholder = this._fieldData?.placeholder;
     }
 
     /**
      * Validate
+     * @public
      */
     Validate() {
         
@@ -45,6 +55,7 @@ Colibri.UI.TextAreaEditor = class extends Colibri.UI.Editor {
 
     /**
      * Focus on editor
+     * @public
      */
     Focus() {
         this._element.focus();
@@ -54,6 +65,7 @@ Colibri.UI.TextAreaEditor = class extends Colibri.UI.Editor {
 
     /**
      * Remove focus from editor
+     * @public
      */
     Blur() {
         this?.parent?.parent?.RemoveClass('-focused');

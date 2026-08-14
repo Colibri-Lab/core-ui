@@ -194,7 +194,11 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
 
     }
 
-    /** @private */
+    /**
+     * Returns the value of the field that this viewer depends on, if any
+     * @returns {any} The value of the dependent field, or null if there is no dependency 
+     * @protected 
+     */
     _getDependsValue() {
         if (this.root && this._field?.lookup &&
             this._field.lookup['depends']) {
@@ -213,6 +217,7 @@ Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
     /**
      * Set lookup
      * @param {object|string} value
+     * @private
      */
      _setLookup(value) {
         return Colibri.UI.GetLookupPromise(this, value, '', (type = null) => {

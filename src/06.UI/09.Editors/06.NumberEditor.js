@@ -21,7 +21,13 @@ Colibri.UI.NumberEditor = class extends Colibri.UI.Editor {
 
     }
 
-    /** @private */
+    /**
+     * When element changed
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments 
+     * @ignore 
+     */
     __elementChanged(e) {
         if(this.value) {
             this._setFilled();
@@ -33,6 +39,7 @@ Colibri.UI.NumberEditor = class extends Colibri.UI.Editor {
 
     /**
      * Validate editor
+     * @public
      */
     Validate() {
         
@@ -40,6 +47,7 @@ Colibri.UI.NumberEditor = class extends Colibri.UI.Editor {
 
     /**
      * Focus on editor
+     * @public
      */
     Focus() {
         this._element.focus();
@@ -49,12 +57,16 @@ Colibri.UI.NumberEditor = class extends Colibri.UI.Editor {
 
     /**
      * Remove focus from editor
+     * @public
      */
     Blur() {
         this?.parent?.parent?.RemoveClass('-focused');
     }
 
-    /** @private */
+    /**
+     * Update field data
+     * @protected 
+     */
     _updateFieldData() {
         if(this._fieldData?.placeholder) {
             this._element.attr('placeholder', this._fieldData?.placeholder);

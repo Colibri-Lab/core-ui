@@ -21,12 +21,14 @@ Colibri.UI.Maps.Controls.ToolBox = class extends Colibri.UI.ButtonGroup {
     }
 
     /**
+     * Orientation of the toolbox
      * @type {vertical,horizontal}
      */
     get orientation() {
         return this._orientation;
     }
     /**
+     * Orientation of the toolbox
      * @type {vertical,horizontal}
      */
     set orientation(value) {

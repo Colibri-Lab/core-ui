@@ -1,5 +1,10 @@
 /**
- * Json type log
+ * Shows log messages in JSON format
+ * @example
+ * ```
+ * const log = new Colibri.UI.Logs.JsonLog('log', parent);
+ * log.value = { message: 'Hello, world!', level: 'info' };
+ * ```
  * @class
  * @extends Colibri.UI.List
  * @memberof Colibri.UI.Logs
@@ -27,6 +32,7 @@ Colibri.UI.Logs.JsonLog = class extends Colibri.UI.List {
     /**
      * Add log message
      * @param {object} args log message arguments
+     * @public
      */
     Log(args) {
         this._listGroup.AddItem({ ...args, id: Date.Mc() });

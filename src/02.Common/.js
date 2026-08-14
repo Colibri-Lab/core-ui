@@ -1,11 +1,15 @@
 /**
  * Represents common utility functions.
  * @namespace
+ * @class
  * @memberof Colibri
  */
 Colibri.Common = class {
 
-    /** @constructor */
+    /**
+     * Constructs Colibri.Common object 
+     * @constructor 
+     */
     constructor() {
         // Do nothing
     } 
@@ -15,12 +19,37 @@ Colibri.Common = class {
      * Delays execution for a specified time.
      * @param {number} timeout - The time to wait in milliseconds.
      * @return {Promise} - A promise that resolves after the specified time.
+     * @static
+     * @async
+     * @public
+     * @example
+     * ```
+     * /// without any arguments
+     * Colibri.Common.Delay(1000).then(() => {
+     *     console.log('Executed after 1 second');
+     * });
+     * /// send the arguments to the resolve function
+     * Colibri.Common.Delay(1000, 'Hello').then((message) => {
+     *     console.log(message); // Outputs: Hello
+     * });
+     * /// use async/await syntax
+     * async function example() {
+     *     await Colibri.Common.Delay(1000);
+     *     console.log('Executed after 1 second');
+     * }
+     * example();
+     * ```
      */
     static Delay(timeout, args) {
         return new Promise((resolve, reject) => setTimeout(() => resolve(args), timeout));
     }
 
-    /** @type {Object.<string, number>} - A collection of timers identified by their names. */
+    /**
+     * A collection of timers identified by their names. 
+     * @type {Object.<string, number>}
+     * @static
+     * @private
+     */
     static _timers = {};
 
     /**
@@ -28,6 +57,15 @@ Colibri.Common = class {
      * @param {string} name - The name of the timer.
      * @param {number} timeout - The interval of the timer in milliseconds.
      * @param {Function} tickFunction - The function to execute on each tick of the timer.
+     * @public
+     * @static 
+     * @example
+     * ```
+     * /// Start a timer named 'myTimer' that logs a message every 2 seconds
+     * Colibri.Common.StartTimer('myTimer', 2000, () => {
+     *     console.log('Timer ticked!');
+     * });
+     * ```
      */
     static StartTimer(name, timeout, tickFunction) {
         if(Colibri.Common._timers[name]) {
@@ -42,6 +80,13 @@ Colibri.Common = class {
     /**
      * Stops the timer with the specified name.
      * @param {string} name - The name of the timer to stop.
+     * @public
+     * @static
+     * @example
+     * ```
+     * /// Stop the timer named 'myTimer'
+     * Colibri.Common.StopTimer('myTimer');
+     * ```
      */
     static StopTimer(name) {
         if(Colibri.Common._timers[name]) {
@@ -55,6 +100,14 @@ Colibri.Common = class {
      * Checks if a timer with the specified name exists.
      * @param {string} name - The name of the timer to check.
      * @returns {boolean} - True if the timer exists, false otherwise.
+     * @static
+     * @public
+     * @example
+     * ```
+     * /// Check if the timer named 'myTimer' exists
+     * const exists = Colibri.Common.TimerExists('myTimer');
+     * console.log(exists); // Outputs: true or false
+     * ```
      */
     static TimerExists(name) {
         return !!Colibri.Common._timers?.[name];
@@ -67,6 +120,20 @@ Colibri.Common = class {
      * @param {number} [interval=100] - The interval to check the condition in milliseconds.
      * @param {boolean} [resolveWhenTimedOut=false] - Whether to resolve the promise when the timeout occurs.
      * @returns {Promise} - A promise that resolves when the condition is true or the timeout occurs.
+     * @async
+     * @public
+     * @static
+     * @example
+     * ```
+     * /// Wait for a condition to be true with a maximum timeout of 5 seconds
+     * Colibri.Common.Wait(() => document.readyState === 'complete', 5000, 100, true)
+     *     .then(() => {
+     *         console.log('Condition met or timeout occurred');
+     *     })
+     *     .catch(() => {
+     *         console.log('Condition not met within the timeout');
+     *     });
+     * ```
      */
     static Wait(action, maxTimeout = 0, interval = 100, resolveWhenTimedOut = false, params = null) {
         return new Promise((resolve, reject) => {
@@ -103,6 +170,17 @@ Colibri.Common = class {
     /**
      * Waits for the document to be ready.
      * @return {Promise} - A promise that resolves when the document is ready.
+     * @public
+     * @async
+     * @static
+     * @example
+     * ```
+     * /// Wait for the document to be ready
+     * Colibri.Common.WaitForDocumentReady()
+     *     .then(() => {
+     *         console.log('Document is ready');
+     *     });
+     * ```
      */
     static WaitForDocumentReady() {
         return Colibri.Common.Wait(() => document.readyState === 'complete');
@@ -111,6 +189,17 @@ Colibri.Common = class {
     /**
      * Waits for the body element to be available.
      * @return {Promise} - A promise that resolves when the body element exists.
+     * @public
+     * @async
+     * @static
+     * @example
+     * ```
+     * /// Wait for the body element to be available
+     * Colibri.Common.WaitForBody()
+     *     .then(() => {
+     *         console.log('Body element is available');
+     *     });
+     * ```
      */
     static WaitForBody() {
         return Colibri.Common.Wait(() => document.body != null);
@@ -122,6 +211,20 @@ Colibri.Common = class {
      * @param {string} [id=null] - The ID to assign to the script element.
      * @param {Object} [params] - the parameters of script object
      * @returns {Promise} - A promise that resolves with the ID of the loaded script.
+     * @public
+     * @async
+     * @static
+     * @example
+     * ```
+     * /// Load a script from a URL and assign it an ID of 'myScript'
+     * Colibri.Common.LoadScript('https://example.com/script.js', 'myScript')
+     *     .then((id) => {
+     *         console.log(`Script loaded with ID: ${id}`);
+     *     })
+     *     .catch((error) => {
+     *         console.error('Failed to load script:', error);
+     *     });
+     * ```
      */
     static LoadScript(url, id = null, params = {}) {
 
@@ -156,6 +259,20 @@ Colibri.Common = class {
      * @param {string} url - The URL of the styles.
      * @param {string} [id=null] - The ID to assign to the link element.
      * @returns {Promise} - A promise that resolves with the ID of the loaded styles.
+     * @public
+     * @async
+     * @static
+     * @example
+     * ```
+     * /// Load styles from a URL and assign it an ID of 'myStyles'
+     * Colibri.Common.LoadStyles('https://example.com/styles.css', 'myStyles')
+     *     .then((id) => {
+     *         console.log(`Styles loaded with ID: ${id}`);
+     *     })
+     *     .catch((error) => {
+     *         console.error('Failed to load styles:', error);
+     *     });
+     * ```
      */
      static LoadStyles(url, id = null) {
 
@@ -188,6 +305,14 @@ Colibri.Common = class {
      * @param {Array} array - The array of items.
      * @param {number} timeout - The delay between executions in milliseconds.
      * @param {Function} callback - The callback function to execute for each item.
+     * @public
+     * @static
+     * @example
+     * ```
+     * Colibri.Common.Tick([1, 2, 3], 1000, (item) => {
+     *     console.log(item);
+     * });
+     * ```
      */
     static Tick(array, timeout, callback) {
         array.forEach((v, i) => {

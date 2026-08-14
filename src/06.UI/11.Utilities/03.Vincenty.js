@@ -5,14 +5,40 @@
  */
 Colibri.UI.Utilities.Vincenty = class {
 
-    static a = 6378137.0;              // semi-major axis (WGS-84)
-    static f = 1 / 298.257223563;      // flattening (WGS-84)
+    /**
+     * Semi-major axis of the ellipsoid (WGS-84)
+     * @const {number}
+     */
+    static a = 6378137.0;
+    /**
+     * Flattening of the ellipsoid (WGS-84)
+     * @const {number}
+     */
+    static f = 1 / 298.257223563;
+    /**
+     * Semi-minor axis of the ellipsoid (WGS-84)
+     * @const {number}
+     */
     static b = (1 - (1 / 298.257223563)) * 6378137.0;
 
+    /**
+     * Convert degrees to radians
+     * @param {number} deg degrees
+     * @returns {number} radians
+     * @static
+     * @public
+     */
     static radians(deg) {
         return (deg * Math.PI) / 180;
     }
 
+    /**
+     * Convert radians to degrees
+     * @param {number} rad radians
+     * @returns {number} degrees
+     * @static
+     * @public
+     */
     static degrees(rad) {
         return (rad * 180) / Math.PI;
     }
@@ -24,6 +50,8 @@ Colibri.UI.Utilities.Vincenty = class {
      * @param {number} lat2
      * @param {number} lon2
      * @returns {number} Distance in meters.
+     * @static
+     * @public
      */
     static haversine(lat1, lon1, lat2, lon2) {
         const [rLat1, rLon1, rLat2, rLon2] = [lat1, lon1, lat2, lon2].map(Colibri.UI.Utilities.Vincenty.radians);
@@ -45,6 +73,8 @@ Colibri.UI.Utilities.Vincenty = class {
      * @param {[number, number]} coord1
      * @param {[number, number]} coord2
      * @returns {number} Bearing in degrees (0–360).
+     * @static
+     * @public
      */
     static heading(coord1, coord2) {
         const [lat1, lon1] = coord1.map(Colibri.UI.Utilities.Vincenty.radians);
@@ -66,6 +96,8 @@ Colibri.UI.Utilities.Vincenty = class {
      * @param {number} [maxIter=200]
      * @param {number} [tol=1e-12]
      * @returns {[number, number]} [distance, initial bearing].
+     * @static
+     * @public
      */
     static inverse(coord1, coord2, maxIter = 200, tol = 1e-12) {
         const [phi1, L1] = coord1;
@@ -152,6 +184,8 @@ Colibri.UI.Utilities.Vincenty = class {
      * @param {number} alpha12
      * @param {number} s
      * @returns {[number, number]} [latitude2, longitude2]
+     * @public
+     * @static
      */
     static direct(phi1, lambda1, alpha12, s) {
         const f = Colibri.UI.Utilities.Vincenty.f;
@@ -221,6 +255,14 @@ Colibri.UI.Utilities.Vincenty = class {
         return [Colibri.UI.Utilities.Vincenty.degrees(phi2), Colibri.UI.Utilities.Vincenty.degrees(lambda2)];
     }
 
+    /**
+     * Check if a point is inside a bounding box.
+     * @param {number} lat - latitude of the point
+     * @param {number} lon - longitude of the point
+     * @param {Array} bbox - bounding box [[lat1, lon1], [lat2, lon2]]
+     * @static
+     * @public
+     */
     static InsideBBox(lat, lon, bbox) {
         if (!bbox) return true;
         return (
@@ -232,13 +274,15 @@ Colibri.UI.Utilities.Vincenty = class {
     }
 
     /**
-    * Построение линии из точки [lat, lon] по азимуту и длине.
-    * @param {number} lat - стартовая широта
-    * @param {number} lon - стартовая долгота
-    * @param {number} azimuth - азимут в градусах (0–360)
-    * @param {number} totalDistance - длина линии в метрах
-    * @param {number} steps - количество точек вдоль линии
-    * @returns {[number, number][]} массив точек [lat, lon]
+    * Generate a line of points along a given azimuth and distance using the Vincenty formula.
+    * @param {number} lat - start latitude
+    * @param {number} lon - start longitude
+    * @param {number} azimuth - azimuth in degrees (0–360)
+    * @param {number} totalDistance - length of the line in meters
+    * @param {number} steps - number of points along the line
+    * @returns {[number, number][]} array of points [lat, lon]
+    * @static
+    * @public
     */
     static Line(lat, lon, azimuth, totalDistance, steps = 1000, bbox = null) {
         const points = [];
@@ -257,10 +301,14 @@ Colibri.UI.Utilities.Vincenty = class {
     }
 
     /**
-     * Линия по Винсенти между двумя точками
-     * с учётом твоего inverse(), который возвращает [distance, azimuth]
+     * Generate a line of points between two coordinates using the Vincenty formula.
      *
-     * coord = [lat, lon]
+     * @param {Array<Number>} coord1 - [lat, lon] of the first point
+     * @param {Array<Number>} coord2 - [lat, lon] of the second point
+     * @param {number} steps - number of points along the line
+     * @returns {Object} GeoJSON LineString with coordinates
+     * @public
+     * @static
      */
     static LineBetween(coord1, coord2, steps = 1000) {
         // inverse: [distance(m), azimuth(deg)]
@@ -287,11 +335,13 @@ Colibri.UI.Utilities.Vincenty = class {
 
 
     /**
-     * Построение линии с разрывами при переходе ±180 долготы
-     * @param {<lat, lng, azimuth>} point - стартовая широта
-     * @param {number} totalDistance - длина линии в метрах
-     * @param {number} steps - количество точек вдоль линии
-     * @returns {Array<Array<[number, number]>>} массив сегментов, каждый сегмент массив [lat, lon]
+     * Generate a line with breaks when crossing ±180 longitude
+     * @param {Object} point - starting point with properties {lat, lng, azimuth}
+     * @param {number} totalDistance - length of the line in meters
+     * @param {number} steps - number of points along the line
+     * @returns {Array<Array<[number, number]>>} array of segments, each segment an array of [lat, lon]
+     * @static
+     * @public
      */
     static Wrapped(point, totalDistance, steps = 1000, bbox = null) {
         const segments = [];
@@ -344,11 +394,13 @@ Colibri.UI.Utilities.Vincenty = class {
 
 
     /**
-     * Пересечение двух векторов Винсенти.
-     * @param {{lat:number,lng:number,azimuth:number}} p1
-     * @param {{lat:number,lng:number,azimuth:number}} p2
-     * @param {Array<{lat:number,lng:number}>} [bbox]
-     * @returns {{lat:number,lng:number}|null}
+     * Calculate the intersection point of two geodesic lines defined by starting points and azimuths.
+     * @param {{lat:number,lng:number,azimuth:number}} p1 - starting point of the first line
+     * @param {{lat:number,lng:number,azimuth:number}} p2 - starting point of the second line
+     * @param {Array<{lat:number,lng:number}>} [bbox] - optional bounding box to restrict the intersection point
+     * @returns {{lat:number,lng:number}|null} intersection point or null if no intersection
+     * @public
+     * @static
      */
     static intersection(p1, p2, bbox = null, maxDistance = 20000000) {
         const { lat: lat1, lng: lon1, azimuth: az1 } = p1;
@@ -452,11 +504,13 @@ Colibri.UI.Utilities.Vincenty = class {
     }
 
     /**
-     * Найти пересечения всех пар точек с азимутами
-     * @param {Array<{lat:number,lng:number,azimuth:number, ...params}>} points
-     * @param {Array<{lat:number,lng:number}>} [bbox]
-     * @param {Array<{parameter:string,tolerance:number,unit:number}>} tolerances
-     * @returns {Array<{lat:number,lng:number}>}
+     * Calculate intersections of all pairs of points with azimuths
+     * @param {Array<{lat:number,lng:number,azimuth:number, ...params}>} points - array of points with azimuths and optional parameters
+     * @param {Array<{lat:number,lng:number}>} [bbox] - optional bounding box to restrict the intersection points
+     * @param {Array<{parameter:string,tolerance:number,unit:number}>} tolerances - optional array of tolerances for parameters
+     * @returns {Array<{lat:number,lng:number}>} array of intersection points
+     * @public
+     * @static
      */
     static Intersections(points, bbox = null, maxDistance = 20000000, tolerances = []) {
         const results = [];
@@ -528,6 +582,18 @@ Colibri.UI.Utilities.Vincenty = class {
         return unique;
     }
 
+    /**
+     * Calculate the closest point on a line segment to a given point.
+     * @param {number} lat1 - latitude of the first endpoint of the segment
+     * @param {number} lon1 - longitude of the first endpoint of the segment
+     * @param {number} lat2 - latitude of the second endpoint of the segment
+     * @param {number} lon2 - longitude of the second endpoint of the segment
+     * @param {number} latP - latitude of the point to project
+     * @param {number} lonP - longitude of the point to project
+     * @returns {{lat: number, lon: number}} closest point on the segment
+     * @static
+     * @public
+     */
     static closestPointOnSegment(lat1, lon1, lat2, lon2, latP, lonP) {
         // проекция на сегмент в плоских координатах (приближение)
         const x1 = lon1, y1 = lat1;
@@ -546,7 +612,13 @@ Colibri.UI.Utilities.Vincenty = class {
         };
     }
     
-
+    /**
+     * Calculate the total length of a line defined by an array of coordinates.
+     * @param {Array<[number, number]>} coords - array of coordinates [[lon, lat], [lon, lat], ...]
+     * @returns {number} total length in meters
+     * @static
+     * @public
+     */
     static lineLength(coords) {
         let length = 0;
         for (let i = 0; i < coords.length - 2; i += 2) {
@@ -557,6 +629,16 @@ Colibri.UI.Utilities.Vincenty = class {
         return length;
     }
 
+    /**
+     * Check if the intersection point is in the correct direction relative to the real line and azimuth.
+     * @param {Array<[number, number]>} realLinePoints - array of coordinates of the real line [[lon, lat], [lon, lat], ...]
+     * @param {number} azimuth - azimuth of the real line in degrees
+     * @param {Array<[number, number]>} fictionLinePoints - array of coordinates of the fictional line to the intersection point [[lon, lat], [lon, lat], ...]
+     * @param {number} maxDistance - maximum allowed distance from the start point to the intersection point
+     * @returns {boolean} true if the intersection point is valid, false otherwise
+     * @static
+     * @public
+     */
     static checkDirectionOfIntersectionPoint(realLinePoints, azimuth, fictionLinePoints, maxDistance) {
 
         // 2 создаем линию из точек от coords[0] до point
@@ -577,6 +659,14 @@ Colibri.UI.Utilities.Vincenty = class {
         return true;
     }
 
+    /**
+     * Calculate the total length of a polyline up to a given point.
+     * @param {Array<[number, number]>} coords - array of coordinates [[lon, lat], [lon, lat], ...]
+     * @param {{lat: number, lng: number}} point - point to measure length to
+     * @returns {number} total length in meters up to the point
+     * @static
+     * @public
+     */
     static polylineLengthToPoint(coords, point) {
         if (!coords || coords.length < 4) return 0;
 
@@ -603,6 +693,16 @@ Colibri.UI.Utilities.Vincenty = class {
         return length + distToPoint;
     }
 
+    /**
+     * Calculate the initial bearing (forward azimuth) from point 1 to point 2.
+     * @param {number} lat1 - latitude of the first point
+     * @param {number} lon1 - longitude of the first point
+     * @param {number} lat2 - latitude of the second point
+     * @param {number} lon2 - longitude of the second point
+     * @returns {number} Bearing in degrees (0–360).
+     * @static
+     * @public
+     */
     static bearing(lat1, lon1, lat2, lon2) {
 
         const f1 = Colibri.UI.Utilities.Vincenty.radians(lat1);

@@ -33,30 +33,28 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
     }
 
     /**
+     * When focused on editor
      * @private
      * @param {Colibri.Events.Event} event event object
-     * @param {*} args event arguments
+     * @param {object} args log message arguments
+     * @ignore
      */ 
     __thisFocused(event, args) {
         const fieldEditoPane = this._element.closest('.app-field-pane-editor');
-        // if(fieldEditoPane && fieldEditoPane.getUIComponent()) {
-        //     fieldEditoPane.getUIComponent().AddClass('-focused');
-        // }
         if(fieldEditoPane && fieldEditoPane.getUIComponent()) {
             fieldEditoPane.getUIComponent().AddClass('-focused');
         }
     }
 
     /**
+     * When unfocused from editor
      * @private
      * @param {Colibri.Events.Event} event event object
-     * @param {*} args event arguments
+     * @param {object} args log message arguments
+     * @ignore
      */ 
     __thisUnfocused(event, args) {
         const fieldEditoPane = this._element.closest('.app-field-pane-editor');
-        // if(fieldEditoPane && fieldEditoPane.getUIComponent()) {
-        //     fieldEditoPane.getUIComponent().RemoveClass('-focused');
-        // }
         if(fieldEditoPane && fieldEditoPane.getUIComponent()) {
             fieldEditoPane.getUIComponent().RemoveClass('-focused');
         }
@@ -112,23 +110,17 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
         return this._fieldData;
     }
 
-    /** @protected */
+    /** @ignore */
     _setFilled() {
         const fieldEditoPane = this._element.closest('.app-field-pane-editor');
-        // if(fieldEditoPane && fieldEditoPane.getUIComponent()) {
-        //     fieldEditoPane.getUIComponent().AddClass('-filled');
-        // }
         if(fieldEditoPane && fieldEditoPane.getUIComponent()) {
             fieldEditoPane.getUIComponent().AddClass('-filled');
         }
     }
 
-    /** @protected */
+    /** @ignore */
     _unsetFilled() {
         const fieldEditoPane = this._element.closest('.app-field-pane-editor');
-        // if(fieldEditoPane && fieldEditoPane.getUIComponent()) {
-        //     fieldEditoPane.getUIComponent().RemoveClass('-filled');
-        // }
         if(fieldEditoPane && fieldEditoPane.getUIComponent()) {
             fieldEditoPane.getUIComponent().RemoveClass('-filled');
         }
@@ -140,11 +132,13 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
      * @type {Array}
      */
     static _registered = [];
+
     /**
      * Registers the editor
      * @static
      * @param {string} name name of editor
      * @param {string} desc description of editor
+     * @public
      */
     static Register(name, desc) {
         Colibri.UI.Editor._registered.push({value: name, title: desc});
@@ -152,7 +146,7 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
     /**
      * Enums the registered editors
      * @static
-     * @returns Array
+     * @returns {Array}
      */
     static Enum() {
         return Colibri.UI.Editor._registered;

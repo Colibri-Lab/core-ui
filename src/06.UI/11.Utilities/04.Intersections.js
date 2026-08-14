@@ -5,14 +5,21 @@
  */
 Colibri.UI.Utilities.Intersections = class {
 
-    static MAX_DISTANCE = 20_000_000; // 20 000 км
+    /**
+     * Maximum distance for intersection calculations (in meters).
+     * 20 000 km
+     * @const {number}
+     */
+    static MAX_DISTANCE = 20_000_000;
 
     /**
-     * Пересечение двух векторов Винсенти.
-     * @param {{lat:number,lng:number,azimuth:number}} p1
-     * @param {{lat:number,lng:number,azimuth:number}} p2
-     * @param {Array<{lat:number,lng:number}>} [bbox]
-     * @returns {{lat:number,lng:number}|null}
+     * Calculates the intersection point of two geodesic lines defined by starting points and azimuths.
+     * @param {{lat:number,lng:number,azimuth:number}} p1 - starting point of the first line
+     * @param {{lat:number,lng:number,azimuth:number}} p2 - starting point of the second line
+     * @param {Array<{lat:number,lng:number}>} [bbox] - optional bounding box to restrict the intersection point
+     * @returns {{lat:number,lng:number}|null} intersection point or null if no intersection
+     * @static
+     * @public
      */
     static vincentyIntersection(p1, p2, bbox = null) {
         const { lat: lat1, lng: lon1, azimuth: az1 } = p1;
@@ -82,10 +89,12 @@ Colibri.UI.Utilities.Intersections = class {
     }
 
     /**
-     * Найти пересечения всех пар точек с азимутами
-     * @param {Array<{lat:number,lng:number,azimuth:number}>} points
-     * @param {Array<{lat:number,lng:number}>} [bbox]
-     * @returns {Array<{lat:number,lng:number}>}
+     * Find intersections of all pairs of points with azimuths
+     * @param {Array<{lat:number,lng:number,azimuth:number}>} points - array of points with azimuths
+     * @param {Array<{lat:number,lng:number}>} [bbox] - optional bounding box to restrict the intersection points
+     * @returns {Array<{lat:number,lng:number}>} array of intersection points
+     * @static
+     * @public
      */
     static vincentyIntersections(points, bbox = null) {
         const results = [];

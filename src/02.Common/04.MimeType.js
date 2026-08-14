@@ -8,6 +8,8 @@ Colibri.Common.MimeType = class {
     /**
      * A map of file extensions to MIME types.
      * @type {Object<string, string>}
+     * @static
+     * @public
      */
     static types = {
         "acx": "application/internet-property-stream",
@@ -205,12 +207,20 @@ Colibri.Common.MimeType = class {
 
     }
 
+    /**
+     * A map of external MIME types.
+     * @type {Object<string, Object>}
+     * @static
+     * @public
+     */
     static externalTypes = {};
 
     /**
      * Returns the MIME type associated with the given file extension.
      * @param {string} ext - The file extension.
      * @returns {string|undefined} The MIME type, or undefined if not found.
+     * @static
+     * @public
      */
     static ext2type(ext) {
         if (Colibri.Common.MimeType.externalTypes) {
@@ -232,6 +242,8 @@ Colibri.Common.MimeType = class {
      * Returns the file extension associated with the given MIME type.
      * @param {string} type - The MIME type.
      * @returns {string|false} The file extension, or false if not found.
+     * @public
+     * @static
      */
     static type2ext(type) {
         if (Colibri.Common.MimeType.externalTypes && Object.countKeys(Colibri.Common.MimeType.externalTypes) > 0) {
@@ -254,6 +266,8 @@ Colibri.Common.MimeType = class {
      * Returns the file extension associated with the given base64 encoded data.
      * @param {string} base - The base64 encoded data.
      * @returns {string|false} The file extension, or false if not found.
+     * @public
+     * @static
      */
     static base2type(base) {
         var ret = false;
@@ -266,6 +280,13 @@ Colibri.Common.MimeType = class {
         return ret;
     }
 
+    /**
+     * Returns the MIME type associated with the given file name.
+     * @param {string} name - The file name.
+     * @returns {string|false} The MIME type, or false if not found.
+     * @public
+     * @static
+     */
     static name2type(name) {
         var parts = name.split('.');
         var ext = parts[parts.length - 1];
@@ -276,6 +297,8 @@ Colibri.Common.MimeType = class {
      * Check if a file with the given extension is an image.
      * @param {string} ext - The file extension.
      * @returns {boolean} True if the file is an image, otherwise false.
+     * @public
+     * @static
      */
     static isImage(ext) {
         if (ext.indexOf('/') !== -1) {
@@ -287,6 +310,8 @@ Colibri.Common.MimeType = class {
      * Check if a file with the given extension is an audio file.
      * @param {string} ext - The file extension.
      * @returns {boolean} True if the file is an audio file, otherwise false.
+     * @public
+     * @static
      */
     static isAudio(ext) {
         if (ext.indexOf('/') !== -1) {
@@ -298,6 +323,8 @@ Colibri.Common.MimeType = class {
      * Check if a file with the given extension is a video file.
      * @param {string} ext - The file extension.
      * @returns {boolean} True if the file is a video file, otherwise false.
+     * @public
+     * @static
      */
     static isVideo(ext) {
         if (ext.indexOf('/') !== -1) {
@@ -309,36 +336,48 @@ Colibri.Common.MimeType = class {
      * Check if a file with the given extension is a Flash file.
      * @param {string} ext - The file extension.
      * @returns {boolean} True if the file is a Flash file, otherwise false.
+     * @public
+     * @static
      */
     static isFlash(ext) { return ["swf"].indexOf(ext.toLowerCase()) != -1; }
     /**
      * Check if a file with the given extension is editable.
      * @param {string} ext - The file extension.
      * @returns {boolean} True if the file is editable, otherwise false.
+     * @public
+     * @static
      */
     static isEditable(ext) { return ["txt", "js", "css", "scss", "less", "layout", "php", "htm", "html", "service", "xml", "xsl"].indexOf(ext.toLowerCase()) != -1; }
     /**
      * Check if a file with the given extension is viewable.
      * @param {string} ext - The file extension.
      * @returns {boolean} True if the file is viewable, otherwise false.
+     * @public
+     * @static
      */
     static isBrowserCapable(ext) { return ["jpg", "png", "gif", "swf", "html", "htm", "txt", "css", "js", "pdf", "wmv", "mpg", "mp4", "mid", "mp3", "au"].indexOf(ext.toLowerCase()) != -1; }
     /**
      * Get the icon class for a file with the given extension.
      * @param {string} ext - The file extension.
      * @returns {string} The icon class.
+     * @public
+     * @static
      */
     static isViewable(ext) { return isImage(ext) || isFlash(ext); }
     /**
      * Get the CodeMirror mode associated with a given file extension.
      * @param {string} ext - The file extension.
      * @returns {string} The CodeMirror mode.
+     * @public
+     * @static
      */
     static icon(ext) { return 'icon-file-' + ext; }
     /**
      * Get the CodeMirror mode associated with a given file extension.
      * @param {string} ext - The file extension.
      * @returns {string} The CodeMirror mode.
+     * @public
+     * @static
      */
     static ext2mode(ext) {
 
@@ -359,6 +398,8 @@ Colibri.Common.MimeType = class {
      * @param {string} ext - The file extension.
      * @param {string} [path='/res/codemirror'] - The base path for resources.
      * @returns {Object<string, string[]>} The CodeMirror requirements.
+     * @public
+     * @static
      */
     static extrequirements(ext, path = '/res/codemirror') {
 
@@ -392,29 +433,32 @@ Colibri.Common.MimeType = class {
         };
 
     }
-
-
-}
-
-/**
- * Reloads the external MIME types from a remote source and updates the `externalTypes` property of the `Colibri.Common.MimeType` class.
- * @returns {Promise<void>} A promise that resolves when the external MIME types have been successfully reloaded.
- * @throws {Error} If there is an error while fetching the external MIME types.
- */
-Colibri.Common.MimeType.Reload = () => {
-    return new Promise((resolve, reject) => {
-        Colibri.IO.Request.Get((!App.Device.isElectron ? '/' : '') + 'res/mime.json', {}, {}, false).then((response) => {
-            Colibri.Common.MimeType.externalTypes = JSON.parse(response.result);
-            resolve();
-        }).catch(() => {
-            Colibri.IO.Request.Get('https://cdn.jsdelivr.net/gh/jshttp/mime-db/db.json', {}, {}, false).then((response) => {
+    
+    /**
+     * Reloads the external MIME types from a remote source and updates the `externalTypes` property of the `Colibri.Common.MimeType` class.
+     * @returns {Promise<void>} A promise that resolves when the external MIME types have been successfully reloaded.
+     * @throws {Error} If there is an error while fetching the external MIME types.
+     * @public
+     * @static
+     */
+    static Reload() {
+        return new Promise((resolve, reject) => {
+            Colibri.IO.Request.Get((!App.Device.isElectron ? '/' : '') + 'res/mime.json', {}, {}, false).then((response) => {
                 Colibri.Common.MimeType.externalTypes = JSON.parse(response.result);
                 resolve();
-            }).catch((error) => {
-                console.log(error);
-                reject(error);
+            }).catch(() => {
+                Colibri.IO.Request.Get('https://cdn.jsdelivr.net/gh/jshttp/mime-db/db.json', {}, {}, false).then((response) => {
+                    Colibri.Common.MimeType.externalTypes = JSON.parse(response.result);
+                    resolve();
+                }).catch((error) => {
+                    console.log(error);
+                    reject(error);
+                });
             });
         });
-    });
+    }
+
+
 }
+
 

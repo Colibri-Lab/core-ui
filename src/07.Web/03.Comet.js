@@ -6,31 +6,82 @@
  */
 Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
-    /** @type {string} */
+    /**
+     * The URL of the Comet server. 
+     * @type {string} 
+     */
     _url = '';
-    /** @type {object} */
+
+    /**
+     * The storage object for storing messages. 
+     * @type {object} 
+     */
     _storage = null;
-    /** @type {Colibri.Storages.Store} */
+
+    /** 
+     * The store object for managing messages in the module.
+     * @type {Colibri.Storages.Store} 
+     */
     _store = null;
-    /** @type {string} */
+
+    /** 
+     * The key for storing messages in the module store.
+     * @type {string} 
+     */
     _storeMessages = '';
-    /** @type {string} */
+    
+    /** 
+     * The key for storing unread message count in the module store.
+     * @type {string} 
+     */
     _storeUnread = '';
 
-    /** @type {object} */
+    /** 
+     * The settings for the Comet connection.
+     * @type {object} 
+     */
     _settings = null;
-    /** @type {WebSocket|null} */
+
+    /** 
+     * The WebSocket connection for the Comet server.
+     * @type {WebSocket|null} 
+     */
     _ws = null;
-    /** @type {boolean} */
+
+    /** 
+     * Whether the Comet connection is established.
+     * @type {boolean} 
+     */
     _connected = false;
-    /** @type {object} */
+
+    /** 
+     * The user object for the Comet connection.
+     * @type {object} 
+     */
     _user = null;
-    /** @type {string} */
+
+    /** 
+     * The client ID for the Comet connection.
+     * @type {string} 
+     */
     _clientId = null;
 
+    /** 
+     * Event handlers for specific events in the Comet connection.
+     * @type {Object}
+     */
     __eventHandlers = {};
+
+    /** 
+     * Sent messages
+     * @type {Object}
+     */
     __sentMessages = {};
 
+    /**
+     * Global options for the Comet connection.
+     * @type {object}
+     */
     static Options = {
         origin: location.host
     };
@@ -69,9 +120,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     /**
      * Transfers messages from the storage to the module store and updates the unread count.
      * @private
-     * @param {Array} messages - The messages to transfer.
      */
-    _transferToModuleStore(messages) {
+    _transferToModuleStore() {
         this._storage.Get().then(messages => {
             const unreadCount = messages.filter(v => v.read === false).length;
             this._store.Set(this._storeMessages, {messages: messages, unread: unreadCount});
@@ -80,6 +130,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     /**
      * Destructor to close WebSocket connection when the object is destroyed.
+     * @destructor
      */
     destructor() {
         super.destructor();
@@ -235,7 +286,9 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {object|null} firebaseServiceJson - Firebase service configuration JSON.
      * @param {string|null} pushToken - Push token for notifications.
      * @param {function|null} pushFunction - Function to handle push notifications.
+     * @param {string|null} websocketURI - The URI for the WebSocket connection.
      * @returns {void}
+     * @public
      */
     Init(userData, store, storeMessages, handlers = {}, texts = {}, firebaseServiceJson = null, pushToken = null, pushFunction = null, websocketURI = null) {
 
@@ -271,6 +324,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {string} token - The push token.
      * @param {function} f - The function to handle push notifications.
      * @returns {void}
+     * @public
      */
     SetPushToken(token, f) {
         this._pushToken = token;
@@ -283,8 +337,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
   
     /**
      * Registers a handler for specific events.
-     * @param {String} handlerName 
-     * @param {Function} handler 
+     * @param {String} handlerName - The name of the event to register the handler for.
+     * @param {Function} handler - The function to be called when the event occurs.
+     * @param {Object} respondent - The object that will respond to the handler.
+     * @public
      */
     RegisterHandler(handlerName, handler, respondent) {
         if(!this.__specificHandlers[handlerName]) {
@@ -297,8 +353,9 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     /**
      * Registers a handler for specific events.
-     * @param {String} handlerName 
-     * @param {Function} handler 
+     * @param {String} handlerName - The name of the event to register the handler for.
+     * @param {Function} handler - The function to be called when the event occurs.
+     * @public
      */
     UnRegisterHandler(handlerName, handler, respondent) {
         if(this.__specificHandlers[handlerName]) {
@@ -313,10 +370,11 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     /**
      * Dispatches handlers for specific events.
-     * @param {String} handlerName
-     * @param {Object} args
+     * @param {String} handlerName - The name of the event to dispatch handlers for.
+     * @param {Object} args - The arguments to pass to the handlers.
      * @returns {Promise<Array>} - An array of responses from the handlers.
      * @async
+     * @public
      */
     async DispatchHandlers(handlerName, args) {
 
@@ -333,6 +391,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     /**
      * Disconnects from the Comet server.
+     * @public
      */
     Disconnect() {
         if(this._ws) {
@@ -347,6 +406,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     /**
      * Handles the WebSocket connection open event.
+     * @param {boolean} registered - Whether the user is already registered.
      * @private
      */
     __onCometOpened(registered = false) {
@@ -363,6 +423,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * Subscribes to a channel on the Comet server.
      * @param {string} channelGuid - The GUID of the channel to subscribe to.
      * @param {Object} params - Additional parameters for the subscription.
+     * @public
      */
     Subscribe(channelGuid, params = {}) {
         this.Command(channelGuid, 'subscribe', params);        
@@ -372,6 +433,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * Unsubscribes from a channel on the Comet server.
      * @param {string} channelGuid - The GUID of the channel to unsubscribe from.
      * @param {Object} params - Additional parameters for the unsubscription.
+     * @public
      */
     Unsubscribe(channelGuid, params = {}) {
         this.Command(channelGuid, 'unsubscribe', params);
@@ -456,7 +518,10 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     /**
      * Send the message and resolves or rejects a promise
      * @param {Colibri.Common.CometMessage|Colibri.Common.CometEvent} msg 
-     * @returns Promise
+     * @param {function} resolve - The function to call when the message is sent successfully.
+     * @param {function} reject - The function to call when there is an error sending the message.
+     * @returns {void}
+     * @private
      */
     _send(msg, resolve, reject) {
 
@@ -484,8 +549,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {string} eventName - The name of the event to wait for.
      * @param {function} handler - The handler function to call when the event occurs.
      * @param {object} respondent - The object that will be the context (`this`) for the handler.
-     * @param {object} args - Additional arguments to pass to the handler.
      * @returns {void}
+     * @public
      */
     UnwaitForEvent(eventName, handler, respondent) {
         if(!this.__eventHandlers[eventName]) {
@@ -509,6 +574,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {object} respondent - The object that will be the context (`this`) for the handler.
      * @param {object} args - Additional arguments to pass to the handler.
      * @returns {void}
+     * @public
      */
     WaitForEvent(eventName, handler, respondent, args = {}) {
         if(!this.__eventHandlers[eventName]) {
@@ -523,6 +589,7 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @async
      * @param {Colibri.Common.CometMessage} msg - The message containing the event information.
      * @returns {Promise<void>}
+     * @public
      */
     async DispatchEvent(msg) {
         if(this.__eventHandlers[msg.action]) {
@@ -546,6 +613,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * Adds a message to the local storage.
      * @param {Colibri.Common.CometMessage} message message to save
      * @returns {Promise}
+     * @async
+     * @public
      */
     AddLocalMessage(message) {
         return new Promise((resolve, reject) => {            
@@ -576,6 +645,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * Retrieves messages from the local storage.
      * @param {object} options - Options for retrieving messages.
      * @returns {Promise<Array<Colibri.Common.CometMessage>>}
+     * @async
+     * @public
      */
     GetMessages(options = {}) {
         return new Promise((resolve, reject) => {
@@ -602,6 +673,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {string} userGuid - The GUID of the user.
      * @param {object} options - Options for retrieving messages.
      * @returns {Promise<Array<Colibri.Common.CometMessage>>}
+     * @async
+     * @public
      */
     GetConversation(userGuid, options = {}) {
         return this.GetMessages(Object.assignRecursive(options, {
@@ -616,6 +689,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * Retrieves broadcast messages from the local storage.
      * @param {object} options - Options for retrieving messages.
      * @returns {Promise<Array<Colibri.Common.CometMessage>>}
+     * @async   
+     * @public
      */
     GetBroadcast(options = {}) {
         return this.GetMessages(Object.assignRecursive(options, {
@@ -629,6 +704,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * Clears stored messages.
      * @param {Date|null} date - If provided, only messages after this date will be cleared.    
      * @returns {Promise<void>}
+     * @async
+     * @public
      */
     ClearMessages(date = null) {
         return new Promise((resolve, reject) => {
@@ -650,6 +727,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {Array<number>|null} ids - The IDs of the messages to mark as read. If null, all messages will be marked as read.
      * @param {boolean} sendEvent - Whether to dispatch the 'MessagesMarkedAsRead' event.
      * @returns {Promise<void>}
+     * @async
+     * @public
      */
     MarkAsRead(ids = null, sendEvent = true) {
         if(!ids) {
@@ -675,6 +754,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * Removes a message from storage.
      * @param {object|number} message - The message to be removed.
      * @returns {Promise<void>}
+     * @async
+     * @public
      */
     RemoveMessage(message) {
         return new Promise((resolve, reject) => {
@@ -690,6 +771,8 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * Removes a message from or to member.
      * @param {string} user - The user whose conversation is to be cleared.
      * @returns {Promise<void>}
+     * @async
+     * @public
      */
     ClearConversationWith(user) {
         return new Promise((resolve, reject) => {
@@ -706,12 +789,15 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {number} id - The ID of the message to be updated.
      * @param {string|Array<object>} textOrFiles - The new text or files for the message.
      * @returns {Promise<void>}
+     * @async
+     * @public
      */
     UpdateMessage(id, textOrFiles) {
         return new Promise((resolve, reject) => {
             this._storage.Update({read: true, message: Array.isArray(textOrFiles) ? {files: textOrFiles} : {text: textOrFiles}}, id).then((msg) => {
                 this._transferToModuleStore();
                 this.Dispatch('MessageUpdated', {message: msg});
+                resolve();
             }).catch(error => reject(error));
         });
     }
@@ -721,21 +807,28 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {number} id - The ID of the message to be updated.
      * @param {string} status - The new status of the message.
      * @returns {Promise<void>}
+     * @async
+     * @public
      */
     UpdateSetStatus(id, status = 'sent') {
         return new Promise((resolve, reject) => {
             this._storage.Update({message: {status: status}, read: true}, id).then((msg) => {
                 this._transferToModuleStore();
                 this.Dispatch('MessageUpdated', {message: msg});
+                resolve();
             }).catch(error => reject(error));
         });
     }
 
     /**
      * Sends a command to the Comet server.
-     * @param {string} userGuid - The GUID of the user.
+     * @param {string} userGuid - The GUID of the user to send the command to.
      * @param {string} action - The action to be performed.
      * @param {object} message - The message data.
+     * @param {boolean} activate - Whether to activate the command.
+     * @param {boolean} wakeup - Whether to wake up the recipient.
+     * @async
+     * @public
      */
     Command(userGuid, action, message = null, activate = false, wakeup = false) {
         return new Promise((resolve, reject) => {
@@ -757,8 +850,12 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     /**
      * Sends a broadcast message.
      * @param {string} action - The action to be performed.
-     * @param {object} message - The message content.
-     * @returns {string|null} - The ID of the sent message. 
+     * @param {object} message - The message data.
+     * @param {boolean} activate - Whether to activate the message.
+     * @param {boolean} wakeup - Whether to wake up the recipient.
+     * @returns {Promise<string|null>} - The ID of the sent message. 
+     * @async
+     * @public
      */
     CommandBroadcast(action, message = null, activate = false, wakeup = false) {
         return new Promise((resolve, reject) => {
@@ -779,9 +876,11 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     /**
      * Sends a message to multiple users.
-     * @param {object} msg - The message object to be sent.
-     * @param {Array<string>} userGuids - The GUIDs of the recipient users.
+     * @param {Colibri.Common.CometMessage} msg - The message to be sent.
+     * @param {Array<string>} userGuids - An array of user GUIDs to send the message to.
      * @returns {Promise<void>}
+     * @async
+     * @public
      */
     SendFor(msg, userGuids) {
         return new Promise((resolve, reject) => {
@@ -830,9 +929,14 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     /**
      * Sends a message to a specific user.
      * @param {string} userGuid - The GUID of the recipient user.
-     * @param {string} message - The message content.
+     * @param {string|object} message - The message content.
      * @param {object} contact - The name of the contact.
+     * @param {boolean} activate - Whether to activate the message.
+     * @param {boolean} wakeup - Whether to wake up the recipient.
+     * @param {boolean} addLocal - Whether to add the message to local storage.
      * @returns {string|null} - The ID of the sent message.
+     * @async
+     * @public
      */
     SendTo(userGuid, message = null, contact = null, activate = false, wakeup = false, addLocal = true) {
         return new Promise((resolve, reject) => {
@@ -873,10 +977,13 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     /**
      * Sends a broadcast message.
-     * @param {string} action - The action to be performed.
-     * @param {string} message - The message content.
+     * @param {string} text - The message content.
      * @param {object} contact - The name of the contact.
-     * @returns {string|null} - The ID of the sent message. 
+     * @param {boolean} activate - Whether to activate the message.
+     * @param {boolean} wakeup - Whether to wake up the recipient.
+     * @returns {Promise<string|null>} - The ID of the sent message.
+     * @async
+     * @public
      */
     SendBroadcast(text = null, contact = null, activate = false, wakeup = false) {
         return new Promise((resolve, reject) => {
@@ -898,11 +1005,15 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
     
     /**
      * Sends a message to a specific user.
+     * This method sends files to a specific user and updates the local message store.
      * @param {string} userGuid - The GUID of the recipient user.
      * @param {Array} files - The message content.
      * @param {object} contact - The name of the contact.
-     * @returns {string|null} - The ID of the sent message.
-     * @description This method sends files to a specific user and updates the local message store.
+     * @param {boolean} activate - Whether to activate the message.
+     * @param {boolean} wakeup - Whether to wake up the recipient.
+     * @returns {Promise<string|null>} - The ID of the sent message.
+     * @async
+     * @public
      */
     SendFilesTo(userGuid, files = null, contact = null, activate = false, wakeup = false) {
         return new Promise((resolve, reject) => {
@@ -935,10 +1046,13 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
 
     /**
      * Sends a broadcast message.
-     * @param {string} action - The action to be performed.
      * @param {Array} files - The message content.
      * @param {object} contact - The name of the contact.
-     * @returns {string|null} - The ID of the sent message. 
+     * @param {boolean} activate - Whether to activate the message.
+     * @param {boolean} wakeup - Whether to wake up the recipient.
+     * @returns {Promise<string|null>} - The ID of the sent message.
+     * @async
+     * @public
      */
     SendFilesBroadcast(files = null, contact = null, activate = false, wakeup = false) {
         return new Promise((resolve, reject) => {

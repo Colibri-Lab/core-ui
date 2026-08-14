@@ -6,9 +6,25 @@
  */
 Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
 
+    /**
+     * The SQLite database instance.
+     * @type {Object|null} _db
+     * @private
+     */
     _db = null;
+
+    /**
+     * The name of the SQLite database file.
+     * @type {string|null} _name
+     * @private
+     */
     _name = null;
 
+    /**
+     * Indicates whether the SQLite storage implementation has been loaded.
+     * @type {boolean}
+     * @static
+     */
     static loaded = true;
 
     /**
@@ -24,6 +40,7 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * Constructs an instance of the Colibri.Storages.Sqlite class.
      * @param {string} [name='local.db'] - The name of the SQLite database file.
      * @constructor
+     * @public
      */
     constructor(name = 'local.db') {
         super();
@@ -54,6 +71,7 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * Creates an empty database with the specified structure.
      * @param {Array} structure - An array of table structures to create.
      * @returns {Promise} A promise that resolves when the database is created.
+     * @public
      */
     CreateEmptyDatabase(structure) {
         structure = this._convertStructure(structure);
@@ -86,9 +104,7 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
 
     /**
      * Checks if the database has been created and is available for use.
-     * @type {boolean}
-     * @readonly
-     * @returns {boolean} True if the database is created, false otherwise.
+     * @type {boolean} True if the database is created, false otherwise.
      */
     get dbCreated() {
         return !!this._db;
@@ -98,6 +114,8 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * Opens the SQLite database from a base64 string or Blob object.
      * @param {string|Blob} base64OrBlob - The base64 string or Blob representing the database.
      * @returns {Promise} A promise that resolves when the database is opened.
+     * @async
+     * @public
      */
     Open(base64OrBlob) {
         return new Promise((resolve, reject) => {
@@ -134,6 +152,7 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
 
     /**
      * Closes the SQLite database connection if it is open.
+     * @public
      */
     Close() {
         if (this._db) {
@@ -195,6 +214,8 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * @param {string} table - The name of the table to insert rows into.
      * @param {Array} data - An array of objects representing the rows to insert.
      * @returns {Promise} A promise that resolves when the rows are inserted.
+     * @async
+     * @public
      */
     Insert(table, data) {
         if (!data.length) return Promise.resolve();
@@ -227,6 +248,8 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * @param {Object} data - An object representing the fields and values to update.
      * @param {string} condition - The SQL condition to determine which rows to update.
      * @returns {Promise} A promise that resolves when the rows are updated.
+     * @async
+     * @public
      */
     Update(table, data, condition) {
         const fields = Object.keys(data);
@@ -244,6 +267,8 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * @param {string} table - The name of the table to delete rows from.
      * @param {string} [condition=''] - The SQL condition to determine which rows to delete.
      * @returns {Promise} A promise that resolves when the rows are deleted.
+     * @async
+     * @public
      */
     Delete(table, condition = '') {
         const sql = `DELETE FROM "${table}"${condition ? ' WHERE ' + condition : ''}`;
@@ -257,6 +282,8 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * @param {string} query - The SQL query to execute.
      * @param {Object} [params={}] - An object containing parameter bindings for the query.
      * @returns {Promise<Array>} A promise that resolves with an array of result objects.
+     * @async
+     * @public
      */
     Query(query, params = {}) {
         const d = this._prepareQuery(query, params);
@@ -278,6 +305,8 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * Load all rows from a specified table in the SQLite database.
      * @param {string} table - The name of the table to load rows from.
      * @returns {Promise<Array>} A promise that resolves with an array of all rows in the table.
+     * @async
+     * @public
      */
     LoadAll(table) {
         return this.Query(`SELECT * FROM "${table}"`);
@@ -289,6 +318,8 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * @param {Object} filters - An object containing filter parameters for the query.
      * @param {string} [order=''] - An optional SQL ORDER BY clause to sort the results.
      * @returns {Promise<Array>} A promise that resolves with an array of filtered rows.
+     * @async
+     * @public
      */
     LoadBy(table, filters, order = '') {
         const d = this._convertFilters(filters);
@@ -305,6 +336,8 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * @param {number|Date} max - The maximum value for the histogram range.
      * @param {number|Date} min - The minimum value for the histogram range.
      * @returns {Promise<Array>} A promise that resolves with an array of histogram bin objects, each containing start, end, and count properties.
+     * @async
+     * @public
      */
     HistogramByField(table, filters, field, step, max, min) {
         filters = Object.cloneRecursive(filters);
@@ -348,6 +381,8 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
     /**
      * Exports the current state of the database as a Blob object.
      * @returns {Promise<Blob>} A promise that resolves with a Blob representing the exported database.
+     * @async
+     * @public
      */
     Export() {
         return new Promise((resolve, reject) => {
@@ -367,6 +402,7 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * @param {Array} result - The result set from the database.
      * @returns {Array} An array of objects representing the result set.    
      * @private
+     * @async
      */
     _blobToBase64(blob) {
         return new Promise((resolve, reject) => {

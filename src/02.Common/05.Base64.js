@@ -16,6 +16,8 @@ Colibri.Common.Base64 = class {
      * Encode a string using Base64 encoding.
      * @param {string} _input - The input string to encode.
      * @returns {string} The Base64 encoded string.
+     * @static
+     * @public
      */
     static encode(_input) {
         var output = "";
@@ -52,6 +54,8 @@ Colibri.Common.Base64 = class {
      * Decode a Base64 encoded string.
      * @param {string} _input - The Base64 encoded string to decode.
      * @returns {string} The decoded string.
+     * @public
+     * @static
      */
     static decode(_input) {
         var output = "";
@@ -92,6 +96,8 @@ Colibri.Common.Base64 = class {
      * @param {string} string - The input string to encode.
      * @returns {string} The UTF-8 encoded string.
      * @private
+     * @static
+     * @public
      */
     static _utf8_encode(string) {
         string = string.replace(/\r\n/g,"\n");
@@ -122,6 +128,7 @@ Colibri.Common.Base64 = class {
      * @param {string} utftext - The UTF-8 encoded string to decode.
      * @returns {string} The decoded string.
      * @private
+     * @static
      */
     static _utf8_decode(utftext) {
         var string = "";

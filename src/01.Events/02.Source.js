@@ -10,6 +10,8 @@ Colibri.Events.Source = class extends Destructable {
      * Creates a new instance of Colibri.Events.Source.
      * @param {string} ipOrHost Ip addres or host of source
      * @param {string|number} port Port of source
+     * @constructor
+     * @public
      */
     constructor(ipOrHost, port) {
         super();
@@ -22,6 +24,7 @@ Colibri.Events.Source = class extends Destructable {
     /**
      * Gets the IP address and port of the source.
      * @type {string}
+     * @public
      */
     get ipAndPort() {
         return `${this._ipOrHost}:${this._port}`;
@@ -31,6 +34,7 @@ Colibri.Events.Source = class extends Destructable {
      * Registers a respondent for a specific event name.
      * @param {Object} repsondent The respondent object that will handle the event.
      * @param {string} eventName The name of the event to register for.
+     * @public
      */
     register(repsondent, eventName) {
         if(!this._handlers[eventName]) {
@@ -43,6 +47,7 @@ Colibri.Events.Source = class extends Destructable {
      * Unregisters a respondent for a specific event name.
      * @param {Object} repsondent The respondent object to unregister.
      * @param {string} eventName The name of the event to unregister from.
+     * @public
      */
     unregister(repsondent, eventName) {
         if(!this._handlers[eventName]) {
@@ -56,6 +61,7 @@ Colibri.Events.Source = class extends Destructable {
 
     /**
      * Disconnects the source from the WebSocket server and releases any associated resources.
+     * @public
      */
     Disconnect() {
         if(this._socket) {
@@ -71,6 +77,7 @@ Colibri.Events.Source = class extends Destructable {
      * @param {string} ipOrHost The IP address or host of the WebSocket server.
      * @param {string|number} port The port of the WebSocket server.
      * @returns {void}
+     * @public
      */
     Connect(ipOrHost, port) {
 
@@ -103,6 +110,7 @@ Colibri.Events.Source = class extends Destructable {
     /**
      * Indicates whether the WebSocket connection is ready (open).
      * @type {boolean}
+     * @public
      */
     get isReady() {
         return this._socket.readyState === 1;
@@ -112,6 +120,7 @@ Colibri.Events.Source = class extends Destructable {
      * Dispatch an event
      * @param {String} name Event name
      * @param {*} args Event arguments
+     * @public
      */
     Dispatch(name, args) {
         if(!this.isReady) {

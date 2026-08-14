@@ -19,7 +19,7 @@ Colibri.UI.ArrayViewer = class extends Colibri.UI.Viewer {
     }
 
     /**
-     * @private
+     * @ignore
      */
     _showValue() {
         if(this._value && this._value.length > 0) {

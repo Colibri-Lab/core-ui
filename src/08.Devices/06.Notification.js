@@ -41,7 +41,7 @@ Colibri.Devices.Notification = class extends Destructable {
 
     /**
      * Instance variable representing the payload.
-     * @type {null}
+     * @type {object}
      * @private
      */
     _payload = null;
@@ -61,19 +61,19 @@ Colibri.Devices.Notification = class extends Destructable {
 
     /**
      * Gets the title of the notification.
-     * @returns {string} - The title.
+     * @type {string} - The title.
      */
     get title() {
         if(this._device.isAndroid) {
             return this._payload.data.title;
         }
         else if(this._device.isIOs) {
-            return this._payload.data.title;
+            return this._payload.aps.alert.title;
         }
     }
     /**
      * Gets the subtitle of the notification.
-     * @returns {string} - The subtitle.
+     * @type {string} - The subtitle.
      */
     get subtitle() {
         if(this._device.isAndroid) {
@@ -85,7 +85,7 @@ Colibri.Devices.Notification = class extends Destructable {
     }
     /**
      * Gets the payload of the notification.
-     * @returns {string} - The payload.
+     * @type {string} - The payload.
      */
     get payload() {
         if(this._device.isAndroid) {

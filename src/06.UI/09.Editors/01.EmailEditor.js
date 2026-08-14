@@ -18,7 +18,13 @@ Colibri.UI.EmailEditor = class extends Colibri.UI.Editor {
 
     }
 
-    /** @private */
+    /**
+     * Validate editor data
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments 
+     * @ignore 
+     */
     __elementChanged(e) {
         if(this.value) {
             this._setFilled();
@@ -30,6 +36,7 @@ Colibri.UI.EmailEditor = class extends Colibri.UI.Editor {
 
     /**
      * Validate editor data
+     * @public
      */
     Validate() {
         if(this._element.value && !this._element.value.isEmail()) {
@@ -44,6 +51,7 @@ Colibri.UI.EmailEditor = class extends Colibri.UI.Editor {
 
     /**
      * Focus on editor
+     * @public
      */
     Focus() {
         this._element.focus();

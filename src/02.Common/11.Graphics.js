@@ -6,12 +6,15 @@
 Colibri.Common.Graphics = class {
 
     /**
-     * Loads an image from a URL.
+     * Loads an image from a URL. This method creates a new Image object and sets its 
      * @param {string} url - The URL of the image to load.
      * @returns {Promise<HTMLImageElement>} - A promise that resolves to the loaded image.
      * @memberof Colibri.Common.Graphics
      * @static
+     * @public
+     * @async
      * @example
+     * ```
      * Colibri.Common.Graphics.LoadImage('path/to/image.png')
      *   .then(image => {
      *     Use the loaded image
@@ -19,8 +22,7 @@ Colibri.Common.Graphics = class {
      *   .catch(error => {  
      *      Handle error   
      *   })
-     * @description
-     * Loads an image from a URL. This method creates a new Image object and sets its 
+     * ```
      */
     static LoadImage(url) {
         return new Promise((resolve, reject) => {
@@ -32,20 +34,22 @@ Colibri.Common.Graphics = class {
     }
 
     /**
-     * Resizes an image to the specified dimensions.
+     * Resizes an image to the specified dimensions. This method creates a new canvas element,
+     * draws the image onto the canvas at the specified size, and then returns the canvas
+     * content as a data URL. The original image is not modified.
      * @param {HTMLImageElement} image - The image to resize.
      * @param {number} width - The desired width of the resized image.
      * @param {number} height - The desired height of the resized image.
      * @returns {string} - The resized image as a data URL.
      * @memberof Colibri.Common.Graphics
+     * @public
      * @static
+     * @async
      * @example
+     * ```
      * const resizedImage = Colibri.Common.Graphics.ResizeImage(image, 200, 100);
-     * resizedImage is a data URL of the resized image
-     * @description
-     * Resizes an image to the specified dimensions. This method creates a new canvas element,
-     * draws the image onto the canvas at the specified size, and then returns the canvas
-     * content as a data URL. The original image is not modified.
+     * /// resizedImage is a data URL of the resized image
+     * ```
      */
     static ResizeImage(image, width, height, aspectRatio = true) {
         return new Promise((resolve, reject) => {
@@ -73,7 +77,9 @@ Colibri.Common.Graphics = class {
     }
 
     /**
-     * Crops an image to the specified dimensions.
+     * Crops an image to the specified dimensions. This method creates a new canvas element,
+     * draws the specified portion of the image onto the canvas, and then returns the canvas
+     * content as a data URL. The original image is not modified.    
      * @param {HTMLImageElement} image - The image to crop.
      * @param {number} x - The x-coordinate of the top-left corner of the crop area.
      * @param {number} y - The y-coordinate of the top-left corner of the crop area.
@@ -81,14 +87,14 @@ Colibri.Common.Graphics = class {
      * @param {number} height - The height of the crop area.
      * @returns {string} - The cropped image as a data URL.
      * @memberof Colibri.Common.Graphics
+     * @public
      * @static
+     * @async
      * @example
+     * ```
      * const croppedImage = Colibri.Common.Graphics.CropImage(image, 10, 10, 100, 100);
-     * croppedImage is a data URL of the cropped image
-     * @description
-     * Crops an image to the specified dimensions. This method creates a new canvas element,
-     * draws the specified portion of the image onto the canvas, and then returns the canvas
-     * content as a data URL. The original image is not modified.    
+     * /// croppedImage is a data URL of the cropped image
+     * ```
      */
     static CropImage(image, x, y, width, height) {
         return new Promise((resolve, reject) => {
@@ -111,10 +117,14 @@ Colibri.Common.Graphics = class {
      * @param {string} dataURL - The data URL to convert.
      * @returns {Blob} - The converted Blob.
      * @memberof Colibri.Common.Graphics
+     * @public
      * @static
+     * @async
      * @example
+     * ```
      * const blob = Colibri.Common.Graphics.DataURLToBlob(dataURL);
-     * blob is a Blob object representing the data URL
+     * /// blob is a Blob object representing the data URL
+     * ```
      */
     static FileFromImage(image, filename = 'image.png') {
         return new Promise((resolve, reject) => {
@@ -139,12 +149,16 @@ Colibri.Common.Graphics = class {
      * @param {Blob} blob - The Blob to convert.
      * @returns {Promise<string>} - A promise that resolves to the data URL.
      * @memberof Colibri.Common.Graphics
+     * @public
      * @static
+     * @async
      * @example
+     * ```
      * Colibri.Common.Graphics.ImageFromFile(file)
      *   .then(image => {
      *     Use the data URL
      *   })
+     * ```
      */
     static ImageFromFile(file) {
         return new Promise((resolve, reject) => {
@@ -168,12 +182,16 @@ Colibri.Common.Graphics = class {
      * @param {number} previewHeight - The desired height of the preview image.
      * @returns {Promise<File>} - A promise that resolves to the preview file.
      * @memberof Colibri.Common.Graphics
+     * @public
      * @static
+     * @async
      * @example
+     * ```
      * Colibri.Common.Graphics.CreatePreview(file, 'preview.png', 100, 100)
      *   .then(previewFile => {
      *     Use the preview file
      *   })
+     * ```
      */
     static CreatePreview(file, name, previewWidth, previewHeight) {
         return new Promise((resolve, reject) => {
@@ -197,12 +215,16 @@ Colibri.Common.Graphics = class {
      * @param {number} previewHeight - The desired height of the preview image.
      * @returns {Promise<File>} - A promise that resolves to the preview file.
      * @memberof Colibri.Common.Graphics
+     * @public
      * @static
+     * @async
      * @example
+     * ```
      * Colibri.Common.Graphics.CreatePreviewCrop(file, 'preview.png', 100, 100)
      *   .then(previewFile => {
      *     Use the preview file
      *   })
+     * ```
      */
     static CreatePreviewCrop(file, name, previewWidth, previewHeight) {
         return new Promise((resolve, reject) => {

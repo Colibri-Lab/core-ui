@@ -28,6 +28,8 @@ Colibri.Devices.Sim = class extends Destructable {
     /**
      * Detects the current position.
      * @returns {Promise} - Promise resolving with the current position.
+     * @async
+     * @public
      */
     HasPermission() {
         return new Promise((resolve, reject) => {
@@ -42,6 +44,7 @@ Colibri.Devices.Sim = class extends Destructable {
     /**
      * Detects the current position.
      * @returns {Promise} - Promise resolving with the current position.
+     * @public
      */
     RequestPermission() {
         this._plugin.requestReadPermission();
@@ -50,7 +53,9 @@ Colibri.Devices.Sim = class extends Destructable {
 
     /**
      * Detects the current sim installed.
-     * @returns {Promise<{carrierName,countryCode,mcc,mnc}>} - Promise resolving with the current position.
+     * @returns {Promise<{carrierName,countryCode,mcc,mnc}>} - Promise resolving with the current sim information.
+     * @async
+     * @public
      */
     Detect() {
         return new Promise((resolve, reject) => {

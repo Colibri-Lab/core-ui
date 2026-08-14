@@ -10,6 +10,9 @@ Colibri.IO.Crypt = class {
      * @param {string} key The encryption key.
      * @param {string} data The data to encrypt.
      * @returns {Promise<string>} A promise that resolves to the encrypted data.
+     * @async
+     * @public
+     * @static
      */
     static Encrypt(key, data) {
         return new Promise((resolve, reject) => {
@@ -25,6 +28,9 @@ Colibri.IO.Crypt = class {
      * @param {string} key The decryption key.
      * @param {string} data The data to decrypt.
      * @returns {Promise<string>} A promise that resolves to the decrypted data.
+     * @async
+     * @public
+     * @static
      */
     static Decrypt(key, data) {
         return Colibri.IO.Crypt.Encrypt(key, data);

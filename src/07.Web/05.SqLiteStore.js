@@ -39,6 +39,8 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
      * Add the message to the storage
      * @param {Object} message - The message to add.
      * @returns {Promise} A promise that resolves when the message is added.
+     * @public
+     * @async
      */
     Add(message) {
         return new Promise((resolve, reject) => {
@@ -83,6 +85,8 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
      * @param {Object} message - The message to update.
      * @param {number} id - The ID of the message to update.
      * @returns {Promise} A promise that resolves when the message is updated.
+     * @public
+     * @async
      */
     Update(message, id) {
         return new Promise((resolve, reject) => {
@@ -131,6 +135,8 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
      * Store messages in the store.
      * @param {Array} messages - The messages to store.
      * @returns {Promise} A promise that resolves when the messages are stored.
+     * @public
+     * @async
      */
     Store(messages) {
         messages.forEach((m) => {
@@ -172,6 +178,8 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
      * @param {number} options.page - The page number for pagination.
      * @param {number} options.pagesize - The number of messages per page.
      * @returns {Promise} A promise that resolves with the retrieved messages.
+     * @public
+     * @async
      */
     Get(options = {}) {
 
@@ -220,6 +228,8 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
     /**
      * Deletes messages from the store.
      * @returns {Promise} A promise that resolves when the messages are deleted.
+     * @public
+     * @async
      */
     Clear() {
         return new Promise((resolve, reject) => {
@@ -237,8 +247,10 @@ Colibri.Web.SqLiteStore = class extends Colibri.Common.AbstractMessageStore {
     /**
      * Deletes a message from the store.
      * @param {Object} options - Options for deleting the message.
-     * @param {number} options.filter - The filter to apply to the messages.
+     * @param {Object|Array} options.filter - The filter to apply to the messages.
      * @returns {Promise} A promise that resolves when the message is deleted.
+     * @public
+     * @async
      */
     Delete(options) {
         let messages = App.Browser.Get('comet.messages');

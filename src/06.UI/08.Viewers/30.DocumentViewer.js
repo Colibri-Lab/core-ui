@@ -47,7 +47,12 @@ Colibri.UI.DocumentViewer = class extends Colibri.UI.Viewer {
         this._unknownFormatText = value;
     }
 
-    /** @private */
+    /**
+     * Check if file is viewable 
+     * @param {string} mimetype mimetype of file
+     * @returns {boolean}
+     * @private 
+     */
     _isFileViewable(mimetype) {
         let found = false;
         ['application/pdf', 'image/'].forEach((m) => {

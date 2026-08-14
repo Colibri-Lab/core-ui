@@ -24,15 +24,15 @@ Colibri.UI.DateTimeViewer = class extends Colibri.UI.Viewer {
     }
 
     /**
-     * Format object (Intl.DateTimeFormat)
-     * @type {Object}
+     * Format object
+     * @type {Intl.DateTimeFormat}
      */
     get format() {
         return this._format;
     }
     /**
-     * Format object (Intl.DateTimeFormat)
-     * @type {Object}
+     * Format object
+     * @type {Intl.DateTimeFormat}
      */
     set format(value) {
         this._format = value;

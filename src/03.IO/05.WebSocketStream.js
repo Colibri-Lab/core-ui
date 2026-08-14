@@ -37,16 +37,22 @@ Colibri.IO.WebSocketStream = class extends Destructable {
     };
 
     /**
-     * @type {Function} - Data type of the chunk
+     * Data type of the chunk
+     * @type {Function}
      */
     _chunkDataType = null;
 
     /**
-     * Constructor
+     * This constructor initializes a new instance of the WebSocketStream class, establishing a WebSocket connection to the specified URI.
+     * It sets up the necessary properties for handling chunked data, formatting, and callbacks for received data and data type changes.
      * @constructor
-     * @param {String} uri websocket uri
-     * @param {Number|null} chunkSize part size in bytes or null (means that must be one row in chunk)
-     * @param {Array<Array>} format of chunk [[8,'time','Date'],[4,'duration','Uint8'],[['n',4], 'chunk','Float32Array']]
+     * @param {string} name - The name of the WebSocket stream.
+     * @param {string} uri - The URI of the WebSocket server.
+     * @param {number} chunkSize - The size of each chunk in bytes.
+     * @param {Array<Array>} chunkFormatter - The layout for formatting the received chunks.
+     * @param {Function} chunkReceived - The callback function to handle received chunks.
+     * @param {Function} dataTypeChanged - The callback function to handle changes in data type.
+     * @constructor
      */
     constructor(name, uri, chunkSize, chunkFormatter, chunkReceived, dataTypeChanged) {
         super();
@@ -62,14 +68,13 @@ Colibri.IO.WebSocketStream = class extends Destructable {
 
     /**
      * Formats the received buffer according to the specified layout.
+     * This method takes a received buffer and a layout that defines how to interpret the data in the buffer.
+     * It uses DataView to read the data from the buffer based on the specified sizes and types in the layout.
+     * The method returns an object where each property corresponds to a field defined in the layout, containing the formatted data.
      * @param {ArrayBuffer} buffer - The received buffer to format.
      * @param {Array<Array>} layout - The layout defining the structure of the data in the buffer.
      * @returns {Object} An object containing the formatted data according to the specified layout.
      * @private
-     * @description
-     * This method takes a received buffer and a layout that defines how to interpret the data in the buffer.
-     * It uses DataView to read the data from the buffer based on the specified sizes and types in the layout.
-     * The method returns an object where each property corresponds to a field defined in the layout, containing the formatted data.
      */
     _format(buffer, layout) {
         const dv = new DataView(buffer);
@@ -101,13 +106,12 @@ Colibri.IO.WebSocketStream = class extends Destructable {
 
     /**
      * Unpacks the received buffer into rows based on the specified row size.
+     * This method takes a received buffer and a specified row size, and splits the buffer into multiple rows based on the row size.
+     * It returns an array of ArrayBuffers, where each ArrayBuffer corresponds to a single row of data extracted from the original buffer.
      * @param {ArrayBuffer} buffer - The received buffer to unpack.
      * @param {number} rowSize - The size of each row in bytes.
      * @returns {Array<ArrayBuffer>} An array of ArrayBuffers, each representing a row of data.
      * @private
-     * @description
-     * This method takes a received buffer and a specified row size, and splits the buffer into multiple rows based on the row size.
-     * It returns an array of ArrayBuffers, where each ArrayBuffer corresponds to a single row of data extracted from the original buffer.
      */
     _unpackRows(buffer, rowSize) {
         const rows = [];
@@ -120,13 +124,12 @@ Colibri.IO.WebSocketStream = class extends Destructable {
 
     /**
      * Establishes a WebSocket connection to the specified URI and sets up event handlers for open, message, close, and error events.
-     * @private
-     * @description
      * This method creates a new WebSocket connection to the URI provided during the instantiation of the WebSocketStream class.
      * It sets the binary type of the WebSocket to "arraybuffer" and defines event handlers for the 'open', 'message', 'close', and 'error' events.
      * The 'message' event handler processes incoming data, optionally unpacks it into rows, formats it according to the specified layout, and invokes the chunkReceived callback.
      * The 'close' event handler attempts to reconnect after a delay if the disconnection was not manual.
      * The 'error' event handler logs any errors that occur during the WebSocket communication.
+     * @private
      */
     _connect() {
         this._manualDisconnect = false;
@@ -159,7 +162,6 @@ Colibri.IO.WebSocketStream = class extends Destructable {
     /**
      * Indicates whether the WebSocket connection is ready (open).
      * @type {boolean}
-     * @readonly
      */
     get isReady() {
         return this._socket.readyState === 1;
@@ -208,7 +210,7 @@ Colibri.IO.WebSocketStream = class extends Destructable {
     /**
      * Disconnects the WebSocket connection and prevents automatic reconnection.
      * @returns {void}
-     * @description
+     * @public
      */
     disconnect() {
         this._manualDisconnect = true;

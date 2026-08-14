@@ -8,30 +8,35 @@ Colibri.Common.CometEvent = class {
     /**
      * Message action
      * @type {String}
+     * @public
      */
     action = '';
     
     /**
      * Message domain
      * @type {String}
+     * @public
      */
     domain = 'localhost';
 
     /**
      * Message date
      * @type {String}
+     * @public
      */
     date = Date.Now();
 
     /**
      * Message ID
      * @type {Number}
+     * @public
      */
     id = Date.Mc();
 
     /**
      * From user ID
      * @type {String}
+     * @public
      */
     from = '';
 
@@ -39,32 +44,50 @@ Colibri.Common.CometEvent = class {
      * Recipient of the message
      * If exists means that the message is sent to a specific user
      * @type {String}
+     * @public
      */
     recipient = null;
 
     /**
      * Message text
      * @type {Object}
+     * @public
      */
     message = {};
 
     /** 
      * Delivery type
      * @type {String}
+     * @public
      */
     delivery = 'untrusted';
 
     /**
      * Is message broadcast
      * @type {Boolean}
+     * @public
      */
     broadcast = false;
 
+    /** 
+     * Activate message
+     * @type {Boolean}
+     * @public
+     */
     activate = false;
 
+    /**
+     * Wake up recipients
+     * @type {Boolean}
+     * @public
+     */
     wakeup = false;
 
-    /** @constructor */
+    /**
+     * Constructs a new CometEvent instance.
+     * @constructor 
+     * @public
+     */
     constructor() {
         // do nothing
     }
@@ -72,6 +95,7 @@ Colibri.Common.CometEvent = class {
     /**
      * Creates a clone of the current CometEvent instance.
      * @returns {Colibri.Common.CometEvent} A new instance of Colibri.Common.CometEvent with the same properties as the current instance.
+     * @public
      */
     clone() {
         const msg = new Colibri.Common.CometEvent();
@@ -92,7 +116,8 @@ Colibri.Common.CometEvent = class {
     /**
      * Creates a new instance of Colibri.Common.CometEvent from a received event object.
      * @param {Object} eventReceived - The received event object.
-     * @returns {Colibri.Common.CometEvent
+     * @returns {Colibri.Common.CometEvent} A new instance of Colibri.Common.CometEvent created from the received event object.
+     * @public
      */
     static FromReceivedObject(eventReceived) {
         const msg = new Colibri.Common.CometEvent();
@@ -118,6 +143,7 @@ Colibri.Common.CometEvent = class {
      * @param {boolean} [activate=false] - Whether to activate the message.
      * @param {boolean} [wakeup=false] - Whether to wake up the recipients.
      * @returns {Colibri.Common.CometEvent} A new instance of Colibri.Common.CometEvent for sending a message.
+     * @public
      */
     static CreateForSend(action, domain, from, recipient, message, delivery = 'untrusted', activate = false, wakeup = false) {
         const msg = new Colibri.Common.CometMessage();
@@ -142,6 +168,7 @@ Colibri.Common.CometEvent = class {
      * @param {boolean} [activate=false] - Whether to activate the message.
      * @param {boolean} [wakeup=false] - Whether to wake up the recipients.
      * @returns {Colibri.Common.CometEvent} A new instance of Colibri.Common.CometEvent for sending a broadcast message.
+     * @public
      */
     static CreateForSendBroadcast(action, domain, from, message, delivery = 'untrusted', activate = false, wakeup = false) {
         const msg = new Colibri.Common.CometMessage();
@@ -160,7 +187,7 @@ Colibri.Common.CometEvent = class {
     /**
      * Checks if the message is intended for sending (i.e., has a recipient).
      * @type {boolean} True if the message has a recipient, otherwise false.
-     * @readonly
+     * @public
      */
     get isForSent() {
         return !!this.recipient;
@@ -169,10 +196,10 @@ Colibri.Common.CometEvent = class {
     /**
      * Checks if the message is a broadcast message (i.e., has a recipient of '*').
      * @type {boolean} True if the message is a broadcast message, otherwise false.
-     * @readonly
+     * @public
      */
-    get isBradcast() {
-        return this.recipient === '*' || this.message.boradcast;
+    get isBroadcast() {
+        return this.recipient === '*' || this.message.broadcast;
     }
 
     /**
@@ -180,8 +207,10 @@ Colibri.Common.CometEvent = class {
      * @returns {string} A JSON string representation of the message instance.
      * @throws {TypeError} If the message instance cannot be converted to JSON.
      * @example
+     * ```
      * const message = new Colibri.Common.CometMessage();
      * const jsonString = message.toJson();
+     * ``` 
      */
     toJson() {
         if(this.isForSent) {

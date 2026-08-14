@@ -7,7 +7,8 @@ Colibri.Common.NumToText = class {
     /**
      * Convert number to Russian words
      * Supports integers up to billions
-     * Author: ChatGPT
+     * @static
+     * @public
      */
     static numberToText(num) {
         if (typeof num !== "number" || !Number.isFinite(num)) {

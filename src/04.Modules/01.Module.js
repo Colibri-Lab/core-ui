@@ -14,6 +14,8 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
      * @param {string} [type] - The type of data.
      * @param {string} remoteDomain - The remote domain for the module.
      * @param {string} urlResolver - The URL resolver for the module.
+     * @constructor
+     * @public
      */
     constructor(entryName, type, remoteDomain, urlResolver) {
         super(entryName, type, remoteDomain, urlResolver);
@@ -29,6 +31,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
      * Destructor for the Colibri.Modules.Module class.
      * This method is automatically called when the module is destroyed.
      * @public
+     * @destructor
      */
     destructor() {
         this._stopDeferedTimer();
@@ -37,7 +40,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
     /**
      * Initializes the module.
      * This method is automatically called during module construction.
-     * @public 
+     * @protected 
      */
     InitializeModule() {
 
@@ -55,7 +58,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
     /**
      * Registers events for the module.
      * This method is automatically called during module construction.
-     * @public 
+     * @protected 
      */
     RegisterEvents() {
         // Тут регистрируем все события (свои события)
@@ -65,7 +68,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
     /**
      * Registers event handlers for the module.
      * This method is automatically called during module construction.
-     * @public 
+     * @protected 
      */
     RegisterEventHandlers() {
         // Тут регистрируем обарботчики событий
@@ -75,7 +78,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
      * Handles routing for the module.
      * @param {string} pattern - The routing pattern.
      * @param {string|Function} event - The event associated with the routing pattern.
-     * @public 
+     * @protected 
      */
     HandleRoute(pattern, event) {
         pattern = ('/' + this._moduleEntry.fromCamelCase('-') + '/' + pattern).replaceAll('//', '/');
@@ -90,7 +93,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
      * Navigates to a specified URL within the module.
      * @param {string} url - The URL to navigate to.
      * @param {Object} options - Additional navigation options.
-     * @public 
+     * @protected 
      */
     RouteTo(url, options = {}) {
         url = ('/' + this._moduleEntry.fromCamelCase('-') + '/' + url).replaceAll('//', '/');
@@ -100,7 +103,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
     /**
      * Setter for enabling/disabling the use of authorization cookies.
      * @param {boolean} value - Whether to use authorization cookies.
-     * @public 
+     * @protected 
      */
     set useAuthorizationCookie(value) {
         this._useAuthorizationCookie = value;
@@ -109,7 +112,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
     /**
      * Getter for checking if authorization cookies are enabled.
      * @returns {boolean} - Whether authorization cookies are used.
-     * @public 
+     * @protected 
      */
     get useAuthorizationCookie() {
         return this._useAuthorizationCookie;
@@ -118,7 +121,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
     /**
      * Getter for retrieving the name of the authorization cookie.
      * @returns {string} - The name of the authorization cookie.
-     * @public 
+     * @protected 
      */
     get authorizationCookieName() {
         return this._authorizationCookieName;
@@ -127,7 +130,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
     /**
      * Setter for defining the name of the authorization cookie.
      * @param {string} value - The name of the authorization cookie.
-     * @public 
+     * @protected 
      */
     set authorizationCookieName(value) {
         this._authorizationCookieName = value;
@@ -143,6 +146,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
      * @param {string} requestKeyword - The request keyword.
      * @returns {Promise} - A promise representing the result of the RPC call.
      * @public 
+     * @async
      */
     Call(controller, method, params = null, headers= {}, withCredentials= true, requestKeyword = Date.Mc()) {
         if(!this._useAuthorizationCookie) {
@@ -158,12 +162,14 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
 
     /**
      * Calls saved to next launch
+     * @type {Array}
      * @protected
      */
     _deferedCalls = [];
 
     /**
      * Call results by requestKeyword
+     * @type {Object}
      * @protected
      */
     _deferedResults = {};
@@ -173,6 +179,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
      * @param {number} timeout timeout for defer call
      * @param {string} deferedController controller for executing defered calls
      * @param {string} deferedMethod defered calls method
+     * @protected
      */
     _startDeferedTimer(timeout = 500, deferedController, deferedMethod) {
 
@@ -200,6 +207,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
 
     /**
      * Stop timer
+     * @protected
      */
     _stopDeferedTimer() {
         Colibri.Common.StopTimer(this.name + '-defered-timer');
@@ -214,7 +222,7 @@ Colibri.Modules.Module = class extends Colibri.IO.RpcRequest {
      * @param {boolean} withCredentials - Whether to include credentials in the request.
      * @param {string} requestKeyword - The request keyword.
      * @returns {Promise} - A promise representing the result of the RPC call.
-     * @public 
+     * @protected 
      */
     Defer(controller, method, params = null, headers= {}, withCredentials= true, requestKeyword = Date.Mc()) {
 

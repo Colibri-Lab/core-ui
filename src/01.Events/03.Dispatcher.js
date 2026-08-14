@@ -7,16 +7,23 @@
 Colibri.Events.Dispatcher = class extends Destructable {
 
     /** 
-     * @type {Object.<string, Colibri.Events.Event>} - events list provided by the dispatcher
+     * Events list provided by the dispatcher
+     * @type {Object.<string, Colibri.Events.Event>}
+     * @private
      **/
     __events = {};
+    
     /** 
-     * @type {Object.<string, Array<Object.<handler: Function, respondent: Object>>>} - list of handlers
+     * List of handlers
+     * @type {Object.<string, Array<Object.<handler: Function, respondent: Object>>>}
+     * @private
      **/
     __handlers = {};
 
     /**
      * Creates a new instance of Colibri.Events.Dispatcher.
+     * @constructor
+     * @public
      */
     constructor() {
         super();
@@ -24,7 +31,7 @@ Colibri.Events.Dispatcher = class extends Destructable {
 
     /**
      * Destructs the dispatcher instance and releases any resources associated with it.
-     * @returns {void}
+     * @destructor
      */
     destructor() {
         super.destructor();
@@ -36,6 +43,7 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * @param {string} eventName - The name of the event.
      * @param {boolean} bubbles - Indicates whether the event bubbles up the component tree.
      * @param {string} description - Description of the event.
+     * @public
      */
     RegisterEvent(eventName, bubbles, description, source = null) {
         if (source) {
@@ -48,6 +56,7 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * Unregisters an event.
      * @param {string} eventName - The name of the event.
      * @param {Colibri.Events.Source} [source=null] - The source from which to unregister the event.
+     * @public
      */
     UnregisterEvent(eventName, source = null) {
         if (source) {
@@ -63,6 +72,7 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * @param {boolean} [prepend=false] - Whether to insert the handler at the beginning.
      * @param {Object} [respondent=this] - The object that responds to the event.
      * @returns {Colibri.Events.Dispatcher}
+     * @public
      */
     AddHandler(eventName, handler, prepend = false, respondent = null) {
 
@@ -99,6 +109,7 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * @param {string} eventName - The event to remove the handler from.
      * @param {Function} handler - The handler to remove.
      * @returns {Colibri.Events.Dispatcher}
+     * @public
      */
     RemoveHandler(eventName, handler, respondent = null) {
 
@@ -133,6 +144,7 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * @param {string} eventName - The event to check for the handler.
      * @param {Function} handler - The handler to check for.
      * @returns {boolean} - True if the handler exists, false otherwise.
+     * @public
      */
     HandlerExists(eventName, handler) {
         const handlerObject = { handler: handler, respondent: this },
@@ -152,6 +164,8 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * @param {(Colibri.Events.Event|string)} event - The event object or its name.
      * @param {object} args - Arguments for the event.
      * @returns {Colibri.Events.Dispatcher}
+     * @public
+     * @async
      */
     async Dispatch(event, args = null) {
 
@@ -210,13 +224,15 @@ Colibri.Events.Dispatcher = class extends Destructable {
 
     /**
      * Clears all event handlers.
+     * @public
      */
     ClearHandlers() {
         this.__handlers = {};
     }
 
     /**
-     * Clears all event handlers.
+     * Clears all event handlers for a specific event.
+     * @public  
      */
     ClearHandler(eventName) {
         delete this.__handlers[eventName];
@@ -224,6 +240,7 @@ Colibri.Events.Dispatcher = class extends Destructable {
 
     /**
      * Disposes of the dispatcher.
+     * @public
      */
     Dispose() {
         delete this.__events;

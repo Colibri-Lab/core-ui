@@ -8,14 +8,14 @@ Colibri.Devices.Camera = class extends Colibri.Events.Dispatcher {
 
     /**
      * Instance variable representing the device.
-     * @type {null}
+     * @type {Colibri.Devices.Device}
      * @private
      */
     _device = null;
 
     /**
      * Instance variable representing the plugin.
-     * @type {null}
+     * @type {object}
      * @private
      */
     _plugin = null;
@@ -35,6 +35,8 @@ Colibri.Devices.Camera = class extends Colibri.Events.Dispatcher {
      * @constructor
      * @param {*} options - Options for getting the picture.
      * @returns {Promise} - Promise resolving to the picture URI.
+     * @async
+     * @public
      */
     GetPicture(options = {}) {
         options = Object.assign({
@@ -58,6 +60,8 @@ Colibri.Devices.Camera = class extends Colibri.Events.Dispatcher {
     /**
      * Cleans up temporary files.
      * @returns {Promise} - Promise resolving when cleanup is complete.
+     * @async
+     * @public
      */
     CleanUp() {
         return new Promise((resolve, reject) => {

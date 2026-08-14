@@ -5,14 +5,53 @@
  */
 Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
 
+    /**
+     * Field component
+     * @type {Colibri.UI.Forms.Field}
+     * @private
+     */
     _field = null;
+
+    /**
+     * Form component
+     * @type {Colibri.UI.Forms.Form}
+     * @private
+     */
     _form = null;
 
+    /**
+     * Is field validated
+     * @type {boolean}
+     * @private
+     */
     _validated = true;
+
+    /**
+     * Message
+     * @type {string}
+     * @private
+     */
     _message = '';
 
+    /**
+     * Class name for error
+     * @type {string}
+     * @private
+     */
     _className = null;
+
+    /**
+     * Is field validating
+     * @type {boolean}
+     * @private
+     */
     _validating = false;
+
+    /**
+     * Validators for subfields
+     * @type {Array<Colibri.UI.FieldValidator>}
+     * @private
+     */
     _validators = [];
 
     /**
@@ -31,10 +70,23 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
         this._createValidators();
     }
 
+    /**
+     * When fields rendered
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments
+     * @private
+     * @ignore
+     */
     __fieldFieldsRendered(event, args) {
         this._createValidators();
     }
 
+    /**
+     * When field changed, keyup or pasted
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments
+     * @ignore 
+     */
     __fieldChangedOrKeyUpOrPasted(event, args) {
         Colibri.Common.Delay(100).then(() => {
             this.Clear();
@@ -44,7 +96,10 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
         });
     }
 
-    /** @private */
+    /** 
+     * Create validators for subfields
+     * @private 
+     */
     _createValidators() {
         if (this._field?.Fields) {
             this._validators = [];
@@ -56,6 +111,12 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * When subfield validator validated
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments
+     * @ignore 
+     */
     __validatorValidated(event, args) {
         this.Dispatch('Validated', args);
     }
@@ -63,6 +124,7 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
     /**
      * Clear validation
      * @param {string} className class name
+     * @public
      */
     Clear(className = null) {
         this._validated = true;
@@ -81,6 +143,7 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
      * @param {Array<string>} messages messages
      * @param {string} className class name
      * @returns {boolean}
+     * @public
      */
     Validate(messages = true, className = null) {
         this._className = className;
@@ -133,6 +196,7 @@ Colibri.UI.FieldValidator = class extends Colibri.Events.Dispatcher {
      * Invalidate form
      * @param {string} message message
      * @param {string} className class name
+     * @public
      */
     Invalidate(message, className) {
         this._validated = false;

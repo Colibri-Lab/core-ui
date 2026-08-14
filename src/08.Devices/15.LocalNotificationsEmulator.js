@@ -9,6 +9,7 @@ Colibri.Devices.LocalNotificationsEmulator = class extends Destructable {
      * Checks if the emulator has permission.
      * @param {function} success - Success callback.
      * @param {function} fail - Fail callback.
+     * @public
      */
     hasPermission(success, fail) {
         success(true);
@@ -17,6 +18,7 @@ Colibri.Devices.LocalNotificationsEmulator = class extends Destructable {
      * Requests permission for the emulator.
      * @param {function} success - Success callback.
      * @param {function} fail - Fail callback.
+     * @public
      */
     requestPermission(success, fail) {
         success(true);
@@ -24,6 +26,7 @@ Colibri.Devices.LocalNotificationsEmulator = class extends Destructable {
     /**
      * Schedules a notification with given parameters.
      * @param {*} params - Parameters for scheduling the notification.
+     * @public
      */
     schedule(params) {
         //
@@ -31,6 +34,7 @@ Colibri.Devices.LocalNotificationsEmulator = class extends Destructable {
     /**
      * Cancels a scheduled notification with given id.
      * @param {number} id - The id of the notification to cancel.
+     * @public
      */
     cancel(id) {
         // 
@@ -40,6 +44,7 @@ Colibri.Devices.LocalNotificationsEmulator = class extends Destructable {
      * @param {string} event - The event to listen for.
      * @param {function} callback - The callback function.
      * @param {*} scope - The scope of the callback.
+     * @public
      */
     on(event, callback, scope) {
         // 
@@ -49,6 +54,7 @@ Colibri.Devices.LocalNotificationsEmulator = class extends Destructable {
      * @param {string} event - The event to stop listening for.
      * @param {function} callback - The callback function.
      * @param {*} scope - The scope of the callback.
+     * @public
      */
     un(event, callback, scope) {
         // 

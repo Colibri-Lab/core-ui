@@ -21,7 +21,13 @@ Colibri.UI.TextEditor = class extends Colibri.UI.Editor {
 
     }
 
-    /** @private */
+    /**
+     * When element changed
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {object} args log message arguments 
+     * @ignore 
+     */
     __elementChanged(e) {
         if(this.value) {
             this._setFilled();
@@ -31,13 +37,16 @@ Colibri.UI.TextEditor = class extends Colibri.UI.Editor {
         this.Dispatch('KeyDown', {domEvent: e});
     }
 
-    /** @private */
+    /**
+     * @ignore 
+     */
     _updateFieldData() {
         this.placeholder = this._fieldData?.placeholder;
     }
 
     /**
      * Validate editor
+     * @public
      */
     Validate() {
         
@@ -45,6 +54,7 @@ Colibri.UI.TextEditor = class extends Colibri.UI.Editor {
 
     /**
      * Focus on editor
+     * @public
      */
     Focus() {
         this._element.focus();
@@ -54,6 +64,7 @@ Colibri.UI.TextEditor = class extends Colibri.UI.Editor {
 
     /**
      * Remove focus from editor
+     * @public
      */
     Blur() {
         return this._element.attr('readonly') === 'readonly';

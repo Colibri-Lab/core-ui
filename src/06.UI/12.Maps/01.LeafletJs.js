@@ -3,6 +3,7 @@
  * @class
  * @extends Colibri.UI.FlexBox
  * @memberof Colibri.UI.Maps
+ * @ignore
  */
 Colibri.UI.Maps.LeafletJs = class extends Colibri.UI.Pane {
     

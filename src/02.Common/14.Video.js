@@ -8,16 +8,20 @@ Colibri.Common.Video = class {
     /**
      * MediaRecorder instance for recording video.
      * @type {MediaRecorder|null}
+     * @private
      */
     _mediaRecorder = null;
     /**
      * Video component element.
      * @type {HTMLVideoElement|null}
+     * @private
      */
     _videoObject = null;
 
     /**
-     * Records video using the user's camera and microphone.
+     * This method uses the MediaRecorder API to record video from the user's camera and microphone.
+     * It allows specifying video and audio settings, as well as selecting specific devices for recording.
+     * The recorded video is returned as a Blob object.
      * @param {HTMLVideoElement} videoComponent - The video component element to display the recorded video.
      * @param {MediaTrackConstraints|null} videoSettings - The video settings for the recording.
      * @param {MediaTrackConstraints|null} audioSettings - The audio settings for the recording.
@@ -26,7 +30,10 @@ Colibri.Common.Video = class {
      * @param {string|null} selectedCamera - The ID of the selected camera device or 'screen' for screen capture.
      * @returns {Promise<Blob>} - A promise that resolves to the recorded video blob.
      * @throws {Error} If there is an error accessing the user's media devices or if recording fails.
+     * @async
+     * @public
      * @example
+     * ```
      * const videoComponent = document.getElementById('video');
      * const videoSettings = { width: 1280, height: 720 };
      * const audioSettings = { echoCancellation: true };
@@ -39,10 +46,7 @@ Colibri.Common.Video = class {
      *   .catch(error => {
      *     Handle the error
      *   });
-     * @description
-     * This method uses the MediaRecorder API to record video from the user's camera and microphone.
-     * It allows specifying video and audio settings, as well as selecting specific devices for recording.
-     * The recorded video is returned as a Blob object.
+     * ```
      */
     RecordVideo(videoComponent, videoSettings = null, audioSettings = null, dataReceivedCallback = null, selectedMic = null, selectedCamera = null) {
 
@@ -168,10 +172,11 @@ Colibri.Common.Video = class {
     }
 
     /**
-     * Stops the video recording and releases the media resources.
+     * This method stops the video recording, releases the media resources, and cleans up any associated objects.
      * @returns {Promise<void>} - A promise that resolves when the recording is stopped and resources are released.
      * @throws {Error} If there is an error stopping the recording or releasing resources.
      * @example
+     * ```
      * Colibri.Common.Video.StopRecording()
      *   .then(() => {
      *     Recording stopped successfully
@@ -179,8 +184,7 @@ Colibri.Common.Video = class {
      *   .catch(error => {
      *     Handle the error
      *   });
-     * @description
-     * This method stops the video recording, releases the media resources, and cleans up any associated objects.
+     * ```
      */
     StopRecording() {
         if(this._audioContext) {
@@ -202,11 +206,13 @@ Colibri.Common.Video = class {
     }
     
     /**
-     * Captures a screenshot of the current video frame after waiting for a specified number of seconds.
+     * This method captures a screenshot of the current video frame after waiting for the specified number of seconds.
+     * The captured screenshot is returned as a Blob object.
      * @param {number} [secondstowait=3] - The number of seconds to wait before capturing the screenshot.
      * @returns {Promise<Blob>} - A promise that resolves to a Blob containing the captured screenshot.
      * @throws {Error} If there is an error capturing the screenshot.
      * @example
+     * ```
      * Colibri.Common.Video.CaptureScreeshot(5)
      *   .then(screenshotBlob => {
      *     Handle the captured screenshot blob
@@ -214,9 +220,7 @@ Colibri.Common.Video = class {
      *   .catch(error => {
      *     Handle the error
      *   });
-     * @description
-     * This method captures a screenshot of the current video frame after waiting for the specified number of seconds.
-     * The captured screenshot is returned as a Blob object.
+     * ```
      */
     CaptureScreeshot(secondstowait = 3) {
         return new Promise((resolve, reject) => {

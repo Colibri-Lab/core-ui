@@ -28,6 +28,8 @@ Colibri.UI.ImageViewer = class extends Colibri.UI.Viewer {
      * Get the image size
      * @param {string} value url of image
      * @returns {Promise}
+     * @public
+     * @async
      */
     GetImageSize(value) {
         return new Promise((resolve, reject) => {

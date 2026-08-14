@@ -9,6 +9,7 @@ Colibri.Common.DatedHistory = class {
      * Creates an instance of the DatedHistory class.
      * @param {number} [limit=1000] - The maximum number of items to store in the history.
      * @param {boolean} [newestFirst=true] - Whether to store the newest items at the beginning of the history.
+     * @constructor
      */
     constructor(limit = 1000, newestFirst = true) {
         this._items = [];
@@ -86,6 +87,7 @@ Colibri.Common.DatedHistory = class {
      * @param {BigInt} date1 Date to compare
      * @param {BigInt} date2 Date compare with
      * @returns BigInt nanoseconds between two dates
+     * @public
      */
     measure(date1, date2) {
         if(date1 instanceof Colibri.Common.FDate) {
@@ -225,6 +227,7 @@ Colibri.Common.DatedHistory = class {
      * @param {number} chunkObject.duration - The duration of the item in milliseconds.
      * @param {Array|TypedArray} chunkObject.chunk - The data chunk to add.
      * @returns {void}
+     * @public
      */
     addObject(chunkObject) {
         // {
@@ -241,12 +244,12 @@ Colibri.Common.DatedHistory = class {
 
     /**
      * Adds a new item to the history with the specified line array containing date and chunk data.
+     * This method extracts the date and chunk data from the line array and adds it to the history.
+     * The date is expected to be at the specified datePosition index, and the chunk data is expected to be at the next index.
+     * If the datePosition is not provided, it defaults to 0 (the first element of the line array).
      * @param {Array} line - The array containing date and chunk data.
      * @param {number} [datePosition=0] - The index of the date in the line array.
      * @returns {void}
-     * @description This method extracts the date and chunk data from the line array and adds it to the history.
-     * The date is expected to be at the specified datePosition index, and the chunk data is expected to be at the next index.
-     * If the datePosition is not provided, it defaults to 0 (the first element of the line array).
      */
     add(line, datePosition = 0) {
         this._add(line[datePosition], line, this._dateShift);
@@ -254,12 +257,13 @@ Colibri.Common.DatedHistory = class {
 
     /**
      * Adds a new item to the history (alias for add method).
+     * This method is an alias for the add method and is provided for backward compatibility.
+     * It extracts the date and chunk data from the line array and adds it to the history.
      * @param {Array} line - The array containing date and chunk data.
      * @param {number} [datePosition=0] - The index of the date in the line array.
      * @returns {void}
      * @deprecated Use the add method instead.
-     * @description This method is an alias for the add method and is provided for backward compatibility.
-     * It extracts the date and chunk data from the line array and adds it to the history.
+     * @public
      */
     push(line) {
         this.add(line);
@@ -267,9 +271,10 @@ Colibri.Common.DatedHistory = class {
 
     /**
      * Removes and returns the most recent item from the history.
-     * @returns {Object} - The most recent item from the history.
-     * @description This method removes and returns the most recent item from the history.
+     * This method removes and returns the most recent item from the history.
      * If the history is empty, it returns undefined.
+     * @returns {Object} - The most recent item from the history.
+     * @public
      */
     pop() {
         return this._newestFirst ? this._items.shift() : this._items.pop();
@@ -277,12 +282,13 @@ Colibri.Common.DatedHistory = class {
 
     /**
      * Sets the entire history to the specified array of items.
+     * This method replaces the entire history with the specified array of items.
+     * It ensures that the number of items does not exceed the specified limit.
+     * If the provided value is not an array, it throws an error.
      * @param {Array} value - The array of items to set as the history.
      * @returns {void}
      * @throws {Error} - Throws an error if the provided value is not an array.
-     * @description This method replaces the entire history with the specified array of items.
-     * It ensures that the number of items does not exceed the specified limit.
-     * If the provided value is not an array, it throws an error.
+     * @public
      */
     setAll(value) {
         const newData = value.slice(0, this._limit);
@@ -294,10 +300,11 @@ Colibri.Common.DatedHistory = class {
 
     /**
      * Gets a copy of all items in the history.
-     * @returns {Array} - A copy of all items in the history.
-     * @description This method returns a shallow copy of the array containing all items in the history.
+     * This method returns a shallow copy of the array containing all items in the history.
      * It allows external code to access the history without modifying the original array.
      * The returned array can be used for further processing or analysis of the historical data.    
+     * @returns {Array} - A copy of all items in the history.
+     * @public
      */
     getAll() {
         return this._items.slice();
@@ -308,6 +315,7 @@ Colibri.Common.DatedHistory = class {
      * @param {Function} startF index search method
      * @param {Function} endF index search method
      * @returns Array of items cropped by the index search method
+     * @public
      */
     crop(startF, endF) {
         startF = startF || (() => true);
@@ -327,13 +335,14 @@ Colibri.Common.DatedHistory = class {
 
     /**
      * Clears all items from the history.
-     * @returns {void}
-     * @description This method removes all items from the history, effectively resetting it to an empty state.
+     * This method removes all items from the history, effectively resetting it to an empty state.
      * It can be used to start fresh or discard all previously stored historical data.
      * After calling this method, the history will be empty, and any subsequent calls to getAll() will return an empty array.
      * Note: This method does not affect the limit or other properties of the history; it only clears the stored items.
      * Use this method with caution, as it permanently removes all historical data from the history instance.
      * If you need to preserve the data, consider creating a backup or using the getAll() method before clearing the history.
+     * @returns {void}
+     * @public
      */
     clear() {
         debugger;
@@ -344,6 +353,7 @@ Colibri.Common.DatedHistory = class {
      * Resizes the history to the specified new limit.
      * @param {number} newLimit - The new maximum number of items to store in the history.
      * @returns {void}
+     * @public
      */
     resize(newLimit) {
         this.limit = newLimit;
@@ -351,12 +361,13 @@ Colibri.Common.DatedHistory = class {
 
     /**
      * Prepends the specified number of empty items to each chunk in the history.
-     * @param {number} prependCount - The number of empty items to prepend to each chunk.
-     * @returns {void}
-     * @description This method iterates through each item in the history and prepends the specified number of empty items to the chunk data.
+     * This method iterates through each item in the history and prepends the specified number of empty items to the chunk data.
      * The empty items are filled with the emptyValue defined for the history. This can be useful for aligning or extending the data in the history.
      * Note: The method modifies the existing items in the history and does not create new items. It only affects the chunk data of each item.
      * Use this method with caution, as it may alter the structure of the historical data.
+     * @param {number} prependCount - The number of empty items to prepend to each chunk.
+     * @returns {void}
+     * @public
      */
     prependTo(prependCount) {
         this._items.forEach((item) => {
@@ -366,12 +377,13 @@ Colibri.Common.DatedHistory = class {
 
     /**
      * Appends the specified number of empty items to each chunk in the history.
-     * @param {number} appendCount - The number of empty items to append to each chunk.
-     * @returns {void}
-     * @description This method iterates through each item in the history and appends the specified number of empty items to the chunk data.
+     * This method iterates through each item in the history and appends the specified number of empty items to the chunk data.
      * The empty items are filled with the emptyValue defined for the history. This can be useful for aligning or extending the data in the history.
      * Note: The method modifies the existing items in the history and does not create new items. It only affects the chunk data of each item.
      * Use this method with caution, as it may alter the structure of the historical data.
+     * @param {number} appendCount - The number of empty items to append to each chunk.
+     * @returns {void}
+     * @public
      */
     appendTo(appendCount) {
         this._items.forEach((item) => {
@@ -381,13 +393,13 @@ Colibri.Common.DatedHistory = class {
 
     /**
      * Crops the chunks of each item in the history to the specified start and end indices.
-     * @param {number} startIndex - The starting index for cropping the chunks.
-     * @param {number} endIndex - The ending index for cropping the chunks.
-     * @returns {void}
-     * @description This method iterates through each item in the history and crops the chunk data to the specified start and end indices.
+     * This method iterates through each item in the history and crops the chunk data to the specified start and end indices.
      * The cropped chunks are then extrapolated to the original chunk length defined for the history. This can be useful for focusing on a specific range of data within the chunks.
      * Note: The method modifies the existing items in the history and does not create new items. It only affects the chunk data of each item.
      * Use this method with caution, as it may alter the structure of the historical data.
+     * @param {number} startIndex - The starting index for cropping the chunks.
+     * @param {number} endIndex - The ending index for cropping the chunks.
+     * @returns {void}
      */
     cropItems(startIndex, endIndex) {
         this._items.forEach((item) => {

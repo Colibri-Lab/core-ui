@@ -26,6 +26,7 @@ Colibri.UI.CheckboxListEditor = class extends Colibri.UI.Editor {
 
     /**
      * Validate
+     * @public
      */
     Validate() {
         
@@ -105,6 +106,7 @@ Colibri.UI.CheckboxListEditor = class extends Colibri.UI.Editor {
 
     /**
      * Focus on editor
+     * @public
      */
     Focus() {
         this._inputs[0]?.Focus();

@@ -40,6 +40,7 @@ Colibri.UI.Maps.Controls.StatesButton = class extends Colibri.UI.FlexBox {
      * @param {object} event event object
      * @param {object} args log message arguments
      * @returns {void}
+     * @private
      */
     __thisClicked(event, args) {
         const contextmenu = [];
@@ -56,6 +57,7 @@ Colibri.UI.Maps.Controls.StatesButton = class extends Colibri.UI.FlexBox {
      * @param {object} event event object
      * @param {object} args log message arguments
      * @returns {void}
+     * @private
      */
     __thisContextMenuItemClicked(event, args) {
         if(args.menuData?.name ?? null) {

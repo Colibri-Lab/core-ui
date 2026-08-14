@@ -9,7 +9,10 @@ Colibri.Common.Blob = class {
      * Converts a Blob to a text string.
      * @param {Blob} blob - The Blob to convert.
      * @returns {Promise<{blob: Blob, text: string}>} - A promise that resolves to an object containing the original Blob and the converted text string.
+     * @public
+     * @async
      * @example 
+     * ```
      * Colibri.Common.Blob.LoadAsText(blob)
      *   .then(({blob, text}) => {
      *     Use the text string
@@ -17,6 +20,7 @@ Colibri.Common.Blob = class {
      *   .catch(error => {
      *     Handle the error
      *   });
+     * ```
      */
     static LoadAsText(blob) {
         return new Promise((resolve, reject) => {

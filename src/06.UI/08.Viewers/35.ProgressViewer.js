@@ -38,6 +38,9 @@ Colibri.UI.ProgressViewer = class extends Colibri.UI.Viewer {
         this._value = value;
         this._showValue();
     }
+    /**
+     * @ignore
+     */
     _showValue() {
         
         const max = this._value?.max ?? 100;

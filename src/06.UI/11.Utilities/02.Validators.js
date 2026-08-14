@@ -8,6 +8,8 @@ Colibri.UI.Utilities.Validator = class {
      * Validate UK post code
      * @param {string} string uk post code
      * @returns {boolean}
+     * @static
+     * @public
      */
     static IsUKPostCode(string) {
         var postcodeRegEx = /[A-Z]{1,2}[0-9A-Z]{1,2} ?[0-9][A-Z]{2}/i; 
@@ -18,6 +20,8 @@ Colibri.UI.Utilities.Validator = class {
      * Validate Russian tax code
      * @param {string} value russian tax code
      * @returns {boolean}
+     * @static
+     * @public
      */
     static IsValidRuINN(value){
         //первая цифра ИНН может быть нулём, поэтому он не может быть числом

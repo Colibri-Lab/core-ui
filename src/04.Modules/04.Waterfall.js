@@ -44,6 +44,7 @@ Colibri.Modules.Waterfall = class extends Colibri.Common.Wasm {
      * Normalizes the given chunk of data to a range between 0 and 1.
      * @param {Float32Array} chunk - The chunk of data to normalize.
      * @returns {Float32Array} - The normalized chunk of data.
+     * @private
      */
     normalizeChunk(chunk) {
         if (!chunk || !chunk.length) {
@@ -76,6 +77,7 @@ Colibri.Modules.Waterfall = class extends Colibri.Common.Wasm {
      * Resizes the waterfall visualization to the specified width and height.
      * @param {number} width - The new width of the visualization.
      * @param {number} height - The new height of the visualization.
+     * @public
      */
     Resize(width, height) {
         if (!this.loaded) {
@@ -91,6 +93,7 @@ Colibri.Modules.Waterfall = class extends Colibri.Common.Wasm {
      * @param {BigInt} time - The timestamp for the new row.
      * @param {number} delta - The delta value for the new row.
      * @param {Float32Array} chunk - The chunk of data to add as a new row.
+     * @public
      */
     Add(time, delta, chunk) {
         if (!this.loaded) {
@@ -111,6 +114,7 @@ Colibri.Modules.Waterfall = class extends Colibri.Common.Wasm {
     /**
      * Retrieves the image data of the waterfall visualization as an ImageData object.
      * @returns {ImageData} - The ImageData object representing the waterfall visualization.
+     * @public
      */
     getImageData() {
         const bytes = new Uint8ClampedArray(
@@ -136,6 +140,7 @@ Colibri.Modules.Waterfall = class extends Colibri.Common.Wasm {
      * @param {number} rowStart - The starting row index of the region.
      * @param {number} rowCount - The number of rows to include in the region.
      * @returns {ImageData} - The ImageData object representing the specified region of the waterfall visualization.
+     * @public
      */
     getRegionImageData(rowStart, rowCount) {
         const offset = this.imagePtr + rowStart * this.width * 4;

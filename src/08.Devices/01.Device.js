@@ -1,60 +1,54 @@
 /**
  * Represents a device in the Colibri framework, providing functionalities related to the device's platform, theme, and plugins.
  * @class
+ * @namespace
  * @extends Colibri.Events.Dispatcher
  * @memberof Colibri.Devices
  */
 Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
-     * Represents the platform types.
-     * @readonly
-     * @enum {string}
-     */
-    static Platform = {
-        Web: 'web',
-        IOs: 'ios',
-        Android: 'android',
-        Electron: 'electron'
-    };
-
-    /**
-     * Represents the theme types.
-     * @readonly
-     * @enum {string}
-     */
-    static Theme = {
-        Light: 'light',
-        Dark: 'dark'
-    };
-
-    /**
      * Represents the platform type of the device.
+     * @type {string}
      * @private
      */
     _platform = '';
     /**
      * Represents the file system of the device.
+     * @type {string}
      * @private
      */
     _fileSystem = null;
 
+    /**
+     * Represents browser type
+     * @type {string}
+     * @private
+     */
     _browser = null;
     /**
      * Represents the theme of the device.
+     * @type {string}
      * @private
      */
     _theme = 'light';
     /**
      * Represents the theme detection plugin.
+     * @type {string}
      * @private
      */
     _themeDetectionPlugin = null;
     /**
      * Represents the push notifications plugin.
+     * @type {object}
      * @private
      */
     _pushNotifications = null;
+    /**
+     * Represents the push token for notifications.
+     * @type {string}
+     * @private
+     */
     _pushToken = null;
     
     /**
@@ -90,7 +84,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     /**
      * Retrieves the unique device ID.
      * If the device ID is not already stored, it generates a new one using MD5 hash of the current timestamp and stores it in the browser's local storage.
-     * @returns {string} The unique device ID.
+     * @type {string} The unique device ID.
      */
     get id() {
         let deviceId = App.Browser.Get('device-id');
@@ -253,6 +247,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Browser
+     * @type {string}
      */
     get browser() {
         return this._browser;
@@ -260,6 +255,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Browser is safari
+     * @type {boolean}
      */
     get isSafari() {
         return this._browser === 'safari';
@@ -267,6 +263,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Browser is firefox 
+     * @type {boolean}
      */
     get isFirefox() {
         return this._browser === 'firefox';
@@ -274,6 +271,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Browser is Edge
+     * @type {boolean}
      */
     get isEdge() {
         return this._browser === 'edge';
@@ -281,6 +279,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Browser is Opera
+     * @type {boolean}
      */
     get isOpera() {
         return this._browser === 'opera';
@@ -288,6 +287,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Is application runs standalone
+     * @type {boolean}
      */
     get isStandalone() {
         return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
@@ -295,6 +295,8 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Clear notifications
+     * @public
+     * @async
      */
     ClearNotifications() {
         this._pushNotifications = this.Plugin('firebase.messaging');
@@ -306,6 +308,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Start proximity screen off
+     * @public
      */
     StartProximityScreenOff() {
         if(window?.ColibriAccessories?.Proximity) {
@@ -315,6 +318,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Stop proximity screen off
+     * @public
      */
     StopProximityScreenOff() {
         if(window?.ColibriAccessories?.Proximity) {
@@ -352,6 +356,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
      * Requests a specific permission from the user.
      * @param {string} perm - The permission to request.
      * @returns {Promise<boolean>} A promise that resolves to true if the permission is granted, otherwise false.
+     * @public
      */
     RequestPermission(perm) {
         if(!cordova.plugins.permissions) {
@@ -369,6 +374,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
      * Requests multiple permissions from the user.
      * @param {Array<string>} perms - An array of permissions to request.
      * @returns {Promise<Array<Object>>} A promise that resolves with an array of permission statuses.
+     * @public
      */
     RequestPermissions(perms) {
         if(!cordova.plugins.permissions) {
@@ -394,7 +400,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Gets the platform type of the device.
-     * @returns {string} The platform type.
+     * @type {string} The platform type.
      */
     get platform() {
         return this._platform;
@@ -402,7 +408,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Checks if the device platform is Android.
-     * @returns {boolean} True if the device platform is Android, otherwise false.
+     * @type {boolean} True if the device platform is Android, otherwise false.
      */
     get isAndroid() {
         return this._platform === Colibri.Devices.Device.Platform.Android;
@@ -410,7 +416,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Checks if the device platform is iOS.
-     * @returns {boolean} True if the device platform is iOS, otherwise false.
+     * @type {boolean} True if the device platform is iOS, otherwise false.
      */
     get isIOs() {
         return this._platform === Colibri.Devices.Device.Platform.IOs;
@@ -418,7 +424,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Checks if the device platform is Windows.
-     * @returns {boolean} True if the device platform is Windows, otherwise false.
+     * @type {boolean} True if the device platform is Windows, otherwise false.
      */
     get isElectron() {
         return this._platform === Colibri.Devices.Device.Platform.Electron;
@@ -426,7 +432,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Checks if the device platform is Web.
-     * @returns {boolean} True if the device platform is Web, otherwise false.
+     * @type {boolean} True if the device platform is Web, otherwise false.
      */
     get isWeb() {
         return this._platform === Colibri.Devices.Device.Platform.Web;
@@ -454,6 +460,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Enable autostart service
+     * @public
      */
     enableAutoStartService(id) {
         cordova.plugins.autoStart.enableService(id);
@@ -461,6 +468,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Send the application to foreground
+     * @public
      */
     Foreground() {
         if(!window.ColibriAccessories?.App) {
@@ -471,6 +479,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     
     /**
      * Send the application to background
+     * @public
      */
     Background() {
         if(!window.ColibriAccessories?.App) {
@@ -482,6 +491,8 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     /**
      * Retrieves the safe area of the device.
      * @returns {Promise<{top: number, bottom: number}>} A promise that resolves with the safe area object containing top and bottom values.
+     * @public
+     * @async
      */
     SafeArea() {
         return new Promise((resolve, reject) => {
@@ -505,6 +516,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
      * @param {Object} object
      * @param {string} query
      * @returns {*}
+     * @private
      */
     _searchInObject(object, query) {
         let ret = null;
@@ -521,6 +533,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
      * Retrieves a plugin based on the provided query.
      * @param {string} query - The query string to retrieve the plugin.
      * @returns {*} The plugin object if found, otherwise undefined.
+     * @public
      */
     Plugin(query) {
         try {
@@ -552,6 +565,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     /**
      * Locks the device orientation to a specified type.
      * @param {string|null} [type=null] - The orientation type to lock. Defaults to the current orientation type.
+     * @public
      */
     LockOrientation(type = null) {
         try {
@@ -564,6 +578,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Unlocks the device orientation.
+     * @public
      */
     UnlockOrientation() {
         try {
@@ -576,7 +591,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Retrieves the file system of the device.
-     * @returns {Colibri.Devices.FileSystem} The file system instance.
+     * @type {Colibri.Devices.FileSystem} The file system instance.
      */
     get FileSystem() {
         if(!this._fileSystem) {
@@ -587,7 +602,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Retrieves the camera instance.
-     * @returns {Colibri.Devices.Camera} The camera instance.
+     * @type {Colibri.Devices.Camera} The camera instance.
      */
     get Camera() {
         if(!this._camera) {
@@ -598,7 +613,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Retrieves the SMS instance.
-     * @returns {Colibri.Devices.Sms} The SMS instance.
+     * @type {Colibri.Devices.Sms} The SMS instance.
      */
     get Sms() {
         if(!this._sms) {
@@ -609,7 +624,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Retrieves the dialogs instance.
-     * @returns {Colibri.Devices.Dialogs} The dialogs instance.
+     * @type {Colibri.Devices.Dialogs} The dialogs instance.
      */
     get Dialogs() {
         if(!this._dialogs) {
@@ -620,7 +635,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Retrieves device information.
-     * @returns {Object} The device information.
+     * @type {Object} The device information.
      */
     get Info() {
         
@@ -644,6 +659,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Retrieves the current version of Android SDK
+     * @private
      */
     _getAndroidSdkVersion() {
         const match = navigator.userAgent.match(/Android\s+(\d+)/);
@@ -663,7 +679,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Retrieves the current theme.
-     * @returns {string} The current theme.
+     * @type {string} The current theme.
      */
     get Theme() {
         return this._theme;
@@ -671,7 +687,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Retrieves the geolocation instance.
-     * @returns {Colibri.Devices.GeoLocation} The geolocation instance.
+     * @type {Colibri.Devices.GeoLocation} The geolocation instance.
      */
     get GeoLocation() {
         if(!this._geoLocation) {
@@ -682,7 +698,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Retrieves the sim instance.
-     * @returns {Colibri.Devices.Sim} The sim instance.
+     * @type {Colibri.Devices.Sim} The sim instance.
      */
     get Sim() {
         if(!this._sim) {
@@ -693,7 +709,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Get the vibrate module.
-     * @returns {Colibri.Devices.Vibrate} The vibrate module instance.
+     * @type {Colibri.Devices.Vibrate} The vibrate module instance.
      */
     get Vibrate() {
         if(!this._vibrate) {
@@ -704,7 +720,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Get the sqlite module.
-     * @returns {Colibri.Devices.SqLite}
+     * @type {Colibri.Devices.SqLite}
      */
     get SqLite() {
         if(!this._sqLite) {
@@ -746,7 +762,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Get capture module
-     * @returns {Colibri.Devices.Capture} The capture module instance.
+     * @type {Colibri.Devices.Capture} The capture module instance.
      */
     get Capture() {
         if(!this._capture) {
@@ -757,7 +773,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Get auth module  
-     * @returns {Colibri.Devices.Auth} The auth module instance.
+     * @type {Colibri.Devices.Auth} The auth module instance.
      */
     get Auth() {
         if(!this._auth) {
@@ -776,20 +792,25 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Get the list of ringtones available on the device
-     * @param {{notification|alarm|ringtone}}} ringtoneType 
-     * @returns Promise
+     * @param {{notification|alarm|ringtone}} ringtoneType 
+     * @returns {Promise<Array<{title: string, url: string}>>} A promise that resolves with the list of available ringtones
+     * @async
+     * @public
      */
     AvailableRingtones(ringtoneType = 'notification') {
         return new Promise((resolve, reject) => {        
             this._ringtones.getRingtone((list) => {
                 resolve(list);
-            }, (e) => {}, ringtoneType);
+            }, reject, ringtoneType);
         });
     }
 
     /**
      * Play the ringtone from device
      * @param {string} url 
+     * @returns {Promise<void>}
+     * @async
+     * @public
      */
     PlayRingtone(url) {
         return new Promise((resolve, reject) => {
@@ -803,7 +824,9 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Stop the ringtone from device
-     * @returns Promise
+     * @returns {Promise<void>}
+     * @async
+     * @public
      */
     StopRingtone() {
         return new Promise((resolve, reject) => {
@@ -818,6 +841,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     /**
      * Get the local audio device
      * @returns {string} The local audio device
+     * @public
      */
     AudioDevice() {
         return this._audioDevice;
@@ -825,6 +849,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Set the audo to default
+     * @public
      */
     SetAudioToDefault() {
         if(window['AudioToggle'] !== undefined) {
@@ -834,6 +859,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     }
     /**
      * Set audio to speackers
+     * @public
      */
     SetAudioToSpeakers() {
         if(window['AudioToggle'] !== undefined) {
@@ -843,6 +869,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     }
     /**
      * Set audio to earpiece
+     * @public
      */
     SetAudioToEarpiece() {
         if(window['AudioToggle'] !== undefined) {
@@ -854,6 +881,8 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     /**
      * Get the system speaker volume
      * @returns {Promise<number>} The system speaker volume
+     * @public
+     * @async
      */
     GetSystemSpeakerVolume() {
         return new Promise((resolve, reject) => {
@@ -871,6 +900,8 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     /**
      * Check if the system audio is muted
      * @returns {Promise<boolean>} True if the system audio is muted, false otherwise
+     * @async
+     * @public
      */
     IsMuted() {
         if(!window?.cordova?.plugins?.VolumeControl) {
@@ -887,6 +918,8 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     /**
      * Toggle the system audio mute state
      * @returns {Promise<void>}
+     * @async
+     * @public
      */
     ToggleMute() {
         if(!window?.cordova?.plugins?.VolumeControl) {
@@ -903,6 +936,8 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     /**
      * Mute the system audio
      * @returns {Promise<void>}
+     * @async
+     * @public
      */
     Mute() {
         if(!window?.cordova?.plugins?.VolumeControl) {
@@ -917,6 +952,8 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Unmute the system audio
+     * @async
+     * @public
      */
     UnMute() {
         return this.IsMuted().then(muted => {
@@ -944,7 +981,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Is device is near the proximity sensor
-     * @returns {string} 'near' or 'far'
+     * @type {string} 'near' or 'far'
      */
     get priximityState() {
         return this._proximityState || 'far';
@@ -957,6 +994,8 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
      * @param {string} contact - The contact associated with the notification
      * @param {string} photo - The photo associated with the notification
      * @returns {Promise<string>} A promise that resolves with the notification token when the notification is tapped
+     * @async
+     * @public
      */
     Notify(title, text, contact, photo) {
         return new Promise((resolve, reject) => {
@@ -1002,6 +1041,7 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Set the ready state to notification module
+     * @public
      */
     NotifyReady() {
         if(window.ColibriAccessories) {
@@ -1010,3 +1050,4 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
     }
 
 }
+

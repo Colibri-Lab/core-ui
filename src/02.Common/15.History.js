@@ -9,6 +9,8 @@ Colibri.Common.History = class {
      * Creates an instance of the History class.
      * @param {number} [limit=1000] - The maximum number of items to store in the history.
      * @param {boolean} [newestFirst=true] - Whether to store the newest items at the beginning of the history.
+     * @constructor
+     * @public
      */
     constructor(limit = 1000, newestFirst = true) {
         this._items = [];
@@ -61,6 +63,7 @@ Colibri.Common.History = class {
      * Adds a new item to the history.
      * @param {Object} line - The item to add to the history.
      * @returns {void}
+     * @public
      */
     add(line) {
         const copy = Object.cloneRecursive(line); // твой метод клонирования
@@ -91,6 +94,7 @@ Colibri.Common.History = class {
     /**
      * Removes and returns the most recent item from the history.
      * @returns {Object} - The most recent item from the history.
+     * @public
      */
     pop() {
         return this._newestFirst ? this._items.shift() : this._items.pop();
@@ -101,6 +105,7 @@ Colibri.Common.History = class {
      * @param {Array} value - The array of items to set as the history.
      * @returns {void}
      * @throws {Error} - Throws an error if the provided value is not an array.
+     * @public
      */
     setAll(value) {
         this._items = value.slice(0, this._limit);
@@ -109,6 +114,7 @@ Colibri.Common.History = class {
     /**
      * Gets a copy of all items in the history.
      * @returns {Array} - A copy of all items in the history.
+     * @public
      */
     getAll() {
         return this._items.slice();
@@ -120,11 +126,14 @@ Colibri.Common.History = class {
      * @param {number} endIndex - The ending index of the range to crop.
      * @returns {Array} - A new array containing the cropped items from the history.
      * @throws {Error} - Throws an error if the provided indices are out of bounds.
+     * @public
      * @example
+     * ```
      * const history = new Colibri.Common.History();
      * history.add({ id: 1, name: 'Item 1' });
      * history.add({ id: 2, name: 'Item 2' });
      * const croppedItems = history.crop(0, 1); // Returns [{ id: 1, name: 'Item 1' }]
+     * ```
      */
     crop(startIndex, endIndex) {
         return this._items.slice(startIndex, endIndex);
@@ -134,9 +143,11 @@ Colibri.Common.History = class {
      * Clears all items from the history.
      * @returns {void}
      * @example
+     * ```
      * const history = new Colibri.Common.History();
      * history.add({ id: 1, name: 'Item 1' });
      * history.clear(); // Clears all items from the history
+     * ```
      */
     clear() {
         this._items = [];
@@ -147,12 +158,15 @@ Colibri.Common.History = class {
      * @param {number} newLimit - The new maximum number of items to store in the history.
      * @returns {void}
      * @example
+     * ```
      * const history = new Colibri.Common.History(5);
      * history.add({ id: 1, name: 'Item 1' });
      * history.add({ id: 2, name: 'Item 2' });
      * history.resize(1); // Resizes the history to a limit of 1, removing excess items
+     * ```
      */
     resize(newLimit) {
         this.limit = newLimit;
     }
-};
+
+}

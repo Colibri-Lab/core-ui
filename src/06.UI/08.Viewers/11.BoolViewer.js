@@ -53,7 +53,7 @@ Colibri.UI.BoolViewer = class extends Colibri.UI.Viewer {
     }
 
     /**
-     * @private
+     * @ignore
      */
     _showValue() {
 
