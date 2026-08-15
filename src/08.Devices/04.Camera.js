@@ -37,6 +37,16 @@ Colibri.Devices.Camera = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} - Promise resolving to the picture URI.
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.Camera.GetPicture({ quality: 80, destinationType: Camera.DestinationType.DATA_URL })
+     *     .then(pictureUri => {
+     *         console.log('Picture URI:', pictureUri);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error getting picture:', error);
+     *     });
+     * ```
      */
     GetPicture(options = {}) {
         options = Object.assign({
@@ -62,6 +72,16 @@ Colibri.Devices.Camera = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} - Promise resolving when cleanup is complete.
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.Camera.CleanUp()
+     *     .then(() => {
+     *         console.log('Cleanup complete.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error during cleanup:', error);
+     *     });
+     * ```
      */
     CleanUp() {
         return new Promise((resolve, reject) => {

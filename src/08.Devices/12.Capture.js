@@ -32,6 +32,16 @@ Colibri.Devices.Capture = class extends Destructable {
      * @param {Array<Number>|Number} time - The time parameter for the audio capture (optional).
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.Capture.Audio(5)
+     *     .then(audioBlob => {
+     *         console.log('Captured audio blob:', audioBlob);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error capturing audio:', error);
+     *     });
+     * ```
      */
     Audio(limit = 10) {
         return new Promise((resolve, reject) => {

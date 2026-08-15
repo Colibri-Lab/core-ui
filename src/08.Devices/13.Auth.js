@@ -19,6 +19,16 @@ Colibri.Devices.Auth = class extends Destructable {
      * Checks if biometric authentication is available on the device.
      * @returns {Promise} - Resolves if available, rejects otherwise.
      * @public
+     * @example
+     * ```
+     * App.Device.Auth.IsAvailable()
+     *     .then(() => {
+     *         console.log('Biometric authentication is available.');
+     *     })
+     *     .catch(() => {
+     *         console.error('Biometric authentication is not available.');
+     *     });
+     * ```
      */
     IsAvailable() {
         if(App.Device.isWeb || App.Device.isElectron) {
@@ -55,6 +65,16 @@ Colibri.Devices.Auth = class extends Destructable {
      * @returns {Promise} - Resolves with credential information if successful, rejects otherwise.
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.Auth.Create('userToken123', 'John Doe', 'john.doe@example.com')
+     *     .then(credential => {
+     *         console.log('Credential created:', credential);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error creating credential:', error);
+     *     });
+     * ```
      */
     Create(userToken, userName, userEmail) {
         // if(App.Device.isElectron) {
@@ -128,6 +148,16 @@ Colibri.Devices.Auth = class extends Destructable {
      * @returns {Promise} - Resolves with credential information if successful, rejects otherwise.
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.Auth.Authenticate('userToken123')
+     *     .then(credential => {
+     *         console.log('Authenticated successfully:', credential);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error during authentication:', error);
+     *     });
+     * ```
      */
     Authenticate(userToken) {
         // if(App.Device.isElectron) {

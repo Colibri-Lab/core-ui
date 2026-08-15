@@ -28,6 +28,14 @@ Colibri.Devices.Vibrate = class extends Destructable {
      * Vibrates
      * @param {Array<Number>|Number} time 
      * @public
+     * @example
+     * ```
+     * /// Vibrate for 1000 milliseconds
+     * Colibri.Devices.Vibrate.Vibrate(1000);
+     * 
+     * /// Vibrate for 500 milliseconds, pause for 200 milliseconds, then vibrate for 300 milliseconds
+     * Colibri.Devices.Vibrate.Vibrate([500, 200, 300]);
+     * ```
      */
     Vibrate(time) {
         navigator.vibrate(time);

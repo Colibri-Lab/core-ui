@@ -50,6 +50,10 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
     /**
      * Fires queued events.
      * @public
+     * @example
+     * ```
+     * App.Device.LocalNotifications.FireQueuedEvents();
+     * ```
      */
     FireQueuedEvents() {
         this._plugin.fireQueuedEvents();
@@ -59,6 +63,16 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      * Checks if permission is granted.
      * @returns {Promise} - Promise resolving when permission is granted.
      * @public
+     * @example
+     * ```
+     * App.Device.LocalNotifications.HasPermission()
+     *     .then(() => {
+     *         console.log('Permission granted for local notifications.');
+     *     })
+     *     .catch(() => {
+     *         console.error('Permission denied for local notifications.');
+     *     });
+     * ```
      */
     HasPermission() {
         return new Promise((resolve, reject) => {
@@ -81,6 +95,16 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      * Requests permission for notifications.
      * @returns {Promise} - Promise resolving when permission is granted.
      * @public
+     * @example
+     * ```
+     * App.Device.LocalNotifications.RequestPermission()
+     *     .then(() => {
+     *         console.log('Permission granted for local notifications.');
+     *     })
+     *     .catch(() => {
+     *         console.error('Permission denied for local notifications.');
+     *     });
+     * ```
      */
     RequestPermission() {
         return new Promise((resolve, reject) => {
@@ -103,6 +127,13 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      * @param {string} groupName - The name of the notification group.
      * @param {*} actions - Actions to add.
      * @public
+     * @example
+     * ```
+     * App.Device.LocalNotifications.AddActions('myGroup', [
+     *     { id: 'action1', title: 'Action 1' },
+     *     { id: 'action2', title: 'Action 2' }
+     * ]);
+     * ```
      */
     AddActions(groupName, actions) {
         this._plugin.addActions(groupName, actions);
@@ -111,6 +142,10 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      * Removes actions from a notification group.
      * @param {string} groupName - The name of the notification group.
      * @public
+     * @example
+     * ```
+     * App.Device.LocalNotifications.RemoveActions('myGroup');
+     * ```
      */
     RemoveActions(groupName) {
         this._plugin.removeActions(groupName);
@@ -147,6 +182,12 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      * @param {*} progressBar - Progress bar configuration.
      * @param {Function} callback - Callback function to execute after scheduling.
      * @public
+     * @example
+     * ```
+     * App.Device.LocalNotifications.Schedule(1, 'Notification Title', 'This is a notification message.', null, { in: 5, unit: 'seconds' }, { launch: true, foreground: true, priority: 2 }, null, () => {
+     *     console.log('Notification scheduled.');
+     * });
+     * ```
      */
     Schedule(title, message, actions = null, trigger = null, data = null, options = {}, progressBar = null, successCallback = null, errorCallback = null) {
         const params = Object.assign(options, {
@@ -171,6 +212,10 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      * Cancels a scheduled notification with given id.
      * @param {number} id - The id of the notification to cancel.
      * @public
+     * @example
+     * ```
+     * App.Device.LocalNotifications.Cancel(1);
+     * ```
      */
     Cancel(id) {
         this.RequestPermission().then(() => {
@@ -184,6 +229,12 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      * @param {function(notification, eopts)} callback - The callback function.
      * @param {*} scope - The scope of the callback.
      * @public
+     * @example
+     * ```
+     * App.Device.LocalNotifications.On('click', (notification, eopts) => {
+     *     console.log('Notification clicked:', notification);
+     * }, this);
+     * ```
      */
     On(event, callback, scope) {
         this._plugin.on(event, callback, scope);
@@ -195,6 +246,10 @@ Colibri.Devices.LocalNotifications = class extends Destructable {
      * @param {function} callback - The callback function.
      * @param {*} scope - The scope of the callback.
      * @public
+     * @example
+     * ```
+     * App.Device.LocalNotifications.Off('click', myClickHandler, this);
+     * ```
      */
     Off(event, callback, scope) {
         this._plugin.un(event, callback, scope);

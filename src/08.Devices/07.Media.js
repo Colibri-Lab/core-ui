@@ -186,6 +186,16 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} - Promise resolving to the amplitude.
      * @public
      * @async
+     * @example
+     * ```
+     * App.Device.Media.GetCurrentAmplitude()
+     *     .then(amplitude => {
+     *         console.log('Current Amplitude:', amplitude);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error getting current amplitude:', error);
+     *     });
+     * ```
      */
     GetCurrentAmplitude() {
         return new Promise((resolve, reject) => {
@@ -201,6 +211,16 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} - Promise resolving to the position.
      * @public
      * @async
+     * @example
+     * ```
+     * App.Device.Media.GetCurrentPosition()
+     *     .then(position => {
+     *         console.log('Current Position:', position);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error getting current position:', error);
+     *     });
+     * ```
      */
     GetCurrentPosition() {
         return new Promise((resolve, reject) => {
@@ -214,6 +234,16 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
      * Returns the duration of an audio file.
      * @returns {number} - The duration of the audio file.
      * @public
+     * @example
+     * ```
+     * App.Device.Media.GetDuration()
+     *     .then(duration => {
+     *         console.log('Duration:', duration);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error getting duration:', error);
+     *     });
+     * ```
      */
     GetDuration() {
         return this._object.getDuration();
@@ -222,6 +252,16 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
     /**
      * Start or resume playing an audio file.
      * @public
+     * @example
+     * ```
+     * App.Device.Media.Play()
+     *     .then(() => {
+     *         console.log('Playback started.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error starting playback:', error);
+     *     });
+     * ```
      */
     Play() {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -232,6 +272,16 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
     /**
      * Pause playback of an audio file.
      * @public
+     * @example
+     * ```
+     * App.Device.Media.Pause()
+     *     .then(() => {
+     *         console.log('Playback paused.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error pausing playback:', error);
+     *     });
+     * ```
      */
     Pause() {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -242,6 +292,16 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
     /**
      * Pause recording of an audio file.
      * @public
+     * @example
+     * ```
+     * App.Device.Media.PauseRecording()
+     *     .then(() => {
+     *         console.log('Recording paused.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error pausing recording:', error);
+     *     });
+     * ```
      */
     PauseRecording() {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -252,6 +312,16 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
     /**
      * Releases the underlying operating system's audio resources.
      * @public
+     * @example
+     * ```
+     * App.Device.Media.Release()
+     *     .then(() => {
+     *         console.log('Audio resources released.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error releasing audio resources:', error);
+     *     });
+     * ```
      */
     Release() {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -262,6 +332,16 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
     /**
      * Resume recording of an audio file.
      * @public
+     * @example
+     * ```
+     * App.Device.Media.ResumeRecording()
+     *     .then(() => {
+     *         console.log('Recording resumed.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error resuming recording:', error);
+     *     });
+     * ```
      */
     ResumeRecording() {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -273,6 +353,16 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
      * Moves the position within the audio file.
      * @param {number} ms - The position in milliseconds.
      * @public
+     * @example
+     * ```
+     * App.Device.Media.SeekTo(10000)
+     *     .then(() => {
+     *         console.log('Seeked to 10 seconds.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error seeking:', error);
+     *     });
+     * ```
      */
     SeekTo(ms = 10000) {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -284,6 +374,16 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
      * Set the volume for audio playback.
      * @param {string} volume - The volume level.
      * @public
+     * @example
+     * ```
+     * App.Device.Media.SetVolume('0.5')
+     *     .then(() => {
+     *         console.log('Volume set to 50%.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error setting volume:', error);
+     *     });
+     * ```
      */
     SetVolume(volume = '0.5') {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -294,6 +394,16 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
     /**
      * Start recording an audio file.
      * @public
+     * @example
+     * ```
+     * App.Device.Media.StartRecording()
+     *     .then(() => {
+     *         console.log('Recording started.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error starting recording:', error);
+     *     });
+     * ```
      */
     StartRecording() {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -304,6 +414,16 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
     /**
      * Stop recording an audio file.
      * @public
+     * @example
+     * ```
+     * App.Device.Media.StopRecording()
+     *     .then(() => {
+     *         console.log('Recording stopped.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error stopping recording:', error);
+     *     });
+     * ```
      */
     StopRecording() {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -314,6 +434,16 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
     /**
      * Stop playing an audio file.
      * @public
+     * @example
+     * ```
+     * App.Device.Media.Stop()
+     *     .then(() => {
+     *         console.log('Playback stopped.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error stopping playback:', error);
+     *     });
+     * ```
      */
     Stop() {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -325,6 +455,16 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
      * Set the playback rate for the audio file.
      * @param {number} rate - The playback rate.
      * @public
+     * @example
+     * ```
+     * App.Device.Media.SetRate(2.0)
+     *     .then(() => {
+     *         console.log('Playback rate set to 2x.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error setting playback rate:', error);
+     *     });
+     * ```
      */
     SetRate(rate = 2.0) {
         Colibri.Common.Wait(() => !!this._object).then(() => {
@@ -337,6 +477,11 @@ Colibri.Devices.Media = class extends Colibri.Events.Dispatcher {
      * Static method to play a media file.
      * @param {string} mediaFile - The media file to play.
      * @returns {*} - The media object.
+     * @public
+     * @example
+     * ```
+     * const media = Colibri.Devices.Media.Play('path/to/media/file.mp3');
+     * ```
      */
     static Play(mediaFile, isBase64Encoded = false) {
         try {

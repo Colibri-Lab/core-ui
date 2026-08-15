@@ -36,6 +36,15 @@ Colibri.Devices.Media.Recording = class extends Colibri.Events.Dispatcher {
     /**
      * Start recording the media.
      * @public
+     * @example
+     * ```
+     * const recording = new Colibri.Devices.Media.Recording('path/to/file.wav', (blob) => {
+     *     console.log('Recording completed:', blob);
+     * }, (error) => {
+     *     console.error('Recording error:', error);
+     * });
+     * recording.Start();
+     * ```
      */
     Start() {
         this._mediaRec.startRecord();
@@ -44,6 +53,10 @@ Colibri.Devices.Media.Recording = class extends Colibri.Events.Dispatcher {
     /**
      * Stop recording the media.
      * @public
+     * @example
+     * ```
+     * recording.Stop();
+     * ```
      */
     Stop() {
         this._mediaRec.stopRecord();
@@ -53,6 +66,15 @@ Colibri.Devices.Media.Recording = class extends Colibri.Events.Dispatcher {
      * Static method to start recording a media file.
      * @param {string} mediaFile - The media file to record.
      * @returns {*} - The media object.
+     * @public
+     * @example
+     * ```
+     * const recording = Colibri.Devices.Media.Recording.StartRecording('audio', (blob) => {
+     *     console.log('Recording completed:', blob);
+     * }, (error) => {
+     *     console.error('Recording error:', error);
+     * });
+     * ```
      */
     static StartRecording(type = 'audio', success, error) {
         const filePath = cordova.file.cacheDirectory + 'temp.' + (type === 'audio' ? 'wav' : 'mp4');

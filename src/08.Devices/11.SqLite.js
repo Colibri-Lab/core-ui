@@ -47,6 +47,16 @@ Colibri.Devices.SqLite = class extends Destructable {
      * @param {string} [location='default'] - The location of the database.
      * @returns {Promise} - Promise resolving to the opened database object.
      * @public
+     * @example
+     * ```
+     * App.Device.SqLite.Open('myDatabase.db', 'default')
+     *     .then(db => {
+     *         console.log('Database opened:', db);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error opening database:', error);
+     *     });
+     * ```
      */
     Open(name, location = 'default') {
         return this._plugin.openDatabase({
@@ -63,6 +73,16 @@ Colibri.Devices.SqLite = class extends Destructable {
      * @returns {Promise} - Promise resolving to the query results.
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.SqLite.Query(db, 'SELECT * FROM myTable WHERE id = ?', [1])
+     *     .then(results => {
+     *         console.log('Query results:', results);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error executing query:', error);
+     *     });
+     * ```
      */
     Query(db, query, params = []) {
         return new Promise((resolve, reject) => {
@@ -93,6 +113,16 @@ Colibri.Devices.SqLite = class extends Destructable {
      * @returns {Promise} - Promise resolving when the table is created and rows are inserted.
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.SqLite.CreateTable(db, 'myTable', ['id INTEGER PRIMARY KEY', 'name TEXT'], [{id: 1, name: 'John'}, {id: 2, name: 'Jane'}])
+     *     .then(() => {
+     *         console.log('Table created and rows inserted.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error creating table or inserting rows:', error);
+     *     });
+     * ```
      */
     CreateTable(db, name, fields, rows = []) {
         return new Promise((resolve, reject) => {
@@ -135,6 +165,16 @@ Colibri.Devices.SqLite = class extends Destructable {
      * @returns {Promise} - Promise resolving when the rows are inserted.
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.SqLite.Insert(db, 'myTable', [{id: 1, name: 'John'}, {id: 2, name: 'Jane'}])
+     *     .then(() => {
+     *         console.log('Rows inserted into table.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error inserting rows into table:', error);
+     *     });
+     * ```
      */
     Insert(db, name, rows = []) {
         return new Promise((resolve, reject) => {
@@ -171,6 +211,16 @@ Colibri.Devices.SqLite = class extends Destructable {
      * @returns {Promise} - Promise resolving when the rows are updated.
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.SqLite.Update(db, 'myTable', [{id: 1, name: 'John Updated'}, {id: 2, name: 'Jane Updated'}])
+     *     .then(() => {
+     *         console.log('Rows updated in table.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error updating rows in table:', error);
+     *     });
+     * ```
      */
     Update(db, name, rows) {
         return new Promise((resolve, reject) => {
@@ -206,6 +256,16 @@ Colibri.Devices.SqLite = class extends Destructable {
      * @returns {Promise} - Promise resolving when the rows are updated.
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.SqLite.UpdateByCondition(db, 'myTable', {name: 'Updated Name'}, 'id = 1')
+     *     .then(() => {
+     *         console.log('Rows updated in table based on condition.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error updating rows in table based on condition:', error);
+     *     });
+     * ```
      */
     UpdateByCondition(db, table, data, condition) {
         return new Promise((resolve, reject) => {
@@ -231,6 +291,16 @@ Colibri.Devices.SqLite = class extends Destructable {
      * @returns {Promise} - Promise resolving to the selected rows.
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.SqLite.Select(db, 'myTable', 'id, name', 'id = 1')
+     *     .then(rows => {
+     *         console.log('Selected rows:', rows);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error selecting rows from table:', error);
+     *     });
+     * ```
      */
     Select(db, name, fields = '*', where = '', orderby = '', limit = '') {  
         return new Promise((resolve, reject) => {
@@ -257,6 +327,16 @@ Colibri.Devices.SqLite = class extends Destructable {
      * @returns {Promise} - Promise resolving when the rows are deleted.
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.SqLite.Delete(db, 'myTable', 'id = 1')
+     *     .then(() => {
+     *         console.log('Rows deleted from table.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error deleting rows from table:', error);
+     *     });
+     * ```
      */
     Delete(db, name, where) {
         return new Promise((resolve, reject) => {
@@ -277,6 +357,16 @@ Colibri.Devices.SqLite = class extends Destructable {
      * @returns {Promise} - Promise resolving when the database is closed.
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.SqLite.Close(db)
+     *     .then(() => {
+     *         console.log('Database closed.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error closing database:', error);
+     *     });
+     * ```
      */
     Close(db) {
         return new Promise((resolve, reject) => {

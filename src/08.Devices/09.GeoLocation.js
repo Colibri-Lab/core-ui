@@ -30,6 +30,16 @@ Colibri.Devices.GeoLocation = class extends Destructable {
      * @returns {Promise} - Promise resolving with the current position.
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.GeoLocation.Detect({ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true })
+     *     .then(position => {
+     *         console.log('Current position:', position);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error detecting position:', error);
+     *     });
+     * ```
      */
     Detect(options = { maximumAge: 3000, timeout: 5000, enableHighAccuracy: true }) {
         return new Promise((resolve, reject) => {
@@ -48,6 +58,18 @@ Colibri.Devices.GeoLocation = class extends Destructable {
      * @returns {Promise} - Promise resolving when position watching is started.
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.GeoLocation.Watch((position) => {
+     *         console.log('Position changed:', position);
+     *     }, { maximumAge: 3000, timeout: 5000, enableHighAccuracy: true })
+     *     .then(() => {
+     *         console.log('Started watching position.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error watching position:', error);
+     *     });
+     * ```
      */
     Watch(callback, options = { maximumAge: 3000, timeout: 5000, enableHighAccuracy: true }) {
         return new Promise((resolve, reject) => {

@@ -30,6 +30,16 @@ Colibri.Devices.Sim = class extends Destructable {
      * @returns {Promise} - Promise resolving with the current position.
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.Sim.Detect()
+     *     .then(simInfo => {
+     *         console.log('Current sim information:', simInfo);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error detecting sim information:', error);
+     *     });
+     * ```
      */
     HasPermission() {
         return new Promise((resolve, reject) => {
@@ -45,9 +55,25 @@ Colibri.Devices.Sim = class extends Destructable {
      * Detects the current position.
      * @returns {Promise} - Promise resolving with the current position.
      * @public
+     * @example
+     * ```
+     * App.Device.Sim.RequestPermission()
+     *     .then(() => {
+     *         console.log('Permission requested for sim information.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error requesting permission for sim information:', error);
+     *     });
+     * ```
      */
     RequestPermission() {
-        this._plugin.requestReadPermission();
+        return new Promise((resolve, reject) => {
+            this._plugin.requestReadPermission(() => {
+                resolve();
+            }, (error) => {
+                reject(error);
+            });
+        });
     }
 
 
@@ -56,6 +82,16 @@ Colibri.Devices.Sim = class extends Destructable {
      * @returns {Promise<{carrierName,countryCode,mcc,mnc}>} - Promise resolving with the current sim information.
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.Sim.Detect()
+     *     .then(simInfo => {
+     *         console.log('Current sim information:', simInfo);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error detecting sim information:', error);
+     *     });
+     * ```
      */
     Detect() {
         return new Promise((resolve, reject) => {

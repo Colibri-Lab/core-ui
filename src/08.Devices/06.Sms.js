@@ -55,6 +55,16 @@ Colibri.Devices.Sms = class extends Destructable {
      * @returns {Promise} - Promise resolving when permission is checked.
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.Sms.CheckPermissionForSend()
+     *     .then(() => {
+     *         console.log('Permission granted for sending SMS.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Permission denied for sending SMS:', error);
+     *     });
+     * ```
      */
     CheckPermissionForSend() {
         return new Promise((resolve, reject) => {
@@ -82,6 +92,16 @@ Colibri.Devices.Sms = class extends Destructable {
      * @returns {Promise} - Promise resolving when permission is requested.
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.Sms.RequestPermissionForSend()
+     *     .then(() => {
+     *         console.log('Permission granted for sending SMS.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Permission denied for sending SMS:', error);
+     *     });
+     * ```
      */
     RequestPermissionForSend() {
         return new Promise((resolve, reject) => {
@@ -110,6 +130,16 @@ Colibri.Devices.Sms = class extends Destructable {
      * @returns {Promise} - Promise resolving when message is sent.
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.Sms.Send('+1234567890', 'Hello, this is a test message.', 'INTENT')
+     *     .then(() => {
+     *         console.log('SMS sent successfully.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error sending SMS:', error);
+     *     });
+     * ```
      */
     Send(number, message, intent = 'INTENT') {
         return new Promise((resolve, reject) => {
@@ -147,6 +177,12 @@ Colibri.Devices.Sms = class extends Destructable {
      * Registers an event listener for incoming SMS messages.
      * @param {function} listener - The listener function.
      * @public
+     * @example
+     * ```
+     * App.Device.Sms.RegisterArriveListener((message) => {
+     *     console.log('Incoming SMS:', message);
+     * });
+     * ```
      */
     RegisterArriveListener(listener) {
         document.addEventListener('onSMSArrive', (e) => {
@@ -159,6 +195,16 @@ Colibri.Devices.Sms = class extends Destructable {
      * @async
      * @public
      * @returns {Promise} - Promise resolving when watching is started.
+     * @example
+     * ```
+     * App.Device.Sms.Watch()
+     *     .then(() => {
+     *         console.log('Started watching for incoming SMS messages.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error starting SMS watch:', error);
+     *     });
+     * ```
      */
     Watch() {
         if(!this._pluginRead) {
@@ -178,6 +224,16 @@ Colibri.Devices.Sms = class extends Destructable {
      * @async
      * @public
      * @returns {Promise} - Promise resolving when watching is stopped.
+     * @example
+     * ```
+     * App.Device.Sms.Stop()
+     *     .then(() => {
+     *         console.log('Stopped watching for incoming SMS messages.');
+     *     })
+     *     .catch(error => {
+     *         console.error('Error stopping SMS watch:', error);
+     *     });
+     * ```
      */
     Stop() {
         if(!this._pluginRead) {

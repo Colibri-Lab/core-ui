@@ -6,6 +6,18 @@
  */
 Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
+
+    /** 
+     * Routing based on hash
+     * @const string
+     */
+    static RouteOnHash = 'hash';
+    /** 
+     * Routing based on history
+     * @const string
+     */
+    static RouteOnHistory = 'history';
+
     /**
      * Initializes a new instance of the Router class.
      * @constructor
@@ -104,6 +116,10 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
      * Creates a URI string with the current URL and query parameters.
      * @returns {string} - The URI string.
      * @public
+     * @example
+     * ```
+     * const uri = App.Router.CreateUri(); // Creates a URI string with the current URL and query parameters
+     * ```
      */
     CreateUri() {
         return this._url + '?' + Object.toQueryString(this._options, ['&', '=']);
@@ -112,6 +128,10 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
     /**
      * Handles the DOM ready event. Initializes the router with the current URL and query parameters.
      * @public
+     * @example
+     * ```
+     * App.Router.HandleDomReady(); // Initializes the router with the current URL and query parameters
+     * ```
      */
     HandleDomReady() {
         const args = this.ProcessUrlToOptionsHandlers('forward', App.Request.uri, App.Request.query);
@@ -137,6 +157,10 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
     /**
      * Processes route patterns.
      * @public
+     * @example
+     * ```
+     * App.Router.ProcessPatterns(); // Processes route patterns and executes corresponding handlers
+     * ```
      */
     ProcessPatterns() {
         this._processRoutePatterns();
@@ -194,6 +218,12 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
      * @param {Function} handler - The handler function for the route.
      * @param {boolean} [prepend=false] - Whether to add the handler at the beginning.
      * @public
+     * @example
+     * ```
+     * App.Router.AddRoutePattern('/home', (url, options, path) => {
+     *     console.log('Home route matched:', url, options, path);
+     * });
+     * ```
      */
     AddRoutePattern(routePattern, handler, prepend = false) {
 
@@ -230,6 +260,11 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
      * @param {object} options The query parameters.
      * @returns {string} The constructed URL.
      * @public
+     * @example
+     * ```
+     * const fullUrl = App.Router.Url('/api/data', { id: 123, type: 'user' });
+     * /// fullUrl will be '/api/data?id=123&type=user'
+     * ```
      */
     Url(url, options) {
         return url + (Object.countKeys(options) > 0 ? '?' + String.fromObject(options, ['&', '=']) : '');
@@ -293,6 +328,13 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
      * @param {string} [target='_self'] - The target window or tab.
      * @returns {string} - The URL that was navigated to.
      * @public
+     * @example
+     * ```
+     * App.Router.Navigate('/home', { id: 123 }, false, false, '_self'); // Navigates to '/home?id=123' in the same window
+     * App.Router.Navigate('/home', { id: 123 }, false, false, '_blank'); // Opens '/home?id=123' in a new tab
+     * App.Router.Navigate('/home', { id: 123 }, true, false, '_self'); // Navigates to '/home?id=123' and replaces the current history entry
+     * App.Router.Navigate('/home', { id: 123 }, false, true, '_self'); // Navigates to '/home?id=123' and adds it to the history
+     * ```
      */
     Navigate(url, options = {}, replaceOnHistory = false, setOnHistory = false, target = '_self') {
         const args = this.ProcessUrlToOptionsHandlers('back', url, options);
@@ -340,6 +382,10 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
     /**
      * Gets back
      * @public
+     * @example
+     * ```
+     * App.Router.Back(); // Navigates back in the browser history
+     * ```
      */
     Back() {
         history.back();
@@ -348,6 +394,10 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
     /**
      * Returns to start of navigation
      * @public
+     * @example
+     * ```
+     * App.Router.Pop(); // Navigates back to the start of the navigation history
+     * ```
      */
     Pop() {
         const data = this._history.pop();
@@ -357,6 +407,10 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
     /**
      * Dispatches the 'RouteChanged' event with the current URL and options.
      * @public
+     * @example
+     * ```
+     * App.Router.DispatchRouteChanged(); // Dispatches the 'RouteChanged' event with the current URL and options
+     * ```
      */
     DispatchRouteChanged() {
         this.Dispatch('RouteChanged', {url: this._url, options: this._options});
@@ -437,6 +491,10 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
      * Gets the string representation of safe query parameters.
      * @returns {string} - The string representation of safe query parameters.
      * @public
+     * @example
+     * ```
+     * const safeParamsString = App.Router.GetSafeParamsAsString(); // Gets the string representation of safe query parameters
+     * ```
      */
     GetSafeParamsAsString() {
         let ret = [];
@@ -452,6 +510,10 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
      * Gets the object representation of safe query parameters.
      * @returns {Object} - The object representation of safe query parameters.
      * @public
+     * @example
+     * ```
+     * const safeParamsObject = App.Router.GetSafeParamsAsObject(); // Gets the object representation of safe query parameters
+     * ```
      */
     GetSafeParamsAsObject() {
         let ret = {};
@@ -468,6 +530,11 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
      * @param {Array} handlers - The handlers to add.
      * @param {boolean} [prepend=false] - Whether to prepend the handlers.
      * @public
+     * @example
+     * ```
+     * App.Router.AddUrlToOptionsHandler(handler, true); // Adds handler to process URL to options, prepending them
+     * App.Router.AddUrlToOptionsHandler(handler, false); // Adds handler to process URL to options, appending them
+     * ```
      */
     AddUrlToOptionsHandler(handlers, prepend = false) {
         if(prepend) {
@@ -484,6 +551,14 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
      * @param {Object} options - The options to process.
      * @returns {Object} - An object containing the processed URL and options.
      * @public
+     * @example
+     * ```
+     * const result = App.Router.ProcessUrlToOptionsHandlers('forward', '/home', { id: 123 });
+     * /// result will contain the processed URL and options
+     * 
+     * const result = App.Router.ProcessUrlToOptionsHandlers('back', '/home', { id: 123 });
+     * /// result will contain the processed URL and options
+     * ```
      */
     ProcessUrlToOptionsHandlers(direction = 'forward', url, options) {
         options = Object.cloneRecursive(options);
@@ -497,8 +572,3 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
     }
 
 }
-
-/** Routing based on hash */
-Colibri.Web.Router.RouteOnHash = 'hash';
-/** Routing based on history */
-Colibri.Web.Router.RouteOnHistory = 'history';

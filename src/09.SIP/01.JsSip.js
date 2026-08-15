@@ -19,6 +19,11 @@ Colibri.Sip.JsSip = class extends Colibri.Events.Dispatcher {
      * Initializes the JsSip library with the given SIP address.
      * @param {string} sipAddr - The SIP address to initialize with.
      * @returns {void} - Resolves when initialization is complete.
+     * @example
+     * ```
+     * const jsSip = new Colibri.Sip.JsSip('https://example.com/jssip.js');
+     * jsSip.Init('sip:username@example.com');
+     * ```
      */
     Init(sipAddr) {
         Colibri.Common.LoadScript(this._url, 'jssip').then(() => {

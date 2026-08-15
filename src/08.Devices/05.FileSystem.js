@@ -186,6 +186,11 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @param {*} content - The content of the file.
      * @returns {*} - Blob object.@
      * @public
+     * @example
+     * ```
+     * const blob = App.Device.FileSystem.Blob('example.txt', 'Hello, World!');
+     * console.log('Blob:', blob);
+     * ```
      */
     Blob(name, content) {
         if(content instanceof Blob) {
@@ -202,6 +207,13 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @param {number} sliceSize - The slice size.
      * @returns {*} - Blob object.
      * @public
+     * @example
+     * ```
+     * const base64Data = '...'; // Your base64 data here
+     * const contentType = 'image/png';
+     * const blob = App.Device.FileSystem.B64ToBlob(base64Data, contentType);
+     * console.log('Blob:', blob);
+     * ```
      */
     B64ToBlob(b64Data, contentType, sliceSize = 512) {
         
@@ -235,6 +247,16 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} - Promise resolving to the file system root.
      * @async
      * @public
+     * @example
+     * ```
+     * App.Device.FileSystem.Get(LocalFileSystem.PERSISTENT, 0)
+     *     .then(root => {
+     *         console.log('File system root:', root);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error getting file system:', error);
+     *     });
+     * ```
      */
     Get(type = LocalFileSystem.PERSISTENT, quota = 0) {
         return new Promise((resolve, reject) => {
@@ -250,6 +272,16 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} - Promise resolving to the file system entry.
      * @public
      * @async
+     * @example
+     * ```
+     * App.Device.FileSystem.Local('file:///path/to/file.txt')
+     *     .then(entry => {
+     *         console.log('File entry:', entry);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error resolving local file system URL:', error);
+     *     });
+     * ```
      */
     Local(path) {
         return new Promise((resolve, reject) => {
@@ -265,6 +297,16 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} - Promise resolving to the file system entry.
      * @public
      * @async
+     * @example
+     * ```
+     * App.Device.FileSystem.LocalAsBlob('file:///path/to/file.txt', 'text/plain')
+     *     .then(blob => {
+     *         console.log('Blob:', blob);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error resolving local file system URL as Blob:', error);
+     *     });
+     * ```
      */
     LocalAsBlob(path, type = null) {
         return new Promise((resolve, reject) => {
@@ -290,6 +332,16 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} - Promise resolving to the file entry.
      * @public
      * @async
+     * @example
+     * ```
+     * App.Device.FileSystem.File(fsOrDir, 'example.txt', { create: true, exclusive: false })
+     *     .then(fileEntry => {
+     *         console.log('File entry:', fileEntry);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error creating file:', error);
+     *     });
+     * ```
      */
     File(fsOrDir, fileName, options) {
         options = Object.assign({ create: true, exclusive: false }, options);
@@ -308,6 +360,16 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} - Promise resolving to the directory entry.
      * @public
      * @async
+     * @example
+     * ```
+     * App.Device.FileSystem.Directory(fsOrDir, 'myDirectory', { create: true, exclusive: false })
+     *     .then(dirEntry => {
+     *         console.log('Directory entry:', dirEntry);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error creating directory:', error);
+     *     });
+     * ```
      */
     Directory(fsOrDir, dirName, options) {
         return new Promise((resolve, reject) => {
@@ -332,6 +394,16 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} - Promise resolving to the file entry.
      * @public
      * @async
+     * @example
+     * ```
+     * App.Device.FileSystem.Write(fileEntry, 'Hello, World!', false)
+     *     .then(updatedFileEntry => {
+     *         console.log('File written:', updatedFileEntry);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error writing to file:', error);
+     *     });
+     * ```
      */
     Write(fileEntry, content, isAppend) {
         return new Promise((resolve, reject) => {
@@ -362,6 +434,16 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} - Promise resolving to the file content.
      * @public
      * @async
+     * @example
+     * ```
+     * App.Device.FileSystem.Read(fileEntry)
+     *     .then(content => {
+     *         console.log('File content:', content);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error reading file:', error);
+     *     });
+     * ```
      */
     Read(fileEntry) {
         return new Promise((resolve, reject) => {
@@ -391,6 +473,16 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} - Promise resolving to the file entry.
      * @public
      * @async
+     * @example
+     * ```
+     * App.Device.FileSystem.RequestFile(LocalFileSystem.PERSISTENT, 0, 'myDirectory', 'example.txt', 'Hello, World!', false)
+     *     .then(fileEntry => {
+     *         console.log('File entry:', fileEntry);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error requesting file:', error);
+     *     });
+     * ```
      */
     RequestFile(type = LocalFileSystem.PERSISTENT, quota = 0, path, fileName, content, isAppend, options = {}) {
         return new Promise((resolve, reject) => {
@@ -413,6 +505,16 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} - Promise resolving to the file entry.
      * @public
      * @async
+     * @example
+     * ```
+     * App.Device.FileSystem.RequestLocalWriter(LocalFileSystem.PERSISTENT, 0, 'myDirectory', 'example.txt')
+     *     .then(fileWriter => {
+     *         console.log('File writer:', fileWriter);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error requesting file writer:', error);
+     *     });
+     * ```
      */
     RequestLocalWriter(rootDir, fileName, options = {}) {
         return new Promise((resolve, reject) => {
@@ -431,6 +533,16 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} - Promise resolving to the directory entry.
      * @public
      * @async
+     * @example
+     * ```
+     * App.Device.FileSystem.CreateDirectory('file:///path/to/root', 'myDirectory', { create: true, exclusive: false })
+     *     .then(dirEntry => {
+     *         console.log('Directory entry:', dirEntry);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error creating directory:', error);
+     *     });
+     * ```
      */
     CreateDirectory(rootPath, path, options = {}) {
         return new Promise((resolve, reject) => {
@@ -452,6 +564,16 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} - Promise resolving to the file entry.
      * @public
      * @async
+     * @example
+     * ```
+     * App.Device.FileSystem.CreateFile('file:///path/to/root', 'myDirectory', 'example.txt', 'Hello, World!', false)
+     *     .then(fileEntry => {
+     *         console.log('File entry:', fileEntry);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error creating file:', error);
+     *     });
+     * ```
      */
     CreateFile(rootPath, path, fileName, content, isAppend, options = {}) {
         return new Promise((resolve, reject) => {
@@ -472,6 +594,16 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} - Promise resolving to the file content.
      * @public
      * @async
+     * @example
+     * ```
+     * App.Device.FileSystem.ReadFile('file:///path/to/root', 'myDirectory', 'example.txt')
+     *     .then(content => {
+     *         console.log('File content:', content);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error reading file:', error);
+     *     });
+     * ```
      */
     ReadFile(rootPath, path, fileName) {
         return new Promise((resolve, reject) => {
@@ -491,6 +623,16 @@ Colibri.Devices.FileSystem = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} - Promise resolving to the directory entries.
      * @public
      * @async
+     * @example
+     * ```
+     * App.Device.FileSystem.ReadDirectory('file:///path/to/root', 'myDirectory')
+     *     .then(entries => {
+     *         console.log('Directory entries:', entries);
+     *     })
+     *     .catch(error => {
+     *         console.error('Error reading directory:', error);
+     *     });
+     * ```
      */
     ReadDirectory(rootPath, path) {
         return new Promise((resolve, reject) => {

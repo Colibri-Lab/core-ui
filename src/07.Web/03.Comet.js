@@ -289,6 +289,11 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {string|null} websocketURI - The URI for the WebSocket connection.
      * @returns {void}
      * @public
+     * @example
+     * ```
+     * const userData = { guid: 'user-guid', name: 'User Name' };
+     * App.Comet.Init(userData, store, 'messages', handlers, texts, firebaseServiceJson, pushToken, pushFunction, websocketURI);
+     * ```
      */
     Init(userData, store, storeMessages, handlers = {}, texts = {}, firebaseServiceJson = null, pushToken = null, pushFunction = null, websocketURI = null) {
 
@@ -325,6 +330,12 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {function} f - The function to handle push notifications.
      * @returns {void}
      * @public
+     * @example
+     * ```
+     * const token = 'push-token';
+     * const pushFunction = (notification) => { console.log(notification); };
+     * App.Comet.SetPushToken(token, pushFunction);
+     * ```
      */
     SetPushToken(token, f) {
         this._pushToken = token;
@@ -341,6 +352,11 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {Function} handler - The function to be called when the event occurs.
      * @param {Object} respondent - The object that will respond to the handler.
      * @public
+     * @example
+     * ```
+     * /// Register a handler for the 'EventReceiving|MessageReceiving|FilesSending|MessageSending' event
+     * App.Comet.RegisterHandler('EventReceiving', myHandler, this);
+     * ```
      */
     RegisterHandler(handlerName, handler, respondent) {
         if(!this.__specificHandlers[handlerName]) {
@@ -356,6 +372,11 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {String} handlerName - The name of the event to register the handler for.
      * @param {Function} handler - The function to be called when the event occurs.
      * @public
+     * @example
+     * ```
+     * /// Unregister a handler for the 'EventReceiving|MessageReceiving|FilesSending|MessageSending' event
+     * App.Comet.UnRegisterHandler('EventReceiving', myHandler, this);
+     * ```
      */
     UnRegisterHandler(handlerName, handler, respondent) {
         if(this.__specificHandlers[handlerName]) {
@@ -375,6 +396,11 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @returns {Promise<Array>} - An array of responses from the handlers.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Dispatch handlers for the 'EventReceiving|MessageReceiving|FilesSending|MessageSending' event
+     * App.Comet.DispatchHandlers('MessageReceiving', {key: 'value'});
+     * ```
      */
     async DispatchHandlers(handlerName, args) {
 
@@ -424,6 +450,11 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {string} channelGuid - The GUID of the channel to subscribe to.
      * @param {Object} params - Additional parameters for the subscription.
      * @public
+     * @example
+     * ```
+     * /// Subscribe to a channel with GUID 'channel-guid'
+     * App.Comet.Subscribe('channel-guid', {param1: 'value1', param2: 'value2'});
+     * ```
      */
     Subscribe(channelGuid, params = {}) {
         this.Command(channelGuid, 'subscribe', params);        
@@ -434,6 +465,11 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {string} channelGuid - The GUID of the channel to unsubscribe from.
      * @param {Object} params - Additional parameters for the unsubscription.
      * @public
+     * @example
+     * ```
+     * /// Unsubscribe from a channel with GUID 'channel-guid'
+     * App.Comet.Unsubscribe('channel-guid', {param1: 'value1', param2: 'value2'});
+     * ```
      */
     Unsubscribe(channelGuid, params = {}) {
         this.Command(channelGuid, 'unsubscribe', params);
@@ -551,6 +587,11 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {object} respondent - The object that will be the context (`this`) for the handler.
      * @returns {void}
      * @public
+     * @example
+     * ```
+     * /// Register a handler for the 'some-event' event
+     * App.Comet.WaitForEvent('some-event', (message) => { console.log(message); }, this);
+     * ```
      */
     UnwaitForEvent(eventName, handler, respondent) {
         if(!this.__eventHandlers[eventName]) {
@@ -575,6 +616,11 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {object} args - Additional arguments to pass to the handler.
      * @returns {void}
      * @public
+     * @example
+     * ```
+     * /// Register a handler for the 'some-event' event
+     * App.Comet.WaitForEvent('some-event', (message) => { console.log(message); }, this, {additional: 'data'});
+     * ```
      */
     WaitForEvent(eventName, handler, respondent, args = {}) {
         if(!this.__eventHandlers[eventName]) {
@@ -590,6 +636,11 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @param {Colibri.Common.CometMessage} msg - The message containing the event information.
      * @returns {Promise<void>}
      * @public
+     * @example
+     * ```
+     * /// Dispatch an event to all registered handlers
+     * App.Comet.DispatchEvent(msg);
+     * ```
      */
     async DispatchEvent(msg) {
         if(this.__eventHandlers[msg.action]) {
@@ -615,6 +666,11 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @returns {Promise}
      * @async
      * @public
+     * @example
+     * ```
+     * /// Add a local message
+     * App.Comet.AddLocalMessage(message);
+     * ```
      */
     AddLocalMessage(message) {
         return new Promise((resolve, reject) => {            
@@ -647,6 +703,15 @@ Colibri.Web.Comet = class extends Colibri.Events.Dispatcher {
      * @returns {Promise<Array<Colibri.Common.CometMessage>>}
      * @async
      * @public
+     * @example
+     * ```
+     * /// Get messages with specific options
+     * App.Comet.GetMessages({filter: {from: 'user-guid'}}).then(messages => { 
+     *      console.log(messages); 
+     * }).catch(error => { 
+     *      console.error(error); 
+     * });
+     * ```
      */
     GetMessages(options = {}) {
         return new Promise((resolve, reject) => {

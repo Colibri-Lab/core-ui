@@ -98,9 +98,8 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
 
     /**
      * Registers events for the device.
-     * @private
+     * @protected
      */
-    /** @protected */
     _registerEvents() {
         this.RegisterEvent('OrientationChanged', false, 'Когда ориентация была изменена');
         this.RegisterEvent('ThemeChanged', false, 'Когда тема изменена');
@@ -297,6 +296,14 @@ Colibri.Devices.Device = class extends Colibri.Events.Dispatcher {
      * Clear notifications
      * @public
      * @async
+     * @example
+     * ```
+     * App.Device.ClearNotifications().then(() => {
+     *     console.log('Notifications cleared successfully.');
+     * }).catch((error) => {
+     *     console.error('Failed to clear notifications:', error);
+     * });
+     * ```
      */
     ClearNotifications() {
         this._pushNotifications = this.Plugin('firebase.messaging');
