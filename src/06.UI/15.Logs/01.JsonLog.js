@@ -4,6 +4,16 @@
  * ```
  * const log = new Colibri.UI.Logs.JsonLog('log', parent);
  * log.value = { message: 'Hello, world!', level: 'info' };
+ * 
+ * /// using html template
+ * <Colibri.UI.Logs.JsonLog name="log" value="{ message: 'Hello, world!', level: 'info' }" />
+ * /// or
+ * <Logs.JsonLog name="log" value="{ message: 'Hello, world!', level: 'info' }" />
+ * /// then in template js file 
+ * /// in constructor
+ * this._log = this.Children('log');
+ * /// then in some method
+ * this._log.value = { message: 'Hello, world!', level: 'info' };
  * ```
  * @class
  * @extends Colibri.UI.List

@@ -72,6 +72,24 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * @param {Array} structure - An array of table structures to create.
      * @returns {Promise} A promise that resolves when the database is created.
      * @public
+     * @example
+     * ```
+     * /// Create an empty database with the specified structure
+     * const structure = [
+     *     {
+     *         name: 'users',
+     *         fields: {
+     *             id: { class: 'int' },
+     *             name: { class: 'string' },
+     *             email: { class: 'string' }
+     *         },
+     *         additional: [],
+     *         except: []
+     *     }
+     * ];
+     * await sqliteInstance.CreateEmptyDatabase(structure);
+     * console.log('Empty database created with the specified structure');
+     * ```
      */
     CreateEmptyDatabase(structure) {
         structure = this._convertStructure(structure);
@@ -116,6 +134,18 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} A promise that resolves when the database is opened.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Open the SQLite database from a base64 string
+     * const base64String = '...'; // Your base64 string representing the database
+     * await sqliteInstance.Open(base64String);
+     * console.log('Database opened from base64 string');
+     * 
+     * /// Open the SQLite database from a Blob object
+     * const blob = new Blob([...], { type: 'application/octet-stream' });
+     * await sqliteInstance.Open(blob);
+     * console.log('Database opened from Blob object');
+     * ```
      */
     Open(base64OrBlob) {
         return new Promise((resolve, reject) => {
@@ -153,6 +183,12 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
     /**
      * Closes the SQLite database connection if it is open.
      * @public
+     * @example
+     * ```
+     * /// Close the SQLite database connection
+     * sqliteInstance.Close();
+     * console.log('Database connection closed');
+     * ```
      */
     Close() {
         if (this._db) {
@@ -216,6 +252,17 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} A promise that resolves when the rows are inserted.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Insert multiple rows into a table
+     * const table = 'users';
+     * const data = [
+     *     { id: 1, name: 'John Doe', email: 'john.doe@example.com' },
+     *     { id: 2, name: 'Jane Smith', email: 'jane.smith@example.com' }
+     * ];
+     * await sqliteInstance.Insert(table, data);
+     * console.log('Rows inserted into the table');
+     * ```
      */
     Insert(table, data) {
         if (!data.length) return Promise.resolve();
@@ -250,6 +297,15 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} A promise that resolves when the rows are updated.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Update rows in a table based on a condition
+     * const table = 'users';
+     * const data = { name: 'Updated Name', email: 'updated.email@example.com' };
+     * const condition = 'id = 1';
+     * await sqliteInstance.Update(table, data, condition);
+     * console.log('Rows updated in the table');
+     * ```
      */
     Update(table, data, condition) {
         const fields = Object.keys(data);
@@ -269,6 +325,14 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} A promise that resolves when the rows are deleted.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Delete rows from a table based on a condition
+     * const table = 'users';
+     * const condition = 'id = 1';
+     * await sqliteInstance.Delete(table, condition);
+     * console.log('Rows deleted from the table');
+     * ```
      */
     Delete(table, condition = '') {
         const sql = `DELETE FROM "${table}"${condition ? ' WHERE ' + condition : ''}`;
@@ -284,6 +348,14 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * @returns {Promise<Array>} A promise that resolves with an array of result objects.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Execute a SQL query with parameters
+     * const query = 'SELECT * FROM users WHERE id = [[id:integer]]';
+     * const params = { id: 1 };
+     * const result = await sqliteInstance.Query(query, params);
+     * console.log('Query result:', result);
+     * ```
      */
     Query(query, params = {}) {
         const d = this._prepareQuery(query, params);
@@ -307,6 +379,13 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * @returns {Promise<Array>} A promise that resolves with an array of all rows in the table.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Load all rows from a table
+     * const table = 'users';
+     * const result = await sqliteInstance.LoadAll(table);
+     * console.log('Load all result:', result);
+     * ```
      */
     LoadAll(table) {
         return this.Query(`SELECT * FROM "${table}"`);
@@ -320,6 +399,15 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * @returns {Promise<Array>} A promise that resolves with an array of filtered rows.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Load rows from a table by filters
+     * const table = 'users';
+     * const filters = { id: 1 };
+     * const order = 'name ASC';
+     * const result = await sqliteInstance.LoadBy(table, filters, order);
+     * console.log('Load by result:', result);
+     * ```
      */
     LoadBy(table, filters, order = '') {
         const d = this._convertFilters(filters);
@@ -338,6 +426,18 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * @returns {Promise<Array>} A promise that resolves with an array of histogram bin objects, each containing start, end, and count properties.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Perform a histogram aggregation on a table field
+     * const table = 'users';
+     * const filters = { active: 1 };
+     * const field = 'age';
+     * const step = 10;
+     * const min = 0;
+     * const max = 100;
+     * const result = await sqliteInstance.HistogramByField(table, filters, field, step, max, min);
+     * console.log('Histogram result:', result);
+     * ```
      */
     HistogramByField(table, filters, field, step, max, min) {
         filters = Object.cloneRecursive(filters);
@@ -383,6 +483,12 @@ Colibri.Storages.Sqlite = class extends Colibri.Events.Dispatcher {
      * @returns {Promise<Blob>} A promise that resolves with a Blob representing the exported database.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Export the current state of the database as a Blob object
+     * const blob = await sqliteInstance.Export();
+     * console.log('Exported database as Blob:', blob);
+     * ```
      */
     Export() {
         return new Promise((resolve, reject) => {

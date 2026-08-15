@@ -9,6 +9,14 @@ Colibri.Common.NumToText = class {
      * Supports integers up to billions
      * @static
      * @public
+     * @example
+     * ```
+     * const text = Colibri.Common.NumToText.numberToText(123456789);
+     * console.log(text); // Outputs: "сто двадцать три миллиона четыреста пятьдесят шесть тысяч семьсот восемьдесят девять"
+     * ```
+     * @param {number} num - The number to convert.
+     * @returns {string} - The Russian words representation of the number.
+     * @throws {Error} - Throws an error if the input is not a finite integer.
      */
     static numberToText(num) {
         if (typeof num !== "number" || !Number.isFinite(num)) {

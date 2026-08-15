@@ -36,6 +36,27 @@ Colibri.Common.Scrolling = class {
      * @returns {Colibri.Common.Scrolling} A new instance of Colibri.Common.Scrolling.
      * @static
      * @public
+     * @example
+     * ```
+     * const scrollingInstance = Colibri.Common.Scrolling.Create(document.getElementById('myElement'));
+     * console.log(scrollingInstance); // Outputs: Colibri.Common.Scrolling instance
+     * /// Create a scrolling instance for an element with the ID 'myElement'
+     * const myElement = document.getElementById('myElement');
+     * const scrollingInstance = Colibri.Common.Scrolling.Create(myElement);
+     * console.log('Scrolling instance created for:', myElement);
+     * /// Create a scrolling instance and enable it
+     * const scrollingInstance = Colibri.Common.Scrolling.Create(document.getElementById('myElement'));
+     * scrollingInstance.Enable();
+     * console.log('Scrolling enabled for myElement');
+     * /// Create a scrolling instance and disable it
+     * const scrollingInstance = Colibri.Common.Scrolling.Create(document.getElementById('myElement'));
+     * scrollingInstance.Disable();
+     * console.log('Scrolling disabled for myElement');
+     * /// Dispose of a scrolling instance
+     * const scrollingInstance = Colibri.Common.Scrolling.Create(document.getElementById('myElement'));
+     * scrollingInstance.Dispose();
+     * console.log('Scrolling instance disposed');
+     * ```
      */
     static Create(element) {
         return new Colibri.Common.Scrolling(element);
@@ -68,6 +89,12 @@ Colibri.Common.Scrolling = class {
     /**
      * Disables scrolling behavior on the element.
      * @public
+     * @example
+     * ```
+     * const scrollingInstance = Colibri.Common.Scrolling.Create(document.getElementById('myElement'));
+     * scrollingInstance.Disable();
+     * console.log('Scrolling disabled for myElement');
+     * ```
      */
     Disable() {
         this._element.addEventListener('DOMMouseScroll', this.__preventDefault, false); // older FF
@@ -79,6 +106,12 @@ Colibri.Common.Scrolling = class {
     /**
      * Enables scrolling behavior on the element.
      * @public
+     * @example
+     * ```
+     * const scrollingInstance = Colibri.Common.Scrolling.Create(document.getElementById('myElement'));
+     * scrollingInstance.Enable();
+     * console.log('Scrolling enabled for myElement');
+     * ```
      */
     Enable() {
         this._element.removeEventListener('DOMMouseScroll', this.__preventDefault, false);

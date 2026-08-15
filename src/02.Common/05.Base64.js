@@ -18,6 +18,11 @@ Colibri.Common.Base64 = class {
      * @returns {string} The Base64 encoded string.
      * @static
      * @public
+     * @example
+     * ```
+     * const encoded = Colibri.Common.Base64.encode('Hello, World!');
+     * console.log(encoded); // Outputs: SGVsbG8sIFdvcmxkIQ==
+     * ```
      */
     static encode(_input) {
         var output = "";
@@ -56,6 +61,11 @@ Colibri.Common.Base64 = class {
      * @returns {string} The decoded string.
      * @public
      * @static
+     * @example
+     * ```
+     * const decoded = Colibri.Common.Base64.decode('SGVsbG8sIFdvcmxkIQ==');
+     * console.log(decoded); // Outputs: Hello, World!
+     * ```
      */
     static decode(_input) {
         var output = "";

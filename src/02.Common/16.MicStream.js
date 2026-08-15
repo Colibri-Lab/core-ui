@@ -62,6 +62,14 @@ Colibri.Common.MicStream = class extends Colibri.Events.Dispatcher {
      * @throws {Error} If there is an error loading the devices.
      * @async
      * @public
+     * @example
+     * ```
+     * Colibri.Common.MicStream.loadDevices().then(devices => {
+     *     console.log('Available microphone devices:', devices);
+     * }).catch(error => {
+     *     console.error('Error loading microphone devices:', error);
+     * });
+     * ```
      */
     async loadDevices() {
         const list = await navigator.mediaDevices.enumerateDevices();
@@ -77,6 +85,15 @@ Colibri.Common.MicStream = class extends Colibri.Events.Dispatcher {
      * @throws {Error} If there is an error starting the microphone stream.
      * @public
      * @async
+     * @example
+     * ```
+     * const micStream = new Colibri.Common.MicStream({ fftSize: 2048 });
+     * micStream.AddHandler('DataReceived', (event, args) => {
+     *     const frequencyData = args.data;
+     *     /// Handle the received frequency data
+     * });
+     * micStream.start(); // Start capturing audio data
+     * ```
      */
     async start(deviceId = null) {
         this.stop();
@@ -127,6 +144,16 @@ Colibri.Common.MicStream = class extends Colibri.Events.Dispatcher {
      * @returns {void}
      * @description This method stops the microphone stream and releases any associated resources.
      * @public
+     * @example
+     * ```
+     * const micStream = new Colibri.Common.MicStream({ fftSize: 2048 });
+     * micStream.start(); // Start capturing audio data 
+     * /// Stop capturing audio data after some time
+     * setTimeout(() => {
+     *     micStream.stop();
+     *     console.log('Microphone stream stopped');
+     * }, 5000);
+     * ```
      */
     stop() {
         Colibri.Common.StopTimer('mictimer');
@@ -148,6 +175,16 @@ Colibri.Common.MicStream = class extends Colibri.Events.Dispatcher {
      * The frequency data is returned as a Uint8Array, which can be used for further processing or visualization.
      * @returns {Uint8Array|null} - A Uint8Array containing the frequency data, or null if the analyser is not initialized.
      * @public
+     * @example
+     * ```
+     * const micStream = new Colibri.Common.MicStream({ fftSize: 2048 });
+     * micStream.start(); // Start capturing audio data
+     * /// Get the frequency data after some time
+     * setTimeout(() => {
+     *     const frequencyData = micStream.getFrequencyData();
+     *     console.log('Frequency data:', frequencyData);
+     * }, 2000);
+     * ```
      */
     getFrequencyData() {
         if (this._analyser && this._dataArray) {
@@ -164,6 +201,16 @@ Colibri.Common.MicStream = class extends Colibri.Events.Dispatcher {
      * @param {string} deviceId - The ID of the microphone device to use.
      * @returns {void}
      * @public
+     * @example
+     * ```
+     * const micStream = new Colibri.Common.MicStream({ fftSize: 2048 });
+     * micStream.start(); // Start capturing audio data
+     * /// Change the microphone device after some time
+     * setTimeout(() => {
+     *     micStream.setDevice('new-device-id');
+     *     console.log('Microphone device changed');
+     * }, 3000);
+     * ```
      */
     setDevice(deviceId) {
         this._options.deviceId = deviceId;

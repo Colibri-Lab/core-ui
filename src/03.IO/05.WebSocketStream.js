@@ -2,6 +2,29 @@
  * Provides a WebSocket stream with chunked data handling and custom formatting.
  * @class
  * @memberof Colibri.IO
+ * @extends Destructable
+ * @example 
+ * ```
+ * /// Create a new WebSocketStream instance
+ * const stream = new Colibri.IO.WebSocketStream(
+ *     'myStream',
+ *     'ws://example.com/socket',
+ *     1024, // chunk size in bytes
+ *     [ // chunk formatter layout
+ *         [8, 'timestamp', 'FDate'],
+ *         [4, 'value', 'Float32']
+ *     ],
+ *     (chunks, streamInstance) => {
+ *         console.log('Received chunks:', chunks);
+ *     },
+ *     (dataType, streamInstance) => {
+ *         console.log('Data type changed to:', dataType);
+ *     }
+ * );
+ * 
+ * /// Disconnect the WebSocket stream when done
+ * stream.disconnect(); 
+ * ```
  */
 Colibri.IO.WebSocketStream = class extends Destructable {
 

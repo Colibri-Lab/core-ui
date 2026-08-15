@@ -7233,6 +7233,25 @@ Element.prototype.delete = function () {
 
 };
 
+if (!XMLHttpRequest.prototype.sendAsBinary) {
+    /**
+     * Sends data as binary data 
+     * Defines the object for making requests.
+     * If the XMLHttpRequest object doesn't have the sendAsBinary method, it adds it.
+     * @param {string} sData data to send
+     * @prototypeof XMLHttpRequest
+     * @method
+     * @public
+     */
+    XMLHttpRequest.prototype.sendAsBinary = function (sData) {
+        var nBytes = sData.length, ui8Data = new Uint8Array(nBytes);
+        for (var nIdx = 0; nIdx < nBytes; nIdx++) {
+            ui8Data[nIdx] = sData.charCodeAt(nIdx) & 0xff;
+        }
+        this.send(ui8Data);
+    };
+}
+
 const oldStringifyMethod = JSON.stringify;
 JSON.stringify = function (value, replacer, space, escapeUnicode = false) {
     let v = oldStringifyMethod(value, replacer, space);

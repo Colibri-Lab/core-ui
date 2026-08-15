@@ -45,6 +45,19 @@ Colibri.UI.Rgb = class {
      * @param {Number} b Blue color (0, 256)
      * @param {Number} a Opaque (0, 1)
      * @returns {Colibri.UI.Rgb}
+     * @public
+     * @example
+     * ```
+     * const color = Colibri.UI.Rgb.Create(255, 0, 0, 255);
+     * console.log(color.hex); // #ff0000
+     * console.log(color.hue); // 0
+     * console.log(color.hsl); // {h: 0, s: 1, l: 0.5}
+     * console.log(color.hsv); // {h: 0, s: 1, v: 1}
+     * console.log(color.red); // 255
+     * console.log(color.green); // 0
+     * console.log(color.blue); // 0
+     * console.log(color.alpha); // 255
+     * ```
      */
     static Create(r = 0, g = 0, b = 0, a = 255) {
         return new Colibri.UI.Rgb(r, g, b, a);
@@ -54,6 +67,19 @@ Colibri.UI.Rgb = class {
      * Creates RGB color from object
      * @param {object} obj Object that contains {r,g,b,a} properties 
      * @returns {Colibri.UI.Rgb}
+     * @public
+     * @example
+     * ```
+     * const color = Colibri.UI.Rgb.CreateFromObject({r: 255, g: 0, b: 0, a: 255});
+     * console.log(color.hex); // #ff0000
+     * console.log(color.hue); // 0
+     * console.log(color.hsl); // {h: 0, s: 1, l: 0.5}
+     * console.log(color.hsv); // {h: 0, s: 1, v: 1}
+     * console.log(color.red); // 255
+     * console.log(color.green); // 0
+     * console.log(color.blue); // 0
+     * console.log(color.alpha); // 255
+     * ```
      */
     fromObject(obj) {
         this._r = obj.r;
@@ -67,6 +93,19 @@ Colibri.UI.Rgb = class {
      * Creates RGB color from hex color
      * @param {string} hex HEX color presentation 
      * @returns {Colibri.UI.Rgb}
+     * @public
+     * @example
+     * ```
+     * const color = Colibri.UI.Rgb.CreateFromHex('#ff0000');
+     * console.log(color.hex); // #ff0000
+     * console.log(color.hue); // 0
+     * console.log(color.hsl); // {h: 0, s: 1, l: 0.5}
+     * console.log(color.hsv); // {h: 0, s: 1, v: 1}
+     * console.log(color.red); // 255
+     * console.log(color.green); // 0
+     * console.log(color.blue); // 0
+     * console.log(color.alpha); // 255
+     * ```
      */
     fromHex(hex) {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]*?)$/i.exec(hex);
@@ -92,6 +131,19 @@ Colibri.UI.Rgb = class {
      * @param   {Number}  s       The saturation
      * @param   {Number}  l       The lightness
      * @returns {Colibri.UI.Rgb}
+     * @public
+     * @example
+     * ```
+     * const color = Colibri.UI.Rgb.CreateFromHSL(0, 1, 0.5);
+     * console.log(color.hex); // #ff0000
+     * console.log(color.hue); // 0
+     * console.log(color.hsl); // {h: 0, s: 1, l: 0.5}
+     * console.log(color.hsv); // {h: 0, s: 1, v: 1}
+     * console.log(color.red); // 255
+     * console.log(color.green); // 0
+     * console.log(color.blue); // 0
+     * console.log(color.alpha); // 255
+     * ```
      */
     fromHSL(h,s,l) {
         var r, g, b;
@@ -132,6 +184,19 @@ Colibri.UI.Rgb = class {
      * @param   {Number}  s       The saturation
      * @param   {Number}  v       The value
      * @return  {Colibri.UI.Rgb}           The RGB representation
+     * @public
+     * @example
+     * ```
+     * const color = Colibri.UI.Rgb.CreateFromHSV(0, 1, 1);
+     * console.log(color.hex); // #ff0000
+     * console.log(color.hue); // 0
+     * console.log(color.hsl); // {h: 0, s: 1, l: 0.5}
+     * console.log(color.hsv); // {h: 0, s: 1, v: 1}
+     * console.log(color.red); // 255
+     * console.log(color.green); // 0
+     * console.log(color.blue); // 0
+     * console.log(color.alpha); // 255
+     * ```
      */
     fromHSV(h, s, v) {
 
@@ -174,6 +239,19 @@ Colibri.UI.Rgb = class {
      * @param   {Number}  s       The saturation
      * @param   {Number}  v       The value
      * @return  {Colibri.UI.Rgb}           The RGB representation
+     * @public
+     * @example
+     * ```
+     * const color = Colibri.UI.Rgb.CreateFromHue(0);
+     * console.log(color.hex); // #ff0000
+     * console.log(color.hue); // 0
+     * console.log(color.hsl); // {h: 0, s: 1, l: 0.5}
+     * console.log(color.hsv); // {h: 0, s: 1, v: 1}
+     * console.log(color.red); // 255
+     * console.log(color.green); // 0
+     * console.log(color.blue); // 0
+     * console.log(color.alpha); // 255
+     * ```
      */
     fromHue(hue) {
         this.fromHSV(hue, 1, 1);
@@ -256,61 +334,63 @@ Colibri.UI.Rgb = class {
 
     /**
      * Returns Red component of current color
-     * @readonly
+     * @type {Number}
      */
     get red() {
         return this._r;
     }
     /**
      * Returns Green component of corrent color
-     * @readonly
+     * @type {Number}
      */
     get green() {
         return this._g;
     }
     /**
      * Returns Blue component of corrent color
-     * @readonly
+     * @type {Number}
      */
     get blue() {
         return this._g;
     }
     /**
      * Returns Alpha channel of color
+     * @type {Number}
      */
     get alpha() {
         return this._a;
     }
     /**
      * Sets Alpha channel of color
+     * @type {Number}
      */
     set alpha(value) {
         this._a = value;
     }
     /**
      * Returns Hue
-     * @readonly
+     * @type {Number}
      */
     get hue() {
         return this._getHue();
     }
     /**
      * Returns Hex representation of color
-     * @readonly
+     * @type {String}
      */
     get hex() {
         return this._toHex();
     }
     /**
      * Returns HSL representation of color
-     * @readonly
+     * @type {object}
      */
     get hsl() {
         return this._getHSL();
     }
     /**
      * Returns HSV representation of color
-     * @readonly
+     * @type {object}
      */
     get hsv() {
         return this._getHSV();

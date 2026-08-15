@@ -41,6 +41,15 @@ Colibri.Common.Wasm = class extends Colibri.Events.Dispatcher {
      * @throws {Error} If there is an error loading the WebAssembly module or if the response status is not 200.
      * @async
      * @public
+     * @example
+     * ```
+     * const wasmModule = new Colibri.Common.Wasm('path/to/module.wasm');
+     * wasmModule.Load(1024, { someConfig: true }).then(() => {
+     *     console.log('WASM module loaded successfully');
+     * }).catch((error) => {
+     *     console.error('Failed to load WASM module:', error);
+     * });
+     * ```
      */
     async Load(memoryByteSize = 0, config = {}) {
 

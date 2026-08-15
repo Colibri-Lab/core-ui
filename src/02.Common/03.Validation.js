@@ -12,6 +12,17 @@ Colibri.Common.Validation = class {
      * @returns {boolean} - Indicates whether the БИК is valid.
      * @static
      * @public
+     * @example
+     * ```
+     * /// Validate a BIC
+     * const error = {};
+     * const isValid = Colibri.Common.Validation.ValidateBik('044525225', error);
+     * if (isValid) {
+     *     console.log('BIC is valid');
+     * } else {
+     *     console.error('BIC is invalid:', error.message);
+     * }
+     * ```
      */
     static ValidateBik(bik, error) {
         var result = false;
@@ -42,6 +53,17 @@ Colibri.Common.Validation = class {
      * @returns {boolean} - Indicates whether the ИНН is valid.
      * @static
      * @public
+     * @example
+     * ```
+     * /// Validate an INN
+     * const error = {};
+     * const isValid = Colibri.Common.Validation.ValidateInn('7707083893', error);
+     * if (isValid) {
+     *     console.log('INN is valid');
+     * } else {
+     *     console.error('INN is invalid:', error.message);
+     * }
+     * ```
      */
     static ValidateInn(inn, error) {
         error = error ?? {};
@@ -98,6 +120,17 @@ Colibri.Common.Validation = class {
      * @returns {boolean} - Indicates whether the КПП is valid.
      * @static
      * @public
+     * @example
+     * ```
+     * /// Validate a KPP
+     * const error = {};
+     * const isValid = Colibri.Common.Validation.ValidateKpp('770301001', error);
+     * if (isValid) {
+     *     console.log('KPP is valid');
+     * } else {
+     *     console.error('KPP is invalid:', error.message);
+     * }
+     * ```
      */
     static ValidateKpp(kpp, error) {
         var result = false;
@@ -129,6 +162,17 @@ Colibri.Common.Validation = class {
      * @returns {boolean} - Indicates whether the КС is valid.
      * @static
      * @public
+     * @example
+     * ```
+     * /// Validate a KS with associated BIK
+     * const error = {};
+     * const isValid = Colibri.Common.Validation.ValidateKs('30101810400000000225', '044525225', error);
+     * if (isValid) {
+     *     console.log('KS is valid');
+     * } else {
+     *     console.error('KS is invalid:', error.message);
+     * }
+     * ```
      */
     static ValidateKs(ks, bik, error) {
         var result = false;
@@ -172,6 +216,17 @@ Colibri.Common.Validation = class {
      * @returns {boolean} - Indicates whether the OGRN is valid.
      * @static
      * @public
+     * @example
+     * ```
+     * /// Validate an OGRN
+     * const error = {};
+     * const isValid = Colibri.Common.Validation.ValidateOgrn('1027700132195', error);
+     * if (isValid) {
+     *     console.log('OGRN is valid');
+     * } else {
+     *     console.error('OGRN is invalid:', error.message);
+     * }
+     * ```
      */
     static ValidateOgrn(ogrn, error) {
         var result = false;
@@ -208,6 +263,17 @@ Colibri.Common.Validation = class {
      * @returns {boolean} - Indicates whether the OGRNIP is valid.
      * @static
      * @public
+     * @example
+     * ```
+     * /// Validate an OGRNIP
+     * const error = {};
+     * const isValid = Colibri.Common.Validation.ValidateOgrnip('304500116000157', error);
+     * if (isValid) {
+     *     console.log('OGRNIP is valid');
+     * } else {
+     *     console.error('OGRNIP is invalid:', error.message);
+     * }
+     * ```
      */
     static ValidateOgrnip(ogrnip, error) {
         var result = false;
@@ -245,6 +311,17 @@ Colibri.Common.Validation = class {
      * @returns {boolean} - Indicates whether the RS is valid.
      * @static
      * @public
+     * @example
+     * ```
+     * /// Validate an RS with associated BIK
+     * const error = {};
+     * const isValid = Colibri.Common.Validation.ValidateRs('40702810900000000001', '044525225', error);
+     * if (isValid) {
+     *     console.log('RS is valid');
+     * } else {
+     *     console.error('RS is invalid:', error.message);
+     * }
+     * ```
      */
     static ValidateRs(rs, bik, error) {
         var result = false;
@@ -288,6 +365,17 @@ Colibri.Common.Validation = class {
      * @returns {boolean} - Indicates whether the SNILS is valid.
      * @static
      * @public
+     * @example
+     * ```
+     * /// Validate a SNILS
+     * const error = {};
+     * const isValid = Colibri.Common.Validation.ValidateSnils('112-233-445 95', error);
+     * if (isValid) {
+     *     console.log('SNILS is valid');
+     * } else {
+     *     console.error('SNILS is invalid:', error.message);
+     * }
+     * ```
      */
     static ValidateSnils(snils, error) {
         var result = false;

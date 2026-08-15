@@ -2,6 +2,7 @@
  * @classdesc Drag process worker
  * @class
  * @memberof Colibri.UI
+ * @ignore
  */
 Colibri.UI.WaterfallBuffer = class extends Destructable {
 

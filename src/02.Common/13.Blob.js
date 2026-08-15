@@ -41,8 +41,11 @@ Colibri.Common.Blob = class {
      * @param {string} type - The MIME type of the resulting Blob.
      * @returns {Blob} - The resulting Blob containing the text string.
      * @example
+     * ```
      * const text = "Hello, world!";
      * const blob = Colibri.Common.Blob.Text2Blob(text, 'text/plain');
+     * console.log(blob); // Outputs: Blob { size: 13, type: "text/plain" }
+     * ```
      */
     static Text2Blob(text, type) {
         return new Blob([text], { type: type });

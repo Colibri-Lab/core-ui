@@ -35,6 +35,11 @@ Colibri.Events.Source = class extends Destructable {
      * @param {Object} repsondent The respondent object that will handle the event.
      * @param {string} eventName The name of the event to register for.
      * @public
+     * @example
+     * ```
+     * const source = new Colibri.Events.Source('example.com', 8080);
+     * component.RegisterEvent('myEvent', myHandler, source); /// actualy registered event on event source
+     * ```
      */
     register(repsondent, eventName) {
         if(!this._handlers[eventName]) {

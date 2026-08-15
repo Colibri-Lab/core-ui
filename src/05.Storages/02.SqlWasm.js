@@ -79,6 +79,21 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
      * @param {Array} structure - The structure of the database tables.
      * @returns {Promise} A promise that resolves when the database is created.
      * @public
+     * @example
+     * ```
+     * const structure = [
+     *     {
+     *         name: 'users',
+     *         fields: {
+     *             id: { class: 'int' },
+     *             name: { class: 'string' },
+     *             email: { class: 'string' }
+     *         },
+     *         additional: [],
+     *         except: []
+     *     }
+     * ];
+     * ```
      */
     CreateEmptyDatabase(structure) {
 
@@ -107,6 +122,20 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
      * @param {Object} storage - The storage structure defining the table.
      * @returns {Promise} A promise that resolves when the table is created.
      * @public
+     * @example
+     * ```
+     * const storage = {
+     *     name: 'users',
+     *     fields: {
+     *         id: { class: 'int' },
+     *         name: { class: 'string' },
+     *         email: { class: 'string' }
+     *     },
+     *     additional: [],
+     *     except: []
+     * };
+     * await sqlWasmInstance.Create(storage);
+     * ```
      */
     Create(storage) {
         return this._db.run(this._createTable(storage));
@@ -174,6 +203,13 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} A promise that resolves when the database is opened.
      * @public
      * @async
+     * @example
+     * ```
+     * /// Open a database from bytes
+     * const bytes = new Uint8Array([...]); // Your database bytes here
+     * await sqlWasmInstance.OpenBytes(bytes);
+     * console.log('Database opened from bytes');
+     * ```
      */
     OpenBytes(bytes) {
         return new Promise((resolve, reject) => {
@@ -188,6 +224,19 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
      * @param {string|Blob} base64 - The base64 string or Blob representing the database.
      * @returns {Promise} A promise that resolves when the database is opened.
      * @public
+     * @async
+     * @example
+     * ```
+     * /// Open a database from a base64 string
+     * const base64 = '...'; // Your base64 string here
+     * await sqlWasmInstance.Open(base64);
+     * console.log('Database opened from base64');
+     * 
+     * /// Open a database from a Blob
+     * const blob = new Blob([...]); // Your Blob here
+     * await sqlWasmInstance.Open(blob);
+     * console.log('Database opened from Blob');
+     * ```
      */
     Open(base64) {
         return new Promise((resolve, reject) => {
@@ -209,6 +258,12 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
     /**
      * Closes the database connection.
      * @public
+     * @example
+     * ```
+     * /// Close the database connection
+     * sqlWasmInstance.Close();
+     * console.log('Database connection closed');
+     * ```
      */
     Close() {
         this._db.close();
@@ -220,6 +275,16 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
      * @param {Array} data
      * @returns {Promise}
      * @public
+     * @example
+     * ```
+     * /// Insert data into a table
+     * const table = 'users';
+     * const data = [
+     *     { id: 1, name: 'John Doe', email: 'john.doe@example.com' },
+     *     { id: 2, name: 'Jane Smith', email: 'jane.smith@example.com' }
+     * ];
+     * await sqlWasmInstance.Insert(table, data);
+     * ```
      */
     Insert(table, data) {
         if (data.length == 0) {
@@ -264,6 +329,14 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
      * @param {Object} data
      * @param {String} condition
      * @public
+     * @example
+     * ```
+     * /// Update data in a table
+     * const table = 'users';
+     * const data = { name: 'John Doe', email: 'john.doe@example.com' };
+     * const condition = 'id = 1';
+     * await sqlWasmInstance.Update(table, data, condition);
+     * ```
      */
     Update(table, data, condition) {
         const fields = Object.keys(data);
@@ -282,6 +355,13 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
      * @param {String} table - The name of the table from which to delete data.
      * @param {String} [condition=''] - The condition for deleting data (optional).
      * @public
+     * @example
+     * ```
+     * /// Delete data from a table
+     * const table = 'users';
+     * const condition = 'id = 1';
+     * await sqlWasmInstance.Delete(table, condition);
+     * ```
      */
     Delete(table, condition = '') {
         try {
@@ -298,6 +378,13 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
      * @param {String} table - The name of the table to check.
      * @returns {boolean} - Returns true if the table exists, false otherwise.
      * @public
+     * @example
+     * ```
+     * /// Check if a table exists
+     * const table = 'users';
+     * const exists = sqlWasmInstance.TableExists(table);
+     * console.log('Table exists:', exists);
+     * ```
      */
     TableExists(table) {
         try {
@@ -315,6 +402,14 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
      * @param {Object} params
      * @returns {Array} 
      * @public
+     * @example
+     * ```
+     * /// Execute a query
+     * const query = 'SELECT * FROM users WHERE id = [[id:integer]]';
+     * const params = { id: 1 };
+     * const result = sqlWasmInstance.Query(query, params);
+     * console.log('Query result:', result);
+     * ```
      */
     Query(query, params) {
         // console.log(query, params);
@@ -338,6 +433,13 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
      * @param {String} table
      * @returns {Array}
      * @public
+     * @example
+     * ```
+     * /// Load all data from a table
+     * const table = 'users';
+     * const result = sqlWasmInstance.LoadAll(table);
+     * console.log('Load all result:', result);
+     * ```
      */
     LoadAll(table) {
         const query = 'SELECT * FROM "' + table + '"';
@@ -351,6 +453,15 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
      * @param {String} order
      * @returns {Array}
      * @public
+     * @example
+     * ```
+     * /// Load data from a table by filters
+     * const table = 'users';
+     * const filters = { id: 1 };
+     * const order = 'name ASC';
+     * const result = sqlWasmInstance.LoadBy(table, filters, order);
+     * console.log('Load by result:', result);
+     * ```
      */
     LoadBy(table, filters, order = '') {
         const d = this._convertFilters(filters);
@@ -368,6 +479,18 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
      * @param {Number|Date} min - The minimum value for the histogram range.
      * @returns {Array} An array of histogram bins with start, end, and count properties.
      * @public
+     * @example
+     * ```
+     * /// Create a histogram of data in a table
+     * const table = 'users';
+     * const filters = { active: true };
+     * const field = 'age';
+     * const step = 5;
+     * const max = 100;
+     * const min = 0;
+     * const result = sqlWasmInstance.HistogramByField(table, filters, field, step, max, min);
+     * console.log('Histogram result:', result);
+     * ```
      */
     HistogramByField(table, filters, field, step, max, min) {
         filters = Object.cloneRecursive(filters);
@@ -413,6 +536,12 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
      * Exports the current state of the database as a binary array.
      * @returns {Uint8Array} A binary array representing the exported database.
      * @public
+     * @example
+     * ```
+     * /// Export the current state of the database as a binary array
+     * const binaryArray = sqlWasmInstance.ExportBytes();
+     * console.log('Exported database as binary array:', binaryArray);
+     * ```
      */
     ExportBytes() {
         return this._db.export();
@@ -422,6 +551,12 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
      * Exports the current state of the database as a Blob object.
      * @returns {Blob} A Blob object representing the exported database.
      * @public
+     * @example
+     * ```
+     * /// Export the current state of the database as a Blob object
+     * const blob = sqlWasmInstance.Export();
+     * console.log('Exported database as Blob:', blob);
+     * ```
      */
     Export() {
         const binaryArray = this.ExportBytes();

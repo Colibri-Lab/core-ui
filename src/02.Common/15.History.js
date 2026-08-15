@@ -64,6 +64,13 @@ Colibri.Common.History = class {
      * @param {Object} line - The item to add to the history.
      * @returns {void}
      * @public
+     * @example
+     * ```
+     * const history = new Colibri.Common.History();
+     * history.add({ id: 1, name: 'Item 1' });
+     * history.add({ id: 2, name: 'Item 2' });
+     * console.log(history.getAll()); // Outputs: [{ id: 1, name: 'Item 1' }, { id: 2, name: 'Item 2' }]
+     * ```
      */
     add(line) {
         const copy = Object.cloneRecursive(line); // твой метод клонирования
@@ -95,6 +102,13 @@ Colibri.Common.History = class {
      * Removes and returns the most recent item from the history.
      * @returns {Object} - The most recent item from the history.
      * @public
+     * @example
+     * ```
+     * const history = new Colibri.Common.History();    
+     * history.add({ id: 1, name: 'Item 1' });
+     * const recentItem = history.pop(); // Removes and returns the most recent item
+     * console.log(recentItem); // Outputs: { id: 1, name: 'Item 1' }   
+     * ```
      */
     pop() {
         return this._newestFirst ? this._items.shift() : this._items.pop();
@@ -106,6 +120,12 @@ Colibri.Common.History = class {
      * @returns {void}
      * @throws {Error} - Throws an error if the provided value is not an array.
      * @public
+     * @example
+     * ```
+     * const history = new Colibri.Common.History();
+     * history.setAll([{ id: 1, name: 'Item 1' }, { id: 2, name: 'Item 2' }]);
+     * console.log(history.getAll()); // Outputs: [{ id: 1, name: 'Item 1' }, { id: 2, name: 'Item 2' }]
+     * ```
      */
     setAll(value) {
         this._items = value.slice(0, this._limit);
@@ -115,6 +135,14 @@ Colibri.Common.History = class {
      * Gets a copy of all items in the history.
      * @returns {Array} - A copy of all items in the history.
      * @public
+     * @example
+     * ```
+     * const history = new Colibri.Common.History();
+     * history.add({ id: 1, name: 'Item 1' });
+     * history.add({ id: 2, name: 'Item 2' });
+     * const allItems = history.getAll(); // Gets a copy of all items in the history
+     * console.log(allItems); // Outputs: [{ id: 1, name: 'Item 1' }, { id: 2, name: 'Item 2' }]
+     * ```
      */
     getAll() {
         return this._items.slice();

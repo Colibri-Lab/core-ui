@@ -1,6 +1,14 @@
 /**
+ * Implements global shortcuts for the application
  * @class
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * Colibri.UI.Shortcuts.Add(['Control+Shift+S'], (key) => {
+ *      console.log('Shortcut pressed: ' + key);
+ *      return false; // prevent default action
+ * });
+ * ```
  */
 Colibri.UI.Shortcuts = class {
 

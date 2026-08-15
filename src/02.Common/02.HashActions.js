@@ -37,6 +37,11 @@ Colibri.Common.HashActions = class extends Colibri.Events.Dispatcher {
     /**
      * Handles the DOM ready event.
      * @public
+     * @example
+     * ```
+     * /// Handle the DOM ready event
+     * App.Actions.HandleDomReady();
+     * ```
      */
     HandleDomReady() {
         this.InitDOMHandlers();
@@ -46,6 +51,11 @@ Colibri.Common.HashActions = class extends Colibri.Events.Dispatcher {
     /**
      * Initializes DOM event handlers.
      * @public
+     * @example
+     * ```
+     * /// Initialize DOM event handlers
+     * App.Actions.InitDOMHandlers();
+     * ```
      */
     InitDOMHandlers() {
 
@@ -82,6 +92,13 @@ Colibri.Common.HashActions = class extends Colibri.Events.Dispatcher {
      * @param {string} action - The hash action.
      * @param {Function} handler - The handler function.
      * @public
+     * @example
+     * ```
+     * /// Add a handler for a hash action
+     * App.Actions.AddHandler('myAction', (action, args) => {
+     *     console.log('Hash action raised:', action, 'with arguments:', args);
+     * });
+     * ```
      */
     AddHandler(action, handler) {
         if(this.handlers[action] === undefined)
@@ -94,6 +111,11 @@ Colibri.Common.HashActions = class extends Colibri.Events.Dispatcher {
      * @param {string} action - The hash action.
      * @param {Function} handler - The handler function.
      * @public
+     * @example
+     * ```
+     * /// Remove a handler for a hash action
+     * App.Actions.RemoveHandler('myAction', myHandlerFunction);
+     * ```
      */
     RemoveHandler(action, handler) {
         if(this.handlers[action] === undefined)
@@ -110,6 +132,12 @@ Colibri.Common.HashActions = class extends Colibri.Events.Dispatcher {
      * @param {Object} [args={}] - Additional arguments.
      * @returns {boolean} - Indicates if the action was raised successfully.
      * @public
+     * @example
+     * ```
+     * /// Raise a hash action
+     * const success = App.Actions.Raise('myAction', { key: 'value' });
+     * console.log('Hash action raised successfully:', success);
+     * ```
      */
     Raise(action, args = {}, domEvent = null) {
         try {

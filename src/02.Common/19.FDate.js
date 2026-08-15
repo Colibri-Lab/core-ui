@@ -53,6 +53,11 @@ Colibri.Common.FDate = class {
      * The returned FDate instance can be used for various purposes, such as logging, profiling, or measuring elapsed time with nanosecond precision.
      * @static
      * @returns {Colibri.Common.FDate} A new instance of Colibri.Common.FDate representing the current date and time.
+     * @example
+     * ```
+     * const currentDate = Colibri.Common.FDate.now();
+     * console.log(currentDate.toString()); // Outputs the current date and time with millisecond and nanosecond precision
+     * ```
      */
     static now() {
         return new Colibri.Common.FDate();
@@ -69,6 +74,11 @@ Colibri.Common.FDate = class {
      * @param {string} s - The string representation of the date in the format "YYYY-MM-DDTHH:mm:ss.sssnnnnnn".
      * @returns {Colibri.Common.FDate} A new instance of Colibri.Common.FDate representing the parsed date and time.
      * @throws {Error} - Throws an error if the provided string is not in the expected format.
+     * @example
+     * ```
+     * const parsedDate = Colibri.Common.FDate.parse("2024-06-05T12:34:56.789123456/123456");
+     * console.log(parsedDate.toString()); // Outputs the parsed date and time with millisecond and nanosecond precision
+     * ```
      */
     static parse(s) {
         const [date, ns] = s.split("/");
@@ -85,6 +95,11 @@ Colibri.Common.FDate = class {
      * The nanosecond component is not included in the returned value, as it is not part of the standard JavaScript Date representation.
      * @returns {number} The number of milliseconds since the Unix epoch.
      * @public
+     * @example
+     * ```
+     * const date = Colibri.Common.FDate.now();
+     * console.log(date.valueOf()); // Outputs the number of milliseconds since the Unix epoch
+     * ```
      */
     valueOf() {
         return this._ms;
@@ -97,6 +112,11 @@ Colibri.Common.FDate = class {
      * The nanosecond component is not included in the returned Date object, as it is not part of the standard JavaScript Date representation.
      * @returns {Date} A JavaScript Date object representing the same point in time as the FDate instance.
      * @public
+     * @example
+     * ```
+     * const date = Colibri.Common.FDate.now();
+     * console.log(date.toDate()); // Outputs a JavaScript Date object representing the same point in time
+     * ```
      */
     toDate() {
         return new Date(this._ms);
@@ -109,6 +129,11 @@ Colibri.Common.FDate = class {
      * The nanosecond component is not included in the returned value, as it is not part of the standard JavaScript Date representation.
      * @returns {number} The number of milliseconds since the Unix epoch.
      * @public
+     * @example
+     * ```
+     * const date = Colibri.Common.FDate.now();
+     * console.log(date.getTime()); // Outputs the number of milliseconds since the Unix epoch
+     * ```
      */
     getTime() {
         return this._ms;
@@ -121,6 +146,13 @@ Colibri.Common.FDate = class {
      * The method returns the updated number of milliseconds since the Unix epoch, which can be used for further calculations or comparisons.
      * @param {number} ms - The number of milliseconds since the Unix epoch to set as the time.
      * @returns {number} The updated number of milliseconds since the Unix epoch.
+     * @public
+     * @example
+     * ```
+     * const date = Colibri.Common.FDate.now(); 
+     * date.setTime(1620000000000); // Sets the time to a specific millisecond value
+     * console.log(date.getTime()); // Outputs: 1620000000000
+     * ```
      */
     setTime(ms) {
         this._ms = Number(ms);
@@ -134,6 +166,12 @@ Colibri.Common.FDate = class {
      * The format includes the date and time components, as well as the millisecond and nanosecond precision, allowing for accurate representation of the point in time.
      * The returned string can be used for logging, data storage, or communication between systems that require precise time information.
      * @returns {string} The ISO 8601 string representation of the FDate instance in the format "YYYY-MM-DDTHH:mm:ss.sssnnnnnn".
+     * @public
+     * @example
+     * ```
+     * const date = Colibri.Common.FDate.now();
+     * console.log(date.toISOString()); // Outputs the ISO 8601 string representation of the current date and time
+     * ```
      */
     toISOString() {
         return new Date(this._ms).toISOString();
@@ -145,6 +183,12 @@ Colibri.Common.FDate = class {
      * It uses the standard JavaScript Date to generate the string, which includes the day of the week, date, month, year, time, and the "GMT" designation.
      * The returned string can be used for display purposes or for communication with systems that expect UTC-formatted date strings.
      * @returns {string} The UTC string representation of the FDate instance in the format "Day, DD Mon YYYY HH:mm:ss GMT".
+     * @public
+     * @example
+     * ```
+     * const date = Colibri.Common.FDate.now();
+     * console.log(date.toUTCString()); // Outputs the UTC string representation of the current date and time
+     * ```
      */
     toUTCString() {
         return new Date(this._ms).toUTCString();
@@ -156,6 +200,12 @@ Colibri.Common.FDate = class {
      * The format includes the date and time components, as well as the millisecond and nanosecond precision, allowing for accurate representation of the point in time.
      * The returned string can be used for debugging, logging, or any context where a textual representation of the date and time is needed.
      * @returns {string} The string representation of the FDate instance in the format "YYYY-MM-DDTHH:mm:ss.sssnnnnnn".
+     * @public
+     * @example
+     * ```
+     * const date = Colibri.Common.FDate.now();
+     * console.log(date.toString()); // Outputs the string representation of the current date and time
+     * ```
      */
     toString() {
         return this.__toString();
@@ -189,36 +239,78 @@ Colibri.Common.FDate = class {
     /** 
      * Returns the full year of the FDate instance in UTC. 
      * @returns {number} The full year of the FDate instance in UTC.
+     * @public
+     * @example
+     * ```
+     * const date = Colibri.Common.FDate.now();
+     * console.log(date.getFullYear()); // Outputs the full year of the current date in UTC
+     * ```
      */
     getFullYear() { return new Date(this._ms).getUTCFullYear(); }
     /** 
      * Returns the month of the FDate instance in UTC.
      * @returns {number} The month of the FDate instance in UTC.
+     * @public
+     * @example
+     * ```
+     * const date = Colibri.Common.FDate.now();
+     * console.log(date.getMonth()); // Outputs the month of the current date in UTC (0-11)
+     * ```
      */
     getMonth() { return new Date(this._ms).getUTCMonth(); }
     /** 
      * Returns the day of the month of the FDate instance in UTC.
      * @returns {number} The day of the month of the FDate instance in UTC.
+     * @public
+     * @example
+     * ```
+     * const date = Colibri.Common.FDate.now();
+     * console.log(date.getDate()); // Outputs the day of the month of the current date in UTC (1-31)
+     * ```
      */
     getDate() { return new Date(this._ms).getUTCDate(); }
     /** 
      * Returns the hours of the FDate instance in UTC.
      * @returns {number} The hours of the FDate instance in UTC.
+     * @public
+     * @example
+     * ```
+     * const date = Colibri.Common.FDate.now();
+     * console.log(date.getHours()); // Outputs the hours of the current date in UTC (0-23)
+     * ```
      */
     getHours() { return new Date(this._ms).getUTCHours(); }
     /** 
      * Returns the minutes of the FDate instance in UTC.
      * @returns {number} The minutes of the FDate instance in UTC.
+     * @public
+     * @example
+     * ```
+     * const date = Colibri.Common.FDate.now();
+     * console.log(date.getMinutes()); // Outputs the minutes of the current date in UTC (0-59)
+     * ```
      */
     getMinutes() { return new Date(this._ms).getUTCMinutes(); }
     /** 
      * Returns the seconds of the FDate instance in UTC.
      * @returns {number} The seconds of the FDate instance in UTC.
+     * @public
+     * @example
+     * ```
+     * const date = Colibri.Common.FDate.now();
+     * console.log(date.getSeconds()); // Outputs the seconds of the current date in UTC (0-59)
+     * ```
      */
     getSeconds() { return new Date(this._ms).getUTCSeconds(); }
     /** 
      * Returns the milliseconds of the FDate instance in UTC.
      * @returns {number} The milliseconds of the FDate instance in UTC.
+     * @public
+     * @example
+     * ```
+     * const date = Colibri.Common.FDate.now();
+     * console.log(date.getMilliseconds()); // Outputs the milliseconds of the current date in UTC (0-999)
+     * ```
      */
     getMilliseconds() { return new Date(this._ms).getUTCMilliseconds(); }
 
@@ -258,6 +350,12 @@ Colibri.Common.FDate = class {
      * Creates a clone of the current FDate instance.
      * @returns {Colibri.Common.FDate}
      * @public
+     * @example
+     * ```
+     * const originalDate = new Colibri.Common.FDate();
+     * const clonedDate = originalDate.clone();
+     * console.log(clonedDate); // Outputs: A clone of the original FDate instance
+     * ```
      */
     clone() {
         return new Colibri.Common.FDate(this);
@@ -270,6 +368,12 @@ Colibri.Common.FDate = class {
      * This can be useful for sorting or ordering FDate instances based on their temporal values.
      * @param {Colibri.Common.FDate} other - The other FDate instance to compare with.
      * @returns {number} A negative number if the current instance is earlier than the other, a positive number if it is later, or zero if they are equal.
+     * @example
+     * ```
+     * const date1 = new Colibri.Common.FDate(1620000000000, 500000);
+     * const date2 = new Colibri.Common.FDate(1620000000000, 600000);
+     * console.log(date1.compare(date2)); // Outputs: -100000 (date1 is earlier than date2)
+     * ```
      */
     compare(other) {
         if(this._ms !== other._ms)
@@ -284,6 +388,12 @@ Colibri.Common.FDate = class {
      * It combines the millisecond and nanosecond components into a single BigInt value, allowing for accurate representation of time intervals or durations.
      * The returned BigInt can be used for calculations, comparisons, or conversions to other time representations that require nanosecond precision.
      * @returns {BigInt} The total time in nanoseconds as a BigInt.
+     * @public
+     * @example
+     * ```
+     * const date = new Colibri.Common.FDate(1620000000000, 500000);
+     * console.log(date.toBigIntNanoseconds()); // Outputs: 1620000000500000000n (total time in nanoseconds)
+     * ```
      */
     toBigIntNanoseconds() {
         return BigInt(this._ms) * 1000000n + BigInt(this._ns);
@@ -296,6 +406,14 @@ Colibri.Common.FDate = class {
      * This can be useful for applications that require high-precision time representation or for converting between different time formats.
      * @param {BigInt} ns - The total time in nanoseconds as a BigInt.
      * @returns {Colibri.Common.FDate} A new instance of Colibri.Common.FDate representing the specified time in nanoseconds.
+     * @static
+     * @public
+     * @example
+     * ```
+     * const ns = 1620000000500000000n; // Total time in nanoseconds
+     * const date = Colibri.Common.FDate.fromBigIntNanoseconds(ns);
+     * console.log(date.toString()); // Outputs: The corresponding date and time for the given nanoseconds
+     * ```
      */
     static fromBigIntNanoseconds(ns) {
         const ms = Number(ns / 1000000n);
@@ -311,6 +429,13 @@ Colibri.Common.FDate = class {
      * This can be useful for applications that require high-precision time calculations or for adjusting timestamps with nanosecond-level granularity.
      * @param {number} ns - The number of nanoseconds to add to the current FDate instance.
      * @returns {Colibri.Common.FDate} A new instance of Colibri.Common.FDate representing the updated time after adding the specified nanoseconds.
+     * @public
+     * @example
+     * ```
+     * const date = new Colibri.Common.FDate(1620000000000, 500000);
+     * const updatedDate = date.addNanoseconds(100000);
+     * console.log(updatedDate.toString()); // Outputs: The updated date and time after adding 100000 nanoseconds
+     * ```
      */
     addNanoseconds(ns) {
         const totalNs = this.toBigIntNanoseconds() + BigInt(ns);

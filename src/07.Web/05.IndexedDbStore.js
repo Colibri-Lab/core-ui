@@ -88,6 +88,13 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
      * @returns {Promise} A promise that resolves with the added message or the existing message if it already exists.
      * @public
      * @async
+     * @example
+     * ```
+     * /// Add a message to the IndexedDB store
+     * const message = { id: 1, action: 'send', domain: 'example.com', date: new Date(), from: 'user1', recipient: 'user2', read: false, message: 'Hello!', delivery: 'pending', broadcast: false, activate: false, wakeup: false };
+     * const addedMessage = await App.IndexedDbStore.Add(message);
+     * console.log(addedMessage); // The added message or the existing message if it already exists
+     * ```
      */
     Add(message) {
         return this.Get({ filter: { id: message.id } }).then(existing => {
@@ -109,6 +116,13 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
      * @returns {Promise} A promise that resolves with the updated message or rejects if the message is not found.
      * @async  
      * @public
+     * @example
+     * ```
+     * /// Update a message in the IndexedDB store
+     * const updatedMessage = { id: 1, action: 'send', domain: 'example.com', date: new Date(), from: 'user1', recipient: 'user2', read: true, message: 'Hello!', delivery: 'delivered', broadcast: false, activate: false, wakeup: false };
+     * const result = await App.IndexedDbStore.Update(updatedMessage, 1);
+     * console.log(result); // The updated message or an error if the message is not found
+     * ```
      */
     Update(message, id) {
         return new Promise((resolve, reject) => {
@@ -136,6 +150,16 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
      * @returns {Promise} A promise that resolves with the stored messages.
      * @async  
      * @public
+     * @example
+     * ```
+     * /// Store multiple messages in the IndexedDB store
+     * const messages = [
+     *     { id: 1, action: 'send', domain: 'example.com', date: new Date(), from: 'user1', recipient: 'user2', read: false, message: 'Hello!', delivery: 'pending', broadcast: false, activate: false, wakeup: false },
+     *     { id: 2, action: 'send', domain: 'example.com', date: new Date(), from: 'user3', recipient: 'user4', read: false, message: 'Hi!', delivery: 'pending', broadcast: false, activate: false, wakeup: false }
+     * ];
+     * const storedMessages = await App.IndexedDbStore.Store(messages);
+     * console.log(storedMessages); // The stored messages
+     * ```
      */
     Store(messages) {
         return this._withStore('readwrite', (store) => {
@@ -150,6 +174,19 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
      * @returns {Promise<Array>} A promise that resolves with the retrieved messages.
      * @async  
      * @public
+     * @example
+     * ```
+     * /// Retrieve messages from the IndexedDB store with specific options
+     * const options = {
+     *     order: ['date'],
+     *     direction: 'asc',
+     *     filter: { read: false },
+     *     page: 1,
+     *     pagesize: 10
+     * };
+     * const messages = await App.IndexedDbStore.Get(options);
+     * console.log(messages); // The retrieved messages based on the provided options
+     * ```
      */
     Get(options = {}) {
         options.order = options.order ?? ['date'];
@@ -217,6 +254,12 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
      * @returns {Promise} A promise that resolves when the store is cleared.
      * @async  
      * @public
+     * @example
+     * ```
+     * /// Clear all messages from the IndexedDB store
+     * await App.IndexedDbStore.Clear();
+     * console.log('All messages cleared from the store');
+     * ```
      */
     Clear() {
         return this._withStore('readwrite', (store) => {
@@ -231,6 +274,15 @@ Colibri.Web.IndexedDbStore = class extends Colibri.Common.AbstractMessageStore {
      * @returns {Promise} A promise that resolves when the messages are deleted.
      * @async  
      * @public
+     * @example
+     * ```
+     * /// Delete messages from the IndexedDB store based on filter options
+     * const options = {
+     *     filter: { read: true }
+     * };
+     * await App.IndexedDbStore.Delete(options);
+     * console.log('Messages matching the filter criteria deleted from the store');
+     * ```
      */
     Delete(options) {
         

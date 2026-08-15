@@ -16,6 +16,11 @@ Colibri.Common.Cookie = class {
      * @param {string} [samesite] - The SameSite attribute for the cookie.
      * @static
      * @public
+     * @example
+     * ```
+     * /// Set a cookie named 'myCookie' with value 'myValue' that expires in 7 days
+     * Colibri.Common.Cookie.Set('myCookie', 'myValue', 7);
+     * ```
      */
     static Set(c_name, value, exdays, path, domain, secure, samesite) {
         var exdate = new Date();
@@ -35,6 +40,12 @@ Colibri.Common.Cookie = class {
      * @returns {*} - The value of the cookie.
      * @static
      * @public
+     * @example
+     * ```
+     * /// Get the value of a cookie named 'myCookie'
+     * const cookieValue = Colibri.Common.Cookie.Get('myCookie');
+     * console.log('Cookie value:', cookieValue);
+     * ```
      */
     static Get (c_name) {
         var i,x,y,ARRcookies=document.cookie.split(";");
@@ -55,6 +66,12 @@ Colibri.Common.Cookie = class {
      * @param {string} [domain] - The domain of the cookie to delete.
      * @static
      * @public
+     * @example
+     * ```
+     * /// Delete a cookie named 'myCookie'
+     * Colibri.Common.Cookie.Delete('myCookie');
+     * console.log('Cookie deleted');
+     * ```
      */
     static Delete(c_name, path, domain) {
         document.cookie = c_name + '=;max-age=0;' + (path == null ? '; path=/' : '; path=' + path) + (domain ? '; domain=' + domain : '');

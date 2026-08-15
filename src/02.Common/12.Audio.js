@@ -17,6 +17,23 @@ Colibri.Common.Audio = class {
      * @returns {Promise<Blob>} - A promise that resolves to the recorded audio blob.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Record audio with default settings
+     * Colibri.Common.Audio.RecordAudio().then(audioBlob => {
+     *     console.log('Recorded audio blob:', audioBlob);
+     * }).catch(error => {
+     *     console.error('Error recording audio:', error);
+     * });
+     * 
+     * /// Record audio with custom settings
+     * const customSettings = { sampleRate: 44100, channelCount: 2 };
+     * Colibri.Common.Audio.RecordAudio(customSettings).then(audioBlob => {
+     *     console.log('Recorded audio blob with custom settings:', audioBlob);
+     * }).catch(error => {
+     *     console.error('Error recording audio with custom settings:', error);
+     * });
+     * ```
      */
     RecordAudio(audioSettings = null) {
         return new Promise((resolve, reject) => {
@@ -48,6 +65,15 @@ Colibri.Common.Audio = class {
      * Stops the audio recording and releases the media resources.
      * @returns {Promise<void>} - A promise that resolves when the recording is stopped and resources are released.
      * @public
+     * @example
+     * ```
+     * /// Stop the audio recording
+     * Colibri.Common.Audio.StopRecording().then(() => {
+     *     console.log('Audio recording stopped and resources released');
+     * }).catch(error => {
+     *     console.error('Error stopping audio recording:', error);
+     * });
+     * ```
      */
     StopRecording() {
         
@@ -77,6 +103,13 @@ Colibri.Common.Audio = class {
      * @param {Function} tickMethod - The method to call with the measured amplitude.
      * @returns {void}
      * @public
+     * @example
+     * ```
+     * /// Start measuring audio amplitude
+     * Colibri.Common.Audio.AmplitudeTick((amplitude) => {
+     *     console.log('Current audio amplitude:', amplitude);
+     * });
+     * ```
      */
     AmplitudeTick(tickMethod) {
     

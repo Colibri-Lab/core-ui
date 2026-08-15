@@ -103,6 +103,12 @@ Colibri.Common.CometMessage = class {
      * Creates a clone of the current message.
      * @returns {Colibri.Common.CometMessage} A new instance of Colibri.Common.CometMessage with the same properties.
      * @public
+     * @example
+     * ```
+     * const originalMessage = new Colibri.Common.CometMessage();
+     * const clonedMessage = originalMessage.clone();
+     * console.log(clonedMessage); // Outputs: A clone of the original message
+     * ```
      */
     clone() {
         const msg = new Colibri.Common.CometMessage();
@@ -127,6 +133,21 @@ Colibri.Common.CometMessage = class {
      * @returns {Colibri.Common.CometMessage} A new instance of Colibri.Common.CometMessage with properties set based on the received message.
      * @static
      * @public
+     * @example
+     * ```
+     * const receivedMessage = {
+     *     message: { id: 1, text: 'Hello!' },
+     *     domain: 'example.com',
+     *     from: 'user1',
+     *     recipient: 'user2',
+     *     broadcast: false,
+     *     delivery: 'pending',
+     *     activate: true,
+     *     wakeup: true
+     * };
+     * const cometMessage = Colibri.Common.CometMessage.FromReceivedObject(receivedMessage);
+     * console.log(cometMessage); // Outputs: A new instance of Colibri.Common.CometMessage based on the received message
+     * ```
      */
     static FromReceivedObject(messageReceived) {
         const msg = new Colibri.Common.CometMessage();
@@ -154,6 +175,11 @@ Colibri.Common.CometMessage = class {
      * @returns {Colibri.Common.CometMessage} A new instance of Colibri.Common.CometMessage for sending.
      * @public
      * @static
+     * @example
+     * ```
+     * const messageToSend = Colibri.Common.CometMessage.CreateForSend('example.com', 'user1', 'user2', 'Hello!', { priority: 'high' }, true, true);
+     * console.log(messageToSend); // Outputs: A new instance of Colibri.Common.CometMessage for sending
+     * ```
      */
     static CreateForSend(domain, from, recipient, text, addditional = {}, activate = true, wakeup = true) {
         const message = new Colibri.Common.CometMessage();
@@ -178,6 +204,12 @@ Colibri.Common.CometMessage = class {
      * @returns {Colibri.Common.CometMessage} A new instance of Colibri.Common.CometMessage for sending files.
      * @public
      * @static
+     * @example
+     * ```
+     * const filesToSend = [{ name: 'file1.txt', size: 1024 }, { name: 'file2.jpg', size: 2048 }];
+     * const messageForFiles = Colibri.Common.CometMessage.CreateForFilesSend('example.com', 'user1', 'user2', filesToSend, { priority: 'high' }, true, true);
+     * console.log(messageForFiles); // Outputs: A new instance of Colibri.Common.CometMessage for sending files
+     * ```
      */
     static CreateForFilesSend(domain, from, recipient, files, addditional = {}, activate = true, wakeup = true) {
         const message = new Colibri.Common.CometMessage();
@@ -201,6 +233,11 @@ Colibri.Common.CometMessage = class {
      * @returns {Colibri.Common.CometMessage} A new instance of Colibri.Common.CometMessage for sending a broadcast message.
      * @public
      * @static
+     * @example
+     * ```
+     * const broadcastMessage = Colibri.Common.CometMessage.CreateForSendBroadcast('example.com', 'user1', 'Hello, everyone!', { priority: 'high' }, true, true);
+     * console.log(broadcastMessage); // Outputs: A new instance of Colibri.Common.CometMessage for sending a broadcast message
+     * ```
      */
     static CreateForSendBroadcast(domain, from, text, addditional = {}, activate = true, wakeup = true) {
         const message = new Colibri.Common.CometMessage();
@@ -225,6 +262,12 @@ Colibri.Common.CometMessage = class {
      * @returns {Colibri.Common.CometMessage} A new instance of Colibri.Common.CometMessage for sending files as a broadcast message.
      * @public
      * @static
+     * @example
+     * ```
+     * const filesToSend = [{ name: 'file1.txt', size: 1024 }, { name: 'file2.jpg', size: 2048 }];
+     * const broadcastFilesMessage = Colibri.Common.CometMessage.CreateForFilesSendBroadcast('example.com', 'user1', filesToSend, { priority: 'high' }, true, true);
+     * console.log(broadcastFilesMessage); // Outputs: A new instance of Colibri.Common.CometMessage for sending files as a broadcast message
+     * ```
      */
     static CreateForFilesSendBroadcast(domain, from, files, addditional = {}, activate = true, wakeup = true) {
         const message = new Colibri.Common.CometMessage();
@@ -241,6 +284,12 @@ Colibri.Common.CometMessage = class {
     /**
      * Marks the message as read.
      * @public
+     * @example
+     * ```
+     * const message = new Colibri.Common.CometMessage();
+     * message.MarkAsRead();
+     * console.log(message.read); // Outputs: true
+     * ```
      */
     MarkAsRead() {
         this.read = true;
@@ -249,6 +298,12 @@ Colibri.Common.CometMessage = class {
     /**
      * Marks the message as unread.
      * @public
+     * @example
+     * ```
+     * const message = new Colibri.Common.CometMessage();
+     * message.MarkAsUnread();
+     * console.log(message.read); // Outputs: false
+     * ```
      */
     MarkAsUnread() {
         this.read = false;

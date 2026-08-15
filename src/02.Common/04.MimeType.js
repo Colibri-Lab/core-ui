@@ -221,6 +221,11 @@ Colibri.Common.MimeType = class {
      * @returns {string|undefined} The MIME type, or undefined if not found.
      * @static
      * @public
+     * @example
+     * ```
+     * const mimeType = Colibri.Common.MimeType.ext2type('jpg');
+     * console.log(mimeType); // Outputs: image/jpeg
+     * ```
      */
     static ext2type(ext) {
         if (Colibri.Common.MimeType.externalTypes) {
@@ -244,6 +249,11 @@ Colibri.Common.MimeType = class {
      * @returns {string|false} The file extension, or false if not found.
      * @public
      * @static
+     * @example
+     * ```
+     * const ext = Colibri.Common.MimeType.type2ext('image/jpeg');
+     * console.log(ext); // Outputs: jpg
+     * ```
      */
     static type2ext(type) {
         if (Colibri.Common.MimeType.externalTypes && Object.countKeys(Colibri.Common.MimeType.externalTypes) > 0) {
@@ -268,6 +278,11 @@ Colibri.Common.MimeType = class {
      * @returns {string|false} The file extension, or false if not found.
      * @public
      * @static
+     * @example
+     * ```
+     * const ext = Colibri.Common.MimeType.base2type('data:image/jpeg;base64,...');
+     * console.log(ext); // Outputs: jpg
+     * ```
      */
     static base2type(base) {
         var ret = false;
@@ -286,6 +301,11 @@ Colibri.Common.MimeType = class {
      * @returns {string|false} The MIME type, or false if not found.
      * @public
      * @static
+     * @example
+     * ```
+     * const mimeType = Colibri.Common.MimeType.name2type('example.jpg');
+     * console.log(mimeType); // Outputs: image/jpeg
+     * ```
      */
     static name2type(name) {
         var parts = name.split('.');
@@ -299,6 +319,11 @@ Colibri.Common.MimeType = class {
      * @returns {boolean} True if the file is an image, otherwise false.
      * @public
      * @static
+     * @example
+     * ```
+     * const isImage = Colibri.Common.MimeType.isImage('jpg');
+     * console.log(isImage); // Outputs: true
+     * ```
      */
     static isImage(ext) {
         if (ext.indexOf('/') !== -1) {
@@ -312,6 +337,11 @@ Colibri.Common.MimeType = class {
      * @returns {boolean} True if the file is an audio file, otherwise false.
      * @public
      * @static
+     * @example
+     * ```
+     * const isAudio = Colibri.Common.MimeType.isAudio('mp3');
+     * console.log(isAudio); // Outputs: true
+     * ```
      */
     static isAudio(ext) {
         if (ext.indexOf('/') !== -1) {
@@ -325,6 +355,11 @@ Colibri.Common.MimeType = class {
      * @returns {boolean} True if the file is a video file, otherwise false.
      * @public
      * @static
+     * @example
+     * ```
+     * const isVideo = Colibri.Common.MimeType.isVideo('mp4');
+     * console.log(isVideo); // Outputs: true
+     * ```
      */
     static isVideo(ext) {
         if (ext.indexOf('/') !== -1) {
@@ -338,6 +373,11 @@ Colibri.Common.MimeType = class {
      * @returns {boolean} True if the file is a Flash file, otherwise false.
      * @public
      * @static
+     * @example
+     * ```
+     * const isFlash = Colibri.Common.MimeType.isFlash('swf');
+     * console.log(isFlash); // Outputs: true
+     * ```
      */
     static isFlash(ext) { return ["swf"].indexOf(ext.toLowerCase()) != -1; }
     /**
@@ -346,6 +386,11 @@ Colibri.Common.MimeType = class {
      * @returns {boolean} True if the file is editable, otherwise false.
      * @public
      * @static
+     * @example
+     * ```
+     * const isEditable = Colibri.Common.MimeType.isEditable('txt');
+     * console.log(isEditable); // Outputs: true
+     * ```
      */
     static isEditable(ext) { return ["txt", "js", "css", "scss", "less", "layout", "php", "htm", "html", "service", "xml", "xsl"].indexOf(ext.toLowerCase()) != -1; }
     /**
@@ -354,6 +399,11 @@ Colibri.Common.MimeType = class {
      * @returns {boolean} True if the file is viewable, otherwise false.
      * @public
      * @static
+     * @example
+     * ```
+     * const isViewable = Colibri.Common.MimeType.isViewable('jpg');
+     * console.log(isViewable); // Outputs: true
+     * ```
      */
     static isBrowserCapable(ext) { return ["jpg", "png", "gif", "swf", "html", "htm", "txt", "css", "js", "pdf", "wmv", "mpg", "mp4", "mid", "mp3", "au"].indexOf(ext.toLowerCase()) != -1; }
     /**
@@ -362,6 +412,11 @@ Colibri.Common.MimeType = class {
      * @returns {string} The icon class.
      * @public
      * @static
+     * @example
+     * ```
+     * const iconClass = Colibri.Common.MimeType.icon('jpg');
+     * console.log(iconClass); // Outputs: icon-file-jpg
+     * ```
      */
     static isViewable(ext) { return isImage(ext) || isFlash(ext); }
     /**
@@ -370,6 +425,11 @@ Colibri.Common.MimeType = class {
      * @returns {string} The CodeMirror mode.
      * @public
      * @static
+     * @example
+     * ```
+     * const mode = Colibri.Common.MimeType.ext2mode('js');
+     * console.log(mode); // Outputs: javascript
+     * ```
      */
     static icon(ext) { return 'icon-file-' + ext; }
     /**
@@ -378,6 +438,11 @@ Colibri.Common.MimeType = class {
      * @returns {string} The CodeMirror mode.
      * @public
      * @static
+     * @example
+     * ```
+     * const mode = Colibri.Common.MimeType.ext2mode('js');
+     * console.log(mode); // Outputs: javascript
+     * ```
      */
     static ext2mode(ext) {
 
@@ -400,6 +465,11 @@ Colibri.Common.MimeType = class {
      * @returns {Object<string, string[]>} The CodeMirror requirements.
      * @public
      * @static
+     * @example
+     * ```
+     * const requirements = Colibri.Common.MimeType.extrequirements('js');
+     * console.log(requirements);
+     * ```
      */
     static extrequirements(ext, path = '/res/codemirror') {
 
@@ -440,6 +510,14 @@ Colibri.Common.MimeType = class {
      * @throws {Error} If there is an error while fetching the external MIME types.
      * @public
      * @static
+     * @example
+     * ```
+     * Colibri.Common.MimeType.Reload().then(() => {
+     *     console.log('External MIME types reloaded successfully.');
+     * }).catch((error) => {
+     *     console.error('Error reloading external MIME types:', error);
+     * });
+     * ```
      */
     static Reload() {
         return new Promise((resolve, reject) => {

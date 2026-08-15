@@ -99,6 +99,11 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
     /**
      * Clears the request cache.
      * @public
+     * @example
+     * ```
+     * /// Clear the request cache
+     * rpcRequestInstance.ClearCache();
+     * ```
      */
     ClearCache() {
         this._requestsCache = {};
@@ -110,6 +115,12 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
      * @param {string} method - The method to execute.
      * @returns {string}
      * @public
+     * @example
+     * ```
+     * /// Make an RPC call to the specified controller and method
+     * const result = await rpcRequestInstance.Call('UserController', 'getUserData');
+     * console.log('RPC call result:', result);
+     * ```
      */
     GetEntryPoint(controller, method, requestType = 'json') {
         let url = null;
@@ -132,6 +143,13 @@ Colibri.IO.RpcRequest = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} The result of the RPC call.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Make an RPC call to the specified controller and method with parameters
+     * const params = { userId: 123 };
+     * const result = await rpcRequestInstance.Call('UserController', 'getUserData', params);
+     * console.log('RPC call result:', result);
+     * ```
      */
     Call(controller, method, params = null, headers = {}, withCredentials = true, requestKeyword = Date.Mc()) {
         const request = new Colibri.IO.Request();

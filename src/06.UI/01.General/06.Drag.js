@@ -2,6 +2,16 @@
  * @classdesc Drag process worker
  * @class
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const drag = new Colibri.UI.Drag(element, container, (left, top) => {
+ *      console.log('Drag moved to: ' + left + ', ' + top);
+ * }, (left, top) => {
+ *      console.log('Drag started at: ' + left + ', ' + top);
+ * }, (left, top) => {
+ *      console.log('Drag ended at: ' + left + ', ' + top);
+ * });
+ * ```
  */
 Colibri.UI.Drag = class {
 

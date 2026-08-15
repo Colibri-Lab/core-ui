@@ -22,6 +22,15 @@ Colibri.IO.JsZip = class {
      * @static
      * @async
      * @public
+     * @example
+     * ```
+     * /// Load the JSZip library and create a new instance
+     * Colibri.IO.JsZip.Load().then(jszipInstance => {
+     *     console.log('JSZip loaded:', jszipInstance);
+     * }).catch(error => {
+     *     console.error('Failed to load JSZip:', error);
+     * });
+     * ```
      */
     static Load() {
         return new Promise((resolve, reject) => {

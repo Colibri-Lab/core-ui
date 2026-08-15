@@ -88,6 +88,12 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
     /**
      * Saves the store data in the permanent storage.
      * @public
+     * @example
+     * ```
+     * /// Keep the store data in the permanent storage
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * store.KeepInPermanentStore();
+     * ```
      */
     KeepInPermanentStore() {
 
@@ -99,6 +105,12 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
     /**
      * Retrieves store data from the permanent storage.
      * @public
+     * @example
+     * ```
+     * /// Retrieve store data from the permanent storage
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * store.RetreiveFromPermanentStore();
+     * ```
      */
     RetreiveFromPermanentStore() {
         const data = App.Browser.Get((location.hostname || 'localhost') + '.' + this._name);
@@ -116,6 +128,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @param {boolean} [fullData=false] - Indicates whether to export full data recursively.
      * @returns {Object} The exported data.
      * @public
+     * @example
+     * ```
+     * /// Export store data
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * const data = store.ExportData();
+     * console.log(data);
+     * ```
      */
     ExportData(fullData = false) {
 
@@ -172,6 +191,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * Clears data at the specified path or the entire store if no path is provided.
      * @param {string} [path] - The path to clear.
      * @public
+     * @example
+     * ```
+     * /// Clear the entire store
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * store.Clear();
+     * console.log('Store cleared');
+     * ```
      */
     Clear(path) {
         if (!path) {
@@ -190,7 +216,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
     /**
      * Registers events for the store.
-     * @public
+     * @protected
      */
     RegisterEvents() {
         this.RegisterEvent('StoreUpdated', true, 'When store data is updated');
@@ -202,7 +228,7 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
 
     /**
      * Registers event handlers for the store.
-     * @public
+     * @protected
      */
     RegisterEventHandlers() {
         if (this._parent) {
@@ -228,6 +254,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @param {boolean} [permanent=false] - Indicates whether the child store is permanent.
      * @returns {Colibri.Storages.Store} The newly added child store.
      * @public
+     * @example
+     * ```
+     * /// Add a child store
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * const childStore = store.AddChild('childStore', {childKey: 'childValue'});
+     * console.log(childStore);
+     * ```
      */
     AddChild(path, data = {}, owner = null, permanent = false) {
         let paths = path.split('.');
@@ -242,6 +275,14 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @param {string} path - The path to the child store.
      * @returns {object} The child store object along with its path.
      * @public
+     * @example
+     * ```
+     * /// Retrieve a child store
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * const childStore = store.AddChild('childStore', {childKey: 'childValue'});
+     * const retrievedChildStore = store.GetChild('myStore.childStore');
+     * console.log(retrievedChildStore);
+     * ```
      */
     GetChild(path) {
         let p = path.split('.');
@@ -282,6 +323,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @param {object} [params={}] - Additional parameters for the loader.
      * @returns {Colibri.Storages.Store} The store object.
      * @public
+     * @example
+     * ```
+     * /// Add a path loader
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * store.AddPathLoader('myStore.childStore', 'Module:Controller.Method', {param1: 'value1'});
+     * store.AddPathLoader('myStore.childStore', () => { ... }, {param1: 'value1'});
+     * ```
      */
     AddPathLoader(path, loader, params = {}) {
         if (this._pathLoaders[path]) {
@@ -317,6 +365,12 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @param {boolean} prepend - Indicates whether the handler should be added at the beginning (true) or end (false) of the handlers list.
      * @returns {Colibri.Storages.Store} The store instance.
      * @public
+     * @example
+     * ```
+     * /// Add a path handler
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * store.AddPathHandler('myStore.childStore', (path, params) => { ... }, false);
+     * ```
      */
     AddPathHandler(path, handler, prepend, respondent = null) {
 
@@ -377,6 +431,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * Removes all path handlers associated with the specified component.
      * @param {Colibri.UI.Component} component - The component for which to remove path handlers.
      * @public
+     * @example
+     * ```
+     * /// Erase all path handlers for a component
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * const myComponent = new Colibri.UI.Component();
+     * store.EraseComponentFormHandlers(myComponent);
+     * ```
      */
     EraseComponentFormHandlers(component) {
         for (const key of Object.keys(this._pathHandlers)) {
@@ -397,6 +458,15 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @param {Function} handler - The handler function to be removed.
      * @returns {Colibri.Storages.Store} The store instance.
      * @public
+     * @example
+     * ```
+     * /// Remove a path handler
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * const myComponent = new Colibri.UI.Component();
+     * const handler = (path, params) => { ... };
+     * store.AddPathHandler('myStore.childStore', handler, false, myComponent);
+     * store.RemovePathHandler('myStore.childStore', myComponent, handler);
+     * ```
      */
     RemovePathHandler(path, respondent, handler) {
 
@@ -427,6 +497,12 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
     /**
      * Dispatches events for all registered paths in the store.
      * @public
+     * @example
+     * ```
+     * /// Dispatch all events
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * store.DispatchAll();
+     * ```
      */
     DispatchAll() {
         const keys = Object.keys(this._data);
@@ -441,6 +517,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @returns {boolean} True if all event handlers were executed successfully, otherwise false.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Dispatch events along a specific path
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * const result = await store.DispatchPath('myStore.childStore');
+     * console.log('Dispatch result:', result);
+     * ```
      */
     async DispatchPath(path) {
 
@@ -486,6 +569,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @param {string} path - The path for which to check if the loader has been executed.
      * @returns {boolean} True if the loader has been executed or if the path doesn't have a loader, otherwise false.
      * @public
+     * @example
+     * ```
+     * /// Check if the loader for a specific path has been executed
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * const isExecuted = store.IsLoaderExecuted('myStore.childStore');
+     * console.log('Is loader executed:', isExecuted);
+     * ```
      */
     IsLoaderExecuted(path) {
 
@@ -506,6 +596,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} A promise that resolves when the reload operation is complete.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Reload data for a specific path
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * await store.Reload('myStore.childStore', false, 'additionalParam');
+     * console.log('Data reloaded for the specified path');
+     * ```
      */
     async Reload(path, nodispatch = true, param = null) {
         const childStore = this.GetChild(path);
@@ -549,6 +646,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @returns {Promise<object>} A promise that resolves with the retrieved data.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Asynchronously query data for a specific path
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * const data = await store.AsyncQuery('myStore.childStore', 'additionalParam', true);
+     * console.log('Data retrieved:', data);
+     * ```
      */
     async AsyncQuery(path, param = null, reload = false) {
 
@@ -572,6 +676,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @param {string|null} [queryList=null] - Optional query parameters in the format "field=value".
      * @returns {object} The retrieved data.
      * @public
+     * @example
+     * ```
+     * /// Query data for a specific path with optional query parameters
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * const data = store.Query('myStore.childStore', 'field=value');
+     * console.log('Data retrieved:', data);
+     * ```
      */
     Query(path, queryList = null) {
 
@@ -653,6 +764,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @returns {object} The updated storage object.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Set data at a specific path
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * await store.Set('myStore.childStore', {childKey: 'childValue'});
+     * console.log('Data set at the specified path');
+     * ```
      */
     async Set(path, d, nodispatch = false, force = false) {
 
@@ -731,6 +849,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @param {string} [incrementIfInserted=''] - The path where the length of the list should be incremented if a new entry is inserted.
      * @returns {array} The updated list.
      * @public
+     * @example
+     * ```
+     * /// Update a list in the storage
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * const updatedList = store.UpdateList('myStore.myList', 'id', 1, {id: 1, name: 'Updated Item'}, 'name', 'asc', true, 'myStore.listLength');
+     * console.log('Updated list:', updatedList);
+     * ```
      */
     UpdateList(path, searchField, searchValue = null, newData = null, sortField = null, sortOrder = 'asc', insertIfNotExists = true, incrementIfInserted = '') {
         let list = this.Query(path);
@@ -763,6 +888,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @param {string} searchField - The field used for searching within the list.
      * @param {Array} values - The array of values to intersect with the list.
      * @public
+     * @example
+     * ```
+     * /// Intersect a list in the storage with provided values
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * const intersectedList = store.IntersectList('myStore.myList', 'id', [{id: 1}, {id: 2}]);
+     * console.log('Intersected list:', intersectedList);
+     * ```
      */
     IntersectList(path, searchField, values) {
         let list = this.Query(path);
@@ -785,6 +917,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @param {Array} pageItems - The items to add to the list.
      * @returns {Array} The updated list after adding the page items.
      * @public
+     * @example
+     * ```
+     * /// Add a page of items to a list in the storage
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * const updatedList = store.ListAddPage('myStore.myList', 1, [{id: 1}, {id: 2}]);
+     * console.log('Updated list after adding page:', updatedList);
+     * ```
      */
     ListAddPage(path, page, pageItems) {
         let list = this.Query(path);
@@ -803,6 +942,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @param {string} [sortOrder='asc'] - The order in which the list should be sorted ('asc' for ascending or 'desc' for descending).
      * @returns {Array} The sorted list.
      * @public
+     * @example
+     * ```
+     * /// Sort a list in the storage
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * const sortedList = store.SortList('myStore.myList', 'name', 'asc');
+     * console.log('Sorted list:', sortedList);
+     * ```
      */
     SortList(path, sortField, sortOrder = 'asc') {
         let list = this.Query(path);
@@ -829,6 +975,13 @@ Colibri.Storages.Store = class extends Colibri.Events.Dispatcher {
      * @param {any} value - The value to search for within the list.
      * @returns {any} The queried data from the list.
      * @public
+     * @example
+     * ```
+     * /// Query a list in the storage
+     * const store = App.Store.AddChild('myStore', {key: 'value'});
+     * const queriedData = store.QueryList('myStore.myList', 'id', 1);
+     * console.log('Queried data from the list:', queriedData);
+     * ```  
      */
     QueryList(path, field, value) {
         let list = this.Query(path);

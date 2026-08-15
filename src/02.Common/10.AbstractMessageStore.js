@@ -1,6 +1,7 @@
 /**
  * Handles the connection to the Comet server and message communication.
  * @class 
+ * @abstract
  * @extends Colibri.Events.Dispatcher
  * @memberof Colibri.Common
  */
@@ -11,6 +12,7 @@ Colibri.Common.AbstractMessageStore = class extends Colibri.Events.Dispatcher {
      * @param {Object} message - The message to add.
      * @returns {Promise} A promise that resolves when the message is added.
      * @public
+     * @abstract
      */
     Add(message) {
         throw new Error('Not implemented');
@@ -22,6 +24,7 @@ Colibri.Common.AbstractMessageStore = class extends Colibri.Events.Dispatcher {
      * @param {number} id - The ID of the message to update.
      * @returns {Promise} A promise that resolves when the message is updated.
      * @public
+     * @abstract
      */
     Update(message, id) {
         throw new Error('Not implemented');
@@ -32,6 +35,7 @@ Colibri.Common.AbstractMessageStore = class extends Colibri.Events.Dispatcher {
      * @param {Array} messages - The messages to store.
      * @returns {Promise} A promise that resolves when the messages are stored.
      * @public
+     * @abstract
      */
     Store(messages) {
         throw new Error('Not implemented');
@@ -47,6 +51,7 @@ Colibri.Common.AbstractMessageStore = class extends Colibri.Events.Dispatcher {
      * @param {number} options.pagesize - The number of messages per page.
      * @returns {Promise} A promise that resolves with the retrieved messages.
      * @public
+     * @abstract
      */
     Get(options = {}) {
         throw new Error('Not implemented');
@@ -56,6 +61,7 @@ Colibri.Common.AbstractMessageStore = class extends Colibri.Events.Dispatcher {
      * Deletes messages from the store.
      * @returns {Promise} A promise that resolves when the messages are deleted.
      * @public
+     * @abstract
      */
     Clear() {
         throw new Error('Not implemented');
@@ -67,6 +73,7 @@ Colibri.Common.AbstractMessageStore = class extends Colibri.Events.Dispatcher {
      * @param {number} options.filter - The filter to apply to the messages.
      * @returns {Promise} A promise that resolves when the message is deleted.
      * @public
+     * @abstract
      */
     Delete(options = {}) {
         throw new Error('Not implemented');

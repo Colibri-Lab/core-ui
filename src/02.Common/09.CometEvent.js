@@ -96,6 +96,12 @@ Colibri.Common.CometEvent = class {
      * Creates a clone of the current CometEvent instance.
      * @returns {Colibri.Common.CometEvent} A new instance of Colibri.Common.CometEvent with the same properties as the current instance.
      * @public
+     * @example
+     * ```
+     * const originalEvent = new Colibri.Common.CometEvent();
+     * const clonedEvent = originalEvent.clone();
+     * console.log(clonedEvent); // Outputs: A clone of the original CometEvent instance
+     * ```
      */
     clone() {
         const msg = new Colibri.Common.CometEvent();
@@ -118,6 +124,12 @@ Colibri.Common.CometEvent = class {
      * @param {Object} eventReceived - The received event object.
      * @returns {Colibri.Common.CometEvent} A new instance of Colibri.Common.CometEvent created from the received event object.
      * @public
+     * @example
+     * ```
+     * const receivedEvent = { action: 'send', domain: 'example.com', from: 'user1', message: 'Hello!', broadcast: false, delivery: 'untrusted', activate: false, wakeup: false };
+     * const cometEvent = Colibri.Common.CometEvent.FromReceivedObject(receivedEvent);
+     * console.log(cometEvent); // Outputs: A new instance of Colibri.Common.CometEvent created from the received event object
+     * ```
      */
     static FromReceivedObject(eventReceived) {
         const msg = new Colibri.Common.CometEvent();
@@ -144,6 +156,11 @@ Colibri.Common.CometEvent = class {
      * @param {boolean} [wakeup=false] - Whether to wake up the recipients.
      * @returns {Colibri.Common.CometEvent} A new instance of Colibri.Common.CometEvent for sending a message.
      * @public
+     * @example
+     * ```
+     * const messageToSend = Colibri.Common.CometEvent.CreateForSend('send', 'example.com', 'user1', 'user2', { text: 'Hello!' }, 'untrusted', false, false);
+     * console.log(messageToSend); // Outputs: A new instance of Colibri.Common.CometEvent for sending a message
+     * ```
      */
     static CreateForSend(action, domain, from, recipient, message, delivery = 'untrusted', activate = false, wakeup = false) {
         const msg = new Colibri.Common.CometMessage();
@@ -169,6 +186,11 @@ Colibri.Common.CometEvent = class {
      * @param {boolean} [wakeup=false] - Whether to wake up the recipients.
      * @returns {Colibri.Common.CometEvent} A new instance of Colibri.Common.CometEvent for sending a broadcast message.
      * @public
+     * @example
+     * ```
+     * const broadcastMessage = Colibri.Common.CometEvent.CreateForSendBroadcast('broadcast', 'example.com', 'user1', { text: 'Hello, everyone!' }, 'untrusted', false, false);
+     * console.log(broadcastMessage); // Outputs: A new instance of Colibri.Common.CometEvent for sending a broadcast message
+     * ```
      */
     static CreateForSendBroadcast(action, domain, from, message, delivery = 'untrusted', activate = false, wakeup = false) {
         const msg = new Colibri.Common.CometMessage();

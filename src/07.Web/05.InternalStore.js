@@ -12,6 +12,13 @@ Colibri.Web.InternalStore = class extends Colibri.Common.AbstractMessageStore {
      * @returns {Promise} A promise that resolves when the message is added.
      * @public
      * @async
+     * @example
+     * ```
+     * /// Add a message to the internal store
+     * const message = { id: 1, action: 'send', domain: 'example.com', date: new Date(), from: 'user1', recipient: 'user2', read: false, message: 'Hello!', delivery: 'pending', broadcast: false, activate: false, wakeup: false };
+     * await App.InternalStore.Add(message);
+     * console.log('Message added to the internal store');
+     * ```
      */
     Add(message) {
         let messages = App.Browser.Get('comet.messages');
@@ -37,6 +44,13 @@ Colibri.Web.InternalStore = class extends Colibri.Common.AbstractMessageStore {
      * @returns {Promise} A promise that resolves when the message is updated.
      * @public
      * @async
+     * @example
+     * ```
+     * /// Update a message in the internal store
+     * const updatedMessage = { id: 1, action: 'send', domain: 'example.com', date: new Date(), from: 'user1', recipient: 'user2', read: true, message: 'Hello!', delivery: 'delivered', broadcast: false, activate: false, wakeup: false };
+     * await App.InternalStore.Update(updatedMessage, 1);
+     * console.log('Message updated in the internal store');
+     * ```
      */
     Update(message, id) {
         let messages = App.Browser.Get('comet.messages');
@@ -60,6 +74,16 @@ Colibri.Web.InternalStore = class extends Colibri.Common.AbstractMessageStore {
      * @returns {Promise} A promise that resolves when the messages are stored.
      * @public
      * @async
+     * @example
+     * ```
+     * /// Store multiple messages in the internal store
+     * const messages = [
+     *     { id: 1, action: 'send', domain: 'example.com', date: new Date(), from: 'user1', recipient: 'user2', read: false, message: 'Hello!', delivery: 'pending', broadcast: false, activate: false, wakeup: false },
+     *     { id: 2, action: 'send', domain: 'example.com', date: new Date(), from: 'user3', recipient: 'user4', read: false, message: 'Hi!', delivery: 'pending', broadcast: false, activate: false, wakeup: false }
+     * ];
+     * await App.InternalStore.Store(messages);
+     * console.log('Messages stored in the internal store');
+     * ```
      */
     Store(messages) {
         App.Browser.Set('comet.messages', JSON.stringify(messages));
@@ -77,6 +101,19 @@ Colibri.Web.InternalStore = class extends Colibri.Common.AbstractMessageStore {
      * @returns {Promise} A promise that resolves with the retrieved messages.
      * @public
      * @async
+     * @example
+     * ```
+     * /// Retrieve messages from the internal store with specific options
+     * const options = {
+     *     fields: ['id', 'action', 'domain', 'date', 'from', 'recipient', 'read', 'message', 'delivery', 'broadcast', 'activate', 'wakeup'],
+     *     filter: { read: false },
+     *     order: ['date'],
+     *     page: 1,
+     *     pagesize: 10
+     * };
+     * const messages = await App.InternalStore.Get(options);
+     * console.log(messages); // The retrieved messages based on the specified options
+     * ```
      */
     Get(options = {}) {
 
@@ -129,6 +166,12 @@ Colibri.Web.InternalStore = class extends Colibri.Common.AbstractMessageStore {
      * @returns {Promise} A promise that resolves when the messages are deleted.
      * @public
      * @async
+     * @example
+     * ```
+     * /// Delete all messages from the internal store
+     * await App.InternalStore.Clear();
+     * console.log('All messages deleted from the internal store');
+     * ```
      */
     Clear() {
         App.Browser.Set('comet.messages', JSON.stringify([]));
@@ -142,6 +185,15 @@ Colibri.Web.InternalStore = class extends Colibri.Common.AbstractMessageStore {
      * @returns {Promise} A promise that resolves when the message is deleted.
      * @public
      * @async
+     * @example
+     * ```
+     * /// Delete messages from the internal store based on filter options
+     * const options = {
+     *     filter: { read: true }
+     * };
+     * await App.InternalStore.Delete(options);
+     * console.log('Messages matching the filter criteria deleted from the internal store');
+     * ```
      */
     Delete(options) {
         let messages = App.Browser.Get('comet.messages');

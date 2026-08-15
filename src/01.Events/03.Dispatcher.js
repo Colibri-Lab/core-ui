@@ -44,6 +44,11 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * @param {boolean} bubbles - Indicates whether the event bubbles up the component tree.
      * @param {string} description - Description of the event.
      * @public
+     * @example
+     * ```
+     * /// source is an instance of Colibri.Events.Source or null
+     * component.RegisterEvent('myEvent', true, 'This is my custom event', source); /// component is an instance of Colibri.UI.Component or extends Colibri.Events.Dispatcher
+     * ```
      */
     RegisterEvent(eventName, bubbles, description, source = null) {
         if (source) {
@@ -57,6 +62,11 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * @param {string} eventName - The name of the event.
      * @param {Colibri.Events.Source} [source=null] - The source from which to unregister the event.
      * @public
+     * @example
+     * ```
+     * /// source is an instance of Colibri.Events.Source or null
+     * component.UnregisterEvent('myEvent', source); /// component is an instance of Colibri.UI.Component or extends Colibri.Events.Dispatcher
+     * ```
      */
     UnregisterEvent(eventName, source = null) {
         if (source) {
@@ -73,6 +83,11 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * @param {Object} [respondent=this] - The object that responds to the event.
      * @returns {Colibri.Events.Dispatcher}
      * @public
+     * @example
+     * ```
+     * /// source is an instance of Colibri.Events.Source or null
+     * component.AddHandler('myEvent', myHandler, false, this); /// component is an instance of Colibri.UI.Component or extends Colibri.Events.Dispatcher
+     * ```
      */
     AddHandler(eventName, handler, prepend = false, respondent = null) {
 
@@ -110,6 +125,11 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * @param {Function} handler - The handler to remove.
      * @returns {Colibri.Events.Dispatcher}
      * @public
+     * @example
+     * ```
+     * /// source is an instance of Colibri.Events.Source or null
+     * component.RemoveHandler('myEvent', myHandler); /// component is an instance of Colibri.UI.Component or extends Colibri.Events.Dispatcher
+     * ```
      */
     RemoveHandler(eventName, handler, respondent = null) {
 
@@ -145,6 +165,12 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * @param {Function} handler - The handler to check for.
      * @returns {boolean} - True if the handler exists, false otherwise.
      * @public
+     * @example
+     * ```
+     * /// source is an instance of Colibri.Events.Source or null
+     * const exists = component.HandlerExists('myEvent', myHandler); /// component is an instance of Colibri.UI.Component or extends Colibri.Events.Dispatcher
+     * console.log('Handler exists:', exists);
+     * ```
      */
     HandlerExists(eventName, handler) {
         const handlerObject = { handler: handler, respondent: this },
@@ -166,6 +192,12 @@ Colibri.Events.Dispatcher = class extends Destructable {
      * @returns {Colibri.Events.Dispatcher}
      * @public
      * @async
+     * @example
+     * ```
+     * /// source is an instance of Colibri.Events.Source or null
+     * const event = new Colibri.Events.Event('myEvent', true, 'This is my custom event');
+     * component.Dispatch(event, { key: 'value' }); /// component is an instance of Colibri.UI.Component or extends Colibri.Events.Dispatcher
+     * ```
      */
     async Dispatch(event, args = null) {
 
@@ -225,6 +257,10 @@ Colibri.Events.Dispatcher = class extends Destructable {
     /**
      * Clears all event handlers.
      * @public
+     * @example
+     * ```
+     * component.ClearHandlers(); /// component is an instance of Colibri.UI.Component or extends Colibri.Events.Dispatcher
+     * ```
      */
     ClearHandlers() {
         this.__handlers = {};
@@ -233,6 +269,10 @@ Colibri.Events.Dispatcher = class extends Destructable {
     /**
      * Clears all event handlers for a specific event.
      * @public  
+     * @example
+     * ```
+     * component.ClearHandler('myEvent'); /// component is an instance of Colibri.UI.Component or extends Colibri.Events.Dispatcher
+     * ```
      */
     ClearHandler(eventName) {
         delete this.__handlers[eventName];

@@ -2,6 +2,16 @@
  * @classdesc Drag process worker
  * @class
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const pointerControl = new Colibri.UI.PointerControl(component, (startPoint) => {
+ *      console.log('Selection started at: ' + startPoint.left + ', ' + startPoint.top);
+ * }, (rect) => {
+ *      console.log('Selection ended at: ' + rect.left + ', ' + rect.top + ', width: ' + rect.width + ', height: ' + rect.height);
+ * }, (rect) => {
+ *      console.log('Selecting: ' + rect.left + ', ' + rect.top + ', width: ' + rect.width + ', height: ' + rect.height);
+ * });
+ * ```
  */
 Colibri.UI.PointerControl = class {
 

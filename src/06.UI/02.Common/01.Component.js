@@ -1,5 +1,5 @@
 /**
- * Класс компонента по умолчанию
+ * Base class for all UI components
  * @class
  * @extends Colibri.Events.Dispatcher
  * @memberof Colibri.UI
@@ -12,7 +12,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * @param {string|Colibri.UI.Event} event event to handle
      * @param {*} args arguments for event 
      */
-    static __nullHandler = (event, args) => { };
+    static __nullHandler(event, args) { 
+        // do nothing
+    }
+
     /**
      * Disable handler, prevents handling event and stops propagation
      * @static
@@ -20,11 +23,16 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * @param {*} args arguments for event 
      * @public
      */
-    static __disableHandler = (event, args) => { args.domEvent?.stopPropagation(); args.domEvent?.preventDefault(); return false; };
+    static __disableHandler(event, args) { 
+        args.domEvent?.stopPropagation(); 
+        args.domEvent?.preventDefault(); 
+        return false; 
+    }
 
     /**
      * Dom events map to Colibri events
      * @static
+     * @private
      */
     static __domHandlers = {
         Clicked: {
@@ -121,6 +129,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         },
     };
 
+    /**
+     * Map of elements to components
+     * @static
+     * @private
+     */
     static __elementsToComponentMap = {
         'div': { component: 'Colibri.UI.Pane', element: 'div', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
         'span': { component: 'Colibri.UI.TextSpan', element: null, attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
@@ -149,20 +162,48 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      */
     __domHandlersAttached = {};
 
+    /**
+     * Flag to send Clicked event when context menu icon clicked
+     * @private
+     */
     _clickWhenContextMenuClicked = true;
 
+    /**
+     * Use this handler to bubble event up
+     * @private
+     * @param {string|Colibri.UI.Event} event event to handle
+     * @param {*} args arguments for event 
+     */
     __thisBubble(event, args) {
         return this.Dispatch(event.name, args);
     }
 
+    /**
+     * Use this handler to bubble event up with component argument
+     * @private
+     * @param {string|Colibri.UI.Event} event event to handle
+     * @param {*} args arguments for event 
+     */
     __thisBubbleWithComponent(event, args) {
         return this.Dispatch(event.name, Object.assign(args || {}, { component: this }));
     }
 
+    /**
+     * Use this handler to bubble event up with item argument
+     * @private
+     * @param {string|Colibri.UI.Event} event event to handle
+     * @param {*} args arguments for event 
+     */
     __thisBubbleWithItem(event, args) {
         return this.Dispatch(event.name, Object.assign(args || {}, { item: this }));
     }
 
+    /**
+     * Use this handler to bubble event up with item argument
+     * @private
+     * @param {string|Colibri.UI.Event} event event to handle
+     * @param {*} args arguments for event 
+     */
     __thisBubblePreventDefault(event, args) {
         this.Dispatch(event.name, args);
         args.domEvent.stopPropagation();
@@ -170,23 +211,473 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         return false;
     }
 
+    /**
+     * Use this handler to bubble event up with item argument
+     * @private
+     * @param {string|Colibri.UI.Event} event event to handle
+     * @param {*} args arguments for event 
+     */
     __thisBubbleStopPropagation(event, args) {
         this.Dispatch(event.name, args);
         args.domEvent.stopPropagation();
         return false;
     }
 
+    /**
+     * Use this handler to bubble event up with item argument
+     * @private
+     * @param {string|Colibri.UI.Event} event event to handle
+     * @param {*} args arguments for event 
+     */
     __thisBubbleWithFocus(event, args) {
         this?.Focus();
         this.Dispatch(event.name, args);
     }
 
+    /**
+     * Use this handler to bubble event up with item argument
+     * @private
+     * @param {string|Colibri.UI.Event} event event to handle
+     * @param {*} args arguments for event 
+     */
     __thisBubbleWithFocusStopPropagation(event, args) {
         this?.Focus();
         args.domEvent?.stopPropagation();
         this.Dispatch(event.name, args);
     }
 
+    /**
+     * Default mouse enter handler, shows tooltip if set
+     * @private
+     * @param {string|Colibri.UI.Event} event event to handle
+     * @param {*} args arguments for event 
+     */
+    __defaultMouseEnterHandler(event, args) {
+        if (this._toolTip) {
+            this._createTipObject();
+            this._setToolTipPositionAndGap(this._element, args.domEvent);
+            this._tipObject.html(this._toolTip);
+            this._tipObject.showElement();
+        }
+    }
+
+    /**
+     * Default mouse leave handler, hides tooltip if set
+     * @private
+     * @param {string|Colibri.UI.Event} event event to handle
+     * @param {*} args arguments for event 
+     */
+    __defaultMouseLeaveHandler(event, args) {
+        if (this._tipObject) {
+            this._tipObject.html('');
+            this._tipObject.hideElement();
+        }
+    }
+
+    /**
+     * Default event handler, dispatches event to component
+     * @private
+     * @param {Event} e event to handle
+     */
+    __eventHandler(e) {
+        let enames = [];
+        for (const key of Object.keys(Colibri.UI.Component.__domHandlers)) {
+            const eb = Colibri.UI.Component.__domHandlers[key];
+            if (eb.domEvent === e.type) {
+                enames.push(key);
+            }
+        }
+        if (enames.length == 0) {
+            return;
+        }
+
+        const component = e?.currentTarget?.getUIComponent ? e?.currentTarget?.getUIComponent() : null;
+        if (!component) {
+            return;
+        }
+
+        let delay = null;
+        if (window.__delayMap.get(this)) {
+            delay = window.__delayMap.get(this);
+            window.__delayMap.delete(this);
+        }
+
+        const performHandler = (component, enames, e) => {
+
+            if (this !== window && !this.isConnected) {
+                return false;
+            }
+
+            if (Array.isArray(component)) {
+                for (const c of component) {
+                    c.Dispatch(enames.length === 1 ? enames[0] : enames, { domEvent: e });
+                }
+            } else {
+                return component?.Dispatch(enames.length === 1 ? enames[0] : enames, { domEvent: e });
+            }
+        };
+
+        if (delay) {
+            setTimeout(() => {
+                performHandler(component, enames, e)
+            }, delay);
+        } else {
+            performHandler(component, enames, e)
+        }
+
+    }
+
+    /**
+     * Delayed event handler, dispatches event to component after delay
+     * @private
+     * @param {Event} e event to handle
+     */
+    __delayedEventHandler(e) {
+        Colibri.Common.Delay(delay, e).then(this.__eventHandler);
+    }
+
+    /**
+     * Clicked out handler, dispatches event to component if clicked outside of it
+     * @private
+     * @param {Event} event event to handle
+     * @param {*} args event arguments
+     */
+    __clickedOutHandler(event, args) {
+        if (!this.ContainsElement(args.domEvent.target)) {
+            this.Dispatch('ClickedOut', { domEvent: args.domEvent });
+        }
+    }
+
+    /**
+     * Mouse wheel handler, dispatches event to component if mouse wheel used on it
+     * @private
+     * @param {Event} event event to handle
+     * @param {*} args event arguments
+     */
+    __mouseWheel(event, args) {
+        if (!this.isConnected) {
+            return;
+        }
+
+        if (this.isEventRaisedOnMe(args.domEvent)) {
+            this.Dispatch('MouseWheel', args);
+        }
+
+    }
+
+    /**
+     * Resized handler, dispatches event to component if resized
+     * @private
+     * @param {Event} event event to handle
+     * @param {*} args event arguments
+     */
+    __resizedHandler(event, args) {
+        if (!this.isConnected) {
+            return;
+        }
+        this.Dispatch('Resized', args);
+    }
+
+    /**
+     * Resize handler, dispatches event to component if resized
+     * @private
+     * @param {Event} event event to handle
+     * @param {*} args event arguments
+     */
+    __resizeHandler(event, args) {
+        if (!this.isConnected) {
+            return;
+        }
+        this.Dispatch('Resize', args)
+    }
+
+    /**
+     * Binds html event to attached component event
+     * @private
+     * @param {string} eventName event name
+     * @param {*} args event arguments
+     */
+    __bindHtmlEvent(eventName, args) {
+
+        if (this.__domHandlersAttached[eventName]) {
+            return;
+        }
+
+        let { domEvent, respondent, delay, handler, capture, passive } = args;
+        respondent = respondent ? respondent : this._element;
+
+        handler = handler ? handler : this.__eventHandler;
+
+        this.__domHandlersAttached[eventName] = {
+            domEvent,
+            respondent,
+            handler
+        };
+
+        if (respondent === window || respondent === document.body || respondent === document) {
+            respondent.mapToUIComponent(this);
+        }
+
+        const options = {};
+        if (capture !== undefined) {
+            options.capture = capture;
+        }
+        if (passive !== undefined) {
+            options.passive = passive;
+        }
+        respondent.addEventListener(domEvent, handler, options, delay);
+    }
+
+    /**
+     * Default context menu handler, dispatches event to component and context menu icon
+     * @private
+     */
+    __defaultContextMenuHandler(event, args) {
+        if (this.hasContextMenu && this._getContextMenuIcon()) {
+            if (this._clickWhenContextMenuClicked) {
+                this.Dispatch('Clicked', { domEvent: args.domEvent, isContextMenuEvent: true });
+            }
+            this._getContextMenuIcon().Dispatch('Clicked', { domEvent: args.domEvent, isContextMenuEvent: true });
+            args.domEvent.stopPropagation();
+            args.domEvent.preventDefault();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Default mouse move handler for tooltip, sets tooltip position and gap
+     * @private 
+     * @param {string|Colibri.UI.Event} event event to handle
+     * @param {*} args arguments for event
+     */
+    __mouseMoveForToolTip(event, args) {
+        if (this._toolTip) {
+            this._setToolTipPositionAndGap(this._element, args.domEvent);
+        }
+    }
+
+    __bindingHandler(data, path) {
+        if (this.isConnected) {
+            this.__renderBoundedValues(data, path);
+        }
+    }
+    
+    /**
+     * Default touch end handler, dispatches event to component and removes touch move and touch end handlers
+     * @param {Event} e event to handle
+     * @private
+     */
+    __swipeTouchEnd(e) {
+        if (!document.body.__swipingComponent) {
+            return;
+        }
+
+        const c = document.body.__swipingComponent;
+        c.RemoveStyle('marginLeft');
+        c.RemoveStyle('marginTop');
+        document.body.removeEventListener('touchend', c.__swipeTouchEnd, true);
+        document.body.removeEventListener('touchmove', c.__swipeTouchMove, true);
+        document.body.__swipingComponent = null;
+        c.__touchStartedPos = null;
+    }
+
+    /**
+     * Default touch move handler, dispatches event to component and calculates swipe direction and distance
+     * @param {Event} e event to handle
+     * @private
+     */
+    __swipeTouchMove(e) {
+        if (!document.body.__swipingComponent) {
+            return;
+        }
+
+        const c = document.body.__swipingComponent;
+
+        const xUp = e.touches[0].clientX;
+        const yUp = e.touches[0].clientY;
+
+        const sensitivity = c._swipesensitivity || 10;
+        const orientation = c._swipeOrientation || 'hr';
+
+        const diff = orientation === 'hr' ? c.__touchStartedPos.x - xUp : c.__touchStartedPos.y - yUp;
+        if (Math.abs(diff) > 10) {
+            c.styles = orientation === 'hr' ? { marginLeft: (-1 * diff) + 'px' } : { marginTop: (-1 * diff) + 'px' };
+            if (diff > sensitivity) {
+                c.Dispatch(orientation === 'hr' ? 'SwipedToRight' : 'SwipedToBottom', { domEvent: e });
+            } else if (diff < -sensitivity) {
+                c.Dispatch(orientation === 'hr' ? 'SwipedToLeft' : 'SwipedToTop', { domEvent: e });
+            }
+        }
+    }
+
+    /**
+     * Default touch start handler, dispatches event to component and sets touch start position
+     * @param {Colibri.UI.Event} event event to handle
+     * @param {*} args arguments for event
+     * @private
+     */
+    __defaultTouchStartHandler(event, args) {
+        const firstTouch = args.domEvent.touches[0];
+        this.__touchStartedPos = { x: firstTouch.clientX, y: firstTouch.clientY };
+        document.body.__swipingComponent = this;
+        document.body.addEventListener('touchend', this.__swipeTouchEnd);
+        document.body.addEventListener('touchmove', this.__swipeTouchMove);
+    }
+
+    /**
+     * Default scroll handler, dispatches event to component and adds scrolling class
+     * @param {Colibri.UI.Event} event event to handle
+     * @param {*} args arguments for event
+     * @private
+     */
+    __thisDefaultScrollHandler(event, args) {
+
+        if (this._scrollEndTimeout != -1) {
+            clearTimeout(this._scrollEndTimeout);
+        } else {
+            this.Dispatch('ScrollStarted', { domEvent: args?.domEvent ?? null });
+        }
+
+        if (!this._lastScrollPosition) {
+            this._scrollDirection = null;
+        } else {
+
+            if (this.scrollTop > this._lastScrollPosition.top) {
+                this._scrollDirection = 'down';
+            } else if (this.scrollTop < this._lastScrollPosition.top) {
+                this._scrollDirection = 'up';
+            } else {
+                this._scrollDirection = '';
+            }
+
+            if (this.scrollLeft > this._lastScrollPosition.left) {
+                this._scrollDirection = this._scrollDirection ? this._scrollDirection + ' right' : 'right';
+            } else if (this.scrollLeft < this._lastScrollPosition.left) {
+                this._scrollDirection = this._scrollDirection ? this._scrollDirection + ' left' : 'left';
+            }
+
+            this._scrollDirection = this._scrollDirection.trimString();
+
+        }
+
+        this._lastScrollPosition = { top: this.scrollTop, left: this.scrollLeft };
+
+        this._scrolling = true;
+        this._scrollEndTimeout = setTimeout(() => {
+            if (!this.isConnected) {
+                return;
+            }
+            this._scrollEndTimeout = -1;
+            this.Dispatch('ScrollEnded', { direction: this.scrollDirection, domEvent: args?.domEvent ?? null });
+
+            if (this._element.scrollTop + this._element.clientHeight >= this._element.scrollHeight) {
+                this.Dispatch('ScrolledToBottom', {});
+            } else if (this._element.scrollTop <= 0) {
+                this.Dispatch('ScrolledToTop', {});
+            } else if (this._element.scrollLeft + this._element.clientWidth >= this._element.scrollWidth) {
+                this.Dispatch('ScrolledToRight', {});
+            } else if (this._element.scrollLeft <= 0) {
+                this.Dispatch('ScrolledToLeft', {});
+            }
+
+            this._scrolling = false;
+            this._scrollDirection = null;
+        }, 100);
+
+    }
+
+    /**
+     * Default scroll handler, dispatches event to component and adds scrolling class
+     * @param {Colibri.UI.Event} event event to handle
+     * @param {*} args arguments for event
+     * @private
+     */
+    __thisScrolledHandler(event, args) {
+        this._scrolling = true;
+        this.AddClass('-scrolling');
+        clearTimeout(this.__scrollTimeout);
+        this.__scrollTimeout = setTimeout(() => {
+            this.__scrollTimeout = -1;
+            if (!this.isConnected) {
+                return;
+            }
+            this._scrolling = false;
+            this.RemoveClass('-scrolling');
+        }, 300);
+    }
+
+    /**
+     * Default touch start handler for pull to refresh, dispatches event to component and sets touch start position
+     * @param {Colibri.UI.Event} event event to handle
+     * @param {*} args arguments for event
+     * @private
+     */
+    __bodyTouchStart(event, args) {
+        if (this._element.scrollTop === 0) {
+            this._startY = args.domEvent.touches[0].pageY;
+        }
+    }
+
+    /**
+     * Default touch move handler for pull to refresh, dispatches event to component and calculates touch move distance
+     * @param {Colibri.UI.Event} event event to handle
+     * @param {*} args arguments for event
+     * @private
+     */
+    __bodyTouchMove(event, args) {
+        if (this._startY !== null) {
+            const currentY = args.domEvent.touches[0].pageY;
+            const deltaY = currentY - this._startY;
+            if (deltaY > 50) {
+                if (!this._refreshing) {
+                    this._refreshing = true;
+                    this.Dispatch('RefreshCheck', {});
+                } else {
+                    this.Dispatch('RefreshPosition', { place: deltaY });
+                }
+            }
+        }
+    }
+
+    /**
+     * Default touch end handler for pull to refresh, dispatches event to component and triggers refresh if needed
+     * @param {Colibri.UI.Event} event event to handle
+     * @param {*} args arguments for event
+     * @private
+     */
+    __bodyTouchEnd(event, args) {
+        if (this._refreshing) {
+            this._startY = null;
+            this._refreshing = false;
+            this.Dispatch('RefreshRequested', {});
+        }
+    }
+
+
+    /**
+     * Processes a match of router
+     * @param {RegExpMatchArray} patternMatches array of matches
+     */
+    __processChangeOnRouteSwitch(patternMatches) {
+        this.ReloadBinding();
+    }
+
+    /**
+     * Renders bounded data
+     * @protected
+     * @param {*} data data in store to bind
+     */
+    __renderBoundedValues(data, path) {
+        try {
+            if (typeof data == 'string') {
+                this.value = data;
+            }
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
 
     /**
      * @constructor
@@ -284,22 +775,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     }
 
-    __defaultMouseEnterHandler(event, args) {
-        if (this._toolTip) {
-            this._createTipObject();
-            this._setToolTipPositionAndGap(this._element, args.domEvent);
-            this._tipObject.html(this._toolTip);
-            this._tipObject.showElement();
-        }
-    }
-
-    __defaultMouseLeaveHandler(event, args) {
-        if (this._tipObject) {
-            this._tipObject.html('');
-            this._tipObject.hideElement();
-        }
-    }
-
     /**
      * Converts property to its correct type, if the value is function then runs a function
      * @private
@@ -348,6 +823,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     }
 
     /**
+     * Generates a new name for component
      * @private
      * @returns {string}
      */
@@ -390,6 +866,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * @param {Element|string} element Element to create component for
      * @param {Element|Colibri.UI.Component} parent Parent element or component
      * @returns {string}
+     * @public
      */
     CreateComponentClass(element, parent) {
         let comp = null;
@@ -468,6 +945,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * @param {Element|string} element Element to create component for
      * @param {Element|Colibri.UI.Component} parent Parent element or component
      * @returns {Colibri.UI.Component}
+     * @public
      */
     CreateComponent(objectClass, element, parent, root) {
         try {
@@ -510,6 +988,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * @param {Element|null} parent parent component
      * @param {boolean} dontDispatch do not dispatch ChildsProcessed event
      * @param {Colibri.UI.Component} root Root component
+     * @public
      */
     ProcessChildren(children, parent, dontDispatch = false, root = null) {
         if (!parent) {
@@ -614,6 +1093,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * Generates children
      * @param {Element|string} element Element to process children for
      * @param {Element|Colibri.UI.Component} parent parent component or parent element
+     * @public
      */
     GenerateChildren(element, parent) {
         if (!element) {
@@ -710,6 +1190,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     }
 
     /**
+     * Gets context menu items
      * @private
      * @returns {Colibri.UI.Component}
      */
@@ -721,6 +1202,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     }
 
     /**
+     * Creates context menu icon component
      * @private
      * @returns {Colibri.UI.Component}
      */
@@ -742,6 +1224,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         contextMenuIcon.AddHandler('Clicked', this.__contextMenuIconClicked, false, this);
     }
 
+    /**
+     * Context menu icon click handler
+     * @private
+     * @param {string|Colibri.UI.Event} event event to handle
+     * @param {*} args arguments for event 
+     */
     __contextMenuIconClicked(event, args) {
         this.Dispatch('ContextMenuIconClicked', args);
         args.domEvent.stopPropagation();
@@ -750,6 +1238,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     }
 
     /**
+     * Removes context menu icon component
      * @private
      */
     _removeContextMenuButton() {
@@ -764,6 +1253,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * @param {Array<string>} orientation Orientation
      * @param {string} className class name for context menu
      * @param {{top, left}} point point to show contextmenu on
+     * @public
      */
     ShowContextMenu(orientation = [Colibri.UI.ContextMenu.LB, Colibri.UI.ContextMenu.LT], className = '', point = null, closeOnClick = true, rendererComponent = null, rendererAttrs = {}) {
 
@@ -809,6 +1299,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * @param {boolean} prepend prepend to array of handlers
      * @param {Colibri.UI.Dispatcher} respondent respondet object
      * @returns {Colibri.Events.Dispatcher}
+     * @public
      */
     AddHandler(eventName, handler, prepend = false, respondent = null) {
         if (!respondent) {
@@ -826,6 +1317,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     /**
      * Triggers an event to current component
      * @param {string} eventName event name
+     * @public
      */
     TriggerEvent(eventName) {
         const __domHandlers = Colibri.UI.Component.__domHandlers;
@@ -833,95 +1325,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
             const domEventName = __domHandlers[eventName].domEvent;
             this._element.emitHtmlEvents(domEventName);
         }
-    }
-
-    __eventHandler(e) {
-        let enames = [];
-        for (const key of Object.keys(Colibri.UI.Component.__domHandlers)) {
-            const eb = Colibri.UI.Component.__domHandlers[key];
-            if (eb.domEvent === e.type) {
-                enames.push(key);
-            }
-        }
-        if (enames.length == 0) {
-            return;
-        }
-
-        const component = e?.currentTarget?.getUIComponent ? e?.currentTarget?.getUIComponent() : null;
-        if (!component) {
-            return;
-        }
-
-        let delay = null;
-        if (window.__delayMap.get(this)) {
-            delay = window.__delayMap.get(this);
-            window.__delayMap.delete(this);
-        }
-
-        const performHandler = (component, enames, e) => {
-
-            if (this !== window && !this.isConnected) {
-                return false;
-            }
-
-            if (Array.isArray(component)) {
-                for (const c of component) {
-                    c.Dispatch(enames.length === 1 ? enames[0] : enames, { domEvent: e });
-                }
-            } else {
-                return component?.Dispatch(enames.length === 1 ? enames[0] : enames, { domEvent: e });
-            }
-        };
-
-        if (delay) {
-            setTimeout(() => {
-                performHandler(component, enames, e)
-            }, delay);
-        } else {
-            performHandler(component, enames, e)
-        }
-
-    }
-
-    __delayedEventHandler(e) {
-        Colibri.Common.Delay(delay, e).then(this.__eventHandler);
-    }
-
-    /**
-     * Binds html event to attached component event
-     * @private
-     * @param {string} eventName event name
-     * @param {*} args event arguments
-     */
-    __bindHtmlEvent(eventName, args) {
-
-        if (this.__domHandlersAttached[eventName]) {
-            return;
-        }
-
-        let { domEvent, respondent, delay, handler, capture, passive } = args;
-        respondent = respondent ? respondent : this._element;
-
-        handler = handler ? handler : this.__eventHandler;
-
-        this.__domHandlersAttached[eventName] = {
-            domEvent,
-            respondent,
-            handler
-        };
-
-        if (respondent === window || respondent === document.body || respondent === document) {
-            respondent.mapToUIComponent(this);
-        }
-
-        const options = {};
-        if (capture !== undefined) {
-            options.capture = capture;
-        }
-        if (passive !== undefined) {
-            options.passive = passive;
-        }
-        respondent.addEventListener(domEvent, handler, options, delay);
     }
 
     /**
@@ -1008,19 +1411,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     set clickWhenContextMenuClicked(value) {
         value = this._convertProperty('Boolean', value);
         this._clickWhenContextMenuClicked = value;
-    }
-
-    __defaultContextMenuHandler(event, args) {
-        if (this.hasContextMenu && this._getContextMenuIcon()) {
-            if (this._clickWhenContextMenuClicked) {
-                this.Dispatch('Clicked', { domEvent: args.domEvent, isContextMenuEvent: true });
-            }
-            this._getContextMenuIcon().Dispatch('Clicked', { domEvent: args.domEvent, isContextMenuEvent: true });
-            args.domEvent.stopPropagation();
-            args.domEvent.preventDefault();
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -1314,6 +1704,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         this._element.css(value);
     }
 
+    /**
+     * Style of component element
+     * @type {Object}
+     */
     set textStyle(value) {
         try {
             this.styles = value.toObject([';', ':']);
@@ -1322,10 +1716,18 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Style of component element
+     * @type {Object}
+     */
     get textStyle() {
         return '';
     } 
 
+    /**
+     * Removes style of component element
+     * @param {string} style style to remove
+     */
     RemoveStyle(style) {
         this._element.css(style, null);
     }
@@ -1519,6 +1921,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * Brings coponent to top of z-index
+     * @public
      */
     BringToFront() {
         if (!this._element) {
@@ -1535,6 +1938,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * Sends componpent to bottom of z-index
+     * @public
      */
     SendToBack() {
         this._element && this._element.css('z-index', null);
@@ -1560,6 +1964,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     }
 
     /**
+     * Creates tooltip object
      * @private
      */
     _createTipObject() {
@@ -1601,13 +2006,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     }
 
-    __mouseMoveForToolTip(event, args) {
-        if (this._toolTip) {
-            this._setToolTipPositionAndGap(this._element, args.domEvent);
-        }
-    }
-
     /**
+     * Sets tooltip position and gap
      * @private
      * @param {Element} elementObject element object to position tooltip
      */
@@ -1685,6 +2085,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Shows component tooltip
+     * @param {Event} e mouse event
+     */
     ShowToolTip(e = null) {
         this.__defaultMouseEnterHandler(null, { domEvent: e });
     }
@@ -1784,11 +2188,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     }
 
     /**
-     * 
+     * Moves child component to new index in its parent
      * @param {Colibri.UI.Component} child child to move 
      * @param {number} fromIndex current index of child 
      * @param {number} toIndex new index of child 
      * @param {boolean} raiseEvent rais ComponentMoved event
+     * @public
      */
     MoveChild(child, fromIndex, toIndex, raiseEvent = true) {
 
@@ -1811,6 +2216,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * Move current component up in its parent childs
+     * @param {boolean} raiseEvent raises ComponentMoved event
+     * @public
      */
     MoveUp(raiseEvent = true) {
         if (!this.prev) {
@@ -1824,6 +2231,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * Move current component down in its parent childs
+     * @param {boolean} raiseEvent raises ComponentMoved event
+     * @public
      */
     MoveDown(raiseEvent = true) {
         if (!this.next) {
@@ -1835,6 +2244,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Move current component to start of its parent childs
+     * @param {boolean} raiseEvent raises ComponentMoved event
+     * @public
+     */
     MoveEnd(raiseEvent = true) {
         this.parent.MoveChild(this, this.childIndex, this.parent.children, false);
         if (raiseEvent) {
@@ -1842,6 +2256,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Move current component to end of its parent childs
+     * @param {boolean} raiseEvent raises ComponentMoved event
+     * @public
+     */
     MoveTop(raiseEvent = true) {
         this.parent.MoveChild(this, this.childIndex, 0, false);
         if (raiseEvent) {
@@ -1849,10 +2268,18 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Is component first in its parent childs
+     * @type {boolean}
+     */
     get IsFirst() {
         return this.index === 0;
     }
 
+    /**
+     * Is component last in its parent childs
+     * @type {boolean}
+     */
     get IsLast() {
         return this.index === this.parent.children - 1;
     }
@@ -1900,6 +2327,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * @param {Colibri.UI.Component} val component to add 
      * @param {number} [index] index in childs to add component to
      * @returns {Colibri.UI.Component[]|Colibri.UI.Component}
+     * @public
      */
     Children(name, val = undefined, index = undefined, container = null, childContainer = null) {
 
@@ -1945,6 +2373,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     /**
      * Sort child components
      * @param {Function} callback callback for sorting
+     * @public
      */
     Sort(callback) {
         this._children.sort(callback);
@@ -1955,6 +2384,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     }
 
     /** 
+     * Returns number of child components
      * @type {number} 
      */
     get children() {
@@ -1965,6 +2395,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * Returns index of child component in Component DOM
      * @param {string} name name of child component
      * @returns {Colibri.UI.Component}
+     * @public
      */
     indexOf(name) {
         if (!this._children) {
@@ -2015,22 +2446,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     }
 
     /**
-     * Renders bounded data
-     * @protected
-     * @param {*} data data in store to bind
-     */
-    __renderBoundedValues(data, path) {
-        try {
-            if (typeof data == 'string') {
-                this.value = data;
-            }
-        }
-        catch (e) {
-            console.log(e);
-        }
-    }
-
-    /**
      * Store to bind to component
      * @type {Colibri.UI.Store}
      */
@@ -2053,17 +2468,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         return this._binding;
     }
 
-    _handler(data, path) {
-        // try {
-        if (this.isConnected) {
-            this.__renderBoundedValues(data, path);
-        }
-        // } catch(e) {
-        //     console.error(e);
-        //     App.Notices.Add(new Colibri.UI.Notice(e, Colibri.UI.Notice.Error));
-        // }
-    }
-
     /**
      * Path in store to bind to component
      * @type {String}
@@ -2078,7 +2482,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         if (this._binding && typeof this._binding === 'string') {
             let binding = this._binding.split(';');
             for (const pathsToLoad of binding) {
-                this._storage.RemovePathHandler(pathsToLoad, this, this._handler);
+                this._storage.RemovePathHandler(pathsToLoad, this, this.__bindingHandler);
             }
         }
 
@@ -2109,21 +2513,21 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
                 for (let i = 0; i < responses.length; i++) {
                     this.__renderBoundedValues(responses[i], pathsToLoad[i]);
                 }
-                this._storage.AddPathHandler(pathsToLoad, [this, this._handler]);
+                this._storage.AddPathHandler(pathsToLoad, [this, this.__bindingHandler]);
             }).catch(response => {
                 this.__renderBoundedValues(null, pathsToLoad);
-                this._storage.AddPathHandler(pathsToLoad, [this, this._handler]);
+                this._storage.AddPathHandler(pathsToLoad, [this, this.__bindingHandler]);
             });
 
         }
         else {
             this._storage.AsyncQuery(value).then(data => {
                 this.__renderBoundedValues(data, value);
-                this._storage.AddPathHandler(value, [this, this._handler]);
+                this._storage.AddPathHandler(value, [this, this.__bindingHandler]);
             }).catch((response) => {
                 // App.Notices.Add(new Colibri.UI.Notice(response, Colibri.UI.Notice.Error));
                 this.__renderBoundedValues(null, value);
-                this._storage.AddPathHandler(value, [this, this._handler]);
+                this._storage.AddPathHandler(value, [this, this.__bindingHandler]);
             });
         }
 
@@ -2131,6 +2535,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * Reloads binding
+     * @public
      */
     ReloadBinding() {
         if (this._binding && this._binding instanceof Colibri.UI.Component) {
@@ -2253,12 +2658,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         }
     }
 
-    __clickedOutHandler(event, args) {
-        if (!this.ContainsElement(args.domEvent.target)) {
-            this.Dispatch('ClickedOut', { domEvent: args.domEvent });
-        }
-    }
-
     /**
      * Is component must handle resize event
      * @type {boolean}
@@ -2279,30 +2678,19 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         }
     }
 
-    __mouseWheel(event, args) {
-        if (!this.isConnected) {
-            return;
-        }
-
-        if (this.isEventRaisedOnMe(args.domEvent)) {
-            this.Dispatch('MouseWheel', args);
-        }
-
-    }
-
     /**
      * Is component must handle resize event
      * @type {boolean}
      */
     get handleResize() {
-        return this._handleResize;
+        return this.__bindingHandleresize;
     }
     /**
      * Is component must handle resize event
      * @type {boolean}
      */
     set handleResize(value) {
-        this._handleResize = value;
+        this.__bindingHandleresize = value;
         if (value) {
             this.AddHandler('__Resized', this.__resizedHandler);
             this.AddHandler('__Resize', this.__resizeHandler);
@@ -2310,20 +2698,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
             this.RemoveHandler('__Resized', this.__resizedHandler);
             this.RemoveHandler('__Resize', this.__resizeHandler);
         }
-    }
-
-    __resizedHandler(event, args) {
-        if (!this.isConnected) {
-            return;
-        }
-        this.Dispatch('Resized', args);
-    }
-
-    __resizeHandler(event, args) {
-        if (!this.isConnected) {
-            return;
-        }
-        this.Dispatch('Resize', args)
     }
 
     /**
@@ -2345,55 +2719,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         }
     }
 
-    _swipeTouchEnd(e) {
-        if (!document.body.__swipingComponent) {
-            return;
-        }
-
-        const c = document.body.__swipingComponent;
-        c.RemoveStyle('marginLeft');
-        c.RemoveStyle('marginTop');
-        document.body.removeEventListener('touchend', c._swipeTouchEnd, true);
-        document.body.removeEventListener('touchmove', c._swipeTouchMove, true);
-        document.body.__swipingComponent = null;
-        c.__touchStartedPos = null;
-    }
-
-    _swipeTouchMove(e) {
-        if (!document.body.__swipingComponent) {
-            return;
-        }
-
-        const c = document.body.__swipingComponent;
-
-        const xUp = e.touches[0].clientX;
-        const yUp = e.touches[0].clientY;
-
-        const sensitivity = c._swipesensitivity || 10;
-        const orientation = c._swipeOrientation || 'hr';
-
-        const diff = orientation === 'hr' ? c.__touchStartedPos.x - xUp : c.__touchStartedPos.y - yUp;
-        if (Math.abs(diff) > 10) {
-            c.styles = orientation === 'hr' ? { marginLeft: (-1 * diff) + 'px' } : { marginTop: (-1 * diff) + 'px' };
-            if (diff > sensitivity) {
-                c.Dispatch(orientation === 'hr' ? 'SwipedToRight' : 'SwipedToBottom', { domEvent: e });
-            } else if (diff < -sensitivity) {
-                c.Dispatch(orientation === 'hr' ? 'SwipedToLeft' : 'SwipedToTop', { domEvent: e });
-            }
-        }
-    }
-
-    __defaultTouchStartHandler(event, args) {
-        const firstTouch = args.domEvent.touches[0];
-        this.__touchStartedPos = { x: firstTouch.clientX, y: firstTouch.clientY };
-        document.body.__swipingComponent = this;
-        document.body.addEventListener('touchend', this._swipeTouchEnd);
-        document.body.addEventListener('touchmove', this._swipeTouchMove);
-    }
-
     StopSwiping() {
         if (document.body.__swipingComponent) {
-            document.body.__swipingComponent._swipeTouchEnd(null);
+            document.body.__swipingComponent.__swipeTouchEnd(null);
         }
     }
 
@@ -2432,6 +2760,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * @param {Element} container container to connect
      * @param {number} index index to connect child in
      * @param {boolean} performBinding perform reload binding after connection
+     * @public
      */
     ConnectTo(container, index = null, performBinding = false) {
         this._container = container instanceof Colibri.UI.Component ? container.container : container;
@@ -2452,6 +2781,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * Disconnects component from DOM
+     * @public
      */
     Disconnect() {
         const parentContainer = this._container;
@@ -2463,6 +2793,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * Keeps component in memory but removes from DOM
+     * @public
      */
     KeepInMind() {
         if (this._container) {
@@ -2476,6 +2807,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * Retreives component from memory to DOM in its older position
+     * @public
      */
     Retreive(performBinding = false) {
         if (this._hideData && this._hideData.parent) {
@@ -2487,6 +2819,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * Sends an event to all child components recursively
+     * @param {string} event event name
+     * @param {Object} args event arguments
+     * @private
+     */
     _sendEventToChilds(event, args = {}) {
         for (const component of this._children) {
             component.Dispatch(event, args);
@@ -2496,6 +2834,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * Clears a children of component
+     * @public
      */
     Clear() {
         this._children.reverse();
@@ -2509,6 +2848,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * Hides a tooltip object forcely
+     * @public
      */
     HideToolTip() {
         const tip = document.body.querySelector('.tip');
@@ -2519,6 +2859,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * Disposes a component object and removes it from DOM
+     * @public
      */
     Dispose() {
 
@@ -2563,6 +2904,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * Finds component by path
      * @param {string} path path to component in Component DOM
      * @returns {Colibri.UI.Component}
+     * @public
      */
     Find(path) {
         return Colibri.UI.Find(path, this);
@@ -2572,6 +2914,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * Finds all components by path
      * @param {string} path path to components
      * @returns {Colibri.UI.Component}
+     * @public
      */
     FindAll(path) {
         return Colibri.UI.FindAll(path, this);
@@ -2581,6 +2924,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * Finds a first occurance of component by name
      * @param {string} path путь к компоненту в дереве
      * @returns {Colibri.UI.Component}
+     * @public
      */
     FindByName(name) {
         const query = '[data-object-name="' + name + '"]';
@@ -2596,6 +2940,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * Adds class name to classList of element
      * @param {string} val class name
      * @returns {this}
+     * @public
      */
     AddClass(val) {
         if (!val) {
@@ -2616,6 +2961,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * Removes class names from classList of element
      * @param {string|Array<string>} val class name or array of class names
      * @returns {this}
+     * @public
      */
     RemoveClass(val) {
         if (Array.isArray(val)) {
@@ -2633,7 +2979,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     /**
      * Checkes when component element contains a class name
      * @param {string} val name of class
-     * @returns {this}
+     * @returns {boolean} true if contains, false otherwise
+     * @public
      */
     ContainsClass(val) {
         return this._element?.classList?.contains(val);
@@ -2642,6 +2989,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     /**
      * Toggles a class name in classList of element
      * @param {string} val name of class
+     * @public
      */
     ToggleClass(val) {
         if (this.ContainsClass(val)) {
@@ -2654,6 +3002,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     /**
      * Puts a focus to the component
      * @returns {Colibri.UI.Component}
+     * @public
      */
     Focus() {
         if (this.canFocus)
@@ -2665,6 +3014,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         return this;
     }
 
+    /**
+     * Is component focused
+     * @type {boolean}
+     */
     get isFocused() {
         return this.ContainsClass('-focused');
     }
@@ -2672,6 +3025,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     /**
      * Blurs a focus from component
      * @returns {Colibri.UI.Component}
+     * @public
      */
     Blur() {
         if (this.canFocus)
@@ -2686,6 +3040,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     /**
      * Cycles a component childs and runs a handler
      * @param {Function} handler handler
+     * @public
      */
     ForEach(handler) {
         const children = [...this._children];
@@ -2702,6 +3057,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * Maps a component childs and runs a handler, returns an array of component childs
      * @param {Function} handler handler
      * @returns {Array<Colibri.UI.Component>}
+     * @public
      */
     Map(handler) {
         const children = [...this._children];
@@ -2715,7 +3071,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * Cycles a component childs in reverse order and runs a handler
-     * @param {Function} handler обработчик
+     * @param {Function} handler handler
+     * @public
      */
     ForReverseEach(handler) {
         const children = [...this._children];
@@ -2733,6 +3090,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * @param {number} [top] top position to scroll
      * @param {boolean} [hr] is horizontal scroll
      * @returns {void}
+     * @public
      */
     EnsureVisible(parent, top = null, hr = false) {
         let parentEl = parent;
@@ -2756,6 +3114,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * Scrolls a parent component
      * @param {number} to position to scroll
      * @param {number} duration animation duration
+     * @public
      */
     ScrollTo(to = 0, duration = 200) {
         this._element.animateScrollTop(to, duration);
@@ -2764,7 +3123,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     /**
      * Is component visible
      * @type {Boolean}
-     * @readonly
      */
     get visible() {
         return this._visible;
@@ -2772,7 +3130,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * Is component element visible
-     * @readonly
+     * @type {Boolean}
      */
     get elementVisible() {
         return this._element.computedCss('display') !== 'none' && this._element.computedCss('visibility') !== 'hidden';
@@ -2780,12 +3138,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * Is component element has offset parent
-     * @readonly
+     * @type {Boolean}
      */
     get elementIsInOffset() {
         return this._element.offsetParent !== null;
     }
-
 
     /**
      * Is component must handle visibility change
@@ -2810,6 +3167,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     /**
      * Checks the component contains and element
      * @param {HTMLElement} element элемент
+     * @returns {boolean}
+     * @public
      */
     ContainsElement(element) {
         return this._element.contains(element);
@@ -2817,6 +3176,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * Show component
+     * @public
      */
     Show() {
         this.shown = true;
@@ -2824,6 +3184,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * Hide component
+     * @public
      */
     Hide() {
         this.shown = false;
@@ -2893,14 +3254,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     }
 
     /**
-     * Processes a match of router
-     * @param {RegExpMatchArray} patternMatches array of matches
-     */
-    __processChangeOnRouteSwitch(patternMatches) {
-        this.ReloadBinding();
-    }
-
-    /**
      * Copy style
      * @type {html,text}
      */
@@ -2946,7 +3299,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         this._showCopy();
     }
     /**
-     * @protected
+     * @private
+     * @ignore
      */
     _showCopy() {
         if (this._copy) {
@@ -2963,6 +3317,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * @param {Function} callback callback for search
      * @param {boolean} useContainers use containers in search method
      * @returns {Colibri.UI.Component|Element|null}
+     * @public
      */
     Closest(callback, useContainers = false) {
         let parent = useContainers ? this.container : this;
@@ -2975,7 +3330,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         }
         return null;
     }
-
 
     /**
      * Column spanning for widget
@@ -3011,6 +3365,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * @private
+     * @ignore
      */
     _setSpanning() {
         if (this._rowspan) {
@@ -3023,7 +3378,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * Is component went out of right corner of window
-     * @readonly
+     * @type {Boolean}
      */
     get isComponentWentOutOfRight() {
         const bounds = this.container.bounds();
@@ -3032,7 +3387,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * Is component went out of left corner of window
-     * @readonly
+     * @type {Boolean}
      */
     get isComponentWentOutOfLeft() {
         const bounds = this.container.bounds();
@@ -3041,7 +3396,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * Is component went out of bottom corner of window
-     * @readonly
+     * @type {Boolean}
      */
     get isComponentWentOutOfBottom() {
         const bounds = this.container.bounds();
@@ -3050,7 +3405,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     /**
      * Is component went out of top corner of window
-     * @readonly
+     * @type {Boolean}
      */
     get isComponentWentOutOfTop() {
         const bounds = this.container.bounds();
@@ -3102,6 +3457,11 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         return this._element.isValueExceeded();
     }
 
+    /**
+     * Width of value of input
+     * @returns {Number}
+     * @public
+     */
     ExceededValueWidth() {
         return this._element.getRealWidth();
     }
@@ -3121,6 +3481,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         this._handleContainerScroll = value;
         this._showHandleContainerScroll();
     }
+    /**
+     * @private
+     * @ignore
+     */
     _showHandleContainerScroll() {
         if (this._handleContainerScroll) {
             this._registerPositionObserver();
@@ -3129,6 +3493,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         }
     }
 
+    /**
+     * @private
+     * @ignore
+     */
     _registerPositionObserver() {
         this._lastPosition = null;
         Colibri.Common.StartTimer('scrolling-observer', 10, () => {
@@ -3137,28 +3505,24 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
                 this._lastPosition = this._element.bounds();
             }
         });
-        // this._positionObserver = new IntersectionObserver((entries) => {
-        //     entries.forEach(entry => {
-        //         console.log(entry);
-        //         this.Dispatch('ScrolledIn', {});
-        //     });
-        // });
-        // this._positionObserver.observe(this._element);
     }
 
+    /**
+     * @private
+     * @ignore
+     */
     _unregisterPositionObserver() {
         Colibri.Common.StopTimer('scrolling-observer');
-        // if(this._positionObserver) {
-        //     try {
-        //         this._positionObserver?.unobserve();
-        //     } catch(e) {
-
-        //     }
-        // }
-        // this._positionObserver = null;
         this._lastPosition = null;
     }
 
+    /**
+     * Starts blinking of component
+     * @param {string} name name of timer
+     * @param {Object} styles styles to blink
+     * @param {number} timeout timeout in ms
+     * @public
+     */
     StartBlink(name, styles, timeout) {
         debugger;
         Colibri.Common.StartTimer(name, timeout, () => {
@@ -3176,10 +3540,19 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         });
     }
 
+    /**
+     * Stops blinking of component
+     * @param {string} name name of timer
+     * @public
+     */
     StopBlink(name) {
         Colibri.Common.StopTimer(name);
     }
 
+    /**
+     * Index of component in parent container
+     * @type {Number}
+     */
     get renderedIndex() {
         return this._renderedIndex;
     }
@@ -3205,19 +3578,6 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         this.AddHandler('Scrolled', this.__thisScrolledHandler)
     }
 
-    __thisScrolledHandler(event, args) {
-        this._scrolling = true;
-        this.AddClass('-scrolling');
-        clearTimeout(this.__scrollTimeout);
-        this.__scrollTimeout = setTimeout(() => {
-            this.__scrollTimeout = -1;
-            if (!this.isConnected) {
-                return;
-            }
-            this._scrolling = false;
-            this.RemoveClass('-scrolling');
-        }, 300);
-    }
 
     /**
      * Handle scroll additional properties
@@ -3239,100 +3599,26 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         }
     }
 
-    __thisDefaultScrollHandler(event, args) {
-
-        if (this._scrollEndTimeout != -1) {
-            clearTimeout(this._scrollEndTimeout);
-        } else {
-            this.Dispatch('ScrollStarted', { domEvent: args?.domEvent ?? null });
-        }
-
-        if (!this._lastScrollPosition) {
-            this._scrollDirection = null;
-        } else {
-
-            if (this.scrollTop > this._lastScrollPosition.top) {
-                this._scrollDirection = 'down';
-            } else if (this.scrollTop < this._lastScrollPosition.top) {
-                this._scrollDirection = 'up';
-            } else {
-                this._scrollDirection = '';
-            }
-
-            if (this.scrollLeft > this._lastScrollPosition.left) {
-                this._scrollDirection = this._scrollDirection ? this._scrollDirection + ' right' : 'right';
-            } else if (this.scrollLeft < this._lastScrollPosition.left) {
-                this._scrollDirection = this._scrollDirection ? this._scrollDirection + ' left' : 'left';
-            }
-
-            this._scrollDirection = this._scrollDirection.trimString();
-
-        }
-
-        this._lastScrollPosition = { top: this.scrollTop, left: this.scrollLeft };
-
-        this._scrolling = true;
-        this._scrollEndTimeout = setTimeout(() => {
-            if (!this.isConnected) {
-                return;
-            }
-            this._scrollEndTimeout = -1;
-            this.Dispatch('ScrollEnded', { direction: this.scrollDirection, domEvent: args?.domEvent ?? null });
-
-            if (this._element.scrollTop + this._element.clientHeight >= this._element.scrollHeight) {
-                this.Dispatch('ScrolledToBottom', {});
-            } else if (this._element.scrollTop <= 0) {
-                this.Dispatch('ScrolledToTop', {});
-            } else if (this._element.scrollLeft + this._element.clientWidth >= this._element.scrollWidth) {
-                this.Dispatch('ScrolledToRight', {});
-            } else if (this._element.scrollLeft <= 0) {
-                this.Dispatch('ScrolledToLeft', {});
-            }
-
-            this._scrolling = false;
-            this._scrollDirection = null;
-        }, 100);
-
-    }
-
+    /**
+     * Is component scrolling
+     * @type {Boolean}
+     */
     get scrolling() {
         return this._scrolling;
     }
 
+    /**
+     * Scroll direction
+     * @type {String}
+     */
     get scrollDirection() {
         return this._scrollDirection;
     }
 
-
-    __bodyTouchStart(event, args) {
-        if (this._element.scrollTop === 0) {
-            this._startY = args.domEvent.touches[0].pageY;
-        }
-    }
-
-    __bodyTouchMove(event, args) {
-        if (this._startY !== null) {
-            const currentY = args.domEvent.touches[0].pageY;
-            const deltaY = currentY - this._startY;
-            if (deltaY > 50) {
-                if (!this._refreshing) {
-                    this._refreshing = true;
-                    this.Dispatch('RefreshCheck', {});
-                } else {
-                    this.Dispatch('RefreshPosition', { place: deltaY });
-                }
-            }
-        }
-    }
-
-    __bodyTouchEnd(event, args) {
-        if (this._refreshing) {
-            this._startY = null;
-            this._refreshing = false;
-            this.Dispatch('RefreshRequested', {});
-        }
-    }
-
+    /**
+     * Starts pull to refresh
+     * @public
+     */
     StartPullToRefresh() {
         this._startY = null;
         this._refreshing = false;
@@ -3341,6 +3627,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         this.AddHandler('TouchEnded', this.__bodyTouchEnd, false, this);
     }
 
+    /**
+     * Stops pull to refresh
+     * @public
+     */
     StopPullToRefresh() {
         this._startY = null;
         this._refreshing = false;
@@ -3364,6 +3654,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         this._rotation = value;
         this._showRotation();
     }
+    /**
+     * @private
+     * @ignore
+     */
     _showRotation() {
         if (this._rotation === 0 || this._rotation === null) {
             this.styles = { 'transform': null };
@@ -3373,6 +3667,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Checks if event is raised on component
+     * @param {Event} event event object
+     * @returns {Boolean}
+     * @public
+     */
     isEventRaisedOnMe(event) {
         const bounds = this._element.bounds();
         const x = event.clientX;
@@ -3404,6 +3704,14 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
     }
 
+    /**
+     * Converts html element to component
+     * @param {HTMLElement} element html element
+     * @param {Colibri.UI.Component|HTMLElement} parentComponentOrNode parent component or node
+     * @returns {Colibri.UI.Component}
+     * @public
+     * @static
+     */
     static ConvertHtmlToComponents(element, parentComponentOrNode = null) {
         let cmp = null;
         const cmpData = Colibri.UI.Component.__elementsToComponentMap[element.nodeName.toLowerCase()];
@@ -3446,7 +3754,5 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
         return cmp;
     }
-
-
 
 }

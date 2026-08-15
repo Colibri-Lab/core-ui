@@ -13,6 +13,14 @@ Colibri.IO.Crypt = class {
      * @async
      * @public
      * @static
+     * @example
+     * ```
+     * /// Encrypt data using a key
+     * const key = 'my-secret-key';
+     * const data = 'Hello, world!';
+     * const encryptedData = await Colibri.IO.Crypt.Encrypt(key, data);
+     * console.log('Encrypted data:', encryptedData);
+     * ```
      */
     static Encrypt(key, data) {
         return new Promise((resolve, reject) => {
@@ -31,6 +39,14 @@ Colibri.IO.Crypt = class {
      * @async
      * @public
      * @static
+     * @example
+     * ```
+     * /// Decrypt data using a key
+     * const key = 'my-secret-key';
+     * const encryptedData = await Colibri.IO.Crypt.Encrypt(key, data);
+     * const decryptedData = await Colibri.IO.Crypt.Decrypt(key, encryptedData);
+     * console.log('Decrypted data:', decryptedData);
+     * ```
      */
     static Decrypt(key, data) {
         return Colibri.IO.Crypt.Encrypt(key, data);

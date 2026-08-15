@@ -59,6 +59,12 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
      * Opens the IndexedDB.
      * @returns {void}
      * @public
+     * @example
+     * ```
+     * /// Open the IndexedDB
+     * /// Dispatches events based on the database state (e.g., DatabaseDoesNotExists, DatabaseVersionDoesNotExists, DatabaseOpened, DatabaseOpenError)
+     * App.IndexDB.Open();
+     * ```
      */
     Open() {
         const request = window.indexedDB.open(this._name, this._version);
@@ -89,6 +95,12 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
      * @param {string} name - The name of the store.
      * @returns {boolean} - True if the store exists, false otherwise.
      * @public
+     * @example
+     * ```
+     * /// Check if a store named 'myStore' exists in the database
+     * const exists = App.IndexDB.StoreExists('myStore');
+     * console.log(exists); // true or false
+     * ```
      */
     StoreExists(name) {
         return this._db.objectStoreNames.contains(name);
@@ -102,6 +114,11 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
      * @param {array} indices - Array of index objects to create for the store.
      * @returns {object} - The newly created store.
      * @public
+     * @example
+     * ```
+     * /// Create a new store named 'myStore' with keyPath 'id', autoIncrement set to true, and an index on 'name'
+     * const store = App.IndexDB.CreateStore('myStore', 'id', true, [{name: 'nameIndex', keyPath: 'name', unique: false}]);
+     * ```
      */
     CreateStore(name, keyPath = 'id', autoIncrement = false, indices = []) {
         const store = this._db.createObjectStore(name, {keyPath: keyPath, autoIncrement: autoIncrement});
@@ -120,6 +137,11 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
      * @param {boolean} multiEntry - Whether the index should allow multiple entries for a key.
      * @returns {object} - The newly created index.
      * @public
+     * @example
+     * ```
+     * /// Create a new index named 'nameIndex' for the store 'myStore' with key 'name', unique set to false, and multiEntry set to false
+     * const index = App.IndexDB.CreateIndex('myStore', 'nameIndex', 'name', false, false);
+     * ```
      */
     CreateIndex(name, indexName, key, unique = false, multiEntry = false) {
         const store = this._db.objectStore(name);
@@ -131,6 +153,11 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
      * Deletes a store from the database.
      * @param {string} name - The name of the store to delete.
      * @public
+     * @example
+     * ```
+     * /// Delete the store named 'myStore' from the database
+     * App.IndexDB.DeleteStore('myStore');
+     * ```
      */
     DeleteStore(name) {
         return this._db.deleteObjectStore(name);
@@ -143,6 +170,12 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} - A promise that resolves with the result of the operation.
      * @public
      * @async
+     * @example
+     * ```
+     * /// Add data to the store named 'myStore'
+     * const result = await App.IndexDB.AddData('myStore', {id: 1, name: 'John Doe'});
+     * console.log(result); // The result of the add operation
+     * ```
      */
     AddData(storeName, dataObject) {
         return new Promise((resolve, reject) => {
@@ -174,6 +207,12 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} - A promise that resolves with the result of the operation.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Update data in the store named 'myStore'
+     * const result = await App.IndexDB.UpdateData('myStore', {id: 1, name: 'Jane Doe'});
+     * console.log(result); // The result of the update operation
+     * ```
      */
     UpdateData(storeName, dataObject) {
         return new Promise((resolve, reject) => {
@@ -205,6 +244,12 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} - A promise that resolves with the retrieved data.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Retrieve data from the store named 'myStore' by its ID
+     * const data = await App.IndexDB.GetDataById('myStore', 1);
+     * console.log(data); // The retrieved data object
+     * ```
      */
     GetDataById(storeName, dataId) {
         return new Promise((resolve, reject) => {
@@ -228,6 +273,12 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} A Promise that resolves with the retrieved data or rejects with an error.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Retrieve data from the store named 'myStore' within the range of keys from 1 to 10
+     * const data = await App.IndexDB.GetDataByRange('myStore', 1, 10);
+     * console.log(data); // The retrieved data objects within the specified range
+     * ```
      */
     GetDataByRange(storeName, idFrom = null, idTo = null) {
         return new Promise((resolve, reject) => {
@@ -270,6 +321,12 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} A Promise that resolves with the retrieved keys or rejects with an error.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Retrieve keys from the store named 'myStore' within the range of keys from 1 to 10
+     * const keys = await App.IndexDB.GetKeysByRange('myStore', 1, 10);
+     * console.log(keys); // The retrieved keys within the specified range
+     * ```
      */
     GetKeysByRange(storeName, idFrom = null, idTo = null) {
         return new Promise((resolve, reject) => {
@@ -312,6 +369,12 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} A Promise that resolves with the retrieved data or rejects with an error.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Retrieve data from the store named 'myStore' using the index 'nameIndex' with key 'John Doe'
+     * const data = await App.IndexDB.GetDataByIndex('myStore', 'nameIndex', 'John Doe');
+     * console.log(data); // The retrieved data objects matching the specified index and key
+     * ```
      */
     GetDataByIndex(storeName, indexName, key) {
         return new Promise((resolve, reject) => {
@@ -343,6 +406,12 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} A Promise that resolves with the retrieved data or rejects with an error.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Retrieve data from the store named 'myStore' using the index 'nameIndex' within the range of keys from 'A' to 'Z'
+     * const data = await App.IndexDB.GetDataByIndexRange('myStore', 'nameIndex', 'A', 'Z');    
+     * console.log(data); // The retrieved data objects matching the specified index and key range
+     * ```
      */
     GetDataByIndexRange(storeName, indexName, keyFrom = null, keyTo = null) {
         return new Promise((resolve, reject) => {
@@ -386,6 +455,12 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} A Promise that resolves with the retrieved key or rejects with an error.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Retrieve the key of a data entry in the store named 'myStore' using the index 'nameIndex' with key 'John Doe'    
+     * const key = await App.IndexDB.GetId('myStore', 'nameIndex', 'John Doe');
+     * console.log(key); // The retrieved key of the data entry matching the specified index and key
+     * ```
      */
     GetId(storeName, indexName, key) {
         return new Promise((resolve, reject) => {
@@ -415,6 +490,12 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} A Promise that resolves when the deletion is successful or rejects with an error.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Delete a data entry in the store named 'myStore' by its ID
+     * await App.IndexDB.DeleteById('myStore', 1);
+     * console.log('Data entry deleted successfully');
+     * ```
      */
     DeleteById(storeName, id) {
         return new Promise((resolve, reject) => {
@@ -444,6 +525,12 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
      * @returns {Promise} A Promise that resolves when the deletion is successful or rejects with an error.
      * @async
      * @public
+     * @example
+     * ```
+     * /// Delete data entries in the store named 'myStore' using the index 'nameIndex' with key 'John Doe'
+     * await App.IndexDB.DeleteByIndex('myStore', 'nameIndex', 'John Doe');
+     * console.log('Data entries deleted successfully');
+     * ```
      */
     DeleteByIndex(storeName, indexName, key) {
         return new Promise((resolve, reject) => {
@@ -460,6 +547,9 @@ Colibri.Web.IndexDB = class extends Colibri.Events.Dispatcher {
                 else {
                     resolve();
                 }
+            };
+            request.onerror = () => {
+                reject(request.error);
             };
         });
     }

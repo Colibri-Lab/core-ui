@@ -2,6 +2,7 @@
  * Represents a module class in the Colibri framework.
  * This class extends Colibri.IO.RpcRequest and provides functionality for managing modules.
  * @class 
+ * @abstract
  * @extends Colibri.IO.RpcRequest
  * @memberof Colibri.Modules
  */

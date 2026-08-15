@@ -88,6 +88,13 @@ Colibri.Common.DatedHistory = class {
      * @param {BigInt} date2 Date compare with
      * @returns BigInt nanoseconds between two dates
      * @public
+     * @example
+     * ```
+     * const date1 = 1620000000000000000n; // Example date in nanoseconds
+     * const date2 = 1620000000000005000n; // Example date in nanoseconds
+     * const difference = history.measure(date1, date2);
+     * console.log(difference); // Outputs: 5000n
+     * ```
      */
     measure(date1, date2) {
         if(date1 instanceof Colibri.Common.FDate) {
@@ -228,6 +235,15 @@ Colibri.Common.DatedHistory = class {
      * @param {Array|TypedArray} chunkObject.chunk - The data chunk to add.
      * @returns {void}
      * @public
+     * @example
+     * ```
+     * const chunkObject = {
+     *     time: new Colibri.Common.FDate(),
+     *     duration: 1000, // milliseconds
+     *     chunk: [1, 2, 3, 4, 5]
+     * };
+     * history.addObject(chunkObject);
+     * ```
      */
     addObject(chunkObject) {
         // {
@@ -250,6 +266,11 @@ Colibri.Common.DatedHistory = class {
      * @param {Array} line - The array containing date and chunk data.
      * @param {number} [datePosition=0] - The index of the date in the line array.
      * @returns {void}
+     * @example
+     * ```
+     * const line = [new Colibri.Common.FDate(), [1, 2, 3, 4, 5]];
+     * history.add(line);
+     * ```
      */
     add(line, datePosition = 0) {
         this._add(line[datePosition], line, this._dateShift);
@@ -264,6 +285,11 @@ Colibri.Common.DatedHistory = class {
      * @returns {void}
      * @deprecated Use the add method instead.
      * @public
+     * @example
+     * ```
+     * const line = [new Colibri.Common.FDate(), [1, 2, 3, 4, 5]];
+     * history.push(line);
+     * ```
      */
     push(line) {
         this.add(line);
@@ -275,6 +301,13 @@ Colibri.Common.DatedHistory = class {
      * If the history is empty, it returns undefined.
      * @returns {Object} - The most recent item from the history.
      * @public
+     * @example
+     * ```
+     * const history = new Colibri.Common.History();    
+     * history.add({ id: 1, name: 'Item 1' });
+     * const recentItem = history.pop(); // Removes and returns the most recent item
+     * console.log(recentItem); // Outputs: { id: 1, name: 'Item 1' }   
+     * ```
      */
     pop() {
         return this._newestFirst ? this._items.shift() : this._items.pop();
@@ -289,6 +322,16 @@ Colibri.Common.DatedHistory = class {
      * @returns {void}
      * @throws {Error} - Throws an error if the provided value is not an array.
      * @public
+     * @example
+     * ```
+     * const history = new Colibri.Common.History();
+     * const newItems = [
+     *     { id: 1, name: 'Item 1' },
+     *     { id: 2, name: 'Item 2' }
+     * ];
+     * history.setAll(newItems);
+     * console.log(history.getAll()); // Outputs: [{ id: 1, name: 'Item 1' }, { id: 2, name: 'Item 2' }]
+     * ```
      */
     setAll(value) {
         const newData = value.slice(0, this._limit);
@@ -305,6 +348,14 @@ Colibri.Common.DatedHistory = class {
      * The returned array can be used for further processing or analysis of the historical data.    
      * @returns {Array} - A copy of all items in the history.
      * @public
+     * @example
+     * ```
+     * const history = new Colibri.Common.History();
+     * history.add({ id: 1, name: 'Item 1' });
+     * history.add({ id: 2, name: 'Item 2' });
+     * const allItems = history.getAll(); // Gets a copy of all items in the history
+     * console.log(allItems); // Outputs: [{ id: 1, name: 'Item 1' }, { id: 2, name: 'Item 2' }]
+     * ```
      */
     getAll() {
         return this._items.slice();
@@ -316,6 +367,14 @@ Colibri.Common.DatedHistory = class {
      * @param {Function} endF index search method
      * @returns Array of items cropped by the index search method
      * @public
+     * @example
+     * ```
+     * const history = new Colibri.Common.History();
+     * history.add({ id: 1, name: 'Item 1' });
+     * history.add({ id: 2, name: 'Item 2' });
+     * const croppedItems = history.crop(item => item.id === 1, item => item.id === 2); // Returns [{ id: 1, name: 'Item 1' }]
+     * console.log(croppedItems); // Outputs: [{ id: 1, name: 'Item 1' }]
+     * ```
      */
     crop(startF, endF) {
         startF = startF || (() => true);
@@ -343,6 +402,13 @@ Colibri.Common.DatedHistory = class {
      * If you need to preserve the data, consider creating a backup or using the getAll() method before clearing the history.
      * @returns {void}
      * @public
+     * @example
+     * ```
+     * const history = new Colibri.Common.DatedHistory();
+     * history.add({ id: 1, name: 'Item 1' });
+     * history.clear(); // Clears all items from the history
+     * console.log(history.getAll()); // Outputs: []
+     * ```
      */
     clear() {
         debugger;
@@ -354,6 +420,12 @@ Colibri.Common.DatedHistory = class {
      * @param {number} newLimit - The new maximum number of items to store in the history.
      * @returns {void}
      * @public
+     * @example
+     * ```
+     * const history = new Colibri.Common.DatedHistory(5);
+     * history.add({ id: 1, name: 'Item 1' });
+     * history.resize(10); // Resizes the history to hold a maximum of 10 items
+     * ```
      */
     resize(newLimit) {
         this.limit = newLimit;
@@ -368,6 +440,13 @@ Colibri.Common.DatedHistory = class {
      * @param {number} prependCount - The number of empty items to prepend to each chunk.
      * @returns {void}
      * @public
+     * @example
+     * ```
+     * const history = new Colibri.Common.DatedHistory();    
+     * history.add({ id: 1, name: 'Item 1', chunk: [1, 2, 3] });
+     * history.prependTo(2); // Prepends 2 empty items to each chunk in the history
+     * console.log(history.getAll()); // Outputs: [{ id: 1, name: 'Item 1', chunk: [emptyValue, emptyValue, 1, 2, 3] }]
+     * ```
      */
     prependTo(prependCount) {
         this._items.forEach((item) => {
@@ -384,6 +463,13 @@ Colibri.Common.DatedHistory = class {
      * @param {number} appendCount - The number of empty items to append to each chunk.
      * @returns {void}
      * @public
+     * @example
+     * ```
+     * const history = new Colibri.Common.DatedHistory();    
+     * history.add({ id: 1, name: 'Item 1', chunk: [1, 2, 3] });
+     * history.appendTo(2); // Appends 2 empty items to each chunk in the history
+     * console.log(history.getAll()); // Outputs: [{ id: 1, name: 'Item 1', chunk: [1, 2, 3, emptyValue, emptyValue] }]
+     * ```
      */
     appendTo(appendCount) {
         this._items.forEach((item) => {
@@ -400,6 +486,14 @@ Colibri.Common.DatedHistory = class {
      * @param {number} startIndex - The starting index for cropping the chunks.
      * @param {number} endIndex - The ending index for cropping the chunks.
      * @returns {void}
+     * @public
+     * @example
+     * ```
+     * const history = new Colibri.Common.DatedHistory();    
+     * history.add({ id: 1, name: 'Item 1', chunk: [1, 2, 3, 4, 5] });
+     * history.cropItems(1, 4); // Crops the chunks to indices 1 to 4 and extrapolates to the original length
+     * console.log(history.getAll()); // Outputs: [{ id: 1, name: 'Item 1', chunk: [2, 3, 4] }]
+     * ```
      */
     cropItems(startIndex, endIndex) {
         this._items.forEach((item) => {

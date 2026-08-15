@@ -1,22 +1,3 @@
-if (!XMLHttpRequest.prototype.sendAsBinary) {
-    /**
-     * Sends data as binary data 
-     * Defines the object for making requests.
-     * If the XMLHttpRequest object doesn't have the sendAsBinary method, it adds it.
-     * @param {string} sData data to send
-     * @prototypeof XMLHttpRequest
-     * @method
-     * @public
-     */
-    XMLHttpRequest.prototype.sendAsBinary = function (sData) {
-        var nBytes = sData.length, ui8Data = new Uint8Array(nBytes);
-        for (var nIdx = 0; nIdx < nBytes; nIdx++) {
-            ui8Data[nIdx] = sData.charCodeAt(nIdx) & 0xff;
-        }
-        this.send(ui8Data);
-    };
-}
-
 /**
  * Represents the request class for handling HTTP requests.
  * @class 
@@ -221,6 +202,12 @@ Colibri.IO.Request = class extends Destructable {
      * @param {string} value The value of the header.
      * @returns {Colibri.IO.Request} The modified request object.
      * @public
+     * @example
+     * ```
+     * /// Add a custom header to the request
+     * const request = new Colibri.IO.Request();
+     * request.AddHeader('X-Custom-Header', 'CustomValue');
+     * ```
      */
     AddHeader(name, value) {
         this._headers[name] = value;
@@ -232,6 +219,15 @@ Colibri.IO.Request = class extends Destructable {
      * @param {object} headers The headers to add.
      * @returns {Colibri.IO.Request} The modified request object.
      * @public
+     * @example
+     * ```
+     * /// Add multiple headers to the request
+     * const request = new Colibri.IO.Request();
+     * request.AddHeaders({
+     *     'X-Custom-Header1': 'CustomValue1',
+     *     'X-Custom-Header2': 'CustomValue2'
+     * });
+     * ```
      */
     AddHeaders(headers) {
         this._headers = Object.assign({}, this._headers, headers);
@@ -247,6 +243,24 @@ Colibri.IO.Request = class extends Destructable {
      * @returns {Promise} A promise that resolves with the response data or rejects with an error.
      * @public
      * @async
+     * @example
+     * ```
+     * /// Execute a GET request
+     * const request = new Colibri.IO.Request();
+     * request.Get('/api/data', { param1: 'value1', param2: 'value2' })
+     *     .then(response => {
+     *         console.log('GET request successful:', response);
+     *     })
+     *     .catch(error => {
+     *         console.error('GET request failed:', error);
+     *     });
+     * 
+     * /// Execute a GET request with progress callback
+     * const requestWithProgress = new Colibri.IO.Request();
+     * requestWithProgress.Get('/api/data', { param1: 'value1' }, true, (progressEvent) => {
+     *         console.log('Progress event:', progressEvent);
+     *     });
+     * ```
      */
     Get(url, params, withCredentials = true, onprogressCallback = undefined) {
 
@@ -310,6 +324,23 @@ Colibri.IO.Request = class extends Destructable {
      * @returns {Promise} A promise that resolves with the response data or rejects with an error.
      * @public
      * @async
+     * @example
+     * ```
+     * /// Execute a POST request
+     * const request = new Colibri.IO.Request();
+     * request.Post('/api/data', { param1: 'value1', param2: 'value2' })
+     *     .then(response => {
+     *         console.log('POST request successful:', response);
+     *     })
+     *     .catch(error => {
+     *         console.error('POST request failed:', error);
+     *     });  
+     * /// Execute a POST request with progress callback
+     * const requestWithProgress = new Colibri.IO.Request();
+     * requestWithProgress.Post('/api/data', { param1: 'value1' }, true, (progressEvent) => {
+     *         console.log('Progress event:', progressEvent);
+     *     });
+     * ```
      */
     Post(url, params, withCredentials = true, onprogressCallback = undefined) {
 
@@ -377,6 +408,12 @@ Colibri.IO.Request = class extends Destructable {
     /**
      * Aborts the current XMLHttpRequest request.
      * @public
+     * @example
+     * ```
+     * /// Abort the current request
+     * const request = new Colibri.IO.Request();
+     * request.Abort();
+     * ```
      */
     Abort() {
         if (this._currentRequest) {
@@ -395,6 +432,16 @@ Colibri.IO.Request = class extends Destructable {
      * @static
      * @public
      * @async
+     * @example
+     * ```
+     * /// Execute a POST request
+     * Colibri.IO.Request.Post('/api/data', { param1: 'value1', param2: 'value2' })
+     *     .then(response => {
+     *         console.log('POST request successful:', response);
+     *     })
+     *     .catch(error => {
+     *         console.error('POST request failed:', error);
+     *     });
      */
     static Post(url, params, headers, withCredentials, onprogressCallback) {
         const request = new Colibri.IO.Request();
@@ -412,6 +459,17 @@ Colibri.IO.Request = class extends Destructable {
      * @static
      * @public
      * @async
+     * @example
+     * ```
+     * /// Execute a GET request
+     * Colibri.IO.Request.Get('/api/data', { param1: 'value1', param2: 'value2' })
+     *     .then(response => {  
+     *        console.log('GET request successful:', response);
+     *     })
+     *     .catch(error => {
+     *         console.error('GET request failed:', error);
+     *     });
+     * ```
      */
     static Get(url, params, headers, withCredentials, onprogressCallback) {
         const request = new Colibri.IO.Request();

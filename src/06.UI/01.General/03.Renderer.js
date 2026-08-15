@@ -2,6 +2,7 @@
  * Base renderer class
  * @class
  * @memberof Colibri.UI
+ * @abstract
  */
 Colibri.UI.Renderer = class extends Destructable {
 
@@ -31,7 +32,8 @@ Colibri.UI.Renderer = class extends Destructable {
     }
 
     /**
-     * @description Run render process, must be overloaded
+     * Run render process, must be overloaded
+     * @abstract
      */
     Render() {
         throw new Error('#{ui-renderer-error4}');
