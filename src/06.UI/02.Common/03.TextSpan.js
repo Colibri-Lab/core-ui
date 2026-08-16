@@ -1,7 +1,20 @@
 /**
+ * TextSpan component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * let textspan = new Colibri.UI.TextSpan('textspan', this, 'Hello world');
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.TextSpan name="textspan" value="Hello world" />
+ * 
+ * then in js
+ * 
+ * let textspan = this.Children('textspan');
+ * ```
  */
 Colibri.UI.TextSpan = class extends Colibri.UI.Component {
     /**

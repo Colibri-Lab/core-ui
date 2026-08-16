@@ -1,7 +1,19 @@
 /**
+ * Image component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * if you want to dynamicaly create image component you can do it like this:
+ * let image = new Colibri.UI.Image('image', this);
+ * image.source = 'url("image.png")';
+ * ---
+ * if you using html template you can do it like this:
+ * <Colibri.UI.Image name="image" source="url('image.png')" />
+ * then in js template file you can get it like this:
+ * let image = this.Children('image');
+ * ```
  */
 Colibri.UI.Image = class extends Colibri.UI.Component {
     

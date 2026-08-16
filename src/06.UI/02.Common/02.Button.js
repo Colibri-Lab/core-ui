@@ -3,6 +3,23 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * let button = new Colibri.UI.Button('button', this);
+ * button.value = 'Click me';
+ * button.AddHandler('Clicked', (event, args) => {
+ *      console.log('Button clicked');
+ * });
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.Button name="button" value="Click me" />
+ * 
+ * then in js
+ * 
+ * let button = this.Children('button');
+ * 
+ * ```
  */
 Colibri.UI.Button = class extends Colibri.UI.Component {
 

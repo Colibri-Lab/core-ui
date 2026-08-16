@@ -1,7 +1,21 @@
 /**
+ * Icon component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * let icon = new Colibri.UI.Icon('icon', this);
+ * icon.iconSVG = 'Colibri.UI.LoadingIcon';
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.Icon name="icon" iconSVG="Colibri.UI.LoadingIcon" />
+ * 
+ * then in js
+ * 
+ * let icon = this.Children('icon');
+ * ```
  */
 Colibri.UI.Icon = class extends Colibri.UI.Component {
 

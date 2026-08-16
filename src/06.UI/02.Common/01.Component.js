@@ -3,6 +3,17 @@
  * @class
  * @extends Colibri.Events.Dispatcher
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * if you want to dynamicaly create component you can do it like this:
+ * let component = new Colibri.UI.Component('component', this); /// its create a div dom element and append it to this component
+ * or you can create component in document.body element insteed
+ * let component = new Colibri.UI.Component('component', document.body); /// its create a div dom element and append it to document.body
+ * or you can create component in html template:
+ * <Colibri.UI.Component name="component" /> /// if you are using Colibri.UI VSCode extension you can see the all available attributes for component in html template
+ * then in js template file you can get it like this:
+ * let component = this.Children('component');
+ * ```
  */
 Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
