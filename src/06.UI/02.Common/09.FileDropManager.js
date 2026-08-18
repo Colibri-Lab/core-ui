@@ -83,6 +83,10 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
         this.message = message;
     }
 
+    /**
+     * Dispose the component
+     * @public
+     */
     Dispose() {
         
         this._dropContainer.removeEventListener('dragover', this.__dragOverHandler);
@@ -168,6 +172,7 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
 
     /**
      * @private
+     * @ignore
      */
     _initManager() {
         
@@ -182,6 +187,7 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
+     * @ignore
      */ 
     __dragStartFromSources(event, args) {
         // this._current = args.domEvent.target.closest('[data-object-name]').getUIComponent();
@@ -192,6 +198,7 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
+     * @ignore
      */ 
     __dragEndFromSources(event, args) {
         this._current = null;
@@ -207,6 +214,7 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
+     * @ignore
      */ 
     __dragOverTheDestination(event, args) {
         if(!this._current) {
@@ -237,6 +245,7 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
+     * @ignore
      */ 
     __dragLeaveTheDestination(event, args) {
         if(!this._current) {
@@ -260,6 +269,7 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
+     * @ignore
      */ 
     __dragDropOnTheDestination(event, args) {
 
@@ -282,6 +292,7 @@ Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
 
     /**
      * @private
+     * @ignore
      */
     _checkFiles(files) {
         let errors = [];

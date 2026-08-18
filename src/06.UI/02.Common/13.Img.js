@@ -1,4 +1,5 @@
 /**
+ * Img tag component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
@@ -21,6 +22,7 @@ Colibri.UI.Img = class extends Colibri.UI.Component {
     /**
      * Register events
      * @protected
+     * @ignore
      */
     _registerEvents() {
         super._registerEvents();

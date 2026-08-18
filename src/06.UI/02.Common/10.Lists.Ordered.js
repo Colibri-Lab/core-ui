@@ -1,4 +1,5 @@
 /**
+ * OL ordered list component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
@@ -16,6 +17,13 @@ Colibri.UI.OrderedList = class extends Colibri.UI.Component {
         this.AddClass('app-component-orderedlist');
     }
 
+    /**
+     * Adds a new item to the list
+     * @param {*} value value of the item
+     * @param {string} name name of the item
+     * @returns {Colibri.UI.ListItem} list item component
+     * @public
+     */
     AddItem(value = null, name = null) {
         const n = new Colibri.UI.ListItem(name, this);
         n.shown = true;

@@ -25,6 +25,10 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
         this.Reinit(sources, destinations);
     }
 
+    /**
+     * Clears all targets and sources
+     * @public
+     */
     ClearTargets() {
         this._current = null;
 
@@ -47,6 +51,7 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
     
     /**
      * Dispose the component
+     * @public
      */
     Dispose() {
         this.ClearTargets();
@@ -54,7 +59,10 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
     }
 
     /**
-     * @private
+     * Reinit the drag manager with new sources and destinations
+     * @param {Colibri.UI.Component[]} sources array of source items
+     * @param {Colibri.UI.Component[]} destinations destination items
+     * @public
      */
     Reinit(sources, destinations) {
         
@@ -93,6 +101,7 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
+     * @ignore
      */ 
     __dragEndFromSources(event, args) {
         this._current = null;
@@ -107,6 +116,7 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
+     * @ignore
      */ 
     __dragOverTheDestination(event, args) {
         if(!this._current) {
@@ -146,6 +156,7 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
+     * @ignore
      */ 
     __dragLeaveTheDestination(event, args) {
         if(!this._current) {
@@ -174,6 +185,7 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
+     * @ignore
      */ 
     __dragDropOnTheDestination(event, args) {
 

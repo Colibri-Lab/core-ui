@@ -1,4 +1,5 @@
 /**
+ * H3 component
  * @class
  * @extends Colibri.UI.Heading
  * @memberof Colibri.UI
