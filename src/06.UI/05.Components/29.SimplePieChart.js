@@ -1,4 +1,5 @@
 /**
+ * Simple pie chart component
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI

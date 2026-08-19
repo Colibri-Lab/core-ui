@@ -165,6 +165,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -201,6 +202,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments

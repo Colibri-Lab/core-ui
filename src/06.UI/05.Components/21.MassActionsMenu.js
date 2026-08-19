@@ -1,4 +1,5 @@
 /**
+ * Mass actions menu component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
@@ -70,9 +71,21 @@ Colibri.UI.MassActionsMenu = class extends Colibri.UI.Component {
         });
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __actionButtonContextMenuItemClicked(event, args) {
         this.Dispatch('ActionClicked', args);
     }
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __actionButtonClicked(event, args) {
         if(this._actionButton.contextmenu.length > 0) {
             this._actionButton.ShowContextMenu([Colibri.UI.ContextMenu.LT, Colibri.UI.ContextMenu.RT], '', null);
@@ -120,6 +133,7 @@ Colibri.UI.MassActionsMenu = class extends Colibri.UI.Component {
 
     /**
      * Disposes the object
+     * @public
      */
     Dispose() {
         this.shown = false;

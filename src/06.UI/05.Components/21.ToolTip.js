@@ -1,17 +1,30 @@
 /**
+ * Tooltip component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
  */
 Colibri.UI.ToolTip = class extends Colibri.UI.Component {
 
-    /** Left bottom */
+    /** 
+     * Left bottom
+     * @const {string}
+     */
     static LB = 'lb';
-    /** Left top */
+    /** 
+     * Left top
+     * @const {string}
+     */
     static LT = 'lt';
-    /** Right bottom */
+    /** 
+     * Right bottom
+     * @const {string}
+     */
     static RB = 'rb';
-    /** Right top */
+    /** 
+     * Right top
+     * @const {string}
+     */
     static RT = 'rt';
 
     /**
@@ -43,6 +56,7 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -234,6 +248,7 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
     /**
      * Show tooltip on component
      * @param {Colibri.UI.Component} parent parent component
+     * @public
      */
     Show(parent = null, permanent = false, point = null) {
         if(parent) {

@@ -1,4 +1,5 @@
 /**
+ * Slide down component
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
@@ -22,12 +23,14 @@ Colibri.UI.SlideDown = class extends Colibri.UI.Pane {
 
     /**
      * Toggle component
+     * @public
      */
     Toggle() {
         this.__handlerClicked();    
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments

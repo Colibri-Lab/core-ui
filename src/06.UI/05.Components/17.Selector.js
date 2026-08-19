@@ -1,14 +1,23 @@
 /**
+ * Selector component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
  */
 Colibri.UI.Selector = class extends Colibri.UI.Component {
 
-    /** @type {boolean} */
-    _skipLooseFocus;
-    /** @type {boolean} */
-    _itemSelected;
+    /** 
+     * Skip loose focus event
+     * @private
+     * @type {boolean}
+     */
+    _skipLooseFocus = false;
+    /** 
+     * Item selected flag
+     * @private
+     * @type {boolean}
+     */
+    _itemSelected = false;
 
     /**
      * @constructor
@@ -144,26 +153,56 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __inputLoosedFocus(event, args) {
         !this._skipLooseFocus && this.Dispatch('LoosedFocus', args);
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisLoosesFocus(event, args) {
         if (!this._skipLooseFocus) {
             this._hidePopup();
         }
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __inputReceiveFocus(event, args) {
 
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __inputLoosesFocus(event, args) {
         if (!this._skipLooseFocus) {
             this._hidePopup();
         }
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __inputKeyDown(event, args) {
 
         // , 'Space'
@@ -207,11 +246,18 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         return this.Dispatch('KeyDown', args);
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __inputFilled(event, args) {
         this.__thisFilled(event, Object.assign(args, { search: true }));
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -239,12 +285,16 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         return false;
     }
 
-    /** @public */
+    /**
+     * Before filled event callback
+     * @protected 
+     */
     async __BeforeFilled() {
         return true;
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -268,6 +318,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -307,6 +358,10 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._changeBodyScroll();
     }
 
+    /**
+     * Close popup
+     * @public
+     */
     ClosePopup() {
         this._hidePopup();
     }
@@ -470,6 +525,8 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * Search for value
      * @param {string|number} value value
      * @returns string
+     * @private
+     * @ignore
      */
     _findValue(value) {
         let foundValue = null;
@@ -491,6 +548,10 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         return foundValue;
     }
 
+    /**
+     * @private
+     * @ignore
+     */
     _getRenderMethod() {
         if(typeof this.__render === 'string') {
             return eval(this.__render);
@@ -587,6 +648,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
     /**
      * Set focus on selector
+     * @public
      */
     Focus() {
         // if (this._input?.readonly) {
@@ -600,6 +662,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     /**
      * Is selector has values
      * @returns {boolean}
+     * @public
      */
     HaveValues() {
         const values = this.values;
@@ -748,7 +811,9 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * Search for items to show in selector
      * @param {string} searchString search string
      * @return {Array}
-     *  */
+     * @private
+     * @ignore
+     */
     _search(searchString) {
         if (!searchString) {
             return this._values ?? {};
@@ -831,9 +896,21 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         popup.AddHandler('ShadowClicked', this.__popupShadowClicked, false, this);
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __popupItemMouseDown(event, args) {
         this._skipLooseFocus = true;
     }
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __popupClicked(event, args) {
         const popup = event.sender;
         this._skipLooseFocus = false;
@@ -864,7 +941,12 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
         return false;
     }
-
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __popupShadowClicked(event, args) {
         this._hidePopup();
         this.Focus();
@@ -965,10 +1047,17 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._beforePopupHandler = value;
     }
 
+    /**
+     * Binding parser for data binding
+     * @type {Function}
+     */
     get bindingParser() {
         return this._bindingParser;
     }
-
+    /**
+     * Binding parser for data binding
+     * @type {Function}
+     */
     set bindingParser(value) {
         value = this._convertProperty('Function', value);
         this._bindingParser = value;
@@ -979,6 +1068,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      * @protected
      * @param {*} data 
      * @param {String} path 
+     * @ignore
      */
     __renderBoundedValues(data, path) {
         if(!data) {

@@ -1,4 +1,5 @@
 /**
+ * Files drag and drop component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
@@ -55,19 +56,40 @@ Colibri.UI.FilesDragAndDrop = class extends Colibri.UI.Component {
         this._dropContainer.AddHandler('Drop', this.__dropContainerDrop, false, this);
     }
 
-
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __dropContainerClicked(event, args) { 
         this._innerInput.click(); 
     }
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __dropContainerDragOver(event, args){
         args.domEvent.preventDefault();
         this.AddClass('-active');
     }
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __dropContainerDragLeave(event, args) { 
         this.RemoveClass('-active'); 
     }
-
-    /* выбрать файлы в зависимости от источника, очистить выбор после вызова события  */
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __dropContainerDrop(event, args) {
         args.domEvent.preventDefault();
         this.RemoveClass('-active');
@@ -93,6 +115,7 @@ Colibri.UI.FilesDragAndDrop = class extends Colibri.UI.Component {
      * Choose file
      * @param {FileList|DataTransferItemList} filesList
      * @private
+     * @ignore
      */
     _chooseFiles(filesList) {
         if (!this._multiple) { this._inputFiles = []; }
@@ -110,6 +133,7 @@ Colibri.UI.FilesDragAndDrop = class extends Colibri.UI.Component {
     /**
      * Render drop container
      * @private
+     * @ignore
      */
     _renderDropContainer() {
         this._dropContainer = new Colibri.UI.Pane(this._name + '-drop-container', this);

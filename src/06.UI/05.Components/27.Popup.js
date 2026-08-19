@@ -1,4 +1,5 @@
 /**
+ * Popup component
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
@@ -25,6 +26,12 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisVisibilityChanged(event, args) {
         if(this.parent && this._positionOnParent) {
             const bounds = this.container.bounds(true, true);
@@ -183,6 +190,7 @@ Colibri.UI.Popup = class extends Colibri.UI.Pane {
      * Show popup
      * @param {Colibri.UI.Component} parent parent of popup
      * @param {boolean} connectToBody connect to body
+     * @public
      */
     Show(parent, connectToBody = false) {
         this._connectToBody = connectToBody;

@@ -1,5 +1,5 @@
 /**
- * Timeline
+ * Timeline component
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
@@ -35,6 +35,10 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         this.RegisterEvent('ProgressClicked', false, 'When the progress is clicked');
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _render() {
         
         this._inputFlex = new Colibri.UI.FlexBox('inputflex', this);
@@ -67,6 +71,10 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     */    
     _addHandlers() {
         this.handleVisibilityChange = true;
         this.AddHandler('VisibilityChanged', this.__visibilityChanged);
@@ -81,10 +89,22 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         this._progress.AddHandler('Clicked', this.__progressClicked, false, this);
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __progressClicked(event, args) {
         this.Dispatch('ProgressClicked', Object.assign(args, {value: this.value}));
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __minChanged(event, args) {
         if(!this._disableChangeEvent) {
             this._disableChangeEvent = true;
@@ -93,6 +113,12 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __maxChanged(event, args) {
         if(!this._disableChangeEvent) {
             this._disableChangeEvent = true;
@@ -101,8 +127,8 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         }
     }
 
-    
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -112,6 +138,7 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -126,6 +153,7 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -135,6 +163,7 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -148,8 +177,8 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         this.Dispatch('Changed', {value: this.value});
     }
 
-
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -158,6 +187,12 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         this._showProgress();
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Number} newLeft new left position
+     * @param {Number} newTop new top position
+     */
     _span1Moved(newLeft, newTop) {
         // this._progress.container.css('left', newLeft + 'px');
         this._calculateValue(newLeft, null);
@@ -165,6 +200,12 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         this.Dispatch('Changed', {value: this.value});
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Number} newLeft new left position
+     * @param {Number} newTop new top position
+     */
     _span2Moved(newLeft, newTop) {
         // this._progress.container.css('width', newLeft + 'px');
         this._calculateValue(null, newLeft);
@@ -173,6 +214,13 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * Calculate step count
+     * @param {Date} min minimum value
+     * @param {Date} max maximum value
+     * @return {Number} step count  
+     * @public
+     */
     CalculateStepCount(min, max) {
         if(!(min instanceof Date)) {
             min = min.toDate();
@@ -183,6 +231,11 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         return min.Diff(max);
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Number} left left position
+     */
     _setLeftPoint(left) {
         const width = this._pane.width;
         const perc = (left) * 100 / width;
@@ -202,6 +255,11 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Number} left left position
+     */
     _setRightPoint(left) {
         const width = this._pane.width;
         const perc = (left + 8) * 100 / width;
@@ -222,7 +280,12 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
 
     }
 
-
+    /**
+     * @ignore
+     * @private
+     * @param {Number} left1 left position
+     * @param {Number} left2 left position
+     */
     _calculateValue(left1, left2) {
         if(left1 !== null) {
             this._setLeftPoint(left1);
@@ -232,6 +295,10 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _showProgress() {
         try {
             
@@ -267,6 +334,10 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _viewPicker() {
 
         this._maxText.value = '#{ui-components-timeline-max}: ';
@@ -347,6 +418,10 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         this._value = [left1, left2];
         this._showValue();
     }
+    /**
+     * @ignore
+     * @private
+     */
     _showValue() {
         const max = this._maxValue;
         const min = this._minValue;
@@ -378,7 +453,12 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         this._input1.tabIndex = value;
     }
 
-    
+    /**
+     * @ignore
+     * @private
+     * @param {Date} v date value
+     * @return {String} formatted date
+     */
     _formatDate(v) {
         if(!v) {
             return '';
@@ -428,6 +508,12 @@ Colibri.UI.Timeline = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * Expand values
+     * @param {Date} min minimum value
+     * @param {Date} max maximum value
+     * @public
+     */
     Expand(min, max) {
         if(!(min instanceof Date)) {
             min = min.toDate();

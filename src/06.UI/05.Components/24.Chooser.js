@@ -1,4 +1,5 @@
 /**
+ * Chooser component
  * @class
  * @namespace
  * @extends Colibri.UI.Component
@@ -6,10 +7,16 @@
  */
 Colibri.UI.Chooser = class extends Colibri.UI.Component {
 
-    /** @type {boolean} */
-    _skipLooseFocus;
-    /** @type {boolean} */
-    _itemSelected;
+    /** 
+     * Skip loose focus event
+     * @type {boolean}
+     */
+    _skipLooseFocus = false;
+    /** 
+     * Item is selected
+     * @type {boolean}
+     */
+    _itemSelected = false;
 
     /**
      * @constructor
@@ -68,6 +75,12 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         this._handleEvents();
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __thisVisibilityChanged(event, args) {
         this._input.toolTip = this._input.isValueExceeded ? this._input.value : '';
     }
@@ -86,6 +99,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
 
     /**
      * Show chooser window
+     * @public
      */
     ShowChooser() {
         if (this._chooser) {
@@ -102,6 +116,12 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         return false;
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __chooserObjectChoosed(event, args) {
         this.values = this._chooserObject.values;
         this.value = args.value;
@@ -131,6 +151,12 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */ 
     __inputKeyDown(event, args) {
 
         if (['Enter', 'NumpadEnter'].indexOf(args.domEvent.code) !== -1) {
@@ -146,6 +172,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
     }
 
     /**
+     * Before filled event, can be used to prevent filling
      * @public
      */
     async __BeforeFilled() {
@@ -154,6 +181,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
 
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -176,6 +204,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -317,6 +346,7 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
 
     /**
      * Focus on component
+     * @public
      */
     Focus() {
         this._input.Focus();
@@ -419,54 +449,3 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
     }
 
 }
-
-/**
- * @class
- * @extends Colibri.UI.Window
- * @memberof Colibri.UI.Chooser
- */
-Colibri.UI.Chooser.ChooseWindow = class extends Colibri.UI.Window {
-
-    /**
-     * @constructor
-     * @param {string} name name of component
-     * @param {Element|string|Colibri.UI.Component} container component container 
-     * @param {Element|string} element child elements 
-     * @param {string} title title of window
-     * @param {number} width window width
-     * @param {number} height window height
-     */
-    constructor(name, container, element, params, values, titleField, valueField, selectedValue) {
-        super(name, container, element, 'Choose', 800, 600);
-        this._params = params;
-        this._values = values;
-        this._value = selectedValue;
-        this._valueField = valueField;
-        this._titleValue = titleField;
-    }
-
-    /**
-     * @ignore 
-     * @protected 
-     */
-    _registerEvents() {
-        this.RegisterEvent('Choosed', false, 'When the choice is made');
-    }
-
-    /**
-     * Params
-     * @type {object}
-     */
-    get params() {
-        return this._params;
-    }
-    /**
-     * Params
-     * @type {object}
-     */
-    set params(value) {
-        this._params = value;
-    }
-
-}
-

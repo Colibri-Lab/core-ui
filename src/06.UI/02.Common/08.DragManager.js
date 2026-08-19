@@ -100,6 +100,7 @@ Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments

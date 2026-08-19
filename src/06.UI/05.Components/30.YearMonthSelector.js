@@ -1,4 +1,5 @@
 /**
+ * Year and month selector component
  * @class
  * @extends Colibri.UI.FlexBox
  * @memberof Colibri.UI
@@ -36,6 +37,7 @@ Colibri.UI.YearMonthSelector = class extends Colibri.UI.FlexBox {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments

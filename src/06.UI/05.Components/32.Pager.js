@@ -6,6 +6,11 @@
  */
 Colibri.UI.Pager = class extends Colibri.UI.FlexBox {
     
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     */
     constructor(name, container) {
         /* создаем компонент и передаем шаблон */
         super(name, container);
@@ -24,6 +29,7 @@ Colibri.UI.Pager = class extends Colibri.UI.FlexBox {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -48,6 +54,10 @@ Colibri.UI.Pager = class extends Colibri.UI.FlexBox {
         this.Dispatch('Changed', {domEvent: args.domEvent, page: value});
     }
 
+    /**
+     * Affected rows
+     * @type {Number}
+     */
     set affected(value) {
         if(this._affected !== value) {
             this._affected = value;
@@ -56,10 +66,21 @@ Colibri.UI.Pager = class extends Colibri.UI.FlexBox {
         }
     }
 
+    /**
+     * Affected rows
+     * @type {Number}
+     */
     get affected() {
         return this._affected;
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Number} index page index
+     * @param {Number} pages total pages
+     * @returns {Colibri.UI.Button} button component
+     */
     _renderButton(index, pages) {
         const button = new Colibri.UI.Button(this.name + '-' + (index === 0 ? Date.Mc() : index), this);
         button.shown = pages > 1;
@@ -69,6 +90,10 @@ Colibri.UI.Pager = class extends Colibri.UI.FlexBox {
         return button;
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _renderPages() {
         
         this.Clear();
@@ -136,6 +161,10 @@ Colibri.UI.Pager = class extends Colibri.UI.FlexBox {
         
     }
 
+    /**
+     * Value of pager
+     * @type {Number}
+     */
     set value(value) {
         if(this._value != value) {
             this._value = parseInt(value);
@@ -143,10 +172,18 @@ Colibri.UI.Pager = class extends Colibri.UI.FlexBox {
         }
     }
 
+    /**
+     * Value of pager
+     * @type {Number}
+     */
     get value() {
         return this._value ?? 1;
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _showValue() {
         if(this.children === 0 || !this._value) {
             return;
@@ -191,6 +228,10 @@ Colibri.UI.Pager = class extends Colibri.UI.FlexBox {
         this._leftIcon = eval(value);
         this._showLeftIcon();
     }
+    /**
+     * @ignore
+     * @private
+     */
     _showLeftIcon() {
         if(this._left) {
             this._left.value = this._leftIcon;
@@ -212,6 +253,10 @@ Colibri.UI.Pager = class extends Colibri.UI.FlexBox {
         this._rightIcon = eval(value);
         this._showRightIcon();
     }
+    /**
+     * @ignore
+     * @private
+     */
     _showRightIcon() {
         if(this._right) {
             this._right.value = this._rightIcon;

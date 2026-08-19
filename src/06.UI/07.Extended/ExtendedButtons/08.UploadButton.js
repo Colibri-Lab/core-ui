@@ -104,6 +104,7 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments

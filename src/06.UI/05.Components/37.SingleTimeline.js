@@ -1,5 +1,5 @@
 /**
- * Timeline
+ * Simple timeline component
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
@@ -26,6 +26,7 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
     /**
      * Register events
      * @protected
+     * @ignore
      */
     _registerEvents() {
         super._registerEvents();
@@ -38,6 +39,10 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         this.RegisterEvent('DateMayChangeTo', false, 'When the date may change to a new value');
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _render() {
 
         this._inputFlex = new Colibri.UI.FlexBox('inputflex', this);
@@ -88,6 +93,10 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _addHandlers() {
         this.handleVisibilityChange = true;
         this.AddHandler('VisibilityChanged', this.__visibilityChanged);
@@ -102,6 +111,12 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         this.AddHandler('MouseWheel', this.__thisMouseWheel);
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisMouseWheel(event, args) {
         const step = ((this._select?.value?.value ?? this._select?.value) * 1000);
         if (args.domEvent.deltaY > 0) {
@@ -112,6 +127,12 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         this.Dispatch('Changed', { value: this.value });
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __progressClicked(event, args) {
         if (args.domEvent.target.matches('[data-object-name="pane"]')) {
             const left = args.domEvent.offsetX - this._span.width;
@@ -121,6 +142,12 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __minChanged(event, args) {
         this.min = this._min.value;
         if (!this._disableChangeEvent) {
@@ -130,6 +157,12 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __maxChanged(event, args) {
         this.max = this._max.value;
         if (!this._disableChangeEvent) {
@@ -141,6 +174,7 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
 
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -150,6 +184,7 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -164,6 +199,7 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -172,6 +208,12 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         this._showProgress();
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Number} left new left value
+     * @param {Number} top new top value
+     */
     _spanMoved(left, top) {
         const width = this._getWidth();
         const perc = (left + this._getMargin()) * 100 / width;
@@ -198,6 +240,10 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _spanStart(left, top) {
         if (!this._movingHandler) {
             this._movingHandler = new Colibri.UI.TextSpan('movinghandler', this._pane);
@@ -206,6 +252,10 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         this._movingHandler.shown = true;
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _spanEnd(left, top) {
         if (this._movingHandler) {
             this._movingHandler.toolTip = '';
@@ -218,6 +268,10 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         this.Dispatch('Changed', { value: this.value });
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _setPoint(left) {
         const width = this._getWidth();
         const perc = (left + this._getMargin()) * 100 / width;
@@ -236,20 +290,36 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
     }
 
 
+    /**
+     * @ignore
+     * @private
+     */
     _calculateValue(left) {
         if (left !== null) {
             this._setPoint(left);
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _getWidth() {
         return parseFloat(this._pane.width) - parseFloat(this._span.width);
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _getMargin() {
         return parseFloat(this._span.width) / 2;
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _showProgress() {
         try {
 
@@ -274,6 +344,10 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _viewPicker() {
 
         this._maxText.value = '#{ui-components-timeline-max}: ';
@@ -284,14 +358,14 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Показать/не показывать
+     * Show/Hide
      * @type {boolean}
      */
     get shown() {
         return super.shown;
     }
     /**
-     * Показать/не показывать
+     * Show/Hide
      * @type {boolean}
      */
     set shown(value) {
@@ -303,14 +377,14 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
     }
 
     /**
-     * 
+     * Value of timeline
      * @type {Date}
      */
     get value() {
         return this._value;
     }
     /**
-     * 
+     * Value of timeline
      * @type {Date}
      */
     set value(value) {
@@ -337,6 +411,11 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         this._value = left;
         this._showValue();
     }
+    
+    /**
+     * @ignore
+     * @private
+     */
     _showValue() {
         const max = this._maxValue;
         const min = this._minValue;
@@ -367,7 +446,10 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         this._input.tabIndex = value;
     }
 
-
+    /**
+     * @ignore
+     * @private
+     */
     _formatDate(v) {
         if (!v) {
             return '';
@@ -445,6 +527,12 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         return this._maxLength
     }
 
+    /**
+     * Expand the timeline to min and max values
+     * @param {*} min minimum value
+     * @param {*} max maximum value
+     * @public
+     */
     Expand(min, max) {
         if (!(min instanceof Date)) {
             min = min.toDate();
@@ -462,6 +550,10 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         this._disableChangeEvent = false;
     }
 
+    /**
+     * Play the timeline
+     * @public
+     */
     Play() {
         this._state = 'play';
         Colibri.Common.StartTimer('ldi-timeline-timer', (this._intensivity?.value?.value ?? this._intensivity?.value ?? 1) * 1000, () => {
@@ -478,6 +570,10 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         });
     }
 
+    /**
+     * Pause the timeline
+     * @public
+     */
     Pause() {
         this._state = 'pause';
         Colibri.Common.StopTimer('ldi-timeline-timer');
@@ -499,6 +595,10 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         this._steps = value;
         this._showSteps();
     }
+    /**
+     * @ignore
+     * @private
+     */
     _showSteps() {
         this._select.values = this._steps;
     }
@@ -519,6 +619,10 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         this._intensivities = value;
         this._showIntensivities();
     }
+    /**
+     * @ignore
+     * @private
+     */
     _showIntensivities() {
         this._intensivity.values = this._intensivities;
     }
@@ -554,7 +658,12 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         value = this._convertProperty('Number', value);
         this._intensivity.value = value;
     }
-
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __selectChanged(event, args) {
         if (this._state === 'play') {
             this.Pause();
@@ -563,6 +672,12 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         this.Dispatch('StepChanged', { value: this.step });
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __intensivityChanged(event, args) {
         if (this._state === 'play') {
             this.Pause();
@@ -587,6 +702,10 @@ Colibri.UI.SingleTimeline = class extends Colibri.UI.Pane {
         this._hasDateComponents = value;
         this._showHasDateComponents();
     }
+    /**
+     * @ignore
+     * @private
+     */
     _showHasDateComponents() {
         this._inputFlex.shown = this._hasDateComponents;       
     }

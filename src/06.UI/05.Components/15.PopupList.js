@@ -1,4 +1,5 @@
 /**
+ * Popup list component
  * @class
  * @extends Colibri.UI.List
  * @memberof Colibri.UI
@@ -34,10 +35,22 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
 
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisShadowClicked(event, args) {
         this.Hide();
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisVisibilityChanged(event, args) {
         const bounds = this.parent.container.bounds(true, true);
         if(!args.state) {
@@ -124,6 +137,7 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
      * Fill the items
      * @param {Array} value items
      * @param {Array} selectedValues Selected items
+     * @public
      */
     FillItems(value, selectedValues = null) {
 

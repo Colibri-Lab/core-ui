@@ -1,4 +1,5 @@
 /**
+ * Google chart component
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
@@ -42,15 +43,28 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisShown(event, args) {
         this._generateChart();
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisVisibilityChanged(event, args) {
         this._generateChart();
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -69,6 +83,10 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * Clear the component
+     * @public
+     */
     Clear() {
         this._element.html('');
         this._chart = null;

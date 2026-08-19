@@ -1,4 +1,5 @@
 /**
+ * Date selector component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
@@ -92,6 +93,12 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
 
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __viewerKeyDown(event, args) {
         if(args.domEvent.key === 'Tab') {
             return true;
@@ -102,7 +109,12 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
 
 
     }
-
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisClicked(event, args) {
         if (this.enabled) {
             this.Open();
@@ -111,7 +123,12 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         args.domEvent.preventDefault();
         return false;
     }
-
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisKeyDown(event, args) {
         if (['Escape', 'Enter', 'Space'].indexOf(args.domEvent.code) !== -1) {
             if (this.enabled) {
@@ -161,6 +178,12 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
         this.RegisterEvent('PopupClosed', false, 'When popup is closed');
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __clearIconClicked(event, args) {
         this.value = '';
         this.Dispatch('Cleared');
@@ -197,6 +220,7 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
 
     /**
      * Open selector
+     * @public
      */
     Open() {
         if (!this._popup) {
@@ -219,6 +243,7 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
 
     /**
      * Close selector
+     * @public
      */
     Close() {
         this.ToggleView(false);
@@ -233,6 +258,7 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
 
     /**
      * Focus on component
+     * @public
      */
     Focus() {
         if (!this.enabled) {
@@ -245,6 +271,7 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
     /**
      * Toggle view of input
      * @param {boolean} view toggle view of input
+     * @public
      */
     ToggleView(view) {
 
@@ -454,299 +481,6 @@ Colibri.UI.DateSelector = class extends Colibri.UI.Component {
      */
     set todayString(value) {
         this._todayString = value;
-    }
-
-}
-
-/**
- * @class
- * @extends Colibri.UI.Pane
- * @memberof Colibri.UI
- */
-Colibri.UI.DateSelectorPopup = class extends Colibri.UI.Pane {
-
-    /**
-     * @constructor
-     * @param {string} name name of component
-     * @param {Element|Colibri.UI.Component} container container of component
-     */
-    constructor(name, container) {
-        super(name, container);
-
-        this.AddClass('app-date-selector-popup-component');
-
-        this.AddHandler('ShadowClicked', this.__thisShadowClicked);
-
-        this._pickerheader = this._element.append(Element.fromHtml('<div class="calendar__dropdown-pickerheader"></div>'));
-        this._pickerheader.append(Element.fromHtml('<table><tr><td class="left">' + Colibri.UI.ArrowLeft + '</td><td class="calendar__dropdown-pickerheader_title"></td><td class="right">' + Colibri.UI.ArrowRight + '</td></tr></table>'));
-        this._headerText = this._element.querySelector('.calendar__dropdown-pickerheader_title');
-
-        this._datePicker = new Colibri.UI.DatePicker('date-picker', this);
-        this._monthPicker = new Colibri.UI.MonthPicker('month-picker', this);
-        this._yearPicker = new Colibri.UI.YearPicker('year-picker', this);
-
-        this._mode = 'datepicker';
-        this._value = new Date();
-        this._datePicker.value = this._value;
-        this._yearPicker.value = this._value;
-        this._monthPicker.value = this._value;
-
-        this.handleVisibilityChange = true;
-        this.AddHandler('VisibilityChanged', this.__thisVisibilityChanged);
-
-        this._headerText.addEventListener('mousedown', (e) => {
-            this.parent._skipLooseFocus = true;
-        });
-        this._headerText.addEventListener('click', (e) => {
-            this.parent._skipLooseFocus = false;
-            this.ToggleMode();
-            e.stopPropagation();
-            e.preventDefault();
-            return false;
-        });
-
-        this._element.querySelector('.left').addEventListener('mousedown', (e) => {
-            this.parent._skipLooseFocus = true;
-        });
-        this._element.querySelector('.left').addEventListener('click', (e) => {
-            this.parent._skipLooseFocus = false;
-            let dt = this.value.copy();
-
-            if (this.mode == 'datepicker') {
-                // передергиваем на месяц в назад
-                dt.setMonth(dt.getMonth() - 1);
-            } else if (this.mode == 'monthpicker') {
-                // передергиваем на год назад
-                dt.setFullYear(dt.getFullYear() - 1);
-            } else if (this.mode == 'yearpicker') {
-                // передергиваем на 10 лет назад
-                dt.setFullYear(dt.getFullYear() - 10);
-            }
-            this.value = dt.copy();
-
-            e.stopPropagation();
-            e.preventDefault();
-            return false;
-
-        });
-
-        this._element.querySelector('.right').addEventListener('mousedown', (e) => {
-            this.parent._skipLooseFocus = true;
-        });
-        this._element.querySelector('.right').addEventListener('click', (e) => {
-            this.parent._skipLooseFocus = false;
-            let dt = this.value.copy();
-            if (this.mode == 'datepicker') {
-                // передергиваем на месяц вперед
-                dt.setMonth(dt.getMonth() + 1);
-            } else if (this.mode == 'monthpicker') {
-                // передергиваем на год вперед
-                dt.setFullYear(dt.getFullYear() + 1);
-            } else if (this.mode == 'yearpicker') {
-                // передергиваем на 10 лет вперед
-                dt.setFullYear(dt.getFullYear() + 10);
-            }
-
-            this.value = dt.copy();
-
-            e.stopPropagation();
-            e.preventDefault();
-            return false;
-
-        });
-
-        this._element.addEventListener('mousewheel', (e) => {
-
-            if (e.deltaY < 0) {
-                this._element.querySelector('.left').emitMouseEvent('click');
-            } else if (e.deltaY > 0) {
-                this._element.querySelector('.right').emitMouseEvent('click');
-            }
-
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        });
-
-        this._show();
-
-    }
-
-    __thisShadowClicked(event, args) {
-        this.parent.Close();
-        args.domEvent.stopPropagation();
-        args.domEvent.preventDefault();
-    }
-
-    __thisVisibilityChanged(event, args) {
-        
-
-        if (!args.state) {
-            Colibri.Common.Delay(50).then(() => {
-                if (!this.parent) {
-                    return;
-                }
-                const bounds = this.parent.container.bounds();
-                const b = this.container.bounds(true, true);
-
-                if(b.top + b.outerHeight > window.innerHeight) {
-                    this.top = bounds.top - b.outerHeight;
-                    this.AddClass('-up');
-                }
-                if(b.left + b.outerWidth > window.innerWidth) {
-                    this.left = bounds.left - b.outerWidth + bounds.outerWidth;
-                }
-            });
-        }
-
-    }
-
-    /**
-     * Show/Hide
-     * @type {boolean}
-     */
-    set shown(value) {
-        super.shown = value;
-        this.container.hideShowProcess(() => {
-            const bounds = this.parent.container.bounds(true, true);
-            this.top = bounds.top + bounds.outerHeight;
-            this.left = bounds.left;
-            this.RemoveClass('-up');
-            if (value) {
-                this.BringToFront();
-                this._show();
-            }
-            else {
-                this.SendToBack();
-            }
-            this.hasShadow = value;
-            if (this.ContainsClass('-up')) {
-                this.Dispatch('VisibilityChanged', { state: false });
-            }
-        });
-    }
-    /**
-     * Show/Hide
-     * @type {boolean}
-     */
-    get shown() {
-        return super.shown;
-    }
-
-    /**
-     * Mode
-     * @type {datepicker,monthpicker,yearpicker}
-     */
-    set mode(value) {
-        this._mode = value;
-    }
-
-    /**
-     * Mode
-     * @type {datepicker,monthpicker,yearpicker}
-     */
-    get mode() {
-        return this._mode;
-    }
-
-    /**
-     * Date value
-     * @type {Date}
-     */
-    get value() {
-
-        let value = this._value;
-        if (!value || value == 'Invalid Date') {
-            value = Date.Now();
-        }
-
-        return value;
-    }
-
-    /**
-     * Date value
-     * @type {Date}
-     */
-    set value(value) {
-        if(value.toDbDate() == this.value.toDbDate()) {
-            return;
-        }
-        this._value = value.copy();
-        this._show();
-        this._datePicker.Render();
-        this._yearPicker.Render();
-        this._monthPicker.Render();
-        if(this.parent.value.toDbDate() != this.value.toDbDate()) {
-            this.parent.value = this.value;
-        }
-    }
-
-    /**
-     * Toggle mode
-     */
-    ToggleMode() {
-        if (this.mode == 'datepicker') {
-            this.mode = 'monthpicker';
-        } else if (this.mode == 'monthpicker') {
-            this.mode = 'yearpicker';
-        }
-        this._show();
-    }
-
-    /**
-     * Toggle mode to back
-     */
-    ToggleModeBack() {
-        if (this.mode == 'yearpicker') {
-            this.mode = 'monthpicker';
-        } else if (this.mode == 'monthpicker') {
-            this.mode = 'datepicker';
-        }
-        this._show();
-    }
-
-    /**
-     * Show selected mode
-     * @private
-     */
-    _show() {
-        if (this.mode == 'datepicker') {
-            this._datePicker.shown = true;
-            this._yearPicker.shown = false;
-            this._monthPicker.shown = false;
-        } else if (this.mode == 'monthpicker') {
-            this._datePicker.shown = false;
-            this._monthPicker.shown = true;
-            this._yearPicker.shown = false;
-        } else if (this.mode == 'yearpicker') {
-            this._datePicker.shown = false;
-            this._monthPicker.shown = false;
-            this._yearPicker.shown = true;
-        }
-        this._showPickerTitle();
-        if (this.ContainsClass('-up')) {
-            this.Dispatch('VisibilityChanged', { state: false });
-        }
-    }
-
-    /** 
-     * @ignore
-     * @private 
-     */
-    _showPickerTitle() {
-
-        let value = this.value.copy();
-        let dateformat = App.DateFormat || 'ru-RU';
-        if (this.mode == 'datepicker') {
-            const formatter = Intl.DateTimeFormat(dateformat, { month: 'long', year: 'numeric' });
-            this._headerText.html(formatter.format(value).replaceAll('г.', ''));
-        } else if (this.mode == 'monthpicker') {
-            const formatter = Intl.DateTimeFormat(dateformat, { year: 'numeric' });
-            this._headerText.html(formatter.format(value));
-        } else if (this.mode == 'yearpicker') {
-            this._headerText.html(this._yearPicker.startYear + '&nbsp;&ndash;&nbsp;' + (this._yearPicker.startYear + 10));
-        }
-
     }
 
 }

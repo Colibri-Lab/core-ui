@@ -24,10 +24,22 @@ Colibri.UI.SearchInput = class extends Colibri.UI.FlexBox {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __searchClicked(event, args) {
         this.Dispatch('Search', { value: this.value });
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __inputKeyDownOrPastedOrCleared(event, args) {
         if ((event.name === 'KeyDown' && args.domEvent.keyCode === 13) || event.name === 'Pasted' || event.name === 'Cleared') {
             this.Dispatch('Search', { value: this.value });
@@ -37,6 +49,7 @@ Colibri.UI.SearchInput = class extends Colibri.UI.FlexBox {
     /**
      * Register events
      * @protected
+     * @ignore
      */
     _registerEvents() {
         super._registerEvents();

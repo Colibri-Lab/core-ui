@@ -1,4 +1,5 @@
 /**
+ * Switcher component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI

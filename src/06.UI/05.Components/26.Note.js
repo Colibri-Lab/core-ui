@@ -1,4 +1,5 @@
 /**
+ * Note component
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI

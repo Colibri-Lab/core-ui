@@ -36,6 +36,7 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
     /**
      * Register events
      * @protected
+     * @ignore
      */
     _registerEvents() {
         super._registerEvents();
@@ -45,6 +46,10 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         this.RegisterEvent('ProgressClicked', false, 'When the progress is clicked');
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _render() {
         
         this.Clear();
@@ -87,6 +92,10 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _addHandlers() {
         this.handleVisibilityChange = true;
         this.AddHandler('VisibilityChanged', this.__visibilityChanged);
@@ -107,25 +116,62 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         this._progress.AddHandler('Clicked', this.__progressClicked, false, this);
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __progressClicked(event, args) {
         this.Dispatch('ProgressClicked', Object.assign(args, {value: this.value}));
     }
     
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __minLoosedFocus(event, args) {
         this._min.value = this._formatNumber(parseFloat(this._min.value) / (this._unitValue ?? 1));
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __maxLoosedFocus(event, args) {
         this._max.value = this._formatNumber(parseFloat(this._max.value) / (this._unitValue ?? 1));
     }
     
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __maxReceiveFocus(event, args) {
         this._max.value = parseFloat(this._maxValue / (this._unitValue ?? 1)).toMoney(this._decimal, true, '', false, '.');
     }
+
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __minReceiveFocus(event, args) {
         this._min.value = parseFloat(this._minValue / (this._unitValue ?? 1)).toMoney(this._decimal, true, '', false, '.');
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __minChanged(event, args) {
         if(!this._disableChangeEvent) {
             this._minValue = parseFloat(this._min.value) * (this._unitValue ?? 1);
@@ -133,6 +179,12 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __maxChanged(event, args) {
         if(!this._disableChangeEvent) {
             this._minValue = parseFloat(this._max.value) * (this._unitValue ?? 1);
@@ -141,6 +193,7 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -150,6 +203,7 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -176,6 +230,7 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -185,6 +240,7 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -210,6 +266,7 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -218,6 +275,12 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         this._showProgress();
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Number} newLeft new left position
+     * @param {Number} newTop new top position
+     */
     _span1Moved(newLeft, newTop) {
         // this._progress.container.css('left', newLeft + 'px');
         this._calculateValue(newLeft, null);
@@ -225,6 +288,12 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         this.Dispatch('Changed', {value: this.value});
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Number} newLeft new left position
+     * @param {Number} newTop new top position
+     */
     _span2Moved(newLeft, newTop) {
         // this._progress.container.css('width', newLeft + 'px');
         this._calculateValue(null, newLeft);
@@ -232,6 +301,11 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         this.Dispatch('Changed', {value: this.value});
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Number} left left position
+     */
     _setLeftPoint(left) {
         const width = this._pane.width;
         const perc = (left) * 100 / width;
@@ -251,6 +325,11 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Number} left left position
+     */
     _setRightPoint(left) {
         const width = this._pane.width;
         const perc = (left + 8) * 100 / width;
@@ -271,7 +350,12 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
 
     }
 
-
+    /**
+     * @ignore
+     * @private
+     * @param {Number} left1 left position
+     * @param {Number} left2 left position
+     */
     _calculateValue(left1, left2) {
         if(left1 !== null) {
             this._setLeftPoint(left1);
@@ -281,6 +365,10 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _showProgress() {
         let value = this._value;
 
@@ -321,6 +409,10 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _viewPicker() {
 
         const max = this._maxValue;
@@ -336,14 +428,14 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Показать/не показывать
+     * Show/hide
      * @type {boolean}
      */
     get shown() {
         return super.shown;
     }
     /**
-     * Показать/не показывать
+     * Show/hide
      * @type {boolean}
      */
     set shown(value) {
@@ -355,14 +447,14 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
     }
 
     /**
-     * 
+     * Value of picker
      * @type {Array}
      */
     get value() {
         return this._value;
     }
     /**
-     * 
+     * Value of picker
      * @type {Array}
      */
     set value(value) {
@@ -402,6 +494,10 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         this._value = [left1, left2];
         this._showValue();
     }
+    /**
+     * @ignore
+     * @private
+     */
     _showValue() {
         const max = this._maxValue;
         const min = this._minValue;
@@ -419,21 +515,24 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Табуляция
+     * Tab index
      * @type {number}
      */
     get tabIndex() {
         return this._input1.tabIndex;
     }
     /**
-     * Табуляция
+     * Tab index
      * @type {number}
      */
     set tabIndex(value) {
         this._input1.tabIndex = value;
     }
 
-    
+    /**
+     * @ignore
+     * @private
+     */
     _formatNumber(v) {
 
         const unit = Lang.Translate(this._unit);
@@ -503,6 +602,12 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * Expand values
+     * @param {Number} min minimum value
+     * @param {Number} max maximum value
+     * @public
+     */
     Expand(min, max) {
         this._disableChangeEvent = true;
         this._minValue = min;
@@ -533,6 +638,13 @@ Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
         this._showProgress();
     }
 
+    /**
+     * Calculate step count
+     * @param {Number} min minimum value
+     * @param {Number} max maximum value
+     * @return {Number} step count
+     * @public
+     */
     CalculateStepCount(min, max) {
         return parseFloat(max) - parseFloat(min);
     }

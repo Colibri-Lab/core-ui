@@ -43,6 +43,10 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this.RegisterEvent('AfterChanged', false, 'After selection is changed');
     }
 
+    /**
+     * Resize canvas
+     * @public
+     */
     ResizeCanvas() {
         const dpr = window.devicePixelRatio || 1;
         const rect = this._canvas.getBoundingClientRect();
@@ -256,6 +260,10 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this._hasSelector = value;
         this._showHasSelector();
     }
+    /**
+     * @ignore
+     * @private
+     */
     _showHasSelector() {
 
         this._pane = new Colibri.UI.Pane('pane', this);
@@ -276,6 +284,10 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * Get progress start percentage
+     * @type {Number} 
+     */
     get progressStartPerc() {
         if (this._orientation === 'vertical') {
             return (this._progress.top - this.top) * 100 / this.height;
@@ -284,6 +296,10 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * Get progress end percentage
+     * @type {Number} 
+     */
     get progressEndPerc() {
         if (this._orientation === 'vertical') {
             return (this._progress.top - this.top + this._progress.height) * 100 / this.height;
@@ -308,6 +324,12 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this._fixedSelector = value;
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisMouseWheel(event, args) {
         if (this._orientation === 'horizontal') {
             this._calculateValue(this._progress.left - this.left + (args.domEvent.deltaY / 10), null, true);
@@ -319,6 +341,12 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this.Dispatch('AfterChanged');
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Number} newLeft new left position
+     * @param {Number} newTop new top position
+     */
     _progressMoved(newLeft, newTop) {
         if (this._orientation === 'horizontal') {
             this._calculateValue(newLeft, null, true);
@@ -328,16 +356,29 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this.Dispatch('Changed', { value: this.value, right: true, left: true });
     }
 
+    /**
+     * Start move
+     * @public
+     */
     StartMove() {
         this.Dispatch('BeforeChanged');
         this._startMovePoint = { left: this._progress.left - this.left, top: this._progress.top - this.top };
     }
 
+    /**
+     * End move
+     * @public
+     */
     EndMove() {
         this._startMovePoint = null;
         this.Dispatch('AfterChanged');
     }
 
+    /**
+     * Move
+     * @param {Number} delta delta of move
+     * @public
+     */
     Move(delta) {
         if (!this._startMovePoint) {
             return;
@@ -350,6 +391,14 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this.Dispatch('Changed', { value: this.value, right: true, left: true });
     }
 
+    /**
+     * Span 1 moved
+     * @private
+     * @ignore
+     * @param {Number} newLeft new left position
+     * @param {Number} newTop new top position
+     * @param {Boolean} dispatch dispatch events
+     */
     _span1Moved(newLeft, newTop, dispatch = true) {
         if (this._orientation === 'horizontal') {
             this._calculateValue(newLeft, null);
@@ -359,6 +408,14 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         dispatch && this.Dispatch('Changed', { value: this.value, right: false, left: true });
     }
 
+    /**
+     * Span 2 moved
+     * @private
+     * @ignore
+     * @param {Number} newLeft new left position
+     * @param {Number} newTop new top position
+     * @param {Boolean} dispatch dispatch events
+     */
     _span2Moved(newLeft, newTop, dispatch = true) {
         if (this._orientation === 'horizontal') {
             this._calculateValue(null, newLeft);
@@ -368,6 +425,14 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         dispatch && this.Dispatch('Changed', { value: this.value, right: true, left: false });
     }
 
+    /**
+     * Calculate value
+     * @private
+     * @ignore
+     * @param {Number} left new left position
+     * @param {Number} right new right position
+     * @param {Boolean} saveWidth save width flag
+     */
     _calculateValue(left, right, saveWidth = false) {
         if (this._orientation === 'vertical') {
             if (left !== null) {
@@ -386,6 +451,13 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * Set the left value of selector
+     * @private
+     * @ignore
+     * @param {Number} left new left position
+     * @param {Boolean} saveWidth save width flag
+     */
     _setLeftPoint(left, saveWidth = false) {
         const width = this._pane.width;
         const perc = (left) * 100 / width;
@@ -413,6 +485,13 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this._renderSelector(newValue, this._value?.[1] ?? 100);
     }
 
+    /**
+     * Set the top value of selector
+     * @private
+     * @ignore
+     * @param {Number} top new top position
+     * @param {Boolean} saveHeight save height flag
+     */
     _setTopPoint(top, saveHeight = false) {
         const height = this._pane.height;
         const perc = 100 - (top + this._span1.height / 2) * 100 / height;
@@ -441,6 +520,13 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this._renderSelector(this._value?.[0] ?? 0, newValue);
     }
 
+    /**
+     * Set the bottom value of selector
+     * @private
+     * @ignore
+     * @param {Number} bottom new bottom position
+     * @param {Boolean} saveHeight save height flag
+     */
     _setBottomPoint(bottom, saveHeight = false) {
 
         const height = this._pane.height;
@@ -465,9 +551,16 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this._renderSelector(newValue, this._fixedSelector ? newValue + this._fixedSelector : this._value?.[1] ?? 100);
     }
 
-    _setRightPoint(left, saveWidth = false) {
+    /**
+     * Set the bottom value of selector
+     * @private
+     * @ignore
+     * @param {Number} right new right position
+     * @param {Boolean} saveWidth save width flag
+     */
+    _setRightPoint(right, saveWidth = false) {
         const width = this._pane.width;
-        const perc = (left) * 100 / width;
+        const perc = (right) * 100 / width;
         const max = this._max;
         const min = this._min;
         const step = this._step;
@@ -526,12 +619,20 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * Set the min, max values of selector
+     * @public
+     */
     Set(min, max) {
         this._min = min;
         this._max = max;
         this._render();
     }
 
+    /**
+     * Set the delta between min and max values of selector
+     * @public
+     */
     Delta(delta) {
         this.min = this.min + delta;
         this.max = this.max + delta;
@@ -542,6 +643,10 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
         this.value = [this._value[0] + delta, this._value[1] + delta];
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _renderSelector(leftOrTop, rightOrBottom) {
 
         if (this._orientation === 'vertical') {
@@ -616,6 +721,10 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _render() {
 
         const canvas = this._canvas;
@@ -752,11 +861,20 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * Resized
+     * @public
+     */
     Resized() {
         this.value = this.value || [this.min, this.max];
     }
 
-
+    /**
+     * Recalculate the selector positions based on new left and right values
+     * @param {Number} left new left value
+     * @param {Number} right new right value
+     * @public
+     */
     Recalculate(left, right) {
 
         const length = (this._orientation === 'horizontal' ? this.width : this.height);
@@ -780,6 +898,10 @@ Colibri.UI.Ruler = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * Expand the value to min and max of the ruler
+     * @public
+     */
     Expand() {
         this.value = [this.min, this.max];
         this.Dispatch('BeforeChanged');

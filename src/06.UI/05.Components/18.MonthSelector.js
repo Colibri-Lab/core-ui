@@ -1,4 +1,5 @@
 /**
+ * Month selector component
  * @class
  * @extends Colibri.UI.Selector
  * @memberof Colibri.UI
