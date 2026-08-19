@@ -1,4 +1,5 @@
 /**
+ * Checkbox component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
@@ -25,13 +26,19 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
         this._handleEvents();
     }
 
-    /** @protected */
+    /** 
+     * @ignore
+     * @protected
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'Поднимается, когда изменил состояние');
     }
 
-    /** @protected */
+    /** 
+     * @ignore
+     * @protected
+     */
     _handleEvents() {
         this.AddHandler('Clicked', this.__thisClicked);
         this.AddHandler('KeyUp', this.__thisKeyUp);
@@ -39,6 +46,12 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
         this._checkIcon.AddHandler('LoosedFocus', this.__thisCheckIconLoosedFocus, false, this);
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisClicked(event, args) {
         if (!this._readonly && this._enabled) {
             this._setChecked(!this._input.checked);
@@ -49,6 +62,12 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
         args.domEvent.preventDefault();
         return false;
     }
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisKeyUp(event, args) {
         if(args.domEvent.code === 'Space') {
             this.Dispatch('Clicked', args);
@@ -57,10 +76,21 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
         args.domEvent.preventDefault();
         return false;
     }
-    
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisCheckIconReceiveFocus(event, args) {
         this.Dispatch('ReceiveFocus', args);
     }
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisCheckIconLoosedFocus(event, args) {
         this.Dispatch('LoosedFocus', args);
     }
@@ -68,6 +98,7 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
     /**
      * Render input
      * @private
+     * @ignore
      */
     _renderInput() {
         this._checkIcon = new Colibri.UI.Icon(this.name + '-icon', this);
@@ -83,6 +114,7 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
     /**
      * Set icon
      * @private
+     * @ignore
      */
     _setIcon() {
         this._checkIcon.value = (this._hasThirdState && this._thirdState) ? Colibri.UI.MinusIcon : Colibri.UI.AltCheckMarkIcon;
@@ -90,6 +122,7 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
 
     /**
      * Focus on component
+     * @public
      */
     Focus() {
         this._input.focus();
@@ -109,7 +142,10 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
     set checked(value) {
         this._setChecked(value);
     }
-    /** @private */
+    /** 
+     * @private
+     * @ignore
+     */
     _setChecked(value) {
         value = value === true || value === 'true';
         this._input.checked = value;
@@ -200,7 +236,10 @@ Colibri.UI.Checkbox = class extends Colibri.UI.Component {
         this._setPlaceholder(value ? value[Lang.Current] ?? value : '');
     }
     
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _setPlaceholder(value) {
         if(!value) {
             this._placeholder && this._placeholder.Dispose();

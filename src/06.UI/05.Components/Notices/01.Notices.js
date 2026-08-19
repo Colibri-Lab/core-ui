@@ -23,6 +23,7 @@ Colibri.UI.Notices = class extends Colibri.UI.Pane {
      * Add the notice
      * @param {Colibri.UI.Notice} noticeData notice data 
      * @returns {Colibri.UI.Notice}
+     * @public
      */
     Add(noticeData) {
 
@@ -82,98 +83,11 @@ Colibri.UI.Notices = class extends Colibri.UI.Pane {
             }
             
         });
-        
-        // if(!App.Device.isWeb && App.Device.isInBackgroundMode) {
-        //     const titleparts = noticeData.title.split('<br />');
-        //     App.Device.Notifications.Schedule(
-        //         titleparts.length > 1 ? titleparts[0] : 'Error', 
-        //         titleparts.length > 0 ? titleparts[1] : titleparts[0], 
-        //         null, {type: 'calendar', at: new Date().getTime() + 2000}
-        //     );
-        //     App.Device.Dialogs.Beep(1);
-        //     App.Device.Vibrate.Vibrate(1000);
-        // }
 
         return notice; 
 
         
         
-    }
-
-}
-
-/**
- * @class
- * @memberof Colibri.UI
- */
-Colibri.UI.Notice = class {
-
-    /** Error message */
-    static Error = 'error';
-    /** Success message */
-    static Success = 'success';
-    /** Warning message */
-    static Warning = 'warning';
-    /** White message */
-    static White = 'white';
-
-    /** Permanent notice */
-    static Permanent = 0;
-
-    /** @type {object} */
-    _exception = null;
-
-    /**
-     * @constructor
-     * @param {string|object} title title of message
-     * @param {string} severity message severity
-     * @param {number} timeout timeout to hide
-     */
-    constructor(title, severity = Colibri.UI.Notice.Error, timeout = 3000) {
-        if(Object.isObject(title) && !!title.code && !!title.message) {
-            // error object
-            this._exception = title;
-            title = this._exception.message;
-        }
-        this._title = title.message ?? title;
-        this._severity = severity;
-        this._timeout = timeout;
-    }
-
-    /**
-     * Message title
-     * @type {string}
-     * @readonly
-     */
-    get title() {
-        return this._title;
-    }
-
-    /**
-     * Message severity
-     * @type {string}
-     * @readonly
-     */
-    get severity() {
-        return this._severity;
-    }
-
-    /**
-     * Timeout for hide
-     * @type {number}
-     * @readonly
-     */
-    get timeout() {
-        return this._timeout;
-    }
-
-    /**
-     * Class name
-     * @type {string}
-     * @readonly
-     */
-    get className() {
-        return 'app-notice-' + this.severity + '-component';
     }
 
 }

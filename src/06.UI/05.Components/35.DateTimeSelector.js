@@ -139,7 +139,10 @@ Colibri.UI.DateTimeSelector = class extends Colibri.UI.Component {
     }
 
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'When value is changed');
@@ -156,7 +159,10 @@ Colibri.UI.DateTimeSelector = class extends Colibri.UI.Component {
         return false;
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showValue() {
 
         try {
@@ -746,7 +752,10 @@ Colibri.UI.DateTimeSelectorPopup = class extends Colibri.UI.Pane {
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showPickerTitle() {
 
         let value = this.value.copy();

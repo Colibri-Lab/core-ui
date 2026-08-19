@@ -41,7 +41,10 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         }
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('NodeExpanding', false, 'When node is expanding');
@@ -56,7 +59,10 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         this.RegisterEvent('Searched', false, 'When is searched');
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _handleEvents() {
         this.AddHandler('Clicked', (sender, args) => {
             this.ClearSelection();
@@ -259,7 +265,10 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         this._createContextMenuButton();
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _createContextMenuButton() {
         if(!this._hasTreeContextMenu || !this._hasContextMenu || this.Children(this._name + '-contextmenu-icon-parent')) {
             return;
@@ -291,7 +300,10 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         this.Children(this._name + '-contextmenu-icon-parent')?.container?.css('bottom', (-1 * this.scrollTop + 10) + 'px');
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _removeContextMenuButton() {
         if(this._hasTreeContextMenu && this._hasContextMenu && this.Children(this._name + '-contextmenu-icon-parent')) {
             this.Children(this._name + '-contextmenu-icon-parent').Dispose();
@@ -348,7 +360,10 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         this._setSorting();
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _setSorting() {
         if(this._sorting) {
             this.AddClass('-sortable');
@@ -406,7 +421,10 @@ Colibri.UI.Tree = class extends Colibri.UI.Component {
         this._showMultiple();
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showMultiple() {
         Array.from(this.allNodes).map(node => node.multiple = this._multiple);
     }
@@ -614,7 +632,10 @@ Colibri.UI.Tree.SearchBox = class extends Colibri.UI.Pane {
         this.Dispatch('Changed', args);
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'When search term is changed');
@@ -709,7 +730,10 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
 
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _createContextMenuButton() {
         if(!this._hasContextMenu || this.Children(this._name + '-contextmenu-icon-parent')) {
             return;
@@ -737,7 +761,10 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _removeContextMenuButton() {
         if(this._hasContextMenu && this.Children(this._name + '-contextmenu-icon-parent')) {
             this.Children(this._name + '-contextmenu-icon-parent').Dispose();
@@ -745,7 +772,10 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         }
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Expanding', false, 'When node is expanding');
@@ -802,7 +832,10 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
         return false;
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _handleEvents() {
         this.AddHandler('Clicked', this.__thisClicked);
         this.AddHandler('DoubleClicked', this.__thisDoubleClicked);
@@ -812,7 +845,10 @@ Colibri.UI.TreeNode = class extends Colibri.UI.Component {
 
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _bindHtmlEvents() {
         super._bindHtmlEvents();
     }

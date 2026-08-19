@@ -89,7 +89,6 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
 
         this.Dispatch('WindowContentRendered');
 
-        /** @private */
         this._movingStartHandler = (e) => {
             const isTouch = e.type.startsWith('touch');
             const target = isTouch ? e.target : e.target;
@@ -120,7 +119,6 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             }
         }
 
-        /** @private */
         this._movingStopHandler = (e) => {
             if (!this.isConnected) {
                 return;
@@ -137,7 +135,6 @@ Colibri.UI.Window = class extends Colibri.UI.Component {
             this._element?.removeEventListener('touchend', this._movingStopHandler);
         }
 
-        /** @private */
         this._movingHandler = (e) => {
             if (!this.isConnected || !this.moving) {
                 return;

@@ -44,7 +44,6 @@ Colibri.UI.MoveManager = class extends Colibri.Events.Dispatcher {
             }, 300);
         })
 
-        /** @private */
         this._movingStartHandler = this._movingStartHandler || ((e) => {
             const isTouch = e.type.startsWith('touch');
             
@@ -60,7 +59,6 @@ Colibri.UI.MoveManager = class extends Colibri.Events.Dispatcher {
 
         });
 
-        /** @private */
         this._movingStopHandler = this._movingStopHandler || ((e) => {
             this.moving = false;
             if(!this._component.isConnected) {
@@ -75,7 +73,6 @@ Colibri.UI.MoveManager = class extends Colibri.Events.Dispatcher {
             this.Dispatch('MoveComplete', {});
         });
 
-         /** @private */
         this._movingHandler = this._movingHandler || ((e) => {
 
             if (!this._component.isConnected || !this.moving) {

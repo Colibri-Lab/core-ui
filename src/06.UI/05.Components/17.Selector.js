@@ -68,7 +68,10 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._handleEvents();
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _inprooveValues() {
         let v = [];
         for (let vv of this._values) {
@@ -81,19 +84,28 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
 
         this.RegisterEvent('Changed', false, 'Когда выбор изменился');
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     __preventScrolling(e) {
         e.preventDefault();
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _changeBodyScroll() {
 
         let wnd = this._element.closest('.app-component-window');
@@ -106,7 +118,10 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         }
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _handleEvents() {
 
         this._input.AddHandler('Cleared', this.__inputCleared, false, this);
@@ -267,7 +282,10 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         return false;
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _removePopup() {
         if (this._popup) {
             this._popup.Dispose();
@@ -279,7 +297,10 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _hidePopup() {
         this._removePopup();
         this._input.SendToBack();
@@ -334,7 +355,10 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
 
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     __moveSelection(positionDelta) {
         if (!this._popup?.selected) {
             this._popup.selectedIndex = 0;
@@ -381,7 +405,10 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     }
 
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _setValue(value) {
         if (value === null || value === false) {
             this._value = [];
@@ -775,7 +802,10 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _createPopup(values) {
         const popup = new Colibri.UI.PopupList(this.name + '-select-popup', document.body, this._multiple, this.__render, this._titleField, this._valueField, this._groupField, this._canSelectGroup);
         popup.parent = this;
@@ -789,7 +819,10 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         return popup;
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _registerPopupEventHandlers(popup) {
         // сначала происходит SelectionChanged потом ItemClicked, странность, но так сделано
         // SelectionChanged появляется внутри списка, и не связан с значением по умолчанию в селекторе

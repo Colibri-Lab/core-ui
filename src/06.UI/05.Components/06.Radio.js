@@ -1,4 +1,5 @@
 /**
+ * Radio button component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
@@ -24,13 +25,19 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
         this._handleEvents();
     }
 
-    /** @protected */
+    /** 
+     * @protected
+     * @ignore
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'Поднимается, когда изменил состояние');
     }
 
-    /** @protected */
+    /** 
+     * @protected
+     * @ignore
+     */
     _handleEvents() {
         this.AddHandler('Clicked', this.__thisClicked);
         this.AddHandler('KeyUp', this.__thisKeyUp);
@@ -38,6 +45,12 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
         this._checkIcon.AddHandler('LoosedFocus', this.__thisCheckIconLoosedFocus, false, this);
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisClicked(event, args) {
         if (!this._readonly && this._enabled) {
             this._setChecked(!this._input.checked);
@@ -49,6 +62,12 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
         return false;
     }
     
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisKeyUp(event, args) {
         if(args.domEvent.code === 'Space') {
             this.Dispatch('Clicked', args);
@@ -58,10 +77,22 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
         return false;
     }
     
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisCheckIconReceiveFocus(event, args) {
         this.Dispatch('ReceiveFocus', args);
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisCheckIconLoosedFocus(event, args) {
         this.Dispatch('LoosedFocus', args);
     }
@@ -69,6 +100,7 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
     /**
      * Render input
      * @private
+     * @ignore
      */
     _renderInput() {
         this._checkIcon = new Colibri.UI.Icon(this.name + '-icon', this);
@@ -83,6 +115,7 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
     /**
      * Set the icon
      * @private
+     * @ignore
      */
     _setIcon() {
         this._checkIcon.value = Colibri.UI.AltRadioMarkIcon;
@@ -90,6 +123,7 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
 
     /**
      * Focus on input
+     * @public
      */
     Focus() {
         this._input.focus();
@@ -109,7 +143,10 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
     set checked(value) {
         this._setChecked(value);
     }
-    /** @private */
+    /** 
+     * @private
+     * @ignore
+     */
     _setChecked(value, process = true) {
         this._input.checked = value;
         if (value) {
@@ -124,7 +161,10 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
 
     }
 
-    /** @private */
+    /** 
+     * @private
+     * @ignore
+     */
     _unsetAllByGroup() {
         document.querySelectorAll('input[type=radio][name="' + this._fieldName + '"]').forEach(el => {
             if(el != this._input) {
@@ -182,7 +222,10 @@ Colibri.UI.Radio = class extends Colibri.UI.Component {
     set placeholder(value) {
         this._setPlaceholder(value ? value[Lang.Current] ?? value : '');
     }
-    /** @private */
+    /** 
+     * @private
+     * @ignore
+     */
     _setPlaceholder(value) {
         if(!value) {
             this._placeholder.Dispose();

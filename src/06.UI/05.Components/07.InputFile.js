@@ -1,4 +1,5 @@
 /**
+ * Input type file component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI.Input
@@ -22,13 +23,19 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
         this._element.querySelector('.app-component-input-type-file-text').html(this.__title());
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('InputFileChanged', false, 'The selected file/files have been changed');
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _handleEvents() {
         this.AddHandler('Clicked', (sender, args) => {
             this._input.click();
@@ -40,11 +47,14 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
                 this._inputFiles.push(this._input.files[i]);
             }
             this._input.value = '';
-            this.Dispatch('InputFileChanged', {files: this._inputFiles});
+            this.Dispatch('InputFileChanged', { files: this._inputFiles });
         });
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     __title() {
         return this.multiple ? '#{ui-files-choosefiles}' : '#{ui-files-choosefile}';
     }
@@ -52,7 +62,6 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
     /**
      * Container element
      * @type {Element}
-     * @readonly
      */
     get container() {
         return this._element.querySelector('.app-component-input-type-file-text');
@@ -93,7 +102,7 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
         } else {
             this._input.removeAttribute('multiple');
         }
-        if(!this._title) {
+        if (!this._title) {
             this._element.querySelector('.app-component-input-type-file-text').html(this.__title());
         }
     }
@@ -101,6 +110,7 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
     /**
      * Get the selected files
      * @returns {Array}
+     * @public
      */
     Files() {
         if (this._input.hasAttribute('multiple')) {
@@ -112,6 +122,7 @@ Colibri.UI.Input.File = class extends Colibri.UI.Component {
 
     /**
      * Clears data in component, files and selection of input
+     * @public
      */
     ClearData() {
         this._input.value = null;

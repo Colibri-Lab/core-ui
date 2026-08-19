@@ -35,7 +35,10 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
 
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _handleEvents() {
         /** Открыть окно с новым объектом */
         this._addObjectButton.AddHandler('Clicked', this.newObject, false, this);
@@ -59,14 +62,20 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _renderAddObjectButton() {
         this._addObjectButton = new Colibri.UI.OutlineBlueButton(this._name + '-add-object-button', this.contentContainer);
         this._addObjectButton.value = Lang.Translate(this._fieldData.params?.addlink) || '#{ui-arraygrid-add} «' + (Lang.Translate(this._fieldData.desc)) + '»';
         this._addObjectButton.shown = true;
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _renderObjectsGrid() {
         this._objectsGrid = new Colibri.UI.Grid(this._name + '-container-grid', this.contentContainer);
         this._objectsGrid.selectionMode = Colibri.UI.Grid.FullRow;
@@ -379,7 +388,10 @@ Colibri.UI.Forms.ArrayGrid.ObjectWindow = class extends Colibri.UI.Window {
         this.Hide();
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('FormSubmitted', 'Когда форма внутри окна отправлена');

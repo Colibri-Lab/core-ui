@@ -1,4 +1,5 @@
 /**
+ * Image viewer window component
  * @class
  * @extends Colibri.UI.Window
  * @memberof Colibri.UI
@@ -23,13 +24,19 @@ Colibri.UI.ImageViewWindow = class extends Colibri.UI.Window {
         this._handleEvents();
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('ClickedCloseButton', false, 'Поднимается когда нажали на кнопку закрыть!');
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _handleEvents() {
         this._closeButton.addEventListener('click', (event) => {
             this.Dispatch('ClickedCloseButton', {});

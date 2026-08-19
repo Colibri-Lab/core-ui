@@ -84,7 +84,10 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         this._tabs.AddTab(tabButton, component);
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _renderFields() {
 
         // this._fieldData.vertical && this.AddClass('app-field-vertical');
@@ -97,7 +100,10 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         this.Dispatch('FieldsRendered');
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         // если нужно добавить что то
@@ -226,7 +232,10 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         });
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _hideAndShow() {
         if (!this.needHideAndShow) {
             return;
@@ -339,7 +348,10 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
         return this._tabs.components;
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _calcRuntimeValues(changedComponent = null) {
         if (!this.needRecalc) {
             return;

@@ -110,7 +110,10 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _getDependsValue(type = null) {
         if (this.root && this._fieldData?.lookup) {
 
@@ -316,14 +319,20 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         }
         this._input.enabled = value;
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _setEnabled() {
         if (!this.value && this._fieldData.default) {
             this.value = this._fieldData.default;
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _initializeValues() {
         if (this._fieldData.lookup) {
             this.loading = true;
@@ -384,7 +393,10 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         return this._input.popupconfig;
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _createSelector() {
 
         return new Colibri.UI.Selector(

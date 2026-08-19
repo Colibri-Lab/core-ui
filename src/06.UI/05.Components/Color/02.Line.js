@@ -1,4 +1,5 @@
 /**
+ * Color line picker component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
@@ -74,7 +75,10 @@ Colibri.UI.Color.Line = class extends Colibri.UI.Component {
         super.height = value;
         this._renderGradient();
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _setNewValue(left) {
 
         const ctx = this._canvas.container.getContext("2d", { willReadFrequently: true });
@@ -107,7 +111,10 @@ Colibri.UI.Color.Line = class extends Colibri.UI.Component {
         this.Dispatch('Changed', { value: this.value });
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _showValue() {
         let t = this.value;
         const bounds = this._element.bounds();
@@ -116,7 +123,10 @@ Colibri.UI.Color.Line = class extends Colibri.UI.Component {
         this._pointer.styles = { backgroundColor: Colibri.UI.Rgb.Create().fromHSV(t, 1, 1).hex, left: (left - pointerBounds.outerWidth / 2) + 'px' };
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _renderGradient() {
         const bounds = this._element.bounds();
         const ctx = this._canvas.container.getContext("2d", { willReadFrequently: true });
@@ -151,6 +161,7 @@ Colibri.UI.Color.Line = class extends Colibri.UI.Component {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments

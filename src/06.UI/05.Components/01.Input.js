@@ -1,4 +1,5 @@
 /**
+ * Text input component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
@@ -467,7 +468,10 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         value = this._convertProperty('Array', value);
         this._suggestions = value;
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _createPopup(values) {
         const popup = new Colibri.UI.PopupList('select-popup', document.body, this._multiple, this.__render, this._titleField, this._valueField, this._groupField);
         popup.parent = this;

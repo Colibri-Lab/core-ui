@@ -26,7 +26,10 @@ Colibri.UI.YearMonthSelector = class extends Colibri.UI.FlexBox {
 
     }
     
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'Когда значение изменилось');
@@ -71,7 +74,10 @@ Colibri.UI.YearMonthSelector = class extends Colibri.UI.FlexBox {
         this._values = value;
         this._showValues();
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showValues() {
         
         if(!this._values) {
@@ -103,7 +109,10 @@ Colibri.UI.YearMonthSelector = class extends Colibri.UI.FlexBox {
         this._value = value;
         this._showValue();
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showValue() {
         
         if(typeof value === 'string') {

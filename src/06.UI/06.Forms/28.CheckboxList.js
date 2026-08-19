@@ -34,7 +34,10 @@ Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
 
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _handleEvents(input) {
         input.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
         input.AddHandler('Clicked', this.__thisBubblePreventDefault, false, this);
@@ -165,7 +168,10 @@ Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
         this._values = value;
         this._showValues();
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showValues() {
 
         const contentContainer = this.contentContainer;

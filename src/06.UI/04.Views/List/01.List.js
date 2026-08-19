@@ -743,7 +743,10 @@ Colibri.UI.List.SearchBox = class extends Colibri.UI.Pane {
         this.Dispatch('Changed', args);
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'Когда изменился поиск');

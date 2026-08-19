@@ -64,7 +64,10 @@ Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
         return this.Dispatch('Changed', { component: this });
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         // если нужно добавить что то

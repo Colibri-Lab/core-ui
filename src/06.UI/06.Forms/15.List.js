@@ -60,7 +60,10 @@ Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
         return this.Dispatch('Changed', args);
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _getDependsValue(type = null) {
         if (this.root && this._fieldData?.lookup) {
 

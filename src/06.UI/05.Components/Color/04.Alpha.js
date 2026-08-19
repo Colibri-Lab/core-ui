@@ -1,4 +1,5 @@
 /**
+ * Alpha line component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
@@ -31,7 +32,10 @@ Colibri.UI.Color.Alpha = class extends Colibri.UI.Component {
         
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _setNewValue(top) {
         const bounds = this._element.bounds();
         const trackbounds = this._pointer.container.bounds();
@@ -45,6 +49,7 @@ Colibri.UI.Color.Alpha = class extends Colibri.UI.Component {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -65,6 +70,7 @@ Colibri.UI.Color.Alpha = class extends Colibri.UI.Component {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -78,7 +84,10 @@ Colibri.UI.Color.Alpha = class extends Colibri.UI.Component {
         this._setNewValue(top);
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _setTrackPosition() {
         Colibri.Common.Delay(100).then(() => {
             const bounds = this._element.bounds()

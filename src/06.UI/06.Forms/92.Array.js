@@ -53,7 +53,10 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _createAddNewLink() {
         if (!this._fieldData?.params) {
             this._fieldData.params = {};
@@ -93,7 +96,10 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         newObject.Focus();
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     __updateObjectFields(fieldData) {
         return fieldData;
     }
@@ -237,7 +243,10 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         // return this.Dispatch('Changed', Object.assign(args ?? {}, {component: this}));
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         // если нужно добавить что то
@@ -418,7 +427,10 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         return this._itemsContainer;
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _hideAndShow() {
         if (!this.needHideAndShow) {
             return;
@@ -426,7 +438,10 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         this.ForEveryField((name, component) => component._hideAndShow());
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _runGenerateOfFieldData() {
         if (!this.needHideAndShow) {
             return;

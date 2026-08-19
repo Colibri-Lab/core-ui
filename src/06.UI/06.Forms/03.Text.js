@@ -92,7 +92,10 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
 
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         // если нужно добавить что то
@@ -245,7 +248,10 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
         value = this._convertProperty('String', value);
         return this._icon;
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showIcon() {
         const contentContainer = this.contentContainer;
         if (!this._icon) {

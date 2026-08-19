@@ -74,7 +74,10 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
         this._chart = null;
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _generateChart() {
         if (!this._chartsIsLoaded) {
             return;
@@ -116,7 +119,10 @@ Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
 
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('GoogleChartsLoaded', false, 'When the download is complete');

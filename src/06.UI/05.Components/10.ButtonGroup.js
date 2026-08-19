@@ -1,5 +1,5 @@
 /**
- * Button group
+ * Button group component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
@@ -22,6 +22,12 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
         this.AddHandler('KeyDown', this.__thisKeyDown);
     }
 
+    /**
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     * @ignore
+     */
     __thisKeyDown(event, args) {
         if(args.domEvent.key == 'ArrowRight' || args.domEvent.key == 'ArrowDown') {
             if(this._selectedButton) {
@@ -44,7 +50,8 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */ 
+     * @ignore
+     */
     __thisClicked(event, args) {
         // const button = args.domEvent.target.closest('[data-object-name]').getUIComponent().Closest(component => component.parent instanceof Colibri.UI.ButtonGroup);
         const button = args.domEvent.target
@@ -54,7 +61,10 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
         this.SelectButton(button);
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'When button selection is changed');
@@ -64,6 +74,7 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
     /**
      * Select the button by index or name
      * @param {string|number} button button index or name
+     * @public 
      */
     SelectButton(button, dontSendEvent = false) {
         if(typeof button == 'string' || typeof button == 'number') {
@@ -97,6 +108,7 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
      * @param {string} name name of button
      * @param {string} title title of button
      * @returns {Colibri.UI.Button}
+     * @public
      */
     AddButton(name, title, tag = {}, buttonClass = null) {
         if(this.Children(name)) {
@@ -146,6 +158,7 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
 
     /**
      * Disables all buttons
+     * @public
      */
     DisableAllButtons() {
         const childs = this.Children();
@@ -157,6 +170,7 @@ Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
     /**
      * Enables button by index or name
      * @param {string|number} name button index or number
+     * @public
      */
     EnableButton(name) {
         if(this.Children(name)) {

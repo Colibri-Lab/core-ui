@@ -1,4 +1,5 @@
 /**
+ * Color picket component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
@@ -45,6 +46,12 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisVisibilityChanged(event, args) {
         const bounds = this.parent.container.bounds(true, true);
         if(!args.state) {
@@ -53,14 +60,20 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _updateUIComponents() {
         this._colorGrad.value = this._value.hue;
         this._colorSelectedColorGrad.value = this._value;
         this._colorOpacityGrad.value = this._value.alpha;
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _showValue() {
         this._colorHex.value = this._value.hex;
         this._colorSelected.css('background-color', this._colorHex.value);
@@ -68,6 +81,7 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -81,6 +95,7 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -93,6 +108,7 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -104,6 +120,7 @@ Colibri.UI.Color = class extends Colibri.UI.Component {
 
     /**
      * Focus on component hex input
+     * @public
      */
     Focus() {
         this._colorHex.focus();

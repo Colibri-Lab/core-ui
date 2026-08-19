@@ -20,13 +20,19 @@ Colibri.UI.MassActionsMenu = class extends Colibri.UI.Component {
         this._renderMenuPanel();
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('ActionClicked', false, 'When you click on the button in the menu');
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _renderMenuPanel() {
         this._actionsContainer = new Colibri.UI.Pane(this.name + '-actions-container', this);
         this._selectedItemsCounter = new Colibri.UI.Pane(this.name + '-selected-counter', this);
@@ -36,7 +42,10 @@ Colibri.UI.MassActionsMenu = class extends Colibri.UI.Component {
         this._selectedItemsCounter.shown = true;
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _renderActions() {
         this._actionsContainer.Clear();
         this._actions.forEach((action) => {

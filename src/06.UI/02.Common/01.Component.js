@@ -1119,7 +1119,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         this.ProcessChildren(element.childNodes, parent, false, this);
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         this.RegisterEvent('ComponentRendered', false, 'When component is ready and attached to DOM');
         this.RegisterEvent('ComponentDisposed', false, 'When component is detached and disposed');

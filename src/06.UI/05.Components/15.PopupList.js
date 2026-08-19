@@ -46,7 +46,10 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     __popupBounds() {
         return this.parent.container.bounds();
     }
@@ -87,7 +90,10 @@ Colibri.UI.PopupList = class extends Colibri.UI.List {
         return super.shown;
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     __renderItemContent(itemData, item) {
         let html = '';
 

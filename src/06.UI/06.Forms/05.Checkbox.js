@@ -39,7 +39,10 @@ Colibri.UI.Forms.Checkbox = class extends Colibri.UI.Forms.Field {
         this._handleEvents();
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _handleEvents() {
         this._input.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
         this._input.AddHandler('Clicked', this.__thisBubblePreventDefault, false, this);

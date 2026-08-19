@@ -56,7 +56,10 @@ Colibri.UI.Switcher = class extends Colibri.UI.Component {
 
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         this.RegisterEvent('Changed', false, 'Поднимается когда происходи изменение');
         this.RegisterEvent('ButtonClicked', false, 'Поднимается когда происходит нажатие на кнопку пред/след');
@@ -107,7 +110,10 @@ Colibri.UI.Switcher = class extends Colibri.UI.Component {
         this._showItemIndex();
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showItemIndex() {
         if(!this._items) {
             return ;
@@ -157,7 +163,10 @@ Colibri.UI.Switcher = class extends Colibri.UI.Component {
         this._items = value;
         this._showValue();
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showValue() {
         this.itemIndex = 0;
     }

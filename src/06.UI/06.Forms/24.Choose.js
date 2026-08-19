@@ -223,7 +223,10 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
         value = this._convertProperty('Boolean', value);
         this._input.enabled = value;
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _setEnabled() {
         if (!this.value && this._fieldData.default) {
             this.value = this._fieldData.default;
@@ -241,7 +244,10 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
         });
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _getDependsValue(type = null) {
         if (this.root && this._fieldData?.lookup) {
 
@@ -265,7 +271,10 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _initializeValues() {
         if (this._fieldData.lookup) {
             this.loading = true;
@@ -320,7 +329,10 @@ Colibri.UI.Forms.Choose = class extends Colibri.UI.Forms.Field {
         return this._input.popupconfig;
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _createSelector() {
         return new Colibri.UI.Chooser(
             'input',

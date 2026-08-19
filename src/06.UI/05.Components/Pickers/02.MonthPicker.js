@@ -1,5 +1,5 @@
-
 /**
+ * Month picker component
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
@@ -20,13 +20,17 @@ Colibri.UI.MonthPicker = class extends Colibri.UI.Pane {
 
     /**
      * Render the component
+     * @protected
      */
     Render() {
         this._renderContent();
         this._bind();
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _renderContent() {
 
         this._element.html('');
@@ -69,7 +73,10 @@ Colibri.UI.MonthPicker = class extends Colibri.UI.Pane {
 
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _bind() {
         this._element.querySelectorAll('td').forEach((td) => {
             td.addEventListener('mousedown', (e) => {

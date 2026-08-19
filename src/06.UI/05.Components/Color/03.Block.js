@@ -1,4 +1,5 @@
 /**
+ * Color block picker component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
@@ -28,7 +29,10 @@ Colibri.UI.Color.Block = class extends Colibri.UI.Component {
 
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _setNewColor(left, top) {
         this._setPoint(left, top);
 
@@ -48,6 +52,7 @@ Colibri.UI.Color.Block = class extends Colibri.UI.Component {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -61,7 +66,10 @@ Colibri.UI.Color.Block = class extends Colibri.UI.Component {
         this._setNewColor(left, top);     
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _setPoint(left = null, top = null) {
         const bounds = this._element.bounds();
         const pointBounds = this._pointer.container.bounds();
@@ -73,7 +81,10 @@ Colibri.UI.Color.Block = class extends Colibri.UI.Component {
         this._pointer.styles = {left: (left) + 'px', top: (top) + 'px'};
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _showColor() {
         this.styles = {backgroundImage: 'linear-gradient(to right, #ffffff, ' + this._color + ')'};
     }

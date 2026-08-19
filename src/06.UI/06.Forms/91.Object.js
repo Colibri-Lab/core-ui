@@ -65,7 +65,10 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _renderFields() {
 
         this._fieldData?.params?.vertical && this.AddClass('app-field-vertical');
@@ -99,7 +102,10 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         this.Dispatch('FieldsRendered');
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         // если нужно добавить что то
@@ -293,7 +299,10 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _calcRuntimeValues(changedComponent = null) {
         if (!this.needRecalc) {
             return;
@@ -351,7 +360,10 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
         });
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _hideAndShow() {
 
         if (!this.needHideAndShow) {

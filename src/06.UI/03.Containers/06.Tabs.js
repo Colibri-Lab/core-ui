@@ -114,7 +114,10 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         this._selectTab(newIndex);
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('TabClicked', false, 'Когда кликнули на вкладку');
@@ -122,7 +125,10 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
         this.RegisterEvent('Changed', false, 'Когда выбранная вкладка изменилась');
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _unselectAllTabs() {
         const buttons = this.header.querySelectorAll(':scope > .app-ui-component');
         const containers = this.container.querySelectorAll(':scope > .app-ui-component');
@@ -143,7 +149,10 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
 
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _selectTab(index) {
 
         const currentSelection = this.selectedIndex;

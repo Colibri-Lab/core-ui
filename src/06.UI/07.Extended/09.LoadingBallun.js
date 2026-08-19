@@ -61,7 +61,10 @@ Colibri.UI.LoadingBallun = class extends Colibri.UI.Component {
         this._text = value;
         this._showText();
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showText() {
         this._textObject.shown = !!this._text;
         this._textObject.value = this._text;
@@ -82,7 +85,10 @@ Colibri.UI.LoadingBallun = class extends Colibri.UI.Component {
         this._icon = value;
         this._showIcon();
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showIcon() {
         this._iconObject.value = this._icon;       
     }

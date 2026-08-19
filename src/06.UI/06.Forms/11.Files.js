@@ -102,7 +102,10 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
 
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _handleEvents() {
 
         this._files.AddHandler('ItemClicked', this.__filesItemClicked, false, this);
@@ -117,7 +120,10 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _renderFilesList() {
         this._files = new Colibri.UI.List('list', this.contentContainer);
         this._filesGroup = this._files.AddGroup('group', '');
@@ -212,7 +218,10 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         return false;
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _renderInput() {
         if (!this._dropAreaEnabled) {
             this._input = new Colibri.UI.Input.File('input', this.contentContainer);
@@ -232,7 +241,10 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         this._delDialog = this._fieldData.params?.deletedialog ?? false;
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _clearInput() {
         if (this._dropAreaEnabled) {
             this._input.errorMessages = [];
@@ -240,7 +252,10 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showError() {
         this._errorMessages.forEach((message) => {
             App.Notices.Add({
@@ -253,7 +268,10 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         this._errorMessages = [];
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _extensionsToString() {
         let extensionsString = [];
 
@@ -274,7 +292,10 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         return extensionsString.join(' ');
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _validate(filesList) {
         let error = false;
         let validatedList = filesList;
@@ -337,7 +358,10 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         return validatedList;
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _itemClicked(value) {
         if (value.file instanceof File) {
             value.file.download();
@@ -400,7 +424,10 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         this._setValue(value);
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _getValue() {
         let ret = [];
         this._filesGroup.ForEach((name, item) => {
@@ -408,7 +435,10 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         })
         return ret;
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _setValue(value) {
         if (Array.isArray(value)) {
             this._filesGroup.value = [];
@@ -424,7 +454,10 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         this._files.shown = this._filesGroup.value.length > 0;
 
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _addValue(value) {
         if (Array.isArray(value)) {
             for (const file of value) {

@@ -104,7 +104,10 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         this.Dispatch('PasswordValidated', { strength: strength });
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _hidePasswordTip(nowait = false) {
         if (this._passwordTip) {
             if(nowait) {
@@ -121,7 +124,10 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showPasswordTip(strength) {
         if (this._fieldData?.params?.tip) {
             const tipData = this._fieldData?.params?.tip;
@@ -177,7 +183,10 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _generatePassword(e) {
         const tipData = this._fieldData?.params?.tip;
         this.value = String.Password(16);
@@ -245,7 +254,10 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
 
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         // если нужно добавить что то
@@ -357,7 +369,10 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         this._input && this._input.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showIcon() {
         const contentContainer = this.contentContainer;
         if (!this._icon) {
@@ -391,7 +406,10 @@ Colibri.UI.Forms.Password = class extends Colibri.UI.Forms.Field {
         return this._icon;
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _createEyeIcon() {
         const contentContainer = this.contentContainer;
         if (!this._eyeIcon) {

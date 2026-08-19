@@ -28,13 +28,19 @@ Colibri.UI.FilesDragAndDrop = class extends Colibri.UI.Component {
         this._handleEvents();
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('InputFileChosen', false, 'Выбран файл/файлы');
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _handleEvents() {
         this._innerInput.addEventListener('change', (event) => {
             this._dropContainer.Dispatch('Drop', {domEvent: event, inputFiles: this._innerInput.files});
@@ -172,7 +178,10 @@ Colibri.UI.FilesDragAndDrop = class extends Colibri.UI.Component {
         return this._errorMessage;
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _setTitle(value) {
         this._title.value = value ?? (this._multiple ? '#{ui-filesdragdrop-choosefiles}' : '#{ui-filesdragdrop-choosefile}');
     }

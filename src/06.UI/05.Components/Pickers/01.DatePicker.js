@@ -1,5 +1,5 @@
-
 /**
+ * Date picker component
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
@@ -27,7 +27,10 @@ Colibri.UI.DatePicker = class extends Colibri.UI.Pane {
         this._bind();
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _renderContent() {
 
         const min = this.parent.parent.min;
@@ -98,7 +101,10 @@ Colibri.UI.DatePicker = class extends Colibri.UI.Pane {
         tfoot.append(Element.fromHtml('<td colspan="7" data-today="today" data-value="' + (today.getTime()) + '">' + (this.parent.parent.todayString || '#{ui-dateselector-today}') + '</td>'));
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _bind() {
         this._element.querySelectorAll('td').forEach((td) => {
             td.addEventListener('mousedown', (e) => {

@@ -14,7 +14,10 @@ Colibri.UI.Pager = class extends Colibri.UI.FlexBox {
 
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'When page is changed');

@@ -59,7 +59,10 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
         this._loadValues();
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showValue() {
 
         let value = this._value;
@@ -91,7 +94,10 @@ Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
         this._loadValues();
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _loadValues() {
         const contentContainer = this.contentContainer;
         const ident = Date.Mc();

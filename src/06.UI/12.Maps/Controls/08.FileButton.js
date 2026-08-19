@@ -36,7 +36,10 @@ Colibri.UI.Maps.Controls.FileButton = class extends Colibri.UI.Maps.Controls.But
 
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
 

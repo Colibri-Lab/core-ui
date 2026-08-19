@@ -117,7 +117,10 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
 
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         // если нужно добавить что то
@@ -197,7 +200,10 @@ Colibri.UI.Forms.Number = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _convertValue(value, direction = true) {
         this._isShare = this._fieldData?.params?.isShare ?? false;
         if (direction) {

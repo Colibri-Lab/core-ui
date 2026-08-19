@@ -1,4 +1,5 @@
 /**
+ * Progress bar component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
@@ -21,7 +22,10 @@ Colibri.UI.ProgressBar = class extends Colibri.UI.Component {
         this._progress.style.width = '0%';
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('ProgressIsZero', false, 'Поднимается когда прогресс равен 0');
@@ -84,6 +88,7 @@ Colibri.UI.ProgressBar = class extends Colibri.UI.Component {
      * Starts a timer
      * @param {number} timer timer of progress bar
      * @param {number} speed speed
+     * @public
      */
     Start(timer, speed) {
         this._progressiveIterator = 100;
@@ -101,6 +106,7 @@ Colibri.UI.ProgressBar = class extends Colibri.UI.Component {
 
     /**
      * Pauses the timer
+     * @public
      */
     Pause() {
         clearInterval(this._intervalId);
@@ -109,6 +115,7 @@ Colibri.UI.ProgressBar = class extends Colibri.UI.Component {
 
     /**
      * Stop the timer
+     * @public
      */
     Stop() {
         this.progress = 100;

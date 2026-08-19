@@ -73,7 +73,10 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
     }
 
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
 
@@ -106,7 +109,10 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         this.Dispatch('Changed', {});
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _handleEvents() {
 
         this._input.AddHandler('KeyUp', this.__thisBubble, false, this);
@@ -246,12 +252,18 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         this._openButton = value;
         this._showOpenButton();
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showOpenButton() {
         this._arrow.css('display', this._openButton ? 'block' : 'none');
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _setValue(value) {
 
         if (value && this.multiple && !Array.isArray(value)) {
@@ -260,7 +272,10 @@ Colibri.UI.Chooser = class extends Colibri.UI.Component {
         this._value = value;
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _renderValue() {
 
         const set = () => {
@@ -430,7 +445,10 @@ Colibri.UI.Chooser.ChooseWindow = class extends Colibri.UI.Window {
         this._titleValue = titleField;
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         this.RegisterEvent('Choosed', false, 'When the choice is made');
     }

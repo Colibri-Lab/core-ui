@@ -91,7 +91,10 @@ Colibri.UI.Forms.NumberRange = class extends Colibri.UI.Forms.Field {
 
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         // если нужно добавить что то
@@ -181,7 +184,10 @@ Colibri.UI.Forms.NumberRange = class extends Colibri.UI.Forms.Field {
         this._input2.value = value[1];
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _convertValue(value, direction = true) {
         if(this._fieldData?.params?.format === 'percent') {
             value = direction ? value * (value <= 1 ? 100 : 1) : value / (value <= 1 ? 100 : 1);

@@ -60,7 +60,10 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
         }
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'Прозошло изменение данных компонента')

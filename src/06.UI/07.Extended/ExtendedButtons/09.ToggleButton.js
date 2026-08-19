@@ -59,7 +59,10 @@ Colibri.UI.ToggleButton = class extends Colibri.UI.ExtendedButton {
         this._state = value;
         this._showState();
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showState() {
         if(this.stateIcons && Object.isObject(this.stateIcons)) {
             this.icon = this.stateIcons[this._state];

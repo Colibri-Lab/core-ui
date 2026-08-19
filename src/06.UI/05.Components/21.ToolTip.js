@@ -79,12 +79,18 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
         this._element.data('orientation', value);
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _findParent() {
         return this.parent ?? null;
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _findPointOnParent() {
         const parent = this._findParent();
         if(!parent) {
@@ -121,7 +127,10 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _getOrientationPoint(pointOnParent) {
         const ori = this._orientation[1];
         const thisBounds = this._element.bounds(true, true);
@@ -154,7 +163,10 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _setPosition(selectedBounds = null) {
 
         const pointOnParent = this._point || this._findPointOnParent();
@@ -165,7 +177,10 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
 
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _checkPosition() {
         const thisBounds = this._element.bounds(true, true);
 
@@ -263,7 +278,10 @@ Colibri.UI.ToolTip = class extends Colibri.UI.Component {
         this._permanent = value;
         this._showPermanent();
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showPermanent() {
         if(this._permanent && !this.shown) {
             this.shown = true;

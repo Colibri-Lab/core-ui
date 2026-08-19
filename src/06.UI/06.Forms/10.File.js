@@ -53,7 +53,10 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
 
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     __thisClicked(event, args) {
         if (this._value instanceof File) {
             this._value.download();
@@ -108,7 +111,10 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         return false;
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _handleEvents() {
 
         this.AddHandler('Clicked', this.__thisClicked);
@@ -121,7 +127,10 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _renderInput() {
         if (!this._dropAreaEnabled) {
             this._input = new Colibri.UI.Input.File('input', this.contentContainer);
@@ -151,7 +160,10 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showFile() {
         if (this._dropAreaEnabled && this._value) {
             let file = this._value;
@@ -178,7 +190,10 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _clearInput() {
         if (this._dropAreaEnabled) {
             this.RemoveClass('-file-chosen');
@@ -192,7 +207,10 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showError() {
         if (this._dropAreaEnabled) {
             this._input.AddClass('-validation-error');
@@ -204,7 +222,10 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _extensionsToString() {
         let extensionsString = '';
 
@@ -215,7 +236,10 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         return extensionsString;
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _validate(filesList) {
         let error = false;
 

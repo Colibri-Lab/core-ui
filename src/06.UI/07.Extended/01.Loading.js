@@ -82,7 +82,10 @@ Colibri.UI.Loading = class extends Colibri.UI.Pane {
         this._icon = value;
         this._showicon();
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showicon() {
         this._element.html(eval(this._icon));
     }

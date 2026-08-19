@@ -1,5 +1,5 @@
-
 /**
+ * Year picker component
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
@@ -19,13 +19,17 @@ Colibri.UI.YearPicker = class extends Colibri.UI.Pane {
 
     /**
      * Render the component
+     * @protected
      */
     Render() {
         this._renderContent();
         this._bind();
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _renderContent() {
 
         this._element.html('');
@@ -68,7 +72,10 @@ Colibri.UI.YearPicker = class extends Colibri.UI.Pane {
 
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _bind() {
         this._element.querySelectorAll('td').forEach((td) => {
             td.addEventListener('mousedown', (e) => {
@@ -84,7 +91,6 @@ Colibri.UI.YearPicker = class extends Colibri.UI.Pane {
     /**
      * Start year
      * @type {number}
-     * @readonly
      */
     get startYear() {
         let dt = this.parent.value.copy()

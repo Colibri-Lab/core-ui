@@ -57,7 +57,10 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
         this.Dispatch('Changed', Object.assign(args, { component: this }));
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _showPopup() {
 
         this._colorPopupObject = new Colibri.UI.Popup(this.name + '_color_popup', this.contentContainer);
@@ -97,7 +100,10 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
         this._showPopup();
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
         // если нужно добавить что то

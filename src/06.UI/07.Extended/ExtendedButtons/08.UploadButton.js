@@ -35,7 +35,10 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
 
     }
 
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         super._registerEvents();
 
@@ -142,7 +145,10 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
         }
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _checkChoosedFiles(files) {
         let errors = [];
         let success = [];
@@ -159,7 +165,10 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
         this.Dispatch('Changed', {errors: errors, success: success});
     }
     
-    /** @private */
+    /** 
+     * @ignore
+     * @private 
+     */
     _setAccept() {
         let ret = [];
         for(const ext of this._allowTypes) {

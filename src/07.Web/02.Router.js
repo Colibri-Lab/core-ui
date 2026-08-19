@@ -9,12 +9,12 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
 
     /** 
      * Routing based on hash
-     * @const string
+     * @const {string}
      */
     static RouteOnHash = 'hash';
     /** 
      * Routing based on history
-     * @const string
+     * @const {string}
      */
     static RouteOnHistory = 'history';
 
@@ -148,7 +148,10 @@ Colibri.Web.Router = class extends Colibri.Events.Dispatcher {
      * Registers events for the router.
      * @private
      */
-    /** @protected */
+    /**
+     * @ignore 
+     * @protected 
+     */
     _registerEvents() {
         this.RegisterEvent('RouterReady', false, 'When the router is ready.');
         this.RegisterEvent('RouteChanged', false, 'When the route changes.');
