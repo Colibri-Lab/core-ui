@@ -2,6 +2,22 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const pane = new Colibri.UI.Pane('pane', this);
+ * pane.movable = true;
+ * pane.resizable = true;
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.Pane name="pane" movable="true" resizable="true" />
+ * or 
+ * <Pane name="pane" movable="true" resizable="true" />
+ * 
+ * then in js
+ * 
+ * const pane = this.Children('pane');
+ * ```
  */
 Colibri.UI.Pane = class extends Colibri.UI.Component {
 
@@ -200,6 +216,7 @@ Colibri.UI.Pane = class extends Colibri.UI.Component {
     /**
      * Register events
      * @protected
+     * @ignore
      */
     _registerEvents() {
         super._registerEvents();
@@ -224,6 +241,10 @@ Colibri.UI.Pane = class extends Colibri.UI.Component {
         this._movable = value;
         this._showMovable();
     }
+    /**
+     * @private
+     * @ignore
+     */
     _showMovable() {
         if (this._movable) {
             this._element.addEventListener('mousedown', this.__dragStartHandler);
@@ -247,6 +268,10 @@ Colibri.UI.Pane = class extends Colibri.UI.Component {
         this._resizable = value;
         this._showResizable();
     }
+    /**
+     * @private
+     * @ignore
+     */
     _showResizable() {
         this._element.addEventListener('mousemove', this.__startMove, true);
         this._element.addEventListener('mousedown', this.__mouseDown, true);

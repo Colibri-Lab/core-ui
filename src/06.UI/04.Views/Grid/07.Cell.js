@@ -32,7 +32,10 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
 
     }
 
-    /** @protected */
+    /** 
+     * @protected
+     * @ignore
+     */
     _registerEvents() {
         super._registerEvents();
         
@@ -40,6 +43,10 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @protected
+     * @ignore
+     */
     _registerEventHandlers() {
         super._registerEventHandlers();
 
@@ -47,11 +54,20 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisClicked(event, args) {
         this.activated = true;
     }
 
-
+    /**
+     * @ignore
+     * @private
+     */
     _setParentColumnAttrs() {
         this._editor = this._parentColumn?.editor;
         this._viewer = this._parentColumn?.viewer;
@@ -66,10 +82,20 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisParentRowRowStickyChange(event, args) {
         this.stickyVertically = args.row.sticky;
     }
 
+    /**
+     * Perform position change for sticky cells. If the cell is sticky vertically, it will adjust its top position based on the parent row's position.
+     * @public
+     */
     PerformPositionChange() {
         if (this.stickyVertically) {
             this._element.css('top', args.row._positionTop + 'px');
@@ -79,7 +105,6 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
     /**
      * Value container object
      * @type {Colibri.UI.Component}
-     * @readonly
      */
     get valueContainer() {
         return this._valueContainer;
@@ -87,7 +112,7 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
 
     /**
      * Column name
-     * @readonly
+     * @type {string}
      */
     get columnName() {
         return this.name.substring(this.parent.name.length + 1);
@@ -218,11 +243,22 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         this._setParentColumnAttrs();
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __parentColumnStickyChange(event, args) {
         this.stickyHorizontally = args.column.sticky;
     }
 
-
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __parentColumnPositionChange(event, args) {
         if (this.stickyHorizontally) {
             this.left = args.column._positionLeft;
@@ -235,7 +271,6 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
     /**
      * Parent row
      * @type {Colibri.UI.Grid.Row}
-     * @readonly
      */
     get parentRow() {
         return this.parent;
@@ -257,6 +292,10 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         this._createEditor();
     }
 
+    /**
+     * Editor component
+     * @type {Colibri.UI.Component}
+     */
     get editorObject() {
         return this._editorObject;
     }
@@ -277,6 +316,10 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         this._createViewer();
     }
 
+    /**
+     * Viewer component
+     * @type {Colibri.UI.Component}
+     */
     get viewerObject() {
         return this._viewerObject;
     }
@@ -391,6 +434,10 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         return null;
     }
 
+    /**
+     * Next cell in the same row
+     * @type {Colibri.UI.Grid.Cell}
+     */
     _generateViewFromParams(value) {
         const column = this.grid.header.FindColumn(this.columnName);
         if (column.tag.params && column.tag.params.render) {
@@ -404,10 +451,20 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __cellValueContainerClicked(event, args) {
         this.grid?.Dispatch('CellClicked', Object.assign(args, { cell: this, row: this.parentRow, field: this.columnName, data: this.parentRow.value, value: this.value }));
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _createValueContainer() {
         if (!this._valueContainer) {
             this._valueContainer = new Colibri.UI.TextSpan('span', this);
@@ -417,6 +474,10 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _createViewer() {
         
         if (this._viewer && !this._viewerObject) {
@@ -443,6 +504,10 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _removeViewer() {
         if(this._viewerObject) {
             this._viewerObject.Dispose();
@@ -452,11 +517,21 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         this._valueContainer.shown = true;
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __viewerObjectClicked(event, args) {
         this.grid?.Dispatch('CellViewerClicked', Object.assign(args, { cell: this, field: this.columnName, data: this.parentRow.value, value: this.value }));
         this.EditValue();
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _createEditor() {
 
         if (this._editor && !this._editorObject) {
@@ -485,6 +560,10 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _removeEditor() {
         if(this._editorObject) {
             this._editorObject.Dispose();
@@ -492,6 +571,12 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __editorObjectKeyDown(event, args) {
         if (args.domEvent.keyCode == 13 && !this._editorObject.invalid) {
             this.EndEdit();
@@ -501,15 +586,32 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         }
         // args.domEvent.stopPropagation();
     }
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __editorObjectChanged(event, args) {
         if (!this._editorObject.invalid) {
             this._performChangeInEditor();
         }
     }
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __editorObjectLoosedFocus(event, args) {
         this.EndEdit(true, false);
     }
 
+    /**
+     * Edit the value in cell
+     * @param {boolean} setFocus If true, the editor will be focused after being shown.
+     * @public
+     */
     EditValue(setFocus = true) {
         if (this._editorObject) {
             
@@ -532,6 +634,12 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         return false;
     }
 
+    /**
+     * End the edit process
+     * @param {boolean} hide If true, the editor will be hidden after ending the edit process.
+     * @param {boolean} cancel If true, the changes made in the editor will be discarded and the cell value will remain unchanged.
+     * @public
+     */
     EndEdit(hide = true, cancel = false) {
         
         if (this._parentColumn.editorAllways) {
@@ -556,7 +664,11 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         
     }
 
-    _performChangeInEditor() {
+    /**
+     * @ignore
+     * @private
+     */
+     _performChangeInEditor() {
 
         this._createEditor();
 
@@ -576,6 +688,10 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         });
     }
 
+    /**
+     * Dispose the component
+     * @public
+     */
     Dispose() {
 
         if(this._valueContainer) {
@@ -612,6 +728,10 @@ Colibri.UI.Grid.Cell = class extends Colibri.UI.Component {
         this._width = value;
     }
 
+    /**
+     * Click on the viewer
+     * @public
+     */
     ClickOnViewer() {
         if(this._viewerObject) {
             this._viewerObject.Dispatch('Clicked', {});

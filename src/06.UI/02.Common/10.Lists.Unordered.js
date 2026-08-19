@@ -3,6 +3,26 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const unorderedList = new Colibri.UI.UnorderedList('unordered-list', this);
+ * const listItem = unorderedList.AddItem('item1', 'Item 1');
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.UnorderedList name="unordered-list">
+ *     <Colibri.UI.ListItem name="item1" value="Item 1" />
+ * </Colibri.UI.UnorderedList>
+ * or 
+ * <UnorderedList name="unordered-list">
+ *     <ListItem name="item1" value="Item 1" />
+ * </UnorderedList>
+ * 
+ * then in js
+ * 
+ * const unorderedList = this.Children('unordered-list');
+ * const listItem = this.Children('unordered-list/item1');
+ * ```
  */
 Colibri.UI.UnorderedList = class extends Colibri.UI.Component {
     /**

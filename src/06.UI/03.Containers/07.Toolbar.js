@@ -2,19 +2,48 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const toolbar = new Colibri.UI.Toolbar('toolbar', this);
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.Toolbar name="toolbar" />
+ * or 
+ * <Toolbar name="toolbar" />
+ * 
+ * then in js
+ * 
+ * const toolbar = this.Children('toolbar');
+ * ```
  */
 Colibri.UI.Toolbar = class extends Colibri.UI.Component {
 
-    /** Vertical orientation */
+    /** 
+     * Vertical orientation
+     * @const {string}
+     */
     static Vertical = 'vertical';
-    /** Horizontal orientation */
+    /** 
+     * Horizontal orientation
+     * @const {string}
+     */
     static Horizontal = 'horizontal';
 
-    /** Right aligned buttons  */
+    /** 
+     * Right aligned buttons
+     * @const {string}
+     */
     static Right = 'right';
-    /** Left aligned buttons  */
+    /** 
+     * Left aligned buttons
+     * @const {string}
+     */
     static Left = 'left';
-    /** Center aligned buttons  */
+    /** 
+     * Center aligned buttons
+     * @const {string}
+     */
     static Center = 'center';
 
     /**
@@ -31,7 +60,10 @@ Colibri.UI.Toolbar = class extends Colibri.UI.Component {
 
     }
 
-    /** @protected */
+    /** 
+     * @ignore
+     * @protected
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('ToolbarButtonClicked', false, 'Кликнули на кнопку внутри Toolbar-а');
@@ -93,6 +125,7 @@ Colibri.UI.Toolbar = class extends Colibri.UI.Component {
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments

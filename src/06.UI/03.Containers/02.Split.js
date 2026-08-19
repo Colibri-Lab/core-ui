@@ -2,13 +2,46 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const split = new Colibri.UI.Split('split', this, null, Colibri.UI.Split.OrientationHorizontal);
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.Split name="split" orientation="horizontal" hasHandle="true">
+ *      <Colibri.UI.Pane name="left" />
+ *      <Colibri.UI.Pane name="right" />
+ * </Colibri.UI.Split>
+ * or 
+ * <Split name="split" orientation="horizontal" hasHandle="true">
+ *      <Pane name="left" />
+ *      <Pane name="right" />
+ * </Split>
+ * 
+ * then in js
+ * 
+ * const split = this.Children('split');
+ * ```
  */
 Colibri.UI.Split = class extends Colibri.UI.Component {
 
+    /**
+     * Orientation of split horizontal
+     * @const {string}
+     */
     static OrientationHorizontal = 'horizontal';
+
+    /**
+     * Orientation of split vertical
+     * @const {string}
+     */
     static OrientationVertical = 'vertical';
 
-    /** @type {string} */
+    /** 
+     * Orientation of split
+     * @type {string}
+     * @private
+     */
     _orientation = Colibri.UI.Split.OrientationHorizontal;
 
     /**
@@ -16,7 +49,7 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
      * @param {string} name name of component
      * @param {HTMLElement|Colibri.UI.Component} container container of component 
      * @param {string|HTMLElement} element element to generate in
-     * @param {orientation} orientation orientation of split (horizontal|vertical) 
+     * @param {string} orientation orientation of split (horizontal|vertical) 
      */
     constructor(name, container, element, orientation) {
         super(name, container, element || Element.create('div'));
@@ -102,11 +135,21 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Dispose the component
+     * @public
+     */
     Dispose() {
         this.__stopResize(null);
         super.Dispose();
     }
 
+    /**
+     * @private
+     * @ignore
+     * @param {Event} event
+     * @param {*} args
+     */
     __thisResize(event, args) {
         const portrait = window.matchMedia("(orientation: portrait)").matches;
         if(!portrait) {
@@ -117,7 +160,10 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
         this._showViewedSide();
     }
 
-    /** @protected */
+    /** 
+     * @protected
+     * @ignore
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('SplitResizeStart', false, 'When resize started');
@@ -219,6 +265,7 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
      * Processes the children object
      * @param {string|Element|Element[]} children children to generate
      * @param {Element|Colibri.UI.Component} parent parent component or element
+     * @public
      */
     ProcessChildren(children, parent) {
 
@@ -256,11 +303,19 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
         this._left.css('flex', '0 0 ' + value);
     }
 
+    /**
+     * Collapse left container
+     * @public
+     */
     CollapseLeft() {
         this.handle.attr('style', 'width: 0px; flex: 0 0 0px');
         this.left.hideElement();
     }
 
+    /**
+     * Expand left container
+     * @public
+     */
     ExpandLeft() {
         this.handle.attr('style', null);
         this.left.showElement();
@@ -297,6 +352,10 @@ Colibri.UI.Split = class extends Colibri.UI.Component {
         this._viewedSide = value;
         this._showViewedSide();
     }
+    /**
+     * @private
+     * @ignore
+     */
     _showViewedSide() {
         if(this._isMobile) {
             if(this._viewedSide == 'left') {

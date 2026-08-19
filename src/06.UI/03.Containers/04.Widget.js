@@ -2,6 +2,20 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const widget = new Colibri.UI.Widget('widget', this);
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.Widget name="widget" />
+ * or 
+ * <Widget name="widget" />
+ * 
+ * then in js
+ * 
+ * const widget = this.Children('widget');
+ * ```
  */
 Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
 
@@ -37,6 +51,12 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
         this._handlerEvents();
     }
 
+    /**
+     * @private
+     * @ignore
+     * @param {Event} event
+     * @param {*} args
+     */
     __headerChoseToggleClicked(event, args) {
         if(this.ContainsClass('-minimized')) {
             this.RemoveClass('-minimized');
@@ -47,13 +67,22 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
         }
     }
 
+    /**
+     * @private
+     * @ignore
+     * @param {Event} event
+     * @param {*} args
+     */
     __headerTitleClicked(event, args) {
         if(this._toggleOnTitle) {
             this._headerCloseToggle.Dispatch('Clicked');
         }
     }
 
-    /** @protected */
+    /** 
+     * @ignore
+     * @protected
+     */
     _handlerEvents() {
         this._headerCloseToggle.AddHandler('Clicked', this.__headerChoseToggleClicked, false, this);
         this._headerTitle.AddHandler('Clicked', this.__headerTitleClicked, false, this);
@@ -101,7 +130,10 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
         this._title = value;
         this._showTitle();
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _showTitle() {
         this._headerTitle.value = this._title;
         if(this._title) {
@@ -126,7 +158,10 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
         this._closable = value === true || value === 'true';
         this._showClosable();
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _showClosable() {        
         this._headerCloseButton.shown = this._closable;
     }
@@ -146,7 +181,10 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
         this._togglable = value === true || value === 'true';
         this._showTogglable();
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _showTogglable() {
         this._headerCloseToggle.shown = this._togglable;
     }
@@ -223,6 +261,11 @@ Colibri.UI.Widget = class extends Colibri.UI.FlexBox {
         this._toggleText2.value = value[1];
     }
 
+    /**
+     * Check if widget can be closed
+     * @returns {Promise<Boolean>}
+     * @public
+     */
     CheckCloseAbility() {
         return Promise.resolve(true);
     }

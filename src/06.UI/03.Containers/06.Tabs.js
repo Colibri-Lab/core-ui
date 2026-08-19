@@ -4,7 +4,10 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
- * @example Using in component html
+ * @example 
+ * ```
+ * Using in component html
+ * 
  * <component Component="Colibri.UI.Tabs">
  * 
  *      <component-header>
@@ -23,11 +26,12 @@
  * 
  * </component>
  * 
- * @example Using as Class in js
+ * Using as Class in js
+ * 
  * const tabs = new Colibri.UI.Tabs('name', document.body);
  * tabs.AddTab(new Colibri.UI.Button('tab1-button', this.header), new Colibri.UI.Pane('tab1-content', this.container));
  * tabs.AddTab(new Colibri.UI.Button('tab2-button', this.header), new Colibri.UI.Pane('tab2-content', this.container));
- * 
+ * ```
  */
 Colibri.UI.Tabs = class extends Colibri.UI.Component {
 

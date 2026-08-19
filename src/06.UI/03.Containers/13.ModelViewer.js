@@ -2,6 +2,28 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const modelViewer = new Colibri.UI.ModelViewer('modelViewer', this);
+ * modelViewer.src = 'path/to/3d-model.glb';
+ * modelViewer.alt = '3D Model';
+ * modelViewer.poster = 'path/to/poster-image.png';
+ * modelViewer.autoRotate = true;
+ * modelViewer.cameraControl = true;    
+ * modelViewer.Pause();
+ * modelViewer.Play();
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.ModelViewer name="modelViewer" src="path/to/3d-model.glb" alt="3D Model" poster="path/to/poster-image.png" autoRotate="true" cameraControl="true" />
+ * or 
+ * <ModelViewer name="modelViewer" src="path/to/3d-model.glb" alt="3D Model" poster="path/to/poster-image.png" autoRotate="true" cameraControl="true" />
+ * 
+ * then in js
+ * 
+ * const modelViewer = this.Children('modelViewer');
+ * 
+ * ```
  */
 Colibri.UI.ModelViewer = class extends Colibri.UI.Component {
     
@@ -276,30 +298,61 @@ Colibri.UI.ModelViewer = class extends Colibri.UI.Component {
         return this._element[0].currentTime;
     }
 
+    /**
+     * Dismiss the poster image of the 3D model
+     * @public
+     */
     DismissPoster() {
         this._element[0].dismissPoster();
     }
 
+    /**
+     * Show the poster image of the 3D model
+     * @public
+     */
     ShowPoster() {
         this._element[0].showPoster();
     }
 
+    /**
+     * Play the 3D model's animation
+     * @public
+     */
     Play() {
         this._element[0].play();
     }
 
+    /**
+     * Pause the 3D model's animation
+     * @public
+     */
     Pause() {
         this._element[0].pause();
     }
 
+    /**
+     * Get the dimensions of the 3D model viewer
+     * @returns {Object} dimensions
+     * @public
+     */
     Dimensions() {
         return this._element[0].getDimensions();
     }
 
+    /**
+     * Get the bounding box of the 3D model viewer
+     * @returns {Object} bounding box
+     * @public
+     */
     BoundingBoxCenter() {
         return this._element[0].getBoundingBoxCenter();
     }
 
+    /**
+     * Get the blob representation of the 3D model viewer
+     * @returns {Blob} blob
+     * @public
+     */
     Blob() {
         return this._element[0].toBlob();
     }

@@ -3,6 +3,19 @@
  * @class
  * @extends Colibri.Events.Dispatcher
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const dragManager = new Colibri.UI.DragManager(sources, destinations);
+ * dragManager.AddHandler('DragDropComplete', (event, args) => {
+ *     console.log('Drag and drop complete', args);
+ * });
+ * dragManager.AddHandler('DragDropOver', (event, args) => {
+ *     console.log('Drag and drop over', args);
+ * });
+ * dragManager.AddHandler('DragDropLeave', (event, args) => {
+ *     console.log('Drag and drop leave', args);
+ * });
+ * ```
  */
 Colibri.UI.DragManager = class extends Colibri.Events.Dispatcher {
 

@@ -3,6 +3,21 @@
  * @class
  * @extends Colibri.UI.Heading
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const h3 = new Colibri.UI.H3('h3', this);
+ * h3.value = 'Heading 3';
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.H3 name="h3" value="Heading 3" />
+ * or 
+ * <H3 name="h3" value="Heading 3" />
+ * 
+ * then in js
+ * 
+ * const h3 = this.Children('h3');
+ * ```
  */
 Colibri.UI.H3 = class extends Colibri.UI.Heading {
     /**

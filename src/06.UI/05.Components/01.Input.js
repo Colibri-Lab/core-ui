@@ -121,6 +121,12 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __clearClicked(event, args) {
         if (!this.enabled) {
             return;
@@ -137,6 +143,12 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         this.Dispatch('Cleared', args);
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisLoosedFocus(event, args) {
         if (this._popup) {
             this._popup.Hide();
@@ -144,11 +156,20 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
             this._popup = null;
         }
     }
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisReceiveFocus(event, args) {
         this._showSuggestions();
     }
 
-    /** @protected */
+    /** 
+     * @protected
+     * @ignore
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('KeyUp', false, 'Поднимается, когда клавиша поднята');
@@ -162,6 +183,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
     /**
      * Focus on component
      * @returns this
+     * @public
      */
     Focus() {
         this._input.focus();
@@ -171,6 +193,7 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
     /**
      * Select content of input
      * @returns this
+     * @public
      */
     Select() {
         if (!this.readonly) {
@@ -197,7 +220,10 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         }
         this.Children('loadingicon').shown = value;
     }
-    /** @private */
+    /** 
+     * @private
+     * @ignore
+     */
     _hideLoading() {
         if (this.icon) {
             this.icon.shown = true;
@@ -454,11 +480,20 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         return popup;
     }
 
+    /**
+     * @private
+     * @ignore
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __popupMouseDown(event, args) {
         this._input.value = event?.sender?.selected?.value;
     }
 
-    /** @private */
+    /** 
+     * @private
+     * @ignore
+     */
     _showSuggestions() {
         if (this._suggestions && this._suggestions.length > 0) {
             if (!this._popup) {
@@ -492,6 +527,10 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         return this._input.isValueExceeded();
     }
     
+    /**
+     * Returns width of input if value is exceeded
+     * @public
+     */
     ExceededValueWidth() {
         const style = getComputedStyle(this._element);
         return this._input.getRealWidth() + (parseInt(style.paddingLeft || 0)) + (parseInt(style.paddingRight || 0)) + 
@@ -567,6 +606,10 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         }
     }
 
+    /** 
+     * @private
+     * @ignore
+     */
     __expandHandler(event, args) {
         this.width = Math.max(this._expandedMinWidth ?? 0, this.ExceededValueWidth());
     }
@@ -586,6 +629,10 @@ Colibri.UI.Input = class extends Colibri.UI.Component {
         this._expandedMinWidth = value;
     }
 
+    /**
+     * Get the input element
+     * @type {HTMLInputElement}
+     */
     get input() {
         return this._input;
     }

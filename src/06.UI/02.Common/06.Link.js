@@ -3,8 +3,35 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const link = new Colibri.UI.Link('link', this);
+ * link.value = 'Click me';
+ * link.href = 'https://example.com';
+ * link.target = '_blank';
+ * link.customMenu = true;
+ * link.AddHandler('Clicked', (event, args) => {
+ *     console.log('Link clicked', args);
+ * });
+ * this.Add(link);
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.Link name="link" value="Click me" href="https://example.com" target="_blank" customMenu="true" />
+ * or 
+ * <Link name="link" value="Click me" href="https://example.com" target="_blank" customMenu="true" />
+ * 
+ * then in js
+ * 
+ * const link = this.Children('link');
+ * link.AddHandler('Clicked', (event, args) => {
+ *     console.log('Link clicked', args);
+ * });
+ * 
+ * ```
  */
 Colibri.UI.Link = class extends Colibri.UI.Component {
+
     /**
      * @constructor
      * @param {string} name name of component
@@ -48,6 +75,12 @@ Colibri.UI.Link = class extends Colibri.UI.Component {
         this.AddHandler('Clicked', this.__thisClicked);
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisClicked(event, args) {
         App.Router.Navigate(event.sender.navigate?.url ?? '/', event.sender.navigate?.options ?? {});
         args.domEvent.stopPropagation();
@@ -134,6 +167,12 @@ Colibri.UI.Link = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisMouseDown(event, args) {
 
         const contextmenu = [];
@@ -145,6 +184,12 @@ Colibri.UI.Link = class extends Colibri.UI.Component {
         return false;
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisContextMenuItemClicked(event, args) {
         if (args.menuData?.name === 'openblank') {
             this.Dispatch('Clicked', Object.assign(args, { target: '_blank' }));

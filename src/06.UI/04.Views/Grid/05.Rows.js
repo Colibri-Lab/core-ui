@@ -5,6 +5,7 @@
  * @memberof Colibri.UI.Grid
  */
 Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
+    
     /**
      * @constructor
      * @param {string} name name of component
@@ -35,7 +36,10 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
     }
 
-    /** @protected */
+    /** 
+     * @ignore
+     * @protected
+     */
     _registerEvents() {
         super._registerEvents();
 
@@ -43,6 +47,10 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _registerEventHandlers() {
         super._registerEventHandlers();
 
@@ -51,12 +59,22 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __titleCellClicked(event, args) {
         if(this._titleCellArrow.shown) {
             this.closed = !this.closed;
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _createCheckboxContainer() {
 
         this._checkboxContainer = new Colibri.UI.Component('checkbox-column', this._title, Element.create('td'));
@@ -74,6 +92,12 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __checkboxChanged(event, args) {
         this.ForEach((name, row) => {
             if(row.shown) {
@@ -87,6 +111,12 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         this.checkbox.thirdState = this.rowsCount > this.checked.length;
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisChanged(event, args) {
         if(this.grid?.tag?.params?.sort) {
             const foundIndex = this.grid.tag.params.sort(event.sender, this);
@@ -94,6 +124,13 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Adds a new row to the grid row with the specified name and value. The new row will be added to the grid and will be visible by default.
+     * @param {string} name The name of the new row to be added.
+     * @param {*} value The value of the new row to be added.
+     * @returns {Colibri.UI.Grid.Row} The newly created row.
+     * @public
+     */
     Add(name, value, index = null) {
         this.shown = true;
         let newRow = new Colibri.UI.Grid.Row(name, this);
@@ -121,18 +158,35 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         return newRow;
     }
 
+    /**
+     * Update checked state
+     * @returns {Colibri.UI.Grid.Checkbox}
+     * @public
+     */
     UpdateCheckedState() {
         this.checkbox.checked = this.checked.length > 0;
         this.checkbox.thirdState = this.rowsCount > this.checked.length;
                 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __rowDisposed(event, args) {
         if(this._titleCellCountSpan) {
             this._titleCellCountSpan.value = ' (' + this.rowsCount + ')';
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __childAdded(event, args) {
         if(this._titleCellCountSpan) {
             this._titleCellCountSpan.value = ' (' + this.rowsCount + ')';
@@ -142,16 +196,16 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
     }
 
     /**
-     * @type {Boolean}
-     * @readonly
+     * Checkbox of the rows group
+     * @type {Colibri.UI.Checkbox}
      */
     get checkbox() {
         return this._checkbox;
     }
 
     /**
-     * @type {Array}
-     * @readonly
+     * Selected rows
+     * @type {Array<Colibri.UI.Grid.Row>}
      */
     get selected() {
         let selectedRow = [];
@@ -164,8 +218,8 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
     }
 
     /**
-     * @type {Boolean}
-     * @readonly
+     * Checked rows
+     * @type {Array<Colibri.UI.Grid.Row>}
      */
     get checked() {
         let checkedRows = [];
@@ -178,8 +232,8 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
     }
 
     /**
+     * Active row
      * @type {Colibri.UI.Grid.Row}
-     * @readonly
      */
     get activeRow() {
         let activeRow = null;
@@ -192,16 +246,16 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
     }
 
     /**
+     * Get grid
      * @type {Colibri.UI.Grid}
-     * @readonly
      */
     get grid() {
         return this?.parent?.parent;
     }
 
     /**
+     * Get previous group
      * @type {Colibri.UI.Grid.Rows}
-     * @readonly
      */
     get prevGroup() {
         if(this.prev instanceof Colibri.UI.Grid.Rows) {
@@ -211,8 +265,8 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
     }
 
     /**
+     * Next group
      * @type {Colibri.UI.Grid.Rows}
-     * @readonly
      */
     get nextGroup() {
         if(this.next instanceof Colibri.UI.Grid.Rows) {
@@ -222,30 +276,31 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
     }
 
     /**
+     * Rows count in group
      * @type {Number}
-     * @readonly
      */
     get rowsCount() {
         return this.children - 1;
     }
 
     /**
+     * First row in group
      * @type {Colibri.UI.Grid.Row}
-     * @readonly
      */
     get firstRow() {
         return this.Children('firstChild').next;
     }
 
     /**
+     * Last row in group
      * @type {Colibri.UI.Grid.Row}
-     * @readonly
      */
     get lastRow() {
         return this.Children('lastChild');
     }
 
     /**
+     * Title of group
      * @type {String}
      */
     set title(value) {
@@ -253,6 +308,7 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         this._title.shown = !!value;
     }
     /**
+     * Title of group
      * @type {String}
      */
     get title() {
@@ -260,6 +316,7 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
     }
 
     /**
+     * Title cell
      * @type {Colibri.UI.Component}
      */
     get titleCell() {
@@ -267,12 +324,14 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
     }
 
     /**
+     * Columns count
      * @type {Number}
      */
     get columns() {
         return this._titleCell.container.attr('colspan');
     }
     /**
+     * Columns count
      * @type {Number}
      */
     set columns(count) {
@@ -280,12 +339,14 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
     }
 
     /**
+     * Is show checkboxes
      * @type {Boolean}
      */
     get showCheckBoxes() {
         return this._title.Children('checkbox-column').shown;
     }
     /**
+     * Is show checkboxes
      * @type {Boolean}
      */ 
     set showCheckbox(value) {
@@ -293,6 +354,7 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
     }
 
     /**
+     * Is group closed
      * @type {Boolean}
      */
     get closed() {
@@ -300,6 +362,7 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
     }
 
     /**
+     * Is group closed
      * @type {Boolean}
      */
     set closed(value) {
@@ -311,6 +374,10 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Clear all rows in group
+     * @public
+     */
     Clear() {
 
         const collected = [];
@@ -327,6 +394,11 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Iterates over every row in the group and executes the provided callback function for each row. The callback function receives the name of the row and the row object itself as parameters. If the callback function returns false, the iteration will stop.
+     * @param {Function} callback Callback function to be executed for each row in the group. The callback function should accept two parameters: the name of the row and the row object itself. If the callback function returns false, the iteration will stop.
+     * @public
+     */
     ForEveryRow(callback) {
         this.ForEach((rname, row, irow) => {
             if(row instanceof Colibri.UI.Grid.Row) {
@@ -368,6 +440,11 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         this._titleCellCountSpan.shown = value;
     }
 
+    /**
+     * Sort the rows by id
+     * @param {Function} callback Callback function to determine the sort order. The callback function should accept two parameters: the id of the first row and the id of the second row. It should return a negative value if the first row should come before the second, a positive value if the first row should come after the second, or zero if they are equal.
+     * @public
+     */
     SortById(callback) {
         
         let list = [];
@@ -386,6 +463,11 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Update the rows in the group based on the provided array of values. If a row with the same id already exists, its value will be updated. If a row with a new id is provided, it will be added to the group. Any existing rows that are not present in the new array will be removed from the group.
+     * @param {Array} value An array of values to update the rows in the group. Each value should have an 'id' property to identify the row.
+     * @public
+     */
     Update(value) {
         
         const existing = [];
@@ -409,6 +491,10 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Values array
+     * @type {Array}
+     */
     set value(value) {
 
         if(!value) {
@@ -426,6 +512,10 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Values array
+     * @type {Array}
+     */
     get value() {
         const ret = [];
         this.ForEveryRow((name, row) => {
@@ -450,6 +540,10 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
         this._showCheckboxes = value;
         this._showShowCheckboxes();
     }
+    /**
+     * @ignore
+     * @private
+     */
     _showShowCheckboxes() {
         
         this.ForEveryRow((n, row) => {
@@ -458,14 +552,26 @@ Colibri.UI.Grid.Rows = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _createContextMenuButton() {
         // do nothing
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _removeContextMenuButton() {
         // do nothing
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _getContextMenuIcon() {
         return null;
     }

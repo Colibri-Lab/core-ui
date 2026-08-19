@@ -26,27 +26,6 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         this._multipleSelectionKey = '';
         this._multiple = multiple;
 
-        // this.tabIndex = -1;
-        // this._scrolling = -1;
-        // this._scrollY = -1;
-
-        // this.__scrollHandler = (event) => {
-        //     try {
-        //         if(event.target.scrollTop > this._scrollY) {
-        //             if (this.Children('lastChild').container.getBoundingClientRect().bottom < (event.target.getBoundingClientRect().bottom + 10)) {
-        //                 clearTimeout(this._scrolling);
-        //                 this._scrolling = setTimeout(() => {
-        //                     this.Dispatch('ScrolledToBottom', {});
-        //                 }, 66);
-        //             }
-        //         }
-        //         this._scrollY = event.target.scrollTop;    
-        //     }
-        //     catch(e) {
-
-        //     }
-        // };
-
         this._element.addEventListener('scroll', this.__scrollHandler);
 
         this.AddHandler('ReceiveFocus', this.__thisReceiveFocus);
@@ -54,20 +33,39 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisReceiveFocus (event, args) {
         this.AddClass('-focused');
     }
     
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisLoosedFocus(event, args) {
         this.RemoveClass('-focused');
     }
 
+    /**
+     * Disposes the component
+     * @public
+     */
     Dispose() {
         this._element.removeEventListener('scroll', this.__scrollHandler);
         super.Dispose();
     }
 
-    /** @protected */
+    /** 
+     * @ignore
+     * @protected
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('SelectionChanged', false, 'Поднимается, изменилось выделение');
@@ -85,6 +83,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
      * @param {string} name name of group
      * @param {string} title title of group
      * @returns Colibri.UI.List.Group
+     * @public
      */
     AddGroup(name, title) {
         const group = new Colibri.UI.List.Group(name, this);
@@ -99,6 +98,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
      * Search for item
      * @param {Function|string} searchingItemIdOrCompareMethod item id or compare method
      * @returns {Colibri.UI.List.Item}
+     * @public
      */
     FindItem(searchingItemIdOrCompareMethod) {
         
@@ -131,6 +131,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
     /**
      * Unselect items
      * @param {Colibri.UI.List.Item[]} selected items to unselect
+     * @public
      */
     UnselectItem(selected) {
         if(!this._multiple || !this._isMultipleKeyPressed()) {
@@ -154,6 +155,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
     /**
      * Select the item
      * @param {Colibri.UI.List.Item} selected
+     * @public
      */
     SelectItem(selected) {
         if(!this._canSelect || !selected) {
@@ -188,6 +190,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
     /**
      * Select the item
      * @deprecated
+     * @private
      * @param {Colibri.UI.List.Item} selected
      */
     _selectItem(selected) {
@@ -210,6 +213,10 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Selected Item Group index
+     * @type {number}
+     */
     get selectedItemGroupIndex() {
         if(this._selected.length == 0) {
             return null;
@@ -354,6 +361,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
     /**
      * Show selection, ensures visibility of selected item
+     * @public
      */
     ShowSelection() {
         
@@ -363,7 +371,10 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
     }
 
-    
+    /**
+     * Show last item in the list
+     * @public
+     */
     ShowLastMessage() {
         const lastGroup = this.Children('lastChild');
         const last = lastGroup.Items('lastChild');
@@ -409,6 +420,10 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         this._multipleSelectionKey = value;
     }
 
+    /**
+     * @private
+     * @ignore
+     */
     _isMultipleKeyPressed() {
         if(!this._multipleSelectionKey) {
             return true;
@@ -419,6 +434,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
     /**
      * Removes all groups from list
+     * @public
      */
     ClearAllGroups() {
         this.ForEach((name, component) => {
@@ -431,6 +447,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
     /**
      * Clears selection
      * @param {boolean} fireAnEvent fire the SelectionChanged event
+     * @public
      */
     ClearSelection(fireAnEvent = true) {
         this._selected.forEach((item) => {
@@ -442,12 +459,18 @@ Colibri.UI.List = class extends Colibri.UI.Component {
         }
     }
 
-    /** @protected */
+    /** 
+     * @ignore
+     * @protected
+     */
     _createContextMenuButton() {
         // Do nothing
     }
 
-    /** @protected */
+    /**
+     * @ignore
+     * @protected
+     */
     _removeContextMenuButton() {
         // Do nothing
     }
@@ -482,6 +505,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
      * @protected
      * @param {*} data 
      * @param {String} path 
+     * @ignore
      */
     __renderBoundedValues(data, path) {
         try {
@@ -573,6 +597,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
+     * @ignore
      */ 
     __searchBoxChanged(event, args) {
         const f = this._searchFilterCallback;
@@ -646,6 +671,7 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
     /**
      * Sets the focus on searchbox
+     * @public
      */
     FocusOnSearchBox() {
         if(!this._searchBox) {
@@ -777,609 +803,3 @@ Colibri.UI.List.SearchBox = class extends Colibri.UI.Pane {
 
 }
 
-/**
- * @class
- * @extends Colibri.UI.Component
- * @memberof Colibri.UI.List
- */
-Colibri.UI.List.Group = class extends Colibri.UI.Component {
-
-    /**
-     * @constructor
-     * @param {string} name name of component
-     * @param {HTMLElement|Colibri.UI.Component} container container of component 
-     */
-    constructor(name, container) {
-        super(name, container);
-
-        this.AddClass('app-component-list-group');
-
-        this._span = new Colibri.UI.TextSpan('span', this);
-        this._div = new Colibri.UI.Pane('div', this);
-        this._span.shown = true;
-        this._div.shown = true;
-
-        // this._span = this._element.append(Element.create('span', {}));
-        // this._div = this._element.append(Element.create('div', {}));
-
-        this._handlerEvents();
-        
-    }
-
-    /**
-     * Generates an ID for item
-     * @static
-     * @param {object} itemData data of item
-     * @returns string
-     */
-    static CreateKey(itemData, idField = null) {
-        if(idField) {
-            return itemData[idField];
-        }
-        return itemData?.__id ?? itemData?.id ?? String.MD5(JSON.stringify(Object.sortPropertiesRecursive(itemData))); 
-    }
-
-    /** @protected */
-    _handlerEvents() {
-
-        this.AddHandler('ContextMenuIconClicked', (event, args) => event.sender.parent.Dispatch('ContextMenuIconClicked', Object.assign({item: args.item}, args)));
-        this.AddHandler('ContextMenuItemClicked', (event, args) => event.sender.parent.Dispatch('ContextMenuItemClicked', Object.assign({item: args.item}, args)));
-
-        this.AddHandler('Clicked', (sender, args) => {
-            if (args.domEvent?.target?.tagName == 'SPAN' && args.domEvent?.target?.parentElement == this._element) {
-                this.expanded = !this.expanded;
-            }
-        });
-    }
-
-    /**
-     * Cycles for each children
-     * @param {Function} handler method to execute for each child component
-     */
-    ForEach(handler) {
-        this._div.ForEach(handler);
-    }
-
-    Items(name = null) {
-        return this._div.Children(name);
-    }
-
-    AddItem(itemData, id = null, selected = false, index = null) {
-
-        const newKey = Colibri.UI.List.Group.CreateKey(itemData, this.parent?.idField); 
-        const foundItem = this.FindByKey(newKey);
-
-        let control;
-        if(foundItem !== -1) {
-            control = this._div.Children(foundItem);
-            control.value = itemData;
-            if(index !== null) {
-                this._div.Children(control.name, control, index);
-            }
-        } else {
-            const name = (id || itemData?.id || '_' + Number.unique());
-            control = new Colibri.UI.List.Item('item-' + name, this._div);
-            control.shown = true;
-            control.selected = selected;
-            control.hasContextMenu = this.hasContextMenu;
-            control.clickWhenContextMenuClicked = this.clickWhenContextMenuClicked;
-            control.key = newKey;
-            control.value = itemData;
-
-            if(this.parent?.tag && this.parent?.tag?.params && this.parent?.tag?.params?.sort) {
-                const foundIndex = this.parent.tag.params.sort(control, this);
-                this._div.Children(name, control, foundIndex);
-            }
-
-            if(index !== null) {
-                this._div.Children(control.name, control, index);
-            }
-
-        }
-
-        if(selected) {
-            this.parent.SelectItem(control);
-        }
-
-        if(!!this.parent.maxItems) {
-            while(this._div.children > this.parent.maxItems) {
-                this._div.Children('firstChild').Dispose();
-            }
-        }
-
-        return control;
-
-    }
-
-    /**
-     * Searches for index by key
-     * @param {string} key key to search for
-     * @returns {number}
-     */
-    FindByKey(key) {
-        return this._div.indexOf((item) => {
-            const itemKey = Colibri.UI.List.Group.CreateKey(item.value, this.parent?.idField); 
-            return itemKey === key;
-        });
-    }
-
-    /**
-     * Childs
-     * @type {Array}
-     * @readonly
-     */
-    get children() {
-        return this._div.children;
-    }
-
-    /**
-     * Label element
-     * @type {Element}
-     */
-    get label() {
-        return this._span;
-    }
-
-    /**
-     * Label element
-     * @type {Element}
-     */
-    set label(value) {
-        this._span.value = value;
-    }
-
-    /**
-     * Is group expandable
-     * @type {boolean}
-     */    
-    get expandable() {
-        return this.ContainsClass('app-component-expandable');
-    }
-
-    /**
-     * Is group expandable
-     * @type {boolean}
-     */    
-    set expandable(value) {
-        if (value) {
-            this.AddClass('app-component-expandable');
-        } else {
-            this.RemoveClass('app-component-expandable');
-        }
-    }
-
-    /**
-     * Is group expanded
-     * @type {boolean}
-     */    
-    get expanded() {
-        return !this.ContainsClass('app-component-collapsed')
-    }
-
-    /**
-     * Is group expanded
-     * @type {boolean}
-     */    
-    set expanded(value) {
-        if (this.ContainsClass('app-component-collapsed')) {
-            this.Expand();
-        } else {
-            this.Collapse();
-        }
-    }
-
-    /**
-     * Value array
-     * @type {Array}
-     */    
-    get value() {
-        return this._div.Map((name, item, index) => item.value);
-    }
-
-    /**
-     * Value array
-     * @type {Array}
-     */    
-    set value(value) {
-
-        this.parent && this.parent.ClearSelection(false);
-        
-        if(!(Symbol.iterator in Object(value))) {
-            return;
-        }
-
-        this.KeepInMind();
-
-        const oldKeys = [];
-        const oldValues = this.value;
-        for(const item of oldValues) {
-            const key = Colibri.UI.List.Group.CreateKey(item, this.parent?.idField);
-            oldKeys.push(key);
-        }
-
-        const newKeys = [];
-        let index = 0;
-        for(const item of value) {
-            newKeys.push(Colibri.UI.List.Group.CreateKey(item, this.parent?.idField));
-            this.AddItem(item, null, item?.__selected, index++);
-        }
-
-        for(const key of oldKeys) {
-            if(newKeys.indexOf(key) === -1) {
-                const foundIndex = this.FindByKey(key);
-                if(foundIndex !== -1) {
-                    const item = this._div.Children(foundIndex);
-                    item.Dispose();
-                }
-            }
-        }
-
-        this.Retreive();
-
-    }
-
-    /**
-     * Sets and empty message
-     * @type {String}
-     */
-    get emptyMessage() {
-        return this._div.container.data('empty');
-    }
-    /**
-     * Sets and empty message
-     * @type {String}
-     */
-    set emptyMessage(value) {
-        this._div.container.data('empty', value);
-    }
-
-    
-    /**
-     * @deprecated
-     */
-    set noItemsText(value) {
-        this.emptyMessage = value;
-    }
-    
-    /**
-     * @deprecated
-     */
-    get noItemsText() {
-        return this.emptyMessage;
-    }
-    
-    /**
-     * Renderer component
-     * @type {string|Colibri.UI.Component|Function}
-     */
-    get rendererComponent() {
-        return this._rendererComponent;
-    }
-    /**
-     * Renderer component
-     * @type {string|Colibri.UI.Component|Function}
-     */
-    set rendererComponent(value) {
-        this._rendererComponent = value;
-    }
-
-    /**
-     * Renderer component attributes
-     * @type {string|Object}
-     */
-    get rendererAttrs() {
-        return this._rendererAttrs;
-    }
-    /**
-     * Renderer component attributes
-     * @type {string|Object}
-     */
-    set rendererAttrs(value) {
-        if(typeof value === 'string') {
-            eval('value = ' + value + ';');
-        }
-        this._rendererAttrs = value;
-    }
-
-    /**
-     * Expand group
-     */
-    Expand() {
-        if (this.expandable) {
-            this.RemoveClass('app-component-collapsed');
-            if (this.parent instanceof Colibri.UI.List) {
-                this.parent.Dispatch('GroupToggled', {state: 'expanded'});
-            }
-        }
-    }
-
-    /**
-     * Collapse group
-     */
-    Collapse() {
-        if (this.expandable) {
-            this.AddClass('app-component-collapsed');
-            if (this.parent instanceof Colibri.UI.List) {
-                this.parent.Dispatch('GroupToggled', {state: 'collapsed'});
-            }
-        }
-    }
-
-    /** @protected */
-    _createContextMenuButton() {
-        // Do nothing
-    }
-
-    /** @protected */
-    _removeContextMenuButton() {
-        // Do nothing
-    }
-
-    /**
-     * Context menu items
-     * @type {Array}
-     */
-    get contextmenu() {
-        return this.parent.contextmenu;
-    }
-
-    /**
-     * Context menu items
-     * @type {Array}
-     */
-    set contextmenu(items) {
-        this.parent.contextmenu = items;
-    }
-
-    /**
-     * Clear items
-     */
-    Clear() {
-        this._div.Clear();
-    }
-
-    /**
-     * @deprecated
-     */
-    set items(value) {
-        this.value = value;
-    }
-    /**
-     * @deprecated
-     */
-    get items() {
-        return this.value;
-    }
-
-    ShowLastMessage() {
-        const last = this.Items('lastChild');
-        if(last) {
-            this._div.ScrollTo(10000000);
-        }
-    }
-
-}
-
-/**
- * @class
- * @extends Colibri.UI.Component
- * @memberof Colibri.UI.List
- */
-Colibri.UI.List.Item = class extends Colibri.UI.Component {
-
-    /**
-     * @constructor
-     * @param {string} name name of component
-     * @param {HTMLElement|Colibri.UI.Component} container container of component 
-     */
-    constructor(name, container) {
-        super(name, container);
-
-        this.AddClass('app-component-list-item');
-
-        this.AddHandler('Clicked', this.__ItemSelected);
-        this.AddHandler('DoubleClicked', this.__ItemDblSelected);
-        this.AddHandler(['MouseDown', 'TouchStarted'], this.__ItemMouseDown);
-        this.AddHandler(['MouseUp', 'TouchEnded'], this.__thisMouseUpOrTouchEnded);
-
-        this.AddHandler('ContextMenuIconClicked', (event, args) => event.sender.group.Dispatch('ContextMenuIconClicked', Object.assign({item: event.sender}, args)));
-        this.AddHandler('ContextMenuItemClicked', (event, args) => event.sender.group.Dispatch('ContextMenuItemClicked', Object.assign({item: event.sender}, args)));
-
-    }
-
-    __thisMouseUpOrTouchEnded(event, args) {
-        this.list?.Dispatch('ItemMouseUp', args);
-    }
-
-
-    /**
-     * Is item selected 
-     * @type {boolean} 
-     */
-    get selected() {
-        return this._element.is('.app-component-selected');
-    }
-
-    /**
-     * Is item selected 
-     * @type {boolean} 
-     */
-    set selected(value) {
-        if (value) {
-            this.AddClass('app-component-selected');
-            // this._element.ensureInViewport(this.list?.container ?? document.body);
-        } else {
-            this.RemoveClass('app-component-selected');
-        }
-    }
-
-    /**
-     * @private
-     * @param {Colibri.Events.Event} event event object
-     * @param {*} args event arguments
-     */ 
-    __ItemSelected(event, args) {
-        if(this.list) {
-            const lastSelection = this.list.selected;
-            this.list.selected = this;
-            this.list.Dispatch('ItemClicked', Object.assign(args, {item: this, before: lastSelection, domEvent: args.domEvent}));
-        }
-    }
-
-    /**
-     * @private
-     * @param {Colibri.Events.Event} event event object
-     * @param {*} args event arguments
-     */ 
-    __ItemDblSelected(event, args) {
-        if(this.list) {
-            this.list.Dispatch('ItemDoubleClicked', {item: this, domEvent: args.domEvent});
-        }
-    }
-
-    /**
-     * @private
-     * @param {Colibri.Events.Event} event event object
-     * @param {*} args event arguments
-     */ 
-    __ItemMouseDown(event, args) {
-        if(this.list) {
-            this.list?.Dispatch('ItemMouseDown', {item: this, domEvent: args.domEvent});
-        }
-    }
-
-    /** 
-     * Value object
-     * @type {object}
-     */
-    get value() {
-        return this._itemData;
-    }
-
-    /** 
-     * Value object
-     * @type {object}
-     */
-    set value(value) {
-
-        const oldKey = String.MD5(JSON.stringify(Object.sortPropertiesRecursive(this._itemData)));
-        const newKey = String.MD5(JSON.stringify(Object.sortPropertiesRecursive(value)));
-        if(oldKey === newKey) {
-            return;
-        }
-
-        this._itemData = value;
-        
-        let html = this._itemData?.title ?? '';
-        let rendererComponent = this.group?.rendererComponent ?? this.list?.rendererComponent ?? null;
-        const rendererAttrs = this.group?.rendererAttrs ?? this.list?.rendererAttrs ?? {};
-        if(rendererComponent) {
-            let name = (this._itemData?.id ?? this._itemData?.name ?? (this.name + '_renderer'));
-            if(Lang) {
-                name = Lang.Translate(name);
-            }
-            name = (name + '').replaceAll('"', '');
-            this._content = this.Children(name);
-            if(!this._content) {
-                let comp = typeof(rendererComponent) === 'string' ? rendererComponent : rendererComponent(this._itemData, this);
-                if(!(comp instanceof Colibri.UI.Component)) {
-                    comp = eval(comp);
-                }
-                this._content = new comp(name, this);
-                this._content.shown = true;
-                this._content.parent = this;
-                delete rendererAttrs.name;
-                Object.forEach(rendererAttrs, (key, value) => {
-                    this._content[key] = value;
-                });
-            }
-            if(rendererAttrs?.render) {
-                this._content[rendererAttrs?.render] = this._itemData;
-            } else {
-                this._content.value = this._itemData;
-            }
-            if(this.hasContextMenu) {
-                this._removeContextMenuButton();
-                this._createContextMenuButton();
-            }
-            html = null;
-        } else if(this.list?.__renderItemContent) {
-            html = this.list.__renderItemContent(this._itemData, this);
-        }
-        else if(this._itemData?.__render) {
-            html = this._itemData.__render.apply(this, [this._itemData, this]);
-        }
-        
-        if(html) {
-            this._element.html(html);
-        }
-
-        let data = Object.assign({}, this._itemData);
-        delete data.__render;
-
-        this._element.tag(data);
-    }
-
-    /** 
-     * Context menu items
-     * @type {Array}
-     */
-    get contextmenu() {
-        return this.group.contextmenu;
-    }
-
-    /** 
-     * Context menu items
-     * @type {Array}
-     */
-    set contextmenu(items) {
-        this.group.contextmenu = items;
-    }
-
-    /**
-     * Key value
-     * @type {string}
-     */
-    get key() {
-        return this._key;
-    }
-    /**
-     * Key value
-     * @type {string}
-     */
-    set key(value) {
-        this._key = value;
-    }
-
-    /**
-     * List associated by item
-     * @type {Colibri.UI.List}
-     * @readonly
-     */
-    get list() {
-        return this.group?.parent ?? null;
-    }
-
-    /**
-     * List group associated by item
-     * @type {Colibri.UI.List.Group}
-     * @readonly
-     */
-    get group() {
-        return this.parent?.parent ?? null;
-    }
-
-    Dispose() {
-        this.list.UnselectItem(this);
-        this._content && this._content.Dispose();
-        if(this.hasContextMenu) {
-            this._removeContextMenuButton();
-        }
-        super.Dispose();
-    }
-
-    get content() {
-        return this._content;
-    }
-
-}

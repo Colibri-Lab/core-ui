@@ -3,6 +3,22 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const img = new Colibri.UI.Img('img', this);
+ * img.source = 'https://example.com/image.jpg';
+ * img.alt = 'Example image';
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.Img name="img" source="https://example.com/image.jpg" alt="Example image" />
+ * or 
+ * <Img name="img" source="https://example.com/image.jpg" alt="Example image" />
+ * 
+ * then in js
+ * 
+ * const img = this.Children('img');
+ * ```
  */
 Colibri.UI.Img = class extends Colibri.UI.Component {
 

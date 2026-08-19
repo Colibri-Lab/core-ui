@@ -5,6 +5,7 @@
  * @memberof Colibri.UI.Grid
  */
 Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
+    
     /**
      * @constructor
      * @param {string} name name of component
@@ -42,6 +43,10 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
 
     }
     
+    /**
+     * @ignore
+     * @private
+     */
     _registerEventHandlers() {
         super._registerEventHandlers();
         this.AddHandler('Clicked', this.__thisClicked);
@@ -50,28 +55,56 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         this.AddHandler('ComponentMoved', this.__thisComponentMoved);
     }
 
+    /**
+     * Dispose column
+     * @public
+     */
     Dispose() {
         this.grid?.Dispatch('ColumnDisposed', {column: this});
         this.resizable = false;
         super.Dispose();
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisContextMenuItemClicked(event, args) {
         this.grid?.Dispatch('ColumnContextMenuItemClicked', Object.assign(args, {column: this}));        
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisComponentMoved(event, args) {
         this.grid?.Dispatch('ColumnMoved', {column: this});        
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisClicked(event, args) {
         this.grid?.Dispatch('ColumnClicked', {column: this})
     }
+
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisContextMenu(event, args) {
         return this.grid?.Dispatch('ColumnContextMenu', Object.assign(args, {column: this}));
     }
     
-
     /**
      * Set and get the column sticky
      * @type {Boolean}
@@ -157,6 +190,10 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         this._sortHandler && this._sortHandler.html(this.sortIcons[value ? value : 'none'] ?? '');
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _bindResizeEvents() {
 
         this._stopClick = (e) => { e.preventDefault(); e.stopPropagation(); return false; };
@@ -242,12 +279,20 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _createResizeHandler() {
         this._resizeHandler = Element.create('span', {class: 'resize-border'});
         this._bindResizeEvents();
         this._element.append(this._resizeHandler);
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _removeResizeHandler() {
         
         this._resizeHandler && document.removeEventListener("touchend", this._stopResize);
@@ -261,6 +306,10 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         this._resizeHandler && this._resizeHandler.remove();
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _createSortHandler() {
         this.AddClass('-sortable');
         this._sortHandler = Element.create('span', {class: 'sort-handler'});
@@ -268,6 +317,10 @@ Colibri.UI.Grid.Column = class extends Colibri.UI.Component {
         this._element.append(this._sortHandler);
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _removeSortHandler() {
         this._sortHandler && this._sortHandler.remove();
         this.RemoveClass('-sortable');

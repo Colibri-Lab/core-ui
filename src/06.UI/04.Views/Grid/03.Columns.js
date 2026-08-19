@@ -6,6 +6,12 @@
  */
 Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
 
+    /**
+     * @constructor
+     * @param {string} name name of component
+     * @param {Element|Colibri.UI.Component} container container of component
+     * @param {boolean} createCheckBox whether to create a checkbox column or not
+     */
     constructor(name, container, createCheckBox = false) {
         super(name, container, Element.create('tr'));
         this.AddClass('app-ui-header-columns');
@@ -28,20 +34,35 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisCheckboxChanged(event, args) {
         this.grid?.Dispatch('HeaderCheckboxChanged', {value: this._checkbox.checked});
     }
 
+    /**
+     * Get checkbox column
+     * @type {Colibri.UI.Checkbox}
+     */
     get checkbox() {
         return this._checkbox ?? null;
     }
 
+    /**
+     * @protected
+     * @ignore
+     */
     _registerEventHandlers() {
         super._registerEventHandlers();
         this.AddHandler('ChildAdded', this.__thisColumnAdded);
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -55,12 +76,22 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
         this.grid?.Dispatch('ColumnAdded', {column: args.column});
     }
 
+    /**
+     * Add the column
+     * @param {Colibri.UI.Grid.Column} column The column to be added.
+     * @public
+     */
     Add(name, title, attrs = {}) {
         const ret = new Colibri.UI.Grid.Column(name, this, null, Object.assign(attrs, {value: title}));
         ret.shown = true;
         return ret;
     }
 
+    /**
+     * Remove column by name
+     * @param {string} name The name of the column to be removed.
+     * @public
+     */
     Remove(name) {
         const col = this.Children(name);
         if(col) {
@@ -68,6 +99,12 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Column by name
+     * @param {string} name The name of the column to be retrieved.
+     * @returns {Colibri.UI.Grid.Column} The column with the specified name, or null if not found.
+     * @public
+     */
     Column(name) {
         if(name === 'firstChild') {
             return this.Children(1);
@@ -75,10 +112,18 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
         return this.Children(name);
     }
 
+    /**
+     * Gets the grid
+     * @type {Colibri.UI.Grid}
+     */
     get grid() {
         return this.parent.grid;
     }
 
+    /**
+     * Columns count
+     * @type {Number}
+     */
     get count() {
         return this.children - 1;
     }
@@ -99,30 +144,42 @@ Colibri.UI.Grid.Columns = class extends Colibri.UI.Component {
         this._contextmenuContainer.shown = value;
     }
 
+    /**
+     * Get context menu container
+     * @type {Colibri.UI.Grid.Column}
+     */
     get contextmenuContainer() {
         return this._contextmenuContainer;
     }
 
+    /**
+     * Get checkbox container
+     * @type {Colibri.UI.Grid.Column}
+     */
     get checkboxContainer() {
         return this._checkboxContainer;
     }
 
     
     /**
-     * SHow hide checkboxes
+     * Show hide checkboxes
      * @type {Boolean}
      */
     get showCheckboxes() {
         return this._showCheckboxes;
     }
     /**
-     * SHow hide checkboxes
+     * Show hide checkboxes
      * @type {Boolean}
      */
     set showCheckboxes(value) {
         this._showCheckboxes = value;
         this._showShowCheckboxes();
     }
+    /**
+     * @ignore
+     * @private
+     */
     _showShowCheckboxes() {
         this._checkboxContainer.shown = this._showCheckboxes;
     }

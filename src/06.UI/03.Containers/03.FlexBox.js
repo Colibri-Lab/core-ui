@@ -2,11 +2,33 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const flexbox = new Colibri.UI.FlexBox('flexbox', this);
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.FlexBox name="flexbox" />
+ * or 
+ * <FlexBox name="flexbox" />
+ * 
+ * then in js
+ * 
+ * const flexbox = this.Children('flexbox');
+ * ```
  */
 Colibri.UI.FlexBox = class extends Colibri.UI.Component {
 
+    /**
+     * Flexbox horizontal direction
+     * @const {string}
+     */
     static Horizontal = 'row';
-    static Vertical = 'column'
+    /**
+     * Flexbox vertical direction
+     * @const {string}
+     */
+    static Vertical = 'column';
 
     /**
      * @constructor

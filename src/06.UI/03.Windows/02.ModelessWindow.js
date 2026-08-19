@@ -2,6 +2,15 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const window = new Colibri.UI.ModelessWindow('window', this, this._element, 'Window title', 400, 300);
+ * window.Show();
+ * window.AddHandler('WindowClosed', (event, args) => {
+ *    console.log('Window closed');
+ *    window.Close();
+ * });
+ * ```
  */
 Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
 
@@ -166,6 +175,10 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
         this._handleEvents();
     }
 
+    /**
+     * Dispose the component
+     * @public
+     */
     Dispose() {
         document.removeEventListener('mousemove', this.__resizeMove);
         document.removeEventListener('mouseup', this.__resizeStop);
@@ -179,14 +192,20 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
         super.Dispose();
     }
 
-    /** @protected */
+    /** 
+     * @ignore
+     * @protected
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('WindowClosed', false, 'Поднимается, когда окно закрылось');
         this.RegisterEvent('WindowContentRendered', false, 'Когда содержание окна отрисовалось');
     }
 
-    /** @protected */
+    /** 
+     * @protected
+     * @ignore
+     */
     _handleEvents() {
         this._getCloseButton().AddHandler('Clicked', this.__close, false, this);
 
@@ -198,23 +217,33 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
         this.AddHandler('Resized', this.__thisResized);
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisResized(event, args) { 
         this._toggleBodyScroll(true);
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisResize(event, args) {
         this._toggleBodyScroll(false);
         this._updateStyleVariables();
     }
 
     /**
-     * @private
-     */
-    /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
-     */ 
+     */
     __close(event, args) {
         if (this._closable) {
             this.shown = false;
@@ -225,7 +254,10 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     }
 
     /**
+     * @ignore
      * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
      */
     __dragStart(event) {
         if (!this._sticky && this._movable) {
@@ -242,7 +274,10 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     }
 
     /**
+     * @ignore
      * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
      */
     __move(event) {
         if (!this._sticky && this._movable && this._isDragged) {
@@ -257,7 +292,10 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     }
 
     /**
+     * @ignore
      * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
      */
     __dragStop() {
          if (!this._sticky && this._movable && this._isDragged) {
@@ -269,7 +307,10 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     }
 
     /**
+     * @ignore
      * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
      */
     _updateStyleVariables() {
         let bounds = this._element.bounds();
@@ -278,7 +319,10 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     }
 
     /**
+     * @ignore
      * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
      */
     _toggleBodyScroll(value) {
         const scrolling = new Colibri.Common.Scrolling(document.body);
@@ -290,9 +334,18 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     }
 
     /**
-     * When window closed
+     * @deprecated
+     * @ignore
      */
     close() {
+        this.Close();
+    }
+
+    /**
+     * Closes the window
+     * @public
+     */
+    Close() {
         this._getCloseButton().Dispatch('Clicked');
     }
 
@@ -310,7 +363,10 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     set sticky(value) {
         return this._setSticky(value);
     }
-    /** @private */
+    /**
+     * @ignore
+     * @private
+     */
     _setSticky(value) {
         this._sticky = (value === true || value === 'true');
 
@@ -337,7 +393,10 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     set stickyX(value) {
         this._stickToX(value);
     }
-    /** @private */
+    /**
+     * @ignore
+     * @private
+     */
     _stickToX(value) {
         this._stickyX = value;
 
@@ -373,7 +432,10 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     set stickyY(value) {
         this._stickToY(value);
     }
-    /** @private */
+    /**
+     * @ignore
+     * @private
+     */
     _stickToY(value) {
         this._stickyY = value;
 
@@ -411,7 +473,10 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     set startPointX(value) {
         this._setStartPointX(value);
     }
-    /** @private */
+    /**
+     * @ignore
+     * @private
+     */
     _setStartPointX(value) {
         if (![null, false, undefined].includes(value)) {
 
@@ -459,7 +524,10 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     set startPointY(value) {
         this._setStartPointY(value);
     }
-    /** @private */
+    /**
+     * @ignore
+     * @private
+     */
     _setStartPointY(value) {
         if (![null, false, undefined].includes(value)) {
 
@@ -505,7 +573,10 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     set closable(value) {
         this._setClosable(value);
     }
-    /** @private */
+    /**
+     * @ignore
+     * @private
+     */
     _setClosable(value) {
         this._closable = (value === true || value === 'true');
         this._getCloseButton().shown = this._closable;
@@ -542,7 +613,10 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
             this._setWidth(value);
         }
     }
-    /** @private */
+    /**
+     * @ignore
+     * @private
+     */
     _setWidth(value) {
         super.width = value;
         this._updateStyleVariables();
@@ -564,7 +638,10 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
             this._setHeight(value);
         }
     }
-    /** @private */
+    /**
+     * @ignore
+     * @private
+     */
     _setHeight(value) {
         super.height = value;
         this._updateStyleVariables();
@@ -584,7 +661,10 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     set title(value) {
         this._setTitle(value);
     }
-    /** @private */
+    /**
+     * @ignore
+     * @private
+     */
     _setTitle(value) {
         if (value) {
             this._getHeader().html(value);
@@ -603,7 +683,10 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     get header() {
         return this._getHeader();
     }
-    /** @private */
+    /**
+     * @ignore
+     * @private
+     */
     _getHeader() {
         return this._element.querySelector('.modeless-window-header-container > .modeless-window-header');
     }
@@ -615,7 +698,10 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     get container() {
         return this._getContainer();
     }
-    /** @private */
+    /**
+     * @ignore
+     * @private
+     */
     _getContainer() {
         return this._element.querySelector('.modeless-window-container');
     }
@@ -627,12 +713,16 @@ Colibri.UI.ModelessWindow = class extends Colibri.UI.Component {
     get footer() {
         return this._getFooter();
     }
-    /** @private */
+    /**
+     * @ignore
+     * @private
+     */
     _getFooter() {
         return this._element.querySelector('.modeless-window-footer');
     }
 
     /**
+     * @ignore
      * @private
      */
     _getCloseButton() {

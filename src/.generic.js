@@ -5233,6 +5233,9 @@ Date.prototype.format = function (formatObject, dateFormat = 'ru-RU') {
  * Formats the date according to the locale, optionally including time and excluding day.
  * @param {boolean} [withTime=false] - Whether to include time.
  * @param {boolean} [withoutDay=false] - Whether to exclude day.
+ * @param {boolean} [withoutYear=false] - Whether to exclude year.
+ * @param {boolean} [withSeconds=false] - Whether to include seconds.
+ * @param {boolean} [withoutMonth=false] - Whether to exclude month.
  * @returns {string} The formatted date string.
  * @prototypeof Date
  * @method

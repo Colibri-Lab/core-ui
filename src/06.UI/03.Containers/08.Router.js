@@ -2,6 +2,42 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const router = new Colibri.UI.Router('router', this);
+ * router.basePattern = '/';
+ * router.structure = {
+ *      '': Colibri.UI.HomeComponent,
+ *      'childs': { 
+ *          'about': { component: Colibri.UI.AboutComponent },
+ *          'contact': { component: Colibri.UI.ContactComponent },
+ *          'user': { 
+ *              component: Colibri.UI.ContactComponent,
+ *              childs: {
+ *                  '(\d+)': Colibri.UI.UserProfileComponent,
+ *              }
+ *          },
+ *          'settings': { component: Colibri.UI.SettingsComponent },
+ *          'admin': {
+ *              component: Colibri.UI.AdminComponent,
+ *              childs: {
+ *                  'users': Colibri.UI.AdminUsersComponent,
+ *                  'settings': Colibri.UI.AdminSettingsComponent
+ *              }
+ *          }
+ *       }
+ * };
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.Router name="router" basePattern="/">
+ *    <SampleComponent routePattern="test(?)" />
+ * </Colibri.UI.Router>
+ * or 
+ * <Router name="router" basePattern="/">
+ *    <SampleComponent routePattern="test(?)" />
+ * </Router>
+ * ```
  */
 Colibri.UI.Router = class extends Colibri.UI.Pane {
     
@@ -23,6 +59,12 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * @private
+     * @ignore
+     * @param {Colibri.UI.ListItem} item
+     * @param {Colibri.UI.List} list
+     */
     __thisChildsProcessed(event, args) {
         this.ForEach((name, component) => component.Disconnect());
     }
@@ -59,6 +101,10 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _createComponent(pattern, route) {
         let component = null;
         let changed = true;
@@ -99,7 +145,10 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
         return [component, changed];
     }
 
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _initStructure(pattern = null, route = null) {
         if(pattern === null) {
             for(const pattern of Object.keys(this._structure)) {
@@ -118,6 +167,7 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
      * @param {object} object object to plain
      * @param {string} prefix prefix to add in keys
      * @returns object
+     * @public
      */
     toPlain(object, prefix = '') {
         let ret = {};
@@ -164,11 +214,17 @@ Colibri.UI.Router = class extends Colibri.UI.Pane {
         this._ifNotFound = value;
     }
 
+    /**
+     * Returns current route object
+     * @public
+     * @returns {Object}
+     */
     GetCurrentRoute() {
         return this._currentRoute;
     }
 
     /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments

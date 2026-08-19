@@ -3,6 +3,19 @@
  * @class
  * @extends Colibri.Events.Dispatcher
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const moveManager = new Colibri.UI.MoveManager(this);
+ * moveManager.AddHandler('MoveStart', (event, args) => {
+ *     console.log('Move started', args);
+ * });
+ * moveManager.AddHandler('Move', (event, args) => {
+ *     console.log('Moving', args);
+ * });
+ * moveManager.AddHandler('MoveComplete', (event, args) => {
+ *     console.log('Move completed', args);
+ * });
+ * ```
  */
 Colibri.UI.MoveManager = class extends Colibri.Events.Dispatcher {
 

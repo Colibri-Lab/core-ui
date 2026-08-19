@@ -3,6 +3,20 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const hr = new Colibri.UI.Hr('hr', this);
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.Hr name="hr" />
+ * or 
+ * <Hr name="hr" />
+ * 
+ * then in js
+ * 
+ * const hr = this.Children('hr');
+ * ```
  */
 Colibri.UI.Hr = class extends Colibri.UI.Component {
     /**

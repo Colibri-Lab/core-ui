@@ -43,6 +43,10 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Disposes component
+     * @public
+     */
     Dispose() {
 
         if (this._templateElement) {
@@ -53,7 +57,10 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         super.Dispose();
     }
 
-    /** @protected */
+    /** 
+     * @ignore
+     * @protected
+     */
     _registerEvents() {
         super._registerEvents();
 
@@ -65,6 +72,10 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _registerEventHandlers() {
         super._registerEventHandlers();
         
@@ -75,14 +86,32 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisDoubleClicked(event, args) {
         this.grid.Dispatch('RowDoubleClicked', Object.assign(args, {item: this}));
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisComponentDisposed(event, args) {
         this.Dispatch('RowDisposed', args);
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisChildAdded(event, args) {
         // if(args.cell) {
         //     args.cell.minWidth = args.cell.parentColumn.width;
@@ -92,10 +121,20 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Perform column Add
+     * @param {Colibri.UI.Grid.Column} column The column to be added.
+     * @public
+     */
     PerformColumnAdd(column) {
         this.Add(this.value, column);
     }
 
+    /**
+     * Perform column remove
+     * @param {Colibri.UI.Grid.Column} column The column to be removed.
+     * @public
+     */
     PerformColumnRemove(column) {
         let cell = this.Children(this.name + '-' + column.name);
         if(cell) {
@@ -103,6 +142,10 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _addCheckboxContainer() {
 
         this._checkboxContainer = new Colibri.UI.Component('checkbox-column', this, Element.create('td'));
@@ -115,6 +158,10 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _createContextMenuButton() {
         this._contextmenuContainer = new Colibri.UI.Component('contextmenu-column', this, Element.create('td'));
         this._contextmenuContainer.AddClass('app-ui-row-cell');
@@ -131,12 +178,22 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         contextMenuIcon.AddHandler(['Clicked', 'DoubleClicked'], this.__contextMenuIconClickedOrDoubleClicked, false, this);
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _removeContextMenuButton() {
         if(this._hasContextMenu && this._contextmenuContainer.Children(this._name + '-contextmenu-icon-parent')) {
             this._contextmenuContainer.Children(this._name + '-contextmenu-icon-parent').Dispose();
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __contextMenuIconClickedOrDoubleClicked(event, args) {
         if(event.name === 'ContextMenu') {
             args.isContextMenuEvent = true;
@@ -150,12 +207,22 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __checkboxChanged(event, args) {
         this.header.UpdateCheckedState();
         this.group.UpdateCheckedState();
         this.Dispatch('RowCheckChanged');
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _renderTemplateRow() {
         if (this.grid?.rowTemplateComponent) {
 
@@ -180,10 +247,18 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Row index
+     * @type {number}
+     */
     set index(value) {
         this.parent.Children(this.name, this, value);
     }
 
+    /**
+     * Value object
+     * @type {Object}
+     */
     get value() {
         let ret = Object.assign({}, this._data);
         Object.forEach(this.header?.FindAllColumns(), (columnName, column) => {
@@ -195,6 +270,10 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         return ret;
     }
 
+    /**
+     * Value object
+     * @type {Object}
+     */
     set value(value) {
         this._data = Object.assign({}, value);
         Object.forEach(this.header?.FindAllColumns(), (columnName, column) => {
@@ -204,6 +283,10 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         return this;
     }
 
+    /**
+     * Active cell
+     * @type {Colibri.UI.Grid.Cell}
+     */
     get activeCell() {
         let active = null;
         this.ForEach((cellName, cell) => {
@@ -216,6 +299,10 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         return active;
     }
 
+    /**
+     * First cell
+     * @type {Colibri.UI.Grid.Cell}
+     */
     get firstCell() {
         const firstCell = this.Children('firstChild');
         if (firstCell instanceof Colibri.UI.Grid.Cell) {
@@ -224,6 +311,10 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         return null;
     }
 
+    /**
+     * Last cell
+     * @type {Colibri.UI.Grid.Cell}
+     */
     get lastCell() {
         const lastCell = this.Children('lastChild');
         if (lastCell instanceof Colibri.UI.Grid.Cell) {
@@ -232,6 +323,10 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         return null;
     }
 
+    /**
+     * Prev row
+     * @type {Colibri.UI.Grid.Row}
+     */
     get prevRow() {
         if (this.prev instanceof Colibri.UI.Grid.Row) {
             return this.prev;
@@ -239,6 +334,10 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         return null;
     }
 
+    /**
+     * Next row
+     * @type {Colibri.UI.Grid.Row}
+     */
     get nextRow() {
         if (this.next instanceof Colibri.UI.Grid.Row) {
             return this.next;
@@ -246,6 +345,12 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         return null;
     }
 
+    /**
+     * Add the cell to the row
+     * @param {Object} value The value to be added to the cell.
+     * @param {Colibri.UI.Grid.Column} column The column associated with the cell.
+     * @public
+     */
     Add(value, column) {
         
         let val = '';
@@ -293,10 +398,17 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Is row sticky
+     * @type {Boolean}
+     */
     get sticky() {
         return this._sticky;
     }
-
+    /**
+     * Is row sticky
+     * @type {Boolean}
+     */
     set sticky(value) {
 
         if (value) {
@@ -322,11 +434,17 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         }
 
     }
-
+    /**
+     * Is row selected
+     * @type {Boolean}
+     */
     get selected() {
         return this._selected;
     }
-
+    /**
+     * Is row selected
+     * @type {Boolean}
+     */
     set selected(value) {
         const isChanged = this._selected !== value;
         value ? this.AddClass('row-selected') : this.RemoveClass('row-selected');
@@ -336,10 +454,17 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Is row activated
+     * @type {Boolean}
+     */
     get activated() {
         return this._activated;
     }
-
+    /**
+     * Is row activated
+     * @type {Boolean}
+     */
     set activated(value) {
         if (value) {
             if (this.grid?.selectionMode === Colibri.UI.Grid.FullRow) {
@@ -354,65 +479,116 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
     }
 
     /**
-     * @readonly
+     * Get the group of the row
+     * @type {Colibri.UI.Grid.Rows}
      */
     get group() {
         return this.parent;
     }
 
     /**
-     * @readonly
+     * Get the parent grid
+     * @type {Colibri.UI.Grid.Rows}
      */
     get grid() {
         return this?.parent?.grid;
     }
 
     /**
-     * @readonly
+     * Row header
+     * @type {Colibri.UI.Grid.Header}
      */
     get header() {
         return this.grid?.header ?? null;
     }
 
+    /**
+     * Is row checked
+     * @type {Boolean}
+     */
     get checked() {
         return this._checkbox && this._checkbox.checked;
     }
+    /**
+     * Is row checked
+     * @type {Boolean}
+     */
     set checked(value) {
         this._checkbox && (this._checkbox.checked = value);
     }
 
+    /**
+     * Is row checkbox enabled
+     * @type {Boolean}
+     */
     get checkboxEnabled() {
         return this._checkbox && this._checkbox.enabled;
     }
+    /**
+     * Is row checkbox enabled
+     * @type {Boolean}
+     */
     set checkboxEnabled(value) {
         this._checkbox && (this._checkbox.enabled = value);
     }
 
+    /**
+     * Checkbox tooltip
+     * @type {String}
+     */
     get checkboxTooltip() {
         return this._checkbox ? this._checkbox.toolTip : null;
     }
+    /**
+     * Checkbox tooltip
+     * @type {String}
+     */
     set checkboxTooltip(value) {
         this._checkbox && (this._checkbox.toolTip = value);
     }
 
+    /**
+     * Is checkbox shown
+     * @type {Boolean}
+     */
     set checkbox(value) {
         this._checkboxContainer.shown = value;
     }
+    /**
+     * Is checkbox shown
+     * @type {Boolean}
+     */
     get checkbox() {
         return this._checkboxContainer.shown;
     }
 
+    /**
+     * Get the cell by column name
+     * @param {string} columnName The name of the column associated with the cell.
+     * @returns {Colibri.UI.Grid.Cell} The cell associated with the specified column name, or null if not found.
+     * @public
+     */
     Cell(columnName) {
         return this.Children(this.name + '-' + columnName);
     }
 
+    /**
+     * End edit process in all cells
+     * @public
+     */
     EndEdit() {
         this.ForEach((name, cell) => {
             cell.EndEdit && cell.EndEdit();
         })
     }
 
-
+    /**
+     * Show context menu
+     * @param {Array} orientation The orientation of the context menu. It should be an array containing two values: the first value is the horizontal orientation (e.g., Colibri.UI.ContextMenu.RB for right-bottom), and the second value is the vertical orientation (e.g., Colibri.UI.ContextMenu.RT for right-top).
+     * @param {string} className The CSS class name to be added to the context menu for styling purposes.
+     * @param {Object} point The point where the context menu should be displayed. It should be an object with 'x' and 'y' properties representing the coordinates.
+     * @public
+     */
     ShowContextMenu(orientation = [Colibri.UI.ContextMenu.RB, Colibri.UI.ContextMenu.RT], className = '', point = null) {
 
         this._contextmenuContainer.Children('firstChild').AddClass('-selected');
@@ -431,6 +607,12 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @ignore
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     * @private
+     */
     __contextMenuObjectClicked(event, args) {
         
         this._contextmenuContainer.Children('firstChild')?.RemoveClass('-selected');
@@ -440,7 +622,10 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         this._contextMenuObject = null;
     }
 
-
+    /**
+     * @ignore
+     * @private
+     */
     _getContextMenuIcon() {
         if (this._contextmenuContainer.Children(this.lastCell.name + '-contextmenu-icon-parent')) {
             return this._contextmenuContainer.Children(this.lastCell.name + '-contextmenu-icon-parent/' + this.lastCell.name + '-contextmenu-icon');
@@ -448,12 +633,20 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         return null;
     }
 
+    /**
+     * Get the cells count
+     * @type {number}
+     */
     get cells() {
         let count = 0;
         this.ForEach((name, cell) => cell instanceof Colibri.UI.Grid.Cell ? count++ : 0);
         return count;
     }
 
+    /**
+     * Returns all cells count, including hidden cells and special cells (like checkbox and context menu cells).
+     * @type {number}
+     */
     get allCells() {
         let cellsCount = this.Children().length;
         if(!this.hasContextMenu) {
@@ -465,6 +658,10 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         return cellsCount;
     }
 
+    /**
+     * Returns visible cells count, excluding hidden cells and special cells (like checkbox and context menu cells).
+     * @type {number}
+     */
     get visibleCells() {
         let cellsCount = this.Children().filter(v => v.shown).length;
         if(!this.hasContextMenu) {
@@ -477,6 +674,10 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * Get the row template element
+     * @type {Element}
+     */
     SetRowTemplateSpan() {
         if(this._templateElement) {
             this._templateElement.querySelector('td').setAttribute('colspan', this.visibleCells);
@@ -484,6 +685,11 @@ Colibri.UI.Grid.Row = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Collect the editors of the row
+     * @returns {Array} An array of editor objects present in the row.
+     * @public
+     */
     CollectEditors() {
         let editors = [];
         this.ForEach((name, cell) => {

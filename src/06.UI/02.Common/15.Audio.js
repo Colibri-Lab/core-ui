@@ -3,6 +3,22 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const audio = new Colibri.UI.Audio('audio', this);
+ * audio.src = 'audio.mp3';
+ * audio.controls = 'true';
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.Audio name="audio" src="audio.mp3" controls="true" />
+ * or 
+ * <Audio name="audio" src="audio.mp3" controls="true" />
+ * 
+ * then in js
+ * 
+ * const audio = this.Children('audio');
+ * ```
  */
 Colibri.UI.Audio = class extends Colibri.UI.Component {
     

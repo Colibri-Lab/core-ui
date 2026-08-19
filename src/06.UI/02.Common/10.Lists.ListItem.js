@@ -3,6 +3,15 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const list = new Colibri.UI.UnorderedList('list', this);
+ * const listItem = list.AddItem('item1', 'Item 1');
+ * 
+ * or
+ * 
+ * const listItem = new Colibri.UI.ListItem('list-item', list);
+ * ```
  */
 Colibri.UI.ListItem = class extends Colibri.UI.Component {
     /**

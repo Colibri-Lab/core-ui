@@ -21,7 +21,10 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
 
     }
 
-    /** @protected */
+    /** 
+     * @protected
+     * @ignore
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('KeyUp', false, 'Поднимается, когда клавиша поднята');
@@ -33,6 +36,7 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
     /**
      * Focus on component
      * @returns this
+     * @public
      */
     Focus() {
         this._input.focus();
@@ -185,6 +189,10 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
         }
     }
 
+    /** 
+     * @private
+     * @ignore
+     */
     _createTextArea() {
 
         if (this._input) {
@@ -255,6 +263,12 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
         this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', { domEvent: e }));
     }
 
+    /** 
+     * @private
+     * @ignore
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __clearClicked(event, args) {
         this.value = '';
         this.Focus();
@@ -263,6 +277,10 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
         this.Dispatch('Cleared');
     }
 
+    /** 
+     * @private
+     * @ignore
+     */
     _createDivContentEditable() {
 
         if (this._input) {
@@ -335,6 +353,12 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
 
     }
 
+    /** 
+     * @private
+     * @ignore
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __clearClicked(event, args) {
         this.value = '';
         this.Focus();
@@ -343,10 +367,18 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
         this.Dispatch('Cleared');
     }
 
+    /**
+     * Focus on component
+     * @public
+     */
     Focus() {
         this._input.focus();
     }
 
+    /**
+     * Select component content
+     * @public
+     */
     Select() {
         this._input.select();
     }
@@ -354,12 +386,16 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
     /**
      * Content height
      * @type {Number}
-     * @readonly
      */
     get contentHeight() {
         return this._input.bounds().outerHeight;
     }
 
+    /**
+     * Insert text info selection
+     * @param {string} text text to insert
+     * @public
+     */
     InsertTextToSelection(text) {
         if (this._visual) {
             this._input.insertElement(Element.fromHtml(text)[0]);
@@ -368,19 +404,23 @@ Colibri.UI.TextArea = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Removes focus from component
+     * @public
+     */
     Blur() {
         this._input.blur();
     }
 
     /**
-     * 
+     * Has clear icon
      * @type {Boolean}
      */
     get hasClearIcon() {
         return this._hasClearIcon;
     }
     /**
-     * 
+     * Set has clear icon
      * @type {Boolean}
      */
     set hasClearIcon(value) {

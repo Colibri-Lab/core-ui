@@ -3,6 +3,15 @@
  * @class
  * @extends Colibri.Events.Dispatcher
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const dropManager = new Colibri.UI.FileDropManager(this, 'Drop files here');
+ * dropManager.allowTypes = ['jpg', 'png', 'gif'];
+ * dropManager.allowSize = 1000000;
+ * dropManager.AddHandler('FileDropped', (event, args) => {
+ *     console.log('Files dropped', args);
+ * });
+ * ```
  */
 Colibri.UI.FileDropManager = class extends Colibri.Events.Dispatcher {
 

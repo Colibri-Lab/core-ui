@@ -6,7 +6,11 @@
  */
 Colibri.UI.Select = class extends Colibri.UI.Input {
 
-    /** @type {Colibri.UI.Select.Dropdown} */
+    /**
+     * Drop down component
+     * @private
+     * @type {Colibri.UI.Select.Dropdown}
+     */
     _dropdown = null;
 
     /**

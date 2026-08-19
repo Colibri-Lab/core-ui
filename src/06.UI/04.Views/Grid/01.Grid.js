@@ -6,14 +6,26 @@
  */
 Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
-    /** выделять строки целиком */
+    /** 
+     * Select full row
+     * @const {string}
+     */
     static FullRow = 'fullrow';
-    /** Выделять ячейки отдельно */
+    /** 
+     * Select every cell
+     * @const {string}
+     */
     static EveryCell = 'everycell';
 
-    /** Сортировка по возрастанию */
+    /**
+     * Sort ascending
+     * @const {string}
+     */
     static SortAsc = 'asc';
-    /** Сортировка по убыванию */
+    /**
+     * Sort descending
+     * @const {string}
+     */
     static SortDesc = 'desc';
 
     /**
@@ -58,8 +70,10 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         
     }
 
-
-    /** @protected */
+    /** 
+     * @ignore
+     * @protected
+     */
     _registerEvents() {
         super._registerEvents();
 
@@ -100,6 +114,10 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * @ignore
+     * @protected
+     */
     _registerEventHandlers() {
         super._registerEventHandlers();
 
@@ -134,6 +152,13 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * Add custom context menu button to grid
+     * @param {string|Colibri.UI.Component} icon icon or component
+     * @param {number} top top position
+     * @param {number} right right position
+     * @public
+     */
     AddCustomContextMenuButton(icon, top = null, right = 0) {
         if(this._customContextMenuIcon) {
             return;
@@ -160,6 +185,10 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this._customContextMenuIcon.AddHandler('ContextMenuItemClicked', this.__customContextMenuIconContextMenuItemClicked, false, this);
 
     }
+    /**
+     * Remove custom context menu button from grid
+     * @public
+     */
     RemoveCustomContextMenuButton() {
         if(!this._customContextMenuIcon) {
             return;
@@ -169,32 +198,63 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this._customContextMenuIcon = null;
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __customContextMenuIconContextMenuItemClicked(event, args) {
         return this.Dispatch('CustomContextMenuButtonContextMenuItemClicked', Object.assign(args, {icon: this._customContextMenuIcon}));
     }
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __customContextMenuIconClicked(event, args) { 
         return this.Dispatch('CustomContextMenuButtonClicked', Object.assign(args, {icon: this._customContextMenuIcon}));
     }
 
-
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisChildsProcessed(event, args) {
         this._completeRender();
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisComponentRendered(event, args) {
         this._completeRender();
     }
 
+    /**
+     * Register a checkbox for row selection
+     * @public
+     */
     RegisterCheckbox(container) {
         this._rowSelectionCheckbox.add(container);
     }
 
+    /**
+     * Unregister a checkbox for row selection
+     * @public
+     */
     UnregisterCheckbox(container) {
         this._rowSelectionCheckbox.delete(container);
     }
 
     /**
-     * Возвращает хедер
+     * Header of Grid
      * @type {Colibri.UI.Grid.Header}
      */
     get header() {
@@ -202,7 +262,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Возвращает подвал
+     * Footer of Grid
      * @type {Colibri.UI.Pane}
      */
     get footer() {
@@ -210,7 +270,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Возвращает группу строк по умолчамнию
+     * Default group of rows
      * @type {Colibri.UI.Grid.Rows}
      */
     get rows() {
@@ -218,7 +278,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Возвращает массив групп строк
+     * Array of row groups
      * @type {Colibri.UI.Grid.Rows[]}
      */
     get groups() {
@@ -232,7 +292,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Возвращает сыделенные строки/ячейки
+     * Selected rows/cells
      * @type {Colibri.UI.Component[]}
      */
     get selected() {
@@ -259,7 +319,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         }
     }
     /**
-     * Возвращает сыделенные строки/ячейки
+     * Selected rows/cells
      * @type {Colibri.UI.Component[]}
      */
     set selected(value) {
@@ -308,7 +368,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Возвращает список прочеканных строк  
+     * Checked rows
      * @type {Colibri.UI.Component[]}
      */
     get checked() {
@@ -322,7 +382,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Отобразить чекболксы
+     * Show checkboxes
      * @type {bool}
      */
     get showCheckboxes() {
@@ -330,7 +390,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Отобразить чекбоксы  
+     * Show checkboxes
      * @type {bool}
      */
     set showCheckboxes(value) {
@@ -338,6 +398,10 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this._showCheckboxes = value;
         this._showShowCheckboxes();
     }
+    /**
+     * @ignore
+     * @private
+     */
     _showShowCheckboxes() {
         this.header.columns.showCheckboxes = this._showCheckboxes;
         Object.forEach(this.groups, (name, group) => {
@@ -346,23 +410,23 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Мультиселект
-     * @type bool
+     * Is multiple selection enabled
+     * @type {boolean}
      */
     get multiple() {
         return this._multiple;
     }
 
     /**
-     * Режим выделения
-     * @type {bool}
+     * Is multiple selection enabled
+     * @type {boolean}
      */
     set multiple(value) {
         this._multiple = value === 'true' || value === true;
     }
 
     /**
-     * Режим выделения
+     * Selection mode
      * @type {fullrow,everycell}
      */
     get selectionMode() {
@@ -370,7 +434,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Режим выделения
+     * Selection mode
      * @type {fullrow,everycell}
      */
     set selectionMode(value) {
@@ -378,23 +442,23 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Режим циклического селекта
-     * @type {bool}
+     * Cycle selection mode
+     * @type {boolean}
      */
     get cycleSelection() {
         return this._cycleSelection;
     }
 
     /**
-     * Режим циклического селекта
-     * @type {bool} value
+     * Cycle selection mode
+     * @type {boolean} value
      */
     set cycleSelection(value) {
         this._cycleSelection = value;
     }
 
     /**
-     * Активная ячейка
+     * Active cell
      * @type {Colibri.UI.Cell}
      */
     get activeCell() {
@@ -405,8 +469,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Активная строка
-     * @returns Colibri.UI.Row
+     * Active row
+     * @returns {Colibri.UI.Row}
      */
     get activeRow() {
         if (!this.activeGroup || !this.activeGroup.activeRow) {
@@ -416,8 +480,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Активная группа
-     * @returns Colibri.UI.Rows
+     * Active group
+     * @returns {Colibri.UI.Rows}
      */
     get activeGroup() {
         let activeGroup = null;
@@ -432,16 +496,16 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Первая группа
-     * @returns Colibri.UI.Rows
+     * First group
+     * @returns {Colibri.UI.Rows}
      */
     get firstGroup() {
         return this.groups[Object.keys(this.groups)[0]];
     }
 
     /**
-     * Последняя группа
-     * @returns Colibri.UI.Rows
+     * Last group
+     * @returns {Colibri.UI.Rows}
      */
     get lastGroup() {
         let groupNames = Object.keys(this.groups);
@@ -449,7 +513,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Возвращает количество строк
+     * Returns the number of rows
+     * @type {number}
      */
     get rowsCount() {
         let count = 0;
@@ -459,30 +524,49 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         return count;
     }
 
+    /**
+     * Empty message, shows if grid is empty
+     * @type {string}
+     */
     get emptyMessage() {
         return this._norows.value;
     }
-
+    /**
+     * Empty message, shows if grid is empty
+     * @type {string}
+     */
     set emptyMessage(value) {
         this._norows.value = value;
     }
-
+    /**
+     * Sort column
+     * @type {Colibri.UI.Grid.Column}
+     */
     get sortColumn() {
         return this._sortColumn;
     }
+    /**
+     * Sort order
+     * @type {Colibri.UI.Grid.SortAsc|Colibri.UI.Grid.SortDesc}
+     */
     get sortOrder() {
         return this._sortOrder;
     }
 
+    /**
+     * Reset the sort
+     * @public
+     */
     ResetSort() {
         this._sortColumn = null;
         this._sortOrder = null;
     }
 
     /**
-     * Найти строку во всех группах
-     * @param {string} key название строки
-     * @returns Colibri.UI.Row
+     * Find row by key
+     * @param {string} key row key
+     * @returns {Colibri.UI.Row}
+     * @public
      */
     FindRow(key) {
         let found = null;
@@ -498,7 +582,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Снять выделение со всех ячеек 
+     * Unselect all cells
+     * @public 
      */
     DeselectAllCells() {
         Object.forEach(this.groups, (name, group) => {
@@ -513,7 +598,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Снять активность со всех ячеек 
+     * Deactivate all cells
+     * @public
      */
     DeactivateAllCells() {
         Object.forEach(this.groups, (name, group) => {
@@ -528,7 +614,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Снять активность со всех строк 
+     * Deactivate all rows
+     * @public
      */
     DeactivateAllRows() {
         Object.forEach(this.groups, (name, group) => {
@@ -539,7 +626,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Снять выделение со всех строк
+     * Unselect all rows
+     * @public
      */
     UnselectAllRows() {
         Object.forEach(this.groups, (name, group) => {
@@ -551,7 +639,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Снять выделение со всех строк
+     * Uncheck all rows
+     * @public
      */
     UncheckAllRows() {
         Object.forEach(this.groups, (name, group) => {
@@ -569,9 +658,10 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Создает колонку  
-     * @param {string} name название колонки
-     * @returns Colibri.UI.Grid.Column
+     * Creates a column
+     * @param {string} name column name
+     * @returns {Colibri.UI.Grid.Column}
+     * @public
      */
     AddHeader(name) {
         const header = new Colibri.UI.Grid.Header(name, this._gridContent);
@@ -581,10 +671,11 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Создает группу строк (таблицу)
-     * @param {string} name название строки
-     * @param {string} title заголовок строки
-     * @returns Colibri.UI.Grid.Rows
+     * Creates a group of rows (table)
+     * @param {string} name row group name
+     * @param {string} title row group title
+     * @returns {Colibri.UI.Grid.Rows}
+     * @public
      */
     AddGroup(name, title) {
         const rows = new Colibri.UI.Grid.Rows(name, this._gridContent);
@@ -599,10 +690,22 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         return rows;
     }
 
+    /**
+     * Returns a group of rows by name
+     * @param {string} name row group name
+     * @returns {Colibri.UI.Grid.Rows}
+     * @public
+     */
     Groups(name) {
         return this._gridContent.Children(name);
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __rowsRowDisposed(event, args) {
         Object.forEach(this.groups, (name, rows) => {
             rows.columns = this.header.columnsCount;
@@ -610,14 +713,32 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this.RecalculateCellPositions();
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __rowsStickyChanged(event, args) {
         this.RecalculateCellPositions();
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __rowsGridCellsChanged(event, args) {
         this.RecalculateCellPositions();
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __rowsRowAdded(event, args) {
         this._norows.shown = false;
         this._gridContent.shown = true;
@@ -628,15 +749,22 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this.RecalculateCellPositions();
     }
 
+    /** 
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __rowsRowUpdated(event, args) {
         this.RecalculateCellPositions();
         this.Dispatch('RowUpdated', { row: args.row });
     }
 
     /**
-     * Создает подвал для таблицы
-     * @param {string} name название
-     * @returns Colibri.UI.Pane
+     * Creates a footer
+     * @param {string} name footer name
+     * @returns {Colibri.UI.Pane}
+     * @public
      */
     AddFooter(name) {
         const footer = new Colibri.UI.Pane(name, this);
@@ -646,12 +774,7 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Обработчик события нажатия кнопки на гриде
-     * @param {Object} sender 
-     * @param {Object} args 
-     * @returns 
-     */
-    /**
+     * @ignore
      * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
@@ -851,7 +974,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
 
     /**
-     * @protected
+     * @ignore
+     * @private
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
      */
@@ -909,7 +1033,8 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Пересчитывает высоту строк
+     * Recalculate positions of sticky cells and rows
+     * @public
      */
     RecalculateCellPositions() {
         if(!this.header) {
@@ -954,11 +1079,13 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Скроллирует список
-     * @param {Element} element элемент
-     * @param {Element} container котейнер
-     * @param {number} correctionCoefficient коэфициент корректировки
-     * @param {bool} direction направление
+     * Scrolls the list
+     * @param {Element} element element
+     * @param {Element} container container
+     * @param {number} correctionCoefficient correction coefficient
+     * @param {bool} direction direction
+     * @private
+     * @ignore
      */
     __customScroll(element, container, correctionCoefficient, direction) {
 
@@ -1001,22 +1128,27 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Создает кнопку контекстное меню
+     * Creates a context menu button
+     * @private
+     * @ignore
      */
     _createContextMenuButton() {
         // Do nothing
     }
 
     /**
-     * Удаляет кнопку контекстного меню
+     * Removes the context menu button
+     * @private
+     * @ignore
      */
     _removeContextMenuButton() {
         // Do nothing
     }
 
     /**
-     * Удаляет строки из грида, все
-     * @param {bool} removeGroups удалить пустые группы тоже
+     * Removes all rows from the grid
+     * @param {bool} removeGroups remove empty groups as well
+     * @public
      */
     ClearAllRows(removeGroups = true) {
         Object.forEach(this.groups, (name, group) => {
@@ -1033,8 +1165,9 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Удаляет строки из грида, все
-     * @param {bool} removeGroups удалить пустые группы тоже
+     * Removes all rows from the grid
+     * @param {bool} removeGroups remove empty groups as well
+     * @public
      */
     ClearAll() {
         this.ClearAllRows(true);
@@ -1045,6 +1178,11 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this._norows.shown = true;
     }
 
+    /**
+     * Iterates through all rows and executes a callback function
+     * @param {function} callback callback function with parameters (name, row, index)
+     * @public
+     */
     ForEveryRow(callback) {
         let cancel = false;
         Object.forEach(this.groups, (name, group, igroup) => {
@@ -1064,6 +1202,11 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         });
     }
 
+    /**
+     * Deletes all rows except those specified in the found array
+     * @param {string[]} found array of row names to keep
+     * @public
+     */
     DeleteAllExcept(found) {
 
         let collected = [];
@@ -1079,7 +1222,12 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     }
 
-
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __headerCheckboxChanged(event, args) {
 
         if(!args.value) {
@@ -1099,6 +1247,11 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this.Dispatch('CheckChanged');
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     */
     _setSortAndOrder(column) {
         if (!column.sortable) {
             return;
@@ -1132,12 +1285,24 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * Sorts the grid by a specific column and order
+     * @param {string} columnName name of the column to sort by
+     * @param {Colibri.UI.Grid.SortAsc|Colibri.UI.Grid.SortDesc} order sorting order (ascending or descending)
+     * @public
+     */
     Sort(columnName, order) {
         this._sortColumn = this.header.FindColumn(columnName);
         this._sortOrder = order;
         this.Dispatch('SortChanged', { sortColumn: this._sortColumn, order: this._sortOrder });
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisSelectionChanged(event, args) {
         if (args.item) {
             this.ForEveryRow((name, row) => {
@@ -1148,11 +1313,23 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __rowsRowCheckChanged(event, args) {
         this._massActionsMenuObject && (this._massActionsMenuObject.selectedItems = this.checked);
         this.Dispatch('CheckChanged', args);
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __columnColumnMoved(event, args) {
         this.ForEveryRow((name, row) => {
             const cell = row.Cell(args.column.name);
@@ -1166,6 +1343,12 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this.RecalculateCellPositions();
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __columnColumnAdded(event, args) {
         const column = args.column;
         this.ForEveryRow((name, row) => {
@@ -1175,6 +1358,12 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this.RecalculateCellPositions();
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __headerColumnDisposed(event, args) {
         const column = args.column;
         this.ForEveryRow((name, row) => {
@@ -1187,6 +1376,12 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this.RecalculateCellPositions();
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     _completeRender(disposedName = null) {
         return;
         if(this.header) {
@@ -1223,6 +1418,12 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisColumnPropertyChanged(event, args) {
         if(args.property === 'sticky') {
             this.RecalculateCellPositions();
@@ -1239,17 +1440,27 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __headerColumnClicked(event, args) {
         this._setSortAndOrder(args.column);
     }
 
     /**
-     * Есть ли меню массовых операций
+     * Whether the grid has a mass actions menu
      * @type {boolean}
      */
     get hasMassActionsMenu() {
         return this._hasMassActionsMenu;
     }
+    /**
+     * Whether the grid has a mass actions menu
+     * @type {boolean}
+     */
     set hasMassActionsMenu(value) {
         value = this._convertProperty('Boolean', value);
         this._hasMassActionsMenu = value;
@@ -1259,12 +1470,16 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Меню массовых операций
+     * Mass actions menu configuration
      * @type {Object}
      */
     get massActionsMenu() {
         return this._massActionsMenu;
     }
+    /**
+     * Mass actions menu configuration
+     * @type {Object}
+     */
     set massActionsMenu(value) {
         value = this._convertProperty('Array', value);
         this._massActionsMenu = value;
@@ -1275,12 +1490,16 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * Класс меню массовых операций (наследник Colibri.UI.MassActionsMenu)
+     * Mass actions menu class
      * @type {Colibri.UI.MassActionsMenu}
      */
     get massActionsMenuClass() {
         return this._massActionsMenuClass;
     }
+    /**
+     * Mass actions menu class
+     * @type {Colibri.UI.MassActionsMenu}
+     */
     set massActionsMenuClass(value) {
         value = this._convertProperty('Colibri.UI.MassActionsMenu', value);
         this._massActionsMenuClass = value;
@@ -1288,8 +1507,9 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
 
     /**
-     * Показать меню массовых операций
-     * @param container
+     * Show mass actions menu
+     * @param {HTMLElement} container The container element for the mass actions menu
+     * @public
      */
     ShowMassActionsMenu(container) {
         if (this._massActionsMenuClass) {
@@ -1308,6 +1528,12 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __massActionMenuObjectActionClicked(event, args) {
         this._massActionsMenuObject.parent.Dispatch('MassActionsMenuActionClicked', Object.assign({ items: this.checked }, args));
     }
@@ -1327,6 +1553,10 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this._hasContextMenu = value;
         this._showHasContextMenu();
     }
+    /**
+     * @ignore
+     * @private
+     */
     _showHasContextMenu() {
         this.header.hasContextMenu = this._hasContextMenu;
         for(const group of Object.values(this.groups)) {
@@ -1334,6 +1564,11 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * Recalculates the visibility of cells based on their parent column's visibility
+     * @param {Colibri.UI.Grid.Column} column The column whose visibility has changed
+     * @public
+     */
     RecalculateCellVisibility(column) {
         this.ForEveryRow((name, row) => {
             row.ForEach((name, cell) => {
@@ -1345,31 +1580,58 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         });
     }
 
+    /**
+     * Is draggable
+     * @type {boolean}
+     */
     get draggable() {
         return this._draggable;
     }
-
+    
+    /**
+     * Is draggable
+     * @type {boolean}
+     */    
     set draggable(value) {
         this._draggable = value;
     }
 
+    /**
+     * Is droppable
+     * @type {boolean}
+     */
     get dropable() {
         return this._dropable;
     }
-
+    /**
+     * Is droppable
+     * @type {boolean}
+     */
     set dropable(value) {
         this._dropable = value;
     }
 
+    /**
+     * Is enabled
+     * @type {boolean}
+     */
     set enabled(value) {
         this._enabled = value === 'true' || value === true;
         this._setEnabled();
     }
 
+    /**
+     * Is enabled
+     * @type {boolean}
+     */
     get enabled() {
         return this._enabled;
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _setEnabled() {
         // выключаем все группы, те выключают строки, строки выключают чекбоксы
         this.header.checkbox.enabled = this._enabled;
@@ -1379,6 +1641,10 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         this.ForEveryRow((rname, row) => row.checkboxEnabled = this._enabled);
     }
 
+    /**
+     * Sets/Gets the value of the grid, which is an array of data objects. Each object represents a row in the grid.
+     * @type {Array}
+     */
     set value(value) {
 
         if (!value) {
@@ -1399,6 +1665,10 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * Sets/Gets the value of the grid, which is an array of data objects. Each object represents a row in the grid.
+     * @type {Array}
+     */
     get value() {
         const ret = [];
         this.ForEveryRow((name, row) => {
@@ -1457,20 +1727,25 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
     }
 
     /**
-     * 
+     * Resize mode of the grid, which can be either 'percentage' or 'factual'. This determines how the grid resizes its columns and rows.
      * @type {persentage,factual}
      */
     get resizeMode() {
         return this._resizeMode;
     }
     /**
-     * 
+     * Resize mode of the grid, which can be either 'percentage' or 'factual'. This determines how the grid resizes its columns and rows.
      * @type {persentage,factual}
      */
     set resizeMode(value) {
         this._resizeMode = value;
     }
 
+    /**
+     * Focus on component
+     * @param {string|number} element The element to focus on. It can be 'firstVisibleChild', 'lastVisibleChild', 'firstChild', 'lastChild', or an index of the editor to focus on.
+     * @public
+     */
     Focus(element = 'firstVisibleChild') {
         const editors = this.CollectEditors();
         if(element === 'firstVisibleChild') {
@@ -1478,16 +1753,16 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
             if(first) {
                 first.Focus();
             }
-        } else if(editor === 'lastVisibleChild') {
+        } else if(element === 'lastVisibleChild') {
             const last = editors.reverse().find(e => e.shown);
             if(last) {
                 last.Focus();
             }
-        } else if(element == 'firstChild') {
+        } else if(element === 'firstChild') {
             if(editors.length) {
                 editors[0].Focus();
             }
-        } else if(element == 'lastChild') {
+        } else if(element === 'lastChild') {
             if(editors.length) {
                 editors[editors.length - 1].Focus();
             }
@@ -1496,6 +1771,11 @@ Colibri.UI.Grid = class extends Colibri.UI.Pane {
         }
     }
 
+    /**
+     * Collects all editors from the grid's rows and returns them as an array.
+     * @returns {Array} An array of all editors in the grid.
+     * @public
+     */
     CollectEditors() {
         let editors = [];
         this.ForEveryRow((name, row) => {

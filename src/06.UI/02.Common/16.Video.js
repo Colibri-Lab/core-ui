@@ -3,6 +3,22 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const video = new Colibri.UI.Video('video', this);
+ * video.src = 'video.mp4';
+ * video.controls = true;
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.Video name="video" src="video.mp4" controls="true" />
+ * or 
+ * <Video name="video" src="video.mp4" controls="true" />
+ * 
+ * then in js
+ * 
+ * const video = this.Children('video');
+ * ```
  */
 Colibri.UI.Video = class extends Colibri.UI.Component {
     

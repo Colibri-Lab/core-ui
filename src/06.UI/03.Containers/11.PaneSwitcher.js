@@ -2,6 +2,29 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const paneSwitcher = new Colibri.UI.PaneSwitcher('paneSwitcher', this);
+ * 
+ * const pane1 = new Colibri.UI.Pane('pane1', paneSwitcher);
+ * pane1.value = 'Pane 1';
+ * 
+ * const pane2 = new Colibri.UI.Pane('pane2', paneSwitcher);
+ * pane2.value = 'Pane 2';
+ * 
+ * paneSwitcher.value = 'pane1'; // show pane1
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.PaneSwitcher name="paneSwitcher" value="pane1">
+ *      <Colibri.UI.Pane name="pane1" value="Pane 1" />
+ *      <Colibri.UI.Pane name="pane2" value="Pane 2" />
+ * </Colibri.UI.PaneSwitcher>
+ * 
+ * then in js
+ * 
+ * const paneSwitcher = this.Children('paneSwitcher');
+ * ```
  */
 Colibri.UI.PaneSwitcher = class extends Colibri.UI.Pane {
     
@@ -19,10 +42,20 @@ Colibri.UI.PaneSwitcher = class extends Colibri.UI.Pane {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisChildsProcessed(event, args) {
         this.ForEach((name, component) => component.Disconnect());
     }
 
+    /**
+     * Hide all panes
+     * @public
+     */
     HideAll() {
         this.ForEach((name, component) => component.Disconnect());
     }
@@ -42,7 +75,10 @@ Colibri.UI.PaneSwitcher = class extends Colibri.UI.Pane {
         this._value = value;
         this._showValue();
     }
-    /** @private */
+    /** 
+     * @ignore
+     * @private
+     */
     _showValue() {
         this.ForEach((name, component) => component.Disconnect())
         this.Children(this._value).ConnectTo(this);

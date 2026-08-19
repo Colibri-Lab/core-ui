@@ -3,6 +3,26 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const menuList = new Colibri.UI.MenuList('menu-list', this);
+ * const listItem = menuList.AddItem('item1', 'Item 1');
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.MenuList name="menu-list">
+ *     <Colibri.UI.ListItem name="item1" value="Item 1" />
+ * </Colibri.UI.MenuList>
+ * or 
+ * <MenuList name="menu-list">
+ *     <ListItem name="item1" value="Item 1" />
+ * </MenuList>
+ * 
+ * then in js
+ * 
+ * const menuList = this.Children('menu-list');
+ * const listItem = this.Children('menu-list/item1');
+ * ```
  */
 Colibri.UI.MenuList = class extends Colibri.UI.Component {
 

@@ -35,16 +35,27 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
     /**
      * Register events
      * @protected
+     * @ignore
      */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('VirtualRowsChanged', false, 'When the virtual rows are changed');
     }
 
+    /**
+     * Refresh the grid and recalculate the visible rows
+     * @public
+     */
     Refresh() {
         this._showValue();
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisRecalcCounts(event, args) {
         this._showValue();
     }
@@ -95,6 +106,10 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
         this._value = value;
         this._showValue();
     }
+    /**
+     * @ignore
+     * @private
+     */
     _showValue() {
         if (!this.isConnected || !this._value?.length) {
             return;
@@ -161,6 +176,10 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _generateRows(visibleCount) {
         for (let i = 0; i < visibleCount; i++) {
             this.rows.Add('data' + i, this._emptyRow ?? {});
@@ -191,6 +210,7 @@ Colibri.UI.VirtualGrid = class extends Colibri.UI.Grid {
      * @protected
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
+     * @ignore
      */
     __clickedProcessing2(event, args) {
 

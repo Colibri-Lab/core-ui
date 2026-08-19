@@ -2,6 +2,20 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const dropdown = new Colibri.UI.DropDown('dropdown', this);
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.DropDown name="dropdown" />
+ * or 
+ * <DropDown name="dropdown" />
+ * 
+ * then in js
+ * 
+ * const dropdown = this.Children('dropdown');
+ * ```
  */
 Colibri.UI.DropDown = class extends Colibri.UI.Component {
 
@@ -33,19 +47,40 @@ Colibri.UI.DropDown = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @private
+     * @ignore
+     * @param {Colibri.UI.ListItem} item
+     * @param {Colibri.UI.List} list
+     */
     __listItemClicked(event, args) {
         this.Dispatch('ItemClicked', {item: args.item, domEvent: args.domEvent});
     }
     
+    /**
+     * @private
+     * @ignore
+     * @param {Colibri.UI.ListItem} item
+     * @param {Colibri.UI.List} list
+     */
     __thisClickedOut(event, args) {
         this.Hide();
     }
 
+    /**
+     * @private
+     * @ignore
+     * @param {Colibri.UI.ListItem} item
+     * @param {Colibri.UI.List} list
+     */
     __thisShown(event, args) {
         this._search.Focus();
     }
 
-    /** @protected */
+    /** 
+     * @ignore
+     * @protected
+     */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('ItemClicked', false, 'Выбран пунт меню');

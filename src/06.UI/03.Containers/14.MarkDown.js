@@ -3,6 +3,21 @@
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const md = new Colibri.UI.MarkDown('md', this);
+ * md.value = '# Heading 1\n\nThis is a paragraph with **bold** text and *italic* text.\n\n- Item 1\n- Item 2\n- Item 3';
+ * 
+ * in html template
+ * 
+ * <Colibri.UI.MarkDown name="md" value="# Heading 1\n\nThis is a paragraph with **bold** text and *italic* text.\n\n- Item 1\n- Item 2\n- Item 3" />
+ * or 
+ * <MarkDown name="md" value="# Heading 1\n\nThis is a paragraph with **bold** text and *italic* text.\n\n- Item 1\n- Item 2\n- Item 3" />
+ * 
+ * then in js
+ * 
+ * const md = this.Children('md');
+ * ```
  */
 Colibri.UI.MarkDown = class extends Colibri.UI.Pane {
     
@@ -15,8 +30,6 @@ Colibri.UI.MarkDown = class extends Colibri.UI.Pane {
         /* создаем компонент и передаем шаблон */
         super(name, container);
         this.AddClass('colibri-ui-markdown');
-
-
     }
 
     /**
@@ -36,6 +49,7 @@ Colibri.UI.MarkDown = class extends Colibri.UI.Pane {
     }
     /**
      * @ignore
+     * @private
      */
     _showValue() {
         super.value = this._value.markdownToHtml();
