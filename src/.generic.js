@@ -1798,7 +1798,7 @@ Object.toPlain = function (object, prefix = '', except = [], useCamelCase = true
     
     let ret = {};
     Object.forEach(object, (k, v) => {
-        const exceptResult = except(k, v);
+        const exceptResult = exceptFn(k, v);
         if (exceptResult === 0 && v instanceof Object) {
             ret = Object.assign(ret, Object.toPlain(v, prefix + k + splitter, except, useCamelCase, splitter));
         }
