@@ -3,6 +3,19 @@
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const googleChart = new Colibri.UI.GoogleChart('googleChart', this);
+ * googleChart.type = 'PieChart';
+ * googleChart.title = 'My Chart';
+ * googleChart.value = [
+ *     ['Task', 'Hours per Day'],
+ *     ['Work', 8],
+ *     ['Eat', 2],
+ *     ['Commute', 2],
+ *     ['Watch TV', 2]
+ * ];
+ * ```
  */
 Colibri.UI.GoogleChart = class extends Colibri.UI.Pane {
 

@@ -3,6 +3,12 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const numberViewer = new Colibri.UI.NumberViewer('numberViewer', this);
+ * numberViewer.value = 1234.56; // set number value
+ * numberViewer.value = 0.1234; // set number value
+ * ```
  */
 Colibri.UI.NumberViewer = class extends Colibri.UI.Viewer {
 

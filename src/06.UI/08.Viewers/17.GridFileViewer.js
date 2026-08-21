@@ -3,6 +3,21 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const gridFileViewer = new Colibri.UI.GridFileViewer('gridFileViewer', this);
+ * gridFileViewer.value = [
+ *      {
+ *          guid: 'file-guid-1',
+ *          name: 'file1.txt'
+ *      },
+ *      {
+ *          guid: 'file-guid-2',
+ *          name: 'file2.txt'
+ *      }
+ * ];
+ * gridFileViewer.download = '/download/file'; // set the download url
+ * ```
  */
 Colibri.UI.GridFileViewer = class extends Colibri.UI.Viewer {
 

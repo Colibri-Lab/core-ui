@@ -3,6 +3,7 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @deprecated Will be removed in future versions
  */
 Colibri.UI.DocumentViewer = class extends Colibri.UI.Viewer {
 

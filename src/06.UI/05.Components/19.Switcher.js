@@ -3,6 +3,14 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const switcher = new Colibri.UI.Switcher('switcher', this, [{title: 'Item 1', value: 1}, {title: 'Item 2', value: 2}]);
+ * switcher.AddHandler('Changed', (event, args) => {
+ *     console.log('Selected item index:', args.itemIndex);
+ *     console.log('Selected item value:', args.value);
+ * });
+ * ```
  */
 Colibri.UI.Switcher = class extends Colibri.UI.Component {
     /**

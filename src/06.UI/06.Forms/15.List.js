@@ -3,6 +3,58 @@
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
+ * @example
+ * ```
+ * const form = new Colibri.UI.Forms.Form('form', this);
+ * form.fields = {
+ *      'list': {
+ *          'component': 'List',
+ *          'desc': 'Select an option',
+ *          'default': '',
+ *          'values': [
+ *              {
+ *                  'value': 'option1',
+ *                  'title': 'Option 1'
+ *              },
+ *              {
+ *                  'value': 'option2',
+ *                  'title': 'Option 2'
+ *              }
+ *          ]
+ *      }
+ * };
+ * form.value = {
+ *      'list': 'test@example.com'
+ * };
+ * form.AddHandler('Changed', (event, args) => {
+ *      console.log('Form changed', form.value);
+ * });
+ * 
+ * in html template
+ * 
+ * <Forms.Form name="form" fields="fields" value="value">
+ *     <fields>
+ *      {
+ *          'list': {
+ *              'component': 'List',
+ *              'desc': 'Select an option',
+ *              'default': '',
+ *              'values': [
+ *                  {
+ *                      'value': 'option1',
+ *                      'title': 'Option 1'
+ *                  },
+ *                  {
+ *                      'value': 'option2',
+ *                      'title': 'Option 2'
+ *                  }
+ *              ]
+ *          }
+ *      }
+ *     </fields>
+ * </Forms.Form>
+ * 
+ * ```
  */
 Colibri.UI.Forms.List = class extends Colibri.UI.Forms.Field {
 

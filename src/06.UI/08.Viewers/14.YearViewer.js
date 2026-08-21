@@ -3,6 +3,26 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const yearViewer = new Colibri.UI.YearViewer('yearViewer', this);
+ * yearViewer.value = 2023;
+ * yearViewer.field = {
+ *      selector: {
+ *          value: 'value'
+ *      },
+ *      values: {
+ *          2023: {
+ *              title: '2023',
+ *              value: 2023
+ *          },
+ *          2024: {
+ *              title: '2024',
+ *              value: 2024
+ *          }
+ *      }
+ * };
+ * ```
  */
 Colibri.UI.YearViewer = class extends Colibri.UI.Viewer {
 

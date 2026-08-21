@@ -3,6 +3,32 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const buttonGroup = new Colibri.UI.ButtonGroup('buttonGroup', this);
+ * buttonGroup.orientation = 'horizontal';
+ * buttonGroup.AddButton('button1', 'Button 1');
+ * buttonGroup.AddButton('button2', 'Button 2');
+ * buttonGroup.AddButton('button3', 'Button 3');
+ * buttonGroup.AddHandler('Changed', (event, args) => {
+ *     console.log('Selected button:', args.button.name);
+ * });
+ * 
+ * in html template
+ * 
+ * <ButtonGroup name="buttonGroup" orientation="horizontal">
+ *     <Button name="button1" value="Button 1" />
+ *     <Button name="button2" value="Button 2" />
+ *     <Button name="button3" value="Button 3" />
+ * </ButtonGroup>
+ * 
+ * then in js
+ * 
+ * const buttonGroup = this.Children('buttonGroup');
+ * buttonGroup.AddHandler('Changed', (event, args) => {
+ *     console.log('Selected button:', args.button.name);   
+ * });
+ * ```
  */
 Colibri.UI.ButtonGroup = class extends Colibri.UI.Component {
 

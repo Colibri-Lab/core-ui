@@ -3,6 +3,20 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const objectViewer = new Colibri.UI.ObjectViewer('objectViewer', this);
+ * objectViewer.value = {
+ *      'field1': {
+ *          title: 'Field 1',
+ *          value: 'Value 1'
+ *      },
+ *      'field2': {
+ *          title: 'Field 2',
+ *          value: 'Value 2'
+ *      }
+ * }; 
+ * ```
  */
 Colibri.UI.ObjectViewer = class extends Colibri.UI.Viewer {
 

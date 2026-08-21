@@ -3,6 +3,13 @@
  * @class
  * @extends Colibri.UI.FlexBox
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const searchInput = new Colibri.UI.SearchInput('searchInput', this);
+ * searchInput.AddHandler('Search', (event, args) => {
+ *     console.log('Search value:', args.value);
+ * });
+ * ```
  */
 Colibri.UI.SearchInput = class extends Colibri.UI.FlexBox {
 

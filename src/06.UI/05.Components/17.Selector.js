@@ -3,6 +3,13 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const selector = new Colibri.UI.Selector('selector', this, false, true, true, [{title: 'Item 1', value: 1}, {title: 'Item 2', value: 2}], 1);    
+ * selector.AddHandler('Changed', (event, args) => {
+ *    console.log('Selected value:', args.value);   
+ * });
+ * ```
  */
 Colibri.UI.Selector = class extends Colibri.UI.Component {
 

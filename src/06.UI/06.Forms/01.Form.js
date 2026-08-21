@@ -2,6 +2,49 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI.Forms
+ * @example
+ * ```
+ * const form = new Colibri.UI.Forms.Form('form', this);
+ * form.fields = {
+ *      'name': {
+ *          'component': 'Text',
+ *          'desc': 'Name',
+ *          'default': 'John Doe'
+ *      },
+ *      'email': {
+ *          'component': 'Email',
+ *          'desc': 'Email',
+ *          'default': 'john.doe@example.com'
+ *      }
+ * };
+ * form.value = {
+ *      'name': 'Jane Doe',
+ *      'email': 'jane.doe@example.com'
+ * };
+ * form.AddHandler('Changed', (event, args) => {
+ *      console.log('Form changed', form.value);
+ * });
+ * 
+ * in html template
+ * 
+ * <Forms.Form name="form" fields="fields" value="value">
+ *     <fields>
+ *      {
+ *          'name': {
+ *              'component': 'Text',
+ *              'desc': 'Name',
+ *              'default': 'John Doe'
+ *          },
+ *          'email': {
+ *              'component': 'Email',
+ *              'desc': 'Email',
+ *              'default': 'john.doe@example.com'
+ *          }
+ *      }
+ *     </fields>
+ * </Forms.Form>
+ * 
+ * ```
  */
 Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 

@@ -3,6 +3,13 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const arrayViewer = new Colibri.UI.ArrayViewer('arrayViewer', this);
+ * arrayViewer.value = ['item1', 'item2', 'item3'];
+ * arrayViewer.value = [{name: 'John', age: 30}, {name: 'Jane', age: 25}];
+ * arrayViewer.value = []; // will show "No items"
+ * ```
  */
 Colibri.UI.ArrayViewer = class extends Colibri.UI.Viewer {
 

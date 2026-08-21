@@ -3,6 +3,12 @@
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const slideDown = new Colibri.UI.SlideDown('slideDown', this);
+ * slideDown.handler = 'handlerComponentName';
+ * slideDown.Show(this, false);
+ * ```
  */
 Colibri.UI.SlideDown = class extends Colibri.UI.Pane {
 

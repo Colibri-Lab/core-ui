@@ -3,6 +3,12 @@
  * @class
  * @extends Colibri.UI.Viewer
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const progressViewer = new Colibri.UI.ProgressViewer('progressViewer', this);
+ * progressViewer.value = { value: 50, min: 0, max: 100 }; // set progress value
+ * progressViewer.value = { value: 75, min: 0, max: 200 }; // set progress value with different range
+ * ```
  */
 Colibri.UI.ProgressViewer = class extends Colibri.UI.Viewer {
     

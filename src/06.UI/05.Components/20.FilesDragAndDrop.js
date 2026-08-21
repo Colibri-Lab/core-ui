@@ -3,6 +3,13 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const filesDragAndDrop = new Colibri.UI.FilesDragAndDrop('filesDragAndDrop', this, true);
+ * filesDragAndDrop.AddHandler('InputFileChosen', (event, args) => {
+ *     console.log('Selected files:', args.files);
+ * });
+ * ```
  */
 Colibri.UI.FilesDragAndDrop = class extends Colibri.UI.Component {
     

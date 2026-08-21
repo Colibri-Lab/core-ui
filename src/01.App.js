@@ -77,6 +77,9 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('DocumentUnloaded', false, 'Document well be unloaded');
         this.RegisterEvent('KeyDown', false, 'When key is down on document');
         this.RegisterEvent('KeyUp', false, 'When key is up on document');
+        this.RegisterEvent('MouseDown', false, 'When mouse button is pressed on document');
+        this.RegisterEvent('MouseUp', false, 'When mouse button is released on document');
+        this.RegisterEvent('MouseMove', false, 'When mouse is moved on document');
     }
 
     /**

@@ -3,6 +3,11 @@
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const popup = new Colibri.UI.Popup('popup', this);
+ * popup.Show(this, false);
+ * ```
  */
 Colibri.UI.Popup = class extends Colibri.UI.Pane {
 

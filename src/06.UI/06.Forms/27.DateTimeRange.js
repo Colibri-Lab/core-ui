@@ -3,6 +3,38 @@
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
+ * @example
+ * ```
+ * const form = new Colibri.UI.Forms.Form('form', this);
+ * form.fields = {
+ *      'datetimerange': {
+ *          'component': 'DateTimeRange',
+ *          'desc': 'Select range of date and time',
+ *          'default': ''
+ *      }
+ * };
+ * form.value = {
+ *      'datetimerange': ['2024-01-01 00:00', '2024-01-31 23:59']
+ * };
+ * form.AddHandler('Changed', (event, args) => {
+ *      console.log('Form changed', form.value);
+ * });
+ * 
+ * in html template
+ * 
+ * <Forms.Form name="form" fields="fields" value="value">
+ *     <fields>
+ *      {
+ *          'datetimerange': {
+ *              'component': 'DateTimeRange',
+ *              'desc': 'Select range of date and time',
+ *              'default': ''
+ *          }
+ *      }
+ *     </fields>
+ * </Forms.Form>
+ * 
+ * ```
  */
 Colibri.UI.Forms.DateTimeRange = class extends Colibri.UI.Forms.Field {
 

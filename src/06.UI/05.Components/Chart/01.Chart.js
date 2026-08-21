@@ -1,8 +1,17 @@
 /**
+ * Simple chart component
  * @class
  * @namespace
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const chart = new Colibri.UI.Chart('chart', this);
+ * const bar = chart.AddBarchart('barchart');
+ * bar.title = 'Chart title';
+ * bar.value = 50;
+ * bar.textValue = '50%';
+ * ``` 
  */
 Colibri.UI.Chart = class extends Colibri.UI.Component {
 

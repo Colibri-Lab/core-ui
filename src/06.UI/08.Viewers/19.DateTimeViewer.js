@@ -3,6 +3,17 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const dateTimeViewer = new Colibri.UI.DateTimeViewer('dateTimeViewer', this);
+ * dateTimeViewer.value = new Date();
+ * dateTimeViewer.value = '2024-01-01T12:00:00Z';
+ * dateTimeViewer.value = '2024-01-01T12:00:00+03:00';
+ * dateTimeViewer.value = '2024-01-01T12:00:00-03:00';
+ * dateTimeViewer.value = '2024-01-01T12:00:00.000Z';
+ * dateTimeViewer.value = '2024-01-01T12:00:00.000+03:00';
+ * dateTimeViewer.value = '2024-01-01T12:00:00.000-03:00';
+ * ```
  */
 Colibri.UI.DateTimeViewer = class extends Colibri.UI.Viewer {
 

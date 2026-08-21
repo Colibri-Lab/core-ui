@@ -90,6 +90,30 @@ Colibri.UI = class {
     }
 
     /**
+     * Search for the components by point in document or given parent
+     * @param {number} left left position of point
+     * @param {number} top top position of point
+     * @returns {Array<Colibri.UI.Component>}
+     * @static
+     * @public
+     */
+    static ComponentsByPoint(left, top) {
+
+        const ret = [];
+
+        const elements = Element.find(left, top);
+        for(const element of elements) {
+            const component = element?.getUIComponent() ?? null;
+            if(component) {
+                ret.push(component);
+            }
+        }
+
+        return ret;
+
+    }
+
+    /**
      * Search for the component by path in document or given parent
      * @param {string} componentPath path for searching
      * @param {Colibri.UI.Component} parent search component within given parent component

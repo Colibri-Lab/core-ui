@@ -3,6 +3,18 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const monthYearViewer = new Colibri.UI.MonthYearViewer('monthYearViewer', this);
+ * monthYearViewer.value = '2023-06';
+ * monthYearViewer.value = new Date(2023, 5, 1); // June is month 5 (0-indexed)
+ * monthYearViewer.value = '2023-06-15'; // will be converted to '2023-06'
+ * monthYearViewer.value = '2023-06-15T12:00:00Z'; // will be converted to '2023-06'
+ * monthYearViewer.value = '2023-06-15T12:00:00+03:00'; // will be converted to '2023-06'
+ * monthYearViewer.value = '2023-06-15T12:00:00-03:00'; // will be converted to '2023-06'
+ * monthYearViewer.value = '2023-06-15T12:00:00.000Z'; // will be converted to '2023-06'
+ * monthYearViewer.value = '2023-06-15T12:00:00.000+03:00'; // will be converted to '2023-06'
+ * ```
  */
 Colibri.UI.MonthYearViewer = class extends Colibri.UI.Viewer {
 

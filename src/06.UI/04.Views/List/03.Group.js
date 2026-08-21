@@ -1,4 +1,5 @@
 /**
+ * List view group component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI.List

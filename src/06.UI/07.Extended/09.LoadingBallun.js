@@ -1,7 +1,18 @@
 /**
+ * Loading ballun component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const loadingBallun = new Colibri.UI.LoadingBallun('loadingBallun', this);
+ * loadingBallun.Start('Loading...', 'Complete!', 'Error!', 'check', 'error');  
+ * 
+ * ...
+ * 
+ * loadingBallun.Complete();
+ * 
+ * ```
  */
 Colibri.UI.LoadingBallun = class extends Colibri.UI.Component {
 

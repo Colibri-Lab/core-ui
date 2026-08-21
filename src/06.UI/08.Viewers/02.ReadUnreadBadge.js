@@ -3,6 +3,11 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const badge = new Colibri.UI.ReadUnreadBadge('badge', this);
+ * badge.value = true; // mark as read
+ * ```
  */
 Colibri.UI.ReadUnreadBadge = class extends Colibri.UI.Viewer {
 

@@ -2,6 +2,14 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Editor
+ * @example
+ * ```
+ * const cell = ... cell of the grid
+ * cell.editor = 'Colibri.UI.CheckboxListEditor';
+ * cell.Edit();
+ * ...
+ * cell.EndEdit();
+ * ```
  */
 Colibri.UI.CheckboxListEditor = class extends Colibri.UI.Editor {
     /**

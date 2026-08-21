@@ -3,6 +3,23 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const checkbox = new Colibri.UI.Checkbox('checkbox', this);
+ * checkbox.checked = true;
+ * checkbox.AddHandler('Changed', (event, args) => {
+ *      console.log(checkbox.checked);
+ * });
+ * 
+ * in html template
+ * 
+ * <Checkbox name="checkbox" checked="true"></Checkbox>
+ * 
+ * then in js
+ * 
+ * const checkbox = this.Children('checkbox');
+ * 
+ * ```
  */
 Colibri.UI.Checkbox = class extends Colibri.UI.Component {
 

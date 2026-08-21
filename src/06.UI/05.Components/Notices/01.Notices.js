@@ -2,6 +2,11 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * App.Notices.Add(new Colibri.UI.Notice('Notice title', Colibri.UI.Notice.Error, 5000));
+ * App.Notices.Add(new Colibri.UI.Notice('Notice title', Colibri.UI.Notice.Success, 5000));
+ * ```
  */
 Colibri.UI.Notices = class extends Colibri.UI.Pane {
     

@@ -3,6 +3,38 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const contextMenu = new Colibri.UI.ContextMenu('contextMenu', this, [Colibri.UI.ContextMenu.RB, Colibri.UI.ContextMenu.LT]);
+ * contextMenu.Show([
+ *     { title: 'Item 1', name: 'item1', icon: 'icon1' },
+ *     { title: 'Item 2', name: 'item2', icon: 'icon2', children: [
+ *         { title: 'Subitem 1', name: 'subitem1' },
+ *         { title: 'Subitem 2', name: 'subitem2' }
+ *     ] },
+ *     { title: 'Item 3', name: 'item3' }
+ * ], parentComponent);
+ * contextMenu.AddHandler('Clicked', (event, args) => {
+ *     console.log('Clicked item:', args.menuData.name);
+ * });
+ * 
+ * use with other component
+ * 
+ * const component = new Colibri.UI.Component('component', this);
+ * component.contextmenu = [
+ *     { title: 'Item 1', name: 'item1', icon: 'icon1' },
+ *     { title: 'Item 2', name: 'item2', icon: 'icon2', children: [
+ *         { title: 'Subitem 1', name: 'subitem1' },
+ *         { title: 'Subitem 2', name: 'subitem2' }
+ *     ] },
+ *     { title: 'Item 3', name: 'item3' }
+ * ];
+ * component.ShowContextMenu([Colibri.UI.ContextMenu.RB, Colibri.UI.ContextMenu.LT]);
+ * 
+ * then use ContextMenuItemClicked event to catch the menu item click
+ * 
+ * 
+ * ```
  */
 Colibri.UI.ContextMenu = class extends Colibri.UI.Component {
 

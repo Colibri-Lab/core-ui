@@ -2,6 +2,14 @@
  * @class
  * @extends Colibri.UI.Editor
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const cell = ... cell of the grid
+ * cell.editor = 'Colibri.UI.FilesEditor';
+ * cell.Edit();
+ * ...
+ * cell.EndEdit();
+ * ```
  */
 Colibri.UI.FilesEditor = class extends Colibri.UI.Editor {
 

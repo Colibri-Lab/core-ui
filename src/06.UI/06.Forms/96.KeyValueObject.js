@@ -2,6 +2,49 @@
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
+ * @example
+ * ```
+ * const form = new Colibri.UI.Forms.Form('form', this);
+ * form.fields = {
+ *      'object': {
+ *          'component': 'KeyValueObject',
+ *          'desc': 'Check me',
+ *          'fields': {
+ *             'email': {
+ *                  'component': 'Email',
+ *                  'desc': 'Enter your email',
+ *                  'default': ''
+ *              }
+ *          }
+ *     }
+ * };
+ * form.value = {
+ *      'object': { email: 'email@example.com' }
+ * };
+ * form.AddHandler('Changed', (event, args) => {
+ *      console.log('Form changed', form.value);
+ * });
+ * 
+ * in html template
+ * 
+ * <Forms.Form name="form" fields="fields" value="value">
+ *     <fields>
+ *      {
+ *          'object': {
+ *              'component': 'KeyValueObject',
+ *              'fields': {
+ *                  'email': {
+ *                      'component': 'Email',
+ *                      'desc': 'Enter your email',
+ *                      'default': ''
+ *                  }
+ *              }
+ *          }
+ *      }
+ *     </fields>
+ * </Forms.Form>
+ * 
+ * ```
  */
 Colibri.UI.Forms.KeyValueObject = class extends Colibri.UI.Forms.Field {
 

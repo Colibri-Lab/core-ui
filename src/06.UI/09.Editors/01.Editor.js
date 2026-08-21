@@ -3,6 +3,7 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @abstract
  */
 Colibri.UI.Editor = class extends Colibri.UI.Component {
     /**

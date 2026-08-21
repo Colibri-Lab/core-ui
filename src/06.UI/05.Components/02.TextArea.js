@@ -3,6 +3,23 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const textarea = new Colibri.UI.TextArea('textarea', this);
+ * textarea.value = 'Textarea value';
+ * textarea.AddHandler('Changed', (event, args) => {
+ *      console.log(textarea.value);
+ * });
+ * 
+ * in html template
+ * 
+ * <TextArea name="textarea" placeholder="Enter text here..." maxlength="100" visual="true" hasClearIcon="true"></TextArea>
+ * 
+ * in js code
+ * 
+ * const textarea = this.GetComponent('textarea');
+ * 
+ * ```
  */
 Colibri.UI.TextArea = class extends Colibri.UI.Component {
 

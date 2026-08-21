@@ -3,6 +3,11 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const textAreaViewer = new Colibri.UI.TextAreaViewer('textAreaViewer', this);
+ * textAreaViewer.value = 'Some text\nwith line breaks';
+ * ```
  */
 Colibri.UI.TextAreaViewer = class extends Colibri.UI.Viewer {
     

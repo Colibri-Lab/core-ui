@@ -1,6 +1,12 @@
 /**
+ * Validator utility class
  * @class
  * @memberof Colibri.UI.Utilities
+ * @example
+ * ```
+ * const isValidUKPostCode = Colibri.UI.Utilities.Validator.IsUKPostCode('SW1A 1AA');
+ * const isValidRuINN = Colibri.UI.Utilities.Validator.IsValidRuINN('1234567890');  
+ * ```
  */
 Colibri.UI.Utilities.Validator = class {
 

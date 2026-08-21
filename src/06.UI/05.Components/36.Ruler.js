@@ -3,6 +3,13 @@
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const ruler = new Colibri.UI.Ruler('ruler', this);
+ * ruler.AddHandler('Changed', (event, args) => {
+ *     console.log('Ruler value changed:', args.value);
+ * });
+ * ```
  */
 Colibri.UI.Ruler = class extends Colibri.UI.Pane {
 

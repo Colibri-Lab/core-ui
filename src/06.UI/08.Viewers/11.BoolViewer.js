@@ -3,6 +3,29 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const boolViewer = new Colibri.UI.BoolViewer('boolViewer', this);
+ * boolViewer.value = true;
+ * boolViewer.field = {
+ *      selector: {
+ *          value: 'value'
+ *      },
+ *      values: {
+ *          true: {
+ *              title: 'Yes',
+ *              value: true
+ *          },
+ *          false: {
+ *              title: 'No',
+ *              value: false
+ *          }
+ *      },
+ *      params: {
+ *          colors: ['green', 'red']
+ *      }
+ * };
+ * ```
  */
 Colibri.UI.BoolViewer = class extends Colibri.UI.Viewer {
 

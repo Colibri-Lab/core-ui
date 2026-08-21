@@ -3,6 +3,30 @@
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
+ * @example
+ * ```
+ * const form = new Colibri.UI.Forms.Form('form', this);
+ * form.fields = {
+ *      'label': {
+ *          'component': 'Label',
+ *          'placeholder': 'Check me'
+ *      }
+ * };
+ * 
+ * in html template
+ * 
+ * <Forms.Form name="form" fields="fields" value="value">
+ *     <fields>
+ *      {
+ *          'label': {
+ *              'component': 'Label',
+ *              'placeholder': 'Check me'
+ *          }
+ *      }
+ *     </fields>
+ * </Forms.Form>
+ * 
+ * ```
  */
 Colibri.UI.Forms.Label = class extends Colibri.UI.Forms.Field {
 

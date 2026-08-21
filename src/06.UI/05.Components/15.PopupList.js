@@ -3,6 +3,16 @@
  * @class
  * @extends Colibri.UI.List
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const popupList = new Colibri.UI.PopupList('popupList', this, false, (itemData, item) => {
+ *     return itemData.title;
+ * });
+ * popupList.FillItems([{title: 'Item 1', value: 1}, {title: 'Item 2', value: 2}], 1);
+ * popupList.AddHandler('ItemClicked', (event, args) => {
+ *     console.log('Selected item:', args.itemData);
+ * });
+ * ```
  */
 Colibri.UI.PopupList = class extends Colibri.UI.List {
 

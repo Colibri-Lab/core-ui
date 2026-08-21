@@ -2,6 +2,14 @@
  * @class
  * @extends Colibri.Events.Dispatcher
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const form = new Colibri.UI.Forms.Form('form', this);
+ * const validator = new Colibri.UI.SimpleFormValidator(form);
+ * 
+ * validator.Validate();
+ * 
+ * ```
  */
 Colibri.UI.SimpleFormValidator = class {
 

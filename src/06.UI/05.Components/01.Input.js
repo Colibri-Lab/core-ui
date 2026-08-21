@@ -3,6 +3,23 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const input = new Colibri.UI.Input('input', this);
+ * input.placeholder = 'Enter text';
+ * input.AddHandler('Changed', (event, args) => {
+ *      console.log(input.value);
+ * });
+ * 
+ * in html template
+ * 
+ * <Input name="input" placeholder="Enter text" />
+ * 
+ * in js code
+ * 
+ * const input = this.Children('input');
+ * 
+ * ```
  */
 Colibri.UI.Input = class extends Colibri.UI.Component {
 

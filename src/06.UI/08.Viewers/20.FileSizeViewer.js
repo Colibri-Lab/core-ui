@@ -3,6 +3,14 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const fileSizeViewer = new Colibri.UI.FileSizeViewer('fileSizeViewer', this);
+ * fileSizeViewer.value = 1024; // 1 Kb
+ * fileSizeViewer.value = 1048576; // 1 Mb
+ * fileSizeViewer.value = 1073741824; // 1 Gb
+ * fileSizeViewer.value = 1099511627776; // 1 Tb
+ * ```
  */
 Colibri.UI.FileSizeViewer = class extends Colibri.UI.Viewer {
 

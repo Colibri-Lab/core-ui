@@ -3,6 +3,24 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const fieldsViewer = new Colibri.UI.FieldsViewer('fieldsViewer', this);
+ * fieldsViewer.fields = {
+ *      'field1': {
+ *          'component': 'Text',
+ *          'desc': 'Field 1'
+ *      },
+ *      'field2': {
+ *          'component': 'Number',
+ *          'desc': 'Field 2'
+ *      }
+ * };
+ * fieldsViewer.value = {
+ *      'field1': 'Value 1',
+ *      'field2': 123
+ * };
+ * ```
  */
 Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
 

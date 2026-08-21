@@ -3,6 +3,12 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const fontFamilyViewer = new Colibri.UI.FontFamilyViewer('fontFamilyViewer', this);
+ * fontFamilyViewer.value = 'Arial, sans-serif'; // set font family
+ * fontFamilyViewer.value = '"Times New Roman", serif'; // set font family with quotes
+ * ```
  */
 Colibri.UI.FontFamilyViewer = class extends Colibri.UI.Viewer {
 

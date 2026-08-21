@@ -1,7 +1,9 @@
 /**
+ * Vincenty utility class for geodesic calculations
  * @class
  * @namespace
  * @memberof Colibri.UI.Utilities
+ * @deprecated Dont use this class without a good reason, it is not tested and may be removed in future versions
  */
 Colibri.UI.Utilities.Vincenty = class {
 

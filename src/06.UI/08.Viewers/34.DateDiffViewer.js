@@ -3,6 +3,12 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const dateDiffViewer = new Colibri.UI.DateDiffViewer('dateDiffViewer', this);
+ * dateDiffViewer.value = ['2023-06-01', '2023-06-15']; // set date range
+ * dateDiffViewer.value = [new Date(2023, 5, 1), new Date(2023, 5, 15)]; // set date range with Date objects
+ * ```
  */
 Colibri.UI.DateDiffViewer = class extends Colibri.UI.Viewer {
     

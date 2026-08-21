@@ -3,6 +3,11 @@
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const note = new Colibri.UI.Note('note', this);
+ * note.value = 'This is a note';
+ * ```
  */
 Colibri.UI.Note = class extends Colibri.UI.Pane {
     

@@ -4,7 +4,7 @@
  * @memberof Colibri.UI
  * @example
  * ```
- * const window = new Colibri.UI.Window('window', this, '<div>Window content</div>', 'Window title', 400, 300);
+ * const window = new Colibri.UI.Window('window', this, 'Window title', 400, 300);
  * window.movable = true;
  * window.minimizable = true;
  * window.minimizedBind = 'rightbottom';

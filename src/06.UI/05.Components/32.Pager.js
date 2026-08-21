@@ -3,6 +3,15 @@
  * @class
  * @extends Colibri.UI.FlexBox
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const pager = new Colibri.UI.Pager('pager', this);
+ * pager.affected = 100; // Set the total number of affected rows
+ * pager.pagesize = 10; // Set the number of rows per page
+ * pager.AddHandler('Changed', (event, args) => {
+ *     console.log('Current page:', args.page);
+ * });
+ * ```
  */
 Colibri.UI.Pager = class extends Colibri.UI.FlexBox {
     

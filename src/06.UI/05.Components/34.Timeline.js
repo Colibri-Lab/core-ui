@@ -3,6 +3,13 @@
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const timeline = new Colibri.UI.Timeline('timeline', this);
+ * timeline.AddHandler('Changed', (event, args) => {
+ *     console.log('Timeline values changed:', args.value);
+ * });
+ * ```
  */
 Colibri.UI.Timeline = class extends Colibri.UI.Pane {
     

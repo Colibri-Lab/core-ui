@@ -1,7 +1,43 @@
 /**
+ * List view class
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const list = new Colibri.UI.List(this._element, true);
+ * const group1 = list.AddGroup('group1', 'Group 1');
+ * const group2 = list.AddGroup('group2', 'Group 2');
+ * 
+ * const item1 = group1.AddItem({id: 1, name: 'item1', label: 'Item 1'});
+ * const item2 = group1.AddItem({id: 2, name: 'item2', label: 'Item 2'});
+ * const item3 = group2.AddItem({id: 3, name: 'item3', label: 'Item 3'});
+ * 
+ * list.selectedIndex = 0;
+ * 
+ * list.AddHandler('SelectionChanged', (event, args) => {
+ *    console.log('Selected item:', args.selected);
+ * });
+ * 
+ * in html template
+ * 
+ * <List name="list" multiple="true" rendererComponent="Colibri.UI.List.ItemRenderer" rendererAttrs="{labelField: 'label', valueField: 'id'}" canSelect="true" hasSearchBox="true" searchBoxPlaceholder="Search..." searchFilterCallback="(item, value) => item.label.toLowerCase().indexOf(value.toLowerCase()) >= 0">
+ *    <List.Group name="group1" label="Group 1">
+ *      <List.Item name="item1" label="Item 1" value="{id: 1, name: 'item1', label: 'Item 1'}"></List.Item>
+ *      <List.Item name="item2" label="Item 2" value="{id: 2, name: 'item2', label: 'Item 2'}"></List.Item>
+ *    </List.Group>
+ *    <List.Group name="group2" label="Group 2">
+ *      <List.Item name="item3" label="Item 3" value="{id: 3, name: 'item3', label: 'Item 3'}"></List.Item>
+ *    </List.Group>
+ * </List>
+ * 
+ * then in js code you can access the list component by name and use its methods and properties:
+ * 
+ * const list = this.Children('list');
+ * const listGroup1 = list.Children('list/group1');
+ * const listGroup2 = list.Children('list/group2');
+ * 
+ * ```
  */
 Colibri.UI.List = class extends Colibri.UI.Component {
 
@@ -712,97 +748,3 @@ Colibri.UI.List = class extends Colibri.UI.Component {
 
 
 }
-
-/**
- * @class
- * @extends Colibri.UI.Pane
- * @memberof Colibri.UI.List
- */
-Colibri.UI.List.SearchBox = class extends Colibri.UI.Pane {
-    /**
-     * @constructor
-     * @param {string} name name of component
-     * @param {HTMLElement|Colibri.UI.Component} container container of component 
-     */
-    constructor(name, container) {
-        super(name, container);
-        this.AddClass('app-component-list-searchbox');
-
-        this._input = new Colibri.UI.Input(this.name + '-input', this);
-        this._input.shown = true;
-        this._input.AddHandler(['Filled', 'Cleared'], this.__inputChangedOrFilled, false, this);
-        this._input.AddHandler('KeyDown', this.__inputKeyDown, false, this);
-
-    }
-
-    __inputKeyDown(event, args) {
-        args.domEvent.stopPropagation();
-    }
-
-    __inputChangedOrFilled(event, args) {
-        this.Dispatch('Changed', args);
-    }
-
-    /**
-     * @ignore 
-     * @protected 
-     */
-    _registerEvents() {
-        super._registerEvents();
-        this.RegisterEvent('Changed', false, 'Когда изменился поиск');
-    }
-
-    /**
-     * Searchbox has icon
-     * @type {boolean}
-     */
-    get hasIcon() {
-        return this._input.hasIcon;
-    }
-    /**
-     * Searchbox has icon
-     * @type {boolean}
-     */
-    set hasIcon(value) {
-        this._input.hasIcon = value;
-    }
-
-    /**
-     * Searchbox placeholder
-     * @type {string}
-     */
-    get placeholder() {
-        return this._input.placeholder;
-    }
-    /**
-     * Searchbox placeholder
-     * @type {string}
-     */
-    set placeholder(value) {
-        this._input.placeholder = value;
-    }
-
-    /**
-     * Set the focus on searchbox
-     */
-    Focus() {
-        this._input.Focus();
-    }
-
-    /**
-     * Value of searchbox
-     * @type {String}
-     */
-    get value() {
-        return this._input.value;
-    }
-    /**
-     * Value of searchbox
-     * @type {String}
-     */
-    set value(value) {
-        this._input.value = value;
-    }
-
-}
-

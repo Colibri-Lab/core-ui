@@ -3,6 +3,14 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const color = new Colibri.UI.Color('color', this);
+ * color.value = '#ff0000';
+ * color.AddHandler('Changed', (event, args) => {
+ *      console.log(color.value);
+ * });
+ * ```
  */
 Colibri.UI.Color = class extends Colibri.UI.Component {
 

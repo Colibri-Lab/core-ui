@@ -3,6 +3,21 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI.Input
+ * @example
+ * ```
+ * const inputFile = new Colibri.UI.Input.File('inputFile', this);
+ * inputFile.AddHandler('InputFileChanged', (event, args) => {
+ *      console.log(args.files);
+ * });
+ * 
+ * in html template
+ * 
+ * <InputFile name="inputFile"></InputFile>
+ * 
+ * then in js
+ * 
+ * const inputFile = this.Children('inputFile');
+ * ```
  */
 Colibri.UI.Input.File = class extends Colibri.UI.Component {
 

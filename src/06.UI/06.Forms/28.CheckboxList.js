@@ -3,6 +3,65 @@
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
+ * @example
+ * ```
+ * const form = new Colibri.UI.Forms.Form('form', this);
+ * form.fields = {
+ *      'checkboxlist': {
+ *          'component': 'CheckboxList',
+ *          'desc': 'Check me',
+ *          'default': '',
+ *          'values': [
+ *              {
+ *                  'value': 'option1',
+ *                  'title': 'Option 1'
+ *              },
+ *              {
+ *                  'value': 'option2',
+ *                  'title': 'Option 2'
+ *              },
+ *              {
+ *                  'value': 'option3',
+ *                  'title': 'Option 3'
+ *              }
+ *          ]
+ *      }
+ * };
+ * form.value = {
+ *      'checkboxlist': ['option1', 'option2']
+ * };
+ * form.AddHandler('Changed', (event, args) => {
+ *      console.log('Form changed', form.value);
+ * });
+ * 
+ * in html template
+ * 
+ * <Forms.Form name="form" fields="fields" value="value">
+ *     <fields>
+ *      {
+ *          'checkboxlist': {
+ *              'component': 'CheckboxList',
+ *              'desc': 'Check me',
+ *              'default': '',
+ *              'values': [ 
+ *                 {    
+ *                    'value': 'option1',
+ *                    'title': 'Option 1'
+ *                 },
+ *                 {
+ *                    'value': 'option2',
+ *                    'title': 'Option 2'
+ *                 },
+ *                 {
+ *                    'value': 'option3',
+ *                    'title': 'Option 3'
+ *                 }
+ *              ]
+ *          }
+ *     </fields>
+ * </Forms.Form>
+ * 
+ * ```
  */
 Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
 

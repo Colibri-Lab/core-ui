@@ -1,7 +1,13 @@
 /**
+ * Mask utility class
  * @class
  * @extends Destructable
  * @memberof Colibri.UI.Utilities
+ * @example
+ * ```
+ * const elements = [document.getElementById('input1'), document.getElementById('input2')];
+ * const mask = new Colibri.UI.Utilities.Mask(elements);
+ * ```
  */
 Colibri.UI.Utilities.Mask = class extends Destructable {
 

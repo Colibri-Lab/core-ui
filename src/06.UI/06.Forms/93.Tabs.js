@@ -3,6 +3,73 @@
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
+ * @example
+ * ```
+ * const form = new Colibri.UI.Forms.Form('form', this);
+ * form.fields = {
+ *      'tabs': {
+ *          'component': 'Tabs',
+ *          'desc': 'Choose tab',
+ *          'fields': {
+ *              'tab1': {
+ *                  'component': 'Object',
+ *                  'desc': 'Tab 1',
+ *                  'fields': {
+ *                 
+ *                  }
+ *              },
+ *              'tab2': {
+ *                  'component': 'Object',
+ *                  'desc': 'Tab 2',
+ *                  'fields': {
+ *                 
+ *                  },
+ *              }
+ *          }
+ *      }
+ * };
+ * form.value = {
+ *      'tabs': {
+ *          'tab1': {
+ *              'field1': 'value1'
+ *          },
+ *          'tab2': {
+ *              'field2': 'value2'
+ *          }
+ *      }
+ * };
+ * form.AddHandler('Changed', (event, args) => {
+ *      console.log('Form changed', form.value);
+ * });
+ * 
+ * in html template
+ * 
+ * <Forms.Form name="form" fields="fields" value="value">
+ *     <fields>
+ *      {
+ *          'tabs': {
+ *              'component': 'Tabs',
+ *              'desc': 'Choose tab',
+ *              'fields': {
+ *                  'tab1': {
+ *                      'component': 'Object',
+ *                      'desc': 'Tab 1',
+ *                      'fields': {
+ *                      }
+ *                  },
+ *                  'tab2': {
+ *                      'component': 'Object',
+ *                      'desc': 'Tab 2',
+ *                      'fields': {
+ *                      }
+ *                  }
+ *              }
+ *          }
+ *      }
+ *     </fields>
+ * </Forms.Form>
+ * 
+ * ```
  */
 Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 

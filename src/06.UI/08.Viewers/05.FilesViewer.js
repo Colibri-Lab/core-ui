@@ -3,6 +3,20 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const filesViewer = new Colibri.UI.FilesViewer('filesViewer', this);
+ * filesViewer.value = [
+ *      {
+ *          file: '/path/to/file1.txt',
+ *          name: 'file1.txt'
+ *      },
+ *      {
+ *          file: '/path/to/file2.txt',
+ *          name: 'file2.txt'
+ *      }
+ * ];
+ * ```
  */
 Colibri.UI.FilesViewer = class extends Colibri.UI.Viewer {
 

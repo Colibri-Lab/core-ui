@@ -3,6 +3,13 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const shadowViewer = new Colibri.UI.ShadowViewer('shadowViewer', this);
+ * shadowViewer.value = '2px 2px 5px rgba(0, 0, 0, 0.5)'; // set shadow value
+ * shadowViewer.value = 'inset 1px 1px 3px rgba(255, 0, 0, 0.5)'; // set inset shadow value
+ * 
+ * ```
  */
 Colibri.UI.ShadowViewer = class extends Colibri.UI.Viewer {
 

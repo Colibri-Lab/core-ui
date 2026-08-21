@@ -3,6 +3,38 @@
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
+ * @example
+ * ```
+ * const form = new Colibri.UI.Forms.Form('form', this);
+ * form.fields = {
+ *      'token': {
+ *          'component': 'Token',
+ *          'desc': 'Check me',
+ *          'default': ''
+ *      }
+ * };
+ * form.value = {
+ *      'token': 'test-token'
+ * };
+ * form.AddHandler('Changed', (event, args) => {
+ *      console.log('Form changed', form.value);
+ * });
+ * 
+ * in html template
+ * 
+ * <Forms.Form name="form" fields="fields" value="value">
+ *     <fields>
+ *      {
+ *          'token': {
+ *              'component': 'Token',
+ *              'desc': 'Enter your token',
+ *              'default': ''
+ *          }
+ *      }
+ *     </fields>
+ * </Forms.Form>
+ * 
+ * ```
  */
 Colibri.UI.Forms.Token = class extends Colibri.UI.Forms.Field {
 

@@ -3,6 +3,11 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const dateViewer = new Colibri.UI.DateViewer('dateViewer', this);
+ * dateViewer.value = new Date();
+ * ```
  */
 Colibri.UI.DateViewer = class extends Colibri.UI.Viewer {
 

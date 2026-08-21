@@ -3,6 +3,38 @@
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
+ * @example
+ * ```
+ * const form = new Colibri.UI.Forms.Form('form', this);
+ * form.fields = {
+ *      'color': {
+ *          'component': 'Color',
+ *          'desc': 'Choose a color',
+ *          'default': ''
+ *      }
+ * };
+ * form.value = {
+ *      'color': '#ff0000'
+ * };
+ * form.AddHandler('Changed', (event, args) => {
+ *      console.log('Form changed', form.value);
+ * });
+ * 
+ * in html template
+ * 
+ * <Forms.Form name="form" fields="fields" value="value">
+ *     <fields>
+ *      {
+ *          'color': {
+ *              'component': 'Color',
+ *              'desc': 'Choose a color',
+ *              'default': ''
+ *          }
+ *      }
+ *     </fields>
+ * </Forms.Form>
+ * 
+ * ```
  */
 Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
 

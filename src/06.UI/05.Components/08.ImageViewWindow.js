@@ -3,6 +3,24 @@
  * @class
  * @extends Colibri.UI.Window
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const imageViewWindow = new Colibri.UI.ImageViewWindow('imageViewWindow', this, 'Image viewer');
+ * imageViewWindow.source = 'https://example.com/image.jpg';
+ * imageViewWindow.alternativeText = 'Example image';
+ * imageViewWindow.textDescriptionBefore = 'This is an example image.';
+ * imageViewWindow.textDescriptionAfter = 'This image is used for demonstration purposes.';
+ * imageViewWindow.Show();
+ * 
+ * in html template
+ * 
+ * <ImageViewWindow name="imageViewWindow" title="Image viewer"></ImageViewWindow>
+ *  
+ * then in js
+ * 
+ * const imageViewWindow = this.Children('imageViewWindow');
+ * 
+ * ```
  */
 Colibri.UI.ImageViewWindow = class extends Colibri.UI.Window {
 

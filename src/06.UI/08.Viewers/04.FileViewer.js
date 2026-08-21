@@ -3,6 +3,14 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const fileViewer = new Colibri.UI.FileViewer('fileViewer', this);
+ * fileViewer.value = {
+ *    file: '/path/to/file1.txt',
+ *    name: 'file1.txt'
+ * };
+ * ```
  */
 Colibri.UI.FileViewer = class extends Colibri.UI.Viewer {
 
@@ -25,7 +33,7 @@ Colibri.UI.FileViewer = class extends Colibri.UI.Viewer {
 
     /**
      * Value
-     * @type {Array<{file, name}>}
+     * @type {Object} - {file, name}
      */
     get value() {
         return this._value;
@@ -33,17 +41,10 @@ Colibri.UI.FileViewer = class extends Colibri.UI.Viewer {
 
     /**
      * Value
-     * @type {Array<{file, name}>}
+     * @type {Object} - {file, name}
      */
     set value(value) {
-        
-        /**
-         * [{
-         * file: path,
-         * name: name
-         * }...]
-         */
-
+    
         this._value = this._convertValue(value);
         if(this._value && this._value.length > 0) {
             this._icon.shown = true;

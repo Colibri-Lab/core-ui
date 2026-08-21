@@ -3,6 +3,12 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const tooltip = new Colibri.UI.ToolTip('tooltip', this, [Colibri.UI.ToolTip.RT, Colibri.UI.ToolTip.RB], null, false);
+ * tooltip.value = 'This is a tooltip';
+ * tooltip.Show(this, false);
+ * ```
  */
 Colibri.UI.ToolTip = class extends Colibri.UI.Component {
 

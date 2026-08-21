@@ -3,6 +3,13 @@
  * @class
  * @extends Colibri.UI.Selector
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const monthSelector = new Colibri.UI.MonthSelector('monthSelector', this);
+ * monthSelector.AddHandler('Changed', (event, args) => {
+ *     console.log('Selected month:', args.value);
+ * });
+ * ```
  */
 Colibri.UI.MonthSelector = class extends Colibri.UI.Selector {
 

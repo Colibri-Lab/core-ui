@@ -1,7 +1,9 @@
 /**
+ * Intersection utility class for geodesic calculations
  * @class
  * @namespace
  * @memberof Colibri.UI.Utilities
+ * @deprecated This class is not tested and may be removed in future versions. Use with caution.
  */
 Colibri.UI.Utilities.Intersections = class {
 

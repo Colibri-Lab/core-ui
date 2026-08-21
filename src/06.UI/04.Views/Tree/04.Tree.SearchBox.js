@@ -1,10 +1,10 @@
 /**
- * Searchbox component for List view
+ * Searchbox for tree component
  * @class
  * @extends Colibri.UI.Pane
- * @memberof Colibri.UI.List
+ * @memberof Colibri.UI.Tree
  */
-Colibri.UI.List.SearchBox = class extends Colibri.UI.Pane {
+Colibri.UI.Tree.SearchBox = class extends Colibri.UI.Pane {
     /**
      * @constructor
      * @param {string} name name of component
@@ -12,7 +12,7 @@ Colibri.UI.List.SearchBox = class extends Colibri.UI.Pane {
      */
     constructor(name, container) {
         super(name, container);
-        this.AddClass('app-component-list-searchbox');
+        this.AddClass('app-component-tree-searchbox');
 
         this._input = new Colibri.UI.Input(this.name + '-input', this);
         this._input.shown = true;
@@ -24,30 +24,31 @@ Colibri.UI.List.SearchBox = class extends Colibri.UI.Pane {
     /**
      * @ignore
      * @private
-     * @param {Colibri.Events.Event} event event object
-     * @param {*} args event arguments
+     * @param {Colibri.UI.Event} event
+     * @param {Object} args
+     * @returns {boolean}
      */
     __inputKeyDown(event, args) {
         args.domEvent.stopPropagation();
     }
-
     /**
      * @ignore
      * @private
-     * @param {Colibri.Events.Event} event event object
-     * @param {*} args event arguments
+     * @param {Colibri.UI.Event} event
+     * @param {Object} args
+     * @returns {boolean}
      */
     __inputChangedOrFilled(event, args) {
         this.Dispatch('Changed', args);
     }
 
-    /** 
-     * @ignore
-     * @protected
+    /**
+     * @ignore 
+     * @protected 
      */
     _registerEvents() {
         super._registerEvents();
-        this.RegisterEvent('Changed', false, 'Когда изменился поиск');
+        this.RegisterEvent('Changed', false, 'When search term is changed');
     }
 
     /**

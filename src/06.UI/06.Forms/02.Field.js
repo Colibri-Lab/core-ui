@@ -2,6 +2,7 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI.Forms
+ * @abstract
  */
 Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 

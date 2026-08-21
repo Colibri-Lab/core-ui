@@ -3,6 +3,13 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const htmlDataViewer = new Colibri.UI.HtmlDataViewer('htmlDataViewer', this);
+ * htmlDataViewer.value = '<p>This is <strong>HTML</strong> content.</p>';
+ * htmlDataViewer.strip = true; // will strip HTML tags and show only text
+ * htmlDataViewer.strip = false; // will show HTML content as is
+ * ```
  */
 Colibri.UI.HtmlDataViewer = class extends Colibri.UI.Viewer {
     

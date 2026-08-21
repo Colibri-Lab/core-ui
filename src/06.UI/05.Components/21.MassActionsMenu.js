@@ -3,6 +3,21 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const massActionsMenu = new Colibri.UI.MassActionsMenu('massActionsMenu', this);
+ * massActionsMenu.actions = [
+ *     {name: 'delete', title: 'Delete', icon: Colibri.UI.DeleteIcon},
+ *     {name: 'export', title: 'Export', icon: Colibri.UI.ExportIcon, contextmenu: [
+ *         {name: 'csv', title: 'Export as CSV'},
+ *         {name: 'json', title: 'Export as JSON'}
+ *     ]}
+ * ];
+ * massActionsMenu.AddHandler('ActionClicked', (event, args) => {
+ *     console.log('Action clicked:', args.menuData.name);
+ * });
+ * massActionsMenu.selectedItems = [1, 2, 3]; // Set selected items 
+ * ```
  */
 Colibri.UI.MassActionsMenu = class extends Colibri.UI.Component {
     

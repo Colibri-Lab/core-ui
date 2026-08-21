@@ -3,6 +3,12 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const imageViewer = new Colibri.UI.ImageViewer('imageViewer', this);
+ * imageViewer.value = 'https://example.com/image.jpg'; // set image URL
+ * imageViewer.value = 'url(https://example.com/image.jpg)'; // set image URL with url() syntax
+ * ```
  */
 Colibri.UI.ImageViewer = class extends Colibri.UI.Viewer {
 

@@ -3,6 +3,12 @@
  * @class
  * @extends Colibri.UI.Icon
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const iconViewer = new Colibri.UI.IconViewer('iconViewer', this);
+ * iconViewer.value = 'fa-solid fa-user'; // set icon class
+ * iconViewer.value = 'fa-solid fa-cog'; // set another icon class
+ * ```
  */
 Colibri.UI.IconViewer = class extends Colibri.UI.Viewer {
     

@@ -3,6 +3,12 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const jsonViewer = new Colibri.UI.JsonViewer('jsonViewer', this);
+ * jsonViewer.value = { "name": "John", "age": 30, "city": "New York" }; // set JSON object
+ * jsonViewer.value = [1, 2, 3, 4, 5]; // set JSON array
+ * ```
  */
 Colibri.UI.JsonViewer = class extends Colibri.UI.Pane {
     

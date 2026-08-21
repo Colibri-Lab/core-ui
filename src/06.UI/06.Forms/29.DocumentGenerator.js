@@ -3,6 +3,7 @@
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
+ * @deprecated Will be removed in feature release
  */
 Colibri.UI.Forms.DocumentGenerator = class extends Colibri.UI.Forms.Field {
     

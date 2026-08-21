@@ -3,6 +3,14 @@
  * @class
  * @extends Colibri.UI.Window
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const alert = new Colibri.UI.AlertDialog('alert', this);
+ * alert.Show('Alert', 'This is an alert message', 'Close').then(() => {
+ *      console.log('Alert closed');
+ * });
+ * 
+ * ```
  */
 Colibri.UI.AlertDialog = class extends Colibri.UI.Window {
 

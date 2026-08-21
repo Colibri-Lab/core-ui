@@ -2,6 +2,36 @@
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
+ * @example
+ * ```
+ * const form = new Colibri.UI.Forms.Form('form', this);
+ * form.fields = {
+ *      'simplearray': {
+ *          'component': 'SimpleArray',
+ *          'desc': 'Simple array field'
+ *     }
+ * };
+ * form.value = {
+ *      'simplearray': [1,2,3,4,5]
+ * };
+ * form.AddHandler('Changed', (event, args) => {
+ *      console.log('Form changed', form.value);
+ * });
+ * 
+ * in html template
+ * 
+ * <Forms.Form name="form" fields="fields" value="value">
+ *     <fields>
+ *      {
+ *          'simplearray': {
+ *              'component': 'SimpleArray',
+ *              'desc': 'Simple array field'
+ *          }
+ *      }
+ *     </fields>
+ * </Forms.Form>
+ * 
+ * ```
  */
 Colibri.UI.Forms.SimpleArray = class extends Colibri.UI.Forms.Field {
 

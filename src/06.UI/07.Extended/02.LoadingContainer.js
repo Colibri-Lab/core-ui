@@ -1,7 +1,26 @@
 /**
+ * Loading box with progress bar
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const loadingContainer = new Colibri.UI.LoadingContainer('loadingContainer', this);
+ * loadingContainer.shown = true;
+ * loadingContainer.icon = Colibri.UI.LoadingIcon;
+ * loadingContainer.progress = 50;
+ * loadingContainer.progressColor = '#ff0000';
+ * loadingContainer.progressWidth = 5;
+ * loadingContainer.opacity = 0.5;
+ * 
+ * in html template
+ * 
+ * <LoadingContainer name="loadingContainer" shown="shown" icon="icon" progress="progress" progressColor="progressColor" progressWidth="progressWidth" opacity="opacity" />
+ * 
+ * then in js
+ * 
+ * const loadingContainer = this.Children('loadingContainer');
+ * ```
  */
 Colibri.UI.LoadingContainer = class extends Colibri.UI.Component {
 

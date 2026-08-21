@@ -3,6 +3,13 @@
  * @class
  * @extends Colibri.UI.FlexBox
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const yearMonthSelector = new Colibri.UI.YearMonthSelector('yearMonthSelector', this, [new Date(2023, 0), new Date(2023, 1), new Date(2023, 2)]);
+ * yearMonthSelector.AddHandler('Changed', (event, args) => {
+ *     console.log('Selected year and month:', args.value);
+ * });
+ * ```
  */
 Colibri.UI.YearMonthSelector = class extends Colibri.UI.FlexBox {
 

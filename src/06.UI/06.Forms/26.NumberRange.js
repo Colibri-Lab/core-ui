@@ -3,6 +3,38 @@
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
+ * @example
+ * ```
+ * const form = new Colibri.UI.Forms.Form('form', this);
+ * form.fields = {
+ *      'numberrange': {
+ *          'component': 'NumberRange',
+ *          'desc': 'Enter your number range',
+ *          'default': ''
+ *      }
+ * };
+ * form.value = {
+ *      'numberrange': [1, 10]
+ * };
+ * form.AddHandler('Changed', (event, args) => {
+ *      console.log('Form changed', form.value);
+ * });
+ * 
+ * in html template
+ * 
+ * <Forms.Form name="form" fields="fields" value="value">
+ *     <fields>
+ *      {
+ *          'numberrange': {
+ *              'component': 'NumberRange',
+ *              'desc': 'Enter your number range',
+ *              'default': ''
+ *          }
+ *      }
+ *     </fields>
+ * </Forms.Form>
+ * 
+ * ```
  */
 Colibri.UI.Forms.NumberRange = class extends Colibri.UI.Forms.Field {
 

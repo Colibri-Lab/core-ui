@@ -2,6 +2,13 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const dateTimeSelector = new Colibri.UI.DateTimeSelector('dateTimeSelector', this);
+ * dateTimeSelector.AddHandler('Changed', (event, args) => {
+ *     console.log('Selected date and time:', args.value);
+ * });
+ * ```
  */
 Colibri.UI.DateTimeSelector = class extends Colibri.UI.Component {
 

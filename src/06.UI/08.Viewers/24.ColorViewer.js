@@ -3,6 +3,12 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const colorViewer = new Colibri.UI.ColorViewer('colorViewer', this);
+ * colorViewer.value = '#ff0000'; // red
+ * colorViewer.value = 'rgb(0, 255, 0)'; // green
+ * ```
  */
 Colibri.UI.ColorViewer = class extends Colibri.UI.Viewer {
 

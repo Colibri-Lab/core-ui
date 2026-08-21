@@ -3,6 +3,22 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const radio = new Colibri.UI.Radio('radio', this, 'group1');
+ * radio.checked = true;
+ * radio.AddHandler('Changed', (event, args) => {
+ *      console.log(radio.checked);
+ * });
+ * 
+ * in html template
+ * 
+ * <Radio name="radio" field-name="group1" checked="true"></Radio>
+ * 
+ * then in js
+ * 
+ * const radio = this.Children('radio');
+ * ```
  */
 Colibri.UI.Radio = class extends Colibri.UI.Component {
 

@@ -4,6 +4,13 @@
  * @namespace
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const chooser = new Colibri.UI.Chooser('chooser', this, false, true, 'Nothing choosed', {title: 'title', value: 'value', chooser: 'Colibri.UI.YourChooserComponent'}, null, true, true);
+ * chooser.AddHandler('Changed', (event, args) => {
+ *     console.log('Selected value:', args.value);
+ * });
+ * ```
  */
 Colibri.UI.Chooser = class extends Colibri.UI.Component {
 

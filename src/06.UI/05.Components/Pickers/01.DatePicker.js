@@ -3,6 +3,14 @@
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const datepicker = new Colibri.UI.DatePicker('datepicker', this);
+ * datepicker.value = new Date();
+ * datepicker.AddHandler('Changed', (event, args) => {
+ *      console.log(datepicker.value);
+ * });
+ * ```
  */
 Colibri.UI.DatePicker = class extends Colibri.UI.Pane {
 

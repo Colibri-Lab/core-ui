@@ -3,6 +3,12 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const borderViewer = new Colibri.UI.BorderViewer('borderViewer', this);
+ * borderViewer.value = '1px solid #ff0000'; // red border
+ * borderViewer.value = '2px dashed #00ff00'; // green dashed border
+ * ```
  */
 Colibri.UI.BorderViewer = class extends Colibri.UI.Viewer {
 

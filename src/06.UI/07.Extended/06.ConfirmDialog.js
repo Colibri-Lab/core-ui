@@ -3,6 +3,17 @@
  * @class
  * @extends Colibri.UI.Window
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const confirmDialog = new Colibri.UI.ConfirmDialog('confirmDialog', this, 400);
+ * confirmDialog.Show('Confirm', 'Are you sure you want to delete this item?', 'Yes', 'No')
+ *     .then(() => {
+ *         console.log('Confirmed');
+ *     })
+ *     .catch(() => {
+ *         console.log('Cancelled');
+ *     });
+ * ```
  */
 Colibri.UI.ConfirmDialog = class extends Colibri.UI.Window {
 

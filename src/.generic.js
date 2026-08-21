@@ -7196,6 +7196,19 @@ document.mapToUIComponent = Window.prototype.mapToUIComponent = Element.prototyp
 };
 
 /**
+ * Finds the dom element by top and left position
+ * @param {number} left The left position of the element.
+ * @param {number} top The top position of the element.
+ * @returns {Element|null} The found element or null if not found.
+ * @prototypeof Element
+ * @static
+ * @method
+ */
+Element.find = function(left, top) {
+    return document.elementsFromPoint(left, top);
+};
+
+/**
  * Retrieves the UI component instance mapped to the current element, window, or document.
  * @returns {Object|Array|null} The UI component instance(s) mapped to the element, or null if none exist.
  * @prototypeof Document
@@ -7276,9 +7289,33 @@ JSON.stringify = function (value, replacer, space, escapeUnicode = false) {
 document.keysPressed = {
     ctrl: false,
     alt: false,
-    shift: false
+    shift: false,
 };
 
+document.mousePosition = {
+    button: null,
+    lastButton: null,
+    left: 0,
+    top: 0
+};
+document.addEventListener('mousedown', (e) => {
+    document.mousePosition.button = e.button;
+    document.mousePosition.left = e.clientX;
+    document.mousePosition.top = e.clientY;
+    App.Dispatch('MouseDown', { domEvent: e });
+});
+document.addEventListener('mouseup', (e) => {
+    document.mousePosition.lastButton = document.mousePosition.button;
+    document.mousePosition.button = null;
+    document.mousePosition.left = e.clientX;
+    document.mousePosition.top = e.clientY;
+    App.Dispatch('MouseUp', { domEvent: e });
+});
+document.addEventListener('mousemove', (e) => {
+    document.mousePosition.left = e.clientX;
+    document.mousePosition.top = e.clientY;
+    App.Dispatch('MouseMove', { domEvent: e });
+});
 document.addEventListener('keydown', (e) => {
     document.keysPressed.ctrl = e.ctrlKey;
     document.keysPressed.alt = e.altKey;
@@ -7291,3 +7328,31 @@ document.addEventListener('keyup', (e) => {
     document.keysPressed.shift = e.shiftKey;
     App.Dispatch('KeyUp', { domEvent: e });
 });
+
+function buildClassNameMap(root, rootName = 'App') {
+  const map = new Map();
+
+  function walk(obj, prefix, seen) {
+    if (obj === null || typeof obj !== 'object' && typeof obj !== 'function') return;
+    if (seen.has(obj)) return;
+    seen.add(obj);
+
+    for (const key of Object.keys(obj)) {
+      const value = obj[key];
+      const path = `${prefix}.${key}`;
+      if(!value || !value.toString || !value.toString().startsWith('class')) {
+        continue;
+      }
+
+      if (typeof value === 'function' && value.prototype) {
+        map.set(value, path);
+      }
+      if (typeof value === 'object' || typeof value === 'function') {
+        walk(value, path, seen);
+      }
+    }
+  }
+
+  walk(root, rootName, new Set());
+  return map;
+}

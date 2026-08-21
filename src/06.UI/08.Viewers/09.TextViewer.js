@@ -3,6 +3,12 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const textViewer = new Colibri.UI.TextViewer('textViewer', this);
+ * textViewer.value = 'Some text';
+ * textViewer.emptyMessage = 'No data available';
+ * ```
  */
 Colibri.UI.TextViewer = class extends Colibri.UI.Viewer {
 

@@ -3,6 +3,25 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const dateSelector = new Colibri.UI.DateSelector('dateSelector', this);
+ * dateSelector.placeholder = 'Select a date';
+ * dateSelector.AddHandler('Changed', (event, args) => {
+ *     console.log('Selected date:', dateSelector.value);
+ * });
+ * 
+ * in html template
+ * 
+ * <DateSelector name="dateSelector" placeholder="Select a date" />
+ * 
+ * then in js
+ * 
+ * const dateSelector = this.Children('dateSelector');
+ * dateSelector.AddHandler('Changed', (event, args) => {
+ *     console.log('Selected date:', dateSelector.value);   
+ * });
+ * ```
  */
 Colibri.UI.DateSelector = class extends Colibri.UI.Component {
 

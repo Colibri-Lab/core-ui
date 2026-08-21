@@ -3,6 +3,13 @@
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const rangePicker = new Colibri.UI.RangePicker('rangePicker', this);
+ * rangePicker.AddHandler('Changed', (event, args) => {
+ *     console.log('Range values changed:', args.value);
+ * });
+ * ```
  */
 Colibri.UI.RangePicker = class extends Colibri.UI.Pane {
     

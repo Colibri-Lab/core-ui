@@ -3,6 +3,13 @@
  * @class
  * @extends Colibri.UI.Selector
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const yearSelector = new Colibri.UI.YearSelector('yearSelector', this, 2000, 2025);
+ * yearSelector.AddHandler('Changed', (event, args) => {
+ *     console.log('Selected year:', args.value);
+ * });
+ * ```
  */
 Colibri.UI.YearSelector = class extends Colibri.UI.Selector {
 

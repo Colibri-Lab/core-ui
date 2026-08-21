@@ -3,6 +3,18 @@
  * @class
  * @extends Colibri.UI.FlexBox
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const yearQuarterSelector = new Colibri.UI.YearQuarterSelector('yearQuarterSelector', this, [
+ *     {year: 2020, quarters: [1, 2, 3, 4]},
+ *     {year: 2021, quarters: [1, 2]},
+ *     {year: 2022, quarters: [3, 4]}
+ * ]);
+ * yearQuarterSelector.AddHandler('Changed', (event, args) => {
+ *     console.log('Selected year:', args.value.year);
+ *     console.log('Selected quarter:', args.value.quarter);
+ * });
+ * ```
  */
 Colibri.UI.YearQuarterSelector = class extends Colibri.UI.FlexBox {
 

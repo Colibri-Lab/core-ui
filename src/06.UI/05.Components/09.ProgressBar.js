@@ -3,6 +3,23 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const progressBar = new Colibri.UI.ProgressBar('progressbar', this);
+ * progressBar.progress = 50;
+ * progressBar.color = '#ff0000';
+ * progressBar.AddHandler('ProgressChanged', (event, args) => {
+ *      console.log(progressBar.progress);
+ * });
+ * 
+ * in html template
+ * 
+ * <ProgressBar name="progressbar" progress="50" color="#ff0000"></ProgressBar>
+ * 
+ * then in js
+ * 
+ * const progressBar = this.Children('progressbar');
+ * ```
  */
 Colibri.UI.ProgressBar = class extends Colibri.UI.Component {
 

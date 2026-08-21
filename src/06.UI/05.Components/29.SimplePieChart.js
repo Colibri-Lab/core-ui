@@ -3,6 +3,11 @@
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const simplePieChart = new Colibri.UI.SimplePieChart('simplePieChart', this);
+ * simplePieChart.value = 75; // Set the percentage value for the pie chart
+ * ```
  */
 Colibri.UI.SimplePieChart = class extends Colibri.UI.Pane {
     

@@ -3,6 +3,49 @@
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
+ * @example
+ * ```
+ * const form = new Colibri.UI.Forms.Form('form', this);
+ * form.fields = {
+ *      'array': {
+ *          'component': 'Array',
+ *          'desc': 'Check me',
+ *          'fields': {
+ *             'email': {   
+ *                 'component': 'Email',
+ *                  'desc': 'Enter your email',
+ *                  'default': ''
+ *             }
+ *          }
+ *      }
+ * };
+ * form.value = {
+ *      'array': [{ email: 'test@example.com' }]
+ * };
+ * form.AddHandler('Changed', (event, args) => {
+ *      console.log('Form changed', form.value);
+ * });
+ * 
+ * in html template
+ * 
+ * <Forms.Form name="form" fields="fields" value="value">
+ *     <fields>
+ *      {
+ *          'array': {
+ *              'component': 'Array',
+ *              'fields': {
+ *                  'email': {
+ *                      'component': 'Email',
+ *                      'desc': 'Enter your email',
+ *                      'default': ''
+ *                  }
+ *              }
+ *          }
+ *      }
+ *     </fields>
+ * </Forms.Form>
+ * 
+ * ```
  */
 Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 

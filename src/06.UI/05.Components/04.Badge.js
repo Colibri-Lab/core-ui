@@ -3,6 +3,26 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const badge = new Colibri.UI.Badge('badge', this);
+ * badge.backgroundColor = '#ff0000';
+ * badge.textColor = '#ffffff';
+ * badge.html = 'Badge text';
+ * badge.shown = true;
+ * badge.AddHandler('Clicked', (event, args) => {
+ *      console.log('Badge clicked');
+ * });
+ * 
+ * in html template
+ * 
+ * <Badge name="badge" background-color="#ff0000" text-color="#ffffff" html="Badge text" shown="true"></Badge>
+ * 
+ * then in js
+ * 
+ * const badge = this.Children('badge');
+ * 
+ * ```
  */
 Colibri.UI.Badge = class extends Colibri.UI.Component {
 

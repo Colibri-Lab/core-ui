@@ -3,6 +3,19 @@
  * @class
  * @extends Colibri.UI.Viewer
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const imagesViewer = new Colibri.UI.ImagesViewer('imagesViewer', this);
+ * imagesViewer.value = [
+ *      { id: 'image1', path: 'path/to/image1.jpg' },
+ *      { id: 'image2', path: 'path/to/image2.jpg' },
+ *      { id: 'image3', path: 'path/to/image3.jpg' }
+ * ];
+ * 
+ * imagesViewer.AddHandler('ImageClicked', (event, args) => {
+ *     console.log('Image clicked:', args.image);
+ * });
+ * ```
  */
 Colibri.UI.ImagesViewer = class extends Colibri.UI.Viewer {
     

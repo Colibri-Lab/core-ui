@@ -3,6 +3,20 @@
  * @memberof Colibri.UI
  * @class
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const toggleboxViewer = new Colibri.UI.ToggleboxViewer('toggleboxViewer', this);
+ * toggleboxViewer.value = true; // set checked state
+ * toggleboxViewer.value = false; // set unchecked state
+ * 
+ * toggleboxViewer.field = {
+ *      'name': 'togglebox',
+ *      'desc': 'Togglebox field',
+ *      'params': {
+ *          'readonly': true
+ *      }
+ * };
+ * ```
  */
 Colibri.UI.ToggleboxViewer = class extends Colibri.UI.Viewer {
 

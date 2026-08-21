@@ -3,6 +3,11 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const selectViewer = new Colibri.UI.SelectViewer('selectViewer', this);
+ * selectViewer.value = 'value1';
+ * ```
  */
 Colibri.UI.SelectViewer = class extends Colibri.UI.Viewer {
 

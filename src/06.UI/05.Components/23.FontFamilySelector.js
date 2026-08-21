@@ -3,6 +3,13 @@
  * @class
  * @extends Colibri.UI.Selector
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const fontFamilySelector = new Colibri.UI.FontFamilySelector('fontFamilySelector', this);
+ * fontFamilySelector.AddHandler('Changed', (event, args) => {
+ *     console.log('Selected font family:', args.value);
+ * });
+ * ```
  */
 Colibri.UI.FontFamilySelector = class extends Colibri.UI.Selector {
 

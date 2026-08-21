@@ -3,6 +3,20 @@
  * @class
  * @extends Colibri.UI.Window
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const prompt = new Colibri.UI.PromptDialog('prompt', this);
+ * prompt.Show('Prompt', {
+ *      'name': {
+ *          'component': 'Input',
+ *          'placeholder': 'Enter your name'
+ *      }
+ * }, 'Submit').then((data) => {
+ *      console.log('Prompt submitted', data);
+ * }).catch(() => {
+ *      console.log('Prompt cancelled');
+ * });
+ * ```
  */
 Colibri.UI.PromptDialog = class extends Colibri.UI.Window {
 

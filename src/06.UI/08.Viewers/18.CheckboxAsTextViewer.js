@@ -3,6 +3,13 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const checkboxAsTextViewer = new Colibri.UI.CheckboxAsTextViewer('checkboxAsTextViewer', this);
+ * checkboxAsTextViewer.value = true; // or false
+ * checkboxAsTextViewer.field.placeholder = 'Checked'; // set the placeholder text for checked state
+ * checkboxAsTextViewer.field.placeholder = 'Unchecked'; // set the placeholder text for unchecked state
+ * ```
  */
 Colibri.UI.CheckboxAsTextViewer = class extends Colibri.UI.Viewer {
 

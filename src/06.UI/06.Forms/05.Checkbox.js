@@ -3,6 +3,38 @@
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
+ * @example
+ * ```
+ * const form = new Colibri.UI.Forms.Form('form', this);
+ * form.fields = {
+ *      'checkme': {
+ *          'component': 'Checkbox',
+ *          'desc': 'Check me',
+ *          'default': true
+ *      }
+ * };
+ * form.value = {
+ *      'checkme': false
+ * };
+ * form.AddHandler('Changed', (event, args) => {
+ *      console.log('Form changed', form.value);
+ * });
+ * 
+ * in html template
+ * 
+ * <Forms.Form name="form" fields="fields" value="value">
+ *     <fields>
+ *      {
+ *          'checkme': {
+ *              'component': 'Checkbox',
+ *              'desc': 'Check me',
+ *              'default': true
+ *          }
+ *      }
+ *     </fields>
+ * </Forms.Form>
+ * 
+ * ```
  */
 Colibri.UI.Forms.Checkbox = class extends Colibri.UI.Forms.Field {
 

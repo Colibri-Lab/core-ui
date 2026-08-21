@@ -3,6 +3,12 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const dateRangeViewer = new Colibri.UI.DateRangeViewer('dateRangeViewer', this);
+ * dateRangeViewer.value = [new Date(2023, 5, 1), new Date(2023, 5, 30)]; // set date range
+ * dateRangeViewer.value = ['2023-06-01', '2023-06-30']; // set date range with strings
+ * ```
  */
 Colibri.UI.DateRangeViewer = class extends Colibri.UI.Viewer {
     

@@ -3,6 +3,11 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const linkViewer = new Colibri.UI.LinkViewer('linkViewer', this);
+ * linkViewer.value = 'https://example.com';
+ * ```
  */
 Colibri.UI.LinkViewer = class extends Colibri.UI.Viewer {
 

@@ -3,6 +3,26 @@
  * @class
  * @extends Colibri.UI.Input
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const select = new Colibri.UI.Select('select', this);
+ * select.dropdown = new Colibri.UI.Select.DefaultDropdown('dropdown', this);
+ * select.AddHandler('SelectionChanged', (event, args) => {
+ *     console.log('Selected value:', args.value);
+ * });
+ * 
+ * in html template
+ * 
+ * <Select name="select" />
+ * 
+ * then in js
+ * 
+ * const select = this.Children('select');
+ * select.dropdown = new Colibri.UI.Select.DefaultDropdown('dropdown', this);
+ * select.AddHandler('SelectionChanged', (event, args) => {
+ *     console.log('Selected value:', args.value);   
+ * });
+ * ```
  */
 Colibri.UI.Select = class extends Colibri.UI.Input {
 

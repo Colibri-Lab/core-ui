@@ -3,6 +3,20 @@
  * @class
  * @extends Colibri.UI.Pane
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const loading = new Colibri.UI.Loading('loading', this);
+ * loading.shown = true;    
+ * 
+ * in html template
+ * 
+ * <Loading name="loading" shown="shown" />
+ * 
+ * then in js
+ * 
+ * const loading = this.Children('loading');
+ * 
+ * ```
  */
 Colibri.UI.Loading = class extends Colibri.UI.Pane {
 

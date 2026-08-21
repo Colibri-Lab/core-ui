@@ -3,6 +3,38 @@
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
+ * @example
+ * ```
+ * const form = new Colibri.UI.Forms.Form('form', this);
+ * form.fields = {
+ *      'fontfamily': {
+ *          'component': 'FontFamily',
+ *          'desc': 'Choose a font family',
+ *          'default': ''
+ *      }
+ * };
+ * form.value = {
+ *      'fontfamily': 'Arial'
+ * };
+ * form.AddHandler('Changed', (event, args) => {
+ *      console.log('Form changed', form.value);
+ * });
+ * 
+ * in html template
+ * 
+ * <Forms.Form name="form" fields="fields" value="value">
+ *     <fields>
+ *      {
+ *          'fontfamily': {
+ *              'component': 'FontFamily',
+ *              'desc': 'Choose a font family',
+ *              'default': ''
+ *          }
+ *      }
+ *     </fields>
+ * </Forms.Form>
+ * 
+ * ```
  */
 Colibri.UI.Forms.FontFamily = class extends Colibri.UI.Forms.Field {
 

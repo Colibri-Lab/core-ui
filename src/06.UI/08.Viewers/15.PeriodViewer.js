@@ -3,6 +3,11 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const periodViewer = new Colibri.UI.PeriodViewer('periodViewer', this);
+ * periodViewer.value = ['2024-01-01', '2024-01-31'];
+ * ```
  */
 Colibri.UI.PeriodViewer = class extends Colibri.UI.Viewer {
 

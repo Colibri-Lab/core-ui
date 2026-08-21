@@ -3,6 +3,14 @@
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
+ * @example
+ * ```
+ * const radioViewer = new Colibri.UI.RadioViewer('radioViewer', this);
+ * radioViewer.value = {
+ *    title: 'Option 1',
+ *    value: 'option1'
+ * };
+ * ```
  */
 Colibri.UI.RadioViewer = class extends Colibri.UI.Viewer {
 

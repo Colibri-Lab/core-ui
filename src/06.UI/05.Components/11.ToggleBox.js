@@ -3,6 +3,26 @@
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
+ * @example
+ * ```
+ * const toggleBox = new Colibri.UI.ToggleBox('toggleBox', this);
+ * toggleBox.label = 'Toggle me';
+ * toggleBox.checked = true;
+ * toggleBox.AddHandler('Changed', (event, args) => {
+ *     console.log('Toggle state:', args.state);
+ * });
+ * 
+ * in html template
+ * 
+ * <ToggleBox name="toggleBox" label="Toggle me" checked="true" />
+ * 
+ * then in js
+ * 
+ * const toggleBox = this.Children('toggleBox');
+ * toggleBox.AddHandler('Changed', (event, args) => {
+ *     console.log('Toggle state:', args.state);   
+ * });
+ * ```
  */
 Colibri.UI.ToggleBox = class extends Colibri.UI.Component {
 

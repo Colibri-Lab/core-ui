@@ -3,6 +3,58 @@
  * @class
  * @memberof Colibri.UI.Forms
  * @extends Colibri.UI.Forms.Field
+ * @example
+ * ```
+ * const form = new Colibri.UI.Forms.Form('form', this);
+ * form.fields = {
+ *      'radio': {
+ *          'component': 'Radio',
+ *          'desc': 'Select an option',
+ *          'default': '',
+ *          'values': [
+ *              {
+ *                  'value': 'option1',
+ *                  'title': 'Option 1'
+ *              },
+ *              {
+ *                  'value': 'option2',
+ *                  'title': 'Option 2'
+ *              }
+ *          ]
+ *      }
+ * };
+ * form.value = {
+ *      'radio': 'option1'
+ * };
+ * form.AddHandler('Changed', (event, args) => {
+ *      console.log('Form changed', form.value);
+ * });
+ * 
+ * in html template
+ * 
+ * <Forms.Form name="form" fields="fields" value="value">
+ *     <fields>
+ *      {
+ *          'radio': {
+ *              'component': 'Radio',
+ *              'desc': 'Select an option',
+ *              'default': '',
+ *              'values': [
+ *                  {
+ *                      'value': 'option1',
+ *                      'title': 'Option 1'
+ *                  },
+ *                  {
+ *                      'value': 'option2',
+ *                      'title': 'Option 2'
+ *                  }
+ *              ]
+ *          }
+ *      }
+ *     </fields>
+ * </Forms.Form>
+ * 
+ * ```
  */
 Colibri.UI.Forms.Radio = class extends Colibri.UI.Forms.Field {
 
