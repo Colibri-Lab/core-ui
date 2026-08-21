@@ -1,4 +1,5 @@
 /**
+ * Base Viewer component
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Component
@@ -138,6 +139,7 @@ Colibri.UI.Viewer = class extends Colibri.UI.Component {
     static _registered = [];
     /**
      * Registers the viewer
+     * @public
      * @static
      * @param {string} name name of viewer
      * @param {string} desc description of viewer
@@ -147,6 +149,7 @@ Colibri.UI.Viewer = class extends Colibri.UI.Component {
     }
     /**
      * Enums the registered viewers
+     * @public
      * @static
      * @returns Array
      */

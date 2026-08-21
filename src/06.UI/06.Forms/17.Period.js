@@ -1,4 +1,5 @@
 /**
+ * Period field component
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
@@ -7,6 +8,8 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
 
     /**
      * Render field component
+     * @protected
+     * @ignore
      */
     RenderFieldContainer() {
 
@@ -48,6 +51,12 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisChanged(event, args) {
         if (this._input1.value != 'Invalid Date' && this._input2.value != 'Invalid Date') {
             const days = parseInt((this._input2.value.getTime() - this._input1.value.getTime()) / 1000 / 86400) + 1;
@@ -60,6 +69,7 @@ Colibri.UI.Forms.Period = class extends Colibri.UI.Forms.Field {
 
     /**
      * Focus on component
+     * @public
      */
     Focus() {
         this._input1.Focus();

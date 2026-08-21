@@ -1,4 +1,5 @@
 /**
+ * Checkbox field component
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
@@ -7,6 +8,8 @@ Colibri.UI.Forms.Checkbox = class extends Colibri.UI.Forms.Field {
 
     /**
      * Render field component
+     * @protected
+     * @ignore
      */
     RenderFieldContainer() {
 
@@ -51,12 +54,17 @@ Colibri.UI.Forms.Checkbox = class extends Colibri.UI.Forms.Field {
         this._label.AddHandler('Clicked', this.__labelClicked, false, this);
     }
 
+    /**
+     * @ignore 
+     * @protected 
+     */
     __labelClicked(event, args) {
         this._input.Dispatch('Clicked', args);
     }
 
     /**
      * Focus on component
+     * @public
      */
     Focus() {
         this._input.Focus();

@@ -1,4 +1,5 @@
 /**
+ * Fields viewer component
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
@@ -398,6 +399,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
      * @param {Element} contentElement content element
      * @param {boolean} showTitles show titles
      * @private
+     * @ignore
      */
     _updateFields(fields = null, value = null, contentElement = null, showTitles = true) {
         const root = this.root || this;
@@ -431,6 +433,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
      * @param {Colibri.UI.Viewer} component - viewer component
      * @returns {object} converted value object
      * @private
+     * @ignore
      */
     _generateValue(field, value, name, component) {
         let vv = null;

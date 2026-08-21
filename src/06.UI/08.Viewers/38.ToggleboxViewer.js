@@ -1,4 +1,5 @@
 /**
+ * Togglebox viewer component
  * @memberof Colibri.UI
  * @class
  * @extends Colibri.UI.Viewer

@@ -8,6 +8,8 @@ Colibri.UI.Forms.DocumentGenerator = class extends Colibri.UI.Forms.Field {
     
     /**
      * Render field component
+     * @protected
+     * @ignore
      */
     RenderFieldContainer() {
         this.AddClass('app-component-documentgenerator-field');
@@ -51,8 +53,10 @@ Colibri.UI.Forms.DocumentGenerator = class extends Colibri.UI.Forms.Field {
     }
 
     /**
+     * @ignore
      * @private
-     * 
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
      */
     __generatedFileLinkClicked(event, args) {
         const module = typeof this._generatorOptions.fileLink.module === 'string' ? eval(this._generatorOptions.fileLink.module) : this._generatorOptions.fileLink.module;
@@ -68,6 +72,10 @@ Colibri.UI.Forms.DocumentGenerator = class extends Colibri.UI.Forms.Field {
         });
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _startGeneratedProcess() {
         
         const gen = this._generatorOptions.method;
@@ -94,6 +102,11 @@ Colibri.UI.Forms.DocumentGenerator = class extends Colibri.UI.Forms.Field {
         this._value = value;
         this._showValue();
     }
+    
+    /**
+     * @ignore
+     * @private
+     */
     _showValue() {
         if(this._value === null || !this._value?.guid) {
             this._loadingFlexBox.shown = true;

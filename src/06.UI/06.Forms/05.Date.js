@@ -1,4 +1,5 @@
 /**
+ * Date field component
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
@@ -7,6 +8,8 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
 
     /**
      * Render field component
+     * @protected
+     * @ignore
      */
     RenderFieldContainer() {
 
@@ -55,17 +58,41 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * @private
+     * @ignore
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __inputPopupOpened(event, args) {
         this.AddClass('-opened');
     }
+    /**
+     * @private
+     * @ignore
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __inputPopupClosed(event, args) {
         this.RemoveClass('-opened');
     }
 
+    /**
+     * @private
+     * @ignore
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __clearClicked(event, args) {
         this.value = null;
     }
 
+    /**
+     * @private
+     * @ignore
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __inputClicked(event, args) {
         this.Focus();
         this.Dispatch('Clicked', args);
@@ -75,6 +102,7 @@ Colibri.UI.Forms.Date = class extends Colibri.UI.Forms.Field {
 
     /**
      * Focus on component
+     * @public
      */
     Focus() {
         this._input.Focus();

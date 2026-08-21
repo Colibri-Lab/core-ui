@@ -1,4 +1,5 @@
 /**
+ * ArrayGrid field component
  * @class
  * @namespace
  * @extends Colibri.UI.Forms.Field
@@ -8,6 +9,8 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
 
     /**
      * Render field component
+     * @protected
+     * @ignore
      */
     RenderFieldContainer() {
         this.AddClass('app-component-array-grid-field');
@@ -54,6 +57,12 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __objectGridSelectionChanged(event, args) {
         // do not open the window if the context menu is called on the row
         const selected = this._getSelected();
@@ -94,6 +103,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
      * Opens window for clicked object
      * @param {Object|null} value
      * @private
+     * @ignore
      */
     _openObjectWindow(value) {
         if (!this._objectWindow) {
@@ -122,16 +132,34 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         this._objectWindow.shown = true;
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __objectWindowWindowClosed(event, args) {
         if (this._objectWindow.disposeOnClose) { this._objectWindow = null; }
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __objectWindowChanged(event, args) {
         if (!this._objectWindow.containsNewObject) {
             this.updateObjectRow(event, Object.assign({ object_row: this._getSelected() }, args));
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __objectWindowFormSubmited(event, args) {
         let newArgs = Object.assign({ object_row: this._getSelected() }, args);
         if (this._objectWindow.containsNewObject) {
@@ -143,19 +171,38 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
         this._objectsGrid.UnselectAllRows();
     }
 
+    /**
+     * Add new object (open the window)
+     * @public
+     */
     newObject(event, args) {
         this._openObjectWindow();
     }
 
+    /**
+     * Show object (open the window)
+     * @param {*} value field value
+     * @public
+     */
     showObject(value) {
         this._openObjectWindow(value);
     }
 
+    /**
+     * Add object row
+     * @param {*} value field value
+     * @public
+     */
     addObjectRow(value) {
         this._objectsGrid.rows.Add('row-' + Date.Now().getTime(), value || {});
         this.Dispatch('Changed');
     }
 
+    /**
+     * Update object row
+     * @param {*} value field value
+     * @public
+     */
     updateObjectRow(value) {
         let row = this._getSelected();
         if (row) {
@@ -255,6 +302,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
     /**
      * Shows/hides columns
      * @private
+     * @ignore
      */
     _setDisplayedColumns() {
         this._displayedColumns = [];
@@ -280,6 +328,7 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
 
     /**
      * Focus on grid
+     * @public
      */
     Focus() {
         // do nothing
@@ -352,136 +401,6 @@ Colibri.UI.Forms.ArrayGrid = class extends Colibri.UI.Forms.Field {
      */
     get tabIndex() {
         return this._objectsGrid.tabIndex;
-    }
-
-}
-
-/**
- * @class
- * @extends Colibri.UI.ModelessWindow
- * @memberof Colibri.UI.Forms.ArrayGrid
- */
-Colibri.UI.Forms.ArrayGrid.ObjectWindow = class extends Colibri.UI.Window {
-
-    /**
-     * @constructor
-     * @param {string} name name of component
-     * @param {Element|Colibri.UI.Component} container container of component
-     */
-    constructor(name, container) {
-        super(name, container);
-        this.AddClass('app-component-array-grid-object-window');
-
-        this.title = '#{ui-arraygrid-title}';
-
-        this._containsNewObject = true;
-
-        this._form = new Colibri.UI.Forms.Form(this._name + '-form', this.container);
-        this._saveButton = new Colibri.UI.SuccessButton(this._name + '-save-button', this.footer);
-        this._saveButton.value = '#{ui-arraygrid-save}';
-        this._saveButton.AddHandler('Clicked', this.__saveButtonClicked, false, this);
-
-        this._form.shown = true;
-        this._saveButton.shown = true;
-    }
-
-    __saveButtonClicked(event, args) {
-        this.Dispatch('FormSubmitted', { value: this._form.value });
-        this.Hide();
-    }
-
-    /**
-     * @ignore 
-     * @protected 
-     */
-    _registerEvents() {
-        super._registerEvents();
-        this.RegisterEvent('FormSubmitted', 'Когда форма внутри окна отправлена');
-    }
-
-    /**
-     * Set a window params
-     * @param {Object} params
-     */
-    setParams(params) {
-        this.title = params.title;
-        this.width = params.width;
-        this.height = params.height;
-        this.sticky = params.sticky;
-        this.stickyX = params.sticky_x;
-        this.stickyY = params.sticky_y;
-        this.startPointX = params.start_point_x;
-        this.startPointY = params.start_point_y;
-        this.disposeOnClose = params.dispose_on_close;
-    }
-
-    /**
-     * Form with object
-     * @type {Colibri.UI.Forms.Form}
-     */
-    get form() {
-        return this._form;
-    }
-
-    /**
-     * Form fields
-     * @type {Object}
-     */
-    get fields() {
-        return this._form.fields;
-    }
-    /**
-     * Form fields
-     * @param {string|Object} value
-     */
-    set fields(value) {
-        this._form.fields = value;
-    }
-
-    /**
-     * Form values
-     * @type {Object|null}
-     */
-    get value() {
-        return this._form.value;
-    }
-    /**
-     * Form values
-     * @type {Object|null}
-     */
-    set value(value) {
-        this._form.value = value || this._form.defaultValues();
-    }
-
-    /**
-     * Is form contains new object
-     * @type {boolean}
-     */
-    get containsNewObject() {
-        return this._containsNewObject;
-    }
-    /**
-     * Is form contains new object
-     * @type {boolean}
-     */
-    set containsNewObject(value) {
-        this._containsNewObject = (value === true || value === 'true');
-    }
-
-    /**
-     * Returns root object
-     * @type {object}
-     */
-    get root() {
-        return this._form.root;
-    }
-
-    /**
-     * Returns root object
-     * @type {object}
-     */
-    set root(value) {
-        this._form.root = value;
     }
 
 }

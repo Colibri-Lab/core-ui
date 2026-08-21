@@ -26,6 +26,12 @@ Colibri.UI.ToggleButton = class extends Colibri.UI.ExtendedButton {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisClicked(event, args) {
         if(!this._autoChangeState) {
             return true;

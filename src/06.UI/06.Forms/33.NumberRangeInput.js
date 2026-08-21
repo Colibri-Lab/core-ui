@@ -1,10 +1,16 @@
 /**
+ * Number range input field component
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
  */
 Colibri.UI.Forms.NumberRangeInput = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     * @protected
+     * @ignore
+     */
     RenderFieldContainer() {
         this.AddClass('app-component-numberrangeinput-field');
         const contentContainer = this.contentContainer;
@@ -42,14 +48,14 @@ Colibri.UI.Forms.NumberRangeInput = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * 
+     * Value of component
      * @type {number}
      */
     get value() {
         return this._value;
     }
     /**
-     * 
+     * Value of component
      * @type {number}
      */
     set value(value) {
@@ -59,6 +65,10 @@ Colibri.UI.Forms.NumberRangeInput = class extends Colibri.UI.Forms.Field {
         this._value = value;
         this._showValue();
     }
+    /**
+     * @ignore
+     * @private
+     */
     _showValue() {
         this._input1.value = value[0];
         this._input2.value = value[1];

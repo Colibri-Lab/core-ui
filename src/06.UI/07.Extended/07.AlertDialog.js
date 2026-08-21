@@ -26,6 +26,7 @@ Colibri.UI.AlertDialog = class extends Colibri.UI.Window {
      * @param {string} message message to show in window
      * @param {string} button button title
      * @returns {Promise}
+     * @public
      */
     Show(title, message, button) {
         return new Promise((resolve, reject) => {

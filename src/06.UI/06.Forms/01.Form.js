@@ -55,6 +55,12 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         this.AddHandler('KeyDown', this.__thisKeyDown);
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisChanged(event, args) {
         this._hideAndShow();
         this._calcRuntimeValues(args?.component ?? null);
@@ -115,6 +121,10 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _runGenerateOfFieldData() {
 
         Object.forEach(this._fields, (name, fieldData) => {
@@ -248,6 +258,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
      * Searches for field
      * @param {string} name name of field to find
      * @returns Colibri.UI.Forms.Field
+     * @public
      */
     Fields(name = null) {
 
@@ -427,6 +438,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
      * Searches for field in all debt
      * @param {string} fieldName field name or path
      * @returns {Colibri.UI.Forms.Field}
+     * @public
      */
     FindField(fieldName) {
         let field = null,
@@ -478,6 +490,12 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __componentChanged(event, args) {
         const component = event.sender;
         args = args ? args : {};
@@ -492,6 +510,10 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         component._timeout = setTimeout(() => this.Dispatch('Changed', args), 50);
     }
 
+    /**
+     * Need recalculate values
+     * @type {boolean}
+     */
     get needRecalc() {
         let nr = false;
         this.ForEach((n, c) => {
@@ -500,6 +522,10 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         return nr;
     }
 
+    /**
+     * Need hiden and show
+     * @type {boolean}
+     */
     get needHideAndShow() {
         let nr = false;
         this.ForEach((n, c) => {
@@ -508,7 +534,11 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         return nr;
     }
 
-
+    /**
+     * Find next focusable field
+     * @param {Colibri.UI.Forms.Field} field field to start search from
+     * @public
+     */
     FindNextFocusableField(field) {
         let next = field.next;
         while (next) {
@@ -523,6 +553,11 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         return null;
     }
 
+    /**
+     * Find previous focusable field
+     * @param {Colibri.UI.Forms.Field} field field to start search from
+     * @public
+     */
     FindPreviousFocusableField(field) {
         let prev = field.prev;
         while (prev) {
@@ -598,6 +633,12 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         this.Dispatch('FieldsRendered');
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __groupsKeyDown(event, args) {
         if (args.domEvent.key == 'Tab') {
             if (args.domEvent.shiftKey) {
@@ -610,6 +651,12 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __groupsChanged(event, args) {
         const groupName = args.button.name;
         Object.forReverseEach(this._fields, (name, fieldData) => {
@@ -633,7 +680,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     /** 
      * @ignore
-     * @private 
+     * @protected 
      */
     __renderBoundedValues(values) {
         Object.forEach(values, (name, value) => {
@@ -643,6 +690,7 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
 
     /**
      * Focus on form (to the first component)
+     * @public
      */
     Focus() {
         const firstComponent = this.Children('firstChild');
@@ -703,6 +751,11 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Fill default values
+     * @param {object} fields fields to fill
+     * @public
+     */
     defaultValues(fields = null) {
         let ret = {};
         Object.forEach(fields || this._fields, (name, field) => {
@@ -717,6 +770,11 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         return ret;
     }
 
+    /**
+     * Select the group by index
+     * @param {number} index index of group to select
+     * @public
+     */
     SelectGroup(index) {
         if (!this._groups) {
             return;
@@ -725,14 +783,26 @@ Colibri.UI.Forms.Form = class extends Colibri.UI.Component {
         this._groups.SelectButton(index);
     }
 
+    /**
+     * @private
+     * @ignore
+     */
     _checkIfChanged(value) {
         return JSON.stringify(this.value) !== JSON.stringify(value);
     }
 
+    /**
+     * Is form changed
+     * @type {boolean}
+     */
     get changed() {
         return this._changed ?? false;
     }
 
+    /**
+     * Is form changed
+     * @type {boolean}
+     */
     set changed(value) {
         this._changed = value;
     }

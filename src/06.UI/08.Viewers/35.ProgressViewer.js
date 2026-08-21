@@ -40,6 +40,7 @@ Colibri.UI.ProgressViewer = class extends Colibri.UI.Viewer {
     }
     /**
      * @ignore
+     * @private
      */
     _showValue() {
         

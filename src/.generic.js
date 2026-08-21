@@ -5771,17 +5771,20 @@ Element.prototype.ensureInViewportHr = function (container, left = null) {
 Element.prototype.inInViewport = function (container) {
 
     //Determine container top and bottom
-    let cTop = container.scrollTop;
-    let cBottom = cTop + container.clientHeight;
+    const containerBounds = container.bounds();
+    const elementBounds = this.bounds();
+
+    let scrollTop = containerBounds.top + container.scrollTop;
+    let scrollBottom = containerBounds.top + scrollTop + container.clientHeight;
 
     //Determine element top and bottom
-    let eTop = this.offsetTop;
-    let eBottom = eTop + this.clientHeight;
+    let eTop = elementBounds.top;
+    let eBottom = elementBounds.top + elementBounds.outerHeight;
 
     //Check if out of view
-    if (eTop - this.clientHeight < cTop) {
+    if (eTop - elementBounds.outerHeight < scrollTop) {
         return false;
-    } else if (eBottom > cBottom) {
+    } else if (eBottom > scrollBottom) {
         return false;
     }
     return true;

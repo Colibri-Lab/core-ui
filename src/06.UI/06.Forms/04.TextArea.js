@@ -1,4 +1,5 @@
 /**
+ * TextArea field component
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
@@ -7,6 +8,8 @@ Colibri.UI.Forms.TextArea = class extends Colibri.UI.Forms.Field {
     
     /**
      * Render field component 
+     * @protected
+     * @ignore
      */
     RenderFieldContainer() {
 
@@ -88,15 +91,27 @@ Colibri.UI.Forms.TextArea = class extends Colibri.UI.Forms.Field {
         // если нужно добавить что то
     }
 
+    /**
+     * Focus on field
+     * @public
+     */
     Focus() {
         this._input.focus();
         //this._input.select();
     }
 
+    /**
+     * Is field readonly
+     * @type {boolean}
+     */
     get readonly() {
         return this._input.attr('readonly') === 'readonly';
     }
 
+    /**
+     * Is field readonly
+     * @type {boolean}
+     */
     set readonly(value) {
         value = this._convertProperty('Boolean', value);
         if(value) {
@@ -107,15 +122,27 @@ Colibri.UI.Forms.TextArea = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /**
+     * Input placeholder
+     * @type {string}
+     */
     get placeholder() {
         return this._input.attr('placeholder');
     }
 
+    /**
+     * Input placeholder
+     * @type {string}
+     */
     set placeholder(value) {
         value = this._convertProperty('String', value);
         this._input.attr('placeholder', value);
     }
 
+    /**
+     * Value of field
+     * @type {string}
+     */
     get value() {
         let value = this._input.value;
         if(this._fieldData?.params?.emptyAsNull && !value) {
@@ -127,25 +154,44 @@ Colibri.UI.Forms.TextArea = class extends Colibri.UI.Forms.Field {
         return value;
     }
 
+    /**
+     * Value of field
+     * @type {string}
+     */
     set value(value) {
         this._original = value;
         this._input.value = value ?? '';
     }
 
+    /**
+     * Maximum length of field
+     * @type {Number}
+     */
     set maxlength(value) {
-        value = this._convertProperty('String', value);
+        value = this._convertProperty('Number', value);
         this._input.attr('maxlength', value);
     }
 
+    /**
+     * Maximum length of field
+     * @type {Number}
+     */
     get maxlength() {
         return this._input.attr('maxlength');
     }
 
-    
+    /**
+     * Is field enabled
+     * @type {boolean}
+     */
     get enabled() {
         return this._input.attr('disabled') != 'disabled';
     }
 
+    /**
+     * Is field enabled
+     * @type {boolean}
+     */
     set enabled(value) {
         value = this._convertProperty('Boolean', value);
         if(value) {
@@ -159,13 +205,16 @@ Colibri.UI.Forms.TextArea = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * Индекс табуляции
-     * @todo проверить правильно ли получаю tabIndex и исправить
+     * Tab index of the field
      * @type {number}
      */
     get tabIndex() {
         return this._input && this._input.attr('tabIndex');
     }
+    /**
+     * Tab index of the field
+     * @type {number}
+     */
     set tabIndex(value) {
         this._input && this._input.attr('tabIndex', value === true ? Colibri.UI.tabIndex++ : value);
     }

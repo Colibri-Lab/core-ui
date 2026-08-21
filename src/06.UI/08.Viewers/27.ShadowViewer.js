@@ -1,4 +1,5 @@
 /**
+ * Shadow viewer component
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer

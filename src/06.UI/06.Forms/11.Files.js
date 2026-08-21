@@ -1,4 +1,5 @@
 /**
+ * Files field component
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
@@ -7,6 +8,8 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
 
     /**
      * Render field component
+     * @protected
+     * @ignore
      */
     RenderFieldContainer() {
 
@@ -62,10 +65,22 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /** 
+     * @ignore
+     * @private 
+     * @param {Coibri.Events.Event} event
+     * @param {*} args
+     */
     __filesItemClicked(event, args) {
         this._itemClicked(args.item.value);
     }
 
+    /** 
+     * @ignore
+     * @private 
+     * @param {Coibri.Events.Event} event
+     * @param {*} args
+     */
     __inputInputFileChosen(event, args) {
         if (args.files) {
             let validatedFiles = this._validate(args.files);
@@ -87,6 +102,12 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /** 
+     * @ignore
+     * @private 
+     * @param {Coibri.Events.Event} event
+     * @param {*} args
+     */
     __inputInputFileChanged(event, args) {
         this._files.shown = true;
         this.lastValue = this.value;
@@ -169,6 +190,12 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /** 
+     * @ignore
+     * @private 
+     * @param {Coibri.Events.Event} event
+     * @param {*} args
+     */
     __sighClicked(event, args) {
 
         const component = eval(this._fieldData?.params?.sign_component);
@@ -184,6 +211,12 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
         return false;
     }
 
+    /** 
+     * @ignore
+     * @private 
+     * @param {Coibri.Events.Event} event
+     * @param {*} args
+     */
     __deleteIconClicked(event, args) {
         const value = event.sender.parent.value;
         const delParams = this._delDialog;
@@ -373,6 +406,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
 
     /**
      * Rollback to the last selection
+     * @public
      */
     Rollback() {
         if (this.lastValue !== undefined) {
@@ -387,6 +421,7 @@ Colibri.UI.Forms.Files = class extends Colibri.UI.Forms.Field {
 
     /**
      * Focus on component
+     * @public
      */
     Focus() {
         this._input.Focus();

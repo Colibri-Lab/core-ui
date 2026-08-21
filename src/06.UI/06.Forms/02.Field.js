@@ -6,10 +6,19 @@
 Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
     /**
+     * Components registered for field
+     * @public
      * @static
      * @type {object}
      */
     static Components = {};
+
+    /**
+     * Params registered for field
+     * @public
+     * @static
+     * @type {object}
+     */
     static Params = {};
 
     /**
@@ -20,6 +29,8 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      * @param {string} icon icon of component
      * @param {Array} params params of component
      * @param {boolean} canhaveFields whether the component can have fields
+     * @public
+     * @static
      */
     static RegisterFieldComponent(name, className, description, icon, params, canhaveFields = false) {
         if (!icon) {
@@ -30,18 +41,31 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     /**
      * Unregisters a field from backend list
      * @param {string} name name of component
+     * @static
+     * @public
      */
     static UnregisterFieldComponent(name) {
         delete Colibri.UI.Forms.Field.Components[name];
     }
-
+    /**
+     * Registers a field param for backend list
+     * @param {string} component name of component
+     * @static
+     * @public
+     */
     static RegisterFieldParam(component, paramName, fieldData) {
         if(!Colibri.UI.Forms.Field.Params[component]) {
             Colibri.UI.Forms.Field.Params[component] = {};
         }
         Colibri.UI.Forms.Field.Params[component][paramName] = fieldData;
     }
-
+    /**
+     * Unregisters a field param for backend list
+     * @param {string} component name of component
+     * @param {string} paramName name of param
+     * @static
+     * @public
+     */
     static UnregisterFieldParam(component, paramName) {
         if(!Colibri.UI.Forms.Field.Params[component]) {
             return;
@@ -49,6 +73,12 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         delete Colibri.UI.Forms.Field.Params[component][paramName];
     }
 
+    /**
+     * Find component data by name or class name
+     * @param {string} nameOrClassName name or class name of component
+     * @static
+     * @public
+     */
     static FindFieldComponent(nameOrClassName) {
         if (Colibri.UI.Forms.Field.Components[nameOrClassName]) {
             return Colibri.UI.Forms.Field.Components[nameOrClassName];
@@ -64,6 +94,13 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Checks if component has param
+     * @param {string} nameOrClassName name or class name of component
+     * @param {string} paramName name of param
+     * @static
+     * @public
+     */
     static HasParam(nameOrClassName, paramName) {
         const paramData = Colibri.UI.Forms.Field.FindFieldComponent(nameOrClassName);
         if (!paramData) {
@@ -79,6 +116,8 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      * @param {object} field field data
      * @param {Colibri.UI.Forms.Field} parent parent field
      * @param {Colibri.UI.Forms.Form} root form component
+     * @public
+     * @static
      */
     static Create(name, container, field, parent, root = null) {
         if (!field.component && !field.type) {
@@ -183,7 +222,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             this.AddClass('-checkable-box');
             
             this._title = new Colibri.UI.TextSpan(this._name + '-title', this._checkableTitleContainer);
-            this._title.AddHandler('Clicked', this._titleClicked, false, this);
+            this._title.AddHandler('Clicked', this.__titleClicked, false, this);
 
 
         } else {
@@ -272,10 +311,22 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
     }
 
-    _titleClicked(event, args) {
+    /**
+     * @private
+     * @ignore
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
+    __titleClicked(event, args) {
         this._checkableBox.Dispatch('Clicked', args);
     }
 
+    /**
+     * @private
+     * @ignore
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __checkableBoxChanged(event, args) {
         this.enabled = this._checkableBox.checked;
         if(this.enabled) {
@@ -285,10 +336,22 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * @private
+     * @ignore
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __messageClicked(event, args) {
         this.Dispatch('MessageClicked', { domEvent: args.domEvent, field: this });
     }
 
+    /**
+     * @private
+     * @ignore
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisChangedOrKeyUpOrKeyDown(event, args) {
         if (event.name == 'Changed') {
             this.note = this._fieldData?.note ? (this._fieldData.note[Lang.Current] ?? this._fieldData.note ?? '') : '';
@@ -375,10 +438,22 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         return true;
     }
 
+    /**
+     * @private
+     * @ignore
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisReceiveFocus(event, args) {
         this.AddClass('-focused');
         this.form.activeField = this;
     }
+    /**
+     * @private
+     * @ignore
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisLoosedFocus(event, args) {
         this.RemoveClass('-focused');
         this.form.activeField = null;
@@ -387,6 +462,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     /**
      * Adds remove link on field
      * @param {Function} callback handle click on remove link
+     * @public
      */
     AddRemoveLink(callback) {
         this._removeLink = new Colibri.UI.Icon(this._name + '-remove', this);
@@ -397,6 +473,12 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this._removeLink.AddHandler('Clicked', this.__removeLinkClicked, false, this);
     }
 
+    /**
+     * @private
+     * @ignore
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __removeLinkClicked(event, args) {
         if (!this.enabled) {
             return;
@@ -406,6 +488,10 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         event.sender.callback && event.sender.callback(index);
     }
 
+    /**
+     * Click on remove link
+     * @public
+     */
     ClickOnRemoveLink() {
         this._removeLink && this._removeLink.Dispatch('Clicked', {});
     }
@@ -414,6 +500,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      * Adds up and down link on field
      * @param {Function} upCallback handle click on up link
      * @param {Function} downCallback handle click on down link
+     * @public
      */
     AddUpDownLink(upCallback, downCallback) {
         this._upLink = new Colibri.UI.Icon(this._name + '-up', this);
@@ -431,6 +518,12 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this._downLink.AddHandler('Clicked', this.__downLinkClicked, false, this);
     }
 
+    /**
+     * @private
+     * @ignore
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __downLinkClicked(event, args) {
         if (!this.enabled) {
             return;
@@ -438,6 +531,12 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this._downLink.callback && this._downLink.callback();
     }
 
+    /**
+     * @private
+     * @ignore
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __upLinkClicked(event, args) {
         if (!this.enabled) {
             return;
@@ -445,10 +544,18 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         this._upLink.callback && this._upLink.callback();
     }
 
+    /**
+     * Click on up link
+     * @public
+     */
     ClickOnUpLink() {
         this._upLink && this._upLink.Dispatch('Clicked', {});
     }
 
+    /**
+     * Click on down link
+     * @public
+     */
     ClickOnDownLink() {
         this._downLink && this._downLink.Dispatch('Clicked', {});
     }
@@ -473,6 +580,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      * @protected
      * @param {*} data 
      * @param {String} path 
+     * @ignore
      */
     __renderBoundedValues(data, path) {
         this.value = data;
@@ -517,6 +625,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
     /**
      * Validate field
+     * @public
      */
     Validate() {
         this._validated = true;
@@ -530,12 +639,16 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         throw new Error('#{ui-field-needtooverload-error}');
     }
 
+    /**
+     * Clear field container
+     */
     ClearFieldContainer() {
         this.contentContainer.Clear();
     }
 
     /**
      * Reset validation results
+     * @public
      */
     ResetValidation() {
         this.params && (this.params.validated = true);
@@ -546,7 +659,6 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     /**
      * Message component
      * @type {Colibri.UI.Component}
-     * @readonly
      */
     get messageObject() {
         return this._content.Children(this._name + '-message');
@@ -580,7 +692,6 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     /**
      * Title object
      * @type {Colibri.UI.Component}
-     * @readonly
      */
     get titleObject() {
         return this._content.Children(this._name + '-title');
@@ -663,7 +774,6 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     /**
      * Content container
      * @type {Element}
-     * @readonly
      */
     get contentContainer() {
         return this._content.Children(this._name + '-container');
@@ -672,7 +782,6 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     /**
      * Content pane component
      * @type {Colibri.UI.Component}
-     * @readonly
      */
     get contentPane() {
         return this._content;
@@ -745,7 +854,6 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     /**
      * Field form
      * @type {Colibri.UI.Forms.Form}
-     * @readonly
      */
     get form() {
         const formElement = this._element.closest('.app-form-component');
@@ -772,12 +880,16 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
     /**
      * Original value, before change
      * @type {*}
-     * @readonly
      */
     get original() {
         return this._original;
     }
 
+    /**
+     * @private
+     * @ignore
+     * @param {object} fields
+     */
     _needRecalcF(fields) {
         let nr = false;
         Object.forEach(fields, (n, f) => {
@@ -790,6 +902,11 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         return nr;
     }
 
+    /**
+     * @private
+     * @ignore
+     * @param {object} fields
+     */
     _needHideAndShowF(fields) {
         let nr = false;
         Object.forEach(fields, (n, f) => {
@@ -804,7 +921,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
     /**
      * Needs recalc every time when changed to form field
-     * @readonly
+     * @type {Boolean}
      */
     get needRecalc() {
         if (!!this._fieldData.fields) {
@@ -816,7 +933,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
 
     /**
      * Needs hide and show when changed the form
-     * @readonly
+     * @type {Boolean}
      */
     get needHideAndShow() {
         if (!!this._fieldData.fields) {
@@ -826,6 +943,10 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         }
     }
 
+    /**
+     * Whether the field has checkable box
+     * @type {Boolean}
+     */
     get hasCheckable() {
         return !!this._checkableBox;
     }
@@ -847,85 +968,5 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
             this._checkableBox.Dispatch('Changed', {component: this._checkableBox});
         }
     }
-
-}
-
-/**
- * @class
- * @extends Colibri.UI.Component
- * @memberof Colibri.UI.Forms
- */
-Colibri.UI.Forms.HiddenField = class extends Colibri.UI.Component {
-    /**
-     * Creates a new field object
-     * @param {string} name name of field
-     * @param {Colibri.UI.Component} container container of component
-     * @param {object} fieldData field data
-     */
-    constructor(name, container, fieldData) {
-        super(name, container, Element.create('input', { type: 'hidden' }));
-        this._fieldData = fieldData;
-        this._validated = true;
-    }
-
-    /**
-     * Value string
-     * @type {string}
-     */
-    get value() {
-        return this._element.value;
-    }
-
-    /**
-     * Value string
-     * @type {string}
-     */
-    set value(value) {
-        this._element.value = value;
-    }
-
-    get field() {
-        return this._fieldData;
-    }
-
-    set field(value) {
-        this._fieldData = value;
-    }
-
-    /**
-     * Validate field
-     */
-    Validate() {
-        this._validated = true;
-    }
-
-    /**
-     * Is field validated
-     * @type {boolean}
-     * @readonly
-     */
-    get validated() {
-        return this._validated;
-    }
-
-    /**
-     * Reset validation results of field
-     */
-    ResetValidation() {
-        // Do nothing
-    }
-
-    get needRecalc() {
-        return false;
-    }
-
-    get loading() {
-        return this._loading ?? false;
-    }
-
-    set loading(value) {
-        this._loading = value;
-    }
-
 
 }

@@ -20,12 +20,19 @@ Colibri.UI.PlayPauseButton = class extends Colibri.UI.ExtendedButton {
     /**
      * Register events
      * @protected
+     * @ignore
      */
     _registerEvents() {
         super._registerEvents();
         this.RegisterEvent('Changed', false, 'When state is changed');
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisClicked(event, args) {
         if(this.state === PlayPauseButton.Play) {
             this.state = PlayPauseButton.Pause;
@@ -50,6 +57,10 @@ Colibri.UI.PlayPauseButton = class extends Colibri.UI.ExtendedButton {
         this._state = value;
         this._showState();
     }
+    /**
+     * @ignore
+     * @private
+     */
     _showState() {
         if(this._state === PlayPauseButton.Play) {
             this.icon = 'Colibri.UI.PauseIcon';

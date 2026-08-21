@@ -1,4 +1,5 @@
 /**
+ * Files viewer component
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
@@ -45,7 +46,6 @@ Colibri.UI.FilesViewer = class extends Colibri.UI.Viewer {
 
     /**
      * List item clicned  
-     * @private
      * @param {Colibri.Events.Event} event event object
      * @param {object} args log message arguments 
      * @private 
@@ -59,7 +59,10 @@ Colibri.UI.FilesViewer = class extends Colibri.UI.Viewer {
     }
 
 
-    /** @ignore */
+    /**
+     * @private 
+     * @ignore 
+     */
     _showValue() {
 
         const group = this._list.Children('group');

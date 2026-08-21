@@ -1,4 +1,5 @@
 /**
+ * Object field component
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
@@ -7,6 +8,8 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     /**
      * Render field component
+     * @protected
+     * @ignore
      */
     RenderFieldContainer() {
         this.AddClass('app-component-object-field');
@@ -38,12 +41,26 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisChanged(event, args) {
         if (!this.root) {
             this._hideAndShow();
         }
     }
 
+    /**
+     * @ignore 
+     * @protected
+     * @param {String} name name of field to render
+     * @param {Object} fieldData field data
+     * @param {*} value value of field
+     * @param {boolean} shown is field shown 
+     */
     _renderField(name, fieldData, value, shown = true) {
         const component = Colibri.UI.Forms.Field.Create(name, this.contentContainer, fieldData, this, this.root);
         if (!component) {
@@ -113,6 +130,8 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     /**
      * Focus on component
+     * @param {string} element element to focus on
+     * @public
      */
     Focus(element = 'firstVisibleChild') {
         if (this.contentContainer.Children(element)) {
@@ -334,7 +353,10 @@ Colibri.UI.Forms.Object = class extends Colibri.UI.Forms.Field {
 
     }
 
-
+    /**
+     * @ignore
+     * @private
+     */
     _runGenerateOfFieldData() {
 
         Object.forEach(this._fieldData.fields, (name, fieldData) => {

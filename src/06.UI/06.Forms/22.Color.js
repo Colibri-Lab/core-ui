@@ -1,4 +1,5 @@
 /**
+ * Color field component
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
@@ -7,6 +8,8 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
 
     /**
      * Render field component
+     * @protected
+     * @ignore
      */
     RenderFieldContainer() {
 
@@ -52,6 +55,12 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __inputChanged(event, args) {
         this._color.styles = { backgroundColor: this._input.value };
         this.Dispatch('Changed', Object.assign(args, { component: this }));
@@ -80,11 +89,23 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __colorPopupShadowClicked(event, args) {
         console.log('disposing');
         this._colorPopupObject.Dispose();
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __coloPopupChanged(event, args) {
         this._input.value = this._colorPopup.value.hex;
         this._color.styles = { backgroundColor: this._input.value };
@@ -112,6 +133,7 @@ Colibri.UI.Forms.Color = class extends Colibri.UI.Forms.Field {
 
     /**
      * Focus on component
+     * @public
      */
     Focus() {
         this._input.Focus();

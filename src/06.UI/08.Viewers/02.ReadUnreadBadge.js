@@ -1,4 +1,5 @@
 /**
+ * Read or unread badge component
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer

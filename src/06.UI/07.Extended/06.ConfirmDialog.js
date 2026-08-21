@@ -24,7 +24,8 @@ Colibri.UI.ConfirmDialog = class extends Colibri.UI.Window {
      * @param {string} message message to show in dialog
      * @param {string} okbutton ok button title
      * @param {string} cancelbutton cancel button title
-     * @returns Promise
+     * @returns {Promise<void>}
+     * @public
      */
     Show(title, message, okbutton = null, cancelbutton = null, hideCancelButton = false) {
     

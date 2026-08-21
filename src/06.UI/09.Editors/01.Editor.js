@@ -1,4 +1,5 @@
 /**
+ * Base editor component
  * @class
  * @extends Colibri.UI.Component
  * @memberof Colibri.UI
@@ -72,7 +73,6 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
     /**
      * Is editor data is invalid
      * @type {boolean}
-     * @readonly
      */
     get invalid() {
         return this.ContainsClass('-invalid');
@@ -113,7 +113,10 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
         return this._fieldData;
     }
 
-    /** @ignore */
+    /** 
+     * @ignore
+     * @private
+     */
     _setFilled() {
         const fieldEditoPane = this._element.closest('.app-field-pane-editor');
         if(fieldEditoPane && fieldEditoPane.getUIComponent()) {
@@ -121,7 +124,10 @@ Colibri.UI.Editor = class extends Colibri.UI.Component {
         }
     }
 
-    /** @ignore */
+    /** 
+     * @ignore
+     * @private
+     */
     _unsetFilled() {
         const fieldEditoPane = this._element.closest('.app-field-pane-editor');
         if(fieldEditoPane && fieldEditoPane.getUIComponent()) {

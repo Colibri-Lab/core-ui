@@ -1,4 +1,5 @@
 /**
+ * Date range field component
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
@@ -7,6 +8,8 @@ Colibri.UI.Forms.DateRange = class extends Colibri.UI.Forms.Field {
 
     /**
      * Render field component
+     * @protected
+     * @ignore
      */
     RenderFieldContainer() {
         this.AddClass('app-component-daterange-field');
@@ -52,18 +55,42 @@ Colibri.UI.Forms.DateRange = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __inputPopupOpened(event, args) {
         this.AddClass('-opened');
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __inputPopupClosed(event, args) { 
         this.RemoveClass('-opened');
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __input2KeyUp(event, args) {
         return this.Dispatch('KeyUp', Object.assign(args || {}, { component: this._input2 }));
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __input1KeyUp(event, args) {
         return this.Dispatch('KeyUp', Object.assign(args || {}, { component: this._input1 }));
     }

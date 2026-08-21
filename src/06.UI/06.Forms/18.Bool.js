@@ -1,10 +1,16 @@
 /**
+ * Bool field component
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
  */
 Colibri.UI.Forms.Bool = class extends Colibri.UI.Forms.Checkbox {
 
+    /**
+     * Render field component
+     * @protected
+     * @ignore
+     */
     RenderFieldContainer() {
         if(!this._fieldData.placeholder && this._fieldData.desc) {
             this._fieldData.placeholder = this._fieldData.desc;

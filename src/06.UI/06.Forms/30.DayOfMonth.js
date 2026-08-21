@@ -8,6 +8,8 @@ Colibri.UI.Forms.DayOfMonth = class extends Colibri.UI.Forms.Field {
 
     /**
      * Render field component
+     * @protected
+     * @ignore
      */
     RenderFieldContainer() {
 
@@ -45,11 +47,21 @@ Colibri.UI.Forms.DayOfMonth = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __monthChanged(event, args) {
         this._day.values = this._getDays(this._month.value?.value ?? this._month.value);
         this.Dispatch('Changed', Object.assign(args, { component: this }));
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _getMonths() {
         const ret = [];
         [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].forEach((m) => {
@@ -61,6 +73,11 @@ Colibri.UI.Forms.DayOfMonth = class extends Colibri.UI.Forms.Field {
         return ret;
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {number} month month number
+     */
     _getDays(month) {
         const d = [];
         const days = new Date(Date.Now().getFullYear(), month, 0).getDate();
@@ -75,6 +92,7 @@ Colibri.UI.Forms.DayOfMonth = class extends Colibri.UI.Forms.Field {
 
     /**
      * Focus on component
+     * @public
      */
     Focus() {
         this._month.Focus()
@@ -83,6 +101,7 @@ Colibri.UI.Forms.DayOfMonth = class extends Colibri.UI.Forms.Field {
     /**
      * Get value title
      * @returns {string}
+     * @public
      */
     getValueTitle() {
         return this._month.value.title + ' ' + this._year.value.title;

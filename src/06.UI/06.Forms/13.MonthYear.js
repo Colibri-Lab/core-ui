@@ -1,4 +1,5 @@
 /**
+ * MonthYear field component
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
@@ -7,6 +8,8 @@ Colibri.UI.Forms.MonthYear = class extends Colibri.UI.Forms.Field {
 
     /**
      * Render field component
+     * @protected
+     * @ignore
      */
     RenderFieldContainer() {
 
@@ -43,9 +46,10 @@ Colibri.UI.Forms.MonthYear = class extends Colibri.UI.Forms.Field {
 
     /**
      * Focus on component
+     * @public
      */
     Focus() {
-        this._month.Focus()
+        this._month.Focus();
     }
 
     /**

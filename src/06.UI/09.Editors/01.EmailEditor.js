@@ -1,4 +1,5 @@
 /**
+ * Email editor component
  * @class
  * @extends Colibri.UI.Editor
  * @memberof Colibri.UI

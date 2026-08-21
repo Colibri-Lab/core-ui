@@ -1,10 +1,16 @@
 /**
+ * Number range picker field component
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
  */
 Colibri.UI.Forms.NumberRangePicker = class extends Colibri.UI.Forms.Field {
 
+    /**
+     * Render field component
+     * @protected
+     * @ignore
+     */
     RenderFieldContainer() {
         this.AddClass('app-component-numberrangepicker-field');
         const contentContainer = this.contentContainer;
@@ -53,6 +59,10 @@ Colibri.UI.Forms.NumberRangePicker = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _addHandlers() {
         this.handleVisibilityChange = true;
         this.AddHandler('VisibilityChanged', this.__visibilityChanged);
@@ -72,12 +82,20 @@ Colibri.UI.Forms.NumberRangePicker = class extends Colibri.UI.Forms.Field {
         this._showProgress();
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _span1Moved(newLeft, newTop) {
         // this._progress.container.css('left', newLeft + 'px');
         this._calculateValue(newLeft, null);
         this._showProgress();
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _span2Moved(newLeft, newTop) {
         // this._progress.container.css('width', newLeft + 'px');
         this._calculateValue(null, newLeft);
@@ -126,6 +144,10 @@ Colibri.UI.Forms.NumberRangePicker = class extends Colibri.UI.Forms.Field {
         this._showProgress();
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _setLeftPoint(left) {
         const width = this._pane.width;
         const perc = Math.ceil((left) * 100 / width);
@@ -149,6 +171,10 @@ Colibri.UI.Forms.NumberRangePicker = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _setRightPoint(left) {
         const width = this._pane.width;
         const perc = Math.ceil((left + 8) * 100 / width);
@@ -169,7 +195,10 @@ Colibri.UI.Forms.NumberRangePicker = class extends Colibri.UI.Forms.Field {
 
     }
 
-
+    /**
+     * @ignore
+     * @private
+     */
     _calculateValue(left1, left2) {
         if(left1 !== null) {
             this._setLeftPoint(left1);
@@ -179,6 +208,10 @@ Colibri.UI.Forms.NumberRangePicker = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _showProgress() {
         let value = this._value;
 
@@ -202,6 +235,10 @@ Colibri.UI.Forms.NumberRangePicker = class extends Colibri.UI.Forms.Field {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _viewPicker() {
 
         if(this._fieldData.params) {
@@ -233,14 +270,14 @@ Colibri.UI.Forms.NumberRangePicker = class extends Colibri.UI.Forms.Field {
     }
 
     /**
-     * 
+     * Value of component
      * @type {Array}
      */
     get value() {
         return this._value;
     }
     /**
-     * 
+     * Value of component
      * @type {Array}
      */
     set value(value) {
@@ -277,6 +314,11 @@ Colibri.UI.Forms.NumberRangePicker = class extends Colibri.UI.Forms.Field {
         this._value = [left1, left2];
         this._showValue();
     }
+    
+    /**
+     * @ignore
+     * @private
+     */
     _showValue() {
         const max = this._fieldData.params.max;
         const min = this._fieldData.params.min;
@@ -305,7 +347,10 @@ Colibri.UI.Forms.NumberRangePicker = class extends Colibri.UI.Forms.Field {
         this._input1.tabIndex = value;
     }
 
-    
+    /**
+     * @ignore
+     * @private
+     */
     _formatNumber(v) {
 
         const unit = this._fieldData.params?.unit;

@@ -113,6 +113,10 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
         this.ClickOnButton();
     }
 
+    /**
+     * @private
+     * @ignore
+     */
     _loadOnDevice() {
         return new Promise((resolve, reject) => {
             const errorHandler = (error) => {
@@ -135,6 +139,7 @@ Colibri.UI.UploadButton = class extends Colibri.UI.ExtendedButton {
     
     /**
      * Perform click on button
+     * @public
      */
     ClickOnButton() {
         if(App.Device.isWeb || App.Device.isElectron) {

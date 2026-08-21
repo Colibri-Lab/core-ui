@@ -55,6 +55,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /** 
      * Registers component events.
      * @protected
+     * @ignore
      */
     _registerEvents() {
         super._registerEvents();
@@ -105,6 +106,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /** 
      * Initializes map instance and map-level handlers. 
      * @private 
+     * @ignore
      */
     _loadMap() {
 
@@ -240,6 +242,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /** 
      * Reads map bbox/zoom/center/rotation to internal properties. 
      * @private
+     * @ignore
      */
     _getProperties() {
         const bounds = this._map.getBounds();
@@ -261,6 +264,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * @param {Colibri.Events.Event} event
      * @param {*} args
      * @private
+     * @ignore
      */
     __layersSwitchChanged(event, args) {
         this.SwitchToLayer(args.current);
@@ -269,6 +273,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /** 
      * Centers map to stored center/zoom.
      * @private
+     * @ignore
      */
     __zoomSetCenterClicked() {
         this._map.flyTo({ center: this._center, zoom: this._zoom });
@@ -279,6 +284,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * @param {Colibri.Events.Event} event
      * @param {*} args
      * @private
+     * @ignore
      */
     __zoomRotateRotating(event, args) {
         this._map.rotateTo(args.angle);
@@ -289,6 +295,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * @param {Colibri.Events.Event} event
      * @param {*} args
      * @private
+     * @ignore
      */
     __zoomRotateRotated(event, args) {
         this._map.rotateTo(args.angle);
@@ -297,6 +304,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /** 
      * Zoom-in button handler.
      * @private
+     * @ignore
      */
     __zoomZoomInClicked() {
         if (this.zoom >= 18) {
@@ -307,6 +315,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /** 
      * Zoom-out button handler.
      * @private
+     * @ignore
      */
     __zoomZoomOutClicked() {
         if (this.zoom <= 1) {
@@ -318,7 +327,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /**
      * Moves camera immediately.
      * 
-     * @param {[Number, Number]|{lng:Number,lat:Number}} center
+     * @param {*} center - [Number, Number]|{lng:Number,lat:Number}
      * @param {Number} zoom
      * @public
      */
@@ -360,7 +369,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     }
     /**
      * Sets map center.
-     * @param {[Number, Number]|{lng:Number,lat:Number}} latLngLike
+     * @param {*} latLngLike - [Number, Number]|{lng:Number,lat:Number}
      * @public
      */
     SetCenter(latLngLike) {
@@ -422,7 +431,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /**
      * Fits map to bbox.
      * 
-     * @param {Array<Array<Number>>} bbox
+     * @param {Array} bbox - Array<Array<Number>>
      * @public
      */
     SetBBox(bbox) {
@@ -435,7 +444,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /**
      * Calculates bbox for points with fixed padding.
      * 
-     * @param {Array<{lat:Number,lng:Number}>} points
+     * @param {Array} points - Array<{lat:Number,lng:Number}>
      * 
      * @returns {Array<Array<Number>>}
      * @private
@@ -491,7 +500,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /**
      * Fits map to provided feature points.
      * 
-     * @param {Array<{lat:Number,lng:Number}>} featuresPoints
+     * @param {Array} featuresPoints - Array<{lat:Number,lng:Number}>
      * @public
      */
     ShowFeatures(featuresPoints) {
@@ -555,8 +564,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * Creates administrative layers from style definitions.
      * 
      * @param {String} sourceName
-     * 
-     * @param {{polygons?:Object,lines?:Object,points?:Object,texts?:Object}} styles
+     * @param {Object} styles
      * @private
      */
     _createLayers(sourceName, styles) {
@@ -742,7 +750,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /**
      * Adds tile source/style layer option.
      * 
-     * @param {{name:String,title?:String,url:String,type?:String,size?:Number,minzoom?:Number,maxzoom?:Number,style?:Object}} tile
+     * @param {Object} tile - {name:String,title?:String,url:String,type?:String,size?:Number,minzoom?:Number,maxzoom?:Number,style?:Object}
      * @public
      */
     AddTiles(tile) {
@@ -828,9 +836,8 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /**
      * Creates data sources by name and type.
      * 
-     * @param {Object<String,String>} sources
-     * 
-     * @param {Object<String,Object>} properties
+     * @param {Object} sources - Object<String,String>
+     * @param {Object} properties - Object<String,Object>
      * @public
      */
     CreateSources(sources, properties) {
@@ -1059,7 +1066,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /**
      * Adds or updates objects in source.
      * @param {String} name
-     * @param {Array<Object>} objectsJson
+     * @param {Array} objectsJson - Array<Object>
      * @param {Boolean} updateIfExists
      * @param {Boolean} removeIfNotFoundInObjects
      * @private
@@ -1110,7 +1117,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /** 
      * Removes objects from source.
      * @param {String} name 
-     * @param {Array<String|Number>} objectIds
+     * @param {Array} objectIds - Array<String|Number>
      * @private 
      */
     _sourceRemoveObjects(name, objectIds) {
@@ -1362,7 +1369,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /** 
      * Adds or updates fills in source.
      * @param {String} name 
-     * @param {Array<Object>} objectsJson 
+     * @param {Array} objectsJson - Array of GeoJSON features Array<Object>
      * @param {Boolean} updateIfExists 
      * @param {Boolean} removeIfNotFoundInObjects
      * @private 
@@ -1411,7 +1418,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /** 
      * Removes fills from source.
      * @param {String} name 
-     * @param {Array<String|Number>} objectIds
+     * @param {Array} objectIds - Array<String|Number>
      * @private 
      */
     _sourceRemoveFills(name, objectIds) {
@@ -1507,7 +1514,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * 
      * @param {String|Number} id
      * @param {String} name
-     * @returns {{lat:Number,lng:Number}|null}
+     * @returns {Object|null} - {lat:Number,lng:Number}
      * @public 
      */
     MarkerPosition(id, name) {
@@ -1528,7 +1535,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * Adds or updates marker.
      * @param {String} source
      * @param {String|Number} name
-     * @param {{lat:Number,lng:Number}} latLngLike
+     * @param {Object} latLngLike - {lat:Number,lng:Number}
      * @param {String|null} icon
      * @param {Number} opacity
      * @param {Number} azimuth
@@ -1551,7 +1558,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /**
      * Adds or updates markers in batch.
      * @param {String} source
-     * @param {Array<Object>} latLngsLike
+     * @param {Array} latLngsLike - Array<Object>
      * @param {String|null} icon
      * @param {Boolean} updateIfExists
      * @param {Boolean} removeIfNotFoundInObjects
@@ -1646,7 +1653,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
      * Adds circle to source.
      * @param {String} source 
      * @param {String|Number} name 
-     * @param {{lat:Number,lng:Number,radius?:Number,color?:String}} latLngLike 
+     * @param {Object} latLngLike - {lat:Number,lng:Number,radius?:Number,color?:String}
      * @param {Number} radius 
      * @param {String} color 
      * @public
@@ -1700,7 +1707,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /** 
      * Adds or updates circles in source.
      * @param {String} source 
-     * @param {Array<Object>} latLngsLike 
+     * @param {Array} latLngsLike - Array<Object>
      * @param {Number} radius 
      * @param {String} color 
      * @param {Boolean} updateIfExists 
@@ -1733,7 +1740,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /** 
      * Adds or updates fills in source.
      * @param {String} source 
-     * @param {Array<Object>} latLngsLike 
+     * @param {Array} latLngsLike - Array<Object>
      * @param {Boolean} updateIfExists 
      * @param {Boolean} removeIfNotFoundInObjects 
      * @public
@@ -1767,7 +1774,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /** 
      * Adds or updates lines in source.
      * @param {String} source 
-     * @param {Array<Object>} geolineObjects 
+     * @param {Array} geolineObjects - Array<Object>
      * @param {String} color 
      * @param {Number} weight 
      * @param {Boolean} updateIfExists 
@@ -1899,7 +1906,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /** 
      * Deletes lines from source that do not match the provided list of IDs.
      * @param {String} sourceName 
-     * @param {Array<String|Number>} except 
+     * @param {Array} except - Array<String|Number>
      * @public
      */
     DeleteLinesAllExcept(sourceName, except) {
@@ -1923,7 +1930,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /** 
      * Deletes points from source that do not match the provided list of IDs.
      * @param {String} sourceName 
-     * @param {Array<String|Number>} except 
+     * @param {Array} except - Array<String|Number>
      * @public
      */
     DeletePointsAllExcept(sourceName, except) {
@@ -1947,7 +1954,7 @@ Colibri.UI.Maps.MapLibre = class extends Colibri.UI.Pane {
     /** 
      * Deletes objects from source that do not match the provided list of IDs.
      * @param {String} sourceName 
-     * @param {Array<String|Number>} except 
+     * @param {Array} except - Array<String|Number>
      * @public
      */
     DeleteObjectsAllExcept(sourceName, except) {

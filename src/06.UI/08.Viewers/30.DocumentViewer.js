@@ -1,4 +1,5 @@
 /**
+ * Document viewer component
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
@@ -52,6 +53,7 @@ Colibri.UI.DocumentViewer = class extends Colibri.UI.Viewer {
      * @param {string} mimetype mimetype of file
      * @returns {boolean}
      * @private 
+     * @ignore
      */
     _isFileViewable(mimetype) {
         let found = false;

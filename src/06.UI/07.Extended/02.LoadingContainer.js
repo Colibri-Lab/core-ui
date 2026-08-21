@@ -113,6 +113,7 @@ Colibri.UI.LoadingContainer = class extends Colibri.UI.Component {
      * Start progress
      * @param {number} timer timer value
      * @param {number} speed speed
+     * @public
      */
     StartProgress(timer, speed) {
         this.BringToFront();
@@ -121,6 +122,7 @@ Colibri.UI.LoadingContainer = class extends Colibri.UI.Component {
 
     /**
      * Pause timer
+     * @public
      */
     PauseProgress() {
         this.BringToFront();
@@ -129,6 +131,7 @@ Colibri.UI.LoadingContainer = class extends Colibri.UI.Component {
 
     /**
      * Stop timer
+     * @public
      */
     StopProgress(timer) {
         this.BringToFront();
@@ -137,6 +140,7 @@ Colibri.UI.LoadingContainer = class extends Colibri.UI.Component {
 
     /**
      * Show component
+     * @public
      */
     Show() {
         super.Show();

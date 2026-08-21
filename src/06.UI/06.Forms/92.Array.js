@@ -1,4 +1,5 @@
 /**
+ * Array field component
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
@@ -7,6 +8,8 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
     /**
      * Render field component
+     * @protected
+     * @ignore
      */
     RenderFieldContainer() {
 
@@ -88,6 +91,12 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         return this._link;
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __linkClicked(event, args) {
         if (this.readonly || !this.enabled) {
             return;
@@ -108,6 +117,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
      * Adds new object to array
      * @param {Object} value add new row
      * @returns {Colibri.UI.Forms.Object}
+     * @public
      */
     AddNew(value) {
         if (this.readonly || !this.enabled) {
@@ -127,6 +137,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
      * @private
      * @param {object} value object for add
      * @returns {Colibri.UI.Forms.Object}
+     * @ignore
      */
     _addNew(value = null) {
         // const containerElement = this.contentContainer.container.querySelector('.array-component-container');
@@ -234,6 +245,12 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         return object;
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __objectChanged(event, args) {
         if (this._fieldData.params && this._fieldData.params.title !== null) {
             const f = eval(this._fieldData.params.title);
@@ -254,6 +271,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
 
     /**
      * Focus on component to the first object of array
+     * @public
      */
     Focus(element = 'firstVisibleChild') {
         if(!this._itemsContainer.children) {
@@ -353,6 +371,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
      * Searches for objects in array
      * @param {string} name field to search for
      * @returns {Array<Colibri.UI.Forms.Object>}
+     * @public
      */
     Fields(name) {
         if (!this._itemsContainer) {
@@ -376,6 +395,7 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
     /**
      * Cycles all rows in array
      * @param {Function} callback callback for each item
+     * @public
      */
     ForEveryField(callback) {
         this._itemsContainer.ForEach(callback);
@@ -406,7 +426,10 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         return this._itemsContainer;
     }
 
-    /** @proptected */
+    /**
+     * @ignore 
+     * @protected
+     */
     _calcRuntimeValues(rootValue = null) {
         if (!this.needRecalc) {
             return;
@@ -449,14 +472,26 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         this.ForEveryField((name, component) => component._runGenerateOfFieldData());
     }
 
+    /**
+     * Clear all rows
+     * @public
+     */
     ClearAllRows() {
         this._itemsContainer.Clear();
     }
 
+    /**
+     * Hide add link
+     * @public
+     */
     HideAddLink() {
         this._linkCanBeShown = false;
         this._link.shown = false;
     }
+    /**
+     * Show add link
+     * @public
+     */
     ShowAddLink() {
         this._linkCanBeShown = true;
         this._link.shown = true;
@@ -477,6 +512,10 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         this._copyjson = value;
         this._showCopyjson();
     }
+    /**
+     * @ignore
+     * @private
+     */
     _showCopyjson() {
         if (this._copyjson) {
             this.AddHandler('ContextMenu', this.__thisContextMenu);
@@ -486,6 +525,12 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
             this.RemoveHandler('ContextMenuItemClicked', this.__thisContextMenuItemClicked);
         }        
     }
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisContextMenu(event, args) {
         this.contextmenu = [
             {title: '#{ui-fields-array-copyjson}', name: 'copyjson'},
@@ -496,6 +541,12 @@ Colibri.UI.Forms.Array = class extends Colibri.UI.Forms.Field {
         args.domEvent.preventDefault();
         return false;
     }
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisContextMenuItemClicked(event, args) {
         if (args.menuData.name === 'copyjson') {
             const data = JSON.stringify(this.value, null, 4);

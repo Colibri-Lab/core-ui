@@ -1,4 +1,5 @@
 /**
+ * Select field component
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
@@ -7,6 +8,8 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
 
     /**
      * Render field component
+     * @protected
+     * @ignore
      */
     RenderFieldContainer() {
 
@@ -82,6 +85,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
     /**
      * Register events
      * @protected
+     * @ignore
      */
     _registerEvents() {
         super._registerEvents();
@@ -90,6 +94,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
 
     /**
      * Reload values to component
+     * @public
      */
     ReloadValues() {
         this.values = this._fieldData.values;
@@ -140,6 +145,10 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
     /**
      * Run lookup
      * @param {(Object|function)} value
+     * @returns {Promise}
+     * @private
+     * @ignore
+     * @async
      */
     _setLookup(value) {
         this._lookup = value;
@@ -181,6 +190,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
 
     /**
      * Focus on component
+     * @public
      */
     Focus() {
         this._input.Focus();

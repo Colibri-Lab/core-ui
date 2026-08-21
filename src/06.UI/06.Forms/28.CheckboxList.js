@@ -1,4 +1,5 @@
 /**
+ * Checkbox list field component
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
@@ -7,6 +8,8 @@ Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
 
     /**
      * Render field component
+     * @protected
+     * @ignore
      */
     RenderFieldContainer() {
 
@@ -47,6 +50,7 @@ Colibri.UI.Forms.CheckboxList = class extends Colibri.UI.Forms.Field {
 
     /**
      * Focus on component
+     * @public
      */
     Focus() {
         this.contentContainer.Children('firstChild')?.Focus();

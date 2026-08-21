@@ -1,4 +1,5 @@
 /**
+ * File field component
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
@@ -7,6 +8,8 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
 
     /**
      * Render field component
+     * @protected
+     * @ignore
      */
     RenderFieldContainer() {
 
@@ -56,6 +59,8 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
     /** 
      * @ignore
      * @private 
+     * @param {Coibri.Events.Event} event
+     * @param {*} args
      */
     __thisClicked(event, args) {
         if (this._value instanceof File) {
@@ -66,6 +71,12 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /** 
+     * @ignore
+     * @private 
+     * @param {Coibri.Events.Event} event
+     * @param {*} args
+     */
     __inputFileChanged(event, args) {
         let files = this._input.Files();
         if (files) {
@@ -86,6 +97,12 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /** 
+     * @ignore
+     * @private 
+     * @param {Coibri.Events.Event} event
+     * @param {*} args
+     */
     __inputInputFileChosen(event, args) {
         if (args.files) {
             this._validate(args.files);
@@ -102,6 +119,12 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
         }
     }
 
+    /** 
+     * @ignore
+     * @private 
+     * @param {Coibri.Events.Event} event
+     * @param {*} args
+     */
     __removeButtonClicked(event, args) {
         this._value = null;
         this._clearInput();
@@ -280,6 +303,7 @@ Colibri.UI.Forms.File = class extends Colibri.UI.Forms.Field {
 
     /**
      * Focus on component
+     * @public
      */
     Focus() {
         this._input.Focus();

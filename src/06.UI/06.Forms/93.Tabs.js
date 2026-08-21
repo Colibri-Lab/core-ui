@@ -1,4 +1,5 @@
 /**
+ * Tabs field component
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
@@ -7,6 +8,8 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
     /**
      * Render field component
+     * @protected
+     * @ignore
      */
     RenderFieldContainer() {
         this.AddClass('app-component-tabs-field');
@@ -46,22 +49,49 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisSelectionChanged(event, args) {
         // ! нужно видимо убрать событие TabChanged
         // this.Dispatch('TabChanged', args);
         this.Dispatch('Changed', args);
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisTabClicked(event, args) {
         this.Dispatch('TabClicked', args);
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisChanged(event, args) {
         if (!this.root) {
             this._hideAndShow();
         }
     }
 
+    /**
+     * Render field component
+     * @protected
+     * @ignore
+     * @param {String} name field name
+     * @param {Object} fieldData field data
+     * @param {*} value field value
+     * @param {Boolean} shown field shown
+     */
     _renderField(name, fieldData, value, shown = true) {
 
         const field = Object.cloneRecursive(fieldData);
@@ -113,6 +143,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
     /**
      * Focus on component to the first object of array
+     * @public
      */
     Focus(element = 'firstChild') {
         this._tabs.Focus(element);
@@ -213,6 +244,10 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     */
     _runGenerateOfFieldData() {
         Object.forEach(this._fieldData.fields, (name, fieldData) => {
             if (!fieldData || !this.contentContainer) {
@@ -300,6 +335,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
      * Searches for field
      * @param {string} name field to search for
      * @returns {Array<Colibri.UI.Forms.Object>}
+     * @public
      */
     Fields(name = null) {
         if (!this._tabs) {
@@ -311,6 +347,7 @@ Colibri.UI.Forms.Tabs = class extends Colibri.UI.Forms.Object {
     /**
      * Cycles all rows in array
      * @param {Function} callback callback for each item
+     * @public
      */
     ForEveryField(callback) {
         Object.forEach(this._tabs.components, callback);

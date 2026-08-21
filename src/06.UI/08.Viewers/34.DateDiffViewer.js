@@ -1,4 +1,5 @@
 /**
+ * Date diff viewer component
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
@@ -13,7 +14,7 @@ Colibri.UI.DateDiffViewer = class extends Colibri.UI.Viewer {
     constructor(name, container) {
         /* создаем компонент и передаем шаблон */
         super(name, container);
-        this.AddClass('colibri-ui-daterangeviewer');
+        this.AddClass('colibri-ui-datediffviewer');
 
         this._value = null;
     }

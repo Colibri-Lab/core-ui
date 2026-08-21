@@ -1,4 +1,5 @@
 /**
+ * Passport field component
  * @class
  * @extends Colibri.UI.Forms.Field
  * @memberof Colibri.UI.Forms
@@ -7,6 +8,8 @@ Colibri.UI.Forms.Passport = class extends Colibri.UI.Forms.Field {
 
     /**
      * Render field component
+	 * @protected
+	 * @ignore
      */
 	RenderFieldContainer() {
 

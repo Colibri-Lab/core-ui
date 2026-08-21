@@ -1,4 +1,5 @@
 /**
+ * Grid file viewer component
  * @class
  * @memberof Colibri.UI
  * @extends Colibri.UI.Viewer
@@ -62,6 +63,7 @@ Colibri.UI.GridFileViewer = class extends Colibri.UI.Viewer {
     /**
      * Creates a context menu button if the viewer has a context menu 
      * @private 
+     * @ignore
      */
     _createContextMenuButton() {
         if(!this._hasContextMenu || this.Children(this._name + '-contextmenu-icon-parent')) {
@@ -96,6 +98,7 @@ Colibri.UI.GridFileViewer = class extends Colibri.UI.Viewer {
     /**
      * Removes a context menu button if the viewer has a context menu 
      * @private 
+     * @ignore
      */
     _removeContextMenuButton() {
         if(this._hasContextMenu && this.Children(this._name + '-contextmenu-icon-parent')) {

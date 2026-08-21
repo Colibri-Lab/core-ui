@@ -100,6 +100,7 @@ Colibri.UI.LoadingBallun = class extends Colibri.UI.Component {
      * @param {string} errorText error text
      * @param {string} completeIcon complete icon
      * @param {string} errorIcon error icon
+     * @public
      */
     Start(loadingText, completeText, errorText, completeIcon, errorIcon) {
         this._completeIcon = completeIcon;
@@ -116,6 +117,7 @@ Colibri.UI.LoadingBallun = class extends Colibri.UI.Component {
 
     /**
      * Set error
+     * @public
      */
     Error() {
         this.RemoveClass('-loading');
@@ -129,6 +131,7 @@ Colibri.UI.LoadingBallun = class extends Colibri.UI.Component {
 
     /**
      * Complete
+     * @public
      */
     Complete() {
         this.RemoveClass('-loading');

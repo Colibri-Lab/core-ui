@@ -48,6 +48,7 @@ Colibri.UI.LinkEditor = class extends Colibri.UI.Editor {
 
     /**
      * @ignore 
+     * @private
      */
     _showValue() {
         this._text.value = this.value;

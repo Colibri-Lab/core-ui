@@ -26,6 +26,7 @@ Colibri.UI.ImagesViewer = class extends Colibri.UI.Viewer {
     /**
      * Register events
      * @protected
+     * @ignore
      */
     _registerEvents() {
         super._registerEvents();
@@ -49,6 +50,7 @@ Colibri.UI.ImagesViewer = class extends Colibri.UI.Viewer {
     }
     /**
      * @ignore
+     * @private
      */
     _showValue() {
         this._grid.Clear();

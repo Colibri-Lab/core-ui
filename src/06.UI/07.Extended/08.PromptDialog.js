@@ -22,6 +22,12 @@ Colibri.UI.PromptDialog = class extends Colibri.UI.Window {
 
     }
 
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
     __thisKeyDown(event, args) {
         if (args.domEvent.code == 'Enter' || args.domEvent.code == 'NumpadEnter') {
             this._save.Dispatch('Clicked');
@@ -43,6 +49,7 @@ Colibri.UI.PromptDialog = class extends Colibri.UI.Window {
      * @param {object} fields fields object
      * @param {string} button button title
      * @returns {Promise}
+     * @public
      */
     Show(title, fields, button, data = {}, width = null, closable = true) {
         return new Promise((resolve, reject) => {
