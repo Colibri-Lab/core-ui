@@ -1795,7 +1795,7 @@ Object.toPlain = function (object, prefix = '', except = [], useCamelCase = true
     } else {
         exceptFn = except;
     }
-    }
+    
     let ret = {};
     Object.forEach(object, (k, v) => {
         const exceptResult = except(k, v);

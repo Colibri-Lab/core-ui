@@ -68,7 +68,7 @@ Colibri.UI.PaneSwitcher = class extends Colibri.UI.Pane {
         return this._value;
     }
     /**
-     * Show/Hide element
+ * Show/Hide element
      * @type {Number|String}
      */
     set value(value) {
