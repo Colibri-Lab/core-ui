@@ -395,7 +395,7 @@ Float64Array.prototype.min = function () {
  * const arr2 = Array.coalesce(5); // [5]
  * ```
  */
-Array.coalesce = function(v) {
+Array.coalesce = function (v) {
     return Array.isArray(v) ? v : [v];
 }
 
@@ -1795,7 +1795,7 @@ Object.toPlain = function (object, prefix = '', except = [], useCamelCase = true
     } else {
         exceptFn = except;
     }
-    
+
     let ret = {};
     Object.forEach(object, (k, v) => {
         const exceptResult = exceptFn(k, v);
@@ -6349,12 +6349,12 @@ if (!Element.prototype.matches) {
      * @prototypeof Element
      * @method
      */
-    Element.prototype.matches = function() {
-        return (Element.prototype.matchesSelector || 
-                Element.prototype.msMatchesSelector || 
-                Element.prototype.webkitMatchesSelector || 
-                Element.prototype.mozMatchesSelector || 
-                Element.prototype.oMatchesSelector).call(this, arguments[0]);
+    Element.prototype.matches = function () {
+        return (Element.prototype.matchesSelector ||
+            Element.prototype.msMatchesSelector ||
+            Element.prototype.webkitMatchesSelector ||
+            Element.prototype.mozMatchesSelector ||
+            Element.prototype.oMatchesSelector).call(this, arguments[0]);
     };
 };
 
