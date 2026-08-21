@@ -1785,12 +1785,16 @@ Object.insertAt = function (object, key, value, index) {
  * @example
  * ```
  * const nestedObj = {a: {b: 1, c: 2}, d: 3};
- * const plainObj = Object.toPlain(nestedObj); // {a-b: 1, a-c: 2, d: 3}
+ * const plainObj = Object.toPlain(nestedObj); // {'a-b': 1, 'a-c': 2, 'd': 3}
  * ```
  */
 Object.toPlain = function (object, prefix = '', except = [], useCamelCase = true, splitter = '-') {
+    let exceptFn = null;
     if (Array.isArray(except)) {
-        except = (k, v) => except.indexOf(k) === -1 ? -1 : (Object.isObject(v) ? 0 : 1);
+        exceptFn = (k, v) => except.indexOf(k) === -1 ? -1 : (Object.isObject(v) ? 0 : 1);
+    } else {
+        exceptFn = except;
+    }
     }
     let ret = {};
     Object.forEach(object, (k, v) => {
