@@ -23,7 +23,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * @param {string|Colibri.UI.Event} event event to handle
      * @param {*} args arguments for event 
      */
-    static __nullHandler(event, args) { 
+    static __nullHandler(event, args) {
         // do nothing
     }
 
@@ -34,10 +34,10 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * @param {*} args arguments for event 
      * @public
      */
-    static __disableHandler(event, args) { 
-        args.domEvent?.stopPropagation(); 
-        args.domEvent?.preventDefault(); 
-        return false; 
+    static __disableHandler(event, args) {
+        args.domEvent?.stopPropagation();
+        args.domEvent?.preventDefault();
+        return false;
     }
 
     /**
@@ -146,25 +146,25 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * @private
      */
     static __elementsToComponentMap = {
-        'div': { component: 'Colibri.UI.Pane', element: 'div', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
-        'span': { component: 'Colibri.UI.TextSpan', element: null, attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
-        'b': { component: 'Colibri.UI.Strong', element: 'b', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
-        'strong': { component: 'Colibri.UI.Strong', element: 'strong', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
-        'i': { component: 'Colibri.UI.TextSpan', element: 'i', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
-        'p': { component: 'Colibri.UI.Pane', element: 'p', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
-        'ul': { component: 'Colibri.UI.UnorderedList', element: 'ul', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
-        'ol': { component: 'Colibri.UI.OrderedList', element: 'ol', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
-        'menu': { component: 'Colibri.UI.MenuList', element: 'menu', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
-        'li': { component: 'Colibri.UI.ListItem', element: 'li', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
-        'img': { component: 'Colibri.UI.Img', element: 'img', attrs: { source: '{src}', className: '{class}', textStyle: '{style}', elementID: '{id}'} },
-        'h1': { component: 'Colibri.UI.H1', element: 'h1', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
-        'h2': { component: 'Colibri.UI.H2', element: 'h2', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
-        'h3': { component: 'Colibri.UI.H3', element: 'h3', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
-        'h4': { component: 'Colibri.UI.H4', element: 'h4', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
-        'h5': { component: 'Colibri.UI.H5', element: 'h5', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
-        'h6': { component: 'Colibri.UI.H6', element: 'h6', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
-        'hr': { component: 'Colibri.UI.HR', element: 'hr', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}'} },
-        'a': { component: 'Colibri.UI.Link', element: 'a', attrs: {className: '{class}', textStyle: '{style}', elementID: '{id}', href: '{href}', target: '{target}'} },
+        'div': { component: 'Colibri.UI.Pane', element: 'div', attrs: { className: '{class}', textStyle: '{style}', elementID: '{id}' } },
+        'span': { component: 'Colibri.UI.TextSpan', element: null, attrs: { className: '{class}', textStyle: '{style}', elementID: '{id}' } },
+        'b': { component: 'Colibri.UI.Strong', element: 'b', attrs: { className: '{class}', textStyle: '{style}', elementID: '{id}' } },
+        'strong': { component: 'Colibri.UI.Strong', element: 'strong', attrs: { className: '{class}', textStyle: '{style}', elementID: '{id}' } },
+        'i': { component: 'Colibri.UI.TextSpan', element: 'i', attrs: { className: '{class}', textStyle: '{style}', elementID: '{id}' } },
+        'p': { component: 'Colibri.UI.Pane', element: 'p', attrs: { className: '{class}', textStyle: '{style}', elementID: '{id}' } },
+        'ul': { component: 'Colibri.UI.UnorderedList', element: 'ul', attrs: { className: '{class}', textStyle: '{style}', elementID: '{id}' } },
+        'ol': { component: 'Colibri.UI.OrderedList', element: 'ol', attrs: { className: '{class}', textStyle: '{style}', elementID: '{id}' } },
+        'menu': { component: 'Colibri.UI.MenuList', element: 'menu', attrs: { className: '{class}', textStyle: '{style}', elementID: '{id}' } },
+        'li': { component: 'Colibri.UI.ListItem', element: 'li', attrs: { className: '{class}', textStyle: '{style}', elementID: '{id}' } },
+        'img': { component: 'Colibri.UI.Img', element: 'img', attrs: { source: '{src}', className: '{class}', textStyle: '{style}', elementID: '{id}' } },
+        'h1': { component: 'Colibri.UI.H1', element: 'h1', attrs: { className: '{class}', textStyle: '{style}', elementID: '{id}' } },
+        'h2': { component: 'Colibri.UI.H2', element: 'h2', attrs: { className: '{class}', textStyle: '{style}', elementID: '{id}' } },
+        'h3': { component: 'Colibri.UI.H3', element: 'h3', attrs: { className: '{class}', textStyle: '{style}', elementID: '{id}' } },
+        'h4': { component: 'Colibri.UI.H4', element: 'h4', attrs: { className: '{class}', textStyle: '{style}', elementID: '{id}' } },
+        'h5': { component: 'Colibri.UI.H5', element: 'h5', attrs: { className: '{class}', textStyle: '{style}', elementID: '{id}' } },
+        'h6': { component: 'Colibri.UI.H6', element: 'h6', attrs: { className: '{class}', textStyle: '{style}', elementID: '{id}' } },
+        'hr': { component: 'Colibri.UI.HR', element: 'hr', attrs: { className: '{class}', textStyle: '{style}', elementID: '{id}' } },
+        'a': { component: 'Colibri.UI.Link', element: 'a', attrs: { className: '{class}', textStyle: '{style}', elementID: '{id}', href: '{href}', target: '{target}' } },
     }
 
     /**
@@ -473,7 +473,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
             this.__renderBoundedValues(data, path);
         }
     }
-    
+
     /**
      * Default touch end handler, dispatches event to component and removes touch move and touch end handlers
      * @param {Event} e event to handle
@@ -799,7 +799,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         } else if ((value === 'true' || value === 'false') && type === 'Boolean') {
             return value === 'true';
         } else if (typeof value === 'string' && type === 'Number') {
-            if(value.isFunction()) {
+            if (value.isFunction()) {
                 value = value.convertToFunction();
                 value = value(value, this);
             }
@@ -815,7 +815,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
                 try {
                     eval('value = ' + value + ';');
                 } catch (e) {
-                    
+
                 }
             } else {
                 try {
@@ -1005,7 +1005,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         if (!parent) {
             parent = this._element;
         }
-        
+
         if (!root) {
             root = this;
         }
@@ -1062,13 +1062,13 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
                     }
                 }
                 else {
-                    if (parent instanceof Colibri.UI.Component) {                        
+                    if (parent instanceof Colibri.UI.Component) {
                         const e = element.clone(element.attr('xmlns') ? element.attr('xmlns') : parent.container.attr('xmlns'));
                         parent.container.append(e);
                         this.ProcessChildren(element.childNodes, e, true, root);
                     } else {
                         const e = element.clone(element.attr('xmlns') ? element.attr('xmlns') : parent.attr('xmlns'));
-                        parent.append(e);                        
+                        parent.append(e);
                         this.ProcessChildren(element.childNodes, e, true, root);
                     }
                 }
@@ -1183,6 +1183,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         this.RegisterEvent('RefreshCheck', false, 'Pull to refresh check event');
         this.RegisterEvent('RefreshPosition', false, 'Pull to refresh touch position');
         this.RegisterEvent('RefreshRequested', false, 'Pull to refresh check event');
+        this.RegisterEvent('Binding', false, 'When the component binding value changes');
 
         this.RegisterEvent('PointerControlStart', false, 'Pointer control events');
         this.RegisterEvent('PointerControlEnd', false, 'Pointer control events');
@@ -1725,7 +1726,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
     set textStyle(value) {
         try {
             this.styles = value.toObject([';', ':']);
-        } catch(e) {
+        } catch (e) {
             console.log('Error style', value);
         }
     }
@@ -1736,7 +1737,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      */
     get textStyle() {
         return '';
-    } 
+    }
 
     /**
      * Removes style of component element
@@ -2503,11 +2504,17 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         this._binding = value;
         if (value instanceof Colibri.UI.Component) {
             this.__renderBoundedValues(value.value);
-            value.AddHandler(['Changed', 'KeyUp'], (event, args) => this.__renderBoundedValues(value.value));
+            this.Dispatch('Binding', { data: value.value, path: null });
+
+            value.AddHandler(['Changed', 'KeyUp'], (event, args) => {
+                this.__renderBoundedValues(value.value);
+                this.Dispatch('Binding', { data: value.value, path: null });
+            });
             return;
 
         } else if (typeof value !== 'string') {
-            this.__renderBoundedValues(value);
+            this.__renderBoundedValues(value, null);
+            this.Dispatch('Binding', { data: value, path: null });
             return;
         }
 
@@ -2526,10 +2533,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
             Promise.all(promises).then(responses => {
                 for (let i = 0; i < responses.length; i++) {
                     this.__renderBoundedValues(responses[i], pathsToLoad[i]);
+                    this.Dispatch('Binding', { data: responses[i], path: pathsToLoad[i] });
                 }
                 this._storage.AddPathHandler(pathsToLoad, [this, this.__bindingHandler]);
             }).catch(response => {
                 this.__renderBoundedValues(null, pathsToLoad);
+                this.Dispatch('Binding', { data: null, path: pathsToLoad });
                 this._storage.AddPathHandler(pathsToLoad, [this, this.__bindingHandler]);
             });
 
@@ -2537,10 +2546,12 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
         else {
             this._storage.AsyncQuery(value).then(data => {
                 this.__renderBoundedValues(data, value);
+                this.Dispatch('Binding', { data: data, path: value });
                 this._storage.AddPathHandler(value, [this, this.__bindingHandler]);
             }).catch((response) => {
                 // App.Notices.Add(new Colibri.UI.Notice(response, Colibri.UI.Notice.Error));
                 this.__renderBoundedValues(null, value);
+                this.Dispatch('Binding', { data: null, path: value });
                 this._storage.AddPathHandler(value, [this, this.__bindingHandler]);
             });
         }
@@ -2553,7 +2564,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      */
     ReloadBinding() {
         if (this._binding && this._binding instanceof Colibri.UI.Component) {
-            this.__renderBoundedValues(this._binding.value);
+            this.__renderBoundedValues(this._binding.value, null);
+            this.Dispatch('Binding', { data: this._binding.value, path: null });
             return;
         }
         if (this._storage && this._binding) {
@@ -2569,6 +2581,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
                 Promise.all(promises).then(responses => {
                     for (let i = 0; i < responses.length; i++) {
                         this.__renderBoundedValues(responses[i], pathsToLoad[i]);
+                        this.Dispatch('Binding', { data: responses[i], path: pathsToLoad[i] });
                     }
                 });
             }
@@ -2576,6 +2589,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
                 this._storage.AsyncQuery(this._binding).then((data) => {
                     if (this._element && this.__renderBoundedValues) {
                         this.__renderBoundedValues(data, this._binding);
+                        this.Dispatch('Binding', { data: data, path: this._binding });
                     }
                 });
             }
@@ -2811,8 +2825,8 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      */
     KeepInMind() {
         if (this._container) {
-            this._hideData = { index: this.renderedIndex, parent: this._element.parentElement };
-            this._element.tag('containedAt', this._element.parentElement);
+            this._hideData = { index: this.renderedIndex, parent: this._element?.parentElement };
+            this._element.tag('containedAt', this._element?.parentElement);
             this.Disconnect();
             this.Dispatch('Hidden', {});
             this._sendEventToChilds('Hidden', {});
@@ -3112,7 +3126,7 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
             parentEl = parent.container;
         }
         if (parentEl) {
-            if(!this._element.inInViewport(parentEl)) {
+            if (!this._element.inInViewport(parentEl)) {
                 if (!hr) {
                     this._element.ensureInViewport(parentEl, top);
                 } else {
@@ -3735,9 +3749,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
             cmp.shown = true;
             if (cmpData.attrs) {
                 Object.forEach(cmpData.attrs, (attr, prop) => {
-                    if(prop.startsWith('{') && prop.endsWith('}')) {
+                    if (prop.startsWith('{') && prop.endsWith('}')) {
                         prop = element.getAttribute(prop.replaceAll('{', '').replaceAll('}', ''));
-                        if(!prop) {
+                        if (!prop) {
                             return true;
                         }
                     }
@@ -3750,19 +3764,19 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
 
         for (const node of element.childNodes) {
             if (node.nodeType === Node.ELEMENT_NODE) {
-                if(node.nodeName === 'component') {
+                if (node.nodeName === 'component') {
                     cmp.ProcessChildren([node], cmp);
                 } else {
                     Colibri.UI.Component.ConvertHtmlToComponents(node, cmp);
                 }
-            } else if(node.nodeType === Node.TEXT_NODE && node.textContent.trimString(' ').trimString('\n').trimString('\r').trimString('\t') != '') {
+            } else if (node.nodeType === Node.TEXT_NODE && node.textContent.trimString(' ').trimString('\n').trimString('\r').trimString('\t') != '') {
                 const textContent = new Colibri.UI.TextSpan(null, cmp);
                 textContent.shown = true;
                 textContent.value = node.textContent;
             }
         }
 
-        if(cmp.children === 1 && cmp.Children('firstChild') instanceof Colibri.UI.TextSpan) {
+        if (cmp.children === 1 && cmp.Children('firstChild') instanceof Colibri.UI.TextSpan) {
             cmp.value = cmp.Children('firstChild').value;
         }
 

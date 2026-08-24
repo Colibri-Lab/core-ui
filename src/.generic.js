@@ -600,7 +600,7 @@ Array.toObject = function (a) {
  * @method
  * @static
  * @param {Array} arr - The array to search.
- * @param {(string|Function)} field - The field name or function used to extract field values.
+ * @param {string|Function} field - The field name or function used to extract field values.
  * @param {any} value - The value to search for.
  * @returns {Object|null} Returns the found object or null if not found.
  * @example
@@ -1029,7 +1029,7 @@ Array.prototype.toObjectAsTrue = function () {
 
 /**
  * Calculates the sum of all elements in the array.
- * @param {(string|Function)} field - Optional field to specify which values to sum.
+ * @param {string|Function} field - Optional field to specify which values to sum.
  * @returns {number} Returns the sum of values.
  * @prototypeof Array
  * @method
@@ -1053,7 +1053,7 @@ Array.prototype.sum = function (field = null, maxRows = null) {
 
 /**
  * Calculates the average of all elements in the array.
- * @param {(string|Function)} field - Optional field to specify which values to average.
+ * @param {string|Function} field - Optional field to specify which values to average.
  * @returns {number} Returns the average value.
  * @prototypeof Array
  * @method
@@ -1073,7 +1073,7 @@ Array.prototype.avg = function (field = null) {
 
 /**
  * Calculates the max of all elements in the array.
- * @param {(string|Function)} field - Optional field to specify which values to find the maximum of.
+ * @param {string|Function} field - Optional field to specify which values to find the maximum of.
  * @returns {number} Returns the maximum value.
  * @prototypeof Array
  * @method
@@ -1096,7 +1096,7 @@ Array.prototype.max = function (field = null) {
 
 /**
  * Calculates the min of all elements in the array.
- * @param {(string|Function)} field - Optional field to specify which values to find the minimum of.
+ * @param {string|Function} field - Optional field to specify which values to find the minimum of.
  * @returns {number} Returns the minimum value.
  * @prototypeof Array
  * @method
@@ -1168,7 +1168,7 @@ Array.fromObjectWithKeys = function (object, fieldKey, fieldValue) {
 /**
  * Calculates the count of occurrences of each unique value in an array based on a specified field or function.
  * @param {Array} array - The array to analyze.
- * @param {(string|Function)} fieldKey - The field name or function used to extract values for counting.
+ * @param {string|Function} fieldKey - The field name or function used to extract values for counting.
  * @returns {Object} Returns an object with unique values as keys and their counts as values.
  * @prototypeof Array
  * @static
@@ -2555,6 +2555,31 @@ String.prototype.lzwCompress = function () {
     // output the code for w.
     if (w !== "") out.push(dict.get(w));
     return out;
+};
+
+String.prototype.extractJsTypeString = function (parentComponent) {
+
+    const typeStr = this.toString();
+    const tokens = typeStr.split(/(\||<|>|,)/);
+    const components = [];
+
+    tokens.forEach((token, i) => {
+        token = token.trim();
+        if (!token) return;
+
+        if (["|", "<", ">", ","].includes(token)) {
+            const t = new Colibri.UI.TextSpan('span' + i, parentComponent, token);
+            // t.shown = true;
+            components.push(t);
+        } else {
+            const l = new Colibri.UI.Link('link' + i, parentComponent, token);
+            // l.shown = true;
+            l.tag.navigate = token;
+            components.push(l);
+        }
+    });
+
+    return components;
 }
 
 /**
@@ -7204,7 +7229,7 @@ document.mapToUIComponent = Window.prototype.mapToUIComponent = Element.prototyp
  * @static
  * @method
  */
-Element.find = function(left, top) {
+Element.find = function (left, top) {
     return document.elementsFromPoint(left, top);
 };
 
@@ -7330,29 +7355,29 @@ document.addEventListener('keyup', (e) => {
 });
 
 function buildClassNameMap(root, rootName = 'App') {
-  const map = new Map();
+    const map = new Map();
 
-  function walk(obj, prefix, seen) {
-    if (obj === null || typeof obj !== 'object' && typeof obj !== 'function') return;
-    if (seen.has(obj)) return;
-    seen.add(obj);
+    function walk(obj, prefix, seen) {
+        if (obj === null || typeof obj !== 'object' && typeof obj !== 'function') return;
+        if (seen.has(obj)) return;
+        seen.add(obj);
 
-    for (const key of Object.keys(obj)) {
-      const value = obj[key];
-      const path = `${prefix}.${key}`;
-      if(!value || !value.toString || !value.toString().startsWith('class')) {
-        continue;
-      }
+        for (const key of Object.keys(obj)) {
+            const value = obj[key];
+            const path = `${prefix}.${key}`;
+            if (!value || !value.toString || !value.toString().startsWith('class')) {
+                continue;
+            }
 
-      if (typeof value === 'function' && value.prototype) {
-        map.set(value, path);
-      }
-      if (typeof value === 'object' || typeof value === 'function') {
-        walk(value, path, seen);
-      }
+            if (typeof value === 'function' && value.prototype) {
+                map.set(value, path);
+            }
+            if (typeof value === 'object' || typeof value === 'function') {
+                walk(value, path, seen);
+            }
+        }
     }
-  }
 
-  walk(root, rootName, new Set());
-  return map;
+    walk(root, rootName, new Set());
+    return map;
 }
