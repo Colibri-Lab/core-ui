@@ -64,7 +64,7 @@ Colibri.UI.WebRTCVideo = class extends Colibri.UI.Component {
             this._reader = new Colibri.UI.WebRTCVideo.MediaMTXWebRTCReader({
                 url: this._value,
                 onError: (err) => {
-                    setMessage(err);
+                    console.log(err);
                 },
                 onTrack: (evt) => {
                     this._video.srcObject = evt.streams[0];
