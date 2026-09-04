@@ -20,7 +20,7 @@ Colibri.UI.DateTimeSelector = class extends Colibri.UI.Component {
     constructor(name, container) {
         super(name, container, Element.create('div'));
 
-        this.AddClass('.app-datetime-selector-component');
+        this.AddClass('app-datetime-selector-component');
 
         this._hiddenElement = Element.create('input', { type: 'datetime-local', class: 'ui-hidden', name: name });
         this._viewElement = Element.create('input', { type: 'text', name: name + '_view' });
