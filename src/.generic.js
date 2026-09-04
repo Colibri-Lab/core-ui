@@ -445,7 +445,7 @@ Array.merge = function (a, ar) {
  * @example
  * ```
  * const arr = [1, 2, 3, 4];
- * const filteredArr = Array.part(arr, x => x > 2); // [3, 4]
+ * const filteredArr = Array.part(arr, (x, i) => x > 2); // [3, 4]
  * ```
  */
 Array.part = function (a, e) {
