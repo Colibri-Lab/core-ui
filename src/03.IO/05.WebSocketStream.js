@@ -44,7 +44,10 @@ Colibri.IO.WebSocketStream = class extends Destructable {
         Float32: (dv, o, le) => dv.getFloat32(o, le),
         Uint32: (dv, o, le) => dv.getUint32(o, le),
         Uint16: (dv, o, le) => dv.getUint16(o, le),
-        Uint8: (dv, o) => dv.getUint8(o)
+        Uint8: (dv, o) => dv.getUint8(o),
+        Int16: (dv, o, le) => dv.getInt16(o, le),
+        Int32: (dv, o, le) => dv.getInt32(o, le),
+        Int8: (dv, o) => dv.getInt8(o)
     };
 
     /**
