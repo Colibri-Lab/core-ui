@@ -363,6 +363,9 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._removePopup();
         this._input.SendToBack();
         this._changeBodyScroll();
+        if(this._multiple) {
+            this.Dispatch('Changed', {});
+        }
     }
 
     /**
@@ -944,7 +947,9 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
         this._setValue(selected);
         this._renderValue(!this._multiple);
         this.Focus();
-        this.Dispatch('Changed', args);
+        if(!this._multiple) {
+            this.Dispatch('Changed', args);
+        }
 
         return false;
     }

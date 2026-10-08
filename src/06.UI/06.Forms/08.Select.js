@@ -384,6 +384,11 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
      * @private 
      */
     _initializeValues() {
+        if (this._fieldData?.selector?.ondemand) {
+            this._setEnabled();
+            return;
+        }
+
         if (this._fieldData.lookup) {
             this.loading = true;
             this.AddClass('app-select-loading');

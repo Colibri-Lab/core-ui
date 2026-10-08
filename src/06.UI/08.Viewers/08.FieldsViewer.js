@@ -336,7 +336,10 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                 }
                 else {
                     const componentName = field.component.replaceAll('Colibri.UI.Forms.', '');
-                    const viewerComponentName = field?.viewer || field.params?.viewer || (field.params?.editor ? 'Colibri.UI.' + componentName + 'Editor' : 'Colibri.UI.' + componentName + 'Viewer');
+                    const viewerComponentName = field?.viewer || field.params?.viewer || 
+                        (!!field.params?.editor ? 
+                            (typeof field.params?.editor === 'boolean' ? 'Colibri.UI.' + componentName + 'Editor' : field.params.editor) : 
+                            'Colibri.UI.' + componentName + 'Viewer');
                     let viewer = null;
                     let viewerAttrs = field.params?.viewerAttrs ?? {};
                     try {
@@ -369,7 +372,7 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
                     }
                     viewer.value = this._generateValue(field, value, name, viewer);
 
-                    if (field.params?.editor) {
+                    if (!!field.params?.editor) {
                         viewer.AddHandler('Changed', this.__editorChanged, false, this);
                     } else {
                         viewer.AddHandler('Clicked', this.__viewerClicked, false, this);
@@ -487,7 +490,8 @@ Colibri.UI.FieldsViewer = class extends Colibri.UI.Viewer {
      * @type {boolean}
      */
     set showUnsetFields(value) {
-        this._showUnsetFields = value === 'true' || value === true;
+        value = this._convertProperty('Boolean', value);
+        this._showUnsetFields = value;
         this._showShowUnsetFields();
     }
     /** @ignore */

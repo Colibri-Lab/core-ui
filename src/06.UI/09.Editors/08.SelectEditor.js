@@ -80,17 +80,22 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
      * @type {string}
      */
     set value(value) {
-        Colibri.Common.Wait(() => !this.loading).then(() => {
-            if(!this.isConnected) {
+        Colibri.Common.Wait(() => !!this._input).then(() => {
+            if (!this.isConnected) {
                 return;
             }
-            this._input.value = value;
-            this.Validate();
-            if (value) {
-                this._setFilled();
-            } else {
-                this._unsetFilled();
-            }
+
+            this._preLoadLookup().then(() => {
+                this._input.value = value;
+
+                this.Validate();
+                if (value) {
+                    this._setFilled();
+                } else {
+                    this._unsetFilled();
+                }
+            });
+
         });
 
     }
@@ -164,6 +169,7 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
         if (!this._input) {
             this._input = this._createSelector();
             this._input.shown = true;
+            this._input.placeholderinfo = this.field?.params?.placeholderinfo ?? null;
             this._input.AddHandler('Changed', this.__thisBubbleWithComponent, false, this);
             this._input.AddHandler('ReceiveFocus', this.__inputReceiveFocus, false, this);
             this._input.AddHandler('LoosedFocus', this.__inputLoosedFocus, false, this);
@@ -201,18 +207,10 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
             if (this.field?.selector?.ondemand) {
                 this._input.__BeforeFilled = () => {
                     return new Promise((resolve, reject) => {
-                        if (this.field.lookup) {
-                            this.loading = true;
-                            this.AddClass('app-select-loading');
-                            this._setLookup(this.field.lookup).then((response) => {
-                                this.values = response.result || response;
-                            }).finally(() => {
-                                this.loading = false;
-                                this.RemoveClass('app-select-loading');
-                                this._setEnabled();
-                                resolve(true);
-                            });
-                        }
+                        this._preLoadLookup().then(() => {
+                            this._setEnabled();
+                            resolve(true);
+                        });
                     });
                 };
             }
@@ -244,28 +242,40 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
     }
 
     /**
+     * Pre-loads the lookup values if a lookup is defined for the field.
+     * @returns {Promise<void>} A promise that resolves when the lookup values are pre-loaded.
+     * @ignore
+     * @private
+     */
+    _preLoadLookup() {
+        return new Promise((resolve, reject) => {
+            if (this.field.lookup) {
+                this.loading = true;
+                this.AddClass('app-select-loading');
+                this._setLookup(this.field.lookup).then((response) => {
+                    this.values = response.result || response;
+                }).finally(() => {
+                    this.loading = false;
+                    this.RemoveClass('app-select-loading');
+                    resolve();
+                });
+            } else {
+                resolve();
+            }
+        });
+    }
+
+    /**
      * Reload values
      * @public
      */
     ReloadValues() {
         this.values = this.field?.values || this.field?.params?.values;
-        if (this.field.lookup) {
-            this.loading = true;
-            this.AddClass('app-select-loading');
-            this._setLookup(this.field.lookup).then((response) => {
-                this.values = response.result || response;
-            }).finally(() => {
-                this.loading = false;
-
-                this.value = this.value ? this._input._findValue(this.value) : (this.field.default ?? null);
-
-                this.RemoveClass('app-select-loading');
-                this._setEnabled();
-                this.Dispatch('Changed');
-            });
-        } else {
+        this._preLoadLookup().then(() => {
             this.value = this.value ? this._input._findValue(this.value) : (this.field.default ?? null);
-        }
+            this._setEnabled();
+            this.Dispatch('Changed');
+        });
     }
 
     /**
@@ -338,6 +348,11 @@ Colibri.UI.SelectEditor = class extends Colibri.UI.Editor {
      * @private
      */
     _initializeValues() {
+        if (this.field?.selector?.ondemand) {
+            this._setEnabled();
+            return;
+        }
+
         if (this.field.lookup) {
             this.loading = true;
             this.AddClass('app-select-loading');

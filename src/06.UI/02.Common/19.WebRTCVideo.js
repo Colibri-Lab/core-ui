@@ -47,8 +47,10 @@ Colibri.UI.WebRTCVideo = class extends Colibri.UI.Component {
      * @type {String}
      */
     set src(value) {
-        this._value = value;
-        this._showValue();
+        if(this._value != value) {
+            this._value = value;
+            this._showValue();
+        }
     }
 
     /**
