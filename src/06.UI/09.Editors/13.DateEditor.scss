@@ -1,0 +1,8 @@
+.app-date-editor-component {
+	min-width: 0;
+
+	[data-object-name="input"] {
+		width: 100%;
+		min-width: 0;
+	}
+}
