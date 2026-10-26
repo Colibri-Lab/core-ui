@@ -521,7 +521,8 @@ Colibri.Common.MimeType = class {
      */
     static Reload() {
         return new Promise((resolve, reject) => {
-            Colibri.IO.Request.Get((!App.Device.isElectron ? '/' : '') + 'res/mime.json', {}, {}, false).then((response) => {
+            const mimeTypesUrl = App.Native ? '../res/mime.json' : (!App.Device.isElectron ? '/' : '') + 'res/mime.json';
+            Colibri.IO.Request.Get(mimeTypesUrl, {}, {}, false).then((response) => {
                 Colibri.Common.MimeType.externalTypes = JSON.parse(response.result);
                 resolve();
             }).catch(() => {

@@ -5,6 +5,14 @@
  * @memberof Colibri
  */
 Colibri.App = class extends Colibri.Events.Dispatcher { 
+
+    /**
+     * Native host facade when running inside a Colibri.Native host.
+     * @var {Colibri.Native.Device|null}
+     * @private
+     * @ignore
+     */
+    _nativeDevice = null;
     
 
     /**
@@ -50,6 +58,8 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
         this._confirmDialog = null;
         this._db = null;
         this._device = null;
+        this._nativeDevice?.Close();
+        this._nativeDevice = null;
         this._loader = null;
         this._loadingBallun = null;
         this._loadingBox = null;
@@ -154,6 +164,9 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
             this._router = new Colibri.Web.Router(routerType);
             this._device = new Colibri.Devices.Device();
             this._browser = new Colibri.Common.BrowserStorage();
+            if (globalThis.ColibriNativeTransport && Colibri.Native?.Bridge && Colibri.Native?.Device) {
+                this.InitializeNative(globalThis.ColibriNativeTransport);
+            }
             this._session = new Colibri.Common.SessionStorage();
             this._db = new Colibri.Web.IndexDB(this._name, this._version);
             this._dateformat = dateformat;
@@ -189,6 +202,9 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                 this.Dispatch('DocumentReady');
     
                 const headers = {};
+                if (this._nativeDevice && globalThis.ColibriNativeConfig?.locale) {
+                    headers['Colibri-Language'] = globalThis.ColibriNativeConfig.locale;
+                }
                 if(this._csrfToken) {
                     headers['X-CSRF-TOKEN'] = this._csrfToken;
                 }
@@ -237,10 +253,23 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
                         });
     
                         if(settings?.screen?.theme === 'follow-device') {
-                            this._device.AddHandler('ThemeChanged', (event, args) => {
-                                App.SetTheme(args.current);
-                            });
-                            this.SetTheme(this._device.Theme);
+                            if (this._nativeDevice) {
+                                const applyNativeTheme = () => {
+                                    this.SetTheme(this._nativeDevice.isDarkMode ? 'dark' : 'light');
+                                };
+                                this._nativeDevice.AddHandler('Ready', applyNativeTheme);
+                                this._nativeDevice.AddHandler('ThemeChanged', (event, args) => {
+                                    this.SetTheme(args.theme);
+                                });
+                                if (this._nativeDevice.platform !== Colibri.Native.Device.Platform.Unknown) {
+                                    applyNativeTheme();
+                                }
+                            } else {
+                                this._device.AddHandler('ThemeChanged', (event, args) => {
+                                    App.SetTheme(args.current);
+                                });
+                                this.SetTheme(this._device.Theme);
+                            }
                         }    
                         else {
                             this.SetTheme(settings?.screen?.theme ?? 'light');
@@ -520,6 +549,31 @@ Colibri.App = class extends Colibri.Events.Dispatcher {
      */
     get Device() {
         return this._device;
+    }
+
+    /**
+     * Gets the native host facade, or null when no native host is connected.
+     * @type {Colibri.Native.Device|null}
+     * @public
+     */
+    get Native() {
+        return this._nativeDevice;
+    }
+
+    /**
+     * Connects the native host transport to Colibri.Native.Device.
+     * @param {Object} transport Native or Electron bridge transport.
+     * @returns {Colibri.Native.Device} Connected native device facade.
+     * @public
+     */
+    InitializeNative(transport) {
+        if (!Colibri.Native?.Bridge || !Colibri.Native?.Device) {
+            throw new Error('Colibri.Native classes are not loaded');
+        }
+        this._nativeDevice?.Close();
+        const bridge = new Colibri.Native.Bridge(transport);
+        this._nativeDevice = new Colibri.Native.Device(bridge);
+        return this._nativeDevice;
     }
 
     /**
