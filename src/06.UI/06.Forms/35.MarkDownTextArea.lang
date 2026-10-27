@@ -1,0 +1,130 @@
+ui-forms-markdowntextarea-edit:
+  ru: Редактировать
+  en: Edit
+  it: Modifica
+  hy: Խմբագրել
+  es: Editar
+  kk: Өңдеу
+  uz: Tahrirlash
+  cz: Upravit
+  de: Bearbeiten
+  tr: Düzenle
+  zh: 编辑
+  fa: ویرایش
+ui-forms-markdowntextarea-preview:
+  ru: Предпросмотр
+  en: Preview
+  it: Anteprima
+  hy: Նախադիտում
+  es: Vista previa
+  kk: Алдын ала қарау
+  uz: Oldindan ko'rish
+  cz: Náhled
+  de: Vorschau
+  tr: Önizleme
+  zh: 预览
+  fa: پیش‌نمایش
+ui-forms-markdowntextarea-send:
+  ru: Отправить
+  en: Send
+  it: Invia
+  hy: Ուղարկել
+  es: Enviar
+  kk: Жіберу
+  uz: Yuborish
+  cz: Odeslat
+  de: Senden
+  tr: Gönder
+  zh: 发送
+  fa: ارسال
+ui-forms-markdowntextarea-bold:
+  ru: Жирный
+  en: Bold
+  it: Grassetto
+  hy: Թավ
+  es: Negrita
+  kk: Қалың
+  uz: Qalin
+  cz: Tučné
+  de: Fett
+  tr: Kalın
+  zh: 粗体
+  fa: پررنگ
+ui-forms-markdowntextarea-italic:
+  ru: Курсив
+  en: Italic
+  it: Corsivo
+  hy: Շեղ
+  es: Cursiva
+  kk: Көлбеу
+  uz: Qiya
+  cz: Kurzíva
+  de: Kursiv
+  tr: İtalik
+  zh: 斜体
+  fa: مورب
+ui-forms-markdowntextarea-code:
+  ru: Код
+  en: Code
+  it: Codice
+  hy: Կոդ
+  es: Código
+  kk: Код
+  uz: Kod
+  cz: Kód
+  de: Code
+  tr: Kod
+  zh: 代码
+  fa: کد
+ui-forms-markdowntextarea-list:
+  ru: Список
+  en: List
+  it: Elenco
+  hy: Ցանկ
+  es: Lista
+  kk: Тізім
+  uz: Ro'yxat
+  cz: Seznam
+  de: Liste
+  tr: Liste
+  zh: 列表
+  fa: فهرست
+ui-forms-markdowntextarea-link:
+  ru: Ссылка
+  en: Link
+  it: Collegamento
+  hy: Հղում
+  es: Enlace
+  kk: Сілтеме
+  uz: Havola
+  cz: Odkaz
+  de: Link
+  tr: Bağlantı
+  zh: 链接
+  fa: پیوند
+ui-forms-markdowntextarea-quote:
+  ru: Цитата
+  en: Quote
+  it: Citazione
+  hy: Մեջբերում
+  es: Cita
+  kk: Дәйексөз
+  uz: Iqtibos
+  cz: Citace
+  de: Zitat
+  tr: Alıntı
+  zh: 引用
+  fa: نقل قول
+ui-forms-markdowntextarea-title:
+  ru: Редактор Markdown
+  en: Markdown editor
+  it: Editor Markdown
+  hy: Markdown խմբագրիչ
+  es: Editor Markdown
+  kk: Markdown редакторы
+  uz: Markdown muharriri
+  cz: Editor Markdown
+  de: Markdown-Editor
+  tr: Markdown düzenleyici
+  zh: Markdown 编辑器
+  fa: ویرایشگر Markdown
