@@ -98,8 +98,14 @@ Colibri.UI.Maps.Controls.StatesButton = class extends Colibri.UI.FlexBox {
         this._showValue();
     }
     _showValue() {
-        this._icon.iconSVG = this._value?.icon ?? '';
-        this._label.value = this._value?.title ?? '';
+        if(!Object.isPlainObject(this._value)) {
+            const valueObj = this._values.filter(v => v.value == this._value)?.[0] ?? {};
+            this._icon.iconSVG = valueObj?.icon ?? '';
+            this._label.value = valueObj?.title ?? '';
+        } else {
+            this._icon.iconSVG = this._value?.icon ?? '';
+            this._label.value = this._value?.title ?? '';
+        }
     }
 
 }
