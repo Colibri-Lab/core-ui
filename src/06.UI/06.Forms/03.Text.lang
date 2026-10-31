@@ -37,3 +37,29 @@ ui-fields-fieldparams-mask-note:
   tr: Sadece Text türündeki nesnelerle çalışır
   zh: 仅适用于 Text 类型的对象
   fa: فقط با اشیاء از نوع Text کار می‌کند
+ui-fields-fieldparams-suggestions:
+  ru: Метод для отображения подсказок
+  en: Method for displaying suggestions
+  hy: Առաջարկների ցուցադրման մեթոդ
+  it: Metodo per la visualizzazione dei suggerimenti
+  es: Método para mostrar sugerencias
+  kk: Ұсынымдарды көрсету әдісі
+  uz: Takliflarni ko'rsatish usuli
+  cz: Metoda pro zobrazení návrhů
+  de: Methode zur Anzeige von Vorschlägen
+  tr: Önerileri görüntüleme yöntemi
+  zh: 显示建议的方法
+  fa: روش نمایش پیشنهادات
+ui-fields-fieldparams-suggestions-note:
+  ru: "Метод: (value) => new Promise((resolve, reject) => {})"
+  en: "Method: (value) => new Promise((resolve, reject) => {})"
+  hy: "Մեթոդ: (value) => new Promise((resolve, reject) => {})"
+  it: "Metodo: (value) => new Promise((resolve, reject) => {})"
+  es: "Método: (value) => new Promise((resolve, reject) => {})"
+  kk: "Әдіс: (value) => new Promise((resolve, reject) => {})"
+  uz: "Metod: (value) => new Promise((resolve, reject) => {})"
+  cz: "Metoda: (value) => new Promise((resolve, reject) => {})"
+  de: "Methode: (value) => new Promise((resolve, reject) => {})"
+  tr: "Yöntem: (value) => new Promise((resolve, reject) => {})"
+  zh: "方法: (value) => new Promise((resolve, reject) => {})"
+  fa: "متد: (value) => new Promise((resolve, reject) => {})"

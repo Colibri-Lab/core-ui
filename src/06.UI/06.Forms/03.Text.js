@@ -89,6 +89,7 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
             this.icon = this._fieldData?.params?.icon;
         }
 
+
         this._input.addEventListener('focus', (e) => this.Dispatch('ReceiveFocus', { domEvent: e }));
         this._input.addEventListener('blur', (e) => this.Dispatch('LoosedFocus', { domEvent: e }));
         this._input.addEventListener('change', (e) => {
@@ -124,6 +125,9 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
             e.stopPropagation();
             return false;
         });
+
+        this.AddHandler('LoosedFocus', this.__thisLoosedFocus);
+        this.AddHandler('ReceiveFocus', this.__thisReceiveFocus);
 
     }
 
@@ -336,6 +340,119 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
      */
     set inputmode(value) {
         this._input.attr('inputmode', value);
+    }
+
+
+    /** 
+     * @private
+     * @ignore
+     */
+    _showSuggestions() {
+        if (this._fieldData.lookup) {
+            this._setLookup(this._fieldData.lookup).then((response) => {
+                const values = response.result || response;
+                if (!this._popup) {
+                    this._popup = this._createPopup(values);
+                }
+                this._popup.Show();
+            });
+        }
+    }
+
+    /** 
+     * @ignore
+     * @private 
+     */
+    _createPopup(values) {
+        const popup = new Colibri.UI.PopupList('select-popup', document.body, false, this.__render, this._fieldData?.selector?.title, this._fieldData?.selector?.title);
+        popup.parent = this;
+        popup.multiple = false;
+        const el = this.contentContainer.container.closest('[namespace]');
+        el && popup.container.attr('namespace', el.attr('namespace'));
+        popup.__renderElement = (itemData, item) => {
+            return itemData[this._fieldData?.selector?.title] ?? '';
+        };
+        //заполнение списка перед хэндлерами, чтобы не сработал SelectionChanged
+        popup.FillItems(values, this._value);
+        popup.AddHandler('ItemMouseDown', this.__popupMouseDown, false, this);
+        return popup;
+    }
+
+    /**
+     * @private
+     * @ignore
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
+    __popupMouseDown(event, args) {
+        this.value = args.item.value?.[this._fieldData?.selector?.value];
+        this.Dispatch('Changed', { domEvent: args.domEvent, component: this, original: this._original });
+
+    }
+
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
+    __thisReceiveFocus(event, args) {
+        this._showSuggestions();
+    }
+    /**
+     * @ignore
+     * @private
+     * @param {Colibri.Events.Event} event event object
+     * @param {*} args event arguments
+     */
+    __thisLoosedFocus(event, args) {
+        if (this._popup) {
+            this._popup.Hide();
+            // this._popup.Dispose();
+            // this._popup = null;
+        }
+    }
+
+    /**
+     * Run lookup
+     * @param {(Object|function)} value
+     * @returns {Promise}
+     * @private
+     * @ignore
+     * @async
+     */
+    _setLookup(value) {
+        this._lookup = value;
+        return Colibri.UI.GetLookupPromise(this, this._lookup, this._input.value, (type = null) => {
+            return this._getDependsValue(type);
+        }, this._lastValue);
+    }
+
+    /**
+     * @ignore 
+     * @protected 
+     */
+    _getDependsValue(type = null) {
+        if (this.root && this._fieldData?.lookup) {
+
+            if ((type && !this._fieldData.lookup[type]['depends']) || (!type && !this._fieldData.lookup['depends'])) {
+                return;
+            }
+
+            let dependsField = type ? this._fieldData.lookup[type]['depends'] : this._fieldData.lookup['depends'];
+            if (dependsField) {
+                dependsField = dependsField.replaceAll('{', '').replaceAll('}', '');
+                let rootValues = this.root?.value;
+                if (eval(`typeof rootValues?.${dependsField}`) !== 'undefined') {
+                    return eval(`rootValues.${dependsField}`);
+                }
+                const parentValues = this.parentField?.value;
+                if (eval(`typeof parentValues?.${dependsField}`) !== 'undefined') {
+                    return eval(`parentValues.${dependsField}`);
+                }
+                return null;
+            }
+        }
     }
 
 }
