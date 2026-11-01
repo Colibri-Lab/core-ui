@@ -234,6 +234,9 @@ Colibri.UI.Forms.Text = class extends Colibri.UI.Forms.Field {
      * @type {string}
      */
     set value(value) {
+        if(Object.isPlainObject(value) && this._fieldData.lookup) {
+            value = value[this._fieldData.selector.value] ?? '';
+        }
         this._original = value;
         this._input.value = value ?? '';
     }
