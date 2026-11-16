@@ -288,8 +288,9 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
         }
 
         this.AddHandler(['Changed', 'KeyUp', 'KeyDown'], this.__thisChangedOrKeyUpOrKeyDown);
-        this.AddHandler('ReceiveFocus', this.__thisReceiveFocus);
-        this.AddHandler('LoosedFocus', this.__thisLoosedFocus);
+        
+        this.AddHandler('ReceiveFocus', this.__thisFieldReceiveFocus);
+        this.AddHandler('LoosedFocus', this.__thisFieldLoosedFocus);
 
         if (this._fieldData?.hidden && this._fieldData?.hidden === true) {
             this.AddClass('app-component-field-hidden');
@@ -445,7 +446,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
      */
-    __thisReceiveFocus(event, args) {
+    __thisFieldReceiveFocus(event, args) {
         this.AddClass('-focused');
         this.form.activeField = this;
     }
@@ -455,7 +456,7 @@ Colibri.UI.Forms.Field = class extends Colibri.UI.Component {
      * @param {Colibri.Events.Event} event event object
      * @param {*} args event arguments
      */
-    __thisLoosedFocus(event, args) {
+    __thisFieldLoosedFocus(event, args) {
         this.RemoveClass('-focused');
         this.form.activeField = null;
     }
