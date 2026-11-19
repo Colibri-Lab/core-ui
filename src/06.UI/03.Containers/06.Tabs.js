@@ -55,7 +55,10 @@ Colibri.UI.Tabs = class extends Colibri.UI.Component {
     }
     
     __thisKeyDown(event, args) {
-        if( args.domEvent.key === 'ArrowRight' || args.domEvent.key === 'ArrowLeft' ) {
+        if( 
+            (args.domEvent.key === 'ArrowRight' || args.domEvent.key === 'ArrowLeft') && 
+            args.domEvent.ctrlKey && args.domEvent.altKey && args.domEvent.shiftKey
+        ) {
             const buttons = this.buttonsByIndex;
             const currentIndex = this.selectedIndex;
             let newIndex = null;
