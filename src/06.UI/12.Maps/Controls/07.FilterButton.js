@@ -92,15 +92,14 @@ Colibri.UI.Maps.Controls.FilterButton = class extends Colibri.UI.FlexBox {
      */
     set enabled(value) {
         super.enabled = value;
-        this._showEnabled();
+        this._showEnabled2();
     }
     /**
      * @ignore
      * @private
      */
-    _showEnabled() {
-        this.RemoveClass('ui-disabled');
-        this._remove.shown = super.enabled;
+    _showEnabled2() {
+        this._remove.shown = this.enabled;
     }
 
 }
