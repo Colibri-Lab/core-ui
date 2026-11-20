@@ -3231,7 +3231,9 @@ Colibri.UI.Component = class extends Colibri.Events.Dispatcher {
      * @type {boolean}
      */
     set draggable(value) {
-        this._element.attr('draggable', value ? 'true' : null);
+        if(this._element) {
+            this._element.attr('draggable', value ? 'true' : null);
+        }
     }
 
     /**
