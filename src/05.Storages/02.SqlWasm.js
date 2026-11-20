@@ -396,6 +396,31 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
     }
 
     /**
+     * Count the number of lines in a table
+     * @param {String} table - The name of the table
+     * @returns {Number} - The number of lines in the table
+     * @public
+     * @example
+     * ```
+     * const table = 'users';
+     * const count = sqlWasmInstance.CountLines(table);
+     * console.log('Number of lines:', count);
+     * ```
+     */
+    CountLines(table) {
+        try {
+            const result = this._db.exec('SELECT COUNT(*) as count FROM "' + table + '"');
+            if (result && result[0] && result[0].values && result[0].values[0]) {
+                return result[0].values[0][0];
+            }
+        } catch (e) {
+            console.error('Ошибка подсчета строк: ' + e);
+            throw e;
+        }
+        return 0;
+    }
+
+    /**
      * Select from database
      * @example select * from table where field1=[[param1:string]] and field2='sample2' or field3=[[param2:integer]]
      * @param {String} query 
