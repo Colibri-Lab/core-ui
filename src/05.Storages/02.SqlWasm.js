@@ -463,9 +463,9 @@ Colibri.Storages.SqlWasm = class extends Colibri.Events.Dispatcher {
      * console.log('Load by result:', result);
      * ```
      */
-    LoadBy(table, filters, order = '') {
+    LoadBy(table, filters, order = '', limit = -1) {
         const d = this._convertFilters(filters);
-        const query = 'SELECT * FROM "' + table + '" ' + (d.filter ? 'WHERE ' + d.filter : '') + (order ? ' ORDER BY ' + order : '');
+        const query = 'SELECT * FROM "' + table + '" ' + (d.filter ? 'WHERE ' + d.filter : '') + (order ? ' ORDER BY ' + order : '') + (limit > 0 ? ' LIMIT ' + limit : '');
         return this.Query(query, d.params);
     }
 
