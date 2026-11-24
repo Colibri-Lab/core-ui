@@ -7354,6 +7354,10 @@ document.addEventListener('keyup', (e) => {
     App.Dispatch('KeyUp', { domEvent: e });
 });
 
+function movePoint(point, move) {
+    return {left: point.left - move.left, top: point.top - move.top};
+}
+
 function buildClassNameMap(root, rootName = 'App') {
     const map = new Map();
 
