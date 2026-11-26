@@ -98,19 +98,26 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
         }
 
         if (this._fieldData?.selector?.ondemand || this.searchable) {
-            this._input.__BeforeFilled = () => {
+            this._input.__BeforeFilled = (search = false) => {
                 return new Promise((resolve, reject) => {
                     if (this._fieldData.lookup) {
                         this.loading = true;
                         this.AddClass('app-select-loading');
-                        this._setLookup(this._fieldData.lookup).then((response) => {
+                        // the input shows the selected title until the user types, so filter only by typed text
+                        const term = search ? this._input._input.value : '';
+                        this._setLookup(this._fieldData.lookup, term).then((response) => {
                             this.values = response.result || response;
+                            if (!search) {
+                                this._input._renderValue();
+                            }
                         }).finally(() => {
                             this.loading = false;
                             this.RemoveClass('app-select-loading');
                             this._setEnabled();
                             resolve(this._fieldData?.selector?.ondemand || this.searchable);
                         });
+                    } else {
+                        resolve(false);
                     }
                 });
             };
@@ -185,16 +192,79 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
     /**
      * Run lookup
      * @param {(Object|function)} value
+     * @param {string|null} term search term, the input text is used when null
      * @returns {Promise}
      * @private
      * @ignore
      * @async
      */
-    _setLookup(value) {
+    _setLookup(value, term = null) {
         this._lookup = value;
-        return Colibri.UI.GetLookupPromise(this, this._lookup, this._input._input.value, (type = null) => {
+        return Colibri.UI.GetLookupPromise(this, this._lookup, term ?? this._input._input.value, (type = null) => {
             return this._getDependsValue(type);
         }, this._lastValue);
+    }
+
+    /**
+     * Returns selected scalar values that must be resolved through the lookup
+     * @param {*} value selected value
+     * @returns {Array}
+     * @private
+     * @ignore
+     */
+    _getSelectedLookupValues(value) {
+        const valueField = this._fieldData?.selector?.value ?? 'value';
+        const emptyValue = this._fieldData?.selector?.emptyvalue ?? 0;
+        let list = [value];
+        if (Array.isArray(value)) {
+            list = value;
+        } else if (typeof value === 'string' && this._input.multiple) {
+            list = value.split(',');
+        }
+        return list
+            .map((v) => Object.isObject(v) ? v[valueField] : v)
+            .filter((v) => v !== null && v !== undefined && v !== '' && v !== false && v !== emptyValue);
+    }
+
+    /**
+     * Loads on-demand lookup values for the selected value and renders its title
+     * @param {*} value selected value
+     * @private
+     * @ignore
+     */
+    _loadSelectedLookup(value) {
+        if (!this._fieldData?.lookup || !this._fieldData?.selector?.ondemand) {
+            return;
+        }
+
+        const selected = this._getSelectedLookupValues(value);
+        if (selected.length === 0 || selected.every((v) => !!this._input._findValue(v))) {
+            return;
+        }
+
+        const request = {};
+        this._selectedLookupRequest = request;
+        const requestedValue = JSON.stringify(this.value);
+        this.AddClass('app-select-loading');
+        Colibri.UI.GetLookupPromise(this, this._fieldData.lookup, '', (type = null) => {
+            return this._getDependsValue(type);
+        }, this._input.multiple ? selected : selected[0]).then((response) => {
+            if (this._selectedLookupRequest !== request) {
+                return;
+            }
+            this.values = response.result || response;
+            // do not overwrite a newer selection or the text typed into an open popup
+            if (JSON.stringify(this.value) === requestedValue && !this._input._popup) {
+                this._input.value = this.value;
+            }
+        }).catch((error) => {
+            console.log(error);
+        }).finally(() => {
+            if (this._selectedLookupRequest === request) {
+                this._selectedLookupRequest = null;
+                this.RemoveClass('app-select-loading');
+            }
+        });
     }
 
     /**
@@ -345,6 +415,7 @@ Colibri.UI.Forms.Select = class extends Colibri.UI.Forms.Field {
             this._lastValue = value;
         } else {
             this._input.value = value;
+            this._loadSelectedLookup(value);
         }
     }
 

@@ -271,7 +271,7 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
      */
     __thisFilled(event, args) {
         this._itemSelected = false;
-        this.__BeforeFilled().then((searchAllreadyPerformed = false) => {
+        this.__BeforeFilled(!!args?.search).then((searchAllreadyPerformed = false) => {
             if (this._itemSelected === true) {
                 return;
             }
@@ -295,8 +295,11 @@ Colibri.UI.Selector = class extends Colibri.UI.Component {
     /**
      * Before filled event callback
      * @protected 
+     * @async
+     * @param {boolean} search true when the popup is opened by typing search text
+     * @returns {Promise<boolean>}
      */
-    async __BeforeFilled() {
+    async __BeforeFilled(search = false) {
         return true;
     }
 
